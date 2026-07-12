@@ -1,0 +1,449 @@
+/* ─── 16:9 scaling stage ───────────────────────────────────── */
+.stage-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0e1116;
+}
+
+.stage {
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  container-type: size; /* enables cqw / cqh */
+}
+
+/* YouTube-safe inner area */
+/* YouTube-safe inner area — extra bottom room for fixed nav */
+.safe-area {
+  position: absolute;
+  inset: 6% 8% 16% 8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── Fade transition between steps ───────────────────────── */
+.card-fade {
+  animation: cardFadeIn 0.35s ease both;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Persistent header elements ───────────────────────────── */
+.progress-label {
+  position: absolute;
+  top: 5.5%;
+  right: 8%;
+  font-family: var(--font-en);
+  font-size: 2.2cqw;
+  color: var(--text-softer);
+  letter-spacing: 0.08em;
+}
+
+.lesson-label {
+  position: absolute;
+  top: 5.5%;
+  left: 8%;
+  font-family: var(--font-en);
+  font-size: 2.2cqw;
+  color: var(--text-softer);
+}
+
+/* ─── ① Category card ──────────────────────────────────────── */
+.category-chip {
+  background: var(--accent-chip);
+  color: var(--accent);
+  font-family: var(--font-en);
+  font-size: 2.8cqw;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.6cqw 1.8cqw;
+  border-radius: 999px;
+  margin-bottom: 2.5cqh;
+}
+
+.category-word-preview {
+  font-family: var(--font-jp);
+  font-size: 3cqw;
+  color: var(--text-softer);
+  margin-top: 1.5cqh;
+}
+
+/* ─── ② Word card ───────────────────────────────────────────── */
+.word-main {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  font-size: 12cqw;
+  line-height: 1;
+  color: #000;
+}
+
+.word-reading {
+  font-family: var(--font-jp);
+  font-size: 3.4cqw;
+  color: #000;
+  margin-top: 1.8cqh;
+  letter-spacing: 0.06em;
+}
+
+.word-meaning {
+  font-family: var(--font-en);
+  font-size: 4.2cqw;
+  color: #000;
+  margin-top: 1.8cqh;
+}
+
+/* Shared: word-wrapped JP lines + furigana under kanji (fits safe-area) */
+.jp-wrap {
+  max-width: 100%;
+  max-height: 48cqh;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+.jp-wrap-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  column-gap: 0;
+  row-gap: 0.45em;
+  max-width: 100%;
+  white-space: normal;
+}
+
+/* Same wrap units as shadowing — break between words only */
+.jp-word {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Furigana under kanji — real DOM nodes (not ::after) for reliable display */
+.furigana-wrap .furi-cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  line-height: 1.1;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.furigana-wrap .furi-surface {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.furigana-wrap .furi-reading {
+  display: block;
+  font-family: var(--font-jp);
+  font-weight: 400;
+  font-size: 0.38em;
+  color: #000;
+  letter-spacing: 0;
+  line-height: 1.15;
+  margin-top: 0.12em;
+  user-select: none;
+  pointer-events: none;
+}
+
+.furigana-wrap .furi-reading--spacer {
+  visibility: hidden;
+  content: "";
+  height: 1.15em;
+  margin-top: 0.12em;
+}
+
+.furigana-wrap.furigana-hidden .furi-reading {
+  display: none;
+}
+
+/* ─── ③ Phrase / ④ Sentence / ⑤ Shadowing — shared JP size ─── */
+.phrase-main,
+.sentence-main,
+.shadowing-phrase {
+  font-family: var(--font-jp);
+  font-weight: 600;
+  font-size: 8cqw;
+  max-width: 100%;
+}
+
+.phrase-main {
+  color: #000;
+}
+
+.sentence-main {
+  color: #000;
+}
+
+.shadowing-phrase {
+  color: #000;
+}
+
+.phrase-meaning,
+.sentence-meaning {
+  font-family: var(--font-en);
+  font-size: 3.2cqw;
+  color: #000;
+  margin-top: 1.2cqh;
+  max-width: 100%;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* ─── ⑤ Shadowing card ──────────────────────────────────────── */
+.shadowing-cue {
+  font-family: var(--font-en);
+  font-size: 3cqw;
+  font-weight: 600;
+  color: var(--text-softer);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2.5cqh;
+}
+
+.shadowing-ellipsis {
+  font-family: var(--font-en);
+  font-size: 4cqw;
+  color: var(--text-softer);
+  letter-spacing: 0.2em;
+  margin-top: 2.5cqh;
+}
+
+/* ─── ⑥ Review card ─────────────────────────────────────────── */
+.review-word {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  font-size: 12cqw;
+  color: #000;
+  line-height: 1;
+}
+
+.review-reading {
+  font-family: var(--font-jp);
+  font-size: 3.4cqw;
+  color: #000;
+  margin-top: 1.8cqh;
+}
+
+.review-meaning {
+  font-family: var(--font-en);
+  font-size: 3.8cqw;
+  color: #000;
+  margin-top: 1.5cqh;
+}
+
+/* ─── Stage 1 manual navigation (replaced in Stage 2) ──────── */
+.nav-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 10;
+}
+
+.nav-bar button {
+  font-family: var(--font-en);
+  font-size: 15px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.nav-bar button:hover {
+  background: #1d55c4;
+}
+
+.nav-bar button:disabled {
+  background: #9aa4b2;
+  cursor: default;
+}
+
+.voice-btn--active {
+  background: #16a34a !important;
+  border-color: #15803d !important;
+  color: #fff !important;
+}
+
+.voice-btn--active:hover {
+  background: #15803d !important;
+}
+
+.rate-group {
+  display: inline-flex;
+  gap: 6px;
+  margin: 0 4px;
+}
+
+.rate-btn {
+  font-family: var(--font-en);
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border: 1px solid #e67e22 !important;
+  border-radius: 8px !important;
+  background: #3a4452 !important;
+  color: #e5e7eb !important;
+  cursor: pointer;
+}
+
+.rate-btn:hover {
+  background: #4b5563 !important;
+  border-color: #f39c12 !important;
+}
+
+.rate-btn--active {
+  background: #e67e22 !important;
+  border-color: #d35400 !important;
+  color: #fff !important;
+}
+
+.furi-btn {
+  font-family: var(--font-en);
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border: 1px solid #ec4899 !important;
+  border-radius: 8px !important;
+  background: #3a4452 !important;
+  color: #e5e7eb !important;
+  cursor: pointer;
+}
+
+.furi-btn:hover {
+  background: #4b5563 !important;
+  border-color: #f472b6 !important;
+}
+
+.furi-btn--active {
+  background: #ec4899 !important;
+  border-color: #db2777 !important;
+  color: #fff !important;
+}
+
+.auto-btn {
+  font-family: var(--font-en);
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border: 1px solid #22c55e !important;
+  border-radius: 8px !important;
+  background: #3a4452 !important;
+  color: #e5e7eb !important;
+  cursor: pointer;
+  min-width: 7.5rem;
+}
+
+.auto-btn:hover {
+  background: #4b5563 !important;
+  border-color: #4ade80 !important;
+}
+
+.auto-btn--active {
+  background: #16a34a !important;
+  border-color: #15803d !important;
+  color: #fff !important;
+}
+
+.auto-btn--stopping {
+  background: #ca8a04 !important;
+  border-color: #a16207 !important;
+  color: #fff !important;
+}
+
+/* ─── Speech highlight (JP read-aloud karaoke) ──────────────── */
+.speech-line {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+}
+
+/* English: wrap on words; clamp so it stays in frame */
+.speech-line--en {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.speech-line--en .speech-char {
+  display: inline;
+  white-space: normal;
+}
+
+.speech-line--en .speech-space {
+  white-space: pre-wrap;
+}
+
+.speech-char {
+  display: inline-block;
+  transition: color 0.08s ease, background-color 0.08s ease, opacity 0.08s ease;
+  border-radius: 0.08em;
+}
+
+.speech-spoken {
+  opacity: 0.4;
+}
+
+/* All lesson text stays black — only a light wash marks the active unit */
+[lang="ja"] .speech-spoken,
+[lang="en"] .speech-spoken,
+.word-main .speech-spoken,
+.review-word .speech-spoken,
+.shadowing-phrase .speech-spoken,
+.furigana-wrap .furi-cell.speech-spoken {
+  opacity: 1;
+  color: #000;
+}
+
+.speech-active {
+  color: #000 !important;
+  background: rgba(245, 196, 70, 0.4);
+  opacity: 1;
+  box-shadow: none;
+}
+
+.furigana-wrap .furi-cell.speech-active {
+  color: #000 !important;
+  background: rgba(245, 196, 70, 0.4);
+  opacity: 1;
+  border-radius: 0.12em;
+  box-shadow: none;
+}
+
+.step-indicator {
+  position: fixed;
+  bottom: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-en);
+  font-size: 13px;
+  color: #9aa4b2;
+  letter-spacing: 0.08em;
+}

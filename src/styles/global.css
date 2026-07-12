@@ -1,0 +1,36 @@
+:root {
+  --bg: #f7f8fa;
+  --text: #000;
+  --text-soft: #000;
+  --text-softer: #9ca3af;
+  --accent: #2f6fed;
+  --accent-chip: #e8f0fd;
+  --reading-color: #000;
+  --sentence-color: #000;
+
+  --font-jp: "Yu Gothic", "YuGothic", "Meiryo",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  --font-en: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: #0e1116;
+  color: var(--text);
+  font-family: var(--font-en);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
