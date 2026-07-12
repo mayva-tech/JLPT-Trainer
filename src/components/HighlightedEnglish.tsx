@@ -37,7 +37,8 @@ export function HighlightedEnglish({ text, className, highlight }: Props) {
               key={i}
               className={`speech-char ${isSpace ? "speech-space" : ""} ${state}`.trim()}
             >
-              {isSpace ? part.text.replace(/ /g, "\u00A0") : part.text}
+              {/* Keep real spaces so lines wrap per word (not mid-word). */}
+              {part.text}
             </span>
           );
         })}

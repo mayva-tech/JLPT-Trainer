@@ -282,6 +282,20 @@ export const speechService = {
     window.speechSynthesis.cancel();
   },
 
+  pause() {
+    if (!window.speechSynthesis) return;
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+    }
+  },
+
+  resume() {
+    if (!window.speechSynthesis) return;
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+  },
+
   /** Japanese with Microsoft Nanami (七海) Online Natural + highlight. */
   speakJapanese(text: string, callbacks?: SpeakCallbacks, rate = SPEECH_RATE_NORMAL) {
     runUtterance(text, "ja-JP", pickNanamiVoice(), callbacks, true, rate);

@@ -52,36 +52,56 @@ export class AutoModeRunner {
     speechService.stop();
   }
 
+  /**
+   * @returns true when every item finished without soft-stop/abort
+   * (used by optional video-flow sequencing; manual Auto Mode ignores this).
+   */
   async start(
     items: VocabularyItem[],
     startItemIndex: number,
     ui: AutoModeUi,
     onState: (state: "on" | "stopping" | "off") => void
-  ): Promise<void> {
+  ): Promise<boolean> {
     this.abort();
     this.softStop = false;
     const sid = ++this.session;
     onState("on");
 
     const from = Math.max(0, Math.min(startItemIndex, items.length - 1));
+    let completedAll = true;
 
     try {
       for (let i = from; i < items.length; i++) {
-        if (!this.shouldContinue(sid)) break;
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
         const item = items[i]!;
         ui.setItemIndex(i);
 
         await this.runSection(sid, ui, item, "word");
-        if (!this.shouldContinue(sid)) break;
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
 
         await this.runSection(sid, ui, item, "phrase");
-        if (!this.shouldContinue(sid)) break;
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
 
         await this.runSection(sid, ui, item, "sentence");
-        if (!this.shouldContinue(sid)) break;
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
 
         await this.runShadowingAndReview(sid, ui, item);
-        if (!this.shouldContinue(sid)) break;
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
 
         if (i < items.length - 1) {
           await this.pause(T.betweenItemsPause, sid);
@@ -97,6 +117,8 @@ export class AutoModeRunner {
         onState("off");
       }
     }
+
+    return sid === this.session && completedAll && !this.softStop;
   }
 
   private shouldContinue(sid: number): boolean {
