@@ -17,6 +17,10 @@ VIDEOS/**/*.mp4
 *.mp4
 VIDEOS/Images/Apartment/
 
+# Local guides / research (keep offline only)
+Instructions-Guide-MD/
+RESEARCH-Study-reference/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
