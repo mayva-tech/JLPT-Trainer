@@ -194,6 +194,8 @@ function startFallbackHighlight(
 
 export const SPEECH_RATE_NORMAL = 0.85;
 export const SPEECH_RATE_SLOW = 0.7;
+/** Slightly faster normal used only for the shadowing listen pass. */
+export const SPEECH_RATE_SHADOWING = 0.95;
 
 function runUtterance(
   text: string,

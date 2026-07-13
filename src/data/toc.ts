@@ -10,13 +10,22 @@ export type TocItemId =
   | "grammar-11-20"
   | "grammar-21-30"
   | "grammar-31-40"
+  | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-grammar-1-10"
   | "quiz-mixed"
   | "quiz-final"
+  | "quiz-after-comment"
   | "ending-cta";
 
-export type TocItemKind = "intro" | "word" | "grammar" | "quiz" | "ending";
+export type TocItemKind =
+  | "intro"
+  | "word"
+  | "grammar"
+  | "quiz"
+  | "quiz-pre"
+  | "quiz-after"
+  | "ending";
 
 export type TocItem = {
   id: TocItemId;
@@ -85,6 +94,11 @@ export const tocGroups: TocGroup[] = [
     title: "4. Quizzes",
     items: [
       {
+        id: "quiz-pre-comment",
+        label: "Pre Quiz Comment",
+        kind: "quiz-pre",
+      },
+      {
         id: "quiz-vocab-1-10",
         label: "Vocabulary Quiz 1–10",
         kind: "quiz",
@@ -107,6 +121,11 @@ export const tocGroups: TocGroup[] = [
         label: "Final Review Quiz",
         kind: "quiz",
         quizId: "quiz-final",
+      },
+      {
+        id: "quiz-after-comment",
+        label: "After Quiz Comment",
+        kind: "quiz-after",
       },
     ],
   },

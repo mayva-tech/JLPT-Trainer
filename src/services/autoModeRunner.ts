@@ -5,6 +5,7 @@ import {
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
+  SPEECH_RATE_SHADOWING,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -251,7 +252,8 @@ export class AutoModeRunner {
     }
   }
 
-  /** JP normal あ off → pause → EN → pause → JP slow あ on → pause → JP normal あ off */
+  /** JP normal あ off → pause → EN → pause → JP slow あ on
+   *  (no final normal JA repeat — next section follows). */
   private async runSection(
     sid: number,
     ui: AutoModeUi,
@@ -287,16 +289,6 @@ export class AutoModeRunner {
     await this.speakJapanese(ui, ja, SPEECH_RATE_SLOW, sid);
     if (!this.shouldContinue(sid)) return;
 
-    // 6. Pause
-    await this.pause(T.shortPause, sid);
-    if (!this.shouldContinue(sid)) return;
-
-    // 7. Japanese, normal, hiragana hidden
-    ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakJapanese(ui, ja, SPEECH_RATE_NORMAL, sid);
-    if (!this.shouldContinue(sid)) return;
-
     await this.pause(T.normalPause, sid);
   }
 
@@ -305,11 +297,11 @@ export class AutoModeRunner {
     ui: AutoModeUi,
     item: VocabularyItem
   ): Promise<void> {
-    // Play Japanese sentence again (normal, hiragana hidden) for shadowing
+    // Play Japanese sentence again (shadowing rate, hiragana hidden) for listen
     ui.setStep("sentence");
     ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakJapanese(ui, item.sentence, SPEECH_RATE_NORMAL, sid);
+    ui.setSpeechRate(SPEECH_RATE_SHADOWING);
+    await this.speakJapanese(ui, item.sentence, SPEECH_RATE_SHADOWING, sid);
     if (!this.shouldContinue(sid)) return;
 
     // Longer pause for shadowing practice (sentence on screen)

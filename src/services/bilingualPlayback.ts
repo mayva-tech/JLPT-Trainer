@@ -79,13 +79,11 @@ export class BilingualPlayback {
         if (sid !== this.session) return;
       }
     } finally {
-      if (sid === this.session) {
-        ui.setActiveLang(null);
-        ui.setEnHighlight(null);
-        ui.setJaHighlight(null);
-        ui.setSpeechStatus("idle");
-        onDone?.();
-      }
+      ui.setActiveLang(null);
+      ui.setEnHighlight(null);
+      ui.setJaHighlight(null);
+      ui.setSpeechStatus("idle");
+      onDone?.();
     }
   }
 

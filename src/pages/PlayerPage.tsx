@@ -38,11 +38,24 @@ import { bilingualPlayback } from "../services/bilingualPlayback";
 import {
   loadEndingCta,
   loadIntroHook,
+  loadQuizAfterComment,
+  loadQuizPreComment,
   resetEndingCta,
   resetIntroHook,
+  resetQuizAfterComment,
+  resetQuizPreComment,
   saveEndingCta,
   saveIntroHook,
+  saveQuizAfterComment,
+  saveQuizPreComment,
 } from "../services/introCtaStorage";
+import {
+  quizAutoRunner,
+  buildQuizChoices,
+  shuffle,
+  type QuizPhase,
+} from "../services/quizAutoRunner";
+import type { VocabularyItem } from "../types/vocabulary";
 
 const STEPS: StepName[] = [
   "category",
@@ -60,6 +73,8 @@ type Screen =
   | "lesson"
   | "grammar"
   | "quiz"
+  | "quiz-pre"
+  | "quiz-after"
   | "ending"
   | "flow-setup";
 type SpeechUiStatus = "idle" | "speaking" | "paused";
@@ -87,6 +102,18 @@ export function PlayerPage() {
   const [introJa, setIntroJa] = useState(() => loadIntroHook().japanese);
   const [ctaJa, setCtaJa] = useState(() => loadEndingCta().japanese);
   const [ctaEn, setCtaEn] = useState(() => loadEndingCta().english);
+  const [quizPreJa, setQuizPreJa] = useState(
+    () => loadQuizPreComment().japanese
+  );
+  const [quizPreEn, setQuizPreEn] = useState(
+    () => loadQuizPreComment().english
+  );
+  const [quizAfterJa, setQuizAfterJa] = useState(
+    () => loadQuizAfterComment().japanese
+  );
+  const [quizAfterEn, setQuizAfterEn] = useState(
+    () => loadQuizAfterComment().english
+  );
   const [hookActiveLang, setHookActiveLang] = useState<"en" | "ja" | null>(
     null
   );
@@ -94,7 +121,16 @@ export function PlayerPage() {
   const [jaHighlight, setJaHighlight] = useState<SpeechHighlight | null>(null);
 
   const [quizIndex, setQuizIndex] = useState(0);
-  const [quizRevealed, setQuizRevealed] = useState(false);
+  const [quizChoices, setQuizChoices] = useState<string[]>([]);
+  const [quizCorrectIndex, setQuizCorrectIndex] = useState(0);
+  const [quizSelectedIndex, setQuizSelectedIndex] = useState<number | null>(
+    null
+  );
+  const [quizPhase, setQuizPhase] = useState<QuizPhase>("asking");
+  const [quizShowReading, setQuizShowReading] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizAutoOn, setQuizAutoOn] = useState(false);
+  const [quizDeck, setQuizDeck] = useState<VocabularyItem[]>([]);
 
   const [flowConfig, setFlowConfig] = useState<VideoFlowConfig>({
     includeIntro: true,
@@ -131,10 +167,18 @@ export function PlayerPage() {
   const introJaRef = useRef(introJa);
   const ctaEnRef = useRef(ctaEn);
   const ctaJaRef = useRef(ctaJa);
+  const quizPreJaRef = useRef(quizPreJa);
+  const quizPreEnRef = useRef(quizPreEn);
+  const quizAfterJaRef = useRef(quizAfterJa);
+  const quizAfterEnRef = useRef(quizAfterEn);
   introEnRef.current = introEn;
   introJaRef.current = introJa;
   ctaEnRef.current = ctaEn;
   ctaJaRef.current = ctaJa;
+  quizPreJaRef.current = quizPreJa;
+  quizPreEnRef.current = quizPreEn;
+  quizAfterJaRef.current = quizAfterJa;
+  quizAfterEnRef.current = quizAfterEn;
 
   const quizItems =
     activeTocId === "quiz-vocab-1-10" ||
@@ -144,6 +188,19 @@ export function PlayerPage() {
           getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
         )
       : [];
+
+  const quizAutoOnRef = useRef(quizAutoOn);
+  quizAutoOnRef.current = quizAutoOn;
+  const quizScoreRef = useRef(quizScore);
+  quizScoreRef.current = quizScore;
+  const quizCorrectIndexRef = useRef(quizCorrectIndex);
+  quizCorrectIndexRef.current = quizCorrectIndex;
+  const quizPhaseRef = useRef(quizPhase);
+  quizPhaseRef.current = quizPhase;
+  const quizItemsRef = useRef(quizItems);
+  quizItemsRef.current = quizItems;
+  const quizDeckRef = useRef(quizDeck);
+  quizDeckRef.current = quizDeck;
 
   const isFirst = itemIndex === 0 && stepIndex === 0;
   const isLast =
@@ -170,9 +227,148 @@ export function PlayerPage() {
 
   function stopAllAudio() {
     bilingualPlayback.abort();
+    quizAutoRunner.abort();
+    setQuizAutoOn(false);
     softStopAuto();
     speechService.stop();
     clearSpeechUi();
+  }
+
+  function resetQuizQuestion(index: number, itemsList = quizDeckRef.current) {
+    if (itemsList.length === 0) {
+      setQuizChoices([]);
+      setQuizCorrectIndex(0);
+      setQuizSelectedIndex(null);
+      setQuizPhase("asking");
+      setQuizShowReading(false);
+      return;
+    }
+    const safeIndex = Math.max(0, Math.min(index, itemsList.length - 1));
+    const built = buildQuizChoices(itemsList, safeIndex);
+    setQuizIndex(safeIndex);
+    setQuizChoices(built.choices);
+    setQuizCorrectIndex(built.correctChoiceIndex);
+    setQuizSelectedIndex(null);
+    setQuizPhase("asking");
+    setQuizShowReading(false);
+  }
+
+  /** Fresh random order of JA words for this quiz session. */
+  function reshuffleQuizDeck(source = quizItemsRef.current): VocabularyItem[] {
+    const deck = shuffle(source);
+    setQuizDeck(deck);
+    quizDeckRef.current = deck;
+    return deck;
+  }
+
+  function buildQuizAutoUi() {
+    return {
+      setQuizIndex,
+      setChoices: setQuizChoices,
+      setCorrectChoiceIndex: setQuizCorrectIndex,
+      setSelectedChoiceIndex: setQuizSelectedIndex,
+      setPhase: setQuizPhase,
+      setShowReading: setQuizShowReading,
+      setShowFurigana,
+      setSpeechRate,
+      setSpeechLang,
+      setSpeechStatus,
+      setJaHighlight,
+      setEnHighlight,
+    };
+  }
+
+  function startQuizAuto() {
+    const source = quizItemsRef.current;
+    if (source.length === 0) return;
+    if (quizAutoOnRef.current || quizAutoRunner.isActive()) return;
+
+    softStopAuto();
+    bilingualPlayback.abort();
+    speechService.stop();
+    clearSpeechUi();
+    setQuizScore(0);
+    quizScoreRef.current = 0;
+
+    const deck = reshuffleQuizDeck(source);
+
+    void (async () => {
+      setQuizAutoOn(true);
+      setScreen("quiz");
+
+      // Pre quiz comment (JA → EN)
+      setQuizPhase("pre");
+      await playQuizPreComment();
+      if (!quizAutoOnRef.current) return;
+
+      const completed = await quizAutoRunner.start(
+        deck,
+        buildQuizAutoUi(),
+        (state) => {
+          if (state === "on") setQuizAutoOn(true);
+        }
+      );
+
+      if (!completed || !quizAutoOnRef.current) {
+        setQuizAutoOn(false);
+        return;
+      }
+
+      // After quiz comment (JA → EN)
+      setQuizPhase("after");
+      setQuizAutoOn(true);
+      await playQuizAfterComment();
+      if (!quizAutoOnRef.current) return;
+
+      setQuizPhase("finished");
+      setQuizAutoOn(false);
+
+      if (flowActiveRef.current) {
+        advanceFlow();
+      }
+    })();
+  }
+
+  function stopQuizAuto() {
+    quizAutoRunner.abort();
+    bilingualPlayback.abort();
+    setQuizAutoOn(false);
+    speechService.stop();
+    clearSpeechUi();
+  }
+
+  function toggleQuizAuto() {
+    if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+      stopQuizAuto();
+      return;
+    }
+    startQuizAuto();
+  }
+
+  function onQuizSelectChoice(choiceIndex: number) {
+    if (quizPhaseRef.current !== "asking") return;
+
+    setQuizSelectedIndex(choiceIndex);
+    setQuizPhase("revealed");
+    setQuizShowReading(true);
+    setShowFurigana(true);
+
+    const correct = quizCorrectIndexRef.current;
+    if (choiceIndex === correct) {
+      const next = quizScoreRef.current + 1;
+      quizScoreRef.current = next;
+      setQuizScore(next);
+    }
+
+    if (quizAutoRunner.isActive()) {
+      quizAutoRunner.notifyAnswerSelected();
+    } else {
+      // Manual reveal without auto: play English meaning once
+      const item = quizDeckRef.current[quizIndex];
+      if (item) {
+        void speakPromise("en", item.meaning);
+      }
+    }
   }
 
   function buildAutoUi(): AutoModeUi {
@@ -237,8 +433,13 @@ export function PlayerPage() {
     setActiveTocId(id);
     setItemIndex(0);
     setStepIndex(0);
+    setQuizScore(0);
+    quizScoreRef.current = 0;
+    stopQuizAuto();
     setQuizIndex(0);
-    setQuizRevealed(false);
+    setQuizSelectedIndex(null);
+    setQuizPhase("asking");
+    setQuizShowReading(false);
 
     switch (item.kind) {
       case "intro":
@@ -247,6 +448,12 @@ export function PlayerPage() {
       case "ending":
         setScreen("ending");
         break;
+      case "quiz-pre":
+        setScreen("quiz-pre");
+        break;
+      case "quiz-after":
+        setScreen("quiz-after");
+        break;
       case "word":
         setLessonId(item.lessonId ?? "lesson-01");
         setScreen("lesson");
@@ -254,9 +461,17 @@ export function PlayerPage() {
       case "grammar":
         setScreen("grammar");
         break;
-      case "quiz":
+      case "quiz": {
         setScreen("quiz");
+        const list = getVocabularyByIds(
+          getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
+        );
+        const deck = shuffle(list);
+        setQuizDeck(deck);
+        quizDeckRef.current = deck;
+        resetQuizQuestion(0, deck);
         break;
+      }
     }
   }
 
@@ -398,6 +613,42 @@ export function PlayerPage() {
     );
   }
 
+  function playQuizPreComment(): Promise<void> {
+    return new Promise((resolve) => {
+      softStopAuto();
+      void bilingualPlayback.play(
+        quizPreEnRef.current,
+        quizPreJaRef.current,
+        "ja-en",
+        bilingualUi(),
+        speechRateRef.current,
+        () => resolve()
+      );
+    });
+  }
+
+  function playQuizAfterComment(): Promise<void> {
+    return new Promise((resolve) => {
+      softStopAuto();
+      void bilingualPlayback.play(
+        quizAfterEnRef.current,
+        quizAfterJaRef.current,
+        "ja-en",
+        bilingualUi(),
+        speechRateRef.current,
+        () => resolve()
+      );
+    });
+  }
+
+  function restartQuizPre() {
+    void playQuizPreComment();
+  }
+
+  function restartQuizAfter() {
+    void playQuizAfterComment();
+  }
+
   function pauseHookPlayback() {
     if (speechService.getStatus() === "speaking") {
       bilingualPlayback.pause();
@@ -493,7 +744,16 @@ export function PlayerPage() {
       };
     }
     if (screen === "quiz") {
-      void runQuizFlow();
+      if (quizItemsRef.current.length === 0) {
+        const t = window.setTimeout(() => {
+          if (!cancelled && flowActiveRef.current) advanceFlow();
+        }, 1200);
+        return () => {
+          cancelled = true;
+          window.clearTimeout(t);
+        };
+      }
+      startQuizAuto();
       return () => {
         cancelled = true;
       };
@@ -503,38 +763,6 @@ export function PlayerPage() {
       cancelled = true;
     };
   }, [flowActive, screen, activeTocId, lessonId, items.length]);
-
-  async function runQuizFlow() {
-    const list =
-      activeTocId === "quiz-vocab-1-10" ||
-      activeTocId === "quiz-mixed" ||
-      activeTocId === "quiz-final"
-        ? getVocabularyByIds(
-            getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
-          )
-        : [];
-
-    if (list.length === 0) {
-      window.setTimeout(() => advanceFlow(), 1200);
-      return;
-    }
-
-    for (let i = 0; i < list.length; i++) {
-      if (!flowActiveRef.current) return;
-      setQuizIndex(i);
-      setQuizRevealed(false);
-      const item = list[i]!;
-      await speakPromise("en", item.meaning);
-      if (!flowActiveRef.current) return;
-      await delay(600);
-      if (!flowActiveRef.current) return;
-      setQuizRevealed(true);
-      await speakPromise("ja", item.word);
-      if (!flowActiveRef.current) return;
-      await delay(900);
-    }
-    if (flowActiveRef.current) advanceFlow();
-  }
 
   function speakPromise(lang: "en" | "ja", text: string): Promise<void> {
     return new Promise((resolve) => {
@@ -578,15 +806,10 @@ export function PlayerPage() {
     });
   }
 
-  function delay(ms: number) {
-    return new Promise<void>((resolve) => {
-      window.setTimeout(resolve, ms);
-    });
-  }
-
   useEffect(() => {
     return () => {
       autoModeRunner.abort();
+      quizAutoRunner.abort();
       bilingualPlayback.abort();
       speechService.stop();
     };
@@ -614,6 +837,15 @@ export function PlayerPage() {
 
     function onKeyDown(event: KeyboardEvent) {
       if (isTypingTarget(event.target)) return;
+
+      if (event.key === "q" || event.key === "Q") {
+        if (event.repeat) return;
+        if (screen !== "quiz") return;
+        event.preventDefault();
+        toggleQuizAuto();
+        return;
+      }
+
       if (screen !== "lesson") return;
 
       switch (event.key) {
@@ -656,6 +888,9 @@ export function PlayerPage() {
           if (autoStateRef.current !== "off") {
             autoModeRunner.abort();
             setAutoState("off");
+          }
+          if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+            stopQuizAuto();
           }
           bilingualPlayback.abort();
           speechService.stop();
@@ -761,6 +996,28 @@ export function PlayerPage() {
             enHighlight={enHighlight}
           />
         );
+      case "quiz-pre":
+        return (
+          <EndingCtaDisplay
+            chip="Pre Quiz"
+            japanese={quizPreJa}
+            english={quizPreEn}
+            activeLang={hookActiveLang}
+            jaHighlight={jaHighlight}
+            enHighlight={enHighlight}
+          />
+        );
+      case "quiz-after":
+        return (
+          <EndingCtaDisplay
+            chip="After Quiz"
+            japanese={quizAfterJa}
+            english={quizAfterEn}
+            activeLang={hookActiveLang}
+            jaHighlight={jaHighlight}
+            enHighlight={enHighlight}
+          />
+        );
       case "grammar":
         return (
           <SectionPlaceholder
@@ -773,13 +1030,23 @@ export function PlayerPage() {
         return (
           <QuizCard
             title={tocItem?.label ?? "Quiz"}
-            item={quizItems[quizIndex] ?? null}
+            item={quizDeck[quizIndex] ?? null}
             index={quizIndex}
-            total={Math.max(quizItems.length, 1)}
-            revealed={quizRevealed}
+            total={Math.max(quizDeck.length || quizItems.length, 1)}
+            choices={quizChoices}
+            correctChoiceIndex={quizCorrectIndex}
+            selectedChoiceIndex={quizSelectedIndex}
+            phase={quizPhase}
+            showReading={quizShowReading}
+            score={quizScore}
             jaHighlight={jaHighlight}
             enHighlight={enHighlight}
-            showFurigana={showFurigana}
+            onSelectChoice={onQuizSelectChoice}
+            preJapanese={quizPreJa}
+            preEnglish={quizPreEn}
+            afterJapanese={quizAfterJa}
+            afterEnglish={quizAfterEn}
+            commentActiveLang={hookActiveLang}
           />
         );
       case "lesson":
@@ -812,6 +1079,10 @@ export function PlayerPage() {
   const speechHint =
     flowActive
       ? `Video flow ${flowPos + 1}/${flowQueue.length} · controls stay live`
+      : quizAutoOn
+        ? "QUIZ AUTO ON · Q to stop"
+        : screen === "quiz"
+          ? "QUIZ AUTO OFF · Q to start · click a choice to answer"
       : autoState === "on"
         ? "Auto ON · A to stop after current audio"
         : autoState === "stopping"
@@ -844,6 +1115,8 @@ export function PlayerPage() {
   const showProductionPanel =
     screen === "intro" ||
     screen === "ending" ||
+    screen === "quiz-pre" ||
+    screen === "quiz-after" ||
     screen === "flow-setup" ||
     (screen === "quiz" && quizItems.length > 0);
 
@@ -979,6 +1252,141 @@ export function PlayerPage() {
         </div>
       ) : null}
 
+      {screen === "quiz-pre" ? (
+        <div className="production-panel">
+          <div className="production-panel-title">Pre Quiz Comment</div>
+          <div className="production-fields">
+            <label className="production-field">
+              <span>Japanese</span>
+              <textarea
+                rows={2}
+                value={quizPreJa}
+                onChange={(e) => setQuizPreJa(e.target.value)}
+              />
+            </label>
+            <label className="production-field">
+              <span>English</span>
+              <textarea
+                rows={2}
+                value={quizPreEn}
+                onChange={(e) => setQuizPreEn(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="production-actions">
+            <button
+              type="button"
+              onClick={() => {
+                saveQuizPreComment({
+                  japanese: quizPreJa,
+                  english: quizPreEn,
+                });
+              }}
+            >
+              Save Comment
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                const next = resetQuizPreComment();
+                setQuizPreJa(next.japanese);
+                setQuizPreEn(next.english);
+              }}
+            >
+              Reset to Default
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                void playQuizPreComment();
+              }}
+            >
+              Play
+            </button>
+            <button type="button" className="btn-secondary" onClick={pauseHookPlayback}>
+              {speechStatus === "paused" ? "Resume" : "Pause"}
+            </button>
+            <button type="button" className="btn-secondary" onClick={restartQuizPre}>
+              Restart
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                bilingualPlayback.abort();
+                speechService.stop();
+                clearSpeechUi();
+                openTocItem("quiz-vocab-1-10");
+              }}
+            >
+              Next Section
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {screen === "quiz-after" ? (
+        <div className="production-panel">
+          <div className="production-panel-title">After Quiz Comment</div>
+          <div className="production-fields">
+            <label className="production-field">
+              <span>Japanese</span>
+              <textarea
+                rows={2}
+                value={quizAfterJa}
+                onChange={(e) => setQuizAfterJa(e.target.value)}
+              />
+            </label>
+            <label className="production-field">
+              <span>English</span>
+              <textarea
+                rows={2}
+                value={quizAfterEn}
+                onChange={(e) => setQuizAfterEn(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="production-actions">
+            <button
+              type="button"
+              onClick={() => {
+                saveQuizAfterComment({
+                  japanese: quizAfterJa,
+                  english: quizAfterEn,
+                });
+              }}
+            >
+              Save Comment
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                const next = resetQuizAfterComment();
+                setQuizAfterJa(next.japanese);
+                setQuizAfterEn(next.english);
+              }}
+            >
+              Reset to Default
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                void playQuizAfterComment();
+              }}
+            >
+              Play
+            </button>
+            <button type="button" className="btn-secondary" onClick={pauseHookPlayback}>
+              {speechStatus === "paused" ? "Resume" : "Pause"}
+            </button>
+            <button type="button" className="btn-secondary" onClick={restartQuizAfter}>
+              Restart
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {screen === "flow-setup" ? (
         <VideoFlowSetup
           config={flowConfig}
@@ -993,44 +1401,40 @@ export function PlayerPage() {
           <div className="production-actions">
             <button
               type="button"
-              disabled={quizIndex === 0}
+              className={
+                quizAutoOn
+                  ? "quiz-auto-btn quiz-auto-btn--active"
+                  : "quiz-auto-btn"
+              }
+              onClick={toggleQuizAuto}
+              title="Toggle Quiz Auto (Q)"
+            >
+              {quizAutoOn ? "QUIZ AUTO ON" : "QUIZ AUTO OFF"}
+            </button>
+            <button
+              type="button"
+              disabled={quizIndex === 0 || quizAutoOn}
               onClick={() => {
-                stopAllAudio();
-                setQuizIndex((i) => Math.max(0, i - 1));
-                setQuizRevealed(false);
+                stopQuizAuto();
+                speechService.stop();
+                clearSpeechUi();
+                resetQuizQuestion(quizIndex - 1);
               }}
             >
               ← Prev
             </button>
             <button
               type="button"
+              disabled={
+                quizIndex >= (quizDeck.length || quizItems.length) - 1 ||
+                quizAutoOn ||
+                quizPhase === "finished"
+              }
               onClick={() => {
-                softStopAuto();
-                const q = quizItems[quizIndex];
-                if (!q) return;
-                void speakPromise("en", q.meaning);
-              }}
-            >
-              Play Prompt
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setQuizRevealed(true);
-                const q = quizItems[quizIndex];
-                if (!q) return;
-                void speakPromise("ja", q.word);
-              }}
-            >
-              Reveal + JP
-            </button>
-            <button
-              type="button"
-              disabled={quizIndex >= quizItems.length - 1}
-              onClick={() => {
-                stopAllAudio();
-                setQuizIndex((i) => Math.min(quizItems.length - 1, i + 1));
-                setQuizRevealed(false);
+                stopQuizAuto();
+                speechService.stop();
+                clearSpeechUi();
+                resetQuizQuestion(quizIndex + 1);
               }}
             >
               Next →

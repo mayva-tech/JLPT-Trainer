@@ -2,7 +2,11 @@ import {
   CTA_STORAGE_KEY,
   DEFAULT_CTA,
   DEFAULT_INTRO,
+  DEFAULT_QUIZ_AFTER,
+  DEFAULT_QUIZ_PRE,
   INTRO_STORAGE_KEY,
+  QUIZ_AFTER_STORAGE_KEY,
+  QUIZ_PRE_STORAGE_KEY,
 } from "../config/introCtaDefaults";
 
 export type IntroHookCopy = {
@@ -11,6 +15,11 @@ export type IntroHookCopy = {
 };
 
 export type EndingCtaCopy = {
+  japanese: string;
+  english: string;
+};
+
+export type QuizCommentCopy = {
   japanese: string;
   english: string;
 };
@@ -59,4 +68,46 @@ export function saveEndingCta(copy: EndingCtaCopy): void {
 export function resetEndingCta(): EndingCtaCopy {
   localStorage.removeItem(CTA_STORAGE_KEY);
   return { ...DEFAULT_CTA };
+}
+
+export function loadQuizPreComment(): QuizCommentCopy {
+  const saved = readJson<Partial<QuizCommentCopy>>(QUIZ_PRE_STORAGE_KEY);
+  return {
+    japanese: saved?.japanese?.trim()
+      ? saved.japanese
+      : DEFAULT_QUIZ_PRE.japanese,
+    english: saved?.english?.trim()
+      ? saved.english
+      : DEFAULT_QUIZ_PRE.english,
+  };
+}
+
+export function saveQuizPreComment(copy: QuizCommentCopy): void {
+  localStorage.setItem(QUIZ_PRE_STORAGE_KEY, JSON.stringify(copy));
+}
+
+export function resetQuizPreComment(): QuizCommentCopy {
+  localStorage.removeItem(QUIZ_PRE_STORAGE_KEY);
+  return { ...DEFAULT_QUIZ_PRE };
+}
+
+export function loadQuizAfterComment(): QuizCommentCopy {
+  const saved = readJson<Partial<QuizCommentCopy>>(QUIZ_AFTER_STORAGE_KEY);
+  return {
+    japanese: saved?.japanese?.trim()
+      ? saved.japanese
+      : DEFAULT_QUIZ_AFTER.japanese,
+    english: saved?.english?.trim()
+      ? saved.english
+      : DEFAULT_QUIZ_AFTER.english,
+  };
+}
+
+export function saveQuizAfterComment(copy: QuizCommentCopy): void {
+  localStorage.setItem(QUIZ_AFTER_STORAGE_KEY, JSON.stringify(copy));
+}
+
+export function resetQuizAfterComment(): QuizCommentCopy {
+  localStorage.removeItem(QUIZ_AFTER_STORAGE_KEY);
+  return { ...DEFAULT_QUIZ_AFTER };
 }

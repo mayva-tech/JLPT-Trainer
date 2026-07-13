@@ -8,20 +8,23 @@ type Props = {
   activeLang: "ja" | "en" | null;
   jaHighlight: SpeechHighlight | null;
   enHighlight: SpeechHighlight | null;
+  /** Stage chip label */
+  chip?: string;
 };
 
-/** Stage display for the bilingual ending CTA (JA then EN). */
+/** Stage display for bilingual comments (JA then EN) — ending CTA & quiz comments. */
 export function EndingCtaDisplay({
   japanese,
   english,
   activeLang,
   jaHighlight,
   enHighlight,
+  chip = "Ending CTA",
 }: Props) {
   return (
     <div className="safe-area safe-area--hook">
       <div className="hook-display card-fade">
-        <div className="category-chip">Ending CTA</div>
+        <div className="category-chip">{chip}</div>
         <HighlightedJapanese
           text={japanese}
           className={
