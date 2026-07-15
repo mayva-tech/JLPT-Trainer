@@ -13,9 +13,8 @@ dist-ssr
 *.local
 
 # Large local media (over GitHub 100MB limit)
-VIDEOS/**/*.mp4
+VIDEOS/
 *.mp4
-VIDEOS/Images/Apartment/
 
 # Local guides / research (keep offline only)
 Instructions-Guide-MD/
