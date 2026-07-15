@@ -27,13 +27,19 @@ export type TocItemId =
   | "grammar-121-130"
   | "grammar-131-140"
   | "grammar-141-150"
+  | "grammar-151-160"
+  | "grammar-161-170"
+  | "grammar-171-180"
+  | "grammar-181-190"
+  | "grammar-191-200"
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-grammar-1-10"
   | "quiz-mixed"
   | "quiz-final"
   | "quiz-after-comment"
-  | "ending-cta";
+  | "ending-cta"
+  | "glossary";
 
 export type TocItemKind =
   | "intro"
@@ -42,7 +48,8 @@ export type TocItemKind =
   | "quiz"
   | "quiz-pre"
   | "quiz-after"
-  | "ending";
+  | "ending"
+  | "glossary";
 
 export type TocItem = {
   id: TocItemId;
@@ -151,6 +158,11 @@ export const tocGroups: TocGroup[] = [
       { id: "grammar-121-130", label: "Grammar Lesson 121–130", kind: "grammar", lessonId: "grammar-lesson-13" },
       { id: "grammar-131-140", label: "Grammar Lesson 131–140", kind: "grammar", lessonId: "grammar-lesson-14" },
       { id: "grammar-141-150", label: "Grammar Lesson 141–150", kind: "grammar", lessonId: "grammar-lesson-15" },
+      { id: "grammar-151-160", label: "Grammar Lesson 151–160", kind: "grammar", lessonId: "grammar-lesson-16" },
+      { id: "grammar-161-170", label: "Grammar Lesson 161–170", kind: "grammar", lessonId: "grammar-lesson-17" },
+      { id: "grammar-171-180", label: "Grammar Lesson 171–180", kind: "grammar", lessonId: "grammar-lesson-18" },
+      { id: "grammar-181-190", label: "Grammar Lesson 181–190", kind: "grammar", lessonId: "grammar-lesson-19" },
+      { id: "grammar-191-200", label: "Grammar Lesson 191–200", kind: "grammar", lessonId: "grammar-lesson-20" },
     ],
   },
   {
@@ -198,6 +210,13 @@ export const tocGroups: TocGroup[] = [
     title: "5. Ending",
     items: [{ id: "ending-cta", label: "Custom Ending CTA", kind: "ending" }],
   },
+  {
+    id: "reference",
+    title: "6. Reference",
+    items: [
+      { id: "glossary", label: "Content Glossary", kind: "glossary" },
+    ],
+  },
 ];
 
 export function getTocItem(id: TocItemId): TocItem | undefined {
@@ -234,6 +253,11 @@ export const lessonGroupIds: TocItemId[] = [
   "grammar-121-130",
   "grammar-131-140",
   "grammar-141-150",
+  "grammar-151-160",
+  "grammar-161-170",
+  "grammar-171-180",
+  "grammar-181-190",
+  "grammar-191-200",
 ];
 
 export const quizIds: TocItemId[] = [

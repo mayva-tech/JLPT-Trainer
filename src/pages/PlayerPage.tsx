@@ -27,6 +27,7 @@ import { GrammarSentenceCard } from "../components/GrammarSentenceCard";
 import { GrammarShadowingCard } from "../components/GrammarShadowingCard";
 import { GrammarReviewCard } from "../components/GrammarReviewCard";
 import { GrammarProgressIndicator } from "../components/GrammarProgressIndicator";
+import { GlossaryView } from "../components/GlossaryView";
 import {
   VideoFlowSetup,
   type VideoFlowConfig,
@@ -89,6 +90,7 @@ type Screen =
   | "intro"
   | "lesson"
   | "grammar"
+  | "glossary"
   | "quiz"
   | "quiz-pre"
   | "quiz-after"
@@ -570,6 +572,9 @@ export function PlayerPage() {
         resetQuizQuestion(0, deck);
         break;
       }
+      case "glossary":
+        setScreen("glossary");
+        break;
     }
   }
 
@@ -1206,6 +1211,8 @@ export function PlayerPage() {
             onSelect={(id) => openTocItem(id)}
           />
         );
+      case "glossary":
+        return <GlossaryView />;
       case "intro":
         return (
           <IntroHookDisplay
