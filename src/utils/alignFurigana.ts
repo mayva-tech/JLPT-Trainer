@@ -51,6 +51,46 @@ function stripTrailingPunct(token: string): { core: string; punct: string } {
   return { core, punct };
 }
 
+/**
+ * Compounds whose reading cannot be derived from per-kanji on/kun readings.
+ *
+ * Two kinds live here:
+ *  - 熟字訓 (jukujikun): the reading belongs to the whole word, so the ruby
+ *    spans every kanji at once (明日 → あした, never 明[あ] 日[した]).
+ *  - Okurigana-omitted compounds: 敷金 is 敷[しき] 金[きん], but 敷 alone is
+ *    only listed as し・く, so the DP can never find しき on its own.
+ *
+ * Add a line here whenever a new word's furigana comes out wrong.
+ */
+const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
+  明日: [{ text: "明日", reading: "あした" }],
+  今日: [{ text: "今日", reading: "きょう" }],
+  昨日: [{ text: "昨日", reading: "きのう" }],
+  今年: [{ text: "今年", reading: "ことし" }],
+  部屋: [{ text: "部屋", reading: "へや" }],
+  果物: [{ text: "果物", reading: "くだもの" }],
+  大人: [{ text: "大人", reading: "おとな" }],
+  下手: [{ text: "下手", reading: "へた" }],
+  上手: [{ text: "上手", reading: "じょうず" }],
+  日本: [
+    { text: "日", reading: "に" },
+    { text: "本", reading: "ほん" },
+  ],
+  敷金: [
+    { text: "敷", reading: "しき" },
+    { text: "金", reading: "きん" },
+  ],
+  受付: [
+    { text: "受", reading: "うけ" },
+    { text: "付", reading: "つけ" },
+  ],
+};
+
+/** Longest first, so 日本語 tries 日本 before any shorter entry. */
+const COMPOUND_ENTRIES: [string, FuriganaSegment[]][] = Object.entries(
+  COMPOUND_READINGS
+).sort((a, b) => b[0].length - a[0].length);
+
 /** Split reading into tokens on spaces and after Japanese punctuation. */
 export function tokenizeReading(spacedReading: string): string[] {
   const raw = spacedReading.split(/\s+/).filter(Boolean);
@@ -264,7 +304,13 @@ function getReadingCandidates(character: string): string[] {
   return readingCandidateCache.get(character) ?? [];
 }
 
-/** Include unvoiced/voiced/p-sound variants (ひん → びん/ぴん). */
+/**
+ * Sound-change variants for a reading.
+ *
+ * 連濁 (rendaku): first mora may voice   ひん → びん / ぴん
+ * 促音便 (gemination): a final く/つ/ち/き may become っ in compounds
+ *                     はつ+ひょう → はっぴょう, がく+こう → がっこう
+ */
 function withRendakuVariants(hira: string): string[] {
   if (!hira) return [];
   const out = new Set<string>([hira]);
@@ -294,6 +340,13 @@ function withRendakuVariants(hira: string): string[] {
   };
   for (const alt of map[first] ?? []) {
     out.add(alt + rest);
+  }
+
+  // 促音便: final く/つ/ち/き → っ (発 はつ → はっ, 学 がく → がっ, 一 いち → いっ)
+  for (const variant of [...out]) {
+    if (variant.length > 1 && /[くつちき]$/.test(variant)) {
+      out.add(`${variant.slice(0, -1)}っ`);
+    }
   }
   return [...out];
 }
@@ -447,7 +500,11 @@ function readingFitsKanji(kanji: string, reading: string): boolean {
 }
 
 /**
- * 買い物 / かいもの — kanji + okurigana + kanji (か + い + もの).
+ * kanji + okurigana + kanji (+ trailing okurigana).
+ *   買い物   / かいもの    → 買[か] い 物[もの]
+ *   引っ越し / ひっこし    → 引[ひ] っ 越[こ] し
+ *   乗り換え / のりかえ    → 乗[の] り 換[か] え
+ *   蒸し暑い / むしあつい  → 蒸[む] し 暑[あつ] い
  */
 function matchKanjiOkuriKanji(
   surface: string,
@@ -481,11 +538,23 @@ function matchKanjiOkuriKanji(
   }
   if (!kanji2) return null;
 
-  // Reading must be: pre + okuri + post
+  // Optional trailing okurigana (越し / 換え / 暑い)
+  let okuri2 = "";
+  while (i < limit && i < surface.length && isHiragana(surface[i]!)) {
+    okuri2 += surface[i];
+    i++;
+  }
+
+  // Reading must be: pre + okuri + post + okuri2
   const okuriAt = core.indexOf(okuri);
   if (okuriAt <= 0) return null;
+  if (okuri2 && !core.endsWith(okuri2)) return null;
+
   const pre = core.slice(0, okuriAt);
-  const post = core.slice(okuriAt + okuri.length);
+  const post = core.slice(
+    okuriAt + okuri.length,
+    okuri2 ? core.length - okuri2.length : core.length
+  );
   if (!pre || !post) return null;
   if (!readingFitsKanji(kanji1, pre)) return null;
   if (!readingFitsKanji(kanji2, post)) return null;
@@ -496,6 +565,7 @@ function matchKanjiOkuriKanji(
     { text: okuri },
     ...distributePerKanji(kanji2, post),
   ];
+  if (okuri2) segments.push({ text: okuri2 });
 
   if (punct) {
     if (
@@ -621,6 +691,56 @@ function matchDigitToken(
   return { segments, end };
 }
 
+/**
+ * 明日 / あした, 日本語 / にほんご — irregular compounds from COMPOUND_READINGS.
+ * A leftover reading (にほん + ご) continues into the kanji that follow.
+ */
+function matchCompoundToken(
+  surface: string,
+  pos: number,
+  token: string,
+  limit: number
+): { segments: FuriganaSegment[]; end: number } | null {
+  const { core, punct } = stripTrailingPunct(token);
+  const hira = toHiragana(core);
+  if (!hira) return null;
+
+  for (const [compound, compoundSegments] of COMPOUND_ENTRIES) {
+    if (!surface.startsWith(compound, pos)) continue;
+    if (pos + compound.length > limit) continue;
+
+    const compoundReading = compoundSegments
+      .map((seg) => seg.reading ?? seg.text)
+      .join("");
+    if (!hira.startsWith(compoundReading)) continue;
+
+    const segments: FuriganaSegment[] = compoundSegments.map((seg) => ({
+      ...seg,
+    }));
+    let end = pos + compound.length;
+
+    // 日本 + 語 — the rest of the token keeps going into the next kanji
+    const restReading = hira.slice(compoundReading.length);
+    if (restReading) {
+      if (end >= limit || !isKanji(surface[end]!)) continue;
+      const rest = matchKanjiToken(surface, end, restReading + punct, limit);
+      if (!rest) continue;
+      segments.push(...rest.segments);
+      return { segments, end: rest.end };
+    }
+
+    if (punct) {
+      if (!surface.startsWith(punct, end) || end + punct.length > limit) {
+        continue;
+      }
+      segments.push({ text: punct });
+      end += punct.length;
+    }
+    return { segments, end };
+  }
+  return null;
+}
+
 function matchToken(
   surface: string,
   pos: number,
@@ -630,6 +750,10 @@ function matchToken(
   if (pos >= surface.length || pos >= limit) return null;
 
   const { core, punct } = stripTrailingPunct(token);
+
+  // Irregular compounds (明日 / あした) before any per-kanji strategy
+  const compound = matchCompoundToken(surface, pos, token, limit);
+  if (compound) return compound;
 
   // Arabic numerals (20 / にじゅう) optionally + katakana/kanji in same token
   const digitMatch = matchDigitToken(surface, pos, token, limit);
@@ -775,6 +899,12 @@ function findNextStart(
         return i;
       }
     }
+  }
+
+  // Irregular compounds (明日 / あした)
+  for (let i = pos + 1; i < surface.length; i++) {
+    if (!isKanji(surface[i]!)) continue;
+    if (matchCompoundToken(surface, i, nextToken, surface.length)) return i;
   }
 
   // Kanji + okurigana + kanji (売り場 / うりば, 買い物 / かいもの)

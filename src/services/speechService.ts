@@ -100,6 +100,38 @@ export function getSpeakableEnglish(
   }
 }
 
+export function getGrammarSpeakableJapanese(
+  step: string,
+  item: { pattern: string; sentence: string }
+): string | null {
+  switch (step) {
+    case "pattern":
+    case "review":
+      return item.pattern;
+    case "sentence":
+    case "shadowing":
+      return item.sentence;
+    default:
+      return null;
+  }
+}
+
+export function getGrammarSpeakableEnglish(
+  step: string,
+  item: { meaning: string; sentenceMeaning: string }
+): string | null {
+  switch (step) {
+    case "pattern":
+    case "review":
+      return item.meaning;
+    case "sentence":
+    case "shadowing":
+      return item.sentenceMeaning;
+    default:
+      return null;
+  }
+}
+
 /** Split Japanese into highlight units (kanji runs, kana runs, punctuation). */
 export function splitHighlightUnits(text: string): { start: number; end: number }[] {
   const chars = [...text];

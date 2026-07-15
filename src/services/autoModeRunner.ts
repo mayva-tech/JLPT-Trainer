@@ -1,6 +1,6 @@
 import type { VocabularyItem } from "../types/vocabulary";
 import type { StepName } from "../types/player";
-import { autoModeTiming as T } from "../config/autoModeTiming";
+import { autoModeTiming as T, shadowingPauseFor } from "../config/autoModeTiming";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
@@ -304,9 +304,9 @@ export class AutoModeRunner {
     await this.speakJapanese(ui, item.sentence, SPEECH_RATE_SHADOWING, sid);
     if (!this.shouldContinue(sid)) return;
 
-    // Longer pause for shadowing practice (sentence on screen)
+    // Longer pause for shadowing practice — scales with sentence length
     ui.setStep("shadowing");
-    await this.pause(T.shadowingPause, sid);
+    await this.pause(shadowingPauseFor(item.sentence), sid);
     if (!this.shouldContinue(sid)) return;
 
     // Review: Japanese word once (normal, hiragana hidden)

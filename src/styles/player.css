@@ -29,7 +29,8 @@
 /* YouTube-safe inner area — extra bottom room for fixed nav */
 .safe-area {
   position: absolute;
-  inset: 6% 8% 16% 8%;
+  /* Top inset clears lesson-label / progress-label (at ~5.5%) */
+  inset: 12% 8% 16% 8%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -123,6 +124,25 @@
   line-height: 1.25;
 }
 
+/*
+ * Wrapped lines each keep kanji + under-reading. Cap height so FitScale
+ * can shrink instead of letting furigana rows collide with top chrome.
+ */
+.furigana-wrap.jp-wrap {
+  max-height: 58cqh;
+}
+
+.furigana-wrap .jp-wrap-line {
+  /* Keep under-readings visible when a row wraps */
+  align-items: flex-start;
+  row-gap: 0.55em;
+}
+
+.furigana-wrap .jp-word {
+  /* Align kanji tops so each wrapped row keeps readings under its own line */
+  align-items: flex-start;
+}
+
 .jp-wrap-line {
   display: flex;
   flex-wrap: wrap;
@@ -190,29 +210,30 @@
 .shadowing-phrase {
   font-family: var(--font-jp);
   font-weight: 600;
-  font-size: 9cqw;
   max-width: 100%;
 }
 
 .phrase-main {
+  font-size: 9cqw;
   color: #000;
 }
 
-.sentence-main {
-  color: #000;
-}
-
+.sentence-main,
 .shadowing-phrase {
+  font-size: calc(9cqw * var(--fit-scale, 1));
   color: #000;
 }
 
 .phrase-meaning,
 .sentence-meaning {
   font-family: var(--font-en);
-  font-size: 3.8cqw;
   color: #000;
   margin-top: 1.2cqh;
   max-width: 100%;
+}
+
+.phrase-meaning {
+  font-size: 3.8cqw;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -220,6 +241,24 @@
   line-clamp: 3;
   overflow-wrap: break-word;
   word-break: normal;
+}
+
+/* Sentence EN: always one line — FitScale shrinks --fit-scale to fit. */
+.sentence-meaning {
+  width: 100%;
+  font-size: calc(3.8cqw * var(--fit-scale, 1));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.sentence-meaning .speech-line--en {
+  white-space: nowrap;
+}
+
+.fit-scale {
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ─── ⑤ Shadowing card ──────────────────────────────────────── */
@@ -1016,3 +1055,48 @@
     bottom: 10px;
   }
 }
+
+.grammar-pattern {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  font-size: 9cqw;
+  line-height: 1.15;
+  color: #000;
+  letter-spacing: 0.02em;
+}
+
+.grammar-pattern--review {
+  font-size: 8cqw;
+}
+
+.grammar-reading {
+  font-family: var(--font-jp);
+  font-size: 3.2cqw;
+  font-weight: 600;
+  color: #000;
+  margin-top: 1.6cqh;
+  letter-spacing: 0.06em;
+}
+
+.grammar-meaning {
+  font-family: var(--font-en);
+  font-size: 3.8cqw;
+  color: #000;
+  margin-top: 1.8cqh;
+}
+
+.grammar-meaning--review {
+  font-size: 3.8cqw;
+  margin-top: 2.5cqh;
+}
+
+.grammar-formation {
+  font-family: var(--font-en);
+  font-size: 3.8cqw;
+  color: #000;
+  margin-top: 3cqh;
+  line-height: 1.5;
+  max-width: 90%;
+  overflow-wrap: break-word;
+}
+

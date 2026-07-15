@@ -1,21 +1,22 @@
-import type { VocabularyItem } from "../types/vocabulary";
+import type { GrammarItem } from "../types/grammar";
 import type { SpeechHighlight } from "../services/speechService";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { FitScale } from "./FitScale";
 
 type Props = {
-  item: VocabularyItem;
+  item: GrammarItem;
+  showFurigana?: boolean;
   jaHighlight?: SpeechHighlight | null;
   enHighlight?: SpeechHighlight | null;
-  showFurigana?: boolean;
 };
 
-export function SentenceCard({
+/** ④ Example sentence with furigana and English translation. */
+export function GrammarSentenceCard({
   item,
+  showFurigana = true,
   jaHighlight = null,
   enHighlight = null,
-  showFurigana = true,
 }: Props) {
   return (
     <div className="safe-area card-fade">

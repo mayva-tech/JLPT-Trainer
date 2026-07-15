@@ -1,17 +1,17 @@
-import type { VocabularyItem } from "../types/vocabulary";
+import type { GrammarItem } from "../types/grammar";
 import type { SpeechHighlight } from "../services/speechService";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { FitScale } from "./FitScale";
 
 type Props = {
-  item: VocabularyItem;
+  item: GrammarItem;
   phase: "listen" | "repeat";
   highlight?: SpeechHighlight | null;
   showFurigana?: boolean;
 };
 
-/** Shadowing uses the same sentence text + wrap rules as the Sentence step. */
-export function ShadowingCard({
+/** ⑤ Shadowing — listen then repeat the example sentence. */
+export function GrammarShadowingCard({
   item,
   phase,
   highlight = null,

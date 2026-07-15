@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { getLessonById } from "../data/lessons";
 import { getVocabularyByIds } from "../data/vocabulary";
+import { getGrammarByIds, getGrammarLessonById } from "../data/grammar";
+import type { GrammarItem } from "../types/grammar";
 import {
   getTocItem,
   type TocItemId,
@@ -18,6 +20,13 @@ import { IntroHookDisplay } from "../components/IntroHookDisplay";
 import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
 import { QuizCard } from "../components/QuizCard";
+import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
+import { GrammarPatternCard } from "../components/GrammarPatternCard";
+import { GrammarFormationCard } from "../components/GrammarFormationCard";
+import { GrammarSentenceCard } from "../components/GrammarSentenceCard";
+import { GrammarShadowingCard } from "../components/GrammarShadowingCard";
+import { GrammarReviewCard } from "../components/GrammarReviewCard";
+import { GrammarProgressIndicator } from "../components/GrammarProgressIndicator";
 import {
   VideoFlowSetup,
   type VideoFlowConfig,
@@ -25,6 +34,8 @@ import {
 import {
   getSpeakableEnglish,
   getSpeakableJapanese,
+  getGrammarSpeakableEnglish,
+  getGrammarSpeakableJapanese,
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
@@ -34,6 +45,12 @@ import {
   autoModeRunner,
   type AutoModeUi,
 } from "../services/autoModeRunner";
+import {
+  grammarAutoModeRunner,
+  type GrammarAutoModeUi,
+  type GrammarStep,
+  GRAMMAR_STEPS,
+} from "../services/grammarAutoModeRunner";
 import { bilingualPlayback } from "../services/bilingualPlayback";
 import {
   loadEndingCta,
@@ -83,6 +100,8 @@ const QUIZ_VOCAB_LESSON = "lesson-01";
 
 export function PlayerPage() {
   const [screen, setScreen] = useState<Screen>("toc");
+  const screenRef = useRef(screen);
+  screenRef.current = screen;
   const [activeTocId, setActiveTocId] = useState<TocItemId | null>(null);
   const [lessonId, setLessonId] = useState("lesson-01");
 
@@ -97,6 +116,17 @@ export function PlayerPage() {
   const [speechRate, setSpeechRate] = useState(SPEECH_RATE_NORMAL);
   const [showFurigana, setShowFurigana] = useState(true);
   const [autoState, setAutoState] = useState<AutoState>("off");
+
+  const [grammarLessonId, setGrammarLessonId] = useState("grammar-lesson-01");
+  const grammarLesson = getGrammarLessonById(grammarLessonId);
+  const grammarItems: GrammarItem[] = grammarLesson
+    ? getGrammarByIds(grammarLesson.grammarIds)
+    : [];
+
+  const [grammarItemIndex, setGrammarItemIndex] = useState(0);
+  const [grammarStep, setGrammarStep] = useState<GrammarStep>("category");
+  const [grammarAutoState, setGrammarAutoState] = useState<AutoState>("off");
+  const [grammarShowFurigana, setGrammarShowFurigana] = useState(true);
 
   const [introEn, setIntroEn] = useState(() => loadIntroHook().english);
   const [introJa, setIntroJa] = useState(() => loadIntroHook().japanese);
@@ -156,6 +186,15 @@ export function PlayerPage() {
   const itemsRef = useRef(items);
   itemsRef.current = items;
 
+  const grammarItemsRef = useRef(grammarItems);
+  grammarItemsRef.current = grammarItems;
+  const grammarItemIndexRef = useRef(grammarItemIndex);
+  grammarItemIndexRef.current = grammarItemIndex;
+  const grammarStepRef = useRef(grammarStep);
+  grammarStepRef.current = grammarStep;
+  const grammarAutoStateRef = useRef(grammarAutoState);
+  grammarAutoStateRef.current = grammarAutoState;
+
   const flowActiveRef = useRef(flowActive);
   flowActiveRef.current = flowActive;
   const flowQueueRef = useRef(flowQueue);
@@ -207,6 +246,12 @@ export function PlayerPage() {
     items.length > 0 &&
     itemIndex === items.length - 1 &&
     stepIndex === STEPS.length - 1;
+  const grammarIsFirst =
+    grammarItemIndex === 0 && grammarStep === GRAMMAR_STEPS[0];
+  const grammarIsLast =
+    grammarItems.length > 0 &&
+    grammarItemIndex === grammarItems.length - 1 &&
+    grammarStep === GRAMMAR_STEPS[GRAMMAR_STEPS.length - 1];
 
   function currentItem() {
     return items[itemIndexRef.current] ?? null;
@@ -230,6 +275,8 @@ export function PlayerPage() {
     quizAutoRunner.abort();
     setQuizAutoOn(false);
     softStopAuto();
+    grammarAutoModeRunner.abort();
+    setGrammarAutoState("off");
     speechService.stop();
     clearSpeechUi();
   }
@@ -391,6 +438,40 @@ export function PlayerPage() {
       setAutoState("stopping");
       autoModeRunner.requestStopAfterCurrent();
     }
+    if (grammarAutoStateRef.current === "on") {
+      setGrammarAutoState("stopping");
+      grammarAutoModeRunner.requestStopAfterCurrent();
+    }
+  }
+
+  function buildGrammarAutoUi(): GrammarAutoModeUi {
+    return {
+      setItemIndex: setGrammarItemIndex,
+      setStep: (step: GrammarStep) => setGrammarStep(step),
+      setShowFurigana: setGrammarShowFurigana,
+      setSpeechRate,
+      setSpeechLang,
+      setSpeechStatus,
+      setHighlight,
+    };
+  }
+
+  function startGrammarAutoMode(fromFlow = false) {
+    const list = grammarItemsRef.current;
+    if (list.length === 0) {
+      if (fromFlow) advanceFlow();
+      return;
+    }
+    const startAt = fromFlow ? 0 : grammarItemIndexRef.current;
+    void grammarAutoModeRunner
+      .start(list, startAt, buildGrammarAutoUi(), (state) => {
+        setGrammarAutoState(state);
+      })
+      .then((completed) => {
+        if (fromFlow && completed && flowActiveRef.current) {
+          advanceFlow();
+        }
+      });
   }
 
   function bilingualUi() {
@@ -425,6 +506,10 @@ export function PlayerPage() {
         autoModeRunner.abort();
         setAutoState("off");
       }
+      if (grammarAutoStateRef.current !== "off") {
+        grammarAutoModeRunner.abort();
+        setGrammarAutoState("off");
+      }
     }
 
     const item = getTocItem(id);
@@ -458,9 +543,22 @@ export function PlayerPage() {
         setLessonId(item.lessonId ?? "lesson-01");
         setScreen("lesson");
         break;
-      case "grammar":
+      case "grammar": {
+        const gLessonId = item.lessonId ?? "grammar-lesson-01";
+        setGrammarLessonId(gLessonId);
+        setGrammarItemIndex(0);
+        setGrammarStep("category");
+        setGrammarShowFurigana(true);
         setScreen("grammar");
+        if (!options?.fromFlow) {
+          const gl = getGrammarLessonById(gLessonId);
+          const list = gl ? getGrammarByIds(gl.grammarIds) : [];
+          grammarItemsRef.current = list;
+          grammarItemIndexRef.current = 0;
+          startGrammarAutoMode(false);
+        }
         break;
+      }
       case "quiz": {
         setScreen("quiz");
         const list = getVocabularyByIds(
@@ -511,7 +609,38 @@ export function PlayerPage() {
     startAutoMode(false);
   }
 
+  function toggleGrammarAutoMode() {
+    const state = grammarAutoStateRef.current;
+    if (state === "on") {
+      setGrammarAutoState("stopping");
+      grammarAutoModeRunner.requestStopAfterCurrent();
+      return;
+    }
+    if (state === "stopping") {
+      grammarAutoModeRunner.abort();
+      clearSpeechUi();
+      setGrammarAutoState("off");
+      return;
+    }
+    startGrammarAutoMode(false);
+  }
+
   function goNextStep() {
+    if (screenRef.current === "grammar") {
+      softStopAuto();
+      speechService.stop();
+      clearSpeechUi();
+      const stepIdx = GRAMMAR_STEPS.indexOf(grammarStepRef.current);
+      const list = grammarItemsRef.current;
+      if (stepIdx < GRAMMAR_STEPS.length - 1) {
+        setGrammarStep(GRAMMAR_STEPS[stepIdx + 1]!);
+      } else if (grammarItemIndexRef.current < list.length - 1) {
+        setGrammarItemIndex((i) => i + 1);
+        // After Review, skip Category and continue at the next pattern
+        setGrammarStep("pattern");
+      }
+      return;
+    }
     if (items.length === 0) return;
     softStopAuto();
     speechService.stop();
@@ -525,6 +654,28 @@ export function PlayerPage() {
   }
 
   function goPrevStep() {
+    if (screenRef.current === "grammar") {
+      softStopAuto();
+      speechService.stop();
+      clearSpeechUi();
+      const stepIdx = GRAMMAR_STEPS.indexOf(grammarStepRef.current);
+      if (stepIdx > 0) {
+        // From Pattern on items after the first, skip Category → previous Review
+        if (
+          grammarStepRef.current === "pattern" &&
+          grammarItemIndexRef.current > 0
+        ) {
+          setGrammarItemIndex((i) => i - 1);
+          setGrammarStep("review");
+        } else {
+          setGrammarStep(GRAMMAR_STEPS[stepIdx - 1]!);
+        }
+      } else if (grammarItemIndexRef.current > 0) {
+        setGrammarItemIndex((i) => i - 1);
+        setGrammarStep(GRAMMAR_STEPS[GRAMMAR_STEPS.length - 1]!);
+      }
+      return;
+    }
     if (items.length === 0) return;
     softStopAuto();
     speechService.stop();
@@ -539,6 +690,26 @@ export function PlayerPage() {
 
   function playJapanese() {
     softStopAuto();
+    if (screenRef.current === "grammar") {
+      const gItem =
+        grammarItemsRef.current[grammarItemIndexRef.current] ?? null;
+      const gStep = grammarStepRef.current;
+      if (!gItem) return;
+      const text = getGrammarSpeakableJapanese(gStep, gItem);
+      if (!text) return;
+      setSpeechLang("ja");
+      setSpeechStatus("speaking");
+      setHighlight({ start: 0, end: Math.min(1, text.length) });
+      speechService.speakJapanese(
+        text,
+        {
+          onBoundary: (h) => setHighlight(h),
+          onEnd: () => clearSpeechUi(),
+        },
+        speechRateRef.current
+      );
+      return;
+    }
     const item = currentItem();
     const step = currentStep();
     if (!item || !step) return;
@@ -559,6 +730,30 @@ export function PlayerPage() {
 
   function playEnglish() {
     softStopAuto();
+    if (screenRef.current === "grammar") {
+      const gItem =
+        grammarItemsRef.current[grammarItemIndexRef.current] ?? null;
+      const gStep = grammarStepRef.current;
+      if (!gItem) return;
+      const text = getGrammarSpeakableEnglish(gStep, gItem);
+      if (!text) return;
+      setSpeechLang("en");
+      setSpeechStatus("speaking");
+      const firstWord = text.match(/^\S+/);
+      setHighlight({
+        start: 0,
+        end: firstWord ? firstWord[0].length : Math.min(1, text.length),
+      });
+      speechService.speakEnglish(
+        text,
+        {
+          onBoundary: (h) => setHighlight(h),
+          onEnd: () => clearSpeechUi(),
+        },
+        speechRateRef.current
+      );
+      return;
+    }
     const item = currentItem();
     const step = currentStep();
     if (!item || !step) return;
@@ -735,12 +930,18 @@ export function PlayerPage() {
       };
     }
     if (screen === "grammar") {
-      const t = window.setTimeout(() => {
-        if (!cancelled && flowActiveRef.current) advanceFlow();
-      }, 1600);
+      if (grammarItemsRef.current.length === 0) {
+        const t = window.setTimeout(() => {
+          if (!cancelled && flowActiveRef.current) advanceFlow();
+        }, 1200);
+        return () => {
+          cancelled = true;
+          window.clearTimeout(t);
+        };
+      }
+      startGrammarAutoMode(true);
       return () => {
         cancelled = true;
-        window.clearTimeout(t);
       };
     }
     if (screen === "quiz") {
@@ -809,6 +1010,7 @@ export function PlayerPage() {
   useEffect(() => {
     return () => {
       autoModeRunner.abort();
+      grammarAutoModeRunner.abort();
       quizAutoRunner.abort();
       bilingualPlayback.abort();
       speechService.stop();
@@ -846,7 +1048,26 @@ export function PlayerPage() {
         return;
       }
 
-      if (screen !== "lesson") return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (autoStateRef.current !== "off") {
+          autoModeRunner.abort();
+          setAutoState("off");
+        }
+        if (grammarAutoStateRef.current !== "off") {
+          grammarAutoModeRunner.abort();
+          setGrammarAutoState("off");
+        }
+        if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+          stopQuizAuto();
+        }
+        bilingualPlayback.abort();
+        speechService.stop();
+        clearSpeechUi();
+        return;
+      }
+
+      if (screen !== "lesson" && screen !== "grammar") return;
 
       switch (event.key) {
         case "ArrowRight":
@@ -875,26 +1096,21 @@ export function PlayerPage() {
         case "Control":
           if (event.repeat) break;
           event.preventDefault();
-          setShowFurigana((v) => !v);
+          if (screen === "grammar") {
+            setGrammarShowFurigana((v) => !v);
+          } else {
+            setShowFurigana((v) => !v);
+          }
           break;
         case "a":
         case "A":
           if (event.repeat) break;
           event.preventDefault();
-          toggleAutoMode();
-          break;
-        case "Escape":
-          event.preventDefault();
-          if (autoStateRef.current !== "off") {
-            autoModeRunner.abort();
-            setAutoState("off");
+          if (screen === "grammar") {
+            toggleGrammarAutoMode();
+          } else {
+            toggleAutoMode();
           }
-          if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
-            stopQuizAuto();
-          }
-          bilingualPlayback.abort();
-          speechService.stop();
-          clearSpeechUi();
           break;
         default:
           break;
@@ -908,8 +1124,22 @@ export function PlayerPage() {
   const tocItem = activeTocId ? getTocItem(activeTocId) : undefined;
   const item = items[itemIndex];
   const step = STEPS[stepIndex] as StepName;
-  const canJa = item ? !!getSpeakableJapanese(step, item) : false;
-  const canEn = item ? !!getSpeakableEnglish(step, item) : false;
+  const gItemForControls =
+    grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
+  const canJa =
+    screen === "grammar"
+      ? !!gItemForControls &&
+        !!getGrammarSpeakableJapanese(grammarStep, gItemForControls)
+      : item
+        ? !!getSpeakableJapanese(step, item)
+        : false;
+  const canEn =
+    screen === "grammar"
+      ? !!gItemForControls &&
+        !!getGrammarSpeakableEnglish(grammarStep, gItemForControls)
+      : item
+        ? !!getSpeakableEnglish(step, item)
+        : false;
   const jaLessonHighlight = speechLang === "ja" ? highlight : null;
   const enLessonHighlight = speechLang === "en" ? highlight : null;
 
@@ -1018,14 +1248,105 @@ export function PlayerPage() {
             enHighlight={enHighlight}
           />
         );
-      case "grammar":
-        return (
-          <SectionPlaceholder
-            chip="Grammar"
-            title={tocItem?.label ?? "Grammar Lesson"}
-            subtitle="Grammar lesson content will appear here for recording."
-          />
-        );
+      case "grammar": {
+        const gItem = grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
+        if (!gItem) {
+          return (
+            <SectionPlaceholder
+              chip="Grammar"
+              title={tocItem?.label ?? "Grammar Lesson"}
+              subtitle="Grammar lesson content will appear here once data is added."
+            />
+          );
+        }
+        switch (grammarStep) {
+          case "category":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarCategoryCard item={gItem} />
+              </>
+            );
+          case "pattern":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarPatternCard
+                  item={gItem}
+                  showFurigana={grammarShowFurigana}
+                  jaHighlight={jaLessonHighlight}
+                  enHighlight={enLessonHighlight}
+                />
+              </>
+            );
+          case "formation":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarFormationCard item={gItem} />
+              </>
+            );
+          case "sentence":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarSentenceCard
+                  item={gItem}
+                  showFurigana={grammarShowFurigana}
+                  jaHighlight={jaLessonHighlight}
+                  enHighlight={enLessonHighlight}
+                />
+              </>
+            );
+          case "shadowing":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarShadowingCard
+                  item={gItem}
+                  phase="repeat"
+                  showFurigana={grammarShowFurigana}
+                  highlight={jaLessonHighlight}
+                />
+              </>
+            );
+          case "review":
+            return (
+              <>
+                <GrammarProgressIndicator
+                  current={grammarItemIndex}
+                  total={grammarItems.length}
+                  step={grammarStep}
+                />
+                <GrammarReviewCard
+                  item={gItem}
+                  jaHighlight={jaLessonHighlight}
+                  enHighlight={enLessonHighlight}
+                />
+              </>
+            );
+        }
+      }
       case "quiz":
         return (
           <QuizCard
@@ -1076,6 +1397,13 @@ export function PlayerPage() {
     }
   }
 
+  const hintAutoState =
+    screen === "grammar"
+      ? grammarAutoState
+      : screen === "lesson"
+        ? autoState
+        : "off";
+
   const speechHint =
     flowActive
       ? `Video flow ${flowPos + 1}/${flowQueue.length} · controls stay live`
@@ -1083,33 +1411,42 @@ export function PlayerPage() {
         ? "QUIZ AUTO ON · Q to stop"
         : screen === "quiz"
           ? "QUIZ AUTO OFF · Q to start · click a choice to answer"
-      : autoState === "on"
+      : hintAutoState === "on"
         ? "Auto ON · A to stop after current audio"
-        : autoState === "stopping"
+        : hintAutoState === "stopping"
           ? "Auto stopping after audio…"
           : speechStatus === "speaking" && speechLang === "ja"
             ? "JP Nanami… (Esc stop)"
             : speechStatus === "speaking" && speechLang === "en"
               ? "EN Andrew… (Esc stop)"
-              : screen === "lesson"
+              : screen === "lesson" || screen === "grammar"
                 ? `← → navigate · ↑ JP · ↓ EN · Shift rate · Ctrl あ · A Auto`
                 : "TOC · Intro · Lessons · Quizzes · Ending CTA";
 
+  const activeAutoState =
+    screen === "grammar" ? grammarAutoState : autoState;
+
   const autoLabel =
-    autoState === "on"
+    activeAutoState === "on"
       ? "Auto ON"
-      : autoState === "stopping"
+      : activeAutoState === "stopping"
         ? "Auto…"
         : "Auto OFF";
 
   const autoClass =
-    autoState === "on"
+    activeAutoState === "on"
       ? "auto-btn auto-btn--active"
-      : autoState === "stopping"
+      : activeAutoState === "stopping"
         ? "auto-btn auto-btn--stopping"
         : "auto-btn";
 
-  const showLessonChrome = screen === "lesson" && items.length > 0;
+  const showLessonChrome =
+    (screen === "lesson" && items.length > 0) ||
+    (screen === "grammar" && grammarItems.length > 0);
+  const chromeIsFirst = screen === "grammar" ? grammarIsFirst : isFirst;
+  const chromeIsLast = screen === "grammar" ? grammarIsLast : isLast;
+  const chromeShowFurigana =
+    screen === "grammar" ? grammarShowFurigana : showFurigana;
   const showBackToToc = screen !== "toc" && screen !== "flow-setup";
 
   const showProductionPanel =
@@ -1446,9 +1783,11 @@ export function PlayerPage() {
       <div className="step-indicator" aria-hidden="true">
         {screen === "lesson" && items.length > 0
           ? `Step ${stepIndex + 1} of ${STEPS.length} — ${step}`
-          : screen === "toc"
-            ? "Table of Contents"
-            : tocItem?.label ?? screen}
+          : screen === "grammar" && grammarItems.length > 0
+            ? `Step ${GRAMMAR_STEPS.indexOf(grammarStep) + 1} of ${GRAMMAR_STEPS.length} — ${grammarStep}`
+            : screen === "toc"
+              ? "Table of Contents"
+              : tocItem?.label ?? screen}
         {" · "}
         {speechHint}
       </div>
@@ -1485,7 +1824,7 @@ export function PlayerPage() {
 
         {showLessonChrome ? (
           <>
-            <button onClick={goPrevStep} disabled={isFirst} tabIndex={-1}>
+            <button onClick={goPrevStep} disabled={chromeIsFirst} tabIndex={-1}>
               ← Back
             </button>
             <button
@@ -1544,23 +1883,37 @@ export function PlayerPage() {
             </span>
             <button
               type="button"
-              className={showFurigana ? "furi-btn furi-btn--active" : "furi-btn"}
+              className={
+                chromeShowFurigana ? "furi-btn furi-btn--active" : "furi-btn"
+              }
               tabIndex={-1}
               title="Toggle hiragana readings (Ctrl)"
-              onClick={() => setShowFurigana((v) => !v)}
+              onClick={() => {
+                if (screen === "grammar") {
+                  setGrammarShowFurigana((v) => !v);
+                } else {
+                  setShowFurigana((v) => !v);
+                }
+              }}
             >
-              あ {showFurigana ? "ON" : "OFF"}
+              あ {chromeShowFurigana ? "ON" : "OFF"}
             </button>
             <button
               type="button"
               className={autoClass}
               tabIndex={-1}
               title="Toggle Auto Mode (A) — stops after current audio"
-              onClick={toggleAutoMode}
+              onClick={() => {
+                if (screen === "grammar") {
+                  toggleGrammarAutoMode();
+                } else {
+                  toggleAutoMode();
+                }
+              }}
             >
               {autoLabel}
             </button>
-            <button onClick={goNextStep} disabled={isLast} tabIndex={-1}>
+            <button onClick={goNextStep} disabled={chromeIsLast} tabIndex={-1}>
               Forward →
             </button>
           </>
