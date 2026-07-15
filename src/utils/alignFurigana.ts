@@ -84,6 +84,22 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "受", reading: "うけ" },
     { text: "付", reading: "つけ" },
   ],
+  彼女: [
+    { text: "彼", reading: "かの" },
+    { text: "女", reading: "じょ" },
+  ],
+  活躍: [
+    { text: "活", reading: "かつ" },
+    { text: "躍", reading: "やく" },
+  ],
+  一方: [
+    { text: "一", reading: "いっ" },
+    { text: "方", reading: "ぽう" },
+  ],
+  結果: [
+    { text: "結", reading: "けっ" },
+    { text: "果", reading: "か" },
+  ],
 };
 
 /** Longest first, so 日本語 tries 日本 before any shorter entry. */

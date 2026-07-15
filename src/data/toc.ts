@@ -22,6 +22,11 @@ export type TocItemId =
   | "grammar-71-80"
   | "grammar-81-90"
   | "grammar-91-100"
+  | "grammar-101-110"
+  | "grammar-111-120"
+  | "grammar-121-130"
+  | "grammar-131-140"
+  | "grammar-141-150"
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-grammar-1-10"
@@ -141,6 +146,11 @@ export const tocGroups: TocGroup[] = [
       { id: "grammar-71-80",  label: "Grammar Lesson 71–80",  kind: "grammar", lessonId: "grammar-lesson-08" },
       { id: "grammar-81-90",  label: "Grammar Lesson 81–90",  kind: "grammar", lessonId: "grammar-lesson-09" },
       { id: "grammar-91-100", label: "Grammar Lesson 91–100", kind: "grammar", lessonId: "grammar-lesson-10" },
+      { id: "grammar-101-110", label: "Grammar Lesson 101–110", kind: "grammar", lessonId: "grammar-lesson-11" },
+      { id: "grammar-111-120", label: "Grammar Lesson 111–120", kind: "grammar", lessonId: "grammar-lesson-12" },
+      { id: "grammar-121-130", label: "Grammar Lesson 121–130", kind: "grammar", lessonId: "grammar-lesson-13" },
+      { id: "grammar-131-140", label: "Grammar Lesson 131–140", kind: "grammar", lessonId: "grammar-lesson-14" },
+      { id: "grammar-141-150", label: "Grammar Lesson 141–150", kind: "grammar", lessonId: "grammar-lesson-15" },
     ],
   },
   {
@@ -219,6 +229,11 @@ export const lessonGroupIds: TocItemId[] = [
   "grammar-71-80",
   "grammar-81-90",
   "grammar-91-100",
+  "grammar-101-110",
+  "grammar-111-120",
+  "grammar-121-130",
+  "grammar-131-140",
+  "grammar-141-150",
 ];
 
 export const quizIds: TocItemId[] = [
