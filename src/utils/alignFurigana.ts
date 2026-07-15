@@ -100,6 +100,15 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "結", reading: "けっ" },
     { text: "果", reading: "か" },
   ],
+  土産: [{ text: "土産", reading: "みやげ" }],
+  お土産: [{ text: "お" }, { text: "土産", reading: "みやげ" }],
+  今朝: [{ text: "今朝", reading: "けさ" }],
+  省エネ: [{ text: "省", reading: "しょう" }, { text: "エネ" }],
+  排気ガス: [
+    { text: "排", reading: "はい" },
+    { text: "気", reading: "き" },
+    { text: "ガス" },
+  ],
 };
 
 /** Longest first, so 日本語 tries 日本 before any shorter entry. */
@@ -725,9 +734,10 @@ function matchCompoundToken(
     if (!surface.startsWith(compound, pos)) continue;
     if (pos + compound.length > limit) continue;
 
-    const compoundReading = compoundSegments
-      .map((seg) => seg.reading ?? seg.text)
-      .join("");
+    // Plain segments may be katakana (省エネ) — normalize for comparison.
+    const compoundReading = toHiragana(
+      compoundSegments.map((seg) => seg.reading ?? seg.text).join("")
+    );
     if (!hira.startsWith(compoundReading)) continue;
 
     const segments: FuriganaSegment[] = compoundSegments.map((seg) => ({
