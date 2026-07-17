@@ -2,6 +2,8 @@
 export const autoModeTiming = {
   shortPause: 700,
   normalPause: 1200,
+  /** Hold on category intro (Daily Life • Emotions, etc.) before first word/pattern. */
+  categoryPause: 3000,
   formationPause: 3000,
   /** Minimum repeat-hold for short shadowing sentences. */
   shadowingPause: 5000,

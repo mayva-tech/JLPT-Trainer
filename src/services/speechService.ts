@@ -1,3 +1,5 @@
+import { groupWrapUnits, splitIntoWords } from "../utils/wrapWords";
+
 /** Browser speech — Japanese uses Microsoft Nanami (七海) Online Natural when available. */
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
@@ -132,40 +134,15 @@ export function getGrammarSpeakableEnglish(
   }
 }
 
-/** Split Japanese into highlight units (kanji runs, kana runs, punctuation). */
+/**
+ * Japanese karaoke units = same word/phrase wraps as the UI (Intl.Segmenter).
+ * Matches how Nanami fires word boundaries — not per character.
+ * Whitespace-only segments are skipped; punctuation stays attached to the word.
+ */
 export function splitHighlightUnits(text: string): { start: number; end: number }[] {
-  const chars = [...text];
-  const units: { start: number; end: number }[] = [];
-  let i = 0;
-
-  const isKanji = (ch: string) => /[\u4e00-\u9faf\u3400-\u4dbf]/.test(ch);
-  const isKana = (ch: string) => /[\u3040-\u309f\u30a0-\u30ffー]/.test(ch);
-
-  while (i < chars.length) {
-    const start = i;
-    const ch = chars[i]!;
-    if (isKanji(ch)) {
-      while (i < chars.length && isKanji(chars[i]!)) i++;
-      // Keep each kanji as its own unit for clearer karaoke
-      for (let k = start; k < i; k++) {
-        units.push({ start: k, end: k + 1 });
-      }
-    } else if (isKana(ch)) {
-      while (i < chars.length && isKana(chars[i]!)) i++;
-      // Group short kana (okurigana / particles) as one unit if length <= 2, else per char
-      if (i - start <= 2) {
-        units.push({ start, end: i });
-      } else {
-        for (let k = start; k < i; k++) {
-          units.push({ start: k, end: k + 1 });
-        }
-      }
-    } else {
-      i++;
-      units.push({ start, end: i });
-    }
-  }
-  return units;
+  return groupWrapUnits(splitIntoWords(text, "ja"))
+    .filter((u) => !/^\s+$/.test(u.text))
+    .map((u) => ({ start: u.start, end: u.end }));
 }
 
 /** Split English into word units for karaoke highlight. */
@@ -181,53 +158,112 @@ export function splitEnglishHighlightUnits(
   return units;
 }
 
-let fallbackTimer: number | null = null;
-let boundarySeen = false;
+let paceTimer: number | null = null;
+let firstHoldTimer: number | null = null;
 
-function clearFallback() {
-  if (fallbackTimer !== null) {
-    window.clearInterval(fallbackTimer);
-    fallbackTimer = null;
+type HighlightUnit = { start: number; end: number };
+
+/** First word/phrase hold — long enough to see before engine jumps ahead. */
+const FIRST_UNIT_HOLD_MS = { ja: 380, en: 420 } as const;
+
+function clearPace() {
+  if (paceTimer !== null) {
+    window.clearInterval(paceTimer);
+    paceTimer = null;
   }
-  boundarySeen = false;
+  if (firstHoldTimer !== null) {
+    window.clearTimeout(firstHoldTimer);
+    firstHoldTimer = null;
+  }
 }
 
-function startFallbackHighlight(
+function unitIndexForChar(
+  units: HighlightUnit[],
+  charIndex: number
+): number {
+  if (units.length === 0) return -1;
+  const containing = units.findIndex(
+    (u) => charIndex >= u.start && charIndex < u.end
+  );
+  if (containing >= 0) return containing;
+  const next = units.findIndex((u) => u.start >= charIndex);
+  if (next >= 0) return next;
+  return units.length - 1;
+}
+
+/**
+ * Soft backup pace between word units when the engine is quiet.
+ * Sized so the full line finishes roughly with the utterance — not ahead of it.
+ */
+function msPerHighlightUnit(
   text: string,
+  units: HighlightUnit[],
   rate: number,
-  mode: "ja" | "en",
-  onBoundary?: (h: SpeechHighlight) => void
-) {
-  clearFallback();
-  const units =
-    mode === "en" ? splitEnglishHighlightUnits(text) : splitHighlightUnits(text);
-  if (units.length === 0 || !onBoundary) return;
+  mode: "ja" | "en"
+): number {
+  if (units.length <= 1) return 10_000; // single word: stay lit; onend clears
+  if (mode === "en") {
+    return Math.max(FIRST_UNIT_HOLD_MS.en, 320 / rate);
+  }
+  const chars = [...text].filter((ch) => !/\s/.test(ch)).length;
+  // ~180ms/char at rate 1 — slightly behind speech so boundaries lead when present
+  const estimatedMs = Math.max(chars, 1) * (180 / rate);
+  return Math.max(FIRST_UNIT_HOLD_MS.ja, estimatedMs / units.length);
+}
 
-  const msPerUnit =
-    mode === "en"
-      ? Math.max(160, 320 / rate)
-      : Math.max(90, 175 / rate);
-  let index = 0;
+function startHighlightPace(opts: {
+  units: HighlightUnit[];
+  text: string;
+  rate: number;
+  mode: "ja" | "en";
+  getIndex: () => number;
+  tryAdvance: (next: number) => boolean;
+  canLeaveFirst: () => boolean;
+  onAdvance: (h: SpeechHighlight) => void;
+}) {
+  clearPace();
+  const { units, text, rate, mode, getIndex, tryAdvance, canLeaveFirst, onAdvance } =
+    opts;
+  if (units.length === 0) return;
 
-  onBoundary(units[0]!);
-  fallbackTimer = window.setInterval(() => {
-    if (boundarySeen) {
-      clearFallback();
+  // Always start on the first word/phrase.
+  tryAdvance(0);
+
+  // One unit (落ち込む, a short English gloss): no stepping — voice owns the hold.
+  if (units.length === 1) return;
+
+  const stepMs = msPerHighlightUnit(text, units, rate, mode);
+  paceTimer = window.setInterval(() => {
+    const cur = getIndex();
+    if (cur === 0 && !canLeaveFirst()) return;
+    const next = cur + 1;
+    if (next >= units.length) {
+      if (paceTimer !== null) {
+        window.clearInterval(paceTimer);
+        paceTimer = null;
+      }
       return;
     }
-    index++;
-    if (index >= units.length) {
-      clearFallback();
-      return;
-    }
-    onBoundary(units[index]!);
-  }, msPerUnit);
+    if (tryAdvance(next)) onAdvance(units[next]!);
+  }, stepMs);
 }
 
 export const SPEECH_RATE_NORMAL = 0.85;
 export const SPEECH_RATE_SLOW = 0.7;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.95;
+
+/** First word/phrase range — use before the first boundary callback arrives. */
+export function firstHighlightUnit(
+  text: string,
+  lang: "ja" | "en"
+): SpeechHighlight {
+  const units =
+    lang === "ja"
+      ? splitHighlightUnits(text)
+      : splitEnglishHighlightUnits(text);
+  return units[0] ?? { start: 0, end: Math.min(1, text.length) };
+}
 
 function runUtterance(
   text: string,
@@ -239,7 +275,7 @@ function runUtterance(
 ) {
   if (!window.speechSynthesis || !text.trim()) return;
 
-  clearFallback();
+  clearPace();
   window.speechSynthesis.cancel();
 
   const utter = new SpeechSynthesisUtterance(text);
@@ -249,42 +285,112 @@ function runUtterance(
   if (voice) utter.voice = voice;
 
   if (withHighlight && callbacks?.onBoundary) {
-    utter.onboundary = (event: SpeechSynthesisEvent) => {
-      if (event.name === "word" || event.name === "sentence" || !event.name) {
-        boundarySeen = true;
-        clearFallback();
-        const start = event.charIndex ?? 0;
-        let end: number;
-        if (typeof event.charLength === "number" && event.charLength > 0) {
-          end = start + event.charLength;
-        } else if (!isJa) {
-          const slice = text.slice(start);
-          const word = slice.match(/^\S+/);
-          end = start + (word ? word[0].length : 1);
-        } else {
-          end = start + Math.min(2, text.length - start) || start + 1;
-        }
-        callbacks.onBoundary?.({
-          start,
-          end: Math.min(text.length, end),
-        });
-      }
+    const mode = isJa ? "ja" : "en";
+    const units = isJa
+      ? splitHighlightUnits(text)
+      : splitEnglishHighlightUnits(text);
+    let currentUnit = -1;
+    let started = false;
+    let firstShownAt = 0;
+    let pendingAfterFirst = -1;
+    const firstHoldMs = FIRST_UNIT_HOLD_MS[mode];
+
+    const emit = (index: number) => {
+      const unit = units[index];
+      if (!unit) return;
+      currentUnit = index;
+      callbacks.onBoundary?.(unit);
     };
 
-    startFallbackHighlight(
+    const canLeaveFirst = () =>
+      firstShownAt > 0 && performance.now() - firstShownAt >= firstHoldMs;
+
+    const schedulePendingAfterFirst = () => {
+      if (firstHoldTimer !== null) return;
+      const remaining = Math.max(
+        0,
+        firstHoldMs - (performance.now() - firstShownAt)
+      );
+      firstHoldTimer = window.setTimeout(() => {
+        firstHoldTimer = null;
+        if (pendingAfterFirst > currentUnit) {
+          const t = pendingAfterFirst;
+          pendingAfterFirst = -1;
+          emit(t);
+        }
+      }, remaining);
+    };
+
+    /** Move forward only; hold unit 0 briefly so the first word is visible. */
+    const tryAdvance = (rawIndex: number): boolean => {
+      const target = Math.max(0, Math.min(rawIndex, units.length - 1));
+
+      if (!started) {
+        started = true;
+        firstShownAt = performance.now();
+        emit(0);
+        if (target <= 0) return true;
+      }
+
+      if (target <= currentUnit) return false;
+
+      if (currentUnit === 0 && !canLeaveFirst()) {
+        pendingAfterFirst = Math.max(pendingAfterFirst, target);
+        schedulePendingAfterFirst();
+        return false;
+      }
+
+      emit(target);
+      return true;
+    };
+
+    utter.onstart = () => {
+      if (units.length === 0) return;
+      tryAdvance(0);
+    };
+
+    utter.onboundary = (event: SpeechSynthesisEvent) => {
+      if (!(event.name === "word" || event.name === "sentence" || !event.name)) {
+        return;
+      }
+      if (units.length === 0) return;
+
+      const charIndex = event.charIndex ?? 0;
+      let idx = unitIndexForChar(units, charIndex);
+
+      // Engine often reports the end of the current word — step to the next.
+      if (
+        idx >= 0 &&
+        idx === currentUnit &&
+        typeof event.charLength === "number" &&
+        event.charLength > 0 &&
+        charIndex + event.charLength >= (units[idx]?.end ?? 0) &&
+        idx + 1 < units.length
+      ) {
+        idx = idx + 1;
+      }
+
+      tryAdvance(idx);
+    };
+
+    startHighlightPace({
+      units,
       text,
       rate,
-      isJa ? "ja" : "en",
-      callbacks.onBoundary
-    );
+      mode,
+      getIndex: () => currentUnit,
+      tryAdvance,
+      canLeaveFirst,
+      onAdvance: (h) => callbacks.onBoundary?.(h),
+    });
   }
 
   utter.onend = () => {
-    clearFallback();
+    clearPace();
     callbacks?.onEnd?.();
   };
   utter.onerror = () => {
-    clearFallback();
+    clearPace();
     callbacks?.onEnd?.();
   };
 
@@ -311,7 +417,7 @@ export const speechService = {
   },
 
   stop() {
-    clearFallback();
+    clearPace();
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
   },

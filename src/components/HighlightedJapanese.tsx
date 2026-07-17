@@ -8,7 +8,7 @@ type Props = {
   lang?: string;
 };
 
-/** Japanese text with per-character speech highlight; wraps at word boundaries. */
+/** Japanese text with per-word speech highlight (matches TTS word boundaries). */
 export function HighlightedJapanese({
   text,
   className,
@@ -22,27 +22,20 @@ export function HighlightedJapanese({
       <span className="jp-wrap-line">
         {units.map((unit, ui) => {
           const slice = text.slice(unit.start, unit.end);
-          const chars = [...slice];
-          let cursor = unit.start;
+          let state = "";
+          if (highlight) {
+            if (highlight.start < unit.end && highlight.end > unit.start) {
+              state = "speech-active";
+            } else if (unit.end <= highlight.start) {
+              state = "speech-spoken";
+            }
+          }
           return (
-            <span className="jp-word" key={`${unit.start}-${ui}`}>
-              {chars.map((ch, i) => {
-                const idx = cursor;
-                cursor += ch.length;
-                let state = "";
-                if (highlight) {
-                  if (idx >= highlight.start && idx < highlight.end) {
-                    state = "speech-active";
-                  } else if (idx < highlight.start) {
-                    state = "speech-spoken";
-                  }
-                }
-                return (
-                  <span key={`${idx}-${i}`} className={`speech-char ${state}`}>
-                    {ch}
-                  </span>
-                );
-              })}
+            <span
+              className={`jp-word speech-char ${state}`.trim()}
+              key={`${unit.start}-${ui}`}
+            >
+              {slice}
             </span>
           );
         })}

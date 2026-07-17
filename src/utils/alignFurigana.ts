@@ -109,6 +109,35 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "気", reading: "き" },
     { text: "ガス" },
   ],
+  風邪: [{ text: "風邪", reading: "かぜ" }],
+  反応: [
+    { text: "反", reading: "はん" },
+    { text: "応", reading: "のう" },
+  ],
+  副反応: [
+    { text: "副", reading: "ふく" },
+    { text: "反", reading: "はん" },
+    { text: "応", reading: "のう" },
+  ],
+  粗大ゴミ: [
+    { text: "粗", reading: "そ" },
+    { text: "大", reading: "だい" },
+    { text: "ゴミ" },
+  ],
+  近所付き合い: [
+    { text: "近", reading: "きん" },
+    { text: "所", reading: "じょ" },
+    { text: "付", reading: "づ" },
+    { text: "き" },
+    { text: "合", reading: "あ" },
+    { text: "い" },
+  ],
+  最寄り: [{ text: "最寄り", reading: "もより" }],
+  共有スペース: [
+    { text: "共", reading: "きょう" },
+    { text: "有", reading: "ゆう" },
+    { text: "スペース" },
+  ],
 };
 
 /** Longest first, so 日本語 tries 日本 before any shorter entry. */

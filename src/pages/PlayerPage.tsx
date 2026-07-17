@@ -40,6 +40,7 @@ import {
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
+  firstHighlightUnit,
   type SpeechHighlight,
 } from "../services/speechService";
 import {
@@ -704,7 +705,7 @@ export function PlayerPage() {
       if (!text) return;
       setSpeechLang("ja");
       setSpeechStatus("speaking");
-      setHighlight({ start: 0, end: Math.min(1, text.length) });
+      setHighlight(firstHighlightUnit(text, "ja"));
       speechService.speakJapanese(
         text,
         {
@@ -722,7 +723,7 @@ export function PlayerPage() {
     if (!text) return;
     setSpeechLang("ja");
     setSpeechStatus("speaking");
-    setHighlight({ start: 0, end: Math.min(1, text.length) });
+    setHighlight(firstHighlightUnit(text, "ja"));
     speechService.speakJapanese(
       text,
       {
@@ -744,11 +745,7 @@ export function PlayerPage() {
       if (!text) return;
       setSpeechLang("en");
       setSpeechStatus("speaking");
-      const firstWord = text.match(/^\S+/);
-      setHighlight({
-        start: 0,
-        end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-      });
+      setHighlight(firstHighlightUnit(text, "en"));
       speechService.speakEnglish(
         text,
         {
@@ -766,11 +763,7 @@ export function PlayerPage() {
     if (!text) return;
     setSpeechLang("en");
     setSpeechStatus("speaking");
-    const firstWord = text.match(/^\S+/);
-    setHighlight({
-      start: 0,
-      end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-    });
+    setHighlight(firstHighlightUnit(text, "en"));
     speechService.speakEnglish(
       text,
       {

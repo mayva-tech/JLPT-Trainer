@@ -2,7 +2,7 @@
  * Grammar Auto Mode sequencer.
  *
  * Six steps per grammar item (mirrors vocabulary's 6-step flow):
- *  ① category chip     — first item of the lesson only; skipped after Review
+ *  ① category chip     — first item only; 3s hold, then first pattern
  *  ② pattern + meaning — JP pattern → pause → EN meaning → pause → JP slow
  *  ③ formation rule    — silent 3s display (no voice-over)
  *  ④ example sentence  — JP sentence → pause → EN → pause → JP slow
@@ -17,6 +17,7 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
+  firstHighlightUnit,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -94,7 +95,7 @@ export class GrammarAutoModeRunner {
         // ① category — only for the first item; after Review jump to next pattern
         if (i === 0) {
           ui.setStep("category");
-          await this.pause(T.normalPause, sid);
+          await this.pause(T.categoryPause, sid);
           if (!this.shouldContinue(sid)) { completedAll = false; break; }
         }
 
@@ -222,7 +223,7 @@ export class GrammarAutoModeRunner {
       this.speaking = true;
       ui.setSpeechLang("ja");
       ui.setSpeechStatus("speaking");
-      ui.setHighlight({ start: 0, end: Math.min(1, text.length) });
+      ui.setHighlight(firstHighlightUnit(text, "ja"));
       speechService.speakJapanese(
         text,
         {
@@ -250,11 +251,7 @@ export class GrammarAutoModeRunner {
       this.speaking = true;
       ui.setSpeechLang("en");
       ui.setSpeechStatus("speaking");
-      const firstWord = text.match(/^\S+/);
-      ui.setHighlight({
-        start: 0,
-        end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-      });
+      ui.setHighlight(firstHighlightUnit(text, "en"));
       speechService.speakEnglish(
         text,
         {

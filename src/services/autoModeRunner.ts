@@ -6,6 +6,7 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
+  firstHighlightUnit,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -79,6 +80,16 @@ export class AutoModeRunner {
         }
         const item = items[i]!;
         ui.setItemIndex(i);
+
+        // Category intro — first item of the lesson only (Daily Life • Emotions, …)
+        if (i === 0) {
+          ui.setStep("category");
+          await this.pause(T.categoryPause, sid);
+          if (!this.shouldContinue(sid)) {
+            completedAll = false;
+            break;
+          }
+        }
 
         await this.runSection(sid, ui, item, "word");
         if (!this.shouldContinue(sid)) {
@@ -179,7 +190,7 @@ export class AutoModeRunner {
       this.speaking = true;
       ui.setSpeechLang("ja");
       ui.setSpeechStatus("speaking");
-      ui.setHighlight({ start: 0, end: Math.min(1, text.length) });
+      ui.setHighlight(firstHighlightUnit(text, "ja"));
 
       speechService.speakJapanese(
         text,
@@ -212,11 +223,7 @@ export class AutoModeRunner {
       this.speaking = true;
       ui.setSpeechLang("en");
       ui.setSpeechStatus("speaking");
-      const firstWord = text.match(/^\S+/);
-      ui.setHighlight({
-        start: 0,
-        end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-      });
+      ui.setHighlight(firstHighlightUnit(text, "en"));
 
       speechService.speakEnglish(
         text,
