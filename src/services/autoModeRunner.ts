@@ -6,7 +6,6 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
-  firstHighlightUnit,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -179,7 +178,8 @@ export class AutoModeRunner {
     ui: AutoModeUi,
     text: string,
     rate: number,
-    sid: number
+    sid: number,
+    reading?: string | null
   ): Promise<void> {
     return new Promise((resolve) => {
       if (!this.shouldContinue(sid) && !this.speaking) {
@@ -189,21 +189,37 @@ export class AutoModeRunner {
 
       this.speaking = true;
       ui.setSpeechLang("ja");
+      ui.setHighlight(null);
       ui.setSpeechStatus("speaking");
-      ui.setHighlight(firstHighlightUnit(text, "ja"));
 
       speechService.speakJapanese(
         text,
         {
-          onBoundary: (h) => ui.setHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             if (this.softStop) this.clearPauses();
             resolve();
           },
         },
-        rate
+        rate,
+        { reading }
       );
     });
   }
@@ -222,14 +238,29 @@ export class AutoModeRunner {
 
       this.speaking = true;
       ui.setSpeechLang("en");
+      ui.setHighlight(null);
       ui.setSpeechStatus("speaking");
-      ui.setHighlight(firstHighlightUnit(text, "en"));
 
       speechService.speakEnglish(
         text,
         {
-          onBoundary: (h) => ui.setHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             if (this.softStop) this.clearPauses();
@@ -244,15 +275,26 @@ export class AutoModeRunner {
   private sectionTexts(
     item: VocabularyItem,
     section: Section
-  ): { ja: string; en: string; step: StepName } {
+  ): { ja: string; reading?: string; en: string; step: StepName } {
     switch (section) {
       case "word":
-        return { ja: item.word, en: item.meaning, step: "word" };
+        return {
+          ja: item.word,
+          reading: item.reading,
+          en: item.meaning,
+          step: "word",
+        };
       case "phrase":
-        return { ja: item.phrase, en: item.phraseMeaning, step: "phrase" };
+        return {
+          ja: item.phrase,
+          reading: item.phraseReading,
+          en: item.phraseMeaning,
+          step: "phrase",
+        };
       case "sentence":
         return {
           ja: item.sentence,
+          reading: item.sentenceReading,
           en: item.sentenceMeaning,
           step: "sentence",
         };
@@ -267,13 +309,13 @@ export class AutoModeRunner {
     item: VocabularyItem,
     section: Section
   ): Promise<void> {
-    const { ja, en, step } = this.sectionTexts(item, section);
+    const { ja, reading, en, step } = this.sectionTexts(item, section);
     ui.setStep(step);
 
     // 1. Japanese, normal, hiragana hidden
     ui.setShowFurigana(false);
     ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakJapanese(ui, ja, SPEECH_RATE_NORMAL, sid);
+    await this.speakJapanese(ui, ja, SPEECH_RATE_NORMAL, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
     // 2. Pause
@@ -293,7 +335,7 @@ export class AutoModeRunner {
     // 5. Japanese, slow, hiragana visible
     ui.setShowFurigana(true);
     ui.setSpeechRate(SPEECH_RATE_SLOW);
-    await this.speakJapanese(ui, ja, SPEECH_RATE_SLOW, sid);
+    await this.speakJapanese(ui, ja, SPEECH_RATE_SLOW, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
     await this.pause(T.normalPause, sid);
@@ -308,7 +350,13 @@ export class AutoModeRunner {
     ui.setStep("sentence");
     ui.setShowFurigana(false);
     ui.setSpeechRate(SPEECH_RATE_SHADOWING);
-    await this.speakJapanese(ui, item.sentence, SPEECH_RATE_SHADOWING, sid);
+    await this.speakJapanese(
+      ui,
+      item.sentence,
+      SPEECH_RATE_SHADOWING,
+      sid,
+      item.sentenceReading
+    );
     if (!this.shouldContinue(sid)) return;
 
     // Longer pause for shadowing practice — scales with sentence length
@@ -320,7 +368,13 @@ export class AutoModeRunner {
     ui.setStep("review");
     ui.setShowFurigana(false);
     ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakJapanese(ui, item.word, SPEECH_RATE_NORMAL, sid);
+    await this.speakJapanese(
+      ui,
+      item.word,
+      SPEECH_RATE_NORMAL,
+      sid,
+      item.reading
+    );
     if (!this.shouldContinue(sid)) return;
 
     await this.pause(T.normalPause, sid);

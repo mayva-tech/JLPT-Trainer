@@ -1,29 +1,74 @@
-import { groupWrapUnits, splitIntoWords } from "../utils/wrapWords";
+﻿/**
+ * Browser speech synthesis with generation-safe karaoke highlighting.
+ *
+ * Per utterance: wait for onstart -> briefly detect browser word boundaries ->
+ * lock into either `boundary` mode OR weighted `fallback` mode (never both).
+ */
 
-/** Browser speech — Japanese uses Microsoft Nanami (七海) Online Natural when available. */
+import {
+  activeHighlightUnits,
+  buildEnglishHighlightUnits,
+  buildJapaneseHighlightUnits,
+  estimateUnitDurationMs,
+  findUnitForBoundary,
+  type HighlightUnit,
+} from "../utils/speechHighlightUnits";
+import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+import { buildEnglishSpeakText } from "../utils/englishSpeakText";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
 export type SpeechHighlight = {
-  /** Start index of the currently spoken unit (inclusive). */
+  /** Start index of the currently spoken unit (inclusive, UTF-16). */
   start: number;
-  /** End index of the currently spoken unit (exclusive). */
+  /** End index of the currently spoken unit (exclusive, UTF-16). */
   end: number;
 };
 
 export type SpeakCallbacks = {
+  onStart?: () => void;
   onBoundary?: (highlight: SpeechHighlight) => void;
   onEnd?: () => void;
+  onError?: (error?: unknown) => void;
 };
+
+export type SpeakJapaneseOptions = {
+  /**
+   * Space-separated kana reading (same as furigana data).
+   * When set, audio uses this reading so ambiguous kanji pronounce correctly
+   * (e.g. 間に → まに, not あいだに). Highlights still track `text` surface indices.
+   */
+  reading?: string | null;
+};
+
+export const SPEECH_RATE_NORMAL = 0.85;
+export const SPEECH_RATE_SLOW = 0.7;
+/** Slightly faster normal used only for the shadowing listen pass. */
+export const SPEECH_RATE_SHADOWING = 0.95;
+
+const DEBUG_SPEECH = false;
+/** Wait after onstart for a real browser boundary before choosing fallback. */
+const BOUNDARY_DETECT_MS = 320;
+/** Optional lead-in after onstart before first fallback unit (ms). */
+const FALLBACK_START_OFFSET_MS = 60;
+
+type HighlightMode = "detecting" | "boundary" | "fallback";
+
+let playbackGeneration = 0;
+let fallbackTimer: number | null = null;
+let boundaryDetectionTimer: number | null = null;
+let pendingStartTimer: number | null = null;
+let pendingVoicesChangedHandler: (() => void) | null = null;
+let activeUtterance: SpeechSynthesisUtterance | null = null;
+
+function debug(...args: unknown[]) {
+  if (DEBUG_SPEECH) console.log("[speech]", ...args);
+}
 
 function allVoices(): SpeechSynthesisVoice[] {
   return window.speechSynthesis?.getVoices() ?? [];
 }
 
-/**
- * Prefer: Microsoft Nanami Online (Natural) / 七海
- * Fallbacks: any Nanami, then any Microsoft ja, then any ja.
- */
 function pickNanamiVoice(): SpeechSynthesisVoice | null {
   const voices = allVoices();
   const ja = voices.filter((v) => v.lang.toLowerCase().startsWith("ja"));
@@ -66,15 +111,30 @@ export function getSpeakableJapanese(
   step: string,
   item: { word: string; phrase: string; sentence: string }
 ): string | null {
+  return getJapaneseSpeechInput(step, item)?.text ?? null;
+}
+
+/** Surface text + optional reading for correct TTS pronunciation. */
+export function getJapaneseSpeechInput(
+  step: string,
+  item: {
+    word: string;
+    reading?: string;
+    phrase: string;
+    phraseReading?: string;
+    sentence: string;
+    sentenceReading?: string;
+  }
+): { text: string; reading?: string } | null {
   switch (step) {
     case "word":
     case "review":
-      return item.word;
+      return { text: item.word, reading: item.reading };
     case "phrase":
-      return item.phrase;
+      return { text: item.phrase, reading: item.phraseReading };
     case "sentence":
     case "shadowing":
-      return item.sentence;
+      return { text: item.sentence, reading: item.sentenceReading };
     default:
       return null;
   }
@@ -106,13 +166,25 @@ export function getGrammarSpeakableJapanese(
   step: string,
   item: { pattern: string; sentence: string }
 ): string | null {
+  return getGrammarJapaneseSpeechInput(step, item)?.text ?? null;
+}
+
+export function getGrammarJapaneseSpeechInput(
+  step: string,
+  item: {
+    pattern: string;
+    patternReading?: string;
+    sentence: string;
+    sentenceReading?: string;
+  }
+): { text: string; reading?: string } | null {
   switch (step) {
     case "pattern":
     case "review":
-      return item.pattern;
+      return { text: item.pattern, reading: item.patternReading };
     case "sentence":
     case "shadowing":
-      return item.sentence;
+      return { text: item.sentence, reading: item.sentenceReading };
     default:
       return null;
   }
@@ -134,135 +206,53 @@ export function getGrammarSpeakableEnglish(
   }
 }
 
-/**
- * Japanese karaoke units = same word/phrase wraps as the UI (Intl.Segmenter).
- * Matches how Nanami fires word boundaries — not per character.
- * Whitespace-only segments are skipped; punctuation stays attached to the word.
- */
-export function splitHighlightUnits(text: string): { start: number; end: number }[] {
-  return groupWrapUnits(splitIntoWords(text, "ja"))
-    .filter((u) => !/^\s+$/.test(u.text))
-    .map((u) => ({ start: u.start, end: u.end }));
-}
+/** Re-export unit helpers for callers/tests. */
+export {
+  buildJapaneseHighlightUnits,
+  buildEnglishHighlightUnits,
+  findUnitForBoundary,
+  splitHighlightUnits,
+  splitEnglishHighlightUnits,
+} from "../utils/speechHighlightUnits";
 
-/** Split English into word units for karaoke highlight. */
-export function splitEnglishHighlightUnits(
-  text: string
-): { start: number; end: number }[] {
-  const units: { start: number; end: number }[] = [];
-  const re = /\S+/g;
-  let match: RegExpExecArray | null;
-  while ((match = re.exec(text)) !== null) {
-    units.push({ start: match.index, end: match.index + match[0].length });
-  }
-  return units;
-}
-
-let paceTimer: number | null = null;
-let firstHoldTimer: number | null = null;
-
-type HighlightUnit = { start: number; end: number };
-
-/** First word/phrase hold — long enough to see before engine jumps ahead. */
-const FIRST_UNIT_HOLD_MS = { ja: 380, en: 420 } as const;
-
-function clearPace() {
-  if (paceTimer !== null) {
-    window.clearInterval(paceTimer);
-    paceTimer = null;
-  }
-  if (firstHoldTimer !== null) {
-    window.clearTimeout(firstHoldTimer);
-    firstHoldTimer = null;
+function clearFallbackTimer() {
+  if (fallbackTimer !== null) {
+    window.clearTimeout(fallbackTimer);
+    fallbackTimer = null;
   }
 }
 
-function unitIndexForChar(
-  units: HighlightUnit[],
-  charIndex: number
-): number {
-  if (units.length === 0) return -1;
-  const containing = units.findIndex(
-    (u) => charIndex >= u.start && charIndex < u.end
-  );
-  if (containing >= 0) return containing;
-  const next = units.findIndex((u) => u.start >= charIndex);
-  if (next >= 0) return next;
-  return units.length - 1;
-}
-
-/**
- * Soft backup pace between word units when the engine is quiet.
- * Sized so the full line finishes roughly with the utterance — not ahead of it.
- */
-function msPerHighlightUnit(
-  text: string,
-  units: HighlightUnit[],
-  rate: number,
-  mode: "ja" | "en"
-): number {
-  if (units.length <= 1) return 10_000; // single word: stay lit; onend clears
-  if (mode === "en") {
-    return Math.max(FIRST_UNIT_HOLD_MS.en, 320 / rate);
+function clearBoundaryDetectionTimer() {
+  if (boundaryDetectionTimer !== null) {
+    window.clearTimeout(boundaryDetectionTimer);
+    boundaryDetectionTimer = null;
   }
-  const chars = [...text].filter((ch) => !/\s/.test(ch)).length;
-  // ~180ms/char at rate 1 — slightly behind speech so boundaries lead when present
-  const estimatedMs = Math.max(chars, 1) * (180 / rate);
-  return Math.max(FIRST_UNIT_HOLD_MS.ja, estimatedMs / units.length);
 }
 
-function startHighlightPace(opts: {
-  units: HighlightUnit[];
-  text: string;
-  rate: number;
-  mode: "ja" | "en";
-  getIndex: () => number;
-  tryAdvance: (next: number) => boolean;
-  canLeaveFirst: () => boolean;
-  onAdvance: (h: SpeechHighlight) => void;
-}) {
-  clearPace();
-  const { units, text, rate, mode, getIndex, tryAdvance, canLeaveFirst, onAdvance } =
-    opts;
-  if (units.length === 0) return;
-
-  // Always start on the first word/phrase.
-  tryAdvance(0);
-
-  // One unit (落ち込む, a short English gloss): no stepping — voice owns the hold.
-  if (units.length === 1) return;
-
-  const stepMs = msPerHighlightUnit(text, units, rate, mode);
-  paceTimer = window.setInterval(() => {
-    const cur = getIndex();
-    if (cur === 0 && !canLeaveFirst()) return;
-    const next = cur + 1;
-    if (next >= units.length) {
-      if (paceTimer !== null) {
-        window.clearInterval(paceTimer);
-        paceTimer = null;
-      }
-      return;
-    }
-    if (tryAdvance(next)) onAdvance(units[next]!);
-  }, stepMs);
+function clearPendingStartOnly() {
+  if (pendingStartTimer !== null) {
+    window.clearTimeout(pendingStartTimer);
+    pendingStartTimer = null;
+  }
+  if (pendingVoicesChangedHandler && window.speechSynthesis) {
+    window.speechSynthesis.removeEventListener(
+      "voiceschanged",
+      pendingVoicesChangedHandler
+    );
+    pendingVoicesChangedHandler = null;
+  }
 }
 
-export const SPEECH_RATE_NORMAL = 0.85;
-export const SPEECH_RATE_SLOW = 0.7;
-/** Slightly faster normal used only for the shadowing listen pass. */
-export const SPEECH_RATE_SHADOWING = 0.95;
+/** Clear timers/listeners for the current utterance lifecycle (not generation). */
+function clearPlaybackHandles() {
+  clearFallbackTimer();
+  clearBoundaryDetectionTimer();
+  clearPendingStartOnly();
+  activeUtterance = null;
+}
 
-/** First word/phrase range — use before the first boundary callback arrives. */
-export function firstHighlightUnit(
-  text: string,
-  lang: "ja" | "en"
-): SpeechHighlight {
-  const units =
-    lang === "ja"
-      ? splitHighlightUnits(text)
-      : splitEnglishHighlightUnits(text);
-  return units[0] ?? { start: 0, end: Math.min(1, text.length) };
+function isUsefulBoundaryName(name: string | undefined): boolean {
+  return !name || name === "word" || name === "sentence";
 }
 
 function runUtterance(
@@ -271,138 +261,196 @@ function runUtterance(
   voice: SpeechSynthesisVoice | null,
   callbacks?: SpeakCallbacks,
   withHighlight = false,
-  rate = SPEECH_RATE_NORMAL
+  rate = SPEECH_RATE_NORMAL,
+  /** When set, audio uses this string; highlights still use `text`. */
+  speakText?: string
 ) {
-  if (!window.speechSynthesis || !text.trim()) return;
+  if (!window.speechSynthesis || !text.trim()) {
+    callbacks?.onEnd?.();
+    return;
+  }
 
-  clearPace();
+  const audioText = (speakText ?? text).trim() || text;
+  // Browser boundary indices refer to audioText; they won't match surface
+  // highlights when we speak a kana reading of kanji.
+  const forceFallback = withHighlight && audioText !== text;
+
+  // New generation invalidates any in-flight utterance callbacks.
+  playbackGeneration += 1;
+  const playbackId = playbackGeneration;
+  clearPlaybackHandles();
   window.speechSynthesis.cancel();
 
-  const utter = new SpeechSynthesisUtterance(text);
+  const utter = new SpeechSynthesisUtterance(audioText);
+  activeUtterance = utter;
   const isJa = lang.startsWith("ja");
+  const unitLang: "ja" | "en" = isJa ? "ja" : "en";
   utter.lang = lang;
   utter.rate = rate;
   if (voice) utter.voice = voice;
 
-  if (withHighlight && callbacks?.onBoundary) {
-    const mode = isJa ? "ja" : "en";
-    const units = isJa
-      ? splitHighlightUnits(text)
-      : splitEnglishHighlightUnits(text);
-    let currentUnit = -1;
-    let started = false;
-    let firstShownAt = 0;
-    let pendingAfterFirst = -1;
-    const firstHoldMs = FIRST_UNIT_HOLD_MS[mode];
+  debug("speak", {
+    playbackId,
+    lang,
+    voice: voice?.name ?? "(default)",
+    rate,
+    text: text.slice(0, 40),
+    audioText: audioText.slice(0, 40),
+    forceFallback,
+  });
 
-    const emit = (index: number) => {
-      const unit = units[index];
-      if (!unit) return;
-      currentUnit = index;
-      callbacks.onBoundary?.(unit);
+  const allUnits: HighlightUnit[] = isJa
+    ? buildJapaneseHighlightUnits(text)
+    : buildEnglishHighlightUnits(text);
+  const units = activeHighlightUnits(allUnits);
+
+  let mode: HighlightMode = "detecting";
+  let lastBoundaryStart = -1;
+  let lastBoundaryEnd = -1;
+  let utteranceStarted = false;
+  let finished = false;
+
+  const alive = () => playbackId === playbackGeneration;
+
+  const emitHighlight = (h: SpeechHighlight) => {
+    if (!alive()) return;
+    if (h.start === lastBoundaryStart && h.end === lastBoundaryEnd) return;
+    // Never move backward.
+    if (h.start < lastBoundaryStart) return;
+    lastBoundaryStart = h.start;
+    lastBoundaryEnd = h.end;
+    debug("highlight", playbackId, mode, h);
+    callbacks?.onBoundary?.(h);
+  };
+
+  const startFallback = () => {
+    if (!alive() || !withHighlight || units.length === 0) return;
+    mode = "fallback";
+    clearBoundaryDetectionTimer();
+    debug("mode", playbackId, "fallback");
+
+    const scheduleNext = (index: number, delayMs: number) => {
+      clearFallbackTimer();
+      fallbackTimer = window.setTimeout(() => {
+        fallbackTimer = null;
+        if (!alive() || mode !== "fallback") return;
+        const unit = units[index];
+        if (!unit) return;
+        emitHighlight({ start: unit.start, end: unit.end });
+        const next = index + 1;
+        if (next >= units.length) return;
+        const dur =
+          estimateUnitDurationMs(unit, unitLang) / Math.max(rate, 0.2);
+        scheduleNext(next, dur);
+      }, delayMs);
     };
 
-    const canLeaveFirst = () =>
-      firstShownAt > 0 && performance.now() - firstShownAt >= firstHoldMs;
+    scheduleNext(0, FALLBACK_START_OFFSET_MS);
+  };
 
-    const schedulePendingAfterFirst = () => {
-      if (firstHoldTimer !== null) return;
-      const remaining = Math.max(
-        0,
-        firstHoldMs - (performance.now() - firstShownAt)
-      );
-      firstHoldTimer = window.setTimeout(() => {
-        firstHoldTimer = null;
-        if (pendingAfterFirst > currentUnit) {
-          const t = pendingAfterFirst;
-          pendingAfterFirst = -1;
-          emit(t);
-        }
-      }, remaining);
-    };
+  const enterBoundaryMode = (h: SpeechHighlight) => {
+    if (!alive()) return;
+    mode = "boundary";
+    clearBoundaryDetectionTimer();
+    clearFallbackTimer();
+    debug("mode", playbackId, "boundary");
+    emitHighlight(h);
+  };
 
-    /** Move forward only; hold unit 0 briefly so the first word is visible. */
-    const tryAdvance = (rawIndex: number): boolean => {
-      const target = Math.max(0, Math.min(rawIndex, units.length - 1));
+  utter.onstart = () => {
+    if (!alive()) return;
+    utteranceStarted = true;
+    debug("onstart", playbackId);
+    callbacks?.onStart?.();
 
-      if (!started) {
-        started = true;
-        firstShownAt = performance.now();
-        emit(0);
-        if (target <= 0) return true;
-      }
+    if (!withHighlight || units.length === 0) return;
 
-      if (target <= currentUnit) return false;
+    if (forceFallback) {
+      startFallback();
+      return;
+    }
 
-      if (currentUnit === 0 && !canLeaveFirst()) {
-        pendingAfterFirst = Math.max(pendingAfterFirst, target);
-        schedulePendingAfterFirst();
-        return false;
-      }
+    mode = "detecting";
+    clearBoundaryDetectionTimer();
+    boundaryDetectionTimer = window.setTimeout(() => {
+      boundaryDetectionTimer = null;
+      if (!alive()) return;
+      if (mode === "detecting") startFallback();
+    }, BOUNDARY_DETECT_MS);
+  };
 
-      emit(target);
-      return true;
-    };
+  utter.onboundary = (event: SpeechSynthesisEvent) => {
+    if (!alive()) return;
+    if (!withHighlight) return;
+    if (forceFallback) return;
+    if (!isUsefulBoundaryName(event.name)) return;
+    if (!utteranceStarted) return;
 
-    utter.onstart = () => {
-      if (units.length === 0) return;
-      tryAdvance(0);
-    };
+    const charIndex = event.charIndex ?? 0;
+    const charLength =
+      typeof event.charLength === "number" && event.charLength > 0
+        ? event.charLength
+        : undefined;
+    const mapped = findUnitForBoundary(allUnits, charIndex, charLength);
+    if (!mapped) return;
 
-    utter.onboundary = (event: SpeechSynthesisEvent) => {
-      if (!(event.name === "word" || event.name === "sentence" || !event.name)) {
-        return;
-      }
-      if (units.length === 0) return;
-
-      const charIndex = event.charIndex ?? 0;
-      let idx = unitIndexForChar(units, charIndex);
-
-      // Engine often reports the end of the current word — step to the next.
-      if (
-        idx >= 0 &&
-        idx === currentUnit &&
-        typeof event.charLength === "number" &&
-        event.charLength > 0 &&
-        charIndex + event.charLength >= (units[idx]?.end ?? 0) &&
-        idx + 1 < units.length
-      ) {
-        idx = idx + 1;
-      }
-
-      tryAdvance(idx);
-    };
-
-    startHighlightPace({
-      units,
-      text,
-      rate,
+    debug("raw-boundary", playbackId, {
+      name: event.name,
+      charIndex,
+      charLength,
+      mapped,
       mode,
-      getIndex: () => currentUnit,
-      tryAdvance,
-      canLeaveFirst,
-      onAdvance: (h) => callbacks.onBoundary?.(h),
     });
-  }
 
-  utter.onend = () => {
-    clearPace();
+    if (mode === "detecting") {
+      enterBoundaryMode(mapped);
+      return;
+    }
+    if (mode === "boundary") {
+      emitHighlight(mapped);
+      return;
+    }
+    // fallback: ignore late browser boundaries
+  };
+
+  const finish = (kind: "end" | "error", error?: unknown) => {
+    if (!alive() || finished) return;
+    finished = true;
+    if (activeUtterance === utter) {
+      clearPlaybackHandles();
+    } else {
+      clearFallbackTimer();
+      clearBoundaryDetectionTimer();
+    }
+    debug(kind, playbackId, error);
+    if (kind === "error") {
+      callbacks?.onError?.(error);
+    }
     callbacks?.onEnd?.();
   };
-  utter.onerror = () => {
-    clearPace();
-    callbacks?.onEnd?.();
-  };
 
-  const start = () => window.speechSynthesis.speak(utter);
+  utter.onend = () => finish("end");
+  utter.onerror = (ev) => finish("error", ev);
+
+  let started = false;
+  const startOnce = () => {
+    if (started) return;
+    if (!alive()) return;
+    started = true;
+    clearPendingStartOnly();
+    debug("speak-submit", playbackId);
+    window.speechSynthesis.speak(utter);
+  };
 
   if (allVoices().length === 0) {
-    window.speechSynthesis.addEventListener("voiceschanged", start, {
-      once: true,
-    });
-    window.setTimeout(start, 150);
+    pendingVoicesChangedHandler = () => startOnce();
+    window.speechSynthesis.addEventListener(
+      "voiceschanged",
+      pendingVoicesChangedHandler
+    );
+    pendingStartTimer = window.setTimeout(startOnce, 150);
   } else {
-    start();
+    startOnce();
   }
 }
 
@@ -416,8 +464,15 @@ export const speechService = {
     return "idle";
   },
 
+  getPreferredVoiceName(lang: "ja" | "en"): string | null {
+    const v = lang === "ja" ? pickNanamiVoice() : pickEnglishVoice();
+    return v?.name ?? null;
+  },
+
   stop() {
-    clearPace();
+    playbackGeneration += 1;
+    clearPlaybackHandles();
+    debug("stop", playbackGeneration);
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
   },
@@ -436,13 +491,51 @@ export const speechService = {
     }
   },
 
-  /** Japanese with Microsoft Nanami (七海) Online Natural + highlight. */
-  speakJapanese(text: string, callbacks?: SpeakCallbacks, rate = SPEECH_RATE_NORMAL) {
-    runUtterance(text, "ja-JP", pickNanamiVoice(), callbacks, true, rate);
+  speakJapanese(
+    text: string,
+    callbacks?: SpeakCallbacks,
+    rate = SPEECH_RATE_NORMAL,
+    options?: SpeakJapaneseOptions
+  ) {
+    const speakText = options?.reading
+      ? buildJapaneseSpeakText(text, options.reading)
+      : text;
+    runUtterance(
+      text,
+      "ja-JP",
+      pickNanamiVoice(),
+      callbacks,
+      true,
+      rate,
+      speakText
+    );
   },
 
-  /** English with Microsoft Andrew Online Natural + word highlight. */
-  speakEnglish(text: string, callbacks?: SpeakCallbacks, rate = SPEECH_RATE_NORMAL) {
-    runUtterance(text, "en-US", pickEnglishVoice(), callbacks, true, rate);
+  speakEnglish(
+    text: string,
+    callbacks?: SpeakCallbacks,
+    rate = SPEECH_RATE_NORMAL
+  ) {
+    const speakText = buildEnglishSpeakText(text);
+    runUtterance(
+      text,
+      "en-US",
+      pickEnglishVoice(),
+      callbacks,
+      true,
+      rate,
+      speakText
+    );
   },
 };
+
+/** @internal test helpers */
+export const __speechTestHooks = {
+  getGeneration: () => playbackGeneration,
+  BOUNDARY_DETECT_MS,
+  FALLBACK_START_OFFSET_MS,
+};
+
+export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+export { buildEnglishSpeakText } from "../utils/englishSpeakText";
+

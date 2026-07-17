@@ -37,10 +37,11 @@ import {
   getSpeakableJapanese,
   getGrammarSpeakableEnglish,
   getGrammarSpeakableJapanese,
+  getJapaneseSpeechInput,
+  getGrammarJapaneseSpeechInput,
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
-  firstHighlightUnit,
   type SpeechHighlight,
 } from "../services/speechService";
 import {
@@ -701,36 +702,42 @@ export function PlayerPage() {
         grammarItemsRef.current[grammarItemIndexRef.current] ?? null;
       const gStep = grammarStepRef.current;
       if (!gItem) return;
-      const text = getGrammarSpeakableJapanese(gStep, gItem);
-      if (!text) return;
+      const input = getGrammarJapaneseSpeechInput(gStep, gItem);
+      if (!input) return;
       setSpeechLang("ja");
+      setHighlight(null);
       setSpeechStatus("speaking");
-      setHighlight(firstHighlightUnit(text, "ja"));
       speechService.speakJapanese(
-        text,
+        input.text,
         {
+          onStart: () => setSpeechStatus("speaking"),
           onBoundary: (h) => setHighlight(h),
           onEnd: () => clearSpeechUi(),
+          onError: () => clearSpeechUi(),
         },
-        speechRateRef.current
+        speechRateRef.current,
+        { reading: input.reading }
       );
       return;
     }
     const item = currentItem();
     const step = currentStep();
     if (!item || !step) return;
-    const text = getSpeakableJapanese(step, item);
-    if (!text) return;
+    const input = getJapaneseSpeechInput(step, item);
+    if (!input) return;
     setSpeechLang("ja");
+    setHighlight(null);
     setSpeechStatus("speaking");
-    setHighlight(firstHighlightUnit(text, "ja"));
     speechService.speakJapanese(
-      text,
+      input.text,
       {
+        onStart: () => setSpeechStatus("speaking"),
         onBoundary: (h) => setHighlight(h),
         onEnd: () => clearSpeechUi(),
+        onError: () => clearSpeechUi(),
       },
-      speechRateRef.current
+      speechRateRef.current,
+      { reading: input.reading }
     );
   }
 
@@ -744,13 +751,15 @@ export function PlayerPage() {
       const text = getGrammarSpeakableEnglish(gStep, gItem);
       if (!text) return;
       setSpeechLang("en");
+      setHighlight(null);
       setSpeechStatus("speaking");
-      setHighlight(firstHighlightUnit(text, "en"));
       speechService.speakEnglish(
         text,
         {
+          onStart: () => setSpeechStatus("speaking"),
           onBoundary: (h) => setHighlight(h),
           onEnd: () => clearSpeechUi(),
+          onError: () => clearSpeechUi(),
         },
         speechRateRef.current
       );
@@ -762,13 +771,15 @@ export function PlayerPage() {
     const text = getSpeakableEnglish(step, item);
     if (!text) return;
     setSpeechLang("en");
+    setHighlight(null);
     setSpeechStatus("speaking");
-    setHighlight(firstHighlightUnit(text, "en"));
     speechService.speakEnglish(
       text,
       {
+        onStart: () => setSpeechStatus("speaking"),
         onBoundary: (h) => setHighlight(h),
         onEnd: () => clearSpeechUi(),
+        onError: () => clearSpeechUi(),
       },
       speechRateRef.current
     );
@@ -966,18 +977,22 @@ export function PlayerPage() {
   function speakPromise(lang: "en" | "ja", text: string): Promise<void> {
     return new Promise((resolve) => {
       setSpeechLang(lang);
+      setEnHighlight(null);
+      setJaHighlight(null);
       setSpeechStatus("speaking");
       if (lang === "en") {
-        const firstWord = text.match(/^\S+/);
-        setEnHighlight({
-          start: 0,
-          end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-        });
         speechService.speakEnglish(
           text,
           {
+            onStart: () => setSpeechStatus("speaking"),
             onBoundary: (h) => setEnHighlight(h),
             onEnd: () => {
+              setEnHighlight(null);
+              setSpeechStatus("idle");
+              setSpeechLang(null);
+              resolve();
+            },
+            onError: () => {
               setEnHighlight(null);
               setSpeechStatus("idle");
               setSpeechLang(null);
@@ -987,12 +1002,18 @@ export function PlayerPage() {
           speechRateRef.current
         );
       } else {
-        setJaHighlight({ start: 0, end: Math.min(1, text.length) });
         speechService.speakJapanese(
           text,
           {
+            onStart: () => setSpeechStatus("speaking"),
             onBoundary: (h) => setJaHighlight(h),
             onEnd: () => {
+              setJaHighlight(null);
+              setSpeechStatus("idle");
+              setSpeechLang(null);
+              resolve();
+            },
+            onError: () => {
               setJaHighlight(null);
               setSpeechStatus("idle");
               setSpeechLang(null);

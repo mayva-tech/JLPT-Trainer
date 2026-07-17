@@ -17,7 +17,6 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
-  firstHighlightUnit,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -103,7 +102,13 @@ export class GrammarAutoModeRunner {
         ui.setStep("pattern");
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
-        await this.speakJapanese(ui, item.pattern, SPEECH_RATE_NORMAL, sid);
+        await this.speakJapanese(
+          ui,
+          item.pattern,
+          SPEECH_RATE_NORMAL,
+          sid,
+          item.patternReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.shortPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
@@ -114,7 +119,13 @@ export class GrammarAutoModeRunner {
         // Pattern again — slow, furigana on
         ui.setShowFurigana(true);
         ui.setSpeechRate(SPEECH_RATE_SLOW);
-        await this.speakJapanese(ui, item.pattern, SPEECH_RATE_SLOW, sid);
+        await this.speakJapanese(
+          ui,
+          item.pattern,
+          SPEECH_RATE_SLOW,
+          sid,
+          item.patternReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
@@ -129,7 +140,13 @@ export class GrammarAutoModeRunner {
         ui.setStep("sentence");
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
-        await this.speakJapanese(ui, item.sentence, SPEECH_RATE_NORMAL, sid);
+        await this.speakJapanese(
+          ui,
+          item.sentence,
+          SPEECH_RATE_NORMAL,
+          sid,
+          item.sentenceReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.shortPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
@@ -139,7 +156,13 @@ export class GrammarAutoModeRunner {
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         ui.setShowFurigana(true);
         ui.setSpeechRate(SPEECH_RATE_SLOW);
-        await this.speakJapanese(ui, item.sentence, SPEECH_RATE_SLOW, sid);
+        await this.speakJapanese(
+          ui,
+          item.sentence,
+          SPEECH_RATE_SLOW,
+          sid,
+          item.sentenceReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
@@ -148,7 +171,13 @@ export class GrammarAutoModeRunner {
         ui.setStep("sentence");
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_SHADOWING);
-        await this.speakJapanese(ui, item.sentence, SPEECH_RATE_SHADOWING, sid);
+        await this.speakJapanese(
+          ui,
+          item.sentence,
+          SPEECH_RATE_SHADOWING,
+          sid,
+          item.sentenceReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         ui.setStep("shadowing");
         await this.pause(shadowingPauseFor(item.sentence), sid);
@@ -158,7 +187,13 @@ export class GrammarAutoModeRunner {
         ui.setStep("review");
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
-        await this.speakJapanese(ui, item.pattern, SPEECH_RATE_NORMAL, sid);
+        await this.speakJapanese(
+          ui,
+          item.pattern,
+          SPEECH_RATE_NORMAL,
+          sid,
+          item.patternReading
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
 
@@ -216,26 +251,43 @@ export class GrammarAutoModeRunner {
     ui: GrammarAutoModeUi,
     text: string,
     rate: number,
-    sid: number
+    sid: number,
+    reading?: string | null
   ): Promise<void> {
     return new Promise((resolve) => {
       if (!this.shouldContinue(sid) && !this.speaking) { resolve(); return; }
       this.speaking = true;
       ui.setSpeechLang("ja");
+      ui.setHighlight(null);
       ui.setSpeechStatus("speaking");
-      ui.setHighlight(firstHighlightUnit(text, "ja"));
       speechService.speakJapanese(
         text,
         {
-          onBoundary: (h) => ui.setHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             if (this.softStop) this.clearPauses();
             resolve();
           },
         },
-        rate
+        rate,
+        { reading }
       );
     });
   }
@@ -250,13 +302,28 @@ export class GrammarAutoModeRunner {
       if (!this.shouldContinue(sid) && !this.speaking) { resolve(); return; }
       this.speaking = true;
       ui.setSpeechLang("en");
+      ui.setHighlight(null);
       ui.setSpeechStatus("speaking");
-      ui.setHighlight(firstHighlightUnit(text, "en"));
       speechService.speakEnglish(
         text,
         {
-          onBoundary: (h) => ui.setHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             if (this.softStop) this.clearPauses();

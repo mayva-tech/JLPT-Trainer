@@ -1,5 +1,5 @@
 import type { SpeechHighlight } from "../services/speechService";
-import { groupWrapUnits, splitIntoWords } from "../utils/wrapWords";
+import { buildJapaneseHighlightUnits } from "../utils/speechHighlightUnits";
 
 type Props = {
   text: string;
@@ -8,17 +8,20 @@ type Props = {
   lang?: string;
 };
 
-/** Japanese text with per-word speech highlight (matches TTS word boundaries). */
+/**
+ * Japanese text with per-word speech highlight.
+ * Ranges are UTF-16 indices (same as SpeechSynthesisEvent.charIndex / text.slice).
+ * Word spans match speech karaoke units (e.g. もと, not も|と).
+ */
 export function HighlightedJapanese({
   text,
   className,
   highlight,
-  lang = "ja",
 }: Props) {
-  const units = groupWrapUnits(splitIntoWords(text, lang));
+  const units = buildJapaneseHighlightUnits(text);
 
   return (
-    <div className={`jp-wrap ${className}`} lang={lang}>
+    <div className={`jp-wrap ${className}`} lang="ja">
       <span className="jp-wrap-line">
         {units.map((unit, ui) => {
           const slice = text.slice(unit.start, unit.end);

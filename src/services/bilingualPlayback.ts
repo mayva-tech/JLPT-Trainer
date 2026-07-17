@@ -79,11 +79,13 @@ export class BilingualPlayback {
         if (sid !== this.session) return;
       }
     } finally {
-      ui.setActiveLang(null);
-      ui.setEnHighlight(null);
-      ui.setJaHighlight(null);
-      ui.setSpeechStatus("idle");
-      onDone?.();
+      if (sid === this.session) {
+        ui.setActiveLang(null);
+        ui.setEnHighlight(null);
+        ui.setJaHighlight(null);
+        ui.setSpeechStatus("idle");
+        onDone?.();
+      }
     }
   }
 
@@ -100,30 +102,41 @@ export class BilingualPlayback {
         return;
       }
 
+      ui.setEnHighlight(null);
+      ui.setJaHighlight(null);
+
       const callbacks: SpeakCallbacks = {
+        onStart: () => {
+          if (sid !== this.session) return;
+          ui.setSpeechStatus("speaking");
+        },
         onBoundary: (h) => {
           if (sid !== this.session) return;
           if (lang === "en") ui.setEnHighlight(h);
           else ui.setJaHighlight(h);
         },
         onEnd: () => {
+          if (sid !== this.session) {
+            resolve();
+            return;
+          }
+          if (lang === "en") ui.setEnHighlight(null);
+          else ui.setJaHighlight(null);
+          resolve();
+        },
+        onError: () => {
+          if (sid !== this.session) {
+            resolve();
+            return;
+          }
           if (lang === "en") ui.setEnHighlight(null);
           else ui.setJaHighlight(null);
           resolve();
         },
       };
 
-      if (lang === "en") {
-        const firstWord = text.match(/^\S+/);
-        ui.setEnHighlight({
-          start: 0,
-          end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-        });
-        speechService.speakEnglish(text, callbacks, rate);
-      } else {
-        ui.setJaHighlight({ start: 0, end: Math.min(1, text.length) });
-        speechService.speakJapanese(text, callbacks, rate);
-      }
+      if (lang === "en") speechService.speakEnglish(text, callbacks, rate);
+      else speechService.speakJapanese(text, callbacks, rate);
     });
   }
 }

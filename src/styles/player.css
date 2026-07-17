@@ -173,6 +173,7 @@
   line-height: 1.1;
   white-space: nowrap;
   max-width: 100%;
+  transition: none;
 }
 
 .furigana-wrap .furi-surface {
@@ -452,7 +453,7 @@
 
 .speech-char {
   display: inline-block;
-  transition: color 0.08s ease, background-color 0.08s ease, opacity 0.08s ease;
+  transition: none;
   border-radius: 0.08em;
 }
 

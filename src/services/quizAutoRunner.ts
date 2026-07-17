@@ -124,7 +124,13 @@ export class QuizAutoRunner {
         this.clearSpeechUi(ui);
 
         // Show JP word, play at normal speed (hiragana + answer hidden)
-        await this.speakJapanese(ui, item.word, SPEECH_RATE_NORMAL, sid);
+        await this.speakJapanese(
+          ui,
+          item.word,
+          SPEECH_RATE_NORMAL,
+          sid,
+          item.reading
+        );
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
@@ -159,7 +165,13 @@ export class QuizAutoRunner {
         ui.setShowFurigana(true);
         ui.setShowReading(true);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
-        await this.speakJapanese(ui, item.word, SPEECH_RATE_NORMAL, sid);
+        await this.speakJapanese(
+          ui,
+          item.word,
+          SPEECH_RATE_NORMAL,
+          sid,
+          item.reading
+        );
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
@@ -264,7 +276,8 @@ export class QuizAutoRunner {
     ui: QuizAutoUi,
     text: string,
     rate: number,
-    sid: number
+    sid: number,
+    reading?: string | null
   ): Promise<void> {
     return new Promise((resolve) => {
       if (!this.shouldContinue(sid) && !this.speaking) {
@@ -274,20 +287,35 @@ export class QuizAutoRunner {
 
       this.speaking = true;
       ui.setSpeechLang("ja");
+      ui.setJaHighlight(null);
       ui.setSpeechStatus("speaking");
-      ui.setJaHighlight({ start: 0, end: Math.min(1, text.length) });
 
       speechService.speakJapanese(
         text,
         {
-          onBoundary: (h) => ui.setJaHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setJaHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             resolve();
           },
         },
-        rate
+        rate,
+        { reading }
       );
     });
   }
@@ -306,18 +334,28 @@ export class QuizAutoRunner {
 
       this.speaking = true;
       ui.setSpeechLang("en");
+      ui.setEnHighlight(null);
       ui.setSpeechStatus("speaking");
-      const firstWord = text.match(/^\S+/);
-      ui.setEnHighlight({
-        start: 0,
-        end: firstWord ? firstWord[0].length : Math.min(1, text.length),
-      });
 
       speechService.speakEnglish(
         text,
         {
-          onBoundary: (h) => ui.setEnHighlight(h),
+          onStart: () => {
+            if (sid !== this.session) return;
+            ui.setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (sid !== this.session) return;
+            ui.setEnHighlight(h);
+          },
           onEnd: () => {
+            if (sid !== this.session) return;
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            resolve();
+          },
+          onError: () => {
+            if (sid !== this.session) return;
             this.speaking = false;
             this.clearSpeechUi(ui);
             resolve();
