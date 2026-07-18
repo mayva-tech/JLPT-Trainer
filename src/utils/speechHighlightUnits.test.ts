@@ -92,6 +92,14 @@ describe("buildJapaneseHighlightUnits", () => {
     expect(units.map((u) => u.text).join("")).toBe(text);
   });
 
+  it("keeps スマートフォン as one unit (not スマート|フォン)", () => {
+    const text = "スマートフォンやタブレットといったデバイスが普及した。";
+    const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
+    expect(active.map((u) => u.text)).toContain("スマートフォン");
+    expect(active.map((u) => u.text)).not.toContain("スマート");
+    expect(active.map((u) => u.text)).not.toContain("フォン");
+  });
+
   it("maps a char index inside a word to the whole word", () => {
     const text = "在庫を確認します。";
     const units = buildJapaneseHighlightUnits(text);
@@ -110,6 +118,61 @@ describe("buildJapaneseHighlightUnits", () => {
     for (const u of units) {
       expect(text.slice(u.start, u.end)).toBe(u.text);
     }
+  });
+
+  it("keeps はずだ as one unit so final だ is highlighted", () => {
+    const text = "〜はずだ";
+    const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
+    expect(active.map((u) => u.text)).toEqual(["〜", "はずだ"]);
+    expect(active.some((u) => u.text === "だ")).toBe(false);
+  });
+
+  it("keeps もと intact in grammar patterns (のもとで / をもとに)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜のもとで")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "の", "もと", "で"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜をもとに")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "を", "もと", "に"]);
+  });
+
+  it("keeps だから / こと / もの / かまわない from over-splitting", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜ものだから")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "もの", "だから"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜ないことには")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "ないこと", "には"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜ものがある")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "もの", "が", "ある"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜てもかまわない")).map(
+        (u) => u.text
+      )
+    ).toEqual(["〜", "ても", "かまわない"]);
+  });
+
+  it("keeps きっと and だろう as whole units", () => {
+    const active = activeHighlightUnits(
+      buildJapaneseHighlightUnits("きっと約束を守るだろう。")
+    );
+    expect(active.map((u) => u.text)).toEqual([
+      "きっと",
+      "約束を",
+      "守る",
+      "だろう。",
+    ]);
   });
 
   it("keeps もと as one unit (not も|と) and leaves quotation と", () => {

@@ -1,4 +1,3 @@
-import type { VocabularyItem } from "../types/vocabulary";
 import { quizTiming as T } from "../config/quizTiming";
 import {
   speechService,
@@ -6,7 +5,36 @@ import {
   type SpeechHighlight,
 } from "./speechService";
 
-export type QuizPhase = "pre" | "asking" | "revealed" | "after" | "finished";
+export type QuizPhase =
+  | "pre"
+  | "asking"
+  | "revealed"
+  | "example"
+  | "after"
+  | "finished";
+
+/**
+ * Minimal shape the quiz feature needs from a source item. `VocabularyItem`
+ * and `GrammarItem` are both structurally assignable to this — vocab quizzes
+ * pass `{ id, word, reading, meaning, ... }` through as-is, grammar quizzes
+ * map `{ id, pattern, patternReading, meaning }` onto these three fields.
+ * This lets one runner + one card serve both quiz kinds with zero duplication.
+ *
+ * `sentence` / `sentenceReading` / `sentenceMeaning` are optional — when
+ * present, the quiz card shows a short usage example after the answer is
+ * revealed. Both `VocabularyItem` and `GrammarItem` already carry fields
+ * with these exact names, so vocab quizzes get this for free with no
+ * remapping; grammar quizzes populate them explicitly from `GrammarItem`.
+ */
+export type QuizWord = {
+  id: number;
+  word: string;
+  reading: string;
+  meaning: string;
+  sentence?: string;
+  sentenceReading?: string;
+  sentenceMeaning?: string;
+};
 
 export type QuizAutoUi = {
   setQuizIndex: (index: number) => void;
@@ -36,9 +64,9 @@ function shuffle<T>(list: T[]): T[] {
 
 export { shuffle };
 
-/** Build 3 English choices: 1 correct + 2 distractors from other items. */
+/** Build 2 English choices: 1 correct + 1 distractor from another item. */
 export function buildQuizChoices(
-  items: VocabularyItem[],
+  items: QuizWord[],
   questionIndex: number
 ): { choices: string[]; correctChoiceIndex: number } {
   const correct = items[questionIndex]!.meaning;
@@ -46,13 +74,13 @@ export function buildQuizChoices(
     items
       .map((item, i) => (i === questionIndex ? null : item.meaning))
       .filter((m): m is string => m !== null)
-  ).slice(0, 2);
+  ).slice(0, 1);
 
-  while (distractors.length < 2) {
+  while (distractors.length < 1) {
     distractors.push("—");
   }
 
-  const choices = shuffle([correct, distractors[0]!, distractors[1]!]);
+  const choices = shuffle([correct, distractors[0]!]);
   return {
     choices,
     correctChoiceIndex: choices.indexOf(correct),
@@ -90,8 +118,94 @@ export class QuizAutoRunner {
     this.wakeAnswerWait();
   }
 
+  /**
+   * Manual (non-auto) answer reveal: runs the same sequence as auto reveal
+   * (correct meaning → example JP → example EN → example JP again). Starts
+   * a fresh session so it cleanly cancels any previous in-flight sequence
+   * (mirrors `start()`'s own top-of-function session bump). Safe to call
+   * even when no auto-quiz session is active.
+   */
+  async playManualReveal(item: QuizWord, ui: QuizAutoUi): Promise<void> {
+    this.abort();
+    this.softStop = false;
+    const sid = ++this.session;
+    try {
+      await this.playRevealSequence(ui, item, sid);
+    } finally {
+      if (sid === this.session) {
+        this.speaking = false;
+        this.clearSpeechUi(ui);
+      }
+    }
+  }
+
+  /**
+   * Speaks the correct English meaning, then — if `item.sentence` is
+   * present — pauses, switches to the "example" phase (hiding the answer
+   * choices), speaks the example sentence (using `sentenceReading` for
+   * correct pronunciation), pauses, speaks `sentenceMeaning` if present,
+   * then speaks the Japanese example again with karaoke, and returns the
+   * phase to "revealed". The auto loop then re-reads the grammar pattern
+   * and advances. Shared by auto and manual reveal. Caller owns `sid` and
+   * phase transitions before/after this call.
+   */
+  private async playRevealSequence(
+    ui: QuizAutoUi,
+    item: QuizWord,
+    sid: number
+  ): Promise<void> {
+    await this.speakEnglish(ui, item.meaning, SPEECH_RATE_NORMAL, sid);
+    if (!this.shouldContinue(sid)) return;
+
+    if (!item.sentence) return;
+
+    await this.pause(T.revealPause, sid);
+    if (!this.shouldContinue(sid)) return;
+
+    ui.setPhase("example");
+    ui.setJaHighlight(null);
+    ui.setEnHighlight(null);
+
+    await this.speakJapanese(
+      ui,
+      item.sentence,
+      SPEECH_RATE_NORMAL,
+      sid,
+      item.sentenceReading
+    );
+    if (!this.shouldContinue(sid)) return;
+
+    if (item.sentenceMeaning) {
+      await this.pause(T.revealPause, sid);
+      if (!this.shouldContinue(sid)) return;
+
+      await this.speakEnglish(
+        ui,
+        item.sentenceMeaning,
+        SPEECH_RATE_NORMAL,
+        sid
+      );
+      if (!this.shouldContinue(sid)) return;
+    }
+
+    // Second pass: Japanese example again with karaoke highlight.
+    await this.pause(T.revealPause, sid);
+    if (!this.shouldContinue(sid)) return;
+
+    await this.speakJapanese(
+      ui,
+      item.sentence,
+      SPEECH_RATE_NORMAL,
+      sid,
+      item.sentenceReading
+    );
+    if (!this.shouldContinue(sid)) return;
+
+    ui.setPhase("revealed");
+  }
+
   async start(
-    items: VocabularyItem[],
+    items: QuizWord[],
     ui: QuizAutoUi,
     onState: (state: "on" | "off") => void
   ): Promise<boolean> {
@@ -148,8 +262,10 @@ export class QuizAutoRunner {
         ui.setShowReading(true);
         ui.setShowFurigana(true);
 
-        // Play correct English meaning
-        await this.speakEnglish(ui, item.meaning, SPEECH_RATE_NORMAL, sid);
+        // Speak correct English meaning, then (if present) example JP →
+        // example EN → example JP again — see playRevealSequence. After
+        // that, re-read the pattern below and advance.
+        await this.playRevealSequence(ui, item, sid);
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;

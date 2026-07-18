@@ -1,12 +1,12 @@
-import type { VocabularyItem } from "../types/vocabulary";
 import { HighlightedJapanese } from "./HighlightedJapanese";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { FitScale } from "./FitScale";
 import type { SpeechHighlight } from "../services/speechService";
-import type { QuizPhase } from "../services/quizAutoRunner";
+import type { QuizPhase, QuizWord } from "../services/quizAutoRunner";
 
 type Props = {
   title: string;
-  item: VocabularyItem | null;
+  item: QuizWord | null;
   index: number;
   total: number;
   choices: string[];
@@ -126,11 +126,13 @@ export function QuizCard({
 
         <div className="quiz-split">
           <div className="quiz-word-panel">
-            <HighlightedJapanese
-              text={item.word}
-              className="quiz-word-ja"
-              highlight={jaHighlight}
-            />
+            <FitScale maxLines={2} watch={item.word}>
+              <HighlightedJapanese
+                text={item.word}
+                className="quiz-word-ja"
+                highlight={phase === "example" ? null : jaHighlight}
+              />
+            </FitScale>
             {showReading ? (
               <div className="quiz-word-reading" aria-hidden="true">
                 {item.reading}
@@ -139,48 +141,70 @@ export function QuizCard({
           </div>
 
           <div className="quiz-choices-panel">
-            <div className="quiz-prompt">What is the English meaning?</div>
-            <div className="quiz-choices" role="list">
-              {choices.map((choice, i) => {
-                const isCorrect = i === correctChoiceIndex;
-                const isSelected = selectedChoiceIndex === i;
-                let className = "quiz-choice";
+            {phase === "example" && item.sentence ? (
+              <div className="quiz-example-panel">
+                <div className="quiz-prompt">Example</div>
+                <HighlightedJapanese
+                  text={item.sentence}
+                  className="quiz-example-ja"
+                  highlight={jaHighlight}
+                />
+                {item.sentenceMeaning ? (
+                  <HighlightedEnglish
+                    text={item.sentenceMeaning}
+                    className="quiz-example-meaning"
+                    highlight={enHighlight}
+                  />
+                ) : null}
+              </div>
+            ) : (
+              <>
+                <div className="quiz-prompt">
+                  What is the English meaning?
+                </div>
+                <div className="quiz-choices" role="list">
+                  {choices.map((choice, i) => {
+                    const isCorrect = i === correctChoiceIndex;
+                    const isSelected = selectedChoiceIndex === i;
+                    let className = "quiz-choice";
 
-                if (revealed) {
-                  if (isCorrect) {
-                    className += " quiz-choice--correct";
-                  } else if (isSelected) {
-                    className += " quiz-choice--wrong";
-                  } else {
-                    className += " quiz-choice--dimmed";
-                  }
-                }
+                    if (revealed) {
+                      if (isCorrect) {
+                        className += " quiz-choice--correct";
+                      } else if (isSelected) {
+                        className += " quiz-choice--wrong";
+                      } else {
+                        className += " quiz-choice--dimmed";
+                      }
+                    }
 
-                return (
-                  <button
-                    key={`${index}-${i}-${choice}`}
-                    type="button"
-                    className={className}
-                    disabled={revealed}
-                    onClick={() => onSelectChoice(i)}
-                  >
-                    <div className="quiz-choice-text">
-                      {revealed && isCorrect ? "✓ " : ""}
-                      {`${i + 1}. `}
-                      {revealed && isCorrect ? (
-                        <HighlightedEnglish
-                          text={formatMeaning(choice)}
-                          className="quiz-choice-meaning"
-                          highlight={enHighlight}
-                        />
-                      ) : (
-                        formatMeaning(choice)
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                    return (
+                      <button
+                        key={`${index}-${i}-${choice}`}
+                        type="button"
+                        className={className}
+                        disabled={revealed}
+                        onClick={() => onSelectChoice(i)}
+                      >
+                        <div className="quiz-choice-text">
+                          {revealed && isCorrect ? "✓ " : ""}
+                          {`${i + 1}. `}
+                          {revealed && isCorrect ? (
+                            <HighlightedEnglish
+                              text={formatMeaning(choice)}
+                              className="quiz-choice-meaning"
+                              highlight={enHighlight}
+                            />
+                          ) : (
+                            formatMeaning(choice)
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

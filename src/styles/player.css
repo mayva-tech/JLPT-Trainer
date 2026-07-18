@@ -832,23 +832,14 @@
 .quiz-word-ja {
   font-family: var(--font-jp);
   font-weight: 700;
-  font-size: 9.5cqw;
-  line-height: 1.05;
+  font-size: calc(6.5cqw * var(--fit-scale, 1));
+  line-height: 1.15;
   color: #000;
   max-width: 100%;
 }
 
 .quiz-word-ja.jp-wrap {
   max-height: none;
-  overflow: visible;
-}
-
-.quiz-word-ja .jp-wrap-line {
-  flex-wrap: nowrap;
-}
-
-.quiz-word-ja .jp-word {
-  white-space: nowrap;
 }
 
 .quiz-word-reading {
@@ -858,6 +849,32 @@
   color: #000;
   margin-top: 1.4cqh;
   letter-spacing: 0.06em;
+}
+
+.quiz-example-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  text-align: left;
+}
+
+.quiz-example-ja {
+  font-family: var(--font-jp);
+  font-weight: 600;
+  font-size: 3.6cqw;
+  line-height: 1.4;
+  color: #111;
+  margin-top: 0.2cqh;
+}
+
+.quiz-example-meaning {
+  font-family: var(--font-en);
+  font-size: 2.6cqw;
+  color: #000;
+  margin-top: 1.4cqh;
+  line-height: 1.35;
 }
 
 .quiz-choices-panel {

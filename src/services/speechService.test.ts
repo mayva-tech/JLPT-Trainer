@@ -257,7 +257,25 @@ describe("speechService highlight mode", () => {
       onBoundary: (h) => highlights.push(h),
     });
     expect(spoken.length).toBe(1);
-    vi.advanceTimersByTime(__speechTestHooks.BOUNDARY_DETECT_MS + 500);
+
+    vi.advanceTimersByTime(__speechTestHooks.BOUNDARY_DETECT_MS + 50);
     expect(highlights.length).toBe(0);
+  });
+
+  it("highlights the last unit on end when browser skipped its boundary", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish("Hello world", {
+      onBoundary: (h) => highlights.push(h),
+    });
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
+    expect(highlights.at(-1)).toEqual({ start: 0, end: 5 });
+
+    utter.onend?.();
+    expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
   });
 });

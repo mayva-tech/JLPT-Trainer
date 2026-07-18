@@ -80,6 +80,8 @@ const ATTACHABLE_KANA = new Set([
 
 /** Trailing particles peeled from a merged kana run (longest first). */
 const TRAILING_PEEL = [
+  "だから",
+  "ですから",
   "から",
   "まで",
   "より",
@@ -109,6 +111,38 @@ const TRAILING_PEEL = [
   "か",
 ] as const;
 
+/**
+ * Peeling these particles would split a real word (もと/こと/もの/ほか/きっと).
+ */
+function wouldBreakLexicalStem(particle: string, nextRest: string): boolean {
+  if (!nextRest) return true;
+  // きっと / ずっと / もっと — do not peel と after っ
+  if (particle === "と" && /[っッ]$/u.test(nextRest)) return true;
+  // もと / こと / あと — do not peel the final と
+  if (particle === "と" && /(も|こ|あ)$/u.test(nextRest)) return true;
+  // もの — do not peel の from も
+  if (particle === "の" && nextRest === "も") return true;
+  // ものの — keep the grammar form together
+  if (particle === "の" && nextRest === "もの") return true;
+  // ものが / ものは / ものを — do not peel compound particle off も
+  if (
+    (particle === "のが" || particle === "のは" || particle === "のを") &&
+    nextRest === "も"
+  ) {
+    return true;
+  }
+  // だから / ですから — keep as one particle unit
+  if (particle === "から" && (nextRest === "だ" || nextRest === "です")) {
+    return true;
+  }
+  // ほか — do not peel か from ほ
+  if (particle === "か" && /(ほ)$/u.test(nextRest)) return true;
+  return false;
+}
+
+/** Case particles that must not glue onto a following content word (を+もと). */
+const CASE_PARTICLES = new Set(["を", "に", "が", "は", "で", "へ", "の", "や"]);
+
 function classifyUnit(text: string): HighlightUnit["kind"] {
   if (/^\s+$/.test(text)) return "space";
   if (PUNCT_ONLY.test(text)) return "punctuation";
@@ -123,6 +157,12 @@ function stripTrailingPunct(text: string): { core: string; punct: string } {
 function isPureKanaCore(text: string): boolean {
   const { core } = stripTrailingPunct(text);
   return core.length > 0 && /^[\u3040-\u309f\u30a0-\u30ffー]+$/u.test(core);
+}
+
+/** Katakana-only (loanwords). Hiragana particles stay separate. */
+function isPureKatakanaCore(text: string): boolean {
+  const { core } = stripTrailingPunct(text);
+  return core.length > 0 && /^[\u30a0-\u30ffー]+$/u.test(core);
 }
 
 function kanaCoreLen(text: string): number {
@@ -207,6 +247,10 @@ function splitMergedKanaRun(unit: HighlightUnit): HighlightUnit[] {
       const nextLen = [...nextRest].length;
       // Do not peel もと→も+と (single mora left)
       if ([...p].length === 1 && nextLen < 2) continue;
+      if (wouldBreakLexicalStem(p, nextRest)) continue;
+      // Keep final copula on the stem (はずだ) unless another particle
+      // was already peeled (もとだと → もと | だ | と).
+      if (p === "だ" && parts.length === 0) continue;
       if (p === "だ" && !canPeelCopulaOrTa(nextRest)) continue;
       parts.unshift(p);
       rest = nextRest;
@@ -251,10 +295,19 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
   for (let i = 0; i < units.length; i++) {
     const cur = units[i]!;
     const next = units[i + 1];
+    const next2 = units[i + 2];
     const prev = paired[paired.length - 1];
+
+    // Prefer も+と → もと over の+も / を+も (〜のもとで, 〜をもとに).
+    const nextIsMotoHead =
+      !!next &&
+      stripTrailingPunct(next.text).core === "も" &&
+      !!next2 &&
+      stripTrailingPunct(next2.text).core === "と";
 
     const canPair =
       !!next &&
+      !nextIsMotoHead &&
       cur.kind !== "space" &&
       next.kind !== "space" &&
       isPureKanaCore(cur.text) &&
@@ -276,10 +329,29 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
     paired.push(cur);
   }
 
+  // 1b) Merge consecutive katakana loanword fragments
+  //     (スマート + フォン → スマートフォン). Segmenter often splits these.
+  const kataMerged: HighlightUnit[] = [];
+  for (const u of paired) {
+    const prev = kataMerged[kataMerged.length - 1];
+    if (
+      prev &&
+      prev.kind !== "space" &&
+      u.kind !== "space" &&
+      isPureKatakanaCore(prev.text) &&
+      isPureKatakanaCore(u.text) &&
+      stripTrailingPunct(prev.text).punct === ""
+    ) {
+      kataMerged[kataMerged.length - 1] = joinUnits(prev, u);
+    } else {
+      kataMerged.push(u);
+    }
+  }
+
   // 2) Glue a lone kanji onto the previous stem (落ち + 込 → 落ち込)
   //    Only single kanji — do not glue 厳しい + 指導.
   const compounds: HighlightUnit[] = [];
-  for (const u of paired) {
+  for (const u of kataMerged) {
     const prev = compounds[compounds.length - 1];
     const nextCore = stripTrailingPunct(u.text).core;
     if (
@@ -298,17 +370,22 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
   }
 
   // 3) Attach okurigana/particles onto kanji stems — but do not steal the
-  //    first mora of a following kana word (も+と, し+まっ).
+  //    first mora of a following kana word (も+と, し+まっ, だ+ろう).
   const withOkuri: HighlightUnit[] = [];
   for (let i = 0; i < compounds.length; i++) {
     const u = compounds[i]!;
     const next = compounds[i + 1];
     const prev = withOkuri[withOkuri.length - 1];
+    const uCore = stripTrailingPunct(u.text).core;
+    const nextCore = next ? stripTrailingPunct(next.text).core : "";
     const nextIsKanaFragment =
       !!next &&
       next.kind !== "space" &&
       isPureKanaCore(next.text) &&
       isKanaFragment(next.text);
+    // だろう: keep だ with ろう, not glued onto the verb stem (守るだ|ろう).
+    const isDarouSplit =
+      uCore === "だ" && !!next && /^ろう/.test(nextCore);
 
     const canAttach =
       prev &&
@@ -316,6 +393,7 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       u.kind !== "space" &&
       hasKanji(prev.text) &&
       isAttachableOkurigana(u.text) &&
+      !isDarouSplit &&
       !(kanaCoreLen(u.text) === 1 && nextIsKanaFragment);
 
     if (canAttach) {
@@ -326,9 +404,39 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
   }
 
   // 4) Merge consecutive pure-kana fragments (し + まっ + た。 → しまった。)
+  //    Do not glue case particles onto the next word (を + もと → をもと).
+  //    Do not glue a particle onto the previous stem when it starts the next
+  //    word (ても + か + まわない → かまわない, not てもか).
   const kanaMerged: HighlightUnit[] = [];
-  for (const u of withOkuri) {
+  for (let i = 0; i < withOkuri.length; i++) {
+    const u = withOkuri[i]!;
+    const next = withOkuri[i + 1];
     const prev = kanaMerged[kanaMerged.length - 1];
+    const prevCore = prev ? stripTrailingPunct(prev.text).core : "";
+    const uCore = stripTrailingPunct(u.text).core;
+    const nextCore = next ? stripTrailingPunct(next.text).core : "";
+
+    const blockCaseParticle =
+      !!prev &&
+      CASE_PARTICLES.has(prevCore) &&
+      !isKanaFragment(u.text) &&
+      kanaCoreLen(u.text) >= 2;
+
+    // か often starts a content word (かまわない), not a particle on the
+    // previous stem (てもか). Other standalone particles still glue/peel normally.
+    const startsNextWord =
+      uCore === "か" &&
+      kanaCoreLen(u.text) === 1 &&
+      !!next &&
+      next.kind !== "space" &&
+      isPureKanaCore(next.text) &&
+      !STANDALONE_KANA.has(nextCore);
+
+    if (startsNextWord) {
+      kanaMerged.push(u);
+      continue;
+    }
+
     if (
       prev &&
       prev.kind !== "space" &&
@@ -336,6 +444,7 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       isPureKanaCore(prev.text) &&
       isPureKanaCore(u.text) &&
       stripTrailingPunct(prev.text).punct === "" &&
+      !blockCaseParticle &&
       (isKanaFragment(prev.text) || isKanaFragment(u.text))
     ) {
       kanaMerged[kanaMerged.length - 1] = joinUnits(prev, u);

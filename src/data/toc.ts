@@ -22,6 +22,11 @@ export type TocItemId =
   | "word-171-180"
   | "word-181-190"
   | "word-191-200"
+  | "word-201-210"
+  | "word-211-220"
+  | "word-221-230"
+  | "word-231-240"
+  | "word-241-250"
   | "grammar-1-10"
   | "grammar-11-20"
   | "grammar-21-30"
@@ -45,6 +50,10 @@ export type TocItemId =
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-grammar-1-10"
+  | "quiz-grammar-11-20"
+  | "quiz-grammar-21-30"
+  | "quiz-grammar-31-40"
+  | "quiz-grammar-41-50"
   | "quiz-mixed"
   | "quiz-final"
   | "quiz-after-comment"
@@ -207,6 +216,36 @@ export const tocGroups: TocGroup[] = [
         kind: "word",
         lessonId: "lesson-20",
       },
+      {
+        id: "word-201-210",
+        label: "Word Lesson 201–210",
+        kind: "word",
+        lessonId: "lesson-21",
+      },
+      {
+        id: "word-211-220",
+        label: "Word Lesson 211–220",
+        kind: "word",
+        lessonId: "lesson-22",
+      },
+      {
+        id: "word-221-230",
+        label: "Word Lesson 221–230",
+        kind: "word",
+        lessonId: "lesson-23",
+      },
+      {
+        id: "word-231-240",
+        label: "Word Lesson 231–240",
+        kind: "word",
+        lessonId: "lesson-24",
+      },
+      {
+        id: "word-241-250",
+        label: "Word Lesson 241–250",
+        kind: "word",
+        lessonId: "lesson-25",
+      },
     ],
   },
   {
@@ -255,6 +294,30 @@ export const tocGroups: TocGroup[] = [
         label: "Grammar Quiz 1–10",
         kind: "quiz",
         quizId: "quiz-grammar-1-10",
+      },
+      {
+        id: "quiz-grammar-11-20",
+        label: "Grammar Quiz 11–20",
+        kind: "quiz",
+        quizId: "quiz-grammar-11-20",
+      },
+      {
+        id: "quiz-grammar-21-30",
+        label: "Grammar Quiz 21–30",
+        kind: "quiz",
+        quizId: "quiz-grammar-21-30",
+      },
+      {
+        id: "quiz-grammar-31-40",
+        label: "Grammar Quiz 31–40",
+        kind: "quiz",
+        quizId: "quiz-grammar-31-40",
+      },
+      {
+        id: "quiz-grammar-41-50",
+        label: "Grammar Quiz 41–50",
+        kind: "quiz",
+        quizId: "quiz-grammar-41-50",
       },
       {
         id: "quiz-mixed",
@@ -318,6 +381,11 @@ export const lessonGroupIds: TocItemId[] = [
   "word-171-180",
   "word-181-190",
   "word-191-200",
+  "word-201-210",
+  "word-211-220",
+  "word-221-230",
+  "word-231-240",
+  "word-241-250",
   "grammar-1-10",
   "grammar-11-20",
   "grammar-21-30",
@@ -343,6 +411,10 @@ export const lessonGroupIds: TocItemId[] = [
 export const quizIds: TocItemId[] = [
   "quiz-vocab-1-10",
   "quiz-grammar-1-10",
+  "quiz-grammar-11-20",
+  "quiz-grammar-21-30",
+  "quiz-grammar-31-40",
+  "quiz-grammar-41-50",
   "quiz-mixed",
   "quiz-final",
 ];

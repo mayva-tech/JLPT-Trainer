@@ -416,6 +416,14 @@ function runUtterance(
   const finish = (kind: "end" | "error", error?: unknown) => {
     if (!alive() || finished) return;
     finished = true;
+    // Browser TTS often skips a boundary for the final mora (e.g. だ).
+    // Advance karaoke to the last unit before clearing so it still lights up.
+    if (withHighlight && units.length > 0) {
+      const last = units[units.length - 1]!;
+      if (lastBoundaryEnd < last.end) {
+        emitHighlight({ start: last.start, end: last.end });
+      }
+    }
     if (activeUtterance === utter) {
       clearPlaybackHandles();
     } else {

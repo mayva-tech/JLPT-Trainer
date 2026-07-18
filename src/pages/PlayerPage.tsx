@@ -74,8 +74,8 @@ import {
   buildQuizChoices,
   shuffle,
   type QuizPhase,
+  type QuizWord,
 } from "../services/quizAutoRunner";
-import type { VocabularyItem } from "../types/vocabulary";
 
 const STEPS: StepName[] = [
   "category",
@@ -101,6 +101,44 @@ type Screen =
 type SpeechUiStatus = "idle" | "speaking" | "paused";
 
 const QUIZ_VOCAB_LESSON = "lesson-01";
+
+/** Which grammar lesson feeds each grammar-quiz TOC slot. */
+const QUIZ_GRAMMAR_LESSON_BY_TOC_ID: Partial<Record<TocItemId, string>> = {
+  "quiz-grammar-1-10": "grammar-lesson-01",
+  "quiz-grammar-11-20": "grammar-lesson-02",
+  "quiz-grammar-21-30": "grammar-lesson-03",
+  "quiz-grammar-31-40": "grammar-lesson-04",
+  "quiz-grammar-41-50": "grammar-lesson-05",
+};
+
+/** Build the QuizWord[] deck for a given quiz TOC id, or [] if unknown. */
+function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
+  if (
+    quizTocId === "quiz-vocab-1-10" ||
+    quizTocId === "quiz-mixed" ||
+    quizTocId === "quiz-final"
+  ) {
+    return getVocabularyByIds(
+      getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
+    );
+  }
+  const grammarLessonId = quizTocId
+    ? QUIZ_GRAMMAR_LESSON_BY_TOC_ID[quizTocId]
+    : undefined;
+  if (grammarLessonId) {
+    const grammarLesson = getGrammarLessonById(grammarLessonId);
+    return getGrammarByIds(grammarLesson?.grammarIds ?? []).map((g) => ({
+      id: g.id,
+      word: g.pattern,
+      reading: g.patternReading,
+      meaning: g.meaning,
+      sentence: g.sentence,
+      sentenceReading: g.sentenceReading,
+      sentenceMeaning: g.sentenceMeaning,
+    }));
+  }
+  return [];
+}
 
 export function PlayerPage() {
   const [screen, setScreen] = useState<Screen>("toc");
@@ -164,7 +202,7 @@ export function PlayerPage() {
   const [quizShowReading, setQuizShowReading] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizAutoOn, setQuizAutoOn] = useState(false);
-  const [quizDeck, setQuizDeck] = useState<VocabularyItem[]>([]);
+  const [quizDeck, setQuizDeck] = useState<QuizWord[]>([]);
 
   const [flowConfig, setFlowConfig] = useState<VideoFlowConfig>({
     includeIntro: true,
@@ -223,14 +261,7 @@ export function PlayerPage() {
   quizAfterJaRef.current = quizAfterJa;
   quizAfterEnRef.current = quizAfterEn;
 
-  const quizItems =
-    activeTocId === "quiz-vocab-1-10" ||
-    activeTocId === "quiz-mixed" ||
-    activeTocId === "quiz-final"
-      ? getVocabularyByIds(
-          getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
-        )
-      : [];
+  const quizItems: QuizWord[] = buildQuizWords(activeTocId);
 
   const quizAutoOnRef = useRef(quizAutoOn);
   quizAutoOnRef.current = quizAutoOn;
@@ -304,8 +335,8 @@ export function PlayerPage() {
     setQuizShowReading(false);
   }
 
-  /** Fresh random order of JA words for this quiz session. */
-  function reshuffleQuizDeck(source = quizItemsRef.current): VocabularyItem[] {
+  /** Fresh random order of quiz items for this quiz session. */
+  function reshuffleQuizDeck(source = quizItemsRef.current): QuizWord[] {
     const deck = shuffle(source);
     setQuizDeck(deck);
     quizDeckRef.current = deck;
@@ -388,9 +419,75 @@ export function PlayerPage() {
     clearSpeechUi();
   }
 
-  function toggleQuizAuto() {
+  /** Leave auto / comment screens and show a real quiz question for manual control. */
+  function enterManualQuiz(index = quizIndex) {
+    stopQuizAuto();
+    const deck =
+      quizDeckRef.current.length > 0
+        ? quizDeckRef.current
+        : reshuffleQuizDeck(quizItemsRef.current);
+    if (deck.length === 0) return;
+    resetQuizQuestion(index, deck);
+  }
+
+  function goQuizPrev() {
     if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
       stopQuizAuto();
+    }
+    speechService.stop();
+    clearSpeechUi();
+
+    if (quizPhaseRef.current === "pre") {
+      // Still on pre-comment — start at question 0
+      enterManualQuiz(0);
+      return;
+    }
+    if (quizPhaseRef.current === "after" || quizPhaseRef.current === "finished") {
+      const last = Math.max(0, (quizDeckRef.current.length || 1) - 1);
+      enterManualQuiz(last);
+      return;
+    }
+    if (quizIndex <= 0) return;
+    resetQuizQuestion(quizIndex - 1);
+  }
+
+  function goQuizNext() {
+    if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+      stopQuizAuto();
+    }
+    speechService.stop();
+    clearSpeechUi();
+
+    if (quizPhaseRef.current === "pre") {
+      enterManualQuiz(0);
+      return;
+    }
+    if (quizPhaseRef.current === "after") {
+      setQuizPhase("finished");
+      return;
+    }
+    if (quizPhaseRef.current === "finished") return;
+
+    const total = quizDeckRef.current.length || quizItemsRef.current.length;
+    if (quizIndex >= total - 1) {
+      setQuizPhase("finished");
+      return;
+    }
+    resetQuizQuestion(quizIndex + 1);
+  }
+
+  function toggleQuizAuto() {
+    if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+      // Stopping mid-pre/after leaves a usable manual quiz, not a stuck comment screen.
+      const phase = quizPhaseRef.current;
+      stopQuizAuto();
+      if (phase === "pre") {
+        enterManualQuiz(0);
+      } else if (phase === "after") {
+        setQuizPhase("finished");
+      } else if (phase === "example") {
+        setQuizPhase("revealed");
+      }
       return;
     }
     startQuizAuto();
@@ -414,10 +511,12 @@ export function PlayerPage() {
     if (quizAutoRunner.isActive()) {
       quizAutoRunner.notifyAnswerSelected();
     } else {
-      // Manual reveal without auto: play English meaning once
+      // Manual reveal without auto: speak the correct meaning, then — if
+      // this item has one — the example sentence and its meaning. Mirrors
+      // the auto-quiz reveal sequence exactly (see playRevealSequence).
       const item = quizDeckRef.current[quizIndex];
       if (item) {
-        void speakPromise("en", item.meaning);
+        void quizAutoRunner.playManualReveal(item, buildQuizAutoUi());
       }
     }
   }
@@ -565,9 +664,7 @@ export function PlayerPage() {
       }
       case "quiz": {
         setScreen("quiz");
-        const list = getVocabularyByIds(
-          getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
-        );
+        const list = buildQuizWords(id);
         const deck = shuffle(list);
         setQuizDeck(deck);
         quizDeckRef.current = deck;
@@ -974,58 +1071,6 @@ export function PlayerPage() {
     };
   }, [flowActive, screen, activeTocId, lessonId, items.length]);
 
-  function speakPromise(lang: "en" | "ja", text: string): Promise<void> {
-    return new Promise((resolve) => {
-      setSpeechLang(lang);
-      setEnHighlight(null);
-      setJaHighlight(null);
-      setSpeechStatus("speaking");
-      if (lang === "en") {
-        speechService.speakEnglish(
-          text,
-          {
-            onStart: () => setSpeechStatus("speaking"),
-            onBoundary: (h) => setEnHighlight(h),
-            onEnd: () => {
-              setEnHighlight(null);
-              setSpeechStatus("idle");
-              setSpeechLang(null);
-              resolve();
-            },
-            onError: () => {
-              setEnHighlight(null);
-              setSpeechStatus("idle");
-              setSpeechLang(null);
-              resolve();
-            },
-          },
-          speechRateRef.current
-        );
-      } else {
-        speechService.speakJapanese(
-          text,
-          {
-            onStart: () => setSpeechStatus("speaking"),
-            onBoundary: (h) => setJaHighlight(h),
-            onEnd: () => {
-              setJaHighlight(null);
-              setSpeechStatus("idle");
-              setSpeechLang(null);
-              resolve();
-            },
-            onError: () => {
-              setJaHighlight(null);
-              setSpeechStatus("idle");
-              setSpeechLang(null);
-              resolve();
-            },
-          },
-          speechRateRef.current
-        );
-      }
-    });
-  }
-
   useEffect(() => {
     return () => {
       autoModeRunner.abort();
@@ -1065,6 +1110,19 @@ export function PlayerPage() {
         event.preventDefault();
         toggleQuizAuto();
         return;
+      }
+
+      if (screen === "quiz") {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          if (!quizAutoOnRef.current) goQuizPrev();
+          return;
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          if (!quizAutoOnRef.current) goQuizNext();
+          return;
+        }
       }
 
       if (event.key === "Escape") {
@@ -1431,7 +1489,11 @@ export function PlayerPage() {
       : quizAutoOn
         ? "QUIZ AUTO ON · Q to stop"
         : screen === "quiz"
-          ? "QUIZ AUTO OFF · Q to start · click a choice to answer"
+          ? quizPhase === "pre"
+            ? "QUIZ AUTO OFF · Next or ←→ to start questions · Q for auto"
+            : quizPhase === "after" || quizPhase === "finished"
+              ? "Quiz done · Prev to review · Q to restart auto"
+              : "QUIZ AUTO OFF · ←→ or Prev/Next · click a choice · Q for auto"
       : hintAutoState === "on"
         ? "Auto ON · A to stop after current audio"
         : hintAutoState === "stopping"
@@ -1771,31 +1833,29 @@ export function PlayerPage() {
             </button>
             <button
               type="button"
-              disabled={quizIndex === 0 || quizAutoOn}
-              onClick={() => {
-                stopQuizAuto();
-                speechService.stop();
-                clearSpeechUi();
-                resetQuizQuestion(quizIndex - 1);
-              }}
+              disabled={
+                quizAutoOn ||
+                (quizPhase !== "pre" &&
+                  quizPhase !== "after" &&
+                  quizPhase !== "finished" &&
+                  quizIndex === 0)
+              }
+              onClick={goQuizPrev}
+              title="Previous question (←)"
             >
               ← Prev
             </button>
             <button
               type="button"
-              disabled={
-                quizIndex >= (quizDeck.length || quizItems.length) - 1 ||
-                quizAutoOn ||
-                quizPhase === "finished"
+              disabled={quizAutoOn || quizPhase === "finished"}
+              onClick={goQuizNext}
+              title={
+                quizPhase === "pre"
+                  ? "Start quiz questions (→)"
+                  : "Next question (→)"
               }
-              onClick={() => {
-                stopQuizAuto();
-                speechService.stop();
-                clearSpeechUi();
-                resetQuizQuestion(quizIndex + 1);
-              }}
             >
-              Next →
+              {quizPhase === "pre" ? "Start Quiz →" : "Next →"}
             </button>
           </div>
         </div>
