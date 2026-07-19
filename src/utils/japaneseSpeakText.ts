@@ -1,33 +1,62 @@
 /**
- * Content morphemes where は is /ha/ (not the topic particle).
- * Protected before rewriting remaining は → わ for TTS.
- */
-const HA_CONTENT =
-  /は(いき|いり|おっ|かり|げ|じま|じまり|じめ|じめて|ず|たら|だざ|だ|ち|っ|つげん|つ|ながら|なし|なす|なせ|や[めおく]|ら[いうっ]|るめ|る|れた|れ|ん)/g;
-
-/** Content morphemes where へ is /he/ (not the directional particle). */
-const HE_CONTENT = /へ(や|ら|ん)/g;
-
-/**
  * Particle kana that TTS misreads when spoken as a kana-only string.
  * Display / karaoke keep the surface characters; only the audio string changes.
+ *
+ * Important: only rewrite true particles / particle compounds. Never run a
+ * global は→わ replace inside content words (はくさん, りはーさる, はなし…).
  */
 function speakParticleKana(kana: string): string {
   if (!kana) return kana;
 
-  const saved: string[] = [];
-  const protect = (re: RegExp, input: string): string =>
-    input.replace(re, (m) => {
-      const i = saved.length;
-      saved.push(m);
-      return `\uE000${i}\uE001`;
-    });
+  // Isolated particles (own reading token)
+  if (kana === "は") return "わ";
+  if (kana === "へ") return "え";
 
-  let out = protect(HA_CONTENT, kana);
-  out = protect(HE_CONTENT, out);
-  out = out.replace(/は/g, "わ");
-  out = out.replace(/へ/g, "え");
-  out = out.replace(/\uE000(\d+)\uE001/g, (_, i) => saved[Number(i)]!);
+  // Whole-token particle compounds
+  if (/^(に|で|と|の|から|まで|より|へ|て)は$/u.test(kana)) {
+    return `${kana.slice(0, -1)}わ`;
+  }
+  // 経て
+  if (kana === "へて") return "えて";
+
+  let out = kana;
+
+  // Grammar-pattern / set-phrase particle は (longest / most specific first)
+  if (out.startsWith("とは")) {
+    out = `とわ${out.slice(2)}`;
+  }
+  out = out.replace(/べきではない/g, "べきでわない");
+  out = out.replace(/ものではない/g, "ものでわない");
+  out = out.replace(/わけではない/g, "わけでわない");
+  out = out.replace(/ではない/g, "でわない");
+  out = out.replace(/かけては/g, "かけてわ");
+  out = out.replace(/にしては/g, "にしてわ");
+  out = out.replace(/ためには/g, "ためにわ");
+  out = out.replace(/いじょうは/g, "いじょうわ");
+  out = out.replace(/からには/g, "からにわ");
+  out = out.replace(/ことには/g, "ことにわ");
+  out = out.replace(/わけには/g, "わけにわ");
+  out = out.replace(/わけでは/g, "わけでわ");
+  out = out.replace(/ずには/g, "ずにわ");
+  out = out.replace(/ないでは/g, "ないでわ");
+  out = out.replace(/はずは/g, "はずわ");
+  out = out.replace(/ことは/g, "ことわ");
+  out = out.replace(/ものは/g, "ものわ");
+  out = out.replace(/ては/g, "てわ");
+  out = out.replace(/では/g, "でわ");
+  // に反して / に反する keep はん — do not rewrite にはん
+  out = out.replace(/には(?!ん)/g, "にわ");
+  out = out.replace(/とは/g, "とわ");
+  // 〜はともかく (not 〜はず / 〜はん / 〜はじめ)
+  out = out.replace(/^〜は(?!ず|ん|じめ)/u, "〜わ");
+  // Trailing topic は on a long pattern token (〜にかけては already handled)
+  if (/^〜.+は$/u.test(out) && !/(はず|はん|はじめ)$/u.test(out)) {
+    out = `${out.slice(0, -1)}わ`;
+  }
+
+  // Directional へて inside a longer token (〜をへて)
+  out = out.replace(/へて/g, "えて");
+
   return out;
 }
 
@@ -54,11 +83,13 @@ export function buildJapaneseSpeakText(
   if (!reading) return surface;
 
   // Speak from spaced reading tokens so particles like は can be remapped to わ.
+  // Keep spaces between tokens so TTS does not glue the particle into the next
+  // word (きじわらいげつ → sounds like "haraigetsu" / "warai…").
   const spoken = reading
     .split(/\s+/)
     .filter(Boolean)
     .map(speakReadingToken)
-    .join("")
+    .join(" ")
     .trim();
 
   return spoken || surface;
