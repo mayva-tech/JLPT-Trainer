@@ -1,6 +1,15 @@
 import { groupWrapUnits, splitIntoWords } from "./wrapWords";
-import { alignFuriganaWithTokenSpans } from "./alignFurigana";
+import {
+  alignFurigana,
+  alignFuriganaWithTokenSpans,
+} from "./alignFurigana";
 import { buildJapaneseSpeakToken } from "./japaneseSpeakText";
+
+const DEBUG_KARAOKE_ALIGN = false;
+
+function debugKaraoke(...args: unknown[]) {
+  if (DEBUG_KARAOKE_ALIGN) console.log("[karaoke-align]", ...args);
+}
 
 export type HighlightUnit = {
   start: number;
@@ -730,42 +739,254 @@ export function estimateUnitDurationMs(
 }
 
 /**
- * Map a reading-token surface span onto the display highlight unit that
- * should light up while that token is spoken.
+ * All active display units overlapping a reading-token surface span (in order).
+ * Falls back to a nearest unit only when nothing overlaps.
  */
-function displayUnitForTokenSpan(
+function displayUnitsForTokenSpan(
   displayUnits: HighlightUnit[],
   start: number,
   end: number
-): HighlightUnit | null {
+): HighlightUnit[] {
   const active = activeHighlightUnits(displayUnits);
-  if (active.length === 0) return null;
+  if (active.length === 0) return [];
 
   const overlapping = active.filter((u) => u.start < end && u.end > start);
   if (overlapping.length > 0) {
-    // Prefer the word unit that covers the most of this token span.
-    return overlapping.reduce((best, u) => {
-      const bestCover = Math.min(best.end, end) - Math.max(best.start, start);
-      const cover = Math.min(u.end, end) - Math.max(u.start, start);
-      if (cover > bestCover) return u;
-      if (cover === bestCover && u.kind === "word" && best.kind !== "word") {
-        return u;
-      }
-      return best;
-    });
+    // Prefer word units when a span also covers punctuation-only units.
+    const words = overlapping.filter((u) => u.kind === "word");
+    if (words.length > 0) {
+      const punct = overlapping.filter(
+        (u) => u.kind === "punctuation" && u.start >= words.at(-1)!.end
+      );
+      return [...words, ...punct];
+    }
+    return overlapping;
   }
 
-  return (
+  const fallback =
     active.find((u) => start >= u.start && start < u.end) ??
     active.find((u) => u.start >= start) ??
-    active.at(-1) ??
-    null
+    active.at(-1);
+  return fallback ? [fallback] : [];
+}
+
+function isKanaOnlyText(text: string): boolean {
+  return text.length > 0 && /^[\u3040-\u309f\u30a0-\u30ffー〜～]+$/u.test(text);
+}
+
+function toHiraganaLocal(text: string): string {
+  return text.replace(/[\u30a1-\u30f6]/g, (ch) =>
+    String.fromCharCode(ch.charCodeAt(0) - 0x60)
   );
+}
+
+/** Split spoken kana into mora-sized chunks for proportional allocation. */
+function splitSpokenMorae(spoken: string): string[] {
+  const chars = [...spoken.replace(/\s+/g, "")];
+  const morae: string[] = [];
+  for (let i = 0; i < chars.length; i++) {
+    const ch = chars[i]!;
+    const next = chars[i + 1];
+    if (next && /[ゃゅょぁぃぅぇぉャュョァィゥェォ]/.test(next)) {
+      morae.push(ch + next);
+      i++;
+    } else {
+      morae.push(ch);
+    }
+  }
+  return morae;
+}
+
+/**
+ * Align one reading token's spoken kana onto the overlapping display units.
+ * Exact path uses furigana segments; proportional mora split is the backup.
+ */
+function distributeSpokenTokenAcrossUnits(
+  surface: string,
+  readingToken: string,
+  spokenToken: string,
+  units: HighlightUnit[],
+  tokenStart: number,
+  tokenEnd: number
+): Array<{ unit: HighlightUnit; spokenText: string }> {
+  if (units.length === 0) return [];
+  if (units.length === 1) {
+    return [
+      {
+        unit: units[0]!,
+        spokenText: spokenToken || units[0]!.text,
+      },
+    ];
+  }
+
+  const slice = surface.slice(tokenStart, tokenEnd);
+  const segs = alignFurigana(slice, readingToken);
+  const spokenAt: string[] = Array.from({ length: slice.length }, () => "");
+  let p = 0;
+  for (const seg of segs) {
+    if (seg.reading) {
+      if (seg.text.length > 0) spokenAt[p] = seg.reading;
+    } else if (isKanaOnlyText(seg.text)) {
+      const hira = toHiraganaLocal(seg.text);
+      const hiraChars = [...hira];
+      const surfaceChars = [...seg.text];
+      for (let i = 0; i < surfaceChars.length; i++) {
+        spokenAt[p + i] = hiraChars[i] ?? surfaceChars[i] ?? "";
+      }
+    }
+    p += seg.text.length;
+  }
+
+  const distributed = units.map((u) => {
+    const relStart = Math.max(0, u.start - tokenStart);
+    const relEnd = Math.min(slice.length, u.end - tokenStart);
+    let frag = "";
+    for (let i = relStart; i < relEnd; i++) frag += spokenAt[i] ?? "";
+    return { unit: u, spokenText: frag };
+  });
+
+  const wordPieces = distributed.filter((d) => d.unit.kind === "word");
+  const emptyWords = wordPieces.filter((d) => !d.spokenText);
+  const coveredSpoken = distributed.map((d) => d.spokenText).join("");
+  const expectedCore = spokenToken.replace(/\s+/g, "");
+  const coveredCore = coveredSpoken.replace(/\s+/g, "");
+
+  if (
+    emptyWords.length === 0 &&
+    coveredCore.length > 0 &&
+    // Allow particle rewrite length differences (は→わ) of at most a few chars
+    Math.abs(coveredCore.length - expectedCore.length) <= 2
+  ) {
+    return distributed.map((d) => ({
+      unit: d.unit,
+      spokenText: d.spokenText
+        ? buildJapaneseSpeakToken(d.spokenText)
+        : d.unit.kind === "punctuation"
+          ? d.unit.text
+          : "",
+    }));
+  }
+
+  return proportionalDistributeSpoken(units, spokenToken);
+}
+
+function proportionalDistributeSpoken(
+  units: HighlightUnit[],
+  spokenToken: string
+): Array<{ unit: HighlightUnit; spokenText: string }> {
+  const morae = splitSpokenMorae(spokenToken);
+  const targets = units.filter((u) => u.kind === "word");
+  const punctOnly = units.filter((u) => u.kind === "punctuation");
+
+  if (targets.length === 0) {
+    return units.map((u) => ({
+      unit: u,
+      spokenText: u.kind === "punctuation" ? u.text : spokenToken,
+    }));
+  }
+
+  const weights = targets.map((u) => {
+    const { core } = stripTrailingPunct(u.text);
+    let w = 0;
+    for (const ch of core) {
+      if (isKanji(ch)) w += 2;
+      else if (isKana(ch) || ch === "ー" || ch === "〜" || ch === "～") w += 1;
+      else if (!/\s/.test(ch)) w += 1;
+    }
+    return Math.max(1, w);
+  });
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+  const out: Array<{ unit: HighlightUnit; spokenText: string }> = [];
+  let moraIndex = 0;
+  for (let i = 0; i < targets.length; i++) {
+    const u = targets[i]!;
+    const share =
+      i === targets.length - 1
+        ? morae.length - moraIndex
+        : Math.max(
+            1,
+            Math.round((weights[i]! / totalWeight) * morae.length)
+          );
+    const take = Math.min(
+      Math.max(1, share),
+      Math.max(1, morae.length - moraIndex - (targets.length - 1 - i))
+    );
+    const frag = morae.slice(moraIndex, moraIndex + take).join("");
+    moraIndex += take;
+    out.push({ unit: u, spokenText: frag || spokenToken });
+  }
+  // Append any leftover mora to the last word unit
+  if (moraIndex < morae.length && out.length > 0) {
+    const last = out.at(-1)!;
+    last.spokenText += morae.slice(moraIndex).join("");
+  }
+  for (const p of punctOnly) {
+    if (p.start >= (targets.at(-1)?.end ?? 0)) {
+      out.push({ unit: p, spokenText: p.text });
+    }
+  }
+  return out;
+}
+
+/** Merge consecutive steps that highlight the same surface range. */
+function mergeConsecutiveKaraokeSteps(
+  steps: SpokenKaraokeStep[]
+): SpokenKaraokeStep[] {
+  const out: SpokenKaraokeStep[] = [];
+  for (const step of steps) {
+    const prev = out.at(-1);
+    if (prev && prev.start === step.start && prev.end === step.end) {
+      const joiner = prev.speakGapAfter ? " " : "";
+      prev.spokenText = `${prev.spokenText}${joiner}${step.spokenText}`;
+      prev.speakGapAfter = step.speakGapAfter;
+      continue;
+    }
+    out.push({ ...step });
+  }
+  return out;
+}
+
+/**
+ * Insert any active word units still missing from the timeline (surface order).
+ */
+function ensureWordUnitsCovered(
+  steps: SpokenKaraokeStep[],
+  displayUnits: HighlightUnit[]
+): SpokenKaraokeStep[] {
+  const words = activeHighlightUnits(displayUnits).filter(
+    (u) => u.kind === "word"
+  );
+  if (words.length === 0) return steps;
+
+  const covered = new Set(steps.map((s) => `${s.start}:${s.end}`));
+  const missing = words.filter((u) => !covered.has(`${u.start}:${u.end}`));
+  if (missing.length === 0) return steps;
+
+  const merged = [...steps];
+  for (const unit of missing) {
+    const spoken = isKanaOnlyText(stripTrailingPunct(unit.text).core)
+      ? toHiraganaLocal(stripTrailingPunct(unit.text).core)
+      : unit.text;
+    const step: SpokenKaraokeStep = {
+      start: unit.start,
+      end: unit.end,
+      text: unit.text,
+      kind: unit.kind,
+      spokenText: spoken,
+      speakGapAfter: false,
+    };
+    const insertAt = merged.findIndex((s) => s.start > unit.start);
+    if (insertAt < 0) merged.push(step);
+    else merged.splice(insertAt, 0, step);
+  }
+  return mergeConsecutiveKaraokeSteps(merged);
 }
 
 /**
  * Build fallback karaoke steps from the spaced reading (what TTS hears).
  * Each step highlights a surface display unit; duration uses spoken kana.
+ * One reading token may fan out across multiple visible display units.
  */
 export function buildJapaneseSpokenKaraokeSteps(
   surface: string,
@@ -800,30 +1021,54 @@ export function buildJapaneseSpokenKaraokeSteps(
   const steps: SpokenKaraokeStep[] = [];
   for (let i = 0; i < tokenSpans.length; i++) {
     const span = tokenSpans[i]!;
-    const display = displayUnitForTokenSpan(units, span.start, span.end);
-    if (!display) continue;
-    const spokenText = buildJapaneseSpeakToken(span.token);
-    if (!spokenText.trim() && display.kind === "punctuation") {
-      steps.push({
-        start: display.start,
-        end: display.end,
-        text: display.text,
-        kind: display.kind,
-        spokenText: display.text,
-        speakGapAfter: i < tokenSpans.length - 1,
-      });
-      continue;
-    }
-    steps.push({
-      start: display.start,
-      end: display.end,
-      text: display.text,
-      kind: display.kind,
-      spokenText: spokenText || display.text,
-      speakGapAfter: i < tokenSpans.length - 1,
+    const overlapping = displayUnitsForTokenSpan(units, span.start, span.end);
+    if (overlapping.length === 0) continue;
+
+    const spokenToken = buildJapaneseSpeakToken(span.token);
+    const pieces = distributeSpokenTokenAcrossUnits(
+      surface,
+      span.token,
+      spokenToken,
+      overlapping,
+      span.start,
+      span.end
+    );
+
+    debugKaraoke("token", {
+      token: span.token,
+      spokenToken,
+      span: [span.start, span.end],
+      overlapping: overlapping.map((u) => u.text),
+      pieces: pieces.map((p) => `${p.unit.text}->${p.spokenText}`),
     });
+
+    for (let pi = 0; pi < pieces.length; pi++) {
+      const piece = pieces[pi]!;
+      const isLastPiece = pi === pieces.length - 1;
+      steps.push({
+        start: piece.unit.start,
+        end: piece.unit.end,
+        text: piece.unit.text,
+        kind: piece.unit.kind,
+        spokenText: piece.spokenText || piece.unit.text,
+        speakGapAfter: isLastPiece && i < tokenSpans.length - 1,
+      });
+    }
   }
-  return steps;
+
+  const merged = mergeConsecutiveKaraokeSteps(steps);
+  const covered = ensureWordUnitsCovered(merged, units);
+
+  // Enforce non-decreasing starts (drop rare regressive leftovers).
+  const monotonic: SpokenKaraokeStep[] = [];
+  for (const step of covered) {
+    const prev = monotonic.at(-1);
+    if (prev && step.start < prev.start) continue;
+    monotonic.push(step);
+  }
+
+  debugKaraoke("final-steps", monotonic.map((s) => `${s.text}/${s.spokenText}`));
+  return monotonic;
 }
 
 /** Attach spoken-kana timing fields onto existing display units (span merge). */

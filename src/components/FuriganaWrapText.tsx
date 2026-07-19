@@ -1,9 +1,6 @@
 import { alignFurigana } from "../utils/alignFurigana";
 import type { FuriganaSegment } from "../utils/alignFurigana";
-import {
-  groupWrapUnits,
-  splitIntoWords,
-} from "../utils/wrapWords";
+import { buildJapaneseHighlightUnits } from "../utils/speechHighlightUnits";
 import type { SpeechHighlight } from "../services/speechService";
 
 type Props = {
@@ -23,7 +20,8 @@ type Piece = {
 
 /**
  * Phrase/sentence with optional furigana.
- * Wraps at the same word boundaries as shadowing (never mid-character).
+ * Word groups match speech karaoke units (buildJapaneseHighlightUnits) so
+ * highlights for している → して|いる land on the same spans the voice uses.
  */
 export function FuriganaWrapText({
   surface,
@@ -34,7 +32,7 @@ export function FuriganaWrapText({
 }: Props) {
   const segments = alignFurigana(surface, reading);
   const pieces = segmentsToPieces(segments);
-  const units = groupWrapUnits(splitIntoWords(surface, "ja"));
+  const units = buildJapaneseHighlightUnits(surface);
   const groups = assignPiecesToWordUnits(pieces, units);
   const anyReading = showFurigana && pieces.some((p) => !!p.reading);
 

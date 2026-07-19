@@ -283,9 +283,14 @@ function runUtterance(
   }
 
   const audioText = (speakText ?? text).trim() || text;
-  // Browser boundary indices refer to audioText; they won't match surface
-  // highlights when we speak a kana reading of kanji.
-  const forceFallback = withHighlight && audioText !== text;
+  const reading = spacedReading?.trim() || "";
+  const isJa = lang.startsWith("ja");
+  // Browser boundary indices refer to audioText. For Japanese with an explicit
+  // reading (even when it equals the surface, e.g. 〜ことになっている), use the
+  // spoken-kana fallback timeline — Nanami word boundaries routinely skip いる /
+  // auxiliary chunks in grammar patterns and example sentences.
+  const forceFallback =
+    withHighlight && (audioText !== text || (isJa && reading.length > 0));
 
   // New generation invalidates any in-flight utterance callbacks.
   playbackGeneration += 1;
@@ -295,7 +300,6 @@ function runUtterance(
 
   const utter = new SpeechSynthesisUtterance(audioText);
   activeUtterance = utter;
-  const isJa = lang.startsWith("ja");
   const unitLang: "ja" | "en" = isJa ? "ja" : "en";
   utter.lang = lang;
   utter.rate = rate;
@@ -316,7 +320,6 @@ function runUtterance(
     : buildEnglishHighlightUnits(text);
 
   // Japanese + reading: schedule fallback from spoken kana tokens, not kanji weight.
-  const reading = spacedReading?.trim();
   const fallbackUnits: HighlightUnit[] =
     isJa && reading
       ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({

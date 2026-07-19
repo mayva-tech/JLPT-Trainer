@@ -286,6 +286,29 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
 });
 
 describe("buildJapaneseSpokenKaraokeSteps", () => {
+  function expectAllVisibleWordUnitsCovered(
+    surface: string,
+    reading: string
+  ) {
+    const units = activeHighlightUnits(
+      buildJapaneseHighlightUnits(surface)
+    ).filter((unit) => unit.kind === "word");
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+
+    for (const unit of units) {
+      expect(
+        steps.some(
+          (step) => step.start === unit.start && step.end === unit.end
+        ),
+        `missing highlight for 「${unit.text}」 in 「${surface}」`
+      ).toBe(true);
+    }
+
+    for (let i = 1; i < steps.length; i++) {
+      expect(steps[i]!.start).toBeGreaterThanOrEqual(steps[i - 1]!.start);
+    }
+  }
+
   it("maps reading tokens onto surface highlight spans", async () => {
     const { seedKanjiReadingsFromDetails } = await import("./alignFurigana");
     const { vocabulary } = await import("../data/vocabulary");
@@ -299,11 +322,94 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
     const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
     expect(steps.length).toBeGreaterThan(3);
     expect(steps.some((s) => s.spokenText.includes("にんしん"))).toBe(true);
-    expect(steps.some((s) => s.spokenText === "わ" || s.spokenText === "は")).toBe(
+    // Topic particle becomes わ in TTS (own step or glued onto prior unit)
+    expect(steps.some((s) => s.spokenText.includes("わ"))).toBe(true);
+    expectAllVisibleWordUnitsCovered(surface, reading);
+  });
+
+  it("covers every visible unit when one reading token spans multiple kana units", () => {
+    const surface = "ということだ";
+    const reading = "ということだ";
+    const units = activeHighlightUnits(buildJapaneseHighlightUnits(surface));
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    expect(units.length).toBeGreaterThan(1);
+    expectAllVisibleWordUnitsCovered(surface, reading);
+    const reconstructed = steps
+      .map((s) => s.spokenText)
+      .join("")
+      .replace(/\s+/g, "");
+    expect(reconstructed).toBe("ということだ");
+  });
+
+  it("covers grammar expression with kanji (〜を余儀なくされる)", async () => {
+    const { seedKanjiReadingsFromDetails } = await import("./alignFurigana");
+    const { vocabulary } = await import("../data/vocabulary");
+    for (const item of vocabulary) {
+      seedKanjiReadingsFromDetails(item.kanjiDetails);
+    }
+    // Seed 余 / 儀 if present in grammar-related vocab; also register manually via align
+    seedKanjiReadingsFromDetails([
+      { character: "余", onyomi: ["ヨ"], kunyomi: ["あま・る"] },
+      { character: "儀", onyomi: ["ギ"] },
+    ]);
+
+    const surface = "〜を余儀なくされる";
+    const reading = "〜を よぎなく される";
+    expectAllVisibleWordUnitsCovered(surface, reading);
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    expect(steps.some((s) => s.spokenText.includes("よぎ"))).toBe(true);
+    expect(steps.some((s) => s.spokenText.includes("される"))).toBe(true);
+  });
+
+  it("covers connected grammar phrase (〜わけにはいかない)", () => {
+    const surface = "〜わけにはいかない";
+    const reading = "〜わけには いかない";
+    expectAllVisibleWordUnitsCovered(surface, reading);
+  });
+
+  it("covers formal grammar expression (〜のいかんによらず)", () => {
+    const surface = "〜のいかんによらず";
+    const reading = "〜の いかん に よらず";
+    expectAllVisibleWordUnitsCovered(surface, reading);
+  });
+
+  it("covers sentence word units without punctuation replacing words", async () => {
+    const { seedKanjiReadingsFromDetails } = await import("./alignFurigana");
+    const { vocabulary } = await import("../data/vocabulary");
+    for (const item of vocabulary) {
+      seedKanjiReadingsFromDetails(item.kanjiDetails);
+    }
+
+    const surface = "お金があれば幸せというわけではない。";
+    const reading =
+      "おかね が あれば しあわせ という わけでは ない。";
+    expectAllVisibleWordUnitsCovered(surface, reading);
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    expect(steps.every((s, i) => i === 0 || s.start >= steps[i - 1]!.start)).toBe(
       true
     );
-    // Particle TTS form
-    const topic = steps.find((s) => s.text.includes("は") && s.spokenText === "わ");
-    expect(topic || steps.some((s) => s.spokenText === "わ")).toBeTruthy();
+  });
+
+  it("covers している / ている units in grammar-style sentences", () => {
+    const cases: Array<[string, string]> = [
+      [
+        "知っているくせに、知らないふりをしている。",
+        "しって いる くせに、しらない ふり を して いる。",
+      ],
+      [
+        "この学校では、制服を着ることになっている。",
+        "この がっこう では、せいふく を きる こと に なって いる。",
+      ],
+      ["〜ことになっている", "〜ことになっている"],
+      ["準備している。", "じゅんび して いる。"],
+    ];
+    for (const [surface, reading] of cases) {
+      expectAllVisibleWordUnitsCovered(surface, reading);
+      const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+      expect(
+        steps.some((s) => /いる/.test(s.text) && /いる/.test(s.spokenText)),
+        `いる missing spoken timing in 「${surface}」`
+      ).toBe(true);
+    }
   });
 });

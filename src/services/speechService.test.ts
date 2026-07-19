@@ -320,12 +320,38 @@ describe("speechService highlight mode", () => {
     expect(highlights[0]).toBe("妊娠");
   });
 
+  it("uses fallback karaoke when Japanese reading equals the surface (ている patterns)", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "〜ことになっている";
+    const highlights: string[] = [];
+    speechService.speakJapanese(
+      text,
+      {
+        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      },
+      1,
+      { reading: "〜ことになっている" }
+    );
+    const utter = spoken[0]!;
+    // Speak text equals surface — old code waited for browser boundaries.
+    expect(utter.text).toBe(text);
+    utter.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
+    expect(highlights.length).toBeGreaterThanOrEqual(1);
+    // Advance through remaining fallback steps
+    vi.advanceTimersByTime(8000);
+    expect(highlights.some((h) => h.includes("いる"))).toBe(true);
+  });
+
   it("fills skipped みる when browser jumps から→と in 〜からみると", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");
 
     const text = "〜からみると";
     const highlights: string[] = [];
+    // No reading → browser boundary mode (audioText === text)
     speechService.speakJapanese(text, {
       onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
     });
