@@ -47,6 +47,11 @@ export type TocItemId =
   | "word-421-430"
   | "word-431-440"
   | "word-441-450"
+  | "word-451-460"
+  | "word-461-470"
+  | "word-471-480"
+  | "word-481-490"
+  | "word-491-500"
   | "grammar-1-10"
   | "grammar-11-20"
   | "grammar-21-30"
@@ -69,6 +74,55 @@ export type TocItemId =
   | "grammar-191-200"
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
+  | "quiz-vocab-11-20"
+  | "quiz-vocab-21-30"
+  | "quiz-vocab-31-40"
+  | "quiz-vocab-41-50"
+  | "quiz-vocab-51-60"
+  | "quiz-vocab-61-70"
+  | "quiz-vocab-71-80"
+  | "quiz-vocab-81-90"
+  | "quiz-vocab-91-100"
+  | "quiz-vocab-101-110"
+  | "quiz-vocab-111-120"
+  | "quiz-vocab-121-130"
+  | "quiz-vocab-131-140"
+  | "quiz-vocab-141-150"
+  | "quiz-vocab-151-160"
+  | "quiz-vocab-161-170"
+  | "quiz-vocab-171-180"
+  | "quiz-vocab-181-190"
+  | "quiz-vocab-191-200"
+  | "quiz-vocab-201-210"
+  | "quiz-vocab-211-220"
+  | "quiz-vocab-221-230"
+  | "quiz-vocab-231-240"
+  | "quiz-vocab-241-250"
+  | "quiz-vocab-251-260"
+  | "quiz-vocab-261-270"
+  | "quiz-vocab-271-280"
+  | "quiz-vocab-281-290"
+  | "quiz-vocab-291-300"
+  | "quiz-vocab-301-310"
+  | "quiz-vocab-311-320"
+  | "quiz-vocab-321-330"
+  | "quiz-vocab-331-340"
+  | "quiz-vocab-341-350"
+  | "quiz-vocab-351-360"
+  | "quiz-vocab-361-370"
+  | "quiz-vocab-371-380"
+  | "quiz-vocab-381-390"
+  | "quiz-vocab-391-400"
+  | "quiz-vocab-401-410"
+  | "quiz-vocab-411-420"
+  | "quiz-vocab-421-430"
+  | "quiz-vocab-431-440"
+  | "quiz-vocab-441-450"
+  | "quiz-vocab-451-460"
+  | "quiz-vocab-461-470"
+  | "quiz-vocab-471-480"
+  | "quiz-vocab-481-490"
+  | "quiz-vocab-491-500"
   | "quiz-grammar-1-10"
   | "quiz-grammar-11-20"
   | "quiz-grammar-21-30"
@@ -386,6 +440,36 @@ export const tocGroups: TocGroup[] = [
         kind: "word",
         lessonId: "lesson-45",
       },
+      {
+        id: "word-451-460",
+        label: "Word Lesson 451–460",
+        kind: "word",
+        lessonId: "lesson-46",
+      },
+      {
+        id: "word-461-470",
+        label: "Word Lesson 461–470",
+        kind: "word",
+        lessonId: "lesson-47",
+      },
+      {
+        id: "word-471-480",
+        label: "Word Lesson 471–480",
+        kind: "word",
+        lessonId: "lesson-48",
+      },
+      {
+        id: "word-481-490",
+        label: "Word Lesson 481–490",
+        kind: "word",
+        lessonId: "lesson-49",
+      },
+      {
+        id: "word-491-500",
+        label: "Word Lesson 491–500",
+        kind: "word",
+        lessonId: "lesson-50",
+      },
     ],
   },
   {
@@ -425,9 +509,303 @@ export const tocGroups: TocGroup[] = [
       },
       {
         id: "quiz-vocab-1-10",
-        label: "Vocabulary Quiz 1–10",
+        label: "Word Quiz 1–10",
         kind: "quiz",
         quizId: "quiz-vocab-1-10",
+      },
+      {
+        id: "quiz-vocab-11-20",
+        label: "Word Quiz 11–20",
+        kind: "quiz",
+        quizId: "quiz-vocab-11-20",
+      },
+      {
+        id: "quiz-vocab-21-30",
+        label: "Word Quiz 21–30",
+        kind: "quiz",
+        quizId: "quiz-vocab-21-30",
+      },
+      {
+        id: "quiz-vocab-31-40",
+        label: "Word Quiz 31–40",
+        kind: "quiz",
+        quizId: "quiz-vocab-31-40",
+      },
+      {
+        id: "quiz-vocab-41-50",
+        label: "Word Quiz 41–50",
+        kind: "quiz",
+        quizId: "quiz-vocab-41-50",
+      },
+      {
+        id: "quiz-vocab-51-60",
+        label: "Word Quiz 51–60",
+        kind: "quiz",
+        quizId: "quiz-vocab-51-60",
+      },
+      {
+        id: "quiz-vocab-61-70",
+        label: "Word Quiz 61–70",
+        kind: "quiz",
+        quizId: "quiz-vocab-61-70",
+      },
+      {
+        id: "quiz-vocab-71-80",
+        label: "Word Quiz 71–80",
+        kind: "quiz",
+        quizId: "quiz-vocab-71-80",
+      },
+      {
+        id: "quiz-vocab-81-90",
+        label: "Word Quiz 81–90",
+        kind: "quiz",
+        quizId: "quiz-vocab-81-90",
+      },
+      {
+        id: "quiz-vocab-91-100",
+        label: "Word Quiz 91–100",
+        kind: "quiz",
+        quizId: "quiz-vocab-91-100",
+      },
+      {
+        id: "quiz-vocab-101-110",
+        label: "Word Quiz 101–110",
+        kind: "quiz",
+        quizId: "quiz-vocab-101-110",
+      },
+      {
+        id: "quiz-vocab-111-120",
+        label: "Word Quiz 111–120",
+        kind: "quiz",
+        quizId: "quiz-vocab-111-120",
+      },
+      {
+        id: "quiz-vocab-121-130",
+        label: "Word Quiz 121–130",
+        kind: "quiz",
+        quizId: "quiz-vocab-121-130",
+      },
+      {
+        id: "quiz-vocab-131-140",
+        label: "Word Quiz 131–140",
+        kind: "quiz",
+        quizId: "quiz-vocab-131-140",
+      },
+      {
+        id: "quiz-vocab-141-150",
+        label: "Word Quiz 141–150",
+        kind: "quiz",
+        quizId: "quiz-vocab-141-150",
+      },
+      {
+        id: "quiz-vocab-151-160",
+        label: "Word Quiz 151–160",
+        kind: "quiz",
+        quizId: "quiz-vocab-151-160",
+      },
+      {
+        id: "quiz-vocab-161-170",
+        label: "Word Quiz 161–170",
+        kind: "quiz",
+        quizId: "quiz-vocab-161-170",
+      },
+      {
+        id: "quiz-vocab-171-180",
+        label: "Word Quiz 171–180",
+        kind: "quiz",
+        quizId: "quiz-vocab-171-180",
+      },
+      {
+        id: "quiz-vocab-181-190",
+        label: "Word Quiz 181–190",
+        kind: "quiz",
+        quizId: "quiz-vocab-181-190",
+      },
+      {
+        id: "quiz-vocab-191-200",
+        label: "Word Quiz 191–200",
+        kind: "quiz",
+        quizId: "quiz-vocab-191-200",
+      },
+      {
+        id: "quiz-vocab-201-210",
+        label: "Word Quiz 201–210",
+        kind: "quiz",
+        quizId: "quiz-vocab-201-210",
+      },
+      {
+        id: "quiz-vocab-211-220",
+        label: "Word Quiz 211–220",
+        kind: "quiz",
+        quizId: "quiz-vocab-211-220",
+      },
+      {
+        id: "quiz-vocab-221-230",
+        label: "Word Quiz 221–230",
+        kind: "quiz",
+        quizId: "quiz-vocab-221-230",
+      },
+      {
+        id: "quiz-vocab-231-240",
+        label: "Word Quiz 231–240",
+        kind: "quiz",
+        quizId: "quiz-vocab-231-240",
+      },
+      {
+        id: "quiz-vocab-241-250",
+        label: "Word Quiz 241–250",
+        kind: "quiz",
+        quizId: "quiz-vocab-241-250",
+      },
+      {
+        id: "quiz-vocab-251-260",
+        label: "Word Quiz 251–260",
+        kind: "quiz",
+        quizId: "quiz-vocab-251-260",
+      },
+      {
+        id: "quiz-vocab-261-270",
+        label: "Word Quiz 261–270",
+        kind: "quiz",
+        quizId: "quiz-vocab-261-270",
+      },
+      {
+        id: "quiz-vocab-271-280",
+        label: "Word Quiz 271–280",
+        kind: "quiz",
+        quizId: "quiz-vocab-271-280",
+      },
+      {
+        id: "quiz-vocab-281-290",
+        label: "Word Quiz 281–290",
+        kind: "quiz",
+        quizId: "quiz-vocab-281-290",
+      },
+      {
+        id: "quiz-vocab-291-300",
+        label: "Word Quiz 291–300",
+        kind: "quiz",
+        quizId: "quiz-vocab-291-300",
+      },
+      {
+        id: "quiz-vocab-301-310",
+        label: "Word Quiz 301–310",
+        kind: "quiz",
+        quizId: "quiz-vocab-301-310",
+      },
+      {
+        id: "quiz-vocab-311-320",
+        label: "Word Quiz 311–320",
+        kind: "quiz",
+        quizId: "quiz-vocab-311-320",
+      },
+      {
+        id: "quiz-vocab-321-330",
+        label: "Word Quiz 321–330",
+        kind: "quiz",
+        quizId: "quiz-vocab-321-330",
+      },
+      {
+        id: "quiz-vocab-331-340",
+        label: "Word Quiz 331–340",
+        kind: "quiz",
+        quizId: "quiz-vocab-331-340",
+      },
+      {
+        id: "quiz-vocab-341-350",
+        label: "Word Quiz 341–350",
+        kind: "quiz",
+        quizId: "quiz-vocab-341-350",
+      },
+      {
+        id: "quiz-vocab-351-360",
+        label: "Word Quiz 351–360",
+        kind: "quiz",
+        quizId: "quiz-vocab-351-360",
+      },
+      {
+        id: "quiz-vocab-361-370",
+        label: "Word Quiz 361–370",
+        kind: "quiz",
+        quizId: "quiz-vocab-361-370",
+      },
+      {
+        id: "quiz-vocab-371-380",
+        label: "Word Quiz 371–380",
+        kind: "quiz",
+        quizId: "quiz-vocab-371-380",
+      },
+      {
+        id: "quiz-vocab-381-390",
+        label: "Word Quiz 381–390",
+        kind: "quiz",
+        quizId: "quiz-vocab-381-390",
+      },
+      {
+        id: "quiz-vocab-391-400",
+        label: "Word Quiz 391–400",
+        kind: "quiz",
+        quizId: "quiz-vocab-391-400",
+      },
+      {
+        id: "quiz-vocab-401-410",
+        label: "Word Quiz 401–410",
+        kind: "quiz",
+        quizId: "quiz-vocab-401-410",
+      },
+      {
+        id: "quiz-vocab-411-420",
+        label: "Word Quiz 411–420",
+        kind: "quiz",
+        quizId: "quiz-vocab-411-420",
+      },
+      {
+        id: "quiz-vocab-421-430",
+        label: "Word Quiz 421–430",
+        kind: "quiz",
+        quizId: "quiz-vocab-421-430",
+      },
+      {
+        id: "quiz-vocab-431-440",
+        label: "Word Quiz 431–440",
+        kind: "quiz",
+        quizId: "quiz-vocab-431-440",
+      },
+      {
+        id: "quiz-vocab-441-450",
+        label: "Word Quiz 441–450",
+        kind: "quiz",
+        quizId: "quiz-vocab-441-450",
+      },
+      {
+        id: "quiz-vocab-451-460",
+        label: "Word Quiz 451–460",
+        kind: "quiz",
+        quizId: "quiz-vocab-451-460",
+      },
+      {
+        id: "quiz-vocab-461-470",
+        label: "Word Quiz 461–470",
+        kind: "quiz",
+        quizId: "quiz-vocab-461-470",
+      },
+      {
+        id: "quiz-vocab-471-480",
+        label: "Word Quiz 471–480",
+        kind: "quiz",
+        quizId: "quiz-vocab-471-480",
+      },
+      {
+        id: "quiz-vocab-481-490",
+        label: "Word Quiz 481–490",
+        kind: "quiz",
+        quizId: "quiz-vocab-481-490",
+      },
+      {
+        id: "quiz-vocab-491-500",
+        label: "Word Quiz 491–500",
+        kind: "quiz",
+        quizId: "quiz-vocab-491-500",
       },
       {
         id: "quiz-grammar-1-10",
@@ -546,6 +924,11 @@ export const lessonGroupIds: TocItemId[] = [
   "word-421-430",
   "word-431-440",
   "word-441-450",
+  "word-451-460",
+  "word-461-470",
+  "word-471-480",
+  "word-481-490",
+  "word-491-500",
   "grammar-1-10",
   "grammar-11-20",
   "grammar-21-30",
@@ -570,6 +953,55 @@ export const lessonGroupIds: TocItemId[] = [
 
 export const quizIds: TocItemId[] = [
   "quiz-vocab-1-10",
+  "quiz-vocab-11-20",
+  "quiz-vocab-21-30",
+  "quiz-vocab-31-40",
+  "quiz-vocab-41-50",
+  "quiz-vocab-51-60",
+  "quiz-vocab-61-70",
+  "quiz-vocab-71-80",
+  "quiz-vocab-81-90",
+  "quiz-vocab-91-100",
+  "quiz-vocab-101-110",
+  "quiz-vocab-111-120",
+  "quiz-vocab-121-130",
+  "quiz-vocab-131-140",
+  "quiz-vocab-141-150",
+  "quiz-vocab-151-160",
+  "quiz-vocab-161-170",
+  "quiz-vocab-171-180",
+  "quiz-vocab-181-190",
+  "quiz-vocab-191-200",
+  "quiz-vocab-201-210",
+  "quiz-vocab-211-220",
+  "quiz-vocab-221-230",
+  "quiz-vocab-231-240",
+  "quiz-vocab-241-250",
+  "quiz-vocab-251-260",
+  "quiz-vocab-261-270",
+  "quiz-vocab-271-280",
+  "quiz-vocab-281-290",
+  "quiz-vocab-291-300",
+  "quiz-vocab-301-310",
+  "quiz-vocab-311-320",
+  "quiz-vocab-321-330",
+  "quiz-vocab-331-340",
+  "quiz-vocab-341-350",
+  "quiz-vocab-351-360",
+  "quiz-vocab-361-370",
+  "quiz-vocab-371-380",
+  "quiz-vocab-381-390",
+  "quiz-vocab-391-400",
+  "quiz-vocab-401-410",
+  "quiz-vocab-411-420",
+  "quiz-vocab-421-430",
+  "quiz-vocab-431-440",
+  "quiz-vocab-441-450",
+  "quiz-vocab-451-460",
+  "quiz-vocab-461-470",
+  "quiz-vocab-471-480",
+  "quiz-vocab-481-490",
+  "quiz-vocab-491-500",
   "quiz-grammar-1-10",
   "quiz-grammar-11-20",
   "quiz-grammar-21-30",

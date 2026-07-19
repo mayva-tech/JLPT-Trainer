@@ -76,6 +76,7 @@ import {
   type QuizPhase,
   type QuizWord,
 } from "../services/quizAutoRunner";
+import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 
 const STEPS: StepName[] = [
   "category",
@@ -100,8 +101,6 @@ type Screen =
   | "flow-setup";
 type SpeechUiStatus = "idle" | "speaking" | "paused";
 
-const QUIZ_VOCAB_LESSON = "lesson-01";
-
 /** Which grammar lesson feeds each grammar-quiz TOC slot. */
 const QUIZ_GRAMMAR_LESSON_BY_TOC_ID: Partial<Record<TocItemId, string>> = {
   "quiz-grammar-1-10": "grammar-lesson-01",
@@ -113,13 +112,16 @@ const QUIZ_GRAMMAR_LESSON_BY_TOC_ID: Partial<Record<TocItemId, string>> = {
 
 /** Build the QuizWord[] deck for a given quiz TOC id, or [] if unknown. */
 function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
-  if (
-    quizTocId === "quiz-vocab-1-10" ||
-    quizTocId === "quiz-mixed" ||
-    quizTocId === "quiz-final"
-  ) {
+  const vocabLessonId = getVocabularyLessonIdForQuiz(quizTocId);
+  if (vocabLessonId) {
     return getVocabularyByIds(
-      getLessonById(QUIZ_VOCAB_LESSON)?.vocabularyIds ?? []
+      getLessonById(vocabLessonId)?.vocabularyIds ?? []
+    );
+  }
+  // Mixed / final still use lesson 1 until a dedicated pool exists.
+  if (quizTocId === "quiz-mixed" || quizTocId === "quiz-final") {
+    return getVocabularyByIds(
+      getLessonById("lesson-01")?.vocabularyIds ?? []
     );
   }
   const grammarLessonId = quizTocId
@@ -663,11 +665,20 @@ export function PlayerPage() {
         break;
       }
       case "quiz": {
+        setShowFurigana(true);
+        setQuizAutoOn(false);
+        setQuizChoices([]);
+        setQuizCorrectIndex(0);
+        setQuizSelectedIndex(null);
+        setQuizPhase("asking");
+        setQuizShowReading(false);
+        setQuizIndex(0);
         setScreen("quiz");
         const list = buildQuizWords(id);
         const deck = shuffle(list);
         setQuizDeck(deck);
         quizDeckRef.current = deck;
+        quizItemsRef.current = list;
         resetQuizQuestion(0, deck);
         break;
       }
