@@ -8,6 +8,15 @@ function isKanji(ch: string): boolean {
   return /[\u4e00-\u9faf\u3400-\u4dbf]/.test(ch);
 }
 
+/** Ideographic iteration mark (々) — repeats the previous kanji's reading. */
+function isIterationMark(ch: string): boolean {
+  return ch === "々";
+}
+
+function isWaveDash(ch: string): boolean {
+  return ch === "〜" || ch === "～";
+}
+
 function isHiragana(ch: string): boolean {
   return /[\u3040-\u309f]/.test(ch);
 }
@@ -96,6 +105,13 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "一", reading: "いっ" },
     { text: "方", reading: "ぽう" },
   ],
+  世界中: [
+    { text: "世", reading: "せ" },
+    { text: "界", reading: "かい" },
+    { text: "中", reading: "じゅう" },
+  ],
+  // 古く / むかし — irregular (not ふるく)
+  古く: [{ text: "古く", reading: "むかし" }],
   結果: [
     { text: "結", reading: "けっ" },
     { text: "果", reading: "か" },
@@ -137,6 +153,33 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "共", reading: "きょう" },
     { text: "有", reading: "ゆう" },
     { text: "スペース" },
+  ],
+  // Readings include okurigana sound with no kana on the surface
+  差出人: [
+    { text: "差", reading: "さし" },
+    { text: "出", reading: "だし" },
+    { text: "人", reading: "にん" },
+  ],
+  受取人: [
+    { text: "受", reading: "うけ" },
+    { text: "取", reading: "とり" },
+    { text: "人", reading: "にん" },
+  ],
+  引き受け: [
+    { text: "引", reading: "ひ" },
+    { text: "き" },
+    { text: "受", reading: "う" },
+    { text: "け" },
+  ],
+  隅々: [
+    { text: "隅", reading: "すみ" },
+    { text: "々", reading: "ずみ" },
+  ],
+  // 軽々しく / かるがるしく
+  軽々しく: [
+    { text: "軽", reading: "かる" },
+    { text: "々", reading: "がる" },
+    { text: "しく" },
   ],
 };
 
@@ -410,9 +453,11 @@ function normalizeOnyomi(raw: string): string {
 }
 
 function normalizeKunyomi(raw: string): string[] {
-  const noDot = raw.replace(/・/g, "");
+  // Stem only (before ・). Do NOT register the full okurigana-inclusive form
+  // (かならず / おきる) as a bare-kanji reading — that lets「起」absorb「おきる」
+  // and leave a stray「きる」when the next token is「き」.
   const stem = raw.split("・")[0] ?? raw;
-  return [...new Set([toHiragana(stem), toHiragana(noDot)].filter(Boolean))];
+  return [...new Set([toHiragana(stem)].filter(Boolean))];
 }
 
 /** Seed per-kanji reading candidates from vocabulary kanjiDetails. */
@@ -678,6 +723,32 @@ export function arabicToJapaneseReading(digits: string): string | null {
   return `${hundreds}${arabicToJapaneseReading(String(rest))}`;
 }
 
+/**
+ * Minute counter after a number: 3分→さんぷん, 10分→じゅっぷん, 30分→さんじゅっぷん.
+ * Returns the reading under 分, or null if this token is not a digit+分 reading.
+ */
+function matchDigitMinuteCounter(
+  digitReading: string,
+  tokenHira: string
+): string | null {
+  for (const counter of ["ふん", "ぷん", "ぶん"] as const) {
+    if (tokenHira === digitReading + counter) return counter;
+  }
+  // 促音便 before 分: じゅう→じゅっ (10分 / 30分 / 60分…)
+  if (digitReading.endsWith("じゅう")) {
+    const sokuon = `${digitReading.slice(0, -1)}っ`;
+    for (const counter of ["ふん", "ぷん", "ぶん"] as const) {
+      if (tokenHira === sokuon + counter) return counter;
+    }
+  }
+  // 1分 → いっぷん
+  if (digitReading === "いち" && tokenHira === "いっぷん") return "ぷん";
+  // 6分 → ろっぷん, 8分 → はっぷん
+  if (digitReading === "ろく" && tokenHira === "ろっぷん") return "ぷん";
+  if (digitReading === "はち" && tokenHira === "はっぷん") return "ぷん";
+  return null;
+}
+
 function matchDigitToken(
   surface: string,
   pos: number,
@@ -697,13 +768,25 @@ function matchDigitToken(
   const { core, punct } = stripTrailingPunct(token);
   const tokenHira = toHiragana(core);
 
-  if (!tokenHira.startsWith(digitReading)) return null;
-
   const segments: FuriganaSegment[] = [
     { text: digits, reading: digitReading },
   ];
   let end = digitEnd;
-  let restReading = tokenHira.slice(digitReading.length);
+  let restReading: string | null = null;
+
+  if (tokenHira.startsWith(digitReading)) {
+    restReading = tokenHira.slice(digitReading.length);
+  } else {
+    // 分 counter 促音便: 10分→じゅっぷん, 30分→さんじゅっぷん (じゅう→じゅっ)
+    const minuteRest = matchDigitMinuteCounter(digitReading, tokenHira);
+    if (minuteRest && end < limit && surface[end] === "分") {
+      segments.push({ text: "分", reading: minuteRest });
+      end++;
+      restReading = "";
+    } else {
+      return null;
+    }
+  }
 
   // Following katakana in the same reading token (e.g. にじゅうパーセント)
   if (restReading && end < limit && isKatakana(surface[end]!)) {
@@ -775,13 +858,38 @@ function matchCompoundToken(
     let end = pos + compound.length;
 
     // 日本 + 語 — the rest of the token keeps going into the next kanji
+    // 古く + から — or into following hiragana (particle glued in same token)
     const restReading = hira.slice(compoundReading.length);
     if (restReading) {
-      if (end >= limit || !isKanji(surface[end]!)) continue;
-      const rest = matchKanjiToken(surface, end, restReading + punct, limit);
-      if (!rest) continue;
-      segments.push(...rest.segments);
-      return { segments, end: rest.end };
+      if (end < limit && isKanji(surface[end]!)) {
+        const rest = matchKanjiToken(surface, end, restReading + punct, limit);
+        if (!rest) continue;
+        segments.push(...rest.segments);
+        return { segments, end: rest.end };
+      }
+      if (end < limit && isHiragana(surface[end]!)) {
+        let kanaEnd = end;
+        while (
+          kanaEnd < limit &&
+          kanaEnd < surface.length &&
+          isHiragana(surface[kanaEnd]!)
+        ) {
+          kanaEnd++;
+        }
+        const kanaRun = surface.slice(end, kanaEnd);
+        if (toHiragana(kanaRun) !== restReading) continue;
+        segments.push({ text: kanaRun });
+        end = kanaEnd;
+        if (punct) {
+          if (!surface.startsWith(punct, end) || end + punct.length > limit) {
+            continue;
+          }
+          segments.push({ text: punct });
+          end += punct.length;
+        }
+        return { segments, end };
+      }
+      continue;
     }
 
     if (punct) {
@@ -803,6 +911,14 @@ function matchToken(
   limit: number
 ): { segments: FuriganaSegment[]; end: number } | null {
   if (pos >= surface.length || pos >= limit) return null;
+
+  // Grammar-pattern placeholder 〜 / ～ (〜に反して / 〜にはんして)
+  if (isWaveDash(surface[pos]!) && isWaveDash(token[0] ?? "")) {
+    const wave = surface[pos]!;
+    const rest = matchToken(surface, pos + 1, token.slice(1), limit);
+    if (!rest) return null;
+    return { segments: [{ text: wave }, ...rest.segments], end: rest.end };
+  }
 
   const { core, punct } = stripTrailingPunct(token);
 
@@ -888,10 +1004,85 @@ function matchToken(
   const okuriKanji = matchKanjiOkuriKanji(surface, pos, token, limit);
   if (okuriKanji) return okuriKanji;
 
+  // 隅々 / すみずみ (kanji + iteration mark)
+  const iteration = matchKanjiIteration(surface, pos, token, limit);
+  if (iteration) return iteration;
+
   const kanjiMatch = matchKanjiToken(surface, pos, token, limit);
   if (kanjiMatch) {
     return { segments: kanjiMatch.segments, end: kanjiMatch.end };
   }
+  return null;
+}
+
+/**
+ * 隅々 / すみずみ — 々 repeats the previous kanji reading (with optional 連濁).
+ */
+function matchKanjiIteration(
+  surface: string,
+  pos: number,
+  token: string,
+  limit: number
+): { segments: FuriganaSegment[]; end: number } | null {
+  if (!isKanji(surface[pos]!)) return null;
+  if (pos + 1 >= limit || !isIterationMark(surface[pos + 1]!)) return null;
+
+  const { core, punct } = stripTrailingPunct(token);
+  const kanji = surface[pos]!;
+  let end = pos + 2;
+
+  let okuri = "";
+  while (end < limit && end < surface.length && isHiragana(surface[end]!)) {
+    okuri += surface[end];
+    end++;
+  }
+  if (okuri && !core.endsWith(okuri)) return null;
+
+  const kanjiReading = okuri ? core.slice(0, core.length - okuri.length) : core;
+  if (!kanjiReading) return null;
+
+  const candidates = getReadingCandidates(kanji);
+  const tryStems =
+    candidates.length > 0
+      ? candidates
+      : splitMorae(kanjiReading).length >= 2
+        ? [
+            // No dictionary: only even mora split (すみ|ずみ)
+            splitMorae(kanjiReading)
+              .slice(0, Math.floor(splitMorae(kanjiReading).length / 2))
+              .join(""),
+          ].filter(Boolean)
+        : [];
+
+  for (const stem of tryStems) {
+    if (!kanjiReading.startsWith(stem)) continue;
+    const rest = kanjiReading.slice(stem.length);
+    if (!rest) continue;
+    const allowed = new Set([stem, ...withRendakuVariants(stem)]);
+    if (!allowed.has(rest)) continue;
+
+    const segments: FuriganaSegment[] = [
+      { text: kanji, reading: stem },
+      { text: "々", reading: rest },
+    ];
+    if (okuri) segments.push({ text: okuri });
+
+    if (punct) {
+      if (
+        end < surface.length &&
+        end < limit &&
+        surface.startsWith(punct, end)
+      ) {
+        segments.push({ text: punct });
+        end += punct.length;
+      } else {
+        return null;
+      }
+    }
+
+    return { segments, end };
+  }
+
   return null;
 }
 
@@ -925,6 +1116,38 @@ function matchHiraganaThenKanji(
 
   const restReading = tokenHira.slice(ti);
   if (!restReading) return null;
+
+  const compoundRest = matchCompoundToken(
+    surface,
+    kanaEnd,
+    restReading + punct,
+    limit
+  );
+  if (compoundRest) {
+    return {
+      segments: [
+        { text: surface.slice(pos, kanaEnd) },
+        ...compoundRest.segments,
+      ],
+      end: compoundRest.end,
+    };
+  }
+
+  const okuriRest = matchKanjiOkuriKanji(
+    surface,
+    kanaEnd,
+    restReading + punct,
+    limit
+  );
+  if (okuriRest) {
+    return {
+      segments: [
+        { text: surface.slice(pos, kanaEnd) },
+        ...okuriRest.segments,
+      ],
+      end: okuriRest.end,
+    };
+  }
 
   const rest = matchKanjiToken(surface, kanaEnd, restReading + punct, limit);
   if (!rest) return null;
@@ -974,6 +1197,19 @@ function findNextStart(
     if (okuriCompound) return i;
   }
 
+  // Kanji + 々 (隅々 / すみずみ)
+  for (let i = pos + 1; i < surface.length; i++) {
+    if (!isKanji(surface[i]!)) continue;
+    if (matchKanjiIteration(surface, i, nextToken, surface.length)) return i;
+  }
+
+  // Grammar 〜… tokens: start at the wave dash
+  if (isWaveDash(nextToken[0] ?? "")) {
+    for (let i = pos + 1; i < surface.length; i++) {
+      if (isWaveDash(surface[i]!)) return i;
+    }
+  }
+
   // Pick the best-scoring start for the next content word
   let bestPos: number | null = null;
   let bestQ = -Infinity;
@@ -1004,7 +1240,11 @@ export function alignFurigana(
 
   for (let ti = 0; ti < tokens.length; ti++) {
     const token = tokens[ti]!;
-    while (pos < surface.length && /\s/.test(surface[pos]!)) pos++;
+    // Keep surface spaces so 「〜くらい / ぐらい」 round-trips.
+    while (pos < surface.length && /\s/.test(surface[pos]!)) {
+      segments.push({ text: surface[pos]! });
+      pos++;
+    }
 
     const next = tokens[ti + 1];
     let limit = surface.length;
@@ -1030,6 +1270,14 @@ export function alignFurigana(
       continue;
     }
 
+    // Slash / middot between alternate forms (くらい / ぐらい)
+    if (pos < surface.length && (surface[pos] === "/" || surface[pos] === "・")) {
+      segments.push({ text: surface[pos]! });
+      pos++;
+      ti--; // retry same token
+      continue;
+    }
+
     if (pos < surface.length && isPunct(surface[pos]!)) {
       segments.push({ text: surface[pos]! });
       pos++;
@@ -1040,7 +1288,12 @@ export function alignFurigana(
     if (pos < surface.length) {
       const start = pos;
       if (isKanji(surface[pos]!)) {
-        while (pos < surface.length && isKanji(surface[pos]!)) pos++;
+        while (
+          pos < surface.length &&
+          (isKanji(surface[pos]!) || isIterationMark(surface[pos]!))
+        ) {
+          pos++;
+        }
       } else if (isKatakana(surface[pos]!)) {
         while (pos < surface.length && isKatakana(surface[pos]!)) pos++;
       } else {

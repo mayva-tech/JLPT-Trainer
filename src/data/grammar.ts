@@ -240,7 +240,7 @@ export const grammar: GrammarItem[] = [
     meaning: "taking ~ as an opportunity; on the occasion of",
     formation: "N + を契機に",
     sentence: "定年を契機に、田舎へ引っ越した。",
-    sentenceReading: "ていねん を けいきに、いなか へ ひっこした。",
+    sentenceReading: "ていねん を けいき に、いなか へ ひっこした。",
     sentenceMeaning:
       "Taking retirement as an opportunity, I moved to the countryside.",
     audioSentence: "/audio/n2/grammar/5015-sentence.mp3",
@@ -2640,7 +2640,7 @@ export const grammar: GrammarItem[] = [
     meaning: "is considered to be; is regarded as (socially accepted view)",
     formation: "V plain / な-adj / N + とされている",
     sentence: "この地域は、古くから聖地とされている。",
-    sentenceReading: "この ちいき は、むかしから せいち と されて いる。",
+    sentenceReading: "この ちいき は、むかし から せいち と されて いる。",
     sentenceMeaning: "This area has long been considered a sacred place.",
     audioSentence: "/audio/n2/grammar/5182-sentence.mp3",
   },
