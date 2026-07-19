@@ -42,6 +42,11 @@ export type TocItemId =
   | "word-371-380"
   | "word-381-390"
   | "word-391-400"
+  | "word-401-410"
+  | "word-411-420"
+  | "word-421-430"
+  | "word-431-440"
+  | "word-441-450"
   | "grammar-1-10"
   | "grammar-11-20"
   | "grammar-21-30"
@@ -351,6 +356,36 @@ export const tocGroups: TocGroup[] = [
         kind: "word",
         lessonId: "lesson-40",
       },
+      {
+        id: "word-401-410",
+        label: "Word Lesson 401–410",
+        kind: "word",
+        lessonId: "lesson-41",
+      },
+      {
+        id: "word-411-420",
+        label: "Word Lesson 411–420",
+        kind: "word",
+        lessonId: "lesson-42",
+      },
+      {
+        id: "word-421-430",
+        label: "Word Lesson 421–430",
+        kind: "word",
+        lessonId: "lesson-43",
+      },
+      {
+        id: "word-431-440",
+        label: "Word Lesson 431–440",
+        kind: "word",
+        lessonId: "lesson-44",
+      },
+      {
+        id: "word-441-450",
+        label: "Word Lesson 441–450",
+        kind: "word",
+        lessonId: "lesson-45",
+      },
     ],
   },
   {
@@ -506,6 +541,11 @@ export const lessonGroupIds: TocItemId[] = [
   "word-371-380",
   "word-381-390",
   "word-391-400",
+  "word-401-410",
+  "word-411-420",
+  "word-421-430",
+  "word-431-440",
+  "word-441-450",
   "grammar-1-10",
   "grammar-11-20",
   "grammar-21-30",
