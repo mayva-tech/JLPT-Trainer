@@ -77,6 +77,7 @@ import {
   type QuizWord,
 } from "../services/quizAutoRunner";
 import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
+import { getGrammarLessonIdForQuiz } from "../utils/quizGrammarLesson";
 
 const STEPS: StepName[] = [
   "category",
@@ -101,15 +102,6 @@ type Screen =
   | "flow-setup";
 type SpeechUiStatus = "idle" | "speaking" | "paused";
 
-/** Which grammar lesson feeds each grammar-quiz TOC slot. */
-const QUIZ_GRAMMAR_LESSON_BY_TOC_ID: Partial<Record<TocItemId, string>> = {
-  "quiz-grammar-1-10": "grammar-lesson-01",
-  "quiz-grammar-11-20": "grammar-lesson-02",
-  "quiz-grammar-21-30": "grammar-lesson-03",
-  "quiz-grammar-31-40": "grammar-lesson-04",
-  "quiz-grammar-41-50": "grammar-lesson-05",
-};
-
 /** Build the QuizWord[] deck for a given quiz TOC id, or [] if unknown. */
 function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
   const vocabLessonId = getVocabularyLessonIdForQuiz(quizTocId);
@@ -124,9 +116,7 @@ function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
       getLessonById("lesson-01")?.vocabularyIds ?? []
     );
   }
-  const grammarLessonId = quizTocId
-    ? QUIZ_GRAMMAR_LESSON_BY_TOC_ID[quizTocId]
-    : undefined;
+  const grammarLessonId = getGrammarLessonIdForQuiz(quizTocId);
   if (grammarLessonId) {
     const grammarLesson = getGrammarLessonById(grammarLessonId);
     return getGrammarByIds(grammarLesson?.grammarIds ?? []).map((g) => ({

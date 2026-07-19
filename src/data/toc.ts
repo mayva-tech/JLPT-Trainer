@@ -128,6 +128,21 @@ export type TocItemId =
   | "quiz-grammar-21-30"
   | "quiz-grammar-31-40"
   | "quiz-grammar-41-50"
+  | "quiz-grammar-51-60"
+  | "quiz-grammar-61-70"
+  | "quiz-grammar-71-80"
+  | "quiz-grammar-81-90"
+  | "quiz-grammar-91-100"
+  | "quiz-grammar-101-110"
+  | "quiz-grammar-111-120"
+  | "quiz-grammar-121-130"
+  | "quiz-grammar-131-140"
+  | "quiz-grammar-141-150"
+  | "quiz-grammar-151-160"
+  | "quiz-grammar-161-170"
+  | "quiz-grammar-171-180"
+  | "quiz-grammar-181-190"
+  | "quiz-grammar-191-200"
   | "quiz-mixed"
   | "quiz-final"
   | "quiz-after-comment"
@@ -838,6 +853,96 @@ export const tocGroups: TocGroup[] = [
         quizId: "quiz-grammar-41-50",
       },
       {
+        id: "quiz-grammar-51-60",
+        label: "Grammar Quiz 51–60",
+        kind: "quiz",
+        quizId: "quiz-grammar-51-60",
+      },
+      {
+        id: "quiz-grammar-61-70",
+        label: "Grammar Quiz 61–70",
+        kind: "quiz",
+        quizId: "quiz-grammar-61-70",
+      },
+      {
+        id: "quiz-grammar-71-80",
+        label: "Grammar Quiz 71–80",
+        kind: "quiz",
+        quizId: "quiz-grammar-71-80",
+      },
+      {
+        id: "quiz-grammar-81-90",
+        label: "Grammar Quiz 81–90",
+        kind: "quiz",
+        quizId: "quiz-grammar-81-90",
+      },
+      {
+        id: "quiz-grammar-91-100",
+        label: "Grammar Quiz 91–100",
+        kind: "quiz",
+        quizId: "quiz-grammar-91-100",
+      },
+      {
+        id: "quiz-grammar-101-110",
+        label: "Grammar Quiz 101–110",
+        kind: "quiz",
+        quizId: "quiz-grammar-101-110",
+      },
+      {
+        id: "quiz-grammar-111-120",
+        label: "Grammar Quiz 111–120",
+        kind: "quiz",
+        quizId: "quiz-grammar-111-120",
+      },
+      {
+        id: "quiz-grammar-121-130",
+        label: "Grammar Quiz 121–130",
+        kind: "quiz",
+        quizId: "quiz-grammar-121-130",
+      },
+      {
+        id: "quiz-grammar-131-140",
+        label: "Grammar Quiz 131–140",
+        kind: "quiz",
+        quizId: "quiz-grammar-131-140",
+      },
+      {
+        id: "quiz-grammar-141-150",
+        label: "Grammar Quiz 141–150",
+        kind: "quiz",
+        quizId: "quiz-grammar-141-150",
+      },
+      {
+        id: "quiz-grammar-151-160",
+        label: "Grammar Quiz 151–160",
+        kind: "quiz",
+        quizId: "quiz-grammar-151-160",
+      },
+      {
+        id: "quiz-grammar-161-170",
+        label: "Grammar Quiz 161–170",
+        kind: "quiz",
+        quizId: "quiz-grammar-161-170",
+      },
+      {
+        id: "quiz-grammar-171-180",
+        label: "Grammar Quiz 171–180",
+        kind: "quiz",
+        quizId: "quiz-grammar-171-180",
+      },
+      {
+        id: "quiz-grammar-181-190",
+        label: "Grammar Quiz 181–190",
+        kind: "quiz",
+        quizId: "quiz-grammar-181-190",
+      },
+      {
+        id: "quiz-grammar-191-200",
+        label: "Grammar Quiz 191–200",
+        kind: "quiz",
+        quizId: "quiz-grammar-191-200",
+      },
+      {
         id: "quiz-mixed",
         label: "Mixed Quiz",
         kind: "quiz",
@@ -1007,6 +1112,21 @@ export const quizIds: TocItemId[] = [
   "quiz-grammar-21-30",
   "quiz-grammar-31-40",
   "quiz-grammar-41-50",
+  "quiz-grammar-51-60",
+  "quiz-grammar-61-70",
+  "quiz-grammar-71-80",
+  "quiz-grammar-81-90",
+  "quiz-grammar-91-100",
+  "quiz-grammar-101-110",
+  "quiz-grammar-111-120",
+  "quiz-grammar-121-130",
+  "quiz-grammar-131-140",
+  "quiz-grammar-141-150",
+  "quiz-grammar-151-160",
+  "quiz-grammar-161-170",
+  "quiz-grammar-171-180",
+  "quiz-grammar-181-190",
+  "quiz-grammar-191-200",
   "quiz-mixed",
   "quiz-final",
 ];
