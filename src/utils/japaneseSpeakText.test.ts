@@ -71,6 +71,21 @@ describe("buildJapaneseSpeakText", () => {
     );
   });
 
+  it("expands ー so ストーリー / すとーりー keeps long vowels in TTS", () => {
+    expect(
+      buildJapaneseSpeakText(
+        "この映画、子供っぽいストーリーだけど面白い。",
+        "この えいが、こどもっぽい すとーりー だけど おもしろい。"
+      )
+    ).toContain("すとおりい");
+    expect(buildJapaneseSpeakText("ストーリー", "すとーりー")).toBe(
+      "すとおりい"
+    );
+    expect(buildJapaneseSpeakText("スマートフォン", "すまーとふぉん")).toBe(
+      "すまあとふぉん"
+    );
+  });
+
   it("keeps content は (はくさん / りはーさる / はなし), not particle rewrite", () => {
     expect(
       buildJapaneseSpeakText(
@@ -83,7 +98,7 @@ describe("buildJapaneseSpeakText", () => {
         "開会式に先立って、リハーサルが行われた。",
         "かいかいしき に さきだって、りはーさる が おこなわれた。"
       )
-    ).toContain("りはーさる");
+    ).toContain("りはあさる");
     expect(
       buildJapaneseSpeakText(
         "彼の話を聞いて、笑わないではいられなかった。",

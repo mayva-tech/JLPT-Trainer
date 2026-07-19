@@ -42,9 +42,9 @@ export type SpeakJapaneseOptions = {
 };
 
 export const SPEECH_RATE_NORMAL = 0.85;
-export const SPEECH_RATE_SLOW = 0.7;
+export const SPEECH_RATE_SLOW = 0.68;
 /** Slightly faster normal used only for the shadowing listen pass. */
-export const SPEECH_RATE_SHADOWING = 0.95;
+export const SPEECH_RATE_SHADOWING = 0.85;
 
 const DEBUG_SPEECH = false;
 /** Wait after onstart for a real browser boundary before choosing fallback. */
@@ -57,6 +57,7 @@ type HighlightMode = "detecting" | "boundary" | "fallback";
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
 let boundaryDetectionTimer: number | null = null;
+let gapFillTimer: number | null = null;
 let pendingStartTimer: number | null = null;
 let pendingVoicesChangedHandler: (() => void) | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
@@ -222,6 +223,13 @@ function clearFallbackTimer() {
   }
 }
 
+function clearGapFillTimer() {
+  if (gapFillTimer !== null) {
+    window.clearTimeout(gapFillTimer);
+    gapFillTimer = null;
+  }
+}
+
 function clearBoundaryDetectionTimer() {
   if (boundaryDetectionTimer !== null) {
     window.clearTimeout(boundaryDetectionTimer);
@@ -246,6 +254,7 @@ function clearPendingStartOnly() {
 /** Clear timers/listeners for the current utterance lifecycle (not generation). */
 function clearPlaybackHandles() {
   clearFallbackTimer();
+  clearGapFillTimer();
   clearBoundaryDetectionTimer();
   clearPendingStartOnly();
   activeUtterance = null;
@@ -323,10 +332,58 @@ function runUtterance(
     callbacks?.onBoundary?.(h);
   };
 
+  /**
+   * Browser TTS often jumps over a unit (〜から|みる|と → から then と).
+   * Walk any skipped active units before landing on `target`.
+   */
+  const advanceHighlightTo = (target: SpeechHighlight) => {
+    clearGapFillTimer();
+    const from = Math.max(0, lastBoundaryEnd);
+    const skipped = units.filter(
+      (u) => u.start >= from && u.start < target.start
+    );
+    if (skipped.length === 0) {
+      emitHighlight(target);
+      return;
+    }
+
+    const queue: SpeechHighlight[] = [
+      ...skipped.map((u) => ({ start: u.start, end: u.end })),
+      target,
+    ];
+    let i = 0;
+    const step = () => {
+      gapFillTimer = null;
+      if (!alive()) return;
+      if (mode !== "boundary" && mode !== "detecting") return;
+      const h = queue[i++];
+      if (!h) return;
+      emitHighlight(h);
+      if (i >= queue.length) return;
+      const justShown = units.find(
+        (u) => u.start === h.start && u.end === h.end
+      );
+      const dwell = justShown
+        ? Math.max(
+            70,
+            Math.min(
+              160,
+              (estimateUnitDurationMs(justShown, unitLang) /
+                Math.max(rate, 0.2)) *
+                0.45
+            )
+          )
+        : 90;
+      gapFillTimer = window.setTimeout(step, dwell);
+    };
+    step();
+  };
+
   const startFallback = () => {
     if (!alive() || !withHighlight || units.length === 0) return;
     mode = "fallback";
     clearBoundaryDetectionTimer();
+    clearGapFillTimer();
     debug("mode", playbackId, "fallback");
 
     const scheduleNext = (index: number, delayMs: number) => {
@@ -354,7 +411,7 @@ function runUtterance(
     clearBoundaryDetectionTimer();
     clearFallbackTimer();
     debug("mode", playbackId, "boundary");
-    emitHighlight(h);
+    advanceHighlightTo(h);
   };
 
   utter.onstart = () => {
@@ -407,7 +464,7 @@ function runUtterance(
       return;
     }
     if (mode === "boundary") {
-      emitHighlight(mapped);
+      advanceHighlightTo(mapped);
       return;
     }
     // fallback: ignore late browser boundaries
@@ -416,25 +473,60 @@ function runUtterance(
   const finish = (kind: "end" | "error", error?: unknown) => {
     if (!alive() || finished) return;
     finished = true;
-    // Browser TTS often skips a boundary for the final mora (e.g. だ).
-    // Advance karaoke to the last unit before clearing so it still lights up.
+    // Browser TTS often skips a boundary for a middle/final unit (みる in
+    // 〜からみると, or final だ). Walk any still-unlit units before clearing.
     if (withHighlight && units.length > 0) {
-      const last = units[units.length - 1]!;
-      if (lastBoundaryEnd < last.end) {
-        emitHighlight({ start: last.start, end: last.end });
+      const remaining = units.filter(
+        (u) => u.start >= Math.max(0, lastBoundaryEnd)
+      );
+      if (remaining.length === 1) {
+        emitHighlight({
+          start: remaining[0]!.start,
+          end: remaining[0]!.end,
+        });
+        clearAndEnd();
+        return;
+      }
+      if (remaining.length > 1) {
+        let i = 0;
+        const step = () => {
+          gapFillTimer = null;
+          if (!alive()) {
+            clearAndEnd();
+            return;
+          }
+          const u = remaining[i++];
+          if (!u) {
+            clearAndEnd();
+            return;
+          }
+          emitHighlight({ start: u.start, end: u.end });
+          if (i >= remaining.length) {
+            clearAndEnd();
+            return;
+          }
+          gapFillTimer = window.setTimeout(step, 80);
+        };
+        step();
+        return;
       }
     }
-    if (activeUtterance === utter) {
-      clearPlaybackHandles();
-    } else {
-      clearFallbackTimer();
-      clearBoundaryDetectionTimer();
+    clearAndEnd();
+
+    function clearAndEnd() {
+      if (activeUtterance === utter) {
+        clearPlaybackHandles();
+      } else {
+        clearFallbackTimer();
+        clearGapFillTimer();
+        clearBoundaryDetectionTimer();
+      }
+      debug(kind, playbackId, error);
+      if (kind === "error") {
+        callbacks?.onError?.(error);
+      }
+      callbacks?.onEnd?.();
     }
-    debug(kind, playbackId, error);
-    if (kind === "error") {
-      callbacks?.onError?.(error);
-    }
-    callbacks?.onEnd?.();
   };
 
   utter.onend = () => finish("end");

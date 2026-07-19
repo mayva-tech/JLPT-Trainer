@@ -5,6 +5,61 @@
  * Important: only rewrite true particles / particle compounds. Never run a
  * global は→わ replace inside content words (はくさん, りはーさる, はなし…).
  */
+
+/** Vowel letter that prolongs the mora before ー (browser TTS often skips ー). */
+function choonVowelFor(prev: string): string | null {
+  if (
+    /[ぁあかがさざただなはばぱまゃやらわァアカガサザタダナハバパマャヤラワ]/.test(
+      prev
+    )
+  ) {
+    return "あ";
+  }
+  if (
+    /[ぃいきぎしじちぢにひびぴみりゐィイキギシジチヂニヒビピミリヰ]/.test(prev)
+  ) {
+    return "い";
+  }
+  if (
+    /[ぅうくぐすずつづぬふぶぷむゅゆるゥウクグスズツヅヌフブプムュユル]/.test(
+      prev
+    )
+  ) {
+    return "う";
+  }
+  if (
+    /[ぇえけげせぜてでねへべぺめれゑェエケゲセゼテデネヘベペメレヱ]/.test(prev)
+  ) {
+    return "え";
+  }
+  if (
+    /[ぉおこごそぞとどのほぼぽもょよろをォオコゴソゾトドノホボポモョヨロヲ]/.test(
+      prev
+    )
+  ) {
+    return "お";
+  }
+  return null;
+}
+
+/**
+ * Expand ー into the matching vowel so loanwords like すとーりー / ストーリー
+ * keep their length (すとおりい) under ja-JP speech synthesis.
+ */
+function expandChoonpu(kana: string): string {
+  let out = "";
+  for (const ch of kana) {
+    if (ch === "ー" || ch === "ｰ") {
+      const prev = out.at(-1);
+      const vowel = prev ? choonVowelFor(prev) : null;
+      out += vowel ?? ch;
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
 function speakParticleKana(kana: string): string {
   if (!kana) return kana;
 
@@ -57,7 +112,7 @@ function speakParticleKana(kana: string): string {
   // Directional へて inside a longer token (〜をへて)
   out = out.replace(/へて/g, "えて");
 
-  return out;
+  return expandChoonpu(out);
 }
 
 function speakReadingToken(token: string): string {

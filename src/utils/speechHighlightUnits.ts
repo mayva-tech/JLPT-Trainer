@@ -596,7 +596,46 @@ function isKana(ch: string): boolean {
 /**
  * Weighted duration (ms) for one highlight unit at speech rate 1.
  * Callers scale with `duration / rate`.
+ *
+ * Break weights use a one-point step (0.1) for commas / clause commas,
+ * particle-only units, and other phrase separators so fallback karaoke
+ * dwells slightly longer at natural voiceover breaks.
  */
+const KARAOKE_BREAK_POINT = 0.2;
+
+const PARTICLE_BREAK_CORES = new Set([
+  "を",
+  "に",
+  "が",
+  "は",
+  "で",
+  "へ",
+  "の",
+  "や",
+  "と",
+  "も",
+  "から",
+  "まで",
+  "より",
+  "ほど",
+  "だけ",
+  "など",
+  "では",
+  "には",
+  "とは",
+  "でも",
+  "ても",
+  "のは",
+  "のが",
+  "のを",
+  "って",
+]);
+
+function isParticleBreakUnit(text: string): boolean {
+  const { core } = stripTrailingPunct(text);
+  return PARTICLE_BREAK_CORES.has(core);
+}
+
 export function estimateUnitDurationMs(
   unit: HighlightUnit,
   lang: "ja" | "en"
@@ -605,9 +644,15 @@ export function estimateUnitDurationMs(
   if (unit.kind === "space") return 0;
 
   let punctPause = 0;
-  if (/[,，、]/.test(text)) punctPause += 0.25;
-  if (/[;；:]/.test(text)) punctPause += 0.35;
-  if (/[.!?。！？]/.test(text)) punctPause += 0.55;
+  // Commas / Japanese phrase commas (、)
+  if (/[,，、]/.test(text)) punctPause += 0.25 + KARAOKE_BREAK_POINT;
+  // Other phrase separators
+  if (/[;；:]/.test(text)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
+  if (/[.!?。！？]/.test(text)) punctPause += 0.55 + KARAOKE_BREAK_POINT;
+  // Lone particles as their own karaoke unit
+  if (lang === "ja" && isParticleBreakUnit(text)) {
+    punctPause += KARAOKE_BREAK_POINT;
+  }
 
   if (lang === "en") {
     const letters = text.replace(/[^A-Za-z0-9']/g, "").length;

@@ -3,6 +3,7 @@ import {
   activeHighlightUnits,
   buildEnglishHighlightUnits,
   buildJapaneseHighlightUnits,
+  estimateUnitDurationMs,
   findUnitForBoundary,
 } from "./speechHighlightUnits";
 
@@ -219,5 +220,28 @@ describe("buildJapaneseHighlightUnits", () => {
     const shimatta = active.find((u) => u.text.startsWith("しまった"));
     expect(shimatta).toBeTruthy();
     expect(text.slice(shimatta!.start, shimatta!.end)).toContain("ま");
+  });
+});
+
+describe("estimateUnitDurationMs karaoke breaks", () => {
+  it("gives commas and particles more dwell than plain content of similar length", () => {
+    const plain = estimateUnitDurationMs(
+      { start: 0, end: 2, text: "映画", kind: "word" },
+      "ja"
+    );
+    const withComma = estimateUnitDurationMs(
+      { start: 0, end: 3, text: "映画、", kind: "word" },
+      "ja"
+    );
+    const particle = estimateUnitDurationMs(
+      { start: 0, end: 1, text: "は", kind: "word" },
+      "ja"
+    );
+    const contentMora = estimateUnitDurationMs(
+      { start: 0, end: 1, text: "あ", kind: "word" },
+      "ja"
+    );
+    expect(withComma).toBeGreaterThan(plain);
+    expect(particle).toBeGreaterThan(contentMora);
   });
 });

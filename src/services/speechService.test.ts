@@ -278,4 +278,26 @@ describe("speechService highlight mode", () => {
     utter.onend?.();
     expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
   });
+
+  it("fills skipped みる when browser jumps から→と in 〜からみると", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "〜からみると";
+    const highlights: string[] = [];
+    speechService.speakJapanese(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+    });
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    // Boundary reports index inside から (may gap-fill 〜 first)
+    utter.onboundary?.({ name: "word", charIndex: 1, charLength: 2 });
+    vi.advanceTimersByTime(500);
+    expect(highlights).toContain("から");
+    // Browser skips みる and jumps to と
+    utter.onboundary?.({ name: "word", charIndex: 5, charLength: 1 });
+    vi.advanceTimersByTime(500);
+    expect(highlights).toContain("みる");
+    expect(highlights.at(-1)).toBe("と");
+  });
 });
