@@ -1,10 +1,32 @@
 import { groupWrapUnits, splitIntoWords } from "./wrapWords";
+import { alignFuriganaWithTokenSpans } from "./alignFurigana";
+import { buildJapaneseSpeakToken } from "./japaneseSpeakText";
 
 export type HighlightUnit = {
   start: number;
   end: number;
   text: string;
   kind: "word" | "punctuation" | "space";
+  /**
+   * Kana (or English) actually sent to TTS for this unit.
+   * When set, fallback karaoke duration uses this instead of surface kanji weight.
+   */
+  spokenText?: string;
+  /** Extra pause after this unit for the space Nanami hears between reading tokens. */
+  speakGapAfter?: boolean;
+};
+
+/**
+ * One fallback karaoke step: highlight a surface span while speaking `spokenText`.
+ * Built from spaced reading tokens so timing follows TTS, not kanji glyph count.
+ */
+export type SpokenKaraokeStep = {
+  start: number;
+  end: number;
+  text: string;
+  kind: HighlightUnit["kind"];
+  spokenText: string;
+  speakGapAfter: boolean;
 };
 
 export type SpeechHighlightRange = {
@@ -597,11 +619,16 @@ function isKana(ch: string): boolean {
  * Weighted duration (ms) for one highlight unit at speech rate 1.
  * Callers scale with `duration / rate`.
  *
- * Break weights use a one-point step (0.1) for commas / clause commas,
+ * For Japanese with `spokenText`, mora weight comes from the spoken kana
+ * (にんしん), not from surface kanji count (妊娠 → 2×1.6).
+ *
+ * Break weights use a one-point step for commas / clause commas,
  * particle-only units, and other phrase separators so fallback karaoke
  * dwells slightly longer at natural voiceover breaks.
  */
 const KARAOKE_BREAK_POINT = 0.2;
+/** Pause Nanami often inserts between spaced reading tokens. */
+const SPEAK_TOKEN_GAP = 0.35;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -636,6 +663,20 @@ function isParticleBreakUnit(text: string): boolean {
   return PARTICLE_BREAK_CORES.has(core);
 }
 
+/** Mora weight from kana (and digits); ignores kanji glyphs. */
+function estimateSpokenMoraWeight(spoken: string): number {
+  let mora = 0;
+  for (const ch of spoken) {
+    if (isSmallKana(ch)) mora += 0.15;
+    else if (ch === "ー" || ch === "〜" || ch === "～") mora += 0.5;
+    else if (isKana(ch)) mora += 1;
+    else if (/\d/.test(ch)) mora += 0.8;
+    else if (/\s/.test(ch)) mora += SPEAK_TOKEN_GAP;
+    else if (!PUNCT_ONLY.test(ch)) mora += 0.5;
+  }
+  return mora;
+}
+
 export function estimateUnitDurationMs(
   unit: HighlightUnit,
   lang: "ja" | "en"
@@ -653,11 +694,23 @@ export function estimateUnitDurationMs(
   if (lang === "ja" && isParticleBreakUnit(text)) {
     punctPause += KARAOKE_BREAK_POINT;
   }
+  if (unit.speakGapAfter) punctPause += SPEAK_TOKEN_GAP;
 
   if (lang === "en") {
-    const letters = text.replace(/[^A-Za-z0-9']/g, "").length;
+    const spoken = unit.spokenText ?? text;
+    const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
     const weight = 0.6 + Math.min(letters, 12) * 0.08 + punctPause;
     return Math.max(120, weight * 280);
+  }
+
+  // Prefer aligned spoken kana whenever available.
+  if (unit.spokenText) {
+    const mora = estimateSpokenMoraWeight(unit.spokenText);
+    if (unit.kind === "punctuation") {
+      return Math.max(80, punctPause * 280);
+    }
+    const weight = Math.max(0.7, mora) + punctPause;
+    return Math.max(140, weight * 165);
   }
 
   let mora = 0;
@@ -674,4 +727,146 @@ export function estimateUnitDurationMs(
   }
   const weight = Math.max(0.7, mora) + punctPause;
   return Math.max(140, weight * 165);
+}
+
+/**
+ * Map a reading-token surface span onto the display highlight unit that
+ * should light up while that token is spoken.
+ */
+function displayUnitForTokenSpan(
+  displayUnits: HighlightUnit[],
+  start: number,
+  end: number
+): HighlightUnit | null {
+  const active = activeHighlightUnits(displayUnits);
+  if (active.length === 0) return null;
+
+  const overlapping = active.filter((u) => u.start < end && u.end > start);
+  if (overlapping.length > 0) {
+    // Prefer the word unit that covers the most of this token span.
+    return overlapping.reduce((best, u) => {
+      const bestCover = Math.min(best.end, end) - Math.max(best.start, start);
+      const cover = Math.min(u.end, end) - Math.max(u.start, start);
+      if (cover > bestCover) return u;
+      if (cover === bestCover && u.kind === "word" && best.kind !== "word") {
+        return u;
+      }
+      return best;
+    });
+  }
+
+  return (
+    active.find((u) => start >= u.start && start < u.end) ??
+    active.find((u) => u.start >= start) ??
+    active.at(-1) ??
+    null
+  );
+}
+
+/**
+ * Build fallback karaoke steps from the spaced reading (what TTS hears).
+ * Each step highlights a surface display unit; duration uses spoken kana.
+ */
+export function buildJapaneseSpokenKaraokeSteps(
+  surface: string,
+  spacedReading: string,
+  displayUnits?: HighlightUnit[]
+): SpokenKaraokeStep[] {
+  const units = displayUnits ?? buildJapaneseHighlightUnits(surface);
+  const reading = spacedReading.trim();
+  if (!reading) {
+    return activeHighlightUnits(units).map((u) => ({
+      start: u.start,
+      end: u.end,
+      text: u.text,
+      kind: u.kind,
+      spokenText: u.text,
+      speakGapAfter: false,
+    }));
+  }
+
+  const { tokenSpans } = alignFuriganaWithTokenSpans(surface, reading);
+  if (tokenSpans.length === 0) {
+    return activeHighlightUnits(units).map((u) => ({
+      start: u.start,
+      end: u.end,
+      text: u.text,
+      kind: u.kind,
+      spokenText: u.text,
+      speakGapAfter: false,
+    }));
+  }
+
+  const steps: SpokenKaraokeStep[] = [];
+  for (let i = 0; i < tokenSpans.length; i++) {
+    const span = tokenSpans[i]!;
+    const display = displayUnitForTokenSpan(units, span.start, span.end);
+    if (!display) continue;
+    const spokenText = buildJapaneseSpeakToken(span.token);
+    if (!spokenText.trim() && display.kind === "punctuation") {
+      steps.push({
+        start: display.start,
+        end: display.end,
+        text: display.text,
+        kind: display.kind,
+        spokenText: display.text,
+        speakGapAfter: i < tokenSpans.length - 1,
+      });
+      continue;
+    }
+    steps.push({
+      start: display.start,
+      end: display.end,
+      text: display.text,
+      kind: display.kind,
+      spokenText: spokenText || display.text,
+      speakGapAfter: i < tokenSpans.length - 1,
+    });
+  }
+  return steps;
+}
+
+/** Attach spoken-kana timing fields onto existing display units (span merge). */
+export function attachJapaneseSpokenText(
+  units: HighlightUnit[],
+  surface: string,
+  spacedReading: string
+): HighlightUnit[] {
+  const steps = buildJapaneseSpokenKaraokeSteps(
+    surface,
+    spacedReading,
+    units
+  );
+  // Merge spoken fragments that highlight the same display span.
+  const byRange = new Map<string, HighlightUnit>();
+  for (const step of steps) {
+    const key = `${step.start}:${step.end}`;
+    const prev = byRange.get(key);
+    if (!prev) {
+      byRange.set(key, {
+        start: step.start,
+        end: step.end,
+        text: step.text,
+        kind: step.kind,
+        spokenText: step.spokenText,
+        speakGapAfter: step.speakGapAfter,
+      });
+    } else {
+      byRange.set(key, {
+        ...prev,
+        spokenText: `${prev.spokenText ?? ""}${step.speakGapAfter || prev.speakGapAfter ? " " : ""}${step.spokenText}`.trim(),
+        speakGapAfter: step.speakGapAfter,
+      });
+    }
+  }
+
+  return units.map((u) => {
+    const keyed = byRange.get(`${u.start}:${u.end}`);
+    if (!keyed) return u;
+    return {
+      ...u,
+      spokenText: keyed.spokenText,
+      speakGapAfter: keyed.speakGapAfter,
+    };
+  });
 }

@@ -1256,8 +1256,27 @@ export function alignFurigana(
   surface: string,
   spacedReading: string
 ): FuriganaSegment[] {
+  return alignFuriganaWithTokenSpans(surface, spacedReading).segments;
+}
+
+/** One reading token mapped onto a UTF-16 surface span. */
+export type ReadingTokenSpan = {
+  token: string;
+  start: number;
+  end: number;
+};
+
+/**
+ * Same alignment as `alignFurigana`, plus each reading token's surface range.
+ * Used by karaoke timing so duration follows spoken kana, not kanji glyphs.
+ */
+export function alignFuriganaWithTokenSpans(
+  surface: string,
+  spacedReading: string
+): { segments: FuriganaSegment[]; tokenSpans: ReadingTokenSpan[] } {
   const tokens = tokenizeReading(spacedReading);
   const segments: FuriganaSegment[] = [];
+  const tokenSpans: ReadingTokenSpan[] = [];
   let pos = 0;
 
   for (let ti = 0; ti < tokens.length; ti++) {
@@ -1277,10 +1296,12 @@ export function alignFurigana(
       }
     }
 
+    const tokenStart = pos;
     const matched = matchToken(surface, pos, token, limit);
     if (matched) {
       segments.push(...matched.segments);
       pos = matched.end;
+      tokenSpans.push({ token, start: tokenStart, end: pos });
       continue;
     }
 
@@ -1289,6 +1310,7 @@ export function alignFurigana(
     if (retry) {
       segments.push(...retry.segments);
       pos = retry.end;
+      tokenSpans.push({ token, start: tokenStart, end: pos });
       continue;
     }
 
@@ -1322,6 +1344,8 @@ export function alignFurigana(
         pos++;
       }
       segments.push({ text: surface.slice(start, pos) });
+      // Still record a span so karaoke can advance past unaligned leftovers.
+      tokenSpans.push({ token, start, end: pos });
     }
   }
 
@@ -1330,7 +1354,7 @@ export function alignFurigana(
     pos++;
   }
 
-  return mergePlain(segments);
+  return { segments: mergePlain(segments), tokenSpans };
 }
 
 function mergePlain(segments: FuriganaSegment[]): FuriganaSegment[] {

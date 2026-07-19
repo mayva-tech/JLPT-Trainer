@@ -279,6 +279,47 @@ describe("speechService highlight mode", () => {
     expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
   });
 
+  it("does not rush multiple remaining units at end of speech", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish("Hello world today", {
+      onBoundary: (h) => highlights.push(h),
+    });
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+
+    utter.onend?.();
+    // Two+ unlit units must not flash — clear instead of fake sync.
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+    vi.advanceTimersByTime(500);
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+  });
+
+  it("uses spoken-kana fallback timing when a reading is provided", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const highlights: string[] = [];
+    const text = "妊娠";
+    speechService.speakJapanese(
+      text,
+      {
+        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      },
+      1,
+      { reading: "にんしん" }
+    );
+    const utter = spoken[0]!;
+    expect(utter.text).toContain("にんしん");
+    utter.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
+    expect(highlights[0]).toBe("妊娠");
+  });
+
   it("fills skipped みる when browser jumps から→と in 〜からみると", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");

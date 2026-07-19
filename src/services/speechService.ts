@@ -9,6 +9,7 @@ import {
   activeHighlightUnits,
   buildEnglishHighlightUnits,
   buildJapaneseHighlightUnits,
+  buildJapaneseSpokenKaraokeSteps,
   estimateUnitDurationMs,
   findUnitForBoundary,
   type HighlightUnit,
@@ -49,8 +50,8 @@ export const SPEECH_RATE_SHADOWING = 0.85;
 const DEBUG_SPEECH = false;
 /** Wait after onstart for a real browser boundary before choosing fallback. */
 const BOUNDARY_DETECT_MS = 320;
-/** Optional lead-in after onstart before first fallback unit (ms). */
-const FALLBACK_START_OFFSET_MS = 60;
+/** Lead-in after onstart before first fallback unit (ms). Audible audio often lags onstart. */
+const FALLBACK_START_OFFSET_MS = 100;
 
 type HighlightMode = "detecting" | "boundary" | "fallback";
 
@@ -272,7 +273,9 @@ function runUtterance(
   withHighlight = false,
   rate = SPEECH_RATE_NORMAL,
   /** When set, audio uses this string; highlights still use `text`. */
-  speakText?: string
+  speakText?: string,
+  /** Spaced kana reading used to time Japanese fallback karaoke. */
+  spacedReading?: string | null
 ) {
   if (!window.speechSynthesis || !text.trim()) {
     callbacks?.onEnd?.();
@@ -311,7 +314,22 @@ function runUtterance(
   const allUnits: HighlightUnit[] = isJa
     ? buildJapaneseHighlightUnits(text)
     : buildEnglishHighlightUnits(text);
-  const units = activeHighlightUnits(allUnits);
+
+  // Japanese + reading: schedule fallback from spoken kana tokens, not kanji weight.
+  const reading = spacedReading?.trim();
+  const fallbackUnits: HighlightUnit[] =
+    isJa && reading
+      ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({
+          start: s.start,
+          end: s.end,
+          text: s.text,
+          kind: s.kind,
+          spokenText: s.spokenText,
+          speakGapAfter: s.speakGapAfter,
+        }))
+      : activeHighlightUnits(allUnits);
+
+  const units = fallbackUnits;
 
   let mode: HighlightMode = "detecting";
   let lastBoundaryStart = -1;
@@ -339,7 +357,7 @@ function runUtterance(
   const advanceHighlightTo = (target: SpeechHighlight) => {
     clearGapFillTimer();
     const from = Math.max(0, lastBoundaryEnd);
-    const skipped = units.filter(
+    const skipped = activeHighlightUnits(allUnits).filter(
       (u) => u.start >= from && u.start < target.start
     );
     if (skipped.length === 0) {
@@ -360,7 +378,7 @@ function runUtterance(
       if (!h) return;
       emitHighlight(h);
       if (i >= queue.length) return;
-      const justShown = units.find(
+      const justShown = activeHighlightUnits(allUnits).find(
         (u) => u.start === h.start && u.end === h.end
       );
       const dwell = justShown
@@ -473,10 +491,10 @@ function runUtterance(
   const finish = (kind: "end" | "error", error?: unknown) => {
     if (!alive() || finished) return;
     finished = true;
-    // Browser TTS often skips a boundary for a middle/final unit (みる in
-    // 〜からみると, or final だ). Walk any still-unlit units before clearing.
-    if (withHighlight && units.length > 0) {
-      const remaining = units.filter(
+    // Browser TTS sometimes skips the final unit's boundary. Light that one
+    // remaining span once — never rush a multi-unit 80ms sweep (fake sync).
+    if (withHighlight && mode === "boundary") {
+      const remaining = activeHighlightUnits(allUnits).filter(
         (u) => u.start >= Math.max(0, lastBoundaryEnd)
       );
       if (remaining.length === 1) {
@@ -484,31 +502,6 @@ function runUtterance(
           start: remaining[0]!.start,
           end: remaining[0]!.end,
         });
-        clearAndEnd();
-        return;
-      }
-      if (remaining.length > 1) {
-        let i = 0;
-        const step = () => {
-          gapFillTimer = null;
-          if (!alive()) {
-            clearAndEnd();
-            return;
-          }
-          const u = remaining[i++];
-          if (!u) {
-            clearAndEnd();
-            return;
-          }
-          emitHighlight({ start: u.start, end: u.end });
-          if (i >= remaining.length) {
-            clearAndEnd();
-            return;
-          }
-          gapFillTimer = window.setTimeout(step, 80);
-        };
-        step();
-        return;
       }
     }
     clearAndEnd();
@@ -597,9 +590,8 @@ export const speechService = {
     rate = SPEECH_RATE_NORMAL,
     options?: SpeakJapaneseOptions
   ) {
-    const speakText = options?.reading
-      ? buildJapaneseSpeakText(text, options.reading)
-      : text;
+    const reading = options?.reading ?? null;
+    const speakText = reading ? buildJapaneseSpeakText(text, reading) : text;
     runUtterance(
       text,
       "ja-JP",
@@ -607,7 +599,8 @@ export const speechService = {
       callbacks,
       true,
       rate,
-      speakText
+      speakText,
+      reading
     );
   },
 

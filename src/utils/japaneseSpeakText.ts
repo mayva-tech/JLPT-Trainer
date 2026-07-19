@@ -149,3 +149,11 @@ export function buildJapaneseSpeakText(
 
   return spoken || surface;
 }
+
+/**
+ * TTS form of one spaced-reading token (particle rewrite + ー expand).
+ * Used for karaoke duration so timing matches what Nanami actually speaks.
+ */
+export function buildJapaneseSpeakToken(token: string): string {
+  return speakReadingToken(token);
+}

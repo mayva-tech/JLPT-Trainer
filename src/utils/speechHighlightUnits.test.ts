@@ -3,6 +3,7 @@ import {
   activeHighlightUnits,
   buildEnglishHighlightUnits,
   buildJapaneseHighlightUnits,
+  buildJapaneseSpokenKaraokeSteps,
   estimateUnitDurationMs,
   findUnitForBoundary,
 } from "./speechHighlightUnits";
@@ -243,5 +244,66 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
     );
     expect(withComma).toBeGreaterThan(plain);
     expect(particle).toBeGreaterThan(contentMora);
+  });
+
+  it("times Japanese units from spoken kana, not kanji glyph weight", () => {
+    const byKanji = estimateUnitDurationMs(
+      { start: 0, end: 2, text: "妊娠", kind: "word" },
+      "ja"
+    );
+    const byReading = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 2,
+        text: "妊娠",
+        kind: "word",
+        spokenText: "にんしん",
+      },
+      "ja"
+    );
+    // にんしん = 4 mora > 2×1.6 kanji heuristic
+    expect(byReading).toBeGreaterThan(byKanji);
+  });
+
+  it("adds dwell for speakGapAfter (TTS token spaces)", () => {
+    const plain = estimateUnitDurationMs(
+      { start: 0, end: 3, text: "友人", kind: "word", spokenText: "ゆうじん" },
+      "ja"
+    );
+    const withGap = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "友人",
+        kind: "word",
+        spokenText: "ゆうじん",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    expect(withGap).toBeGreaterThan(plain);
+  });
+});
+
+describe("buildJapaneseSpokenKaraokeSteps", () => {
+  it("maps reading tokens onto surface highlight spans", async () => {
+    const { seedKanjiReadingsFromDetails } = await import("./alignFurigana");
+    const { vocabulary } = await import("../data/vocabulary");
+    for (const item of vocabulary) {
+      seedKanjiReadingsFromDetails(item.kanjiDetails);
+    }
+
+    const surface = "友人は先月、妊娠が分かったそうだ。";
+    const reading =
+      "ゆうじん は せんげつ、にんしん が わかった そう だ。";
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    expect(steps.length).toBeGreaterThan(3);
+    expect(steps.some((s) => s.spokenText.includes("にんしん"))).toBe(true);
+    expect(steps.some((s) => s.spokenText === "わ" || s.spokenText === "は")).toBe(
+      true
+    );
+    // Particle TTS form
+    const topic = steps.find((s) => s.text.includes("は") && s.spokenText === "わ");
+    expect(topic || steps.some((s) => s.spokenText === "わ")).toBeTruthy();
   });
 });
