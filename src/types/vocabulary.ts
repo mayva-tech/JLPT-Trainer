@@ -7,7 +7,7 @@ export type KanjiDetail = {
 
 export type VocabularyItem = {
   id: number;
-  jlpt: "N2";
+  jlpt: "N1" | "N2";
   category: string; // e.g. "Daily Life"
   subcategory: string; // e.g. "Apartment"
 

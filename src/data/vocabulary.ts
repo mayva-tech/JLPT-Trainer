@@ -12528,9 +12528,20 @@ const seeds: VocabularySeed[] = [
 
 ];
 
+/**
+ * Vocabulary items confirmed as genuine N1-level words during a targeted manual
+ * review (no clean canonical N1 word list exists the way it does for grammar
+ * patterns, so this list reflects informed judgment on register/specialization,
+ * not a verified external cross-reference).
+ */
+const N1_VOCAB_IDS = new Set<number>([
+  4213, 4248, 4286, 4288, 4305, 4367, 4368, 4410, 4416, 4454, 4455, 4459, 4460,
+  4513, 4529, 4594, 4617, 4622, 4658, 4680, 4699, 4706,
+]);
+
 export const vocabulary: VocabularyItem[] = seeds.map(({ folder, ...seed }) => ({
   ...seed,
-  jlpt: "N2",
+  jlpt: N1_VOCAB_IDS.has(seed.id) ? "N1" : "N2",
   category: "Daily Life",
   kanjiDetails: kanjiDetailsFor(seed.word, seed.phrase, seed.sentence),
   ...audio(folder, String(seed.id)),

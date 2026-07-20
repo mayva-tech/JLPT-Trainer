@@ -24,7 +24,9 @@ describe("getVocabularyLessonIdForQuiz", () => {
   });
 
   it("covers all 75 vocabulary quizzes with 10 ids each", () => {
-    const vocabQuizIds = quizIds.filter((id) => id.startsWith("quiz-vocab-"));
+    const vocabQuizIds = quizIds.filter((id) =>
+      /^quiz-vocab-\d+-\d+$/.test(id)
+    );
     expect(vocabQuizIds).toHaveLength(75);
 
     for (const id of vocabQuizIds) {
@@ -58,5 +60,33 @@ describe("getVocabularyLessonIdForQuiz", () => {
     expect(getVocabularyLessonIdForQuiz("quiz-vocab-741-750")).toBe(
       "lesson-75"
     );
+  });
+
+  it("covers all 3 curated N1 vocabulary quizzes", () => {
+    const n1VocabQuizIds = quizIds.filter((id) =>
+      /^quiz-vocab-n1-\d+$/.test(id)
+    );
+    expect(n1VocabQuizIds).toHaveLength(3);
+
+    const expectedItemCounts: Record<string, number> = {
+      "quiz-vocab-n1-01": 8,
+      "quiz-vocab-n1-02": 5,
+      "quiz-vocab-n1-03": 9,
+    };
+
+    for (const id of n1VocabQuizIds) {
+      const lessonId = getVocabularyLessonIdForQuiz(id);
+      expect(lessonId).toBeTruthy();
+      const lesson = getLessonById(lessonId!);
+      expect(lesson?.vocabularyIds).toHaveLength(expectedItemCounts[id]);
+      const toc = getTocItem(id);
+      expect(toc?.kind).toBe("quiz");
+      expect(toc?.quizId).toBe(id);
+    }
+
+    expect(getVocabularyLessonIdForQuiz("quiz-vocab-n1-01")).toBe(
+      "n1-lesson-01"
+    );
+    expect(getVocabularyLessonIdForQuiz("quiz-vocab-n1-04")).toBeNull();
   });
 });

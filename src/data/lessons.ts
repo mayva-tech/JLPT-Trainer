@@ -681,6 +681,39 @@ export const lessons: Lesson[] = [
     subcategories: ["Abstract", "Verbs"],
     vocabularyIds: idRange(4741),
   },
+
+  // -- N1 Vocabulary Lessons -----------------------------------------------
+  // Curated view: references existing N1-level words by their original ids.
+  // No ids or audio paths are changed; these words remain in their original
+  // N2-themed lessons above as well. This is a browsing lens, not a move.
+  {
+    id: "n1-lesson-01",
+    title: "JLPT N1 Vocabulary -- Legal, Financial & Administrative #1",
+    subtitle: "Legal • Financial • Administrative",
+    youtubeTitle: "JLPT N1 Daily Life Vocabulary #1 | Legal, Financial & Administrative",
+    category: "Daily Life",
+    subcategories: ["Legal", "Financial", "Administrative"],
+    vocabularyIds: [4213, 4248, 4286, 4288, 4305, 4367, 4368, 4410],
+  },
+  {
+    id: "n1-lesson-02",
+    title: "JLPT N1 Vocabulary -- Formal Ceremonies & Mourning #2",
+    subtitle: "Ceremonies • Mourning",
+    youtubeTitle: "JLPT N1 Daily Life Vocabulary #2 | Formal Ceremonies & Mourning",
+    category: "Daily Life",
+    subcategories: ["Ceremonies", "Mourning"],
+    vocabularyIds: [4416, 4454, 4455, 4459, 4460],
+  },
+  {
+    id: "n1-lesson-03",
+    title: "JLPT N1 Vocabulary -- Specialized Register #3",
+    subtitle: "Specialized • Formal Register",
+    youtubeTitle: "JLPT N1 Daily Life Vocabulary #3 | Specialized Register",
+    category: "Daily Life",
+    subcategories: ["Specialized", "Formal Register"],
+    vocabularyIds: [4513, 4529, 4594, 4617, 4622, 4658, 4680, 4699, 4706],
+  },
+
 ];
 
 export function getLessonById(id: string): Lesson | undefined {
