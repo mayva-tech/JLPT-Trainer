@@ -1,6 +1,6 @@
 export type GrammarItem = {
   id: number; // 5001–5050
-  jlpt: "N2";
+  jlpt: "N1" | "N2";
   category: string; // "Grammar"
   subcategory: string; // e.g. "Concession & Contrast"
 

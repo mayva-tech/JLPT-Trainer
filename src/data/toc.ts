@@ -112,6 +112,30 @@ export type TocItemId =
   | "grammar-321-330"
   | "grammar-331-340"
   | "grammar-341-350"
+  | "grammar-351-360"
+  | "grammar-361-370"
+  | "grammar-371-380"
+  | "grammar-381-390"
+  | "grammar-391-400"
+  | "grammar-401-410"
+  | "grammar-411-420"
+  | "grammar-421-430"
+  | "grammar-431-440"
+  | "grammar-441-450"
+  | "grammar-451-460"
+  | "grammar-461-470"
+  | "grammar-471-480"
+  | "grammar-481-490"
+  | "grammar-491-500"
+  | "n1-grammar-01"
+  | "n1-grammar-02"
+  | "n1-grammar-03"
+  | "n1-grammar-04"
+  | "n1-grammar-05"
+  | "n1-grammar-06"
+  | "n1-grammar-07"
+  | "n1-grammar-08"
+  | "n1-grammar-09"
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-vocab-11-20"
@@ -741,6 +765,36 @@ export const tocGroups: TocGroup[] = [
       { id: "grammar-321-330", label: "Grammar Lesson 321–330", kind: "grammar", lessonId: "grammar-lesson-33" },
       { id: "grammar-331-340", label: "Grammar Lesson 331–340", kind: "grammar", lessonId: "grammar-lesson-34" },
       { id: "grammar-341-350", label: "Grammar Lesson 341–350", kind: "grammar", lessonId: "grammar-lesson-35" },
+      { id: "grammar-351-360", label: "Grammar Lesson 351–360", kind: "grammar", lessonId: "grammar-lesson-36" },
+      { id: "grammar-361-370", label: "Grammar Lesson 361–370", kind: "grammar", lessonId: "grammar-lesson-37" },
+      { id: "grammar-371-380", label: "Grammar Lesson 371–380", kind: "grammar", lessonId: "grammar-lesson-38" },
+      { id: "grammar-381-390", label: "Grammar Lesson 381–390", kind: "grammar", lessonId: "grammar-lesson-39" },
+      { id: "grammar-391-400", label: "Grammar Lesson 391–400", kind: "grammar", lessonId: "grammar-lesson-40" },
+      { id: "grammar-401-410", label: "Grammar Lesson 401–410", kind: "grammar", lessonId: "grammar-lesson-41" },
+      { id: "grammar-411-420", label: "Grammar Lesson 411–420", kind: "grammar", lessonId: "grammar-lesson-42" },
+      { id: "grammar-421-430", label: "Grammar Lesson 421–430", kind: "grammar", lessonId: "grammar-lesson-43" },
+      { id: "grammar-431-440", label: "Grammar Lesson 431–440", kind: "grammar", lessonId: "grammar-lesson-44" },
+      { id: "grammar-441-450", label: "Grammar Lesson 441–450", kind: "grammar", lessonId: "grammar-lesson-45" },
+      { id: "grammar-451-460", label: "Grammar Lesson 451–460", kind: "grammar", lessonId: "grammar-lesson-46" },
+      { id: "grammar-461-470", label: "Grammar Lesson 461–470", kind: "grammar", lessonId: "grammar-lesson-47" },
+      { id: "grammar-471-480", label: "Grammar Lesson 471–480", kind: "grammar", lessonId: "grammar-lesson-48" },
+      { id: "grammar-481-490", label: "Grammar Lesson 481–490", kind: "grammar", lessonId: "grammar-lesson-49" },
+      { id: "grammar-491-500", label: "Grammar Lesson 491–500", kind: "grammar", lessonId: "grammar-lesson-50" },
+    ],
+  },
+  {
+    id: "grammar-n1",
+    title: "3b. N1 Grammar Lessons (curated)",
+    items: [
+      { id: "n1-grammar-01", label: "N1 Grammar 1: Emphasis & Extremity", kind: "grammar", lessonId: "n1-grammar-lesson-01" },
+      { id: "n1-grammar-02", label: "N1 Grammar 2: State, Condition & Manner", kind: "grammar", lessonId: "n1-grammar-lesson-02" },
+      { id: "n1-grammar-03", label: "N1 Grammar 3: Perception, Reputation & Appearance", kind: "grammar", lessonId: "n1-grammar-lesson-03" },
+      { id: "n1-grammar-04", label: "N1 Grammar 4: Simultaneity & Timing", kind: "grammar", lessonId: "n1-grammar-lesson-04" },
+      { id: "n1-grammar-05", label: "N1 Grammar 5: Assumption, Concession & Contrast", kind: "grammar", lessonId: "n1-grammar-lesson-05" },
+      { id: "n1-grammar-06", label: "N1 Grammar 6: Criticism, Reproach & Warning", kind: "grammar", lessonId: "n1-grammar-lesson-06" },
+      { id: "n1-grammar-07", label: "N1 Grammar 7: Restriction, Exception & Prohibition", kind: "grammar", lessonId: "n1-grammar-lesson-07" },
+      { id: "n1-grammar-08", label: "N1 Grammar 8: Formal & Written Expressions", kind: "grammar", lessonId: "n1-grammar-lesson-08" },
+      { id: "n1-grammar-09", label: "N1 Grammar 9: Listing, Inference & Habitual", kind: "grammar", lessonId: "n1-grammar-lesson-09" },
     ],
   },
   {
@@ -1480,6 +1534,30 @@ export const lessonGroupIds: TocItemId[] = [
   "grammar-321-330",
   "grammar-331-340",
   "grammar-341-350",
+  "grammar-351-360",
+  "grammar-361-370",
+  "grammar-371-380",
+  "grammar-381-390",
+  "grammar-391-400",
+  "grammar-401-410",
+  "grammar-411-420",
+  "grammar-421-430",
+  "grammar-431-440",
+  "grammar-441-450",
+  "grammar-451-460",
+  "grammar-461-470",
+  "grammar-471-480",
+  "grammar-481-490",
+  "grammar-491-500",
+  "n1-grammar-01",
+  "n1-grammar-02",
+  "n1-grammar-03",
+  "n1-grammar-04",
+  "n1-grammar-05",
+  "n1-grammar-06",
+  "n1-grammar-07",
+  "n1-grammar-08",
+  "n1-grammar-09",
 ];
 
 export const quizIds: TocItemId[] = [
