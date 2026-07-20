@@ -530,7 +530,43 @@
   font-family: var(--font-en);
   font-size: 2cqw;
   color: var(--text-softer);
-  margin: 0.8cqh 0 2cqh;
+  margin: 0.8cqh 0 1.2cqh;
+}
+
+.toc-page-nav {
+  display: flex;
+  gap: 0.8cqw;
+  margin-bottom: 1.6cqh;
+}
+
+.toc-page-btn {
+  font-family: var(--font-en);
+  font-size: 1.45cqw;
+  line-height: 1.2;
+  padding: 0.7cqh 1.4cqw;
+  border: 1px solid #d7dde7;
+  border-radius: 0.55cqw;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.toc-page-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-chip);
+}
+
+.toc-page-btn--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.toc-page-btn--active:hover {
+  background: #1d55c4;
+  border-color: #1d55c4;
+  color: #fff;
 }
 
 .toc-groups {
@@ -538,12 +574,20 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  /* Compact (intro/ending/ref) + Vocab + Grammar + Word Quizzes + Grammar Quizzes */
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1.2cqw;
   align-content: start;
   overflow: auto;
   padding-bottom: 1cqh;
+}
+
+/* Compact (intro/ending/ref) + N2 Vocab + Grammar + Word Quizzes + Grammar Quizzes */
+.toc-groups--page1 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* N1 curated vocabulary, grammar, and word quizzes */
+.toc-groups--page2 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .toc-column {

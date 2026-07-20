@@ -4,45 +4,76 @@ import { vocabulary, getVocabularyByIds } from "../data/vocabulary";
 import { grammar, grammarLessons, getGrammarByIds } from "../data/grammar";
 
 type Tab = "words" | "grammar";
+type GlossaryPage = 1 | 2;
+
+function isN1LessonId(id: string): boolean {
+  return id.startsWith("n1-");
+}
 
 /**
  * In-app content glossary for sanity-checking existing words and grammar
  * patterns. Reads live data, so it is always up to date with the lessons.
+ * Page 1 lists N2 content; page 2 lists curated N1 browsing lenses.
  */
 export function GlossaryView() {
+  const [page, setPage] = useState<GlossaryPage>(1);
   const [tab, setTab] = useState<Tab>("words");
   const [query, setQuery] = useState("");
 
   const q = query.trim().toLowerCase();
+  const wantN1 = page === 2;
+
+  const wordLessons = useMemo(
+    () => lessons.filter((lesson) => isN1LessonId(lesson.id) === wantN1),
+    [wantN1]
+  );
+
+  const grammarLessonList = useMemo(
+    () =>
+      grammarLessons.filter((lesson) => isN1LessonId(lesson.id) === wantN1),
+    [wantN1]
+  );
 
   const wordSections = useMemo(
     () =>
-      lessons.map((lesson) => ({
+      wordLessons.map((lesson) => ({
         lesson,
         items: getVocabularyByIds(lesson.vocabularyIds).filter(
           (v) =>
-            !q ||
-            v.word.toLowerCase().includes(q) ||
-            v.reading.toLowerCase().includes(q) ||
-            v.meaning.toLowerCase().includes(q)
+            (wantN1 ? v.jlpt === "N1" : v.jlpt === "N2") &&
+            (!q ||
+              v.word.toLowerCase().includes(q) ||
+              v.reading.toLowerCase().includes(q) ||
+              v.meaning.toLowerCase().includes(q))
         ),
       })),
-    [q]
+    [q, wantN1, wordLessons]
   );
 
   const grammarSections = useMemo(
     () =>
-      grammarLessons.map((lesson) => ({
+      grammarLessonList.map((lesson) => ({
         lesson,
         items: getGrammarByIds(lesson.grammarIds).filter(
           (g) =>
-            !q ||
-            g.pattern.toLowerCase().includes(q) ||
-            g.patternReading.toLowerCase().includes(q) ||
-            g.meaning.toLowerCase().includes(q)
+            (wantN1 ? g.jlpt === "N1" : g.jlpt === "N2") &&
+            (!q ||
+              g.pattern.toLowerCase().includes(q) ||
+              g.patternReading.toLowerCase().includes(q) ||
+              g.meaning.toLowerCase().includes(q))
         ),
       })),
-    [q]
+    [q, wantN1, grammarLessonList]
+  );
+
+  const pageWordCount = useMemo(
+    () => vocabulary.filter((v) => (wantN1 ? v.jlpt === "N1" : v.jlpt === "N2")).length,
+    [wantN1]
+  );
+
+  const pageGrammarCount = useMemo(
+    () => grammar.filter((g) => (wantN1 ? g.jlpt === "N1" : g.jlpt === "N2")).length,
+    [wantN1]
   );
 
   return (
@@ -51,10 +82,39 @@ export function GlossaryView() {
         <div className="category-chip">Reference</div>
         <h1 className="toc-title">Content Glossary</h1>
         <p className="toc-subtitle">
-          {vocabulary.length} words · {grammar.length} grammar patterns ·{" "}
-          {lessons.length} word lessons · {grammarLessons.length} grammar
-          lessons
+          {wantN1 ? "N1" : "N2"} · {pageWordCount} words · {pageGrammarCount}{" "}
+          grammar patterns · {wordLessons.length} word lessons ·{" "}
+          {grammarLessonList.length} grammar lessons
         </p>
+
+        <div className="toc-page-nav" role="tablist" aria-label="Glossary pages">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 1}
+            className={
+              page === 1
+                ? "toc-page-btn toc-page-btn--active"
+                : "toc-page-btn"
+            }
+            onClick={() => setPage(1)}
+          >
+            Page 1 · N2
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 2}
+            className={
+              page === 2
+                ? "toc-page-btn toc-page-btn--active"
+                : "toc-page-btn"
+            }
+            onClick={() => setPage(2)}
+          >
+            Page 2 · N1
+          </button>
+        </div>
 
         <div className="glossary-controls">
           <button
@@ -64,7 +124,7 @@ export function GlossaryView() {
             }
             onClick={() => setTab("words")}
           >
-            Words ({vocabulary.length})
+            Words ({pageWordCount})
           </button>
           <button
             type="button"
@@ -73,7 +133,7 @@ export function GlossaryView() {
             }
             onClick={() => setTab("grammar")}
           >
-            Grammar ({grammar.length})
+            Grammar ({pageGrammarCount})
           </button>
           <input
             type="text"
