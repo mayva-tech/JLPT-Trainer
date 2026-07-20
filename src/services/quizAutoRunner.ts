@@ -10,6 +10,8 @@ export type QuizPhase =
   | "asking"
   | "revealed"
   | "example"
+  /** Manual ←/→ browse: answer + example together (not used during reveal). */
+  | "review"
   | "after"
   | "finished";
 
@@ -135,6 +137,8 @@ export class QuizAutoRunner {
       if (sid === this.session) {
         this.speaking = false;
         this.clearSpeechUi(ui);
+        // Mark inactive so manual ↑JP/↓EN buttons work after the sequence.
+        this.softStop = true;
       }
     }
   }

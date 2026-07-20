@@ -50,8 +50,16 @@ export const SPEECH_RATE_SHADOWING = 0.85;
 const DEBUG_SPEECH = false;
 /** Wait after onstart for a real browser boundary before choosing fallback. */
 const BOUNDARY_DETECT_MS = 320;
-/** Lead-in after onstart before first fallback unit (ms). Audible audio often lags onstart. */
-const FALLBACK_START_OFFSET_MS = 100;
+/**
+ * Lead-in after onstart before first fallback unit (ms).
+ * Keep small — a large offset makes the whole karaoke trail Nanami.
+ */
+const FALLBACK_START_OFFSET_MS = 20;
+/**
+ * Scale fallback dwell so highlights stay slightly ahead of estimated audio
+ * (setTimeout jitter + React commit lag otherwise trails the voice).
+ */
+const FALLBACK_TIMING_SCALE = 0.94;
 
 type HighlightMode = "detecting" | "boundary" | "fallback";
 
@@ -418,7 +426,8 @@ function runUtterance(
         const next = index + 1;
         if (next >= units.length) return;
         const dur =
-          estimateUnitDurationMs(unit, unitLang) / Math.max(rate, 0.2);
+          (estimateUnitDurationMs(unit, unitLang) / Math.max(rate, 0.2)) *
+          FALLBACK_TIMING_SCALE;
         scheduleNext(next, dur);
       }, delayMs);
     };
@@ -630,6 +639,7 @@ export const __speechTestHooks = {
   getGeneration: () => playbackGeneration,
   BOUNDARY_DETECT_MS,
   FALLBACK_START_OFFSET_MS,
+  FALLBACK_TIMING_SCALE,
 };
 
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";

@@ -1,5 +1,6 @@
 import { HighlightedJapanese } from "./HighlightedJapanese";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { FuriganaWrapText } from "./FuriganaWrapText";
 import { FitScale } from "./FitScale";
 import type { SpeechHighlight } from "../services/speechService";
 import type { QuizPhase, QuizWord } from "../services/quizAutoRunner";
@@ -14,6 +15,12 @@ type Props = {
   selectedChoiceIndex: number | null;
   phase: QuizPhase;
   showReading: boolean;
+  /**
+   * How to show the JA reading under/over the prompt word.
+   * - `line`: vocab style — full reading below the word
+   * - `ruby`: grammar style — furigana only on kanji (no reading if pattern is kana-only)
+   */
+  readingMode?: "line" | "ruby";
   score: number;
   jaHighlight: SpeechHighlight | null;
   enHighlight: SpeechHighlight | null;
@@ -43,6 +50,7 @@ export function QuizCard({
   selectedChoiceIndex,
   phase,
   showReading,
+  readingMode = "line",
   score,
   jaHighlight,
   enHighlight,
@@ -112,7 +120,8 @@ export function QuizCard({
     );
   }
 
-  const revealed = phase === "revealed";
+  const revealed = phase === "revealed" || phase === "review";
+  const showExampleWithAnswer = phase === "review";
 
   return (
     <div className="safe-area safe-area--quiz">
@@ -126,18 +135,35 @@ export function QuizCard({
 
         <div className="quiz-split">
           <div className="quiz-word-panel">
-            <FitScale maxLines={2} watch={item.word}>
-              <HighlightedJapanese
-                text={item.word}
-                className="quiz-word-ja"
-                highlight={phase === "example" ? null : jaHighlight}
-              />
-            </FitScale>
-            {showReading ? (
-              <div className="quiz-word-reading" aria-hidden="true">
-                {item.reading}
-              </div>
-            ) : null}
+            {readingMode === "ruby" ? (
+              <FitScale
+                maxLines={2}
+                watch={`${item.word}|${item.reading}|${showReading}`}
+              >
+                <FuriganaWrapText
+                  surface={item.word}
+                  reading={item.reading}
+                  className="quiz-word-ja"
+                  highlight={phase === "example" ? null : jaHighlight}
+                  showFurigana={showReading}
+                />
+              </FitScale>
+            ) : (
+              <>
+                <FitScale maxLines={2} watch={item.word}>
+                  <HighlightedJapanese
+                    text={item.word}
+                    className="quiz-word-ja"
+                    highlight={phase === "example" ? null : jaHighlight}
+                  />
+                </FitScale>
+                {showReading ? (
+                  <div className="quiz-word-reading" aria-hidden="true">
+                    {item.reading}
+                  </div>
+                ) : null}
+              </>
+            )}
           </div>
 
           <div className="quiz-choices-panel">
@@ -160,7 +186,9 @@ export function QuizCard({
             ) : (
               <>
                 <div className="quiz-prompt">
-                  What is the English meaning?
+                  {revealed
+                    ? "English meaning"
+                    : "What is the English meaning?"}
                 </div>
                 <div className="quiz-choices" role="list">
                   {choices.map((choice, i) => {
@@ -203,6 +231,23 @@ export function QuizCard({
                     );
                   })}
                 </div>
+                {showExampleWithAnswer && item.sentence ? (
+                  <div className="quiz-example-panel quiz-example-panel--review">
+                    <div className="quiz-prompt">Example</div>
+                    <HighlightedJapanese
+                      text={item.sentence}
+                      className="quiz-example-ja"
+                      highlight={null}
+                    />
+                    {item.sentenceMeaning ? (
+                      <HighlightedEnglish
+                        text={item.sentenceMeaning}
+                        className="quiz-example-meaning"
+                        highlight={null}
+                      />
+                    ) : null}
+                  </div>
+                ) : null}
               </>
             )}
           </div>

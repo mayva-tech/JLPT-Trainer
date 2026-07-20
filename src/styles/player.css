@@ -538,11 +538,26 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  /* Compact (intro/ending/ref) + Vocab + Grammar + Word Quizzes + Grammar Quizzes */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1.2cqw;
   align-content: start;
   overflow: auto;
   padding-bottom: 1cqh;
+}
+
+.toc-column {
+  min-width: 0;
+}
+
+.toc-column--compact {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6cqh;
+}
+
+.toc-column--compact .toc-group-title {
+  font-size: 1.4cqw;
 }
 
 .toc-group {
@@ -858,6 +873,22 @@
   justify-content: center;
   min-width: 0;
   text-align: left;
+}
+
+.quiz-example-panel--review {
+  margin-top: 1.8cqh;
+  padding-top: 1.4cqh;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  width: 100%;
+}
+
+.quiz-example-panel--review .quiz-example-ja {
+  font-size: 2.8cqw;
+}
+
+.quiz-example-panel--review .quiz-example-meaning {
+  font-size: 2.2cqw;
+  margin-top: 0.8cqh;
 }
 
 .quiz-example-ja {

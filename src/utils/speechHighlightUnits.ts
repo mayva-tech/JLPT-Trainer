@@ -635,9 +635,16 @@ function isKana(ch: string): boolean {
  * particle-only units, and other phrase separators so fallback karaoke
  * dwells slightly longer at natural voiceover breaks.
  */
-const KARAOKE_BREAK_POINT = 0.2;
-/** Pause Nanami often inserts between spaced reading tokens. */
-const SPEAK_TOKEN_GAP = 0.35;
+const KARAOKE_BREAK_POINT = 0.15;
+/**
+ * Pause Nanami often inserts between spaced reading tokens.
+ * Keep modest — stacked gaps across a sentence were lagging highlights.
+ */
+const SPEAK_TOKEN_GAP = 0.15;
+/** ms per mora-weight at speech rate 1 (callers divide by utterance rate). */
+const JA_MORA_MS = 150;
+/** Minimum dwell for a Japanese content unit at rate 1. */
+const JA_MIN_UNIT_MS = 120;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -719,7 +726,7 @@ export function estimateUnitDurationMs(
       return Math.max(80, punctPause * 280);
     }
     const weight = Math.max(0.7, mora) + punctPause;
-    return Math.max(140, weight * 165);
+    return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
   }
 
   let mora = 0;
@@ -735,7 +742,7 @@ export function estimateUnitDurationMs(
     return Math.max(80, punctPause * 280);
   }
   const weight = Math.max(0.7, mora) + punctPause;
-  return Math.max(140, weight * 165);
+  return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
 }
 
 /**

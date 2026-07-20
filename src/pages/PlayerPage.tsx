@@ -327,6 +327,26 @@ export function PlayerPage() {
     setQuizShowReading(false);
   }
 
+  /**
+   * Manual ←/→ browse: show the word/pattern with reading, correct meaning,
+   * and example sentence (when present) for every quiz item.
+   */
+  function showQuizReview(index: number, itemsList = quizDeckRef.current) {
+    if (itemsList.length === 0) {
+      resetQuizQuestion(0, itemsList);
+      return;
+    }
+    const safeIndex = Math.max(0, Math.min(index, itemsList.length - 1));
+    const built = buildQuizChoices(itemsList, safeIndex);
+    setQuizIndex(safeIndex);
+    setQuizChoices(built.choices);
+    setQuizCorrectIndex(built.correctChoiceIndex);
+    setQuizSelectedIndex(built.correctChoiceIndex);
+    setQuizPhase("review");
+    setQuizShowReading(true);
+    setShowFurigana(true);
+  }
+
   /** Fresh random order of quiz items for this quiz session. */
   function reshuffleQuizDeck(source = quizItemsRef.current): QuizWord[] {
     const deck = shuffle(source);
@@ -430,17 +450,22 @@ export function PlayerPage() {
     clearSpeechUi();
 
     if (quizPhaseRef.current === "pre") {
-      // Still on pre-comment — start at question 0
+      // Still on pre-comment — start at question 0 (unanswered)
       enterManualQuiz(0);
       return;
     }
     if (quizPhaseRef.current === "after" || quizPhaseRef.current === "finished") {
       const last = Math.max(0, (quizDeckRef.current.length || 1) - 1);
-      enterManualQuiz(last);
+      const deck =
+        quizDeckRef.current.length > 0
+          ? quizDeckRef.current
+          : reshuffleQuizDeck(quizItemsRef.current);
+      if (deck.length === 0) return;
+      showQuizReview(last, deck);
       return;
     }
     if (quizIndex <= 0) return;
-    resetQuizQuestion(quizIndex - 1);
+    showQuizReview(quizIndex - 1);
   }
 
   function goQuizNext() {
@@ -465,7 +490,7 @@ export function PlayerPage() {
       setQuizPhase("finished");
       return;
     }
-    resetQuizQuestion(quizIndex + 1);
+    showQuizReview(quizIndex + 1);
   }
 
   function toggleQuizAuto() {
@@ -795,6 +820,43 @@ export function PlayerPage() {
 
   function playJapanese() {
     softStopAuto();
+    if (screenRef.current === "quiz") {
+      // Full quiz-auto owns the timeline; manual reveal may be interrupted.
+      if (quizAutoOnRef.current) return;
+      if (quizAutoRunner.isActive()) quizAutoRunner.abort();
+      const item = quizDeckRef.current[quizIndex];
+      if (!item) return;
+      const phase = quizPhaseRef.current;
+      if (
+        phase !== "asking" &&
+        phase !== "revealed" &&
+        phase !== "example" &&
+        phase !== "review"
+      ) {
+        return;
+      }
+      const useExample = phase === "example" && !!item.sentence;
+      const text = useExample ? item.sentence! : item.word;
+      const reading = useExample ? item.sentenceReading : item.reading;
+      if (!text.trim()) return;
+      speechService.stop();
+      setSpeechLang("ja");
+      setJaHighlight(null);
+      setEnHighlight(null);
+      setSpeechStatus("speaking");
+      speechService.speakJapanese(
+        text,
+        {
+          onStart: () => setSpeechStatus("speaking"),
+          onBoundary: (h) => setJaHighlight(h),
+          onEnd: () => clearSpeechUi(),
+          onError: () => clearSpeechUi(),
+        },
+        speechRateRef.current,
+        { reading }
+      );
+      return;
+    }
     if (screenRef.current === "grammar") {
       const gItem =
         grammarItemsRef.current[grammarItemIndexRef.current] ?? null;
@@ -841,6 +903,39 @@ export function PlayerPage() {
 
   function playEnglish() {
     softStopAuto();
+    if (screenRef.current === "quiz") {
+      if (quizAutoOnRef.current) return;
+      if (quizAutoRunner.isActive()) quizAutoRunner.abort();
+      const item = quizDeckRef.current[quizIndex];
+      if (!item) return;
+      const phase = quizPhaseRef.current;
+      let text: string | null = null;
+      if (phase === "example") {
+        text = item.sentenceMeaning?.trim()
+          ? item.sentenceMeaning
+          : item.meaning;
+      } else if (phase === "revealed" || phase === "review") {
+        text = item.meaning;
+      }
+      // During "asking", English would spoil the answer — leave disabled.
+      if (!text?.trim()) return;
+      speechService.stop();
+      setSpeechLang("en");
+      setJaHighlight(null);
+      setEnHighlight(null);
+      setSpeechStatus("speaking");
+      speechService.speakEnglish(
+        text,
+        {
+          onStart: () => setSpeechStatus("speaking"),
+          onBoundary: (h) => setEnHighlight(h),
+          onEnd: () => clearSpeechUi(),
+          onError: () => clearSpeechUi(),
+        },
+        speechRateRef.current
+      );
+      return;
+    }
     if (screenRef.current === "grammar") {
       const gItem =
         grammarItemsRef.current[grammarItemIndexRef.current] ?? null;
@@ -880,6 +975,43 @@ export function PlayerPage() {
         onError: () => clearSpeechUi(),
       },
       speechRateRef.current
+    );
+  }
+
+  /** Show the example sentence panel and play JA with karaoke. */
+  function replayQuizExample() {
+    if (quizAutoOnRef.current) return;
+    if (quizAutoRunner.isActive()) quizAutoRunner.abort();
+    const item = quizDeckRef.current[quizIndex];
+    if (!item?.sentence?.trim()) return;
+    const phase = quizPhaseRef.current;
+    if (
+      phase !== "revealed" &&
+      phase !== "example" &&
+      phase !== "review"
+    ) {
+      return;
+    }
+
+    speechService.stop();
+    clearSpeechUi();
+    setQuizShowReading(true);
+    setShowFurigana(true);
+    setQuizPhase("example");
+    setSpeechLang("ja");
+    setJaHighlight(null);
+    setEnHighlight(null);
+    setSpeechStatus("speaking");
+    speechService.speakJapanese(
+      item.sentence,
+      {
+        onStart: () => setSpeechStatus("speaking"),
+        onBoundary: (h) => setJaHighlight(h),
+        onEnd: () => clearSpeechUi(),
+        onError: () => clearSpeechUi(),
+      },
+      speechRateRef.current,
+      { reading: item.sentenceReading }
     );
   }
 
@@ -1124,6 +1256,30 @@ export function PlayerPage() {
           if (!quizAutoOnRef.current) goQuizNext();
           return;
         }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          if (!quizAutoOnRef.current) playJapanese();
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          if (!quizAutoOnRef.current) playEnglish();
+          return;
+        }
+        if (event.key === "Shift") {
+          if (event.repeat) return;
+          event.preventDefault();
+          setSpeechRate((r) =>
+            r === SPEECH_RATE_NORMAL ? SPEECH_RATE_SLOW : SPEECH_RATE_NORMAL
+          );
+          return;
+        }
+        if (event.key === "e" || event.key === "E") {
+          if (event.repeat) return;
+          event.preventDefault();
+          if (!quizAutoOnRef.current) replayQuizExample();
+          return;
+        }
       }
 
       if (event.key === "Escape") {
@@ -1204,20 +1360,47 @@ export function PlayerPage() {
   const step = STEPS[stepIndex] as StepName;
   const gItemForControls =
     grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
+  const quizItemForControls = quizDeck[quizIndex] ?? null;
   const canJa =
-    screen === "grammar"
-      ? !!gItemForControls &&
-        !!getGrammarSpeakableJapanese(grammarStep, gItemForControls)
-      : item
-        ? !!getSpeakableJapanese(step, item)
-        : false;
+    screen === "quiz"
+      ? !!quizItemForControls &&
+        (quizPhase === "example"
+          ? !!quizItemForControls.sentence?.trim()
+          : quizPhase === "asking" ||
+              quizPhase === "revealed" ||
+              quizPhase === "review"
+            ? !!quizItemForControls.word.trim()
+            : false)
+      : screen === "grammar"
+        ? !!gItemForControls &&
+          !!getGrammarSpeakableJapanese(grammarStep, gItemForControls)
+        : item
+          ? !!getSpeakableJapanese(step, item)
+          : false;
   const canEn =
-    screen === "grammar"
-      ? !!gItemForControls &&
-        !!getGrammarSpeakableEnglish(grammarStep, gItemForControls)
-      : item
-        ? !!getSpeakableEnglish(step, item)
-        : false;
+    screen === "quiz"
+      ? !!quizItemForControls &&
+        (quizPhase === "example"
+          ? !!(
+              quizItemForControls.sentenceMeaning?.trim() ||
+              quizItemForControls.meaning.trim()
+            )
+          : quizPhase === "revealed" || quizPhase === "review"
+            ? !!quizItemForControls.meaning.trim()
+            : false)
+      : screen === "grammar"
+        ? !!gItemForControls &&
+          !!getGrammarSpeakableEnglish(grammarStep, gItemForControls)
+        : item
+          ? !!getSpeakableEnglish(step, item)
+          : false;
+  const canQuizExample =
+    screen === "quiz" &&
+    !!quizItemForControls?.sentence?.trim() &&
+    (quizPhase === "revealed" ||
+      quizPhase === "example" ||
+      quizPhase === "review") &&
+    !quizAutoOn;
   const jaLessonHighlight = speechLang === "ja" ? highlight : null;
   const enLessonHighlight = speechLang === "en" ? highlight : null;
 
@@ -1439,6 +1622,9 @@ export function PlayerPage() {
             selectedChoiceIndex={quizSelectedIndex}
             phase={quizPhase}
             showReading={quizShowReading}
+            readingMode={
+              getGrammarLessonIdForQuiz(activeTocId) ? "ruby" : "line"
+            }
             score={quizScore}
             jaHighlight={jaHighlight}
             enHighlight={enHighlight}
@@ -1491,10 +1677,10 @@ export function PlayerPage() {
         ? "QUIZ AUTO ON · Q to stop"
         : screen === "quiz"
           ? quizPhase === "pre"
-            ? "QUIZ AUTO OFF · Next or ←→ to start questions · Q for auto"
+            ? "QUIZ AUTO OFF · Next or ←→ to start · Q for auto"
             : quizPhase === "after" || quizPhase === "finished"
               ? "Quiz done · Prev to review · Q to restart auto"
-              : "QUIZ AUTO OFF · ←→ or Prev/Next · click a choice · Q for auto"
+              : "←→ navigate · ↑ JP · ↓ EN · E Example · Shift rate · Q auto"
       : hintAutoState === "on"
         ? "Auto ON · A to stop after current audio"
         : hintAutoState === "stopping"
@@ -1832,6 +2018,75 @@ export function PlayerPage() {
             >
               {quizAutoOn ? "QUIZ AUTO ON" : "QUIZ AUTO OFF"}
             </button>
+            <button
+              type="button"
+              onClick={playJapanese}
+              disabled={quizAutoOn || !canJa}
+              title="Japanese voice — Microsoft Nanami / 七海 (↑)"
+              className={
+                speechStatus === "speaking" && speechLang === "ja"
+                  ? "voice-btn voice-btn--active"
+                  : "voice-btn"
+              }
+            >
+              ↑ JP
+            </button>
+            <button
+              type="button"
+              onClick={playEnglish}
+              disabled={quizAutoOn || !canEn}
+              title="English — Microsoft Andrew Online Natural (↓)"
+              className={
+                speechStatus === "speaking" && speechLang === "en"
+                  ? "voice-btn voice-btn--active"
+                  : "voice-btn"
+              }
+            >
+              ↓ EN
+            </button>
+            <button
+              type="button"
+              onClick={replayQuizExample}
+              disabled={!canQuizExample}
+              title="Play example sentence with karaoke (E)"
+              className={
+                quizPhase === "example" &&
+                speechStatus === "speaking" &&
+                speechLang === "ja"
+                  ? "voice-btn voice-btn--active"
+                  : "voice-btn"
+              }
+            >
+              Example
+            </button>
+            <span className="rate-group">
+              <button
+                type="button"
+                className={
+                  speechRate === SPEECH_RATE_NORMAL
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                title="Normal speed (0.85) — Shift toggles"
+                disabled={quizAutoOn}
+                onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
+              >
+                Normal
+              </button>
+              <button
+                type="button"
+                className={
+                  speechRate === SPEECH_RATE_SLOW
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                title="Slow speed (0.7) — Shift toggles"
+                disabled={quizAutoOn}
+                onClick={() => setSpeechRate(SPEECH_RATE_SLOW)}
+              >
+                Slow
+              </button>
+            </span>
             <button
               type="button"
               disabled={

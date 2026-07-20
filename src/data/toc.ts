@@ -72,6 +72,21 @@ export type TocItemId =
   | "grammar-171-180"
   | "grammar-181-190"
   | "grammar-191-200"
+  | "grammar-201-210"
+  | "grammar-211-220"
+  | "grammar-221-230"
+  | "grammar-231-240"
+  | "grammar-241-250"
+  | "grammar-251-260"
+  | "grammar-261-270"
+  | "grammar-271-280"
+  | "grammar-281-290"
+  | "grammar-291-300"
+  | "grammar-301-310"
+  | "grammar-311-320"
+  | "grammar-321-330"
+  | "grammar-331-340"
+  | "grammar-341-350"
   | "quiz-pre-comment"
   | "quiz-vocab-1-10"
   | "quiz-vocab-11-20"
@@ -511,11 +526,26 @@ export const tocGroups: TocGroup[] = [
       { id: "grammar-171-180", label: "Grammar Lesson 171–180", kind: "grammar", lessonId: "grammar-lesson-18" },
       { id: "grammar-181-190", label: "Grammar Lesson 181–190", kind: "grammar", lessonId: "grammar-lesson-19" },
       { id: "grammar-191-200", label: "Grammar Lesson 191–200", kind: "grammar", lessonId: "grammar-lesson-20" },
+      { id: "grammar-201-210", label: "Grammar Lesson 201–210", kind: "grammar", lessonId: "grammar-lesson-21" },
+      { id: "grammar-211-220", label: "Grammar Lesson 211–220", kind: "grammar", lessonId: "grammar-lesson-22" },
+      { id: "grammar-221-230", label: "Grammar Lesson 221–230", kind: "grammar", lessonId: "grammar-lesson-23" },
+      { id: "grammar-231-240", label: "Grammar Lesson 231–240", kind: "grammar", lessonId: "grammar-lesson-24" },
+      { id: "grammar-241-250", label: "Grammar Lesson 241–250", kind: "grammar", lessonId: "grammar-lesson-25" },
+      { id: "grammar-251-260", label: "Grammar Lesson 251–260", kind: "grammar", lessonId: "grammar-lesson-26" },
+      { id: "grammar-261-270", label: "Grammar Lesson 261–270", kind: "grammar", lessonId: "grammar-lesson-27" },
+      { id: "grammar-271-280", label: "Grammar Lesson 271–280", kind: "grammar", lessonId: "grammar-lesson-28" },
+      { id: "grammar-281-290", label: "Grammar Lesson 281–290", kind: "grammar", lessonId: "grammar-lesson-29" },
+      { id: "grammar-291-300", label: "Grammar Lesson 291–300", kind: "grammar", lessonId: "grammar-lesson-30" },
+      { id: "grammar-301-310", label: "Grammar Lesson 301–310", kind: "grammar", lessonId: "grammar-lesson-31" },
+      { id: "grammar-311-320", label: "Grammar Lesson 311–320", kind: "grammar", lessonId: "grammar-lesson-32" },
+      { id: "grammar-321-330", label: "Grammar Lesson 321–330", kind: "grammar", lessonId: "grammar-lesson-33" },
+      { id: "grammar-331-340", label: "Grammar Lesson 331–340", kind: "grammar", lessonId: "grammar-lesson-34" },
+      { id: "grammar-341-350", label: "Grammar Lesson 341–350", kind: "grammar", lessonId: "grammar-lesson-35" },
     ],
   },
   {
-    id: "quizzes",
-    title: "4. Quizzes",
+    id: "quiz-word",
+    title: "4. Word Quizzes",
     items: [
       {
         id: "quiz-pre-comment",
@@ -822,6 +852,12 @@ export const tocGroups: TocGroup[] = [
         kind: "quiz",
         quizId: "quiz-vocab-491-500",
       },
+    ],
+  },
+  {
+    id: "quiz-grammar",
+    title: "5. Grammar Quizzes",
+    items: [
       {
         id: "quiz-grammar-1-10",
         label: "Grammar Quiz 1–10",
@@ -963,12 +999,12 @@ export const tocGroups: TocGroup[] = [
   },
   {
     id: "ending",
-    title: "5. Ending",
+    title: "Ending",
     items: [{ id: "ending-cta", label: "Custom Ending CTA", kind: "ending" }],
   },
   {
     id: "reference",
-    title: "6. Reference",
+    title: "Reference",
     items: [
       { id: "glossary", label: "Content Glossary", kind: "glossary" },
     ],
@@ -1054,6 +1090,21 @@ export const lessonGroupIds: TocItemId[] = [
   "grammar-171-180",
   "grammar-181-190",
   "grammar-191-200",
+  "grammar-201-210",
+  "grammar-211-220",
+  "grammar-221-230",
+  "grammar-231-240",
+  "grammar-241-250",
+  "grammar-251-260",
+  "grammar-261-270",
+  "grammar-271-280",
+  "grammar-281-290",
+  "grammar-291-300",
+  "grammar-301-310",
+  "grammar-311-320",
+  "grammar-321-330",
+  "grammar-331-340",
+  "grammar-341-350",
 ];
 
 export const quizIds: TocItemId[] = [
