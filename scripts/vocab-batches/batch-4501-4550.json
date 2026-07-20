@@ -1,0 +1,372 @@
+{
+  "lessons": [
+    {
+      "lessonNumber": 51,
+      "startId": 4501,
+      "titleTheme": "Advanced Weather & Climate",
+      "subcategory": "Weather & Climate",
+      "folder": "advanced-weather",
+      "subcategories": [
+        "Weather",
+        "Climate"
+      ],
+      "items": [
+        {
+          "id": 4501,
+          "word": "気候",
+          "reading": "きこう",
+          "meaning": "climate"
+        },
+        {
+          "id": 4502,
+          "word": "気圧",
+          "reading": "きあつ",
+          "meaning": "atmospheric pressure"
+        },
+        {
+          "id": 4503,
+          "word": "寒波",
+          "reading": "かんぱ",
+          "meaning": "cold wave"
+        },
+        {
+          "id": 4504,
+          "word": "熱帯夜",
+          "reading": "ねったいや",
+          "meaning": "sweltering night"
+        },
+        {
+          "id": 4505,
+          "word": "日照",
+          "reading": "にっしょう",
+          "meaning": "sunlight; sunshine duration"
+        },
+        {
+          "id": 4506,
+          "word": "積雪",
+          "reading": "せきせつ",
+          "meaning": "accumulated snow"
+        },
+        {
+          "id": 4507,
+          "word": "暴風",
+          "reading": "ぼうふう",
+          "meaning": "violent wind"
+        },
+        {
+          "id": 4508,
+          "word": "洪水",
+          "reading": "こうずい",
+          "meaning": "flood"
+        },
+        {
+          "id": 4509,
+          "word": "乾燥",
+          "reading": "かんそう",
+          "meaning": "dryness"
+        },
+        {
+          "id": 4510,
+          "word": "注意報",
+          "reading": "ちゅういほう",
+          "meaning": "weather advisory; warning bulletin",
+          "replaced": true
+        }
+      ]
+    },
+    {
+      "lessonNumber": 52,
+      "startId": 4511,
+      "titleTheme": "Social Etiquette & Consideration",
+      "subcategory": "Etiquette & Consideration",
+      "folder": "etiquette-consideration",
+      "subcategories": [
+        "Etiquette",
+        "Consideration"
+      ],
+      "items": [
+        {
+          "id": 4511,
+          "word": "配慮",
+          "reading": "はいりょ",
+          "meaning": "consideration"
+        },
+        {
+          "id": 4512,
+          "word": "気遣い",
+          "reading": "きづかい",
+          "meaning": "thoughtfulness"
+        },
+        {
+          "id": 4513,
+          "word": "謙遜",
+          "reading": "けんそん",
+          "meaning": "modesty; humility",
+          "replaced": true
+        },
+        {
+          "id": 4514,
+          "word": "作法",
+          "reading": "さほう",
+          "meaning": "manners; etiquette"
+        },
+        {
+          "id": 4515,
+          "word": "常識",
+          "reading": "じょうしき",
+          "meaning": "common sense"
+        },
+        {
+          "id": 4516,
+          "word": "失礼",
+          "reading": "しつれい",
+          "meaning": "rudeness; discourtesy"
+        },
+        {
+          "id": 4517,
+          "word": "控える",
+          "reading": "ひかえる",
+          "meaning": "to refrain from"
+        },
+        {
+          "id": 4518,
+          "word": "譲る",
+          "reading": "ゆずる",
+          "meaning": "to yield; give way"
+        },
+        {
+          "id": 4519,
+          "word": "慎む",
+          "reading": "つつしむ",
+          "meaning": "to be discreet; refrain"
+        },
+        {
+          "id": 4520,
+          "word": "わきまえる",
+          "reading": "わきまえる",
+          "meaning": "to understand one’s position"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 53,
+      "startId": 4521,
+      "titleTheme": "Workplace Communication",
+      "subcategory": "Workplace Communication",
+      "folder": "workplace-communication",
+      "subcategories": [
+        "Workplace",
+        "Communication"
+      ],
+      "items": [
+        {
+          "id": 4521,
+          "word": "配布",
+          "reading": "はいふ",
+          "meaning": "distribution; handout",
+          "replaced": true
+        },
+        {
+          "id": 4522,
+          "word": "周知",
+          "reading": "しゅうち",
+          "meaning": "making something widely known"
+        },
+        {
+          "id": 4523,
+          "word": "確認事項",
+          "reading": "かくにんじこう",
+          "meaning": "points requiring confirmation"
+        },
+        {
+          "id": 4524,
+          "word": "引き継ぎ",
+          "reading": "ひきつぎ",
+          "meaning": "handover"
+        },
+        {
+          "id": 4525,
+          "word": "進捗",
+          "reading": "しんちょく",
+          "meaning": "progress"
+        },
+        {
+          "id": 4526,
+          "word": "調整",
+          "reading": "ちょうせい",
+          "meaning": "coordination; adjustment"
+        },
+        {
+          "id": 4527,
+          "word": "回覧",
+          "reading": "かいらん",
+          "meaning": "circulation of a document"
+        },
+        {
+          "id": 4528,
+          "word": "承認",
+          "reading": "しょうにん",
+          "meaning": "approval"
+        },
+        {
+          "id": 4529,
+          "word": "了承",
+          "reading": "りょうしょう",
+          "meaning": "acknowledgment; consent"
+        },
+        {
+          "id": 4530,
+          "word": "催促",
+          "reading": "さいそく",
+          "meaning": "reminder; urging"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 54,
+      "startId": 4531,
+      "titleTheme": "Decisions & Problem Solving",
+      "subcategory": "Decisions & Problem Solving",
+      "folder": "decisions-problems",
+      "subcategories": [
+        "Decisions",
+        "Problem Solving"
+      ],
+      "items": [
+        {
+          "id": 4531,
+          "word": "判断",
+          "reading": "はんだん",
+          "meaning": "judgment"
+        },
+        {
+          "id": 4532,
+          "word": "決断",
+          "reading": "けつだん",
+          "meaning": "decision"
+        },
+        {
+          "id": 4533,
+          "word": "検討",
+          "reading": "けんとう",
+          "meaning": "consideration; examination"
+        },
+        {
+          "id": 4534,
+          "word": "対処",
+          "reading": "たいしょ",
+          "meaning": "handling; dealing with"
+        },
+        {
+          "id": 4535,
+          "word": "解決",
+          "reading": "かいけつ",
+          "meaning": "solution; resolution"
+        },
+        {
+          "id": 4536,
+          "word": "改善",
+          "reading": "かいぜん",
+          "meaning": "improvement"
+        },
+        {
+          "id": 4537,
+          "word": "工夫",
+          "reading": "くふう",
+          "meaning": "ingenuity; creative effort"
+        },
+        {
+          "id": 4538,
+          "word": "方針",
+          "reading": "ほうしん",
+          "meaning": "policy; course of action"
+        },
+        {
+          "id": 4539,
+          "word": "手段",
+          "reading": "しゅだん",
+          "meaning": "means; method"
+        },
+        {
+          "id": 4540,
+          "word": "妥当",
+          "reading": "だとう",
+          "meaning": "reasonable; appropriate"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 55,
+      "startId": 4541,
+      "titleTheme": "Quality & Manufacturing",
+      "subcategory": "Quality & Manufacturing",
+      "folder": "quality-manufacturing",
+      "subcategories": [
+        "Quality",
+        "Manufacturing"
+      ],
+      "items": [
+        {
+          "id": 4541,
+          "word": "品質",
+          "reading": "ひんしつ",
+          "meaning": "quality"
+        },
+        {
+          "id": 4542,
+          "word": "不良",
+          "reading": "ふりょう",
+          "meaning": "defect; faulty condition"
+        },
+        {
+          "id": 4543,
+          "word": "欠陥",
+          "reading": "けっかん",
+          "meaning": "defect; flaw"
+        },
+        {
+          "id": 4544,
+          "word": "耐久性",
+          "reading": "たいきゅうせい",
+          "meaning": "durability"
+        },
+        {
+          "id": 4545,
+          "word": "精度",
+          "reading": "せいど",
+          "meaning": "precision; accuracy"
+        },
+        {
+          "id": 4546,
+          "word": "寸法",
+          "reading": "すんぽう",
+          "meaning": "dimensions"
+        },
+        {
+          "id": 4547,
+          "word": "誤差",
+          "reading": "ごさ",
+          "meaning": "error; margin of error"
+        },
+        {
+          "id": 4548,
+          "word": "仕様",
+          "reading": "しよう",
+          "meaning": "specification"
+        },
+        {
+          "id": 4549,
+          "word": "試作",
+          "reading": "しさく",
+          "meaning": "prototype production"
+        },
+        {
+          "id": 4550,
+          "word": "検品",
+          "reading": "けんぴん",
+          "meaning": "product inspection"
+        }
+      ]
+    }
+  ]
+}

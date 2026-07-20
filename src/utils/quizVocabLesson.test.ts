@@ -23,9 +23,9 @@ describe("getVocabularyLessonIdForQuiz", () => {
     expect(getVocabularyLessonIdForQuiz(null)).toBeNull();
   });
 
-  it("covers all 50 vocabulary quizzes with 10 ids each", () => {
+  it("covers all 75 vocabulary quizzes with 10 ids each", () => {
     const vocabQuizIds = quizIds.filter((id) => id.startsWith("quiz-vocab-"));
-    expect(vocabQuizIds).toHaveLength(50);
+    expect(vocabQuizIds).toHaveLength(75);
 
     for (const id of vocabQuizIds) {
       const lessonId = getVocabularyLessonIdForQuiz(id);
@@ -49,8 +49,14 @@ describe("getVocabularyLessonIdForQuiz", () => {
     expect(getLessonById("lesson-50")!.vocabularyIds).toEqual(
       Array.from({ length: 10 }, (_, i) => 4491 + i)
     );
+    expect(getLessonById("lesson-75")!.vocabularyIds).toEqual(
+      Array.from({ length: 10 }, (_, i) => 4741 + i)
+    );
     expect(getVocabularyLessonIdForQuiz("quiz-vocab-491-500")).toBe(
       "lesson-50"
+    );
+    expect(getVocabularyLessonIdForQuiz("quiz-vocab-741-750")).toBe(
+      "lesson-75"
     );
   });
 });

@@ -1,0 +1,373 @@
+{
+  "lessons": [
+    {
+      "lessonNumber": 61,
+      "startId": 4601,
+      "titleTheme": "Government & Politics",
+      "subcategory": "Government & Politics",
+      "folder": "government-politics",
+      "subcategories": [
+        "Government",
+        "Politics"
+      ],
+      "items": [
+        {
+          "id": 4601,
+          "word": "政策",
+          "reading": "せいさく",
+          "meaning": "policy"
+        },
+        {
+          "id": 4602,
+          "word": "制度",
+          "reading": "せいど",
+          "meaning": "system; institution"
+        },
+        {
+          "id": 4603,
+          "word": "行政",
+          "reading": "ぎょうせい",
+          "meaning": "public administration"
+        },
+        {
+          "id": 4604,
+          "word": "議会",
+          "reading": "ぎかい",
+          "meaning": "assembly; parliament"
+        },
+        {
+          "id": 4605,
+          "word": "選挙",
+          "reading": "せんきょ",
+          "meaning": "election"
+        },
+        {
+          "id": 4606,
+          "word": "投票",
+          "reading": "とうひょう",
+          "meaning": "voting"
+        },
+        {
+          "id": 4607,
+          "word": "改革",
+          "reading": "かいかく",
+          "meaning": "reform"
+        },
+        {
+          "id": 4608,
+          "word": "国民",
+          "reading": "こくみん",
+          "meaning": "citizens; people of a nation"
+        },
+        {
+          "id": 4609,
+          "word": "財政",
+          "reading": "ざいせい",
+          "meaning": "public finance"
+        },
+        {
+          "id": 4610,
+          "word": "自治体",
+          "reading": "じちたい",
+          "meaning": "local government"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 62,
+      "startId": 4611,
+      "titleTheme": "Economy & Business Conditions",
+      "subcategory": "Economy & Business",
+      "folder": "economy-business",
+      "subcategories": [
+        "Economy",
+        "Business"
+      ],
+      "items": [
+        {
+          "id": 4611,
+          "word": "景気",
+          "reading": "けいき",
+          "meaning": "economic conditions"
+        },
+        {
+          "id": 4612,
+          "word": "不況",
+          "reading": "ふきょう",
+          "meaning": "recession"
+        },
+        {
+          "id": 4613,
+          "word": "物価",
+          "reading": "ぶっか",
+          "meaning": "commodity prices"
+        },
+        {
+          "id": 4614,
+          "word": "需要",
+          "reading": "じゅよう",
+          "meaning": "demand"
+        },
+        {
+          "id": 4615,
+          "word": "供給",
+          "reading": "きょうきゅう",
+          "meaning": "supply"
+        },
+        {
+          "id": 4616,
+          "word": "利益",
+          "reading": "りえき",
+          "meaning": "profit; benefit"
+        },
+        {
+          "id": 4617,
+          "word": "欠損",
+          "reading": "けっそん",
+          "meaning": "deficit; shortfall",
+          "replaced": true
+        },
+        {
+          "id": 4618,
+          "word": "市場",
+          "reading": "しじょう",
+          "meaning": "market"
+        },
+        {
+          "id": 4619,
+          "word": "競争",
+          "reading": "きょうそう",
+          "meaning": "competition"
+        },
+        {
+          "id": 4620,
+          "word": "成長率",
+          "reading": "せいちょうりつ",
+          "meaning": "growth rate"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 63,
+      "startId": 4621,
+      "titleTheme": "Employment Conditions",
+      "subcategory": "Employment Conditions",
+      "folder": "employment-conditions",
+      "subcategories": [
+        "Employment",
+        "Labor"
+      ],
+      "items": [
+        {
+          "id": 4621,
+          "word": "雇用",
+          "reading": "こよう",
+          "meaning": "employment"
+        },
+        {
+          "id": 4622,
+          "word": "登用",
+          "reading": "とうよう",
+          "meaning": "appointment; promotion to a post",
+          "replaced": true
+        },
+        {
+          "id": 4623,
+          "word": "解雇",
+          "reading": "かいこ",
+          "meaning": "dismissal"
+        },
+        {
+          "id": 4624,
+          "word": "待遇",
+          "reading": "たいぐう",
+          "meaning": "treatment; employment conditions"
+        },
+        {
+          "id": 4625,
+          "word": "給与",
+          "reading": "きゅうよ",
+          "meaning": "salary"
+        },
+        {
+          "id": 4626,
+          "word": "手当",
+          "reading": "てあて",
+          "meaning": "allowance"
+        },
+        {
+          "id": 4627,
+          "word": "勤務",
+          "reading": "きんむ",
+          "meaning": "work; service"
+        },
+        {
+          "id": 4628,
+          "word": "定年",
+          "reading": "ていねん",
+          "meaning": "retirement age"
+        },
+        {
+          "id": 4629,
+          "word": "人材",
+          "reading": "じんざい",
+          "meaning": "human resources; talent"
+        },
+        {
+          "id": 4630,
+          "word": "労働力",
+          "reading": "ろうどうりょく",
+          "meaning": "labor force"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 64,
+      "startId": 4631,
+      "titleTheme": "Environment & Sustainability",
+      "subcategory": "Environment & Sustainability",
+      "folder": "environment-sustainability",
+      "subcategories": [
+        "Environment",
+        "Sustainability"
+      ],
+      "items": [
+        {
+          "id": 4631,
+          "word": "温暖化",
+          "reading": "おんだんか",
+          "meaning": "global warming"
+        },
+        {
+          "id": 4632,
+          "word": "排出",
+          "reading": "はいしゅつ",
+          "meaning": "emission; discharge"
+        },
+        {
+          "id": 4633,
+          "word": "原料",
+          "reading": "げんりょう",
+          "meaning": "raw material",
+          "replaced": true
+        },
+        {
+          "id": 4634,
+          "word": "再生可能",
+          "reading": "さいせいかのう",
+          "meaning": "renewable"
+        },
+        {
+          "id": 4635,
+          "word": "生態系",
+          "reading": "せいたいけい",
+          "meaning": "ecosystem"
+        },
+        {
+          "id": 4636,
+          "word": "汚染",
+          "reading": "おせん",
+          "meaning": "pollution"
+        },
+        {
+          "id": 4637,
+          "word": "廃棄物",
+          "reading": "はいきぶつ",
+          "meaning": "waste material"
+        },
+        {
+          "id": 4638,
+          "word": "削減",
+          "reading": "さくげん",
+          "meaning": "reduction"
+        },
+        {
+          "id": 4639,
+          "word": "保護",
+          "reading": "ほご",
+          "meaning": "protection"
+        },
+        {
+          "id": 4640,
+          "word": "持続可能",
+          "reading": "じぞくかのう",
+          "meaning": "sustainable"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 65,
+      "startId": 4641,
+      "titleTheme": "Crime & Public Safety",
+      "subcategory": "Crime & Public Safety",
+      "folder": "crime-safety",
+      "subcategories": [
+        "Crime",
+        "Public Safety"
+      ],
+      "items": [
+        {
+          "id": 4641,
+          "word": "犯罪",
+          "reading": "はんざい",
+          "meaning": "crime"
+        },
+        {
+          "id": 4642,
+          "word": "事件",
+          "reading": "じけん",
+          "meaning": "incident; criminal case"
+        },
+        {
+          "id": 4643,
+          "word": "容疑者",
+          "reading": "ようぎしゃ",
+          "meaning": "suspect"
+        },
+        {
+          "id": 4644,
+          "word": "被害者",
+          "reading": "ひがいしゃ",
+          "meaning": "victim"
+        },
+        {
+          "id": 4645,
+          "word": "逮捕",
+          "reading": "たいほ",
+          "meaning": "arrest"
+        },
+        {
+          "id": 4646,
+          "word": "捜査",
+          "reading": "そうさ",
+          "meaning": "criminal investigation"
+        },
+        {
+          "id": 4647,
+          "word": "証拠",
+          "reading": "しょうこ",
+          "meaning": "evidence"
+        },
+        {
+          "id": 4648,
+          "word": "警備",
+          "reading": "けいび",
+          "meaning": "security; guard",
+          "replaced": true
+        },
+        {
+          "id": 4649,
+          "word": "通報",
+          "reading": "つうほう",
+          "meaning": "report to authorities"
+        },
+        {
+          "id": 4650,
+          "word": "不審者",
+          "reading": "ふしんしゃ",
+          "meaning": "suspicious person"
+        }
+      ]
+    }
+  ]
+}

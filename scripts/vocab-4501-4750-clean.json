@@ -1,0 +1,1525 @@
+[
+  {
+    "id": 4501,
+    "word": "気候",
+    "reading": "きこう",
+    "meaning": "climate"
+  },
+  {
+    "id": 4502,
+    "word": "気圧",
+    "reading": "きあつ",
+    "meaning": "atmospheric pressure"
+  },
+  {
+    "id": 4503,
+    "word": "寒波",
+    "reading": "かんぱ",
+    "meaning": "cold wave"
+  },
+  {
+    "id": 4504,
+    "word": "熱帯夜",
+    "reading": "ねったいや",
+    "meaning": "sweltering night"
+  },
+  {
+    "id": 4505,
+    "word": "日照",
+    "reading": "にっしょう",
+    "meaning": "sunlight; sunshine duration"
+  },
+  {
+    "id": 4506,
+    "word": "積雪",
+    "reading": "せきせつ",
+    "meaning": "accumulated snow"
+  },
+  {
+    "id": 4507,
+    "word": "暴風",
+    "reading": "ぼうふう",
+    "meaning": "violent wind"
+  },
+  {
+    "id": 4508,
+    "word": "洪水",
+    "reading": "こうずい",
+    "meaning": "flood"
+  },
+  {
+    "id": 4509,
+    "word": "乾燥",
+    "reading": "かんそう",
+    "meaning": "dryness"
+  },
+  {
+    "id": 4510,
+    "word": "注意報",
+    "reading": "ちゅういほう",
+    "meaning": "weather advisory; warning bulletin",
+    "replaced": true
+  },
+  {
+    "id": 4511,
+    "word": "配慮",
+    "reading": "はいりょ",
+    "meaning": "consideration"
+  },
+  {
+    "id": 4512,
+    "word": "気遣い",
+    "reading": "きづかい",
+    "meaning": "thoughtfulness"
+  },
+  {
+    "id": 4513,
+    "word": "謙遜",
+    "reading": "けんそん",
+    "meaning": "modesty; humility",
+    "replaced": true
+  },
+  {
+    "id": 4514,
+    "word": "作法",
+    "reading": "さほう",
+    "meaning": "manners; etiquette"
+  },
+  {
+    "id": 4515,
+    "word": "常識",
+    "reading": "じょうしき",
+    "meaning": "common sense"
+  },
+  {
+    "id": 4516,
+    "word": "失礼",
+    "reading": "しつれい",
+    "meaning": "rudeness; discourtesy"
+  },
+  {
+    "id": 4517,
+    "word": "控える",
+    "reading": "ひかえる",
+    "meaning": "to refrain from"
+  },
+  {
+    "id": 4518,
+    "word": "譲る",
+    "reading": "ゆずる",
+    "meaning": "to yield; give way"
+  },
+  {
+    "id": 4519,
+    "word": "慎む",
+    "reading": "つつしむ",
+    "meaning": "to be discreet; refrain"
+  },
+  {
+    "id": 4520,
+    "word": "わきまえる",
+    "reading": "わきまえる",
+    "meaning": "to understand one’s position"
+  },
+  {
+    "id": 4521,
+    "word": "配布",
+    "reading": "はいふ",
+    "meaning": "distribution; handout",
+    "replaced": true
+  },
+  {
+    "id": 4522,
+    "word": "周知",
+    "reading": "しゅうち",
+    "meaning": "making something widely known"
+  },
+  {
+    "id": 4523,
+    "word": "確認事項",
+    "reading": "かくにんじこう",
+    "meaning": "points requiring confirmation"
+  },
+  {
+    "id": 4524,
+    "word": "引き継ぎ",
+    "reading": "ひきつぎ",
+    "meaning": "handover"
+  },
+  {
+    "id": 4525,
+    "word": "進捗",
+    "reading": "しんちょく",
+    "meaning": "progress"
+  },
+  {
+    "id": 4526,
+    "word": "調整",
+    "reading": "ちょうせい",
+    "meaning": "coordination; adjustment"
+  },
+  {
+    "id": 4527,
+    "word": "回覧",
+    "reading": "かいらん",
+    "meaning": "circulation of a document"
+  },
+  {
+    "id": 4528,
+    "word": "承認",
+    "reading": "しょうにん",
+    "meaning": "approval"
+  },
+  {
+    "id": 4529,
+    "word": "了承",
+    "reading": "りょうしょう",
+    "meaning": "acknowledgment; consent"
+  },
+  {
+    "id": 4530,
+    "word": "催促",
+    "reading": "さいそく",
+    "meaning": "reminder; urging"
+  },
+  {
+    "id": 4531,
+    "word": "判断",
+    "reading": "はんだん",
+    "meaning": "judgment"
+  },
+  {
+    "id": 4532,
+    "word": "決断",
+    "reading": "けつだん",
+    "meaning": "decision"
+  },
+  {
+    "id": 4533,
+    "word": "検討",
+    "reading": "けんとう",
+    "meaning": "consideration; examination"
+  },
+  {
+    "id": 4534,
+    "word": "対処",
+    "reading": "たいしょ",
+    "meaning": "handling; dealing with"
+  },
+  {
+    "id": 4535,
+    "word": "解決",
+    "reading": "かいけつ",
+    "meaning": "solution; resolution"
+  },
+  {
+    "id": 4536,
+    "word": "改善",
+    "reading": "かいぜん",
+    "meaning": "improvement"
+  },
+  {
+    "id": 4537,
+    "word": "工夫",
+    "reading": "くふう",
+    "meaning": "ingenuity; creative effort"
+  },
+  {
+    "id": 4538,
+    "word": "方針",
+    "reading": "ほうしん",
+    "meaning": "policy; course of action"
+  },
+  {
+    "id": 4539,
+    "word": "手段",
+    "reading": "しゅだん",
+    "meaning": "means; method"
+  },
+  {
+    "id": 4540,
+    "word": "妥当",
+    "reading": "だとう",
+    "meaning": "reasonable; appropriate"
+  },
+  {
+    "id": 4541,
+    "word": "品質",
+    "reading": "ひんしつ",
+    "meaning": "quality"
+  },
+  {
+    "id": 4542,
+    "word": "不良",
+    "reading": "ふりょう",
+    "meaning": "defect; faulty condition"
+  },
+  {
+    "id": 4543,
+    "word": "欠陥",
+    "reading": "けっかん",
+    "meaning": "defect; flaw"
+  },
+  {
+    "id": 4544,
+    "word": "耐久性",
+    "reading": "たいきゅうせい",
+    "meaning": "durability"
+  },
+  {
+    "id": 4545,
+    "word": "精度",
+    "reading": "せいど",
+    "meaning": "precision; accuracy"
+  },
+  {
+    "id": 4546,
+    "word": "寸法",
+    "reading": "すんぽう",
+    "meaning": "dimensions"
+  },
+  {
+    "id": 4547,
+    "word": "誤差",
+    "reading": "ごさ",
+    "meaning": "error; margin of error"
+  },
+  {
+    "id": 4548,
+    "word": "仕様",
+    "reading": "しよう",
+    "meaning": "specification"
+  },
+  {
+    "id": 4549,
+    "word": "試作",
+    "reading": "しさく",
+    "meaning": "prototype production"
+  },
+  {
+    "id": 4550,
+    "word": "検品",
+    "reading": "けんぴん",
+    "meaning": "product inspection"
+  },
+  {
+    "id": 4551,
+    "word": "調査",
+    "reading": "ちょうさ",
+    "meaning": "investigation; survey"
+  },
+  {
+    "id": 4552,
+    "word": "分析",
+    "reading": "ぶんせき",
+    "meaning": "analysis"
+  },
+  {
+    "id": 4553,
+    "word": "統計",
+    "reading": "とうけい",
+    "meaning": "statistics"
+  },
+  {
+    "id": 4554,
+    "word": "傾向",
+    "reading": "けいこう",
+    "meaning": "tendency; trend"
+  },
+  {
+    "id": 4555,
+    "word": "仮説",
+    "reading": "かせつ",
+    "meaning": "hypothesis"
+  },
+  {
+    "id": 4556,
+    "word": "根拠",
+    "reading": "こんきょ",
+    "meaning": "basis; grounds"
+  },
+  {
+    "id": 4557,
+    "word": "検証",
+    "reading": "けんしょう",
+    "meaning": "verification"
+  },
+  {
+    "id": 4558,
+    "word": "対象",
+    "reading": "たいしょう",
+    "meaning": "target; subject"
+  },
+  {
+    "id": 4559,
+    "word": "数値",
+    "reading": "すうち",
+    "meaning": "numerical value"
+  },
+  {
+    "id": 4560,
+    "word": "比率",
+    "reading": "ひりつ",
+    "meaning": "ratio"
+  },
+  {
+    "id": 4561,
+    "word": "主張",
+    "reading": "しゅちょう",
+    "meaning": "assertion; argument"
+  },
+  {
+    "id": 4562,
+    "word": "意見",
+    "reading": "いけん",
+    "meaning": "opinion"
+  },
+  {
+    "id": 4563,
+    "word": "見解",
+    "reading": "けんかい",
+    "meaning": "view; opinion"
+  },
+  {
+    "id": 4564,
+    "word": "賛成",
+    "reading": "さんせい",
+    "meaning": "agreement; support"
+  },
+  {
+    "id": 4565,
+    "word": "反対",
+    "reading": "はんたい",
+    "meaning": "opposition"
+  },
+  {
+    "id": 4566,
+    "word": "批判",
+    "reading": "ひはん",
+    "meaning": "criticism"
+  },
+  {
+    "id": 4567,
+    "word": "反論",
+    "reading": "はんろん",
+    "meaning": "counterargument"
+  },
+  {
+    "id": 4568,
+    "word": "指摘",
+    "reading": "してき",
+    "meaning": "pointing out"
+  },
+  {
+    "id": 4569,
+    "word": "説得",
+    "reading": "せっとく",
+    "meaning": "persuasion"
+  },
+  {
+    "id": 4570,
+    "word": "納得",
+    "reading": "なっとく",
+    "meaning": "understanding; acceptance"
+  },
+  {
+    "id": 4571,
+    "word": "穏やか",
+    "reading": "おだやか",
+    "meaning": "calm; gentle"
+  },
+  {
+    "id": 4572,
+    "word": "素直",
+    "reading": "すなお",
+    "meaning": "honest; obedient"
+  },
+  {
+    "id": 4573,
+    "word": "慎重",
+    "reading": "しんちょう",
+    "meaning": "cautious"
+  },
+  {
+    "id": 4574,
+    "word": "大胆",
+    "reading": "だいたん",
+    "meaning": "bold; daring"
+  },
+  {
+    "id": 4575,
+    "word": "冷静",
+    "reading": "れいせい",
+    "meaning": "calm; composed"
+  },
+  {
+    "id": 4576,
+    "word": "責任感",
+    "reading": "せきにんかん",
+    "meaning": "sense of responsibility"
+  },
+  {
+    "id": 4577,
+    "word": "協調性",
+    "reading": "きょうちょうせい",
+    "meaning": "cooperativeness"
+  },
+  {
+    "id": 4578,
+    "word": "頑固",
+    "reading": "がんこ",
+    "meaning": "stubborn"
+  },
+  {
+    "id": 4579,
+    "word": "向上心",
+    "reading": "こうじょうしん",
+    "meaning": "desire for self-improvement"
+  },
+  {
+    "id": 4580,
+    "word": "弾力",
+    "reading": "だんりょく",
+    "meaning": "elasticity; resilience",
+    "replaced": true
+  },
+  {
+    "id": 4581,
+    "word": "対立",
+    "reading": "たいりつ",
+    "meaning": "conflict; opposition"
+  },
+  {
+    "id": 4582,
+    "word": "衝突",
+    "reading": "しょうとつ",
+    "meaning": "collision; clash"
+  },
+  {
+    "id": 4583,
+    "word": "仲直り",
+    "reading": "なかなおり",
+    "meaning": "reconciliation"
+  },
+  {
+    "id": 4584,
+    "word": "信用",
+    "reading": "しんよう",
+    "meaning": "credit; trustworthiness",
+    "replaced": true
+  },
+  {
+    "id": 4585,
+    "word": "裏切る",
+    "reading": "うらぎる",
+    "meaning": "to betray"
+  },
+  {
+    "id": 4586,
+    "word": "責める",
+    "reading": "せめる",
+    "meaning": "to blame"
+  },
+  {
+    "id": 4587,
+    "word": "許す",
+    "reading": "ゆるす",
+    "meaning": "to forgive; permit"
+  },
+  {
+    "id": 4588,
+    "word": "誤る",
+    "reading": "あやまる",
+    "meaning": "to make a mistake"
+  },
+  {
+    "id": 4589,
+    "word": "尊重",
+    "reading": "そんちょう",
+    "meaning": "respect"
+  },
+  {
+    "id": 4590,
+    "word": "歩み寄る",
+    "reading": "あゆみよる",
+    "meaning": "to make a compromise"
+  },
+  {
+    "id": 4591,
+    "word": "規則",
+    "reading": "きそく",
+    "meaning": "rule; regulation"
+  },
+  {
+    "id": 4592,
+    "word": "規定",
+    "reading": "きてい",
+    "meaning": "provision; regulation"
+  },
+  {
+    "id": 4593,
+    "word": "基準",
+    "reading": "きじゅん",
+    "meaning": "standard; criterion"
+  },
+  {
+    "id": 4594,
+    "word": "逸脱",
+    "reading": "いつだつ",
+    "meaning": "deviation; departure from norms",
+    "replaced": true
+  },
+  {
+    "id": 4595,
+    "word": "義務",
+    "reading": "ぎむ",
+    "meaning": "duty; obligation"
+  },
+  {
+    "id": 4596,
+    "word": "権利",
+    "reading": "けんり",
+    "meaning": "right; entitlement"
+  },
+  {
+    "id": 4597,
+    "word": "厳守",
+    "reading": "げんしゅ",
+    "meaning": "strict observance"
+  },
+  {
+    "id": 4598,
+    "word": "禁止",
+    "reading": "きんし",
+    "meaning": "prohibition"
+  },
+  {
+    "id": 4599,
+    "word": "施行",
+    "reading": "しこう",
+    "meaning": "enforcement; putting into effect",
+    "replaced": true
+  },
+  {
+    "id": 4600,
+    "word": "例外",
+    "reading": "れいがい",
+    "meaning": "exception"
+  },
+  {
+    "id": 4601,
+    "word": "政策",
+    "reading": "せいさく",
+    "meaning": "policy"
+  },
+  {
+    "id": 4602,
+    "word": "制度",
+    "reading": "せいど",
+    "meaning": "system; institution"
+  },
+  {
+    "id": 4603,
+    "word": "行政",
+    "reading": "ぎょうせい",
+    "meaning": "public administration"
+  },
+  {
+    "id": 4604,
+    "word": "議会",
+    "reading": "ぎかい",
+    "meaning": "assembly; parliament"
+  },
+  {
+    "id": 4605,
+    "word": "選挙",
+    "reading": "せんきょ",
+    "meaning": "election"
+  },
+  {
+    "id": 4606,
+    "word": "投票",
+    "reading": "とうひょう",
+    "meaning": "voting"
+  },
+  {
+    "id": 4607,
+    "word": "改革",
+    "reading": "かいかく",
+    "meaning": "reform"
+  },
+  {
+    "id": 4608,
+    "word": "国民",
+    "reading": "こくみん",
+    "meaning": "citizens; people of a nation"
+  },
+  {
+    "id": 4609,
+    "word": "財政",
+    "reading": "ざいせい",
+    "meaning": "public finance"
+  },
+  {
+    "id": 4610,
+    "word": "自治体",
+    "reading": "じちたい",
+    "meaning": "local government"
+  },
+  {
+    "id": 4611,
+    "word": "景気",
+    "reading": "けいき",
+    "meaning": "economic conditions"
+  },
+  {
+    "id": 4612,
+    "word": "不況",
+    "reading": "ふきょう",
+    "meaning": "recession"
+  },
+  {
+    "id": 4613,
+    "word": "物価",
+    "reading": "ぶっか",
+    "meaning": "commodity prices"
+  },
+  {
+    "id": 4614,
+    "word": "需要",
+    "reading": "じゅよう",
+    "meaning": "demand"
+  },
+  {
+    "id": 4615,
+    "word": "供給",
+    "reading": "きょうきゅう",
+    "meaning": "supply"
+  },
+  {
+    "id": 4616,
+    "word": "利益",
+    "reading": "りえき",
+    "meaning": "profit; benefit"
+  },
+  {
+    "id": 4617,
+    "word": "欠損",
+    "reading": "けっそん",
+    "meaning": "deficit; shortfall",
+    "replaced": true
+  },
+  {
+    "id": 4618,
+    "word": "市場",
+    "reading": "しじょう",
+    "meaning": "market"
+  },
+  {
+    "id": 4619,
+    "word": "競争",
+    "reading": "きょうそう",
+    "meaning": "competition"
+  },
+  {
+    "id": 4620,
+    "word": "成長率",
+    "reading": "せいちょうりつ",
+    "meaning": "growth rate"
+  },
+  {
+    "id": 4621,
+    "word": "雇用",
+    "reading": "こよう",
+    "meaning": "employment"
+  },
+  {
+    "id": 4622,
+    "word": "登用",
+    "reading": "とうよう",
+    "meaning": "appointment; promotion to a post",
+    "replaced": true
+  },
+  {
+    "id": 4623,
+    "word": "解雇",
+    "reading": "かいこ",
+    "meaning": "dismissal"
+  },
+  {
+    "id": 4624,
+    "word": "待遇",
+    "reading": "たいぐう",
+    "meaning": "treatment; employment conditions"
+  },
+  {
+    "id": 4625,
+    "word": "給与",
+    "reading": "きゅうよ",
+    "meaning": "salary"
+  },
+  {
+    "id": 4626,
+    "word": "手当",
+    "reading": "てあて",
+    "meaning": "allowance"
+  },
+  {
+    "id": 4627,
+    "word": "勤務",
+    "reading": "きんむ",
+    "meaning": "work; service"
+  },
+  {
+    "id": 4628,
+    "word": "定年",
+    "reading": "ていねん",
+    "meaning": "retirement age"
+  },
+  {
+    "id": 4629,
+    "word": "人材",
+    "reading": "じんざい",
+    "meaning": "human resources; talent"
+  },
+  {
+    "id": 4630,
+    "word": "労働力",
+    "reading": "ろうどうりょく",
+    "meaning": "labor force"
+  },
+  {
+    "id": 4631,
+    "word": "温暖化",
+    "reading": "おんだんか",
+    "meaning": "global warming"
+  },
+  {
+    "id": 4632,
+    "word": "排出",
+    "reading": "はいしゅつ",
+    "meaning": "emission; discharge"
+  },
+  {
+    "id": 4633,
+    "word": "原料",
+    "reading": "げんりょう",
+    "meaning": "raw material",
+    "replaced": true
+  },
+  {
+    "id": 4634,
+    "word": "再生可能",
+    "reading": "さいせいかのう",
+    "meaning": "renewable"
+  },
+  {
+    "id": 4635,
+    "word": "生態系",
+    "reading": "せいたいけい",
+    "meaning": "ecosystem"
+  },
+  {
+    "id": 4636,
+    "word": "汚染",
+    "reading": "おせん",
+    "meaning": "pollution"
+  },
+  {
+    "id": 4637,
+    "word": "廃棄物",
+    "reading": "はいきぶつ",
+    "meaning": "waste material"
+  },
+  {
+    "id": 4638,
+    "word": "削減",
+    "reading": "さくげん",
+    "meaning": "reduction"
+  },
+  {
+    "id": 4639,
+    "word": "保護",
+    "reading": "ほご",
+    "meaning": "protection"
+  },
+  {
+    "id": 4640,
+    "word": "持続可能",
+    "reading": "じぞくかのう",
+    "meaning": "sustainable"
+  },
+  {
+    "id": 4641,
+    "word": "犯罪",
+    "reading": "はんざい",
+    "meaning": "crime"
+  },
+  {
+    "id": 4642,
+    "word": "事件",
+    "reading": "じけん",
+    "meaning": "incident; criminal case"
+  },
+  {
+    "id": 4643,
+    "word": "容疑者",
+    "reading": "ようぎしゃ",
+    "meaning": "suspect"
+  },
+  {
+    "id": 4644,
+    "word": "被害者",
+    "reading": "ひがいしゃ",
+    "meaning": "victim"
+  },
+  {
+    "id": 4645,
+    "word": "逮捕",
+    "reading": "たいほ",
+    "meaning": "arrest"
+  },
+  {
+    "id": 4646,
+    "word": "捜査",
+    "reading": "そうさ",
+    "meaning": "criminal investigation"
+  },
+  {
+    "id": 4647,
+    "word": "証拠",
+    "reading": "しょうこ",
+    "meaning": "evidence"
+  },
+  {
+    "id": 4648,
+    "word": "警備",
+    "reading": "けいび",
+    "meaning": "security; guard",
+    "replaced": true
+  },
+  {
+    "id": 4649,
+    "word": "通報",
+    "reading": "つうほう",
+    "meaning": "report to authorities"
+  },
+  {
+    "id": 4650,
+    "word": "不審者",
+    "reading": "ふしんしゃ",
+    "meaning": "suspicious person"
+  },
+  {
+    "id": 4651,
+    "word": "事故",
+    "reading": "じこ",
+    "meaning": "accident"
+  },
+  {
+    "id": 4652,
+    "word": "負傷",
+    "reading": "ふしょう",
+    "meaning": "injury"
+  },
+  {
+    "id": 4653,
+    "word": "救出",
+    "reading": "きゅうしゅつ",
+    "meaning": "rescue; extrication",
+    "replaced": true
+  },
+  {
+    "id": 4654,
+    "word": "救急車",
+    "reading": "きゅうきゅうしゃ",
+    "meaning": "ambulance"
+  },
+  {
+    "id": 4655,
+    "word": "現場",
+    "reading": "げんば",
+    "meaning": "scene; work site"
+  },
+  {
+    "id": 4656,
+    "word": "損害",
+    "reading": "そんがい",
+    "meaning": "damage; loss"
+  },
+  {
+    "id": 4657,
+    "word": "補償",
+    "reading": "ほしょう",
+    "meaning": "compensation; indemnity",
+    "replaced": true
+  },
+  {
+    "id": 4658,
+    "word": "過失",
+    "reading": "かしつ",
+    "meaning": "negligence; fault"
+  },
+  {
+    "id": 4659,
+    "word": "目撃者",
+    "reading": "もくげきしゃ",
+    "meaning": "witness"
+  },
+  {
+    "id": 4660,
+    "word": "届け出",
+    "reading": "とどけで",
+    "meaning": "official notification"
+  },
+  {
+    "id": 4661,
+    "word": "特集",
+    "reading": "とくしゅう",
+    "meaning": "feature article; special coverage",
+    "replaced": true
+  },
+  {
+    "id": 4662,
+    "word": "論説",
+    "reading": "ろんせつ",
+    "meaning": "editorial; opinion article",
+    "replaced": true
+  },
+  {
+    "id": 4663,
+    "word": "見出し",
+    "reading": "みだし",
+    "meaning": "headline"
+  },
+  {
+    "id": 4664,
+    "word": "速報",
+    "reading": "そくほう",
+    "meaning": "breaking news"
+  },
+  {
+    "id": 4665,
+    "word": "会見",
+    "reading": "かいけん",
+    "meaning": "press conference; interview",
+    "replaced": true
+  },
+  {
+    "id": 4666,
+    "word": "記者",
+    "reading": "きしゃ",
+    "meaning": "reporter"
+  },
+  {
+    "id": 4667,
+    "word": "世論",
+    "reading": "せろん",
+    "meaning": "public opinion"
+  },
+  {
+    "id": 4668,
+    "word": "公表",
+    "reading": "こうひょう",
+    "meaning": "public announcement"
+  },
+  {
+    "id": 4669,
+    "word": "情報源",
+    "reading": "じょうほうげん",
+    "meaning": "information source"
+  },
+  {
+    "id": 4670,
+    "word": "訂正",
+    "reading": "ていせい",
+    "meaning": "correction"
+  },
+  {
+    "id": 4671,
+    "word": "個人情報",
+    "reading": "こじんじょうほう",
+    "meaning": "personal information"
+  },
+  {
+    "id": 4672,
+    "word": "漏えい",
+    "reading": "ろうえい",
+    "meaning": "leak; disclosure"
+  },
+  {
+    "id": 4673,
+    "word": "認証",
+    "reading": "にんしょう",
+    "meaning": "authentication"
+  },
+  {
+    "id": 4674,
+    "word": "暗号化",
+    "reading": "あんごうか",
+    "meaning": "encryption"
+  },
+  {
+    "id": 4675,
+    "word": "不正アクセス",
+    "reading": "ふせいアクセス",
+    "meaning": "unauthorized access"
+  },
+  {
+    "id": 4676,
+    "word": "脅威",
+    "reading": "きょうい",
+    "meaning": "threat"
+  },
+  {
+    "id": 4677,
+    "word": "対策",
+    "reading": "たいさく",
+    "meaning": "countermeasure"
+  },
+  {
+    "id": 4678,
+    "word": "監視",
+    "reading": "かんし",
+    "meaning": "monitoring; surveillance"
+  },
+  {
+    "id": 4679,
+    "word": "復旧",
+    "reading": "ふっきゅう",
+    "meaning": "restoration; recovery"
+  },
+  {
+    "id": 4680,
+    "word": "脆弱性",
+    "reading": "ぜいじゃくせい",
+    "meaning": "vulnerability"
+  },
+  {
+    "id": 4681,
+    "word": "技術",
+    "reading": "ぎじゅつ",
+    "meaning": "technology; skill"
+  },
+  {
+    "id": 4682,
+    "word": "開発",
+    "reading": "かいはつ",
+    "meaning": "development"
+  },
+  {
+    "id": 4683,
+    "word": "発明",
+    "reading": "はつめい",
+    "meaning": "invention"
+  },
+  {
+    "id": 4684,
+    "word": "機器",
+    "reading": "きき",
+    "meaning": "equipment; apparatus",
+    "replaced": true
+  },
+  {
+    "id": 4685,
+    "word": "機能",
+    "reading": "きのう",
+    "meaning": "function"
+  },
+  {
+    "id": 4686,
+    "word": "性能",
+    "reading": "せいのう",
+    "meaning": "performance; capability"
+  },
+  {
+    "id": 4687,
+    "word": "実験",
+    "reading": "じっけん",
+    "meaning": "experiment"
+  },
+  {
+    "id": 4688,
+    "word": "導入",
+    "reading": "どうにゅう",
+    "meaning": "introduction; implementation"
+  },
+  {
+    "id": 4689,
+    "word": "機械化",
+    "reading": "きかいか",
+    "meaning": "mechanization",
+    "replaced": true
+  },
+  {
+    "id": 4690,
+    "word": "先端技術",
+    "reading": "せんたんぎじゅつ",
+    "meaning": "cutting-edge technology",
+    "replaced": true
+  },
+  {
+    "id": 4691,
+    "word": "変化",
+    "reading": "へんか",
+    "meaning": "change"
+  },
+  {
+    "id": 4692,
+    "word": "変動",
+    "reading": "へんどう",
+    "meaning": "fluctuation"
+  },
+  {
+    "id": 4693,
+    "word": "推移",
+    "reading": "すいい",
+    "meaning": "transition; development"
+  },
+  {
+    "id": 4694,
+    "word": "拡大",
+    "reading": "かくだい",
+    "meaning": "expansion"
+  },
+  {
+    "id": 4695,
+    "word": "縮小",
+    "reading": "しゅくしょう",
+    "meaning": "reduction; contraction"
+  },
+  {
+    "id": 4696,
+    "word": "増加",
+    "reading": "ぞうか",
+    "meaning": "increase"
+  },
+  {
+    "id": 4697,
+    "word": "減少",
+    "reading": "げんしょう",
+    "meaning": "decrease"
+  },
+  {
+    "id": 4698,
+    "word": "急増",
+    "reading": "きゅうぞう",
+    "meaning": "rapid increase"
+  },
+  {
+    "id": 4699,
+    "word": "浸透",
+    "reading": "しんとう",
+    "meaning": "penetration; permeation; spread",
+    "replaced": true
+  },
+  {
+    "id": 4700,
+    "word": "衰退",
+    "reading": "すいたい",
+    "meaning": "decline"
+  },
+  {
+    "id": 4701,
+    "word": "原因",
+    "reading": "げんいん",
+    "meaning": "cause"
+  },
+  {
+    "id": 4702,
+    "word": "要因",
+    "reading": "よういん",
+    "meaning": "factor"
+  },
+  {
+    "id": 4703,
+    "word": "背景",
+    "reading": "はいけい",
+    "meaning": "background"
+  },
+  {
+    "id": 4704,
+    "word": "影響",
+    "reading": "えいきょう",
+    "meaning": "influence; effect"
+  },
+  {
+    "id": 4705,
+    "word": "結果",
+    "reading": "けっか",
+    "meaning": "result"
+  },
+  {
+    "id": 4706,
+    "word": "効力",
+    "reading": "こうりょく",
+    "meaning": "efficacy; legal effect",
+    "replaced": true
+  },
+  {
+    "id": 4707,
+    "word": "打撃",
+    "reading": "だげき",
+    "meaning": "blow; hit; serious damage",
+    "replaced": true
+  },
+  {
+    "id": 4708,
+    "word": "負担",
+    "reading": "ふたん",
+    "meaning": "burden"
+  },
+  {
+    "id": 4709,
+    "word": "きっかけ",
+    "reading": "きっかけ",
+    "meaning": "trigger; opportunity"
+  },
+  {
+    "id": 4710,
+    "word": "招く",
+    "reading": "まねく",
+    "meaning": "to cause; invite"
+  },
+  {
+    "id": 4711,
+    "word": "可能性",
+    "reading": "かのうせい",
+    "meaning": "possibility"
+  },
+  {
+    "id": 4712,
+    "word": "見込み",
+    "reading": "みこみ",
+    "meaning": "prospect; likelihood"
+  },
+  {
+    "id": 4713,
+    "word": "予測",
+    "reading": "よそく",
+    "meaning": "prediction"
+  },
+  {
+    "id": 4714,
+    "word": "推測",
+    "reading": "すいそく",
+    "meaning": "conjecture; estimation"
+  },
+  {
+    "id": 4715,
+    "word": "想定",
+    "reading": "そうてい",
+    "meaning": "assumption; supposition"
+  },
+  {
+    "id": 4716,
+    "word": "確実",
+    "reading": "かくじつ",
+    "meaning": "certain; reliable"
+  },
+  {
+    "id": 4717,
+    "word": "明らか",
+    "reading": "あきらか",
+    "meaning": "clear; evident"
+  },
+  {
+    "id": 4718,
+    "word": "おそらく",
+    "reading": "おそらく",
+    "meaning": "probably"
+  },
+  {
+    "id": 4719,
+    "word": "万一",
+    "reading": "まんいち",
+    "meaning": "in the unlikely event"
+  },
+  {
+    "id": 4720,
+    "word": "見通し",
+    "reading": "みとおし",
+    "meaning": "outlook; forecast"
+  },
+  {
+    "id": 4721,
+    "word": "査定",
+    "reading": "さてい",
+    "meaning": "assessment; appraisal",
+    "replaced": true
+  },
+  {
+    "id": 4722,
+    "word": "比較",
+    "reading": "ひかく",
+    "meaning": "comparison"
+  },
+  {
+    "id": 4723,
+    "word": "優れる",
+    "reading": "すぐれる",
+    "meaning": "to excel; be superior"
+  },
+  {
+    "id": 4724,
+    "word": "劣る",
+    "reading": "おとる",
+    "meaning": "to be inferior"
+  },
+  {
+    "id": 4725,
+    "word": "適切",
+    "reading": "てきせつ",
+    "meaning": "appropriate"
+  },
+  {
+    "id": 4726,
+    "word": "不十分",
+    "reading": "ふじゅうぶん",
+    "meaning": "insufficient"
+  },
+  {
+    "id": 4727,
+    "word": "有効",
+    "reading": "ゆうこう",
+    "meaning": "effective; valid"
+  },
+  {
+    "id": 4728,
+    "word": "無効",
+    "reading": "むこう",
+    "meaning": "invalid; ineffective"
+  },
+  {
+    "id": 4729,
+    "word": "公平",
+    "reading": "こうへい",
+    "meaning": "fair; impartial"
+  },
+  {
+    "id": 4730,
+    "word": "客観的",
+    "reading": "きゃっかんてき",
+    "meaning": "objective"
+  },
+  {
+    "id": 4731,
+    "word": "概要",
+    "reading": "がいよう",
+    "meaning": "outline; overview"
+  },
+  {
+    "id": 4732,
+    "word": "内容",
+    "reading": "ないよう",
+    "meaning": "contents"
+  },
+  {
+    "id": 4733,
+    "word": "項目",
+    "reading": "こうもく",
+    "meaning": "item; heading"
+  },
+  {
+    "id": 4734,
+    "word": "要点",
+    "reading": "ようてん",
+    "meaning": "main point"
+  },
+  {
+    "id": 4735,
+    "word": "具体例",
+    "reading": "ぐたいれい",
+    "meaning": "concrete example"
+  },
+  {
+    "id": 4736,
+    "word": "定義",
+    "reading": "ていぎ",
+    "meaning": "definition"
+  },
+  {
+    "id": 4737,
+    "word": "概念",
+    "reading": "がいねん",
+    "meaning": "concept"
+  },
+  {
+    "id": 4738,
+    "word": "文脈",
+    "reading": "ぶんみゃく",
+    "meaning": "context"
+  },
+  {
+    "id": 4739,
+    "word": "引用",
+    "reading": "いんよう",
+    "meaning": "quotation; citation"
+  },
+  {
+    "id": 4740,
+    "word": "結論",
+    "reading": "けつろん",
+    "meaning": "conclusion"
+  },
+  {
+    "id": 4741,
+    "word": "生じる",
+    "reading": "しょうじる",
+    "meaning": "to arise; occur"
+  },
+  {
+    "id": 4742,
+    "word": "及ぼす",
+    "reading": "およぼす",
+    "meaning": "to exert; cause"
+  },
+  {
+    "id": 4743,
+    "word": "伴う",
+    "reading": "ともなう",
+    "meaning": "to accompany"
+  },
+  {
+    "id": 4744,
+    "word": "基づく",
+    "reading": "もとづく",
+    "meaning": "to be based on"
+  },
+  {
+    "id": 4745,
+    "word": "占める",
+    "reading": "しめる",
+    "meaning": "to account for; occupy"
+  },
+  {
+    "id": 4746,
+    "word": "防ぐ",
+    "reading": "ふせぐ",
+    "meaning": "to prevent"
+  },
+  {
+    "id": 4747,
+    "word": "避ける",
+    "reading": "さける",
+    "meaning": "to avoid"
+  },
+  {
+    "id": 4748,
+    "word": "認める",
+    "reading": "みとめる",
+    "meaning": "to recognize; approve"
+  },
+  {
+    "id": 4749,
+    "word": "求める",
+    "reading": "もとめる",
+    "meaning": "to seek; require"
+  },
+  {
+    "id": 4750,
+    "word": "限る",
+    "reading": "かぎる",
+    "meaning": "to limit; be restricted to"
+  }
+]

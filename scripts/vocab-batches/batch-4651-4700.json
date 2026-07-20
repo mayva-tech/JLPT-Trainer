@@ -1,0 +1,378 @@
+{
+  "lessons": [
+    {
+      "lessonNumber": 66,
+      "startId": 4651,
+      "titleTheme": "Accidents & Insurance",
+      "subcategory": "Accidents & Insurance",
+      "folder": "accidents-insurance",
+      "subcategories": [
+        "Accidents",
+        "Insurance"
+      ],
+      "items": [
+        {
+          "id": 4651,
+          "word": "事故",
+          "reading": "じこ",
+          "meaning": "accident"
+        },
+        {
+          "id": 4652,
+          "word": "負傷",
+          "reading": "ふしょう",
+          "meaning": "injury"
+        },
+        {
+          "id": 4653,
+          "word": "救出",
+          "reading": "きゅうしゅつ",
+          "meaning": "rescue; extrication",
+          "replaced": true
+        },
+        {
+          "id": 4654,
+          "word": "救急車",
+          "reading": "きゅうきゅうしゃ",
+          "meaning": "ambulance"
+        },
+        {
+          "id": 4655,
+          "word": "現場",
+          "reading": "げんば",
+          "meaning": "scene; work site"
+        },
+        {
+          "id": 4656,
+          "word": "損害",
+          "reading": "そんがい",
+          "meaning": "damage; loss"
+        },
+        {
+          "id": 4657,
+          "word": "補償",
+          "reading": "ほしょう",
+          "meaning": "compensation; indemnity",
+          "replaced": true
+        },
+        {
+          "id": 4658,
+          "word": "過失",
+          "reading": "かしつ",
+          "meaning": "negligence; fault"
+        },
+        {
+          "id": 4659,
+          "word": "目撃者",
+          "reading": "もくげきしゃ",
+          "meaning": "witness"
+        },
+        {
+          "id": 4660,
+          "word": "届け出",
+          "reading": "とどけで",
+          "meaning": "official notification"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 67,
+      "startId": 4661,
+      "titleTheme": "News & Public Information",
+      "subcategory": "News & Media",
+      "folder": "news-media",
+      "subcategories": [
+        "News",
+        "Media"
+      ],
+      "items": [
+        {
+          "id": 4661,
+          "word": "特集",
+          "reading": "とくしゅう",
+          "meaning": "feature article; special coverage",
+          "replaced": true
+        },
+        {
+          "id": 4662,
+          "word": "論説",
+          "reading": "ろんせつ",
+          "meaning": "editorial; opinion article",
+          "replaced": true
+        },
+        {
+          "id": 4663,
+          "word": "見出し",
+          "reading": "みだし",
+          "meaning": "headline"
+        },
+        {
+          "id": 4664,
+          "word": "速報",
+          "reading": "そくほう",
+          "meaning": "breaking news"
+        },
+        {
+          "id": 4665,
+          "word": "会見",
+          "reading": "かいけん",
+          "meaning": "press conference; interview",
+          "replaced": true
+        },
+        {
+          "id": 4666,
+          "word": "記者",
+          "reading": "きしゃ",
+          "meaning": "reporter"
+        },
+        {
+          "id": 4667,
+          "word": "世論",
+          "reading": "せろん",
+          "meaning": "public opinion"
+        },
+        {
+          "id": 4668,
+          "word": "公表",
+          "reading": "こうひょう",
+          "meaning": "public announcement"
+        },
+        {
+          "id": 4669,
+          "word": "情報源",
+          "reading": "じょうほうげん",
+          "meaning": "information source"
+        },
+        {
+          "id": 4670,
+          "word": "訂正",
+          "reading": "ていせい",
+          "meaning": "correction"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 68,
+      "startId": 4671,
+      "titleTheme": "Digital Security & Privacy",
+      "subcategory": "Digital Security & Privacy",
+      "folder": "digital-security",
+      "subcategories": [
+        "Digital Security",
+        "Privacy"
+      ],
+      "items": [
+        {
+          "id": 4671,
+          "word": "個人情報",
+          "reading": "こじんじょうほう",
+          "meaning": "personal information"
+        },
+        {
+          "id": 4672,
+          "word": "漏えい",
+          "reading": "ろうえい",
+          "meaning": "leak; disclosure"
+        },
+        {
+          "id": 4673,
+          "word": "認証",
+          "reading": "にんしょう",
+          "meaning": "authentication"
+        },
+        {
+          "id": 4674,
+          "word": "暗号化",
+          "reading": "あんごうか",
+          "meaning": "encryption"
+        },
+        {
+          "id": 4675,
+          "word": "不正アクセス",
+          "reading": "ふせいアクセス",
+          "meaning": "unauthorized access"
+        },
+        {
+          "id": 4676,
+          "word": "脅威",
+          "reading": "きょうい",
+          "meaning": "threat"
+        },
+        {
+          "id": 4677,
+          "word": "対策",
+          "reading": "たいさく",
+          "meaning": "countermeasure"
+        },
+        {
+          "id": 4678,
+          "word": "監視",
+          "reading": "かんし",
+          "meaning": "monitoring; surveillance"
+        },
+        {
+          "id": 4679,
+          "word": "復旧",
+          "reading": "ふっきゅう",
+          "meaning": "restoration; recovery"
+        },
+        {
+          "id": 4680,
+          "word": "脆弱性",
+          "reading": "ぜいじゃくせい",
+          "meaning": "vulnerability"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 69,
+      "startId": 4681,
+      "titleTheme": "Science & Technology",
+      "subcategory": "Science & Technology",
+      "folder": "science-technology",
+      "subcategories": [
+        "Science",
+        "Technology"
+      ],
+      "items": [
+        {
+          "id": 4681,
+          "word": "技術",
+          "reading": "ぎじゅつ",
+          "meaning": "technology; skill"
+        },
+        {
+          "id": 4682,
+          "word": "開発",
+          "reading": "かいはつ",
+          "meaning": "development"
+        },
+        {
+          "id": 4683,
+          "word": "発明",
+          "reading": "はつめい",
+          "meaning": "invention"
+        },
+        {
+          "id": 4684,
+          "word": "機器",
+          "reading": "きき",
+          "meaning": "equipment; apparatus",
+          "replaced": true
+        },
+        {
+          "id": 4685,
+          "word": "機能",
+          "reading": "きのう",
+          "meaning": "function"
+        },
+        {
+          "id": 4686,
+          "word": "性能",
+          "reading": "せいのう",
+          "meaning": "performance; capability"
+        },
+        {
+          "id": 4687,
+          "word": "実験",
+          "reading": "じっけん",
+          "meaning": "experiment"
+        },
+        {
+          "id": 4688,
+          "word": "導入",
+          "reading": "どうにゅう",
+          "meaning": "introduction; implementation"
+        },
+        {
+          "id": 4689,
+          "word": "機械化",
+          "reading": "きかいか",
+          "meaning": "mechanization",
+          "replaced": true
+        },
+        {
+          "id": 4690,
+          "word": "先端技術",
+          "reading": "せんたんぎじゅつ",
+          "meaning": "cutting-edge technology",
+          "replaced": true
+        }
+      ]
+    },
+    {
+      "lessonNumber": 70,
+      "startId": 4691,
+      "titleTheme": "Changes & Trends",
+      "subcategory": "Changes & Trends",
+      "folder": "changes-trends",
+      "subcategories": [
+        "Changes",
+        "Trends"
+      ],
+      "items": [
+        {
+          "id": 4691,
+          "word": "変化",
+          "reading": "へんか",
+          "meaning": "change"
+        },
+        {
+          "id": 4692,
+          "word": "変動",
+          "reading": "へんどう",
+          "meaning": "fluctuation"
+        },
+        {
+          "id": 4693,
+          "word": "推移",
+          "reading": "すいい",
+          "meaning": "transition; development"
+        },
+        {
+          "id": 4694,
+          "word": "拡大",
+          "reading": "かくだい",
+          "meaning": "expansion"
+        },
+        {
+          "id": 4695,
+          "word": "縮小",
+          "reading": "しゅくしょう",
+          "meaning": "reduction; contraction"
+        },
+        {
+          "id": 4696,
+          "word": "増加",
+          "reading": "ぞうか",
+          "meaning": "increase"
+        },
+        {
+          "id": 4697,
+          "word": "減少",
+          "reading": "げんしょう",
+          "meaning": "decrease"
+        },
+        {
+          "id": 4698,
+          "word": "急増",
+          "reading": "きゅうぞう",
+          "meaning": "rapid increase"
+        },
+        {
+          "id": 4699,
+          "word": "浸透",
+          "reading": "しんとう",
+          "meaning": "penetration; permeation; spread",
+          "replaced": true
+        },
+        {
+          "id": 4700,
+          "word": "衰退",
+          "reading": "すいたい",
+          "meaning": "decline"
+        }
+      ]
+    }
+  ]
+}

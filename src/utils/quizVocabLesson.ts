@@ -1,7 +1,7 @@
 import type { TocItemId } from "../data/toc";
 
 const VOCAB_QUIZ_ID_RE = /^quiz-vocab-(\d+)-(\d+)$/;
-const MAX_VOCAB_LESSON = 50;
+const MAX_VOCAB_LESSON = 75;
 
 /**
  * Resolve a vocabulary quiz TOC id to its lesson id.

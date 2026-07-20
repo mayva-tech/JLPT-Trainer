@@ -1,0 +1,372 @@
+{
+  "lessons": [
+    {
+      "lessonNumber": 71,
+      "startId": 4701,
+      "titleTheme": "Causes & Consequences",
+      "subcategory": "Causes & Consequences",
+      "folder": "causes-consequences",
+      "subcategories": [
+        "Causes",
+        "Consequences"
+      ],
+      "items": [
+        {
+          "id": 4701,
+          "word": "原因",
+          "reading": "げんいん",
+          "meaning": "cause"
+        },
+        {
+          "id": 4702,
+          "word": "要因",
+          "reading": "よういん",
+          "meaning": "factor"
+        },
+        {
+          "id": 4703,
+          "word": "背景",
+          "reading": "はいけい",
+          "meaning": "background"
+        },
+        {
+          "id": 4704,
+          "word": "影響",
+          "reading": "えいきょう",
+          "meaning": "influence; effect"
+        },
+        {
+          "id": 4705,
+          "word": "結果",
+          "reading": "けっか",
+          "meaning": "result"
+        },
+        {
+          "id": 4706,
+          "word": "効力",
+          "reading": "こうりょく",
+          "meaning": "efficacy; legal effect",
+          "replaced": true
+        },
+        {
+          "id": 4707,
+          "word": "打撃",
+          "reading": "だげき",
+          "meaning": "blow; hit; serious damage",
+          "replaced": true
+        },
+        {
+          "id": 4708,
+          "word": "負担",
+          "reading": "ふたん",
+          "meaning": "burden"
+        },
+        {
+          "id": 4709,
+          "word": "きっかけ",
+          "reading": "きっかけ",
+          "meaning": "trigger; opportunity"
+        },
+        {
+          "id": 4710,
+          "word": "招く",
+          "reading": "まねく",
+          "meaning": "to cause; invite"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 72,
+      "startId": 4711,
+      "titleTheme": "Possibility & Prediction",
+      "subcategory": "Possibility & Prediction",
+      "folder": "possibility-prediction",
+      "subcategories": [
+        "Possibility",
+        "Prediction"
+      ],
+      "items": [
+        {
+          "id": 4711,
+          "word": "可能性",
+          "reading": "かのうせい",
+          "meaning": "possibility"
+        },
+        {
+          "id": 4712,
+          "word": "見込み",
+          "reading": "みこみ",
+          "meaning": "prospect; likelihood"
+        },
+        {
+          "id": 4713,
+          "word": "予測",
+          "reading": "よそく",
+          "meaning": "prediction"
+        },
+        {
+          "id": 4714,
+          "word": "推測",
+          "reading": "すいそく",
+          "meaning": "conjecture; estimation"
+        },
+        {
+          "id": 4715,
+          "word": "想定",
+          "reading": "そうてい",
+          "meaning": "assumption; supposition"
+        },
+        {
+          "id": 4716,
+          "word": "確実",
+          "reading": "かくじつ",
+          "meaning": "certain; reliable"
+        },
+        {
+          "id": 4717,
+          "word": "明らか",
+          "reading": "あきらか",
+          "meaning": "clear; evident"
+        },
+        {
+          "id": 4718,
+          "word": "おそらく",
+          "reading": "おそらく",
+          "meaning": "probably"
+        },
+        {
+          "id": 4719,
+          "word": "万一",
+          "reading": "まんいち",
+          "meaning": "in the unlikely event"
+        },
+        {
+          "id": 4720,
+          "word": "見通し",
+          "reading": "みとおし",
+          "meaning": "outlook; forecast"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 73,
+      "startId": 4721,
+      "titleTheme": "Evaluation & Comparison",
+      "subcategory": "Evaluation & Comparison",
+      "folder": "evaluation-comparison",
+      "subcategories": [
+        "Evaluation",
+        "Comparison"
+      ],
+      "items": [
+        {
+          "id": 4721,
+          "word": "査定",
+          "reading": "さてい",
+          "meaning": "assessment; appraisal",
+          "replaced": true
+        },
+        {
+          "id": 4722,
+          "word": "比較",
+          "reading": "ひかく",
+          "meaning": "comparison"
+        },
+        {
+          "id": 4723,
+          "word": "優れる",
+          "reading": "すぐれる",
+          "meaning": "to excel; be superior"
+        },
+        {
+          "id": 4724,
+          "word": "劣る",
+          "reading": "おとる",
+          "meaning": "to be inferior"
+        },
+        {
+          "id": 4725,
+          "word": "適切",
+          "reading": "てきせつ",
+          "meaning": "appropriate"
+        },
+        {
+          "id": 4726,
+          "word": "不十分",
+          "reading": "ふじゅうぶん",
+          "meaning": "insufficient"
+        },
+        {
+          "id": 4727,
+          "word": "有効",
+          "reading": "ゆうこう",
+          "meaning": "effective; valid"
+        },
+        {
+          "id": 4728,
+          "word": "無効",
+          "reading": "むこう",
+          "meaning": "invalid; ineffective"
+        },
+        {
+          "id": 4729,
+          "word": "公平",
+          "reading": "こうへい",
+          "meaning": "fair; impartial"
+        },
+        {
+          "id": 4730,
+          "word": "客観的",
+          "reading": "きゃっかんてき",
+          "meaning": "objective"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 74,
+      "startId": 4731,
+      "titleTheme": "Academic Reading Vocabulary",
+      "subcategory": "Academic Reading",
+      "folder": "academic-reading",
+      "subcategories": [
+        "Academic",
+        "Reading"
+      ],
+      "items": [
+        {
+          "id": 4731,
+          "word": "概要",
+          "reading": "がいよう",
+          "meaning": "outline; overview"
+        },
+        {
+          "id": 4732,
+          "word": "内容",
+          "reading": "ないよう",
+          "meaning": "contents"
+        },
+        {
+          "id": 4733,
+          "word": "項目",
+          "reading": "こうもく",
+          "meaning": "item; heading"
+        },
+        {
+          "id": 4734,
+          "word": "要点",
+          "reading": "ようてん",
+          "meaning": "main point"
+        },
+        {
+          "id": 4735,
+          "word": "具体例",
+          "reading": "ぐたいれい",
+          "meaning": "concrete example"
+        },
+        {
+          "id": 4736,
+          "word": "定義",
+          "reading": "ていぎ",
+          "meaning": "definition"
+        },
+        {
+          "id": 4737,
+          "word": "概念",
+          "reading": "がいねん",
+          "meaning": "concept"
+        },
+        {
+          "id": 4738,
+          "word": "文脈",
+          "reading": "ぶんみゃく",
+          "meaning": "context"
+        },
+        {
+          "id": 4739,
+          "word": "引用",
+          "reading": "いんよう",
+          "meaning": "quotation; citation"
+        },
+        {
+          "id": 4740,
+          "word": "結論",
+          "reading": "けつろん",
+          "meaning": "conclusion"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 75,
+      "startId": 4741,
+      "titleTheme": "Abstract High-Frequency N2 Verbs",
+      "subcategory": "Abstract Verbs",
+      "folder": "abstract-verbs",
+      "subcategories": [
+        "Abstract",
+        "Verbs"
+      ],
+      "items": [
+        {
+          "id": 4741,
+          "word": "生じる",
+          "reading": "しょうじる",
+          "meaning": "to arise; occur"
+        },
+        {
+          "id": 4742,
+          "word": "及ぼす",
+          "reading": "およぼす",
+          "meaning": "to exert; cause"
+        },
+        {
+          "id": 4743,
+          "word": "伴う",
+          "reading": "ともなう",
+          "meaning": "to accompany"
+        },
+        {
+          "id": 4744,
+          "word": "基づく",
+          "reading": "もとづく",
+          "meaning": "to be based on"
+        },
+        {
+          "id": 4745,
+          "word": "占める",
+          "reading": "しめる",
+          "meaning": "to account for; occupy"
+        },
+        {
+          "id": 4746,
+          "word": "防ぐ",
+          "reading": "ふせぐ",
+          "meaning": "to prevent"
+        },
+        {
+          "id": 4747,
+          "word": "避ける",
+          "reading": "さける",
+          "meaning": "to avoid"
+        },
+        {
+          "id": 4748,
+          "word": "認める",
+          "reading": "みとめる",
+          "meaning": "to recognize; approve"
+        },
+        {
+          "id": 4749,
+          "word": "求める",
+          "reading": "もとめる",
+          "meaning": "to seek; require"
+        },
+        {
+          "id": 4750,
+          "word": "限る",
+          "reading": "かぎる",
+          "meaning": "to limit; be restricted to"
+        }
+      ]
+    }
+  ]
+}

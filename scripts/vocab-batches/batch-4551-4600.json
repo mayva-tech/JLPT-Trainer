@@ -1,0 +1,373 @@
+{
+  "lessons": [
+    {
+      "lessonNumber": 56,
+      "startId": 4551,
+      "titleTheme": "Research & Data",
+      "subcategory": "Research & Data",
+      "folder": "research-data",
+      "subcategories": [
+        "Research",
+        "Data"
+      ],
+      "items": [
+        {
+          "id": 4551,
+          "word": "調査",
+          "reading": "ちょうさ",
+          "meaning": "investigation; survey"
+        },
+        {
+          "id": 4552,
+          "word": "分析",
+          "reading": "ぶんせき",
+          "meaning": "analysis"
+        },
+        {
+          "id": 4553,
+          "word": "統計",
+          "reading": "とうけい",
+          "meaning": "statistics"
+        },
+        {
+          "id": 4554,
+          "word": "傾向",
+          "reading": "けいこう",
+          "meaning": "tendency; trend"
+        },
+        {
+          "id": 4555,
+          "word": "仮説",
+          "reading": "かせつ",
+          "meaning": "hypothesis"
+        },
+        {
+          "id": 4556,
+          "word": "根拠",
+          "reading": "こんきょ",
+          "meaning": "basis; grounds"
+        },
+        {
+          "id": 4557,
+          "word": "検証",
+          "reading": "けんしょう",
+          "meaning": "verification"
+        },
+        {
+          "id": 4558,
+          "word": "対象",
+          "reading": "たいしょう",
+          "meaning": "target; subject"
+        },
+        {
+          "id": 4559,
+          "word": "数値",
+          "reading": "すうち",
+          "meaning": "numerical value"
+        },
+        {
+          "id": 4560,
+          "word": "比率",
+          "reading": "ひりつ",
+          "meaning": "ratio"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 57,
+      "startId": 4561,
+      "titleTheme": "Opinions & Arguments",
+      "subcategory": "Opinions & Arguments",
+      "folder": "opinions-arguments",
+      "subcategories": [
+        "Opinions",
+        "Arguments"
+      ],
+      "items": [
+        {
+          "id": 4561,
+          "word": "主張",
+          "reading": "しゅちょう",
+          "meaning": "assertion; argument"
+        },
+        {
+          "id": 4562,
+          "word": "意見",
+          "reading": "いけん",
+          "meaning": "opinion"
+        },
+        {
+          "id": 4563,
+          "word": "見解",
+          "reading": "けんかい",
+          "meaning": "view; opinion"
+        },
+        {
+          "id": 4564,
+          "word": "賛成",
+          "reading": "さんせい",
+          "meaning": "agreement; support"
+        },
+        {
+          "id": 4565,
+          "word": "反対",
+          "reading": "はんたい",
+          "meaning": "opposition"
+        },
+        {
+          "id": 4566,
+          "word": "批判",
+          "reading": "ひはん",
+          "meaning": "criticism"
+        },
+        {
+          "id": 4567,
+          "word": "反論",
+          "reading": "はんろん",
+          "meaning": "counterargument"
+        },
+        {
+          "id": 4568,
+          "word": "指摘",
+          "reading": "してき",
+          "meaning": "pointing out"
+        },
+        {
+          "id": 4569,
+          "word": "説得",
+          "reading": "せっとく",
+          "meaning": "persuasion"
+        },
+        {
+          "id": 4570,
+          "word": "納得",
+          "reading": "なっとく",
+          "meaning": "understanding; acceptance"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 58,
+      "startId": 4571,
+      "titleTheme": "Personality & Character",
+      "subcategory": "Personality & Character",
+      "folder": "personality-character",
+      "subcategories": [
+        "Personality",
+        "Character"
+      ],
+      "items": [
+        {
+          "id": 4571,
+          "word": "穏やか",
+          "reading": "おだやか",
+          "meaning": "calm; gentle"
+        },
+        {
+          "id": 4572,
+          "word": "素直",
+          "reading": "すなお",
+          "meaning": "honest; obedient"
+        },
+        {
+          "id": 4573,
+          "word": "慎重",
+          "reading": "しんちょう",
+          "meaning": "cautious"
+        },
+        {
+          "id": 4574,
+          "word": "大胆",
+          "reading": "だいたん",
+          "meaning": "bold; daring"
+        },
+        {
+          "id": 4575,
+          "word": "冷静",
+          "reading": "れいせい",
+          "meaning": "calm; composed"
+        },
+        {
+          "id": 4576,
+          "word": "責任感",
+          "reading": "せきにんかん",
+          "meaning": "sense of responsibility"
+        },
+        {
+          "id": 4577,
+          "word": "協調性",
+          "reading": "きょうちょうせい",
+          "meaning": "cooperativeness"
+        },
+        {
+          "id": 4578,
+          "word": "頑固",
+          "reading": "がんこ",
+          "meaning": "stubborn"
+        },
+        {
+          "id": 4579,
+          "word": "向上心",
+          "reading": "こうじょうしん",
+          "meaning": "desire for self-improvement"
+        },
+        {
+          "id": 4580,
+          "word": "弾力",
+          "reading": "だんりょく",
+          "meaning": "elasticity; resilience",
+          "replaced": true
+        }
+      ]
+    },
+    {
+      "lessonNumber": 59,
+      "startId": 4581,
+      "titleTheme": "Conflict & Relationships",
+      "subcategory": "Conflict & Relationships",
+      "folder": "conflict-relationships",
+      "subcategories": [
+        "Conflict",
+        "Relationships"
+      ],
+      "items": [
+        {
+          "id": 4581,
+          "word": "対立",
+          "reading": "たいりつ",
+          "meaning": "conflict; opposition"
+        },
+        {
+          "id": 4582,
+          "word": "衝突",
+          "reading": "しょうとつ",
+          "meaning": "collision; clash"
+        },
+        {
+          "id": 4583,
+          "word": "仲直り",
+          "reading": "なかなおり",
+          "meaning": "reconciliation"
+        },
+        {
+          "id": 4584,
+          "word": "信用",
+          "reading": "しんよう",
+          "meaning": "credit; trustworthiness",
+          "replaced": true
+        },
+        {
+          "id": 4585,
+          "word": "裏切る",
+          "reading": "うらぎる",
+          "meaning": "to betray"
+        },
+        {
+          "id": 4586,
+          "word": "責める",
+          "reading": "せめる",
+          "meaning": "to blame"
+        },
+        {
+          "id": 4587,
+          "word": "許す",
+          "reading": "ゆるす",
+          "meaning": "to forgive; permit"
+        },
+        {
+          "id": 4588,
+          "word": "誤る",
+          "reading": "あやまる",
+          "meaning": "to make a mistake"
+        },
+        {
+          "id": 4589,
+          "word": "尊重",
+          "reading": "そんちょう",
+          "meaning": "respect"
+        },
+        {
+          "id": 4590,
+          "word": "歩み寄る",
+          "reading": "あゆみよる",
+          "meaning": "to make a compromise"
+        }
+      ]
+    },
+    {
+      "lessonNumber": 60,
+      "startId": 4591,
+      "titleTheme": "Rules & Compliance",
+      "subcategory": "Rules & Compliance",
+      "folder": "rules-compliance",
+      "subcategories": [
+        "Rules",
+        "Compliance"
+      ],
+      "items": [
+        {
+          "id": 4591,
+          "word": "規則",
+          "reading": "きそく",
+          "meaning": "rule; regulation"
+        },
+        {
+          "id": 4592,
+          "word": "規定",
+          "reading": "きてい",
+          "meaning": "provision; regulation"
+        },
+        {
+          "id": 4593,
+          "word": "基準",
+          "reading": "きじゅん",
+          "meaning": "standard; criterion"
+        },
+        {
+          "id": 4594,
+          "word": "逸脱",
+          "reading": "いつだつ",
+          "meaning": "deviation; departure from norms",
+          "replaced": true
+        },
+        {
+          "id": 4595,
+          "word": "義務",
+          "reading": "ぎむ",
+          "meaning": "duty; obligation"
+        },
+        {
+          "id": 4596,
+          "word": "権利",
+          "reading": "けんり",
+          "meaning": "right; entitlement"
+        },
+        {
+          "id": 4597,
+          "word": "厳守",
+          "reading": "げんしゅ",
+          "meaning": "strict observance"
+        },
+        {
+          "id": 4598,
+          "word": "禁止",
+          "reading": "きんし",
+          "meaning": "prohibition"
+        },
+        {
+          "id": 4599,
+          "word": "施行",
+          "reading": "しこう",
+          "meaning": "enforcement; putting into effect",
+          "replaced": true
+        },
+        {
+          "id": 4600,
+          "word": "例外",
+          "reading": "れいがい",
+          "meaning": "exception"
+        }
+      ]
+    }
+  ]
+}
