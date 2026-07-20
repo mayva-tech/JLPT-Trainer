@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "glossary": "npx tsx scripts/generateGlossary.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "audit:vocabulary": "npx tsx scripts/auditVocabulary.ts"
   },
   "dependencies": {
     "react": "^19.2.7",

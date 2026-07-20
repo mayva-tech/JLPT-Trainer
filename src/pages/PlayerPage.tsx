@@ -15,6 +15,7 @@ import { SentenceCard } from "../components/SentenceCard";
 import { ShadowingCard } from "../components/ShadowingCard";
 import { ReviewCard } from "../components/ReviewCard";
 import { ProgressIndicator } from "../components/ProgressIndicator";
+import { VocabularyRangeLabel } from "../components/VocabularyRangeLabel";
 import { TableOfContents } from "../components/TableOfContents";
 import { IntroHookDisplay } from "../components/IntroHookDisplay";
 import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
@@ -78,6 +79,12 @@ import {
 } from "../services/quizAutoRunner";
 import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 import { getGrammarLessonIdForQuiz } from "../utils/quizGrammarLesson";
+import {
+  buildVocabularyQuizQuestions,
+  getVocabularyItemsForQuiz,
+  seededShuffle,
+  vocabularyQuestionToQuizWord,
+} from "../utils/vocabularyQuiz";
 
 const STEPS: StepName[] = [
   "category",
@@ -106,15 +113,23 @@ type SpeechUiStatus = "idle" | "speaking" | "paused";
 function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
   const vocabLessonId = getVocabularyLessonIdForQuiz(quizTocId);
   if (vocabLessonId) {
-    return getVocabularyByIds(
-      getLessonById(vocabLessonId)?.vocabularyIds ?? []
+    const lesson = getLessonById(vocabLessonId);
+    if (!lesson) return [];
+    const quizLevel = vocabLessonId.startsWith("n1-") ? "N1" : "N2";
+    const items = getVocabularyItemsForQuiz({ lesson, quizLevel });
+    const questions = buildVocabularyQuizQuestions(
+      items,
+      quizTocId ?? vocabLessonId
     );
+    return questions.map(vocabularyQuestionToQuizWord);
   }
   // Mixed / final still use lesson 1 until a dedicated pool exists.
   if (quizTocId === "quiz-mixed" || quizTocId === "quiz-final") {
-    return getVocabularyByIds(
-      getLessonById("lesson-01")?.vocabularyIds ?? []
-    );
+    const lesson = getLessonById("lesson-01");
+    if (!lesson) return [];
+    const items = getVocabularyItemsForQuiz({ lesson, quizLevel: "N2" });
+    const questions = buildVocabularyQuizQuestions(items, quizTocId);
+    return questions.map(vocabularyQuestionToQuizWord);
   }
   const grammarLessonId = getGrammarLessonIdForQuiz(quizTocId);
   if (grammarLessonId) {
@@ -347,9 +362,15 @@ export function PlayerPage() {
     setShowFurigana(true);
   }
 
-  /** Fresh random order of quiz items for this quiz session. */
-  function reshuffleQuizDeck(source = quizItemsRef.current): QuizWord[] {
-    const deck = shuffle(source);
+  /** Fresh order of quiz items for this quiz session (deterministic for vocab). */
+  function reshuffleQuizDeck(
+    source = quizItemsRef.current,
+    quizTocId: TocItemId | null = activeTocId
+  ): QuizWord[] {
+    const deck =
+      quizTocId && getVocabularyLessonIdForQuiz(quizTocId)
+        ? seededShuffle(source, quizTocId)
+        : shuffle(source);
     setQuizDeck(deck);
     quizDeckRef.current = deck;
     return deck;
@@ -384,7 +405,7 @@ export function PlayerPage() {
     setQuizScore(0);
     quizScoreRef.current = 0;
 
-    const deck = reshuffleQuizDeck(source);
+    const deck = reshuffleQuizDeck(source, activeTocId);
 
     void (async () => {
       setQuizAutoOn(true);
@@ -690,9 +711,7 @@ export function PlayerPage() {
         setQuizIndex(0);
         setScreen("quiz");
         const list = buildQuizWords(id);
-        const deck = shuffle(list);
-        setQuizDeck(deck);
-        quizDeckRef.current = deck;
+        const deck = reshuffleQuizDeck(list, id);
         quizItemsRef.current = list;
         resetQuizQuestion(0, deck);
         break;
@@ -1614,6 +1633,7 @@ export function PlayerPage() {
         return (
           <QuizCard
             title={tocItem?.label ?? "Quiz"}
+            lessonId={getVocabularyLessonIdForQuiz(activeTocId)}
             item={quizDeck[quizIndex] ?? null}
             index={quizIndex}
             total={Math.max(quizDeck.length || quizItems.length, 1)}
@@ -1629,6 +1649,16 @@ export function PlayerPage() {
             jaHighlight={jaHighlight}
             enHighlight={enHighlight}
             onSelectChoice={onQuizSelectChoice}
+            onReplayAudio={() => {
+              const item = quizDeck[quizIndex];
+              if (!item?.audioWord) return;
+              const audio = new Audio(item.audioWord);
+              void audio.play().catch(() => {
+                void speechService.speakJapanese(item.word, {}, SPEECH_RATE_NORMAL, {
+                  reading: item.reading,
+                });
+              });
+            }}
             preJapanese={quizPreJa}
             preEnglish={quizPreEn}
             afterJapanese={quizAfterJa}
@@ -1652,6 +1682,7 @@ export function PlayerPage() {
         }
         return (
           <>
+            <VocabularyRangeLabel lessonId={lessonId} kind="lesson" />
             <ProgressIndicator
               current={itemIndex}
               total={items.length}

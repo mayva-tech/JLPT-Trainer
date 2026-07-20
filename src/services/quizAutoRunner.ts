@@ -5,6 +5,8 @@ import {
   type SpeechHighlight,
 } from "./speechService";
 
+import type { VocabularyQuizQuestionType } from "../types/vocabularyQuiz";
+
 export type QuizPhase =
   | "pre"
   | "asking"
@@ -33,9 +35,22 @@ export type QuizWord = {
   word: string;
   reading: string;
   meaning: string;
+  phrase?: string;
+  phraseReading?: string;
+  phraseMeaning?: string;
   sentence?: string;
   sentenceReading?: string;
   sentenceMeaning?: string;
+  audioWord?: string;
+  jlpt?: "N1" | "N2";
+  questionType?: VocabularyQuizQuestionType;
+  promptText?: string;
+  promptEnglish?: string;
+  contextSource?: string;
+  contextReading?: string;
+  choiceKind?: "english" | "japanese";
+  choices?: string[];
+  correctChoiceIndex?: number;
 };
 
 export type QuizAutoUi = {
@@ -66,12 +81,20 @@ function shuffle<T>(list: T[]): T[] {
 
 export { shuffle };
 
-/** Build 2 English choices: 1 correct + 1 distractor from another item. */
+/** Build choices for a quiz item. Vocabulary quizzes embed choices; grammar uses legacy pool. */
 export function buildQuizChoices(
   items: QuizWord[],
   questionIndex: number
 ): { choices: string[]; correctChoiceIndex: number } {
-  const correct = items[questionIndex]!.meaning;
+  const item = items[questionIndex]!;
+  if (item.choices && item.correctChoiceIndex !== undefined) {
+    return {
+      choices: item.choices,
+      correctChoiceIndex: item.correctChoiceIndex,
+    };
+  }
+
+  const correct = item.meaning;
   const distractors = shuffle(
     items
       .map((item, i) => (i === questionIndex ? null : item.meaning))
@@ -161,7 +184,26 @@ export class QuizAutoRunner {
     await this.speakEnglish(ui, item.meaning, SPEECH_RATE_NORMAL, sid);
     if (!this.shouldContinue(sid)) return;
 
-    if (!item.sentence) return;
+    const exampleText =
+      item.questionType === "phrase-context" && item.contextSource
+        ? item.contextSource
+        : item.questionType === "sentence-context" && item.contextSource
+          ? item.contextSource
+          : item.sentence;
+
+    const exampleReading =
+      item.questionType === "phrase-context" && item.contextReading
+        ? item.contextReading
+        : item.questionType === "sentence-context" && item.contextReading
+          ? item.contextReading
+          : item.sentenceReading;
+
+    const exampleMeaning =
+      item.questionType === "phrase-context" && item.phraseMeaning
+        ? item.phraseMeaning
+        : item.sentenceMeaning;
+
+    if (!exampleText) return;
 
     await this.pause(T.revealPause, sid);
     if (!this.shouldContinue(sid)) return;
@@ -172,40 +214,70 @@ export class QuizAutoRunner {
 
     await this.speakJapanese(
       ui,
-      item.sentence,
+      exampleText,
       SPEECH_RATE_NORMAL,
       sid,
-      item.sentenceReading
+      exampleReading
     );
     if (!this.shouldContinue(sid)) return;
 
-    if (item.sentenceMeaning) {
+    if (exampleMeaning) {
       await this.pause(T.revealPause, sid);
       if (!this.shouldContinue(sid)) return;
 
       await this.speakEnglish(
         ui,
-        item.sentenceMeaning,
+        exampleMeaning,
         SPEECH_RATE_NORMAL,
         sid
       );
       if (!this.shouldContinue(sid)) return;
     }
 
-    // Second pass: Japanese example again with karaoke highlight.
     await this.pause(T.revealPause, sid);
     if (!this.shouldContinue(sid)) return;
 
     await this.speakJapanese(
       ui,
-      item.sentence,
+      exampleText,
       SPEECH_RATE_NORMAL,
       sid,
-      item.sentenceReading
+      exampleReading
     );
     if (!this.shouldContinue(sid)) return;
 
     ui.setPhase("revealed");
+  }
+
+  private playWordAudio(audioPath: string, sid: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.shouldContinue(sid)) {
+        resolve(false);
+        return;
+      }
+      const audio = new Audio(audioPath);
+      const finish = (ok: boolean) => {
+        audio.onended = null;
+        audio.onerror = null;
+        resolve(ok);
+      };
+      audio.onended = () => finish(true);
+      audio.onerror = () => finish(false);
+      void audio.play().catch(() => finish(false));
+    });
+  }
+
+  private promptForItem(item: QuizWord): string {
+    return item.promptText ?? item.word;
+  }
+
+  private shouldHideReading(item: QuizWord): boolean {
+    return (
+      item.questionType === "audio-to-english" ||
+      item.questionType === "english-to-japanese" ||
+      item.questionType === "phrase-context" ||
+      item.questionType === "sentence-context"
+    );
   }
 
   async start(
@@ -236,19 +308,38 @@ export class QuizAutoRunner {
         ui.setCorrectChoiceIndex(correctChoiceIndex);
         ui.setSelectedChoiceIndex(null);
         ui.setPhase("asking");
-        ui.setShowReading(false);
+        ui.setShowReading(!this.shouldHideReading(item));
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
         this.clearSpeechUi(ui);
 
-        // Show JP word, play at normal speed (hiragana + answer hidden)
-        await this.speakJapanese(
-          ui,
-          item.word,
-          SPEECH_RATE_NORMAL,
-          sid,
-          item.reading
-        );
+        if (item.questionType === "english-to-japanese") {
+          // English prompt only — no Japanese audio before answer.
+        } else if (item.questionType === "audio-to-english" && item.audioWord) {
+          const played = await this.playWordAudio(item.audioWord, sid);
+          if (!played) {
+            await this.speakJapanese(
+              ui,
+              item.word,
+              SPEECH_RATE_NORMAL,
+              sid,
+              item.reading
+            );
+          }
+        } else if (
+          item.questionType === "phrase-context" ||
+          item.questionType === "sentence-context"
+        ) {
+          // Context shown on card — no pre-answer audio.
+        } else {
+          await this.speakJapanese(
+            ui,
+            this.promptForItem(item),
+            SPEECH_RATE_NORMAL,
+            sid,
+            item.reading
+          );
+        }
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;

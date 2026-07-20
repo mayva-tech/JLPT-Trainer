@@ -1,4 +1,5 @@
 import type { KanjiDetail, VocabularyItem } from "../types/vocabulary";
+import { lessons } from "./lessons";
 
 const audio = (folder: string, id: string) => ({
   audioWord: `/audio/n2/${folder}/${id}-word.mp3`,
@@ -12539,10 +12540,18 @@ const N1_VOCAB_IDS = new Set<number>([
   4513, 4529, 4594, 4617, 4622, 4658, 4680, 4699, 4706,
 ]);
 
+const VOCAB_CATEGORY_BY_ID = new Map<number, string>();
+for (const lesson of lessons) {
+  if (!lesson.id.startsWith("lesson-")) continue;
+  for (const vocabId of lesson.vocabularyIds) {
+    VOCAB_CATEGORY_BY_ID.set(vocabId, lesson.category);
+  }
+}
+
 export const vocabulary: VocabularyItem[] = seeds.map(({ folder, ...seed }) => ({
   ...seed,
   jlpt: N1_VOCAB_IDS.has(seed.id) ? "N1" : "N2",
-  category: "Daily Life",
+  category: VOCAB_CATEGORY_BY_ID.get(seed.id) ?? "Daily Life",
   kanjiDetails: kanjiDetailsFor(seed.word, seed.phrase, seed.sentence),
   ...audio(folder, String(seed.id)),
 }));

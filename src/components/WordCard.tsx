@@ -2,6 +2,7 @@ import type { VocabularyItem } from "../types/vocabulary";
 import type { SpeechHighlight } from "../services/speechService";
 import { HighlightedJapanese } from "./HighlightedJapanese";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { JlptLevelBadge } from "./JlptLevelBadge";
 
 type Props = {
   item: VocabularyItem;
@@ -18,11 +19,14 @@ export function WordCard({
 }: Props) {
   return (
     <div className="safe-area card-fade">
-      <HighlightedJapanese
-        text={item.word}
-        className="word-main"
-        highlight={jaHighlight}
-      />
+      <div className="word-headline">
+        <HighlightedJapanese
+          text={item.word}
+          className="word-main"
+          highlight={jaHighlight}
+        />
+        <JlptLevelBadge level={item.jlpt} />
+      </div>
       {showFurigana && (
         <div className="word-reading" aria-hidden="true">
           {item.reading}
