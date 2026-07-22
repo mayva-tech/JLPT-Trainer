@@ -261,14 +261,21 @@ export function QuizCard({
             )}
             {revealed && item.questionType !== "english-to-japanese" ? (
               <>
-                <div className="quiz-word-reading" aria-hidden="true">
-                  {item.reading}
-                </div>
-                <HighlightedEnglish
-                  text={item.meaning}
-                  className="quiz-reveal-meaning"
-                  highlight={enHighlight}
-                />
+                {/* Ruby mode already puts furigana on kanji — skip the full reading line. */}
+                {readingMode !== "ruby" ? (
+                  <div className="quiz-word-reading" aria-hidden="true">
+                    {item.reading}
+                  </div>
+                ) : null}
+                {/* Only show English under the prompt when choices are Japanese;
+                    otherwise the highlighted correct choice already shows it. */}
+                {item.choiceKind === "japanese" ? (
+                  <HighlightedEnglish
+                    text={item.meaning}
+                    className="quiz-reveal-meaning"
+                    highlight={enHighlight}
+                  />
+                ) : null}
               </>
             ) : null}
             {revealed && item.questionType === "english-to-japanese" ? (
