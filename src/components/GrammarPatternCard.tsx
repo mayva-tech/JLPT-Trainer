@@ -1,6 +1,6 @@
 import type { GrammarItem } from "../types/grammar";
 import type { SpeechHighlight } from "../services/speechService";
-import { HighlightedJapanese } from "./HighlightedJapanese";
+import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
   enHighlight?: SpeechHighlight | null;
 };
 
-/** ② Grammar pattern + reading + meaning. */
+/** ② Grammar pattern + kanji furigana + meaning. */
 export function GrammarPatternCard({
   item,
   showFurigana = true,
@@ -19,16 +19,15 @@ export function GrammarPatternCard({
 }: Props) {
   return (
     <div className="safe-area card-fade">
-      <HighlightedJapanese
-        text={item.pattern}
-        className="grammar-pattern"
-        highlight={jaHighlight}
-      />
-      {showFurigana && (
-        <div className="grammar-reading" aria-hidden="true">
-          {item.patternReading}
-        </div>
-      )}
+      <div lang="ja">
+        <FuriganaWrapText
+          surface={item.pattern}
+          reading={item.patternReading}
+          className="grammar-pattern"
+          highlight={jaHighlight}
+          showFurigana={showFurigana}
+        />
+      </div>
       <div aria-hidden="true">
         <HighlightedEnglish
           text={item.meaning}

@@ -1,8 +1,13 @@
 import type { VocabularyItem } from "../types/vocabulary";
 
-type Props = { item: VocabularyItem };
+type Props = {
+  item: VocabularyItem;
+  /** TOC lesson theme shown under the category chip (e.g. Shopping • Supermarket). */
+  description?: string;
+};
 
-export function CategoryCard({ item }: Props) {
+export function CategoryCard({ item, description }: Props) {
+  const underCategory = description?.trim() || item.subcategory;
   return (
     <div className="safe-area card-fade" aria-hidden="true">
       <div className="category-chip">{item.category}</div>
@@ -14,7 +19,7 @@ export function CategoryCard({ item }: Props) {
           color: "var(--accent)",
         }}
       >
-        {item.subcategory}
+        {underCategory}
       </div>
     </div>
   );

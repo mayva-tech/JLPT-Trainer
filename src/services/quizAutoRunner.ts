@@ -4,8 +4,11 @@ import {
   SPEECH_RATE_NORMAL,
   type SpeechHighlight,
 } from "./speechService";
-
-import type { VocabularyQuizQuestionType } from "../types/vocabularyQuiz";
+import type { VocabularyQuizQuestion } from "../types/vocabularyQuiz";
+import {
+  getQuizExample,
+  shouldHideReadingOnAsk,
+} from "../utils/quizPresentation";
 
 export type QuizPhase =
   | "pre"
@@ -18,45 +21,12 @@ export type QuizPhase =
   | "finished";
 
 /**
- * Minimal shape the quiz feature needs from a source item. `VocabularyItem`
- * and `GrammarItem` are both structurally assignable to this — vocab quizzes
- * pass `{ id, word, reading, meaning, ... }` through as-is, grammar quizzes
- * map `{ id, pattern, patternReading, meaning }` onto these three fields.
- * This lets one runner + one card serve both quiz kinds with zero duplication.
- *
- * `sentence` / `sentenceReading` / `sentenceMeaning` are optional — when
- * present, the quiz card shows a short usage example after the answer is
- * revealed. Both `VocabularyItem` and `GrammarItem` already carry fields
- * with these exact names, so vocab quizzes get this for free with no
- * remapping; grammar quizzes populate them explicitly from `GrammarItem`.
+ * @deprecated Use VocabularyQuizQuestion. Kept as an alias during migration.
  */
-export type QuizWord = {
-  id: number;
-  word: string;
-  reading: string;
-  meaning: string;
-  phrase?: string;
-  phraseReading?: string;
-  phraseMeaning?: string;
-  sentence?: string;
-  sentenceReading?: string;
-  sentenceMeaning?: string;
-  audioWord?: string;
-  jlpt?: "N1" | "N2";
-  questionType?: VocabularyQuizQuestionType;
-  promptText?: string;
-  promptEnglish?: string;
-  contextSource?: string;
-  contextReading?: string;
-  choiceKind?: "english" | "japanese";
-  choices?: string[];
-  correctChoiceIndex?: number;
-};
+export type QuizWord = VocabularyQuizQuestion;
 
 export type QuizAutoUi = {
   setQuizIndex: (index: number) => void;
-  setChoices: (choices: string[]) => void;
-  setCorrectChoiceIndex: (index: number) => void;
   setSelectedChoiceIndex: (index: number | null) => void;
   setPhase: (phase: QuizPhase) => void;
   setShowReading: (show: boolean) => void;
@@ -81,37 +51,6 @@ function shuffle<T>(list: T[]): T[] {
 
 export { shuffle };
 
-/** Build choices for a quiz item. Vocabulary quizzes embed choices; grammar uses legacy pool. */
-export function buildQuizChoices(
-  items: QuizWord[],
-  questionIndex: number
-): { choices: string[]; correctChoiceIndex: number } {
-  const item = items[questionIndex]!;
-  if (item.choices && item.correctChoiceIndex !== undefined) {
-    return {
-      choices: item.choices,
-      correctChoiceIndex: item.correctChoiceIndex,
-    };
-  }
-
-  const correct = item.meaning;
-  const distractors = shuffle(
-    items
-      .map((item, i) => (i === questionIndex ? null : item.meaning))
-      .filter((m): m is string => m !== null)
-  ).slice(0, 1);
-
-  while (distractors.length < 1) {
-    distractors.push("—");
-  }
-
-  const choices = shuffle([correct, distractors[0]!]);
-  return {
-    choices,
-    correctChoiceIndex: choices.indexOf(correct),
-  };
-}
-
 /**
  * Single-flight Quiz Auto sequencer for the multiple-choice meaning quiz.
  * Turning off / abort stops timers and audio; only one loop can run.
@@ -128,109 +67,79 @@ export class QuizAutoRunner {
     return this.session > 0 && !this.softStop;
   }
 
-  /** Stop immediately: cancel audio, timers, and answer wait. */
   abort(): void {
     this.session += 1;
     this.softStop = true;
     this.speaking = false;
     this.clearPauses();
-    this.wakeAnswerWait();
+    this.answerWaitResolve = null;
     speechService.stop();
   }
 
-  /** User picked a choice — end the answer wait early. */
   notifyAnswerSelected(): void {
     this.wakeAnswerWait();
   }
 
   /**
-   * Manual (non-auto) answer reveal: runs the same sequence as auto reveal
-   * (correct meaning → example JP → example EN → example JP again). Starts
-   * a fresh session so it cleanly cancels any previous in-flight sequence
-   * (mirrors `start()`'s own top-of-function session bump). Safe to call
-   * even when no auto-quiz session is active.
+   * Manual reveal sequence (EN meaning → optional example JP/EN/JP).
+   * Bumps session so it can interrupt a prior manual reveal or idle state.
    */
-  async playManualReveal(item: QuizWord, ui: QuizAutoUi): Promise<void> {
+  async playManualReveal(
+    question: VocabularyQuizQuestion,
+    ui: QuizAutoUi
+  ): Promise<void> {
     this.abort();
     this.softStop = false;
     const sid = ++this.session;
     try {
-      await this.playRevealSequence(ui, item, sid);
+      await this.playRevealSequence(ui, question, sid);
     } finally {
       if (sid === this.session) {
         this.speaking = false;
         this.clearSpeechUi(ui);
-        // Mark inactive so manual ↑JP/↓EN buttons work after the sequence.
         this.softStop = true;
       }
     }
   }
 
-  /**
-   * Speaks the correct English meaning, then — if `item.sentence` is
-   * present — pauses, switches to the "example" phase (hiding the answer
-   * choices), speaks the example sentence (using `sentenceReading` for
-   * correct pronunciation), pauses, speaks `sentenceMeaning` if present,
-   * then speaks the Japanese example again with karaoke, and returns the
-   * phase to "revealed". The auto loop then re-reads the grammar pattern
-   * and advances. Shared by auto and manual reveal. Caller owns `sid` and
-   * phase transitions before/after this call.
-   */
   private async playRevealSequence(
     ui: QuizAutoUi,
-    item: QuizWord,
+    question: VocabularyQuizQuestion,
     sid: number
   ): Promise<void> {
-    await this.speakEnglish(ui, item.meaning, SPEECH_RATE_NORMAL, sid);
+    await this.speakEnglish(
+      ui,
+      question.item.meaning,
+      SPEECH_RATE_NORMAL,
+      sid
+    );
     if (!this.shouldContinue(sid)) return;
 
-    const exampleText =
-      item.questionType === "phrase-context" && item.contextSource
-        ? item.contextSource
-        : item.questionType === "sentence-context" && item.contextSource
-          ? item.contextSource
-          : item.sentence;
-
-    const exampleReading =
-      item.questionType === "phrase-context" && item.contextReading
-        ? item.contextReading
-        : item.questionType === "sentence-context" && item.contextReading
-          ? item.contextReading
-          : item.sentenceReading;
-
-    const exampleMeaning =
-      item.questionType === "phrase-context" && item.phraseMeaning
-        ? item.phraseMeaning
-        : item.sentenceMeaning;
-
-    if (!exampleText) return;
+    const example = getQuizExample(question);
+    if (!example) return;
 
     await this.pause(T.revealPause, sid);
     if (!this.shouldContinue(sid)) return;
 
     ui.setPhase("example");
+    ui.setSpeechRate(SPEECH_RATE_NORMAL);
     ui.setJaHighlight(null);
     ui.setEnHighlight(null);
 
     await this.speakJapanese(
       ui,
-      exampleText,
+      example.text,
       SPEECH_RATE_NORMAL,
       sid,
-      exampleReading
+      example.reading
     );
     if (!this.shouldContinue(sid)) return;
 
-    if (exampleMeaning) {
+    if (example.meaning) {
       await this.pause(T.revealPause, sid);
       if (!this.shouldContinue(sid)) return;
 
-      await this.speakEnglish(
-        ui,
-        exampleMeaning,
-        SPEECH_RATE_NORMAL,
-        sid
-      );
+      await this.speakEnglish(ui, example.meaning, SPEECH_RATE_NORMAL, sid);
       if (!this.shouldContinue(sid)) return;
     }
 
@@ -239,49 +148,18 @@ export class QuizAutoRunner {
 
     await this.speakJapanese(
       ui,
-      exampleText,
+      example.text,
       SPEECH_RATE_NORMAL,
       sid,
-      exampleReading
+      example.reading
     );
     if (!this.shouldContinue(sid)) return;
 
     ui.setPhase("revealed");
   }
 
-  private playWordAudio(audioPath: string, sid: number): Promise<boolean> {
-    return new Promise((resolve) => {
-      if (!this.shouldContinue(sid)) {
-        resolve(false);
-        return;
-      }
-      const audio = new Audio(audioPath);
-      const finish = (ok: boolean) => {
-        audio.onended = null;
-        audio.onerror = null;
-        resolve(ok);
-      };
-      audio.onended = () => finish(true);
-      audio.onerror = () => finish(false);
-      void audio.play().catch(() => finish(false));
-    });
-  }
-
-  private promptForItem(item: QuizWord): string {
-    return item.promptText ?? item.word;
-  }
-
-  private shouldHideReading(item: QuizWord): boolean {
-    return (
-      item.questionType === "audio-to-english" ||
-      item.questionType === "english-to-japanese" ||
-      item.questionType === "phrase-context" ||
-      item.questionType === "sentence-context"
-    );
-  }
-
   async start(
-    items: QuizWord[],
+    items: VocabularyQuizQuestion[],
     ui: QuizAutoUi,
     onState: (state: "on" | "off") => void
   ): Promise<boolean> {
@@ -300,67 +178,39 @@ export class QuizAutoRunner {
           break;
         }
 
-        const item = items[i]!;
-        const { choices, correctChoiceIndex } = buildQuizChoices(items, i);
+        const question = items[i]!;
 
         ui.setQuizIndex(i);
-        ui.setChoices(choices);
-        ui.setCorrectChoiceIndex(correctChoiceIndex);
         ui.setSelectedChoiceIndex(null);
         ui.setPhase("asking");
-        ui.setShowReading(!this.shouldHideReading(item));
+        ui.setShowReading(!shouldHideReadingOnAsk(question));
         ui.setShowFurigana(false);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
         this.clearSpeechUi(ui);
 
-        if (item.questionType === "english-to-japanese") {
-          // English prompt only — no Japanese audio before answer.
-        } else if (item.questionType === "audio-to-english" && item.audioWord) {
-          const played = await this.playWordAudio(item.audioWord, sid);
-          if (!played) {
-            await this.speakJapanese(
-              ui,
-              item.word,
-              SPEECH_RATE_NORMAL,
-              sid,
-              item.reading
-            );
-          }
-        } else if (
-          item.questionType === "phrase-context" ||
-          item.questionType === "sentence-context"
-        ) {
-          // Context shown on card — no pre-answer audio.
-        } else {
-          await this.speakJapanese(
-            ui,
-            this.promptForItem(item),
-            SPEECH_RATE_NORMAL,
-            sid,
-            item.reading
-          );
-        }
+        await this.speakJapanese(
+          ui,
+          question.promptText,
+          SPEECH_RATE_NORMAL,
+          sid,
+          question.item.reading
+        );
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
         }
 
-        // Wait answerTime, or until a manual choice wakes this wait
         await this.waitForAnswer(T.answerTime, sid);
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
         }
 
-        // Reveal correct choice + reading
         ui.setPhase("revealed");
         ui.setShowReading(true);
         ui.setShowFurigana(true);
 
-        // Speak correct English meaning, then (if present) example JP →
-        // example EN → example JP again — see playRevealSequence. After
-        // that, re-read the pattern below and advance.
-        await this.playRevealSequence(ui, item, sid);
+        await this.playRevealSequence(ui, question, sid);
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
@@ -372,16 +222,15 @@ export class QuizAutoRunner {
           break;
         }
 
-        // Normal JA with hiragana visible (no slow pass, no furigana-off repeat)
         ui.setShowFurigana(true);
         ui.setShowReading(true);
         ui.setSpeechRate(SPEECH_RATE_NORMAL);
         await this.speakJapanese(
           ui,
-          item.word,
+          question.item.word,
           SPEECH_RATE_NORMAL,
           sid,
-          item.reading
+          question.item.reading
         );
         if (!this.shouldContinue(sid)) {
           completedAll = false;
@@ -434,8 +283,6 @@ export class QuizAutoRunner {
   private wakeAnswerWait(): void {
     const resolve = this.answerWaitResolve;
     this.answerWaitResolve = null;
-    // Also clear any pending answer-timeout timer via clearPauses on abort;
-    // for early select, just resolve — timer will no-op via settled flag.
     resolve?.();
   }
 

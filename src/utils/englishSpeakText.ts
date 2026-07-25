@@ -1,10 +1,12 @@
 /**
  * Browser TTS mispronounces some English words (e.g. "fare" → "far").
- * Map to homophone spellings the voice reads correctly.
+ * Map to homophone / phonetic spellings the voice reads correctly.
  * Display text and karaoke highlights stay unchanged.
  */
 const WORD_OVERRIDES: Readonly<Record<string, string>> = {
   fare: "fair",
+  // Isolated "lecture" often comes out clipped / non-native on Edge neural voices.
+  lecture: "lekcher",
 };
 
 function applyCase(match: string, spoken: string): string {

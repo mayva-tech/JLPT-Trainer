@@ -1,6 +1,8 @@
 import type { Lesson } from "../types/lesson";
 import type { VocabularyItem } from "../types/vocabulary";
+import type { GrammarItem } from "../types/grammar";
 import type {
+  QuizSourceItem,
   VocabularyQuizChoiceKind,
   VocabularyQuizQuestion,
   VocabularyQuizQuestionType,
@@ -9,18 +11,10 @@ import { getVocabularyByIds } from "../data/vocabulary";
 
 export type VocabularyQuizLevel = "N1" | "N2";
 
-const FULL_TYPE_ORDER: VocabularyQuizQuestionType[] = [
-  "japanese-to-english",
-  "japanese-to-english",
-  "japanese-to-english",
-  "japanese-to-english",
-  "english-to-japanese",
-  "english-to-japanese",
-  "audio-to-english",
-  "audio-to-english",
-  "phrase-context",
-  "sentence-context",
-];
+const FULL_TYPE_ORDER: VocabularyQuizQuestionType[] = Array.from(
+  { length: 10 },
+  () => "japanese-to-english" as const
+);
 
 function hashString(value: string): number {
   let hash = 0;
@@ -71,36 +65,16 @@ export function getVocabularyItemsForQuiz(options: {
   return items.filter((item) => item.jlpt === "N2");
 }
 
-export function assignQuestionTypes(count: number): VocabularyQuizQuestionType[] {
+export function assignQuestionTypes(
+  count: number
+): VocabularyQuizQuestionType[] {
   if (count <= 0) return [];
-  if (count >= FULL_TYPE_ORDER.length) {
-    return FULL_TYPE_ORDER.slice(0, count);
-  }
-
-  const order: VocabularyQuizQuestionType[] = [];
-  for (const type of FULL_TYPE_ORDER) {
-    if (order.length >= count) break;
-    order.push(type);
-  }
-
-  if (!order.includes("japanese-to-english") && count > 0) {
-    order[0] = "japanese-to-english";
-  }
-
-  return order.slice(0, count);
-}
-
-function blankContext(text: string, word: string): string {
-  if (!text) return "＿＿＿";
-  if (text.includes(word)) {
-    return text.replace(word, "＿＿＿");
-  }
-  return `＿＿＿${text}`;
+  return FULL_TYPE_ORDER.slice(0, count);
 }
 
 function pickDistractors(
-  pool: VocabularyItem[],
-  target: VocabularyItem,
+  pool: QuizSourceItem[],
+  target: QuizSourceItem,
   kind: VocabularyQuizChoiceKind,
   count: number,
   seed: string
@@ -109,9 +83,14 @@ function pickDistractors(
     .filter((item) => item.id !== target.id)
     .map((item) => (kind === "english" ? item.meaning : item.word));
 
-  const shuffled = seededShuffle(candidates, `${seed}:distractors:${target.id}`);
+  const shuffled = seededShuffle(
+    candidates,
+    `${seed}:distractors:${target.id}`
+  );
   const picked: string[] = [];
-  const seen = new Set<string>([normalizeChoice(kind === "english" ? target.meaning : target.word)]);
+  const seen = new Set<string>([
+    normalizeChoice(kind === "english" ? target.meaning : target.word),
+  ]);
 
   for (const candidate of shuffled) {
     const key = normalizeChoice(candidate);
@@ -129,24 +108,32 @@ function pickDistractors(
 }
 
 function buildChoices(
-  target: VocabularyItem,
-  pool: VocabularyItem[],
+  target: QuizSourceItem,
+  pool: QuizSourceItem[],
   kind: VocabularyQuizChoiceKind,
-  seed: string
+  seed: string,
+  choiceCount = 2
 ): { choices: string[]; correctChoiceIndex: number } {
   const correct = kind === "english" ? target.meaning : target.word;
-  const distractors = pickDistractors(pool, target, kind, 2, seed);
+  const distractorCount = Math.max(0, choiceCount - 1);
+  const distractors = pickDistractors(
+    pool,
+    target,
+    kind,
+    distractorCount,
+    seed
+  );
   const choices = seededShuffle(
-    uniqueChoices([correct, ...distractors]).slice(0, 3),
+    uniqueChoices([correct, ...distractors]).slice(0, choiceCount),
     `${seed}:choices:${target.id}:${kind}`
   );
 
-  while (choices.length < 3) {
+  while (choices.length < choiceCount) {
     choices.push(kind === "english" ? "—" : "？");
   }
 
-  const finalChoices = uniqueChoices(choices).slice(0, 3);
-  while (finalChoices.length < 3) {
+  const finalChoices = uniqueChoices(choices).slice(0, choiceCount);
+  while (finalChoices.length < choiceCount) {
     finalChoices.push(kind === "english" ? "—" : "？");
   }
 
@@ -163,77 +150,21 @@ function buildChoices(
 function buildQuestion(
   item: VocabularyItem,
   pool: VocabularyItem[],
-  type: VocabularyQuizQuestionType,
   seed: string
 ): VocabularyQuizQuestion {
-  switch (type) {
-    case "english-to-japanese": {
-      const built = buildChoices(item, pool, "japanese", seed);
-      return {
-        type,
-        item,
-        promptText: item.meaning,
-        promptEnglish: item.meaning,
-        choices: built.choices,
-        correctChoiceIndex: built.correctChoiceIndex,
-        choiceKind: "japanese",
-      };
-    }
-    case "audio-to-english": {
-      const built = buildChoices(item, pool, "english", seed);
-      return {
-        type,
-        item,
-        promptText: "Listen to the word",
-        choices: built.choices,
-        correctChoiceIndex: built.correctChoiceIndex,
-        choiceKind: "english",
-        audioPath: item.audioWord,
-      };
-    }
-    case "phrase-context": {
-      const built = buildChoices(item, pool, "japanese", seed);
-      return {
-        type,
-        item,
-        promptText: blankContext(item.phrase, item.word),
-        choices: built.choices,
-        correctChoiceIndex: built.correctChoiceIndex,
-        choiceKind: "japanese",
-        contextSource: item.phrase,
-        contextReading: item.phraseReading,
-      };
-    }
-    case "sentence-context": {
-      const built = buildChoices(item, pool, "japanese", seed);
-      return {
-        type,
-        item,
-        promptText: blankContext(item.sentence, item.word),
-        choices: built.choices,
-        correctChoiceIndex: built.correctChoiceIndex,
-        choiceKind: "japanese",
-        contextSource: item.sentence,
-        contextReading: item.sentenceReading,
-      };
-    }
-    case "japanese-to-english":
-    default: {
-      const built = buildChoices(item, pool, "english", seed);
-      return {
-        type: "japanese-to-english",
-        item,
-        promptText: item.word,
-        choices: built.choices,
-        correctChoiceIndex: built.correctChoiceIndex,
-        choiceKind: "english",
-      };
-    }
-  }
+  const built = buildChoices(item, pool, "english", seed);
+  return {
+    type: "japanese-to-english",
+    item,
+    promptText: item.word,
+    choices: built.choices,
+    correctChoiceIndex: built.correctChoiceIndex,
+    choiceKind: "english",
+  };
 }
 
 /**
- * Build a deterministic mixed-type vocabulary quiz for one lesson.
+ * Build a deterministic Japanese→English vocabulary quiz for one lesson.
  * One question per available quiz item (after N1/N2 filtering).
  */
 export function buildVocabularyQuizQuestions(
@@ -243,70 +174,62 @@ export function buildVocabularyQuizQuestions(
   if (items.length === 0) return [];
 
   const orderedItems = seededShuffle(items, `${quizId}:items`);
-  const types = assignQuestionTypes(orderedItems.length);
-
   return orderedItems.map((item, index) =>
-    buildQuestion(item, orderedItems, types[index]!, `${quizId}:q${index}`)
+    buildQuestion(item, orderedItems, `${quizId}:q${index}`)
   );
 }
 
-export function vocabularyQuestionToQuizWord(
-  question: VocabularyQuizQuestion
-): {
-  id: number;
-  word: string;
-  reading: string;
-  meaning: string;
-  phrase?: string;
-  phraseReading?: string;
-  phraseMeaning?: string;
-  sentence?: string;
-  sentenceReading?: string;
-  sentenceMeaning?: string;
-  audioWord?: string;
-  jlpt?: "N1" | "N2";
-  questionType: VocabularyQuizQuestionType;
-  promptText: string;
-  promptEnglish?: string;
-  contextSource?: string;
-  contextReading?: string;
-  choiceKind: VocabularyQuizChoiceKind;
-  choices: string[];
-  correctChoiceIndex: number;
-} {
-  const { item } = question;
+/** Map a grammar item onto the shared quiz source shape. */
+export function grammarToQuizSource(item: GrammarItem): QuizSourceItem {
   return {
     id: item.id,
-    word: item.word,
-    reading: item.reading,
+    word: item.pattern,
+    reading: item.patternReading,
     meaning: item.meaning,
-    phrase: item.phrase,
-    phraseReading: item.phraseReading,
-    phraseMeaning: item.phraseMeaning,
     sentence: item.sentence,
     sentenceReading: item.sentenceReading,
     sentenceMeaning: item.sentenceMeaning,
-    audioWord: item.audioWord,
     jlpt: item.jlpt,
-    questionType: question.type,
-    promptText: question.promptText,
-    promptEnglish: question.promptEnglish,
-    contextSource: question.contextSource,
-    contextReading: question.contextReading,
-    choiceKind: question.choiceKind,
-    choices: question.choices,
-    correctChoiceIndex: question.correctChoiceIndex,
   };
 }
 
-export function buildVocabularyQuizChoices(
-  questions: VocabularyQuizQuestion[],
-  questionIndex: number
-): { choices: string[]; correctChoiceIndex: number } {
-  const question = questions[questionIndex];
-  if (!question) {
-    return { choices: [], correctChoiceIndex: 0 };
-  }
+/**
+ * Grammar quizzes use japanese-to-english with 2 choices (historical layout).
+ * Choices are embedded so the runner has a single choices owner.
+ */
+export function buildGrammarQuizQuestions(
+  items: GrammarItem[],
+  quizId: string
+): VocabularyQuizQuestion[] {
+  if (items.length === 0) return [];
+
+  const sources = items.map(grammarToQuizSource);
+  const ordered = seededShuffle(sources, `${quizId}:items`);
+
+  return ordered.map((item, index) => {
+    const built = buildChoices(
+      item,
+      ordered,
+      "english",
+      `${quizId}:q${index}`,
+      2
+    );
+    return {
+      type: "japanese-to-english" as const,
+      item,
+      promptText: item.word,
+      choices: built.choices,
+      correctChoiceIndex: built.correctChoiceIndex,
+      choiceKind: "english" as const,
+    };
+  });
+}
+
+/** Read embedded choices from a question (single owner). */
+export function getQuestionChoices(question: VocabularyQuizQuestion): {
+  choices: string[];
+  correctChoiceIndex: number;
+} {
   return {
     choices: question.choices,
     correctChoiceIndex: question.correctChoiceIndex,

@@ -3,7 +3,12 @@ import {
   alignFurigana,
   alignFuriganaWithTokenSpans,
 } from "./alignFurigana";
-import { buildJapaneseSpeakToken } from "./japaneseSpeakText";
+import {
+  buildJapaneseSpeakToken,
+  shouldKeepGaTight,
+  shouldKeepNiTight,
+  shouldKeepWoTight,
+} from "./japaneseSpeakText";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -231,11 +236,36 @@ function isKanaFragment(text: string): boolean {
 function isFinalStemAttachable(text: string): boolean {
   const { core } = stripTrailingPunct(text);
   if (!core || !isPureKanaCore(text)) return false;
-  if (/^(ます|です|でした|ました|ません|した|いた|れた|します)$/u.test(core)) {
+  if (
+    /^(ます|です|でした|ました|ません|ましょう|した|いた|れた|します|しません|しました|しましょう)$/u.test(
+      core
+    )
+  ) {
     return true;
   }
   if (/ます$/u.test(core) && [...core].length <= 4) return true;
   if (/です$/u.test(core) && [...core].length <= 4) return true;
+  if (/ましょう$/u.test(core) && [...core].length <= 6) return true;
+  if (/ません$/u.test(core) && [...core].length <= 5) return true;
+  return false;
+}
+
+/**
+ * Polite auxiliary pieces the segmenter often splits (しま|しょう, でし|ょう).
+ * Without this merge, karaoke lights しま and skips the final しょう.
+ */
+function isPoliteAuxContinuation(prevCore: string, uCore: string): boolean {
+  if (!prevCore || !uCore) return false;
+  // しま + しょう/す/せん/した → しましょう/します/しません/しました
+  if (prevCore === "しま" && /^(しょう|す|せん|した)$/u.test(uCore)) {
+    return true;
+  }
+  // でし + ょう/た → でしょう/でした
+  if (prevCore === "でし" && /^(ょう|た)$/u.test(uCore)) return true;
+  // まし + ょう → ましょう
+  if (prevCore === "まし" && uCore === "ょう") return true;
+  // …ま + しょう when the stem already absorbed し (確認しま|しょう)
+  if (/ま$/u.test(prevCore) && uCore === "しょう") return true;
   return false;
 }
 
@@ -476,7 +506,9 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       isPureKanaCore(u.text) &&
       stripTrailingPunct(prev.text).punct === "" &&
       !blockCaseParticle &&
-      (isKanaFragment(prev.text) || isKanaFragment(u.text))
+      (isKanaFragment(prev.text) ||
+        isKanaFragment(u.text) ||
+        isPoliteAuxContinuation(prevCore, uCore))
     ) {
       kanaMerged[kanaMerged.length - 1] = joinUnits(prev, u);
     } else {
@@ -494,16 +526,19 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
     }
   }
 
-  // 6) Final stem attach for します/です left after fragment merges
+  // 6) Final stem attach for します/です/しましょう left after fragment merges
   const out: HighlightUnit[] = [];
   for (const u of peeled) {
     const prev = out[out.length - 1];
+    const prevCore = prev ? stripTrailingPunct(prev.text).core : "";
+    const uCore = stripTrailingPunct(u.text).core;
     if (
       prev &&
       prev.kind !== "space" &&
       u.kind !== "space" &&
       hasKanji(prev.text) &&
-      isFinalStemAttachable(u.text)
+      (isFinalStemAttachable(u.text) ||
+        isPoliteAuxContinuation(prevCore, uCore))
     ) {
       out[out.length - 1] = joinUnits(prev, u);
     } else {
@@ -674,9 +709,42 @@ const PARTICLE_BREAK_CORES = new Set([
   "って",
 ]);
 
+/**
+ * Extra mora-weight after phrase particles は / が / を / に so karaoke dwells
+ * longer before the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
+ * Applies to standalone particles and units that end in these particles.
+ */
+const PHRASE_PARTICLE_PAUSE = 1.6;
+
 function isParticleBreakUnit(text: string): boolean {
   const { core } = stripTrailingPunct(text);
   return PARTICLE_BREAK_CORES.has(core);
+}
+
+/** Topic/subject/object/adverbial particle at end of unit (筆跡は, 日本語を, 本格的に). */
+function unitHasTrailingPhraseParticle(unit: HighlightUnit): boolean {
+  const { core } = stripTrailingPunct(unit.text);
+  if (!/[はがをに]$/u.test(core)) return false;
+  if (!unit.spokenText) return true;
+
+  // The spaced reading marks a real particle boundary (`ぐんばい が`).
+  // Do not mistake the final は in compounds such as では (`でわ`) for a
+  // standalone topic pause.
+  const spokenCore = stripTrailingPunct(unit.spokenText).core.trim();
+  return /(?:^|\s)[わはがをに]$/u.test(spokenCore);
+}
+
+/** を/が/に that bind into a pattern or governing predicate — no long phrase pause. */
+function shouldSkipPhraseParticlePause(
+  text: string,
+  nextText?: string | null
+): boolean {
+  if (!nextText) return false;
+  const { core } = stripTrailingPunct(text);
+  if (core.endsWith("を")) return shouldKeepWoTight(nextText);
+  if (core.endsWith("が")) return shouldKeepGaTight(nextText);
+  if (core.endsWith("に")) return shouldKeepNiTight(nextText);
+  return false;
 }
 
 /** Mora weight from kana (and digits); ignores kanji glyphs. */
@@ -695,7 +763,8 @@ function estimateSpokenMoraWeight(spoken: string): number {
 
 export function estimateUnitDurationMs(
   unit: HighlightUnit,
-  lang: "ja" | "en"
+  lang: "ja" | "en",
+  nextUnit?: HighlightUnit | null
 ): number {
   const text = unit.text;
   if (unit.kind === "space") return 0;
@@ -709,6 +778,18 @@ export function estimateUnitDurationMs(
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {
     punctPause += KARAOKE_BREAK_POINT;
+  }
+  // Phrase particles は/が/を/に — longer dwell before next word
+  // (skip を/が/に when bound into をきっかけに / お金があれば / 本日に限り / …)
+  if (
+    lang === "ja" &&
+    unitHasTrailingPhraseParticle(unit) &&
+    !shouldSkipPhraseParticlePause(
+      text,
+      nextUnit?.spokenText ?? nextUnit?.text
+    )
+  ) {
+    punctPause += PHRASE_PARTICLE_PAUSE;
   }
   if (unit.speakGapAfter) punctPause += SPEAK_TOKEN_GAP;
 

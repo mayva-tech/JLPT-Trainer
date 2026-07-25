@@ -1,26 +1,39 @@
-import type { VocabularyItem } from "../types/vocabulary";
+import type { VocabularyItem } from "./vocabulary";
 
-export type VocabularyQuizQuestionType =
-  | "japanese-to-english"
-  | "english-to-japanese"
-  | "audio-to-english"
-  | "phrase-context"
-  | "sentence-context";
+export type VocabularyQuizQuestionType = "japanese-to-english";
 
 export type VocabularyQuizChoiceKind = "english" | "japanese";
 
+/**
+ * Shared display/source fields for quiz questions.
+ * VocabularyItem is structurally assignable; grammar projects pattern → word.
+ */
+export type QuizSourceItem = {
+  id: number;
+  word: string;
+  reading: string;
+  meaning: string;
+  phrase?: string;
+  phraseReading?: string;
+  phraseMeaning?: string;
+  sentence?: string;
+  sentenceReading?: string;
+  sentenceMeaning?: string;
+  audioWord?: string;
+  jlpt?: "N1" | "N2";
+};
+
+/** Japanese word → English meaning (same shape as grammar quizzes). */
 export type VocabularyQuizQuestion = {
-  type: VocabularyQuizQuestionType;
-  item: VocabularyItem;
-  /** Surface text shown as the main prompt (may include blanks). */
-  promptText: string;
-  /** English prompt for EN→JP questions. */
-  promptEnglish?: string;
+  type: "japanese-to-english";
+  item: QuizSourceItem;
   choices: string[];
   correctChoiceIndex: number;
-  choiceKind: VocabularyQuizChoiceKind;
-  /** Original phrase/sentence before blanking (for reveal). */
-  contextSource?: string;
-  contextReading?: string;
-  audioPath?: string;
+  choiceKind: "english";
+  promptText: string;
 };
+
+/** Project a vocabulary record into the quiz source shape (keeps nested identity). */
+export function vocabularyToQuizSource(item: VocabularyItem): QuizSourceItem {
+  return item;
+}

@@ -43,9 +43,15 @@ describe("getVocabularyDisplayRange", () => {
 });
 
 describe("formatN2VocabularyTocLessonLabel", () => {
-  it("formats lesson 51 label with lesson number and word range", () => {
-    expect(formatN2VocabularyTocLessonLabel(51)).toBe(
-      "Vocabulary Lesson 51 | Words 501–510"
+  it("formats lesson 51 label with lesson number, word range, and category", () => {
+    expect(formatN2VocabularyTocLessonLabel(51)).toMatch(
+      /^Vocabulary Lesson 51 \| Words 501–510 · /
+    );
+  });
+
+  it("includes shopping theme for lesson 1", () => {
+    expect(formatN2VocabularyTocLessonLabel(1)).toBe(
+      "Vocabulary Lesson 1 | Words 1–10 · Shopping • Supermarket"
     );
   });
 });

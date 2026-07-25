@@ -42,7 +42,7 @@ export type SpeakJapaneseOptions = {
   reading?: string | null;
 };
 
-export const SPEECH_RATE_NORMAL = 0.85;
+export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.85;
@@ -310,8 +310,9 @@ function runUtterance(
   activeUtterance = utter;
   const unitLang: "ja" | "en" = isJa ? "ja" : "en";
   utter.lang = lang;
-  utter.rate = rate;
+  // Voice must be set before rate — Chromium resets rate when voice is assigned.
   if (voice) utter.voice = voice;
+  utter.rate = rate;
 
   debug("speak", {
     playbackId,
@@ -426,7 +427,8 @@ function runUtterance(
         const next = index + 1;
         if (next >= units.length) return;
         const dur =
-          (estimateUnitDurationMs(unit, unitLang) / Math.max(rate, 0.2)) *
+          (estimateUnitDurationMs(unit, unitLang, units[next] ?? null) /
+            Math.max(rate, 0.2)) *
           FALLBACK_TIMING_SCALE;
         scheduleNext(next, dur);
       }, delayMs);

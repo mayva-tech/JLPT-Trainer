@@ -3,10 +3,12 @@ import { getLessonById, lessons } from "../data/lessons";
 import { getVocabularyByIds } from "../data/vocabulary";
 import {
   assignQuestionTypes,
+  buildGrammarQuizQuestions,
   buildVocabularyQuizQuestions,
   getVocabularyItemsForQuiz,
   seededShuffle,
 } from "./vocabularyQuiz";
+import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar";
 
 describe("getVocabularyItemsForQuiz", () => {
   it("excludes N1 items from N2 quizzes", () => {
@@ -25,11 +27,13 @@ describe("getVocabularyItemsForQuiz", () => {
 });
 
 describe("buildVocabularyQuizQuestions", () => {
-  it("uses mixed question types for a full 10-item N2 quiz", () => {
+  it("uses only japanese-to-english questions for a full 10-item N2 quiz", () => {
     const lesson = getLessonById("lesson-01")!;
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel: "N2" });
     const questions = buildVocabularyQuizQuestions(items, "quiz-vocab-1-10");
     expect(questions).toHaveLength(10);
+    expect(questions.every((q) => q.type === "japanese-to-english")).toBe(true);
+    expect(questions.every((q) => q.choiceKind === "english")).toBe(true);
     expect(questions.map((q) => q.type)).toEqual(assignQuestionTypes(10));
   });
 
@@ -58,6 +62,7 @@ describe("buildVocabularyQuizQuestions", () => {
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel: "N2" });
     const questions = buildVocabularyQuizQuestions(items, "quiz-vocab-1-10");
     for (const question of questions) {
+      expect(question.choices).toHaveLength(2);
       const normalized = question.choices.map((c) => c.trim().toLowerCase());
       expect(new Set(normalized).size).toBe(question.choices.length);
     }
@@ -70,5 +75,32 @@ describe("seededShuffle", () => {
     const a = seededShuffle(ids, "quiz-vocab-1-10");
     const b = seededShuffle(ids, "quiz-vocab-1-10");
     expect(a).toEqual(b);
+  });
+});
+
+describe("buildGrammarQuizQuestions", () => {
+  it("embeds japanese-to-english choices for grammar lessons", () => {
+    const lesson = getGrammarLessonById("grammar-batch-001-010")!;
+    const items = getGrammarItemsForLesson(lesson);
+    expect(items.every((item) => item.jlpt === "N2" || item.courseLevel.startsWith("N2"))).toBe(true);
+    const questions = buildGrammarQuizQuestions(items, "quiz-grammar-1-10");
+    expect(questions.length).toBe(items.length);
+    for (const question of questions) {
+      expect(question.type).toBe("japanese-to-english");
+      expect(question.choiceKind).toBe("english");
+      expect(question.choices).toHaveLength(2);
+      expect(question.choices[question.correctChoiceIndex]).toBe(
+        question.item.meaning
+      );
+    }
+  });
+
+  it("is deterministic for the same quiz id", () => {
+    const lesson = getGrammarLessonById("grammar-batch-001-010")!;
+    const items = getGrammarItemsForLesson(lesson);
+    const a = buildGrammarQuizQuestions(items, "quiz-grammar-1-10");
+    const b = buildGrammarQuizQuestions(items, "quiz-grammar-1-10");
+    expect(a.map((q) => q.item.id)).toEqual(b.map((q) => q.item.id));
+    expect(a.map((q) => q.choices)).toEqual(b.map((q) => q.choices));
   });
 });

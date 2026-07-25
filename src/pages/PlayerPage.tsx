@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { getLessonById } from "../data/lessons";
 import { getVocabularyByIds } from "../data/vocabulary";
-import { getGrammarByIds, getGrammarLessonById } from "../data/grammar";
+import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar";
 import type { GrammarItem } from "../types/grammar";
 import {
+  findTocItemByLessonId,
   getTocItem,
   type TocItemId,
 } from "../data/toc";
+import { grammarBatchCategorySuffix, grammarBatchRangeLabel } from "../data/tocGrammarItems";
 import type { StepName } from "../types/player";
 import { CategoryCard } from "../components/CategoryCard";
 import { WordCard } from "../components/WordCard";
@@ -28,7 +30,10 @@ import { GrammarSentenceCard } from "../components/GrammarSentenceCard";
 import { GrammarShadowingCard } from "../components/GrammarShadowingCard";
 import { GrammarReviewCard } from "../components/GrammarReviewCard";
 import { GrammarProgressIndicator } from "../components/GrammarProgressIndicator";
-import { GlossaryView } from "../components/GlossaryView";
+import {
+  GlossaryView,
+  type GlossaryNavigateTarget,
+} from "../components/GlossaryView";
 import {
   VideoFlowSetup,
   type VideoFlowConfig,
@@ -72,18 +77,17 @@ import {
 } from "../services/introCtaStorage";
 import {
   quizAutoRunner,
-  buildQuizChoices,
-  shuffle,
   type QuizPhase,
-  type QuizWord,
 } from "../services/quizAutoRunner";
+import type { VocabularyQuizQuestion } from "../types/vocabularyQuiz";
 import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 import { getGrammarLessonIdForQuiz } from "../utils/quizGrammarLesson";
+import { getQuizExample } from "../utils/quizPresentation";
 import {
+  buildGrammarQuizQuestions,
   buildVocabularyQuizQuestions,
   getVocabularyItemsForQuiz,
   seededShuffle,
-  vocabularyQuestionToQuizWord,
 } from "../utils/vocabularyQuiz";
 
 const STEPS: StepName[] = [
@@ -109,40 +113,35 @@ type Screen =
   | "flow-setup";
 type SpeechUiStatus = "idle" | "speaking" | "paused";
 
-/** Build the QuizWord[] deck for a given quiz TOC id, or [] if unknown. */
-function buildQuizWords(quizTocId: TocItemId | null): QuizWord[] {
+/** Build quiz questions for a TOC id (vocab or grammar). Choices are embedded. */
+function buildQuizQuestions(
+  quizTocId: TocItemId | null
+): VocabularyQuizQuestion[] {
   const vocabLessonId = getVocabularyLessonIdForQuiz(quizTocId);
   if (vocabLessonId) {
     const lesson = getLessonById(vocabLessonId);
     if (!lesson) return [];
     const quizLevel = vocabLessonId.startsWith("n1-") ? "N1" : "N2";
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel });
-    const questions = buildVocabularyQuizQuestions(
-      items,
-      quizTocId ?? vocabLessonId
-    );
-    return questions.map(vocabularyQuestionToQuizWord);
+    return buildVocabularyQuizQuestions(items, quizTocId ?? vocabLessonId);
   }
   // Mixed / final still use lesson 1 until a dedicated pool exists.
   if (quizTocId === "quiz-mixed" || quizTocId === "quiz-final") {
     const lesson = getLessonById("lesson-01");
     if (!lesson) return [];
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel: "N2" });
-    const questions = buildVocabularyQuizQuestions(items, quizTocId);
-    return questions.map(vocabularyQuestionToQuizWord);
+    return buildVocabularyQuizQuestions(items, quizTocId);
   }
   const grammarLessonId = getGrammarLessonIdForQuiz(quizTocId);
   if (grammarLessonId) {
     const grammarLesson = getGrammarLessonById(grammarLessonId);
-    return getGrammarByIds(grammarLesson?.grammarIds ?? []).map((g) => ({
-      id: g.id,
-      word: g.pattern,
-      reading: g.patternReading,
-      meaning: g.meaning,
-      sentence: g.sentence,
-      sentenceReading: g.sentenceReading,
-      sentenceMeaning: g.sentenceMeaning,
-    }));
+    const grammarItems = grammarLesson
+      ? getGrammarItemsForLesson(grammarLesson)
+      : [];
+    return buildGrammarQuizQuestions(
+      grammarItems,
+      quizTocId ?? grammarLessonId
+    );
   }
   return [];
 }
@@ -166,10 +165,10 @@ export function PlayerPage() {
   const [showFurigana, setShowFurigana] = useState(true);
   const [autoState, setAutoState] = useState<AutoState>("off");
 
-  const [grammarLessonId, setGrammarLessonId] = useState("grammar-lesson-01");
+  const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
   const grammarLesson = getGrammarLessonById(grammarLessonId);
   const grammarItems: GrammarItem[] = grammarLesson
-    ? getGrammarByIds(grammarLesson.grammarIds)
+    ? getGrammarItemsForLesson(grammarLesson)
     : [];
 
   const [grammarItemIndex, setGrammarItemIndex] = useState(0);
@@ -200,8 +199,6 @@ export function PlayerPage() {
   const [jaHighlight, setJaHighlight] = useState<SpeechHighlight | null>(null);
 
   const [quizIndex, setQuizIndex] = useState(0);
-  const [quizChoices, setQuizChoices] = useState<string[]>([]);
-  const [quizCorrectIndex, setQuizCorrectIndex] = useState(0);
   const [quizSelectedIndex, setQuizSelectedIndex] = useState<number | null>(
     null
   );
@@ -209,7 +206,7 @@ export function PlayerPage() {
   const [quizShowReading, setQuizShowReading] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizAutoOn, setQuizAutoOn] = useState(false);
-  const [quizDeck, setQuizDeck] = useState<QuizWord[]>([]);
+  const [quizDeck, setQuizDeck] = useState<VocabularyQuizQuestion[]>([]);
 
   const [flowConfig, setFlowConfig] = useState<VideoFlowConfig>({
     includeIntro: true,
@@ -268,20 +265,20 @@ export function PlayerPage() {
   quizAfterJaRef.current = quizAfterJa;
   quizAfterEnRef.current = quizAfterEn;
 
-  const quizItems: QuizWord[] = buildQuizWords(activeTocId);
+  const quizItems: VocabularyQuizQuestion[] = buildQuizQuestions(activeTocId);
 
   const quizAutoOnRef = useRef(quizAutoOn);
   quizAutoOnRef.current = quizAutoOn;
   const quizScoreRef = useRef(quizScore);
   quizScoreRef.current = quizScore;
-  const quizCorrectIndexRef = useRef(quizCorrectIndex);
-  quizCorrectIndexRef.current = quizCorrectIndex;
   const quizPhaseRef = useRef(quizPhase);
   quizPhaseRef.current = quizPhase;
   const quizItemsRef = useRef(quizItems);
   quizItemsRef.current = quizItems;
   const quizDeckRef = useRef(quizDeck);
   quizDeckRef.current = quizDeck;
+  const quizIndexRef = useRef(quizIndex);
+  quizIndexRef.current = quizIndex;
 
   const isFirst = itemIndex === 0 && stepIndex === 0;
   const isLast =
@@ -325,18 +322,13 @@ export function PlayerPage() {
 
   function resetQuizQuestion(index: number, itemsList = quizDeckRef.current) {
     if (itemsList.length === 0) {
-      setQuizChoices([]);
-      setQuizCorrectIndex(0);
       setQuizSelectedIndex(null);
       setQuizPhase("asking");
       setQuizShowReading(false);
       return;
     }
     const safeIndex = Math.max(0, Math.min(index, itemsList.length - 1));
-    const built = buildQuizChoices(itemsList, safeIndex);
     setQuizIndex(safeIndex);
-    setQuizChoices(built.choices);
-    setQuizCorrectIndex(built.correctChoiceIndex);
     setQuizSelectedIndex(null);
     setQuizPhase("asking");
     setQuizShowReading(false);
@@ -352,25 +344,22 @@ export function PlayerPage() {
       return;
     }
     const safeIndex = Math.max(0, Math.min(index, itemsList.length - 1));
-    const built = buildQuizChoices(itemsList, safeIndex);
+    const question = itemsList[safeIndex]!;
     setQuizIndex(safeIndex);
-    setQuizChoices(built.choices);
-    setQuizCorrectIndex(built.correctChoiceIndex);
-    setQuizSelectedIndex(built.correctChoiceIndex);
+    setQuizSelectedIndex(question.correctChoiceIndex);
     setQuizPhase("review");
     setQuizShowReading(true);
     setShowFurigana(true);
   }
 
-  /** Fresh order of quiz items for this quiz session (deterministic for vocab). */
+  /** Fresh order of quiz items for this quiz session (deterministic). */
   function reshuffleQuizDeck(
     source = quizItemsRef.current,
     quizTocId: TocItemId | null = activeTocId
-  ): QuizWord[] {
-    const deck =
-      quizTocId && getVocabularyLessonIdForQuiz(quizTocId)
-        ? seededShuffle(source, quizTocId)
-        : shuffle(source);
+  ): VocabularyQuizQuestion[] {
+    const deck = quizTocId
+      ? seededShuffle(source, quizTocId)
+      : [...source];
     setQuizDeck(deck);
     quizDeckRef.current = deck;
     return deck;
@@ -379,8 +368,6 @@ export function PlayerPage() {
   function buildQuizAutoUi() {
     return {
       setQuizIndex,
-      setChoices: setQuizChoices,
-      setCorrectChoiceIndex: setQuizCorrectIndex,
       setSelectedChoiceIndex: setQuizSelectedIndex,
       setPhase: setQuizPhase,
       setShowReading: setQuizShowReading,
@@ -539,7 +526,8 @@ export function PlayerPage() {
     setQuizShowReading(true);
     setShowFurigana(true);
 
-    const correct = quizCorrectIndexRef.current;
+    const question = quizDeckRef.current[quizIndexRef.current];
+    const correct = question?.correctChoiceIndex ?? -1;
     if (choiceIndex === correct) {
       const next = quizScoreRef.current + 1;
       quizScoreRef.current = next;
@@ -552,9 +540,8 @@ export function PlayerPage() {
       // Manual reveal without auto: speak the correct meaning, then — if
       // this item has one — the example sentence and its meaning. Mirrors
       // the auto-quiz reveal sequence exactly (see playRevealSequence).
-      const item = quizDeckRef.current[quizIndex];
-      if (item) {
-        void quizAutoRunner.playManualReveal(item, buildQuizAutoUi());
+      if (question) {
+        void quizAutoRunner.playManualReveal(question, buildQuizAutoUi());
       }
     }
   }
@@ -633,7 +620,20 @@ export function PlayerPage() {
     // Keep activeTocId so the last opened section stays highlighted.
   }
 
-  function openTocItem(id: TocItemId, options?: { fromFlow?: boolean }) {
+  function openTocItem(
+    id: TocItemId,
+    options?: {
+      fromFlow?: boolean;
+      /** Jump to this item within the lesson (glossary / deep link). */
+      focusIndex?: number;
+      /** Vocabulary step to show (default: start of lesson). */
+      focusStep?: StepName;
+      /** Grammar step to show (default: category / auto). */
+      focusGrammarStep?: GrammarStep;
+      /** Skip starting grammar auto mode (glossary deep links). */
+      skipAuto?: boolean;
+    }
+  ) {
     if (!options?.fromFlow) {
       stopAllAudio();
       setFlowActive(false);
@@ -680,22 +680,35 @@ export function PlayerPage() {
       case "quiz-after":
         setScreen("quiz-after");
         break;
-      case "word":
+      case "word": {
         setLessonId(item.lessonId ?? "lesson-01");
         setScreen("lesson");
+        const focusIndex = options?.focusIndex;
+        if (typeof focusIndex === "number" && focusIndex >= 0) {
+          setItemIndex(focusIndex);
+          const stepName = options?.focusStep ?? "word";
+          const stepIdx = STEPS.indexOf(stepName);
+          setStepIndex(stepIdx >= 0 ? stepIdx : 1);
+        }
         break;
+      }
       case "grammar": {
-        const gLessonId = item.lessonId ?? "grammar-lesson-01";
+        const gLessonId = item.lessonId ?? "grammar-batch-001-010";
         setGrammarLessonId(gLessonId);
-        setGrammarItemIndex(0);
-        setGrammarStep("category");
+        const gl = getGrammarLessonById(gLessonId);
+        const list = gl ? getGrammarItemsForLesson(gl) : [];
+        grammarItemsRef.current = list;
+        const focusIndex =
+          typeof options?.focusIndex === "number" && options.focusIndex >= 0
+            ? Math.min(options.focusIndex, Math.max(0, list.length - 1))
+            : 0;
+        setGrammarItemIndex(focusIndex);
+        grammarItemIndexRef.current = focusIndex;
+        const gStep = options?.focusGrammarStep ?? "category";
+        setGrammarStep(gStep);
         setGrammarShowFurigana(true);
         setScreen("grammar");
-        if (!options?.fromFlow) {
-          const gl = getGrammarLessonById(gLessonId);
-          const list = gl ? getGrammarByIds(gl.grammarIds) : [];
-          grammarItemsRef.current = list;
-          grammarItemIndexRef.current = 0;
+        if (!options?.fromFlow && !options?.skipAuto) {
           startGrammarAutoMode(false);
         }
         break;
@@ -703,14 +716,12 @@ export function PlayerPage() {
       case "quiz": {
         setShowFurigana(true);
         setQuizAutoOn(false);
-        setQuizChoices([]);
-        setQuizCorrectIndex(0);
         setQuizSelectedIndex(null);
         setQuizPhase("asking");
         setQuizShowReading(false);
         setQuizIndex(0);
         setScreen("quiz");
-        const list = buildQuizWords(id);
+        const list = buildQuizQuestions(id);
         const deck = reshuffleQuizDeck(list, id);
         quizItemsRef.current = list;
         resetQuizQuestion(0, deck);
@@ -720,6 +731,33 @@ export function PlayerPage() {
         setScreen("glossary");
         break;
     }
+  }
+
+  function openGlossaryEntry(target: GlossaryNavigateTarget) {
+    const toc = findTocItemByLessonId(target.lessonId);
+    if (!toc) return;
+
+    if (target.kind === "word") {
+      const lesson = getLessonById(target.lessonId);
+      const idx = lesson?.vocabularyIds.indexOf(target.vocabularyId) ?? -1;
+      if (idx < 0) return;
+      openTocItem(toc.id, {
+        focusIndex: idx,
+        focusStep: "word",
+        skipAuto: true,
+      });
+      return;
+    }
+
+    const gl = getGrammarLessonById(target.lessonId);
+    const list = gl ? getGrammarItemsForLesson(gl) : [];
+    const idx = list.findIndex((g) => g.id === target.grammarId);
+    if (idx < 0) return;
+    openTocItem(toc.id, {
+      focusIndex: idx,
+      focusGrammarStep: "pattern",
+      skipAuto: true,
+    });
   }
 
   function startAutoMode(fromFlow = false) {
@@ -843,8 +881,8 @@ export function PlayerPage() {
       // Full quiz-auto owns the timeline; manual reveal may be interrupted.
       if (quizAutoOnRef.current) return;
       if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-      const item = quizDeckRef.current[quizIndex];
-      if (!item) return;
+      const question = quizDeckRef.current[quizIndex];
+      if (!question) return;
       const phase = quizPhaseRef.current;
       if (
         phase !== "asking" &&
@@ -854,9 +892,10 @@ export function PlayerPage() {
       ) {
         return;
       }
-      const useExample = phase === "example" && !!item.sentence;
-      const text = useExample ? item.sentence! : item.word;
-      const reading = useExample ? item.sentenceReading : item.reading;
+      const example = getQuizExample(question);
+      const useExample = phase === "example" && !!example;
+      const text = useExample ? example!.text : question.item.word;
+      const reading = useExample ? example!.reading : question.item.reading;
       if (!text.trim()) return;
       speechService.stop();
       setSpeechLang("ja");
@@ -925,16 +964,17 @@ export function PlayerPage() {
     if (screenRef.current === "quiz") {
       if (quizAutoOnRef.current) return;
       if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-      const item = quizDeckRef.current[quizIndex];
-      if (!item) return;
+      const question = quizDeckRef.current[quizIndex];
+      if (!question) return;
       const phase = quizPhaseRef.current;
       let text: string | null = null;
       if (phase === "example") {
-        text = item.sentenceMeaning?.trim()
-          ? item.sentenceMeaning
-          : item.meaning;
+        const example = getQuizExample(question);
+        text = example?.meaning?.trim()
+          ? example.meaning
+          : question.item.meaning;
       } else if (phase === "revealed" || phase === "review") {
-        text = item.meaning;
+        text = question.item.meaning;
       }
       // During "asking", English would spoil the answer — leave disabled.
       if (!text?.trim()) return;
@@ -1001,8 +1041,9 @@ export function PlayerPage() {
   function replayQuizExample() {
     if (quizAutoOnRef.current) return;
     if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-    const item = quizDeckRef.current[quizIndex];
-    if (!item?.sentence?.trim()) return;
+    const question = quizDeckRef.current[quizIndex];
+    const example = question ? getQuizExample(question) : null;
+    if (!example?.text.trim()) return;
     const phase = quizPhaseRef.current;
     if (
       phase !== "revealed" &&
@@ -1022,7 +1063,7 @@ export function PlayerPage() {
     setEnHighlight(null);
     setSpeechStatus("speaking");
     speechService.speakJapanese(
-      item.sentence,
+      example.text,
       {
         onStart: () => setSpeechStatus("speaking"),
         onBoundary: (h) => setJaHighlight(h),
@@ -1030,7 +1071,7 @@ export function PlayerPage() {
         onError: () => clearSpeechUi(),
       },
       speechRateRef.current,
-      { reading: item.sentenceReading }
+      { reading: example.reading }
     );
   }
 
@@ -1380,15 +1421,18 @@ export function PlayerPage() {
   const gItemForControls =
     grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
   const quizItemForControls = quizDeck[quizIndex] ?? null;
+  const quizExampleForControls = quizItemForControls
+    ? getQuizExample(quizItemForControls)
+    : null;
   const canJa =
     screen === "quiz"
       ? !!quizItemForControls &&
         (quizPhase === "example"
-          ? !!quizItemForControls.sentence?.trim()
+          ? !!quizExampleForControls?.text.trim()
           : quizPhase === "asking" ||
               quizPhase === "revealed" ||
               quizPhase === "review"
-            ? !!quizItemForControls.word.trim()
+            ? !!quizItemForControls.item.word.trim()
             : false)
       : screen === "grammar"
         ? !!gItemForControls &&
@@ -1401,11 +1445,11 @@ export function PlayerPage() {
       ? !!quizItemForControls &&
         (quizPhase === "example"
           ? !!(
-              quizItemForControls.sentenceMeaning?.trim() ||
-              quizItemForControls.meaning.trim()
+              quizExampleForControls?.meaning?.trim() ||
+              quizItemForControls.item.meaning.trim()
             )
           : quizPhase === "revealed" || quizPhase === "review"
-            ? !!quizItemForControls.meaning.trim()
+            ? !!quizItemForControls.item.meaning.trim()
             : false)
       : screen === "grammar"
         ? !!gItemForControls &&
@@ -1415,7 +1459,7 @@ export function PlayerPage() {
           : false;
   const canQuizExample =
     screen === "quiz" &&
-    !!quizItemForControls?.sentence?.trim() &&
+    !!quizExampleForControls?.text.trim() &&
     (quizPhase === "revealed" ||
       quizPhase === "example" ||
       quizPhase === "review") &&
@@ -1427,7 +1471,9 @@ export function PlayerPage() {
     if (!item) return null;
     switch (step) {
       case "category":
-        return <CategoryCard item={item} />;
+        return (
+          <CategoryCard item={item} description={lesson?.subtitle} />
+        );
       case "word":
         return (
           <WordCard
@@ -1487,7 +1533,7 @@ export function PlayerPage() {
           />
         );
       case "glossary":
-        return <GlossaryView />;
+        return <GlossaryView onNavigate={openGlossaryEntry} />;
       case "intro":
         return (
           <IntroHookDisplay
@@ -1550,7 +1596,11 @@ export function PlayerPage() {
                   total={grammarItems.length}
                   step={grammarStep}
                 />
-                <GrammarCategoryCard item={gItem} />
+                <GrammarCategoryCard
+                  item={gItem}
+                  rangeLabel={grammarBatchRangeLabel(grammarLessonId)}
+                  description={grammarBatchCategorySuffix(grammarLessonId)}
+                />
               </>
             );
           case "pattern":
@@ -1622,6 +1672,7 @@ export function PlayerPage() {
                 />
                 <GrammarReviewCard
                   item={gItem}
+                  showFurigana={grammarShowFurigana}
                   jaHighlight={jaLessonHighlight}
                   enHighlight={enLessonHighlight}
                 />
@@ -1633,12 +1684,9 @@ export function PlayerPage() {
         return (
           <QuizCard
             title={tocItem?.label ?? "Quiz"}
-            lessonId={getVocabularyLessonIdForQuiz(activeTocId)}
-            item={quizDeck[quizIndex] ?? null}
+            question={quizDeck[quizIndex] ?? null}
             index={quizIndex}
             total={Math.max(quizDeck.length || quizItems.length, 1)}
-            choices={quizChoices}
-            correctChoiceIndex={quizCorrectIndex}
             selectedChoiceIndex={quizSelectedIndex}
             phase={quizPhase}
             showReading={quizShowReading}
@@ -1649,16 +1697,6 @@ export function PlayerPage() {
             jaHighlight={jaHighlight}
             enHighlight={enHighlight}
             onSelectChoice={onQuizSelectChoice}
-            onReplayAudio={() => {
-              const item = quizDeck[quizIndex];
-              if (!item?.audioWord) return;
-              const audio = new Audio(item.audioWord);
-              void audio.play().catch(() => {
-                void speechService.speakJapanese(item.word, {}, SPEECH_RATE_NORMAL, {
-                  reading: item.reading,
-                });
-              });
-            }}
             preJapanese={quizPreJa}
             preEnglish={quizPreEn}
             afterJapanese={quizAfterJa}
@@ -2098,7 +2136,7 @@ export function PlayerPage() {
                     ? "rate-btn rate-btn--active"
                     : "rate-btn"
                 }
-                title="Normal speed (0.85) — Shift toggles"
+                title="Normal speed (0.80) — Shift toggles"
                 disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
               >
@@ -2230,7 +2268,7 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 tabIndex={-1}
-                title="Normal speed (0.85) — Shift toggles"
+                title="Normal speed (0.80) — Shift toggles"
                 onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
               >
                 Normal

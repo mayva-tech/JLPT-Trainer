@@ -222,6 +222,19 @@ describe("buildJapaneseHighlightUnits", () => {
     expect(shimatta).toBeTruthy();
     expect(text.slice(shimatta!.start, shimatta!.end)).toContain("ま");
   });
+
+  it("keeps しましょう intact so final しょう is highlighted", () => {
+    const text = "クイズで確認しましょう。";
+    const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
+    expect(active.map((u) => u.text)).toEqual([
+      "クイズ",
+      "で",
+      "確認しましょう。",
+    ]);
+    const volitional = active.find((u) => u.text.includes("しましょう"));
+    expect(volitional).toBeTruthy();
+    expect(text.slice(volitional!.start, volitional!.end)).toContain("しょう");
+  });
 });
 
 describe("estimateUnitDurationMs karaoke breaks", () => {
@@ -244,6 +257,301 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
     );
     expect(withComma).toBeGreaterThan(plain);
     expect(particle).toBeGreaterThan(contentMora);
+  });
+
+  it("extends dwell after topic は and subject が before the next word", () => {
+    const de = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "で",
+        kind: "word",
+        spokenText: "で",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    const ha = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "は",
+        kind: "word",
+        spokenText: "わ",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 1, end: 2, text: "彼", kind: "word" }
+    );
+    // が + noun-like next still gets a pause; が + verb does not
+    const gaBeforeNoun = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "が",
+        kind: "word",
+        spokenText: "が",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 1, end: 2, text: "彼女", kind: "word" }
+    );
+    expect(ha).toBeGreaterThan(de);
+    expect(gaBeforeNoun).toBeGreaterThan(de);
+  });
+
+  it("extends dwell when は is glued to the prior word (筆跡は)", () => {
+    const noun = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 2,
+        text: "筆跡",
+        kind: "word",
+        spokenText: "ひっせき",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    const nounHa = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "筆跡は",
+        kind: "word",
+        spokenText: "ひっせき わ",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    // Extra dwell beyond the added わ mora (~150ms) — topic pause
+    expect(nounHa - noun).toBeGreaterThan(250);
+  });
+
+  it("does not add a standalone は pause to compound では", () => {
+    const compound = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 2,
+        text: "では",
+        kind: "word",
+        spokenText: "でわ",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    const sameMoraPlain = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 2,
+        text: "でわ",
+        kind: "word",
+        spokenText: "でわ",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    expect(compound - sameMoraPlain).toBeLessThan(100);
+  });
+
+  it("keeps 軍配が tight with split predicate 上がっ", () => {
+    const subject = {
+      start: 0,
+      end: 3,
+      text: "軍配が",
+      kind: "word" as const,
+      spokenText: "ぐんばい が",
+      speakGapAfter: true,
+    };
+    const beforePredicate = estimateUnitDurationMs(subject, "ja", {
+      start: 3,
+      end: 5,
+      text: "上が",
+      kind: "word",
+      spokenText: "あがっ",
+    });
+    const beforeNoun = estimateUnitDurationMs(subject, "ja", {
+      start: 3,
+      end: 5,
+      text: "選手",
+      kind: "word",
+      spokenText: "せんしゅ",
+    });
+    expect(beforePredicate).toBeLessThan(beforeNoun);
+  });
+
+  it("extends dwell after object を and adverbial に (日本語を / 本格的に)", () => {
+    const de = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "で",
+        kind: "word",
+        spokenText: "で",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    const wo = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "を",
+        kind: "word",
+        spokenText: "を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 1, end: 4, text: "勉強", kind: "word" }
+    );
+    const ni = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "に",
+        kind: "word",
+        spokenText: "に",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    const nihongoWo = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 4,
+        text: "日本語を",
+        kind: "word",
+        spokenText: "にほんご を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 4, end: 8, text: "本格的に", kind: "word" }
+    );
+    const noun = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "日本語",
+        kind: "word",
+        spokenText: "にほんご",
+        speakGapAfter: true,
+      },
+      "ja"
+    );
+    expect(wo).toBeGreaterThan(de);
+    expect(ni).toBeGreaterThan(de);
+    expect(nihongoWo - noun).toBeGreaterThan(250);
+  });
+
+  it("does not add long pause after を before きっかけに", () => {
+    const beforeKikkake = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "留学を",
+        kind: "word",
+        spokenText: "りゅうがく を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 3, end: 7, text: "きっかけ", kind: "word" }
+    );
+    const beforeHonkaku = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 4,
+        text: "日本語を",
+        kind: "word",
+        spokenText: "にほんご を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 4, end: 8, text: "本格的に", kind: "word" }
+    );
+    expect(beforeHonkaku).toBeGreaterThan(beforeKikkake);
+  });
+
+  it("does not add long pause after を before governing verb (聞いて)", () => {
+    const beforeVerb = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 4,
+        text: "知らせを",
+        kind: "word",
+        spokenText: "しらせ を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 4, end: 7, text: "聞いて、", kind: "word" }
+    );
+    const beforeAdverb = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 4,
+        text: "日本語を",
+        kind: "word",
+        spokenText: "にほんご を",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 4, end: 8, text: "本格的に", kind: "word" }
+    );
+    expect(beforeAdverb).toBeGreaterThan(beforeVerb);
+  });
+
+  it("does not add long pause after が before predicate (あれば)", () => {
+    const beforeAreba = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "お金が",
+        kind: "word",
+        spokenText: "おかね が",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 3, end: 6, text: "あれば", kind: "word" }
+    );
+    const beforeNoun = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "お金が",
+        kind: "word",
+        spokenText: "おかね が",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 3, end: 5, text: "彼女", kind: "word" }
+    );
+    expect(beforeNoun).toBeGreaterThan(beforeAreba);
+  });
+
+  it("does not add long pause after に before 限り", () => {
+    const beforeKagiri = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 3,
+        text: "本日に",
+        kind: "word",
+        spokenText: "ほんじつ に",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 3, end: 5, text: "限り、", kind: "word" }
+    );
+    const beforeBenkyou = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 4,
+        text: "本格的に",
+        kind: "word",
+        spokenText: "ほんかくてき に",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 4, end: 6, text: "勉強", kind: "word" }
+    );
+    expect(beforeBenkyou).toBeGreaterThan(beforeKagiri);
   });
 
   it("times Japanese units from spoken kana, not kanji glyph weight", () => {

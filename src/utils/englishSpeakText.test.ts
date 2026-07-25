@@ -21,4 +21,12 @@ describe("buildEnglishSpeakText", () => {
   it("preserves case", () => {
     expect(buildEnglishSpeakText("Fare")).toBe("Fair");
   });
+
+  it('speaks "lecture" as "lekcher" (clearer noun pronunciation)', () => {
+    expect(buildEnglishSpeakText("lecture")).toBe("lekcher");
+    expect(buildEnglishSpeakText("a university lecture")).toBe(
+      "a university lekcher"
+    );
+    expect(buildEnglishSpeakText("Lecture")).toBe("Lekcher");
+  });
 });

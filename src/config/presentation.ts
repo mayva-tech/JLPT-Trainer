@@ -3,6 +3,6 @@ export const presentation = {
   safeAreaVerticalPercent: 6,
   showIntroCard: true,
   showOutroCard: true,
-  accentColor: "#2f6fed",
-  categoryColor: "#e8f0fd", // pale blue chip background
+  accentColor: "#1e3a8a",
+  categoryColor: "#e2e8f4", // pale dark-blue chip background
 };

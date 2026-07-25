@@ -1,4 +1,5 @@
 import type { Lesson } from "../types/lesson";
+import { lessons } from "../data/lessons";
 
 export type VocabularyDisplayRange = {
   lessonNumber: number;
@@ -66,13 +67,23 @@ export function formatVocabularyQuizHeader(quizLessonId: string): string | null 
 export function formatN2VocabularyTocLessonLabel(lessonNumber: number): string {
   const first = (lessonNumber - 1) * 10 + 1;
   const last = lessonNumber * 10;
-  return `Vocabulary Lesson ${lessonNumber} | Words ${first}–${last}`;
+  const base = `Vocabulary Lesson ${lessonNumber} | Words ${first}–${last}`;
+  const lesson = lessons.find(
+    (l) => l.id === formatLessonIdFromNumber(lessonNumber)
+  );
+  const theme = lesson?.subtitle?.trim();
+  return theme ? `${base} · ${theme}` : base;
 }
 
 export function formatN2VocabularyTocQuizLabel(lessonNumber: number): string {
   const first = (lessonNumber - 1) * 10 + 1;
   const last = lessonNumber * 10;
-  return `Vocabulary Quiz ${lessonNumber} | Words ${first}–${last}`;
+  const base = `Vocabulary Quiz ${lessonNumber} | Words ${first}–${last}`;
+  const lesson = lessons.find(
+    (l) => l.id === formatLessonIdFromNumber(lessonNumber)
+  );
+  const theme = lesson?.subtitle?.trim();
+  return theme ? `${base} · ${theme}` : base;
 }
 
 export function formatN2VocabularyTocWordId(lessonNumber: number): string {

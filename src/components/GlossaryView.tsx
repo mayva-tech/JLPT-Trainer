@@ -1,10 +1,23 @@
 import { useMemo, useState } from "react";
 import { lessons } from "../data/lessons";
 import { vocabulary, getVocabularyByIds } from "../data/vocabulary";
-import { grammar, grammarLessons, getGrammarByIds } from "../data/grammar";
+import {
+  grammar,
+  grammarLessons,
+  getGrammarItemsForLesson,
+} from "../data/grammar";
+import { grammarBatchDisplayLabel } from "../data/tocGrammarItems";
 
 type Tab = "words" | "grammar";
 type GlossaryPage = 1 | 2;
+
+export type GlossaryNavigateTarget =
+  | { kind: "word"; lessonId: string; vocabularyId: number }
+  | { kind: "grammar"; lessonId: string; grammarId: number };
+
+type Props = {
+  onNavigate: (target: GlossaryNavigateTarget) => void;
+};
 
 function isN1LessonId(id: string): boolean {
   return id.startsWith("n1-");
@@ -13,9 +26,10 @@ function isN1LessonId(id: string): boolean {
 /**
  * In-app content glossary for sanity-checking existing words and grammar
  * patterns. Reads live data, so it is always up to date with the lessons.
- * Page 1 lists N2 content; page 2 lists curated N1 browsing lenses.
+ * Page 1 lists N2 content (N3 foundations excluded); page 2 lists curated N1.
+ * Rows are clickable and jump to the matching player slide.
  */
-export function GlossaryView() {
+export function GlossaryView({ onNavigate }: Props) {
   const [page, setPage] = useState<GlossaryPage>(1);
   const [tab, setTab] = useState<Tab>("words");
   const [query, setQuery] = useState("");
@@ -30,7 +44,11 @@ export function GlossaryView() {
 
   const grammarLessonList = useMemo(
     () =>
-      grammarLessons.filter((lesson) => isN1LessonId(lesson.id) === wantN1),
+      grammarLessons.filter((lesson) => {
+        if (wantN1) return lesson.id.startsWith("n1-");
+        // N2 course navigation uses family batches (not every singleton family row).
+        return lesson.id.startsWith("grammar-batch-");
+      }),
     [wantN1]
   );
 
@@ -54,25 +72,27 @@ export function GlossaryView() {
     () =>
       grammarLessonList.map((lesson) => ({
         lesson,
-        items: getGrammarByIds(lesson.grammarIds).filter(
+        items: getGrammarItemsForLesson(lesson).filter(
           (g) =>
-            (wantN1 ? g.jlpt === "N1" : g.jlpt === "N2") &&
-            (!q ||
-              g.pattern.toLowerCase().includes(q) ||
-              g.patternReading.toLowerCase().includes(q) ||
-              g.meaning.toLowerCase().includes(q))
+            !q ||
+            g.pattern.toLowerCase().includes(q) ||
+            g.patternReading.toLowerCase().includes(q) ||
+            g.meaning.toLowerCase().includes(q)
         ),
       })),
     [q, wantN1, grammarLessonList]
   );
 
   const pageWordCount = useMemo(
-    () => vocabulary.filter((v) => (wantN1 ? v.jlpt === "N1" : v.jlpt === "N2")).length,
+    () =>
+      vocabulary.filter((v) => (wantN1 ? v.jlpt === "N1" : v.jlpt === "N2"))
+        .length,
     [wantN1]
   );
 
   const pageGrammarCount = useMemo(
-    () => grammar.filter((g) => (wantN1 ? g.jlpt === "N1" : g.jlpt === "N2")).length,
+    () =>
+      grammar.filter((g) => (wantN1 ? g.jlpt === "N1" : g.jlpt === "N2")).length,
     [wantN1]
   );
 
@@ -84,7 +104,8 @@ export function GlossaryView() {
         <p className="toc-subtitle">
           {wantN1 ? "N1" : "N2"} · {pageWordCount} words · {pageGrammarCount}{" "}
           grammar patterns · {wordLessons.length} word lessons ·{" "}
-          {grammarLessonList.length} grammar lessons
+          {grammarLessonList.length} grammar lessons · tap a row to open its
+          slide
         </p>
 
         <div className="toc-page-nav" role="tablist" aria-label="Glossary pages">
@@ -93,9 +114,7 @@ export function GlossaryView() {
             role="tab"
             aria-selected={page === 1}
             className={
-              page === 1
-                ? "toc-page-btn toc-page-btn--active"
-                : "toc-page-btn"
+              page === 1 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
             }
             onClick={() => setPage(1)}
           >
@@ -106,9 +125,7 @@ export function GlossaryView() {
             role="tab"
             aria-selected={page === 2}
             className={
-              page === 2
-                ? "toc-page-btn toc-page-btn--active"
-                : "toc-page-btn"
+              page === 2 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
             }
             onClick={() => setPage(2)}
           >
@@ -159,7 +176,19 @@ export function GlossaryView() {
                           <tr key={v.id}>
                             <td className="glossary-id">{v.id}</td>
                             <td className="glossary-ja" lang="ja">
-                              {v.word}
+                              <button
+                                type="button"
+                                className="glossary-link"
+                                onClick={() =>
+                                  onNavigate({
+                                    kind: "word",
+                                    lessonId: lesson.id,
+                                    vocabularyId: v.id,
+                                  })
+                                }
+                              >
+                                {v.word}
+                              </button>
                             </td>
                             <td className="glossary-reading" lang="ja">
                               {v.reading}
@@ -176,7 +205,9 @@ export function GlossaryView() {
                 items.length === 0 ? null : (
                   <section key={lesson.id} className="glossary-section">
                     <h2 className="toc-group-title">
-                      {lesson.title}{" "}
+                      {(lesson.id.startsWith("grammar-batch-")
+                        ? grammarBatchDisplayLabel(lesson.id)
+                        : lesson.title) || lesson.title}{" "}
                       <span className="glossary-count">({items.length})</span>
                     </h2>
                     <table className="glossary-table">
@@ -185,7 +216,19 @@ export function GlossaryView() {
                           <tr key={g.id}>
                             <td className="glossary-id">{g.id}</td>
                             <td className="glossary-ja" lang="ja">
-                              {g.pattern}
+                              <button
+                                type="button"
+                                className="glossary-link"
+                                onClick={() =>
+                                  onNavigate({
+                                    kind: "grammar",
+                                    lessonId: lesson.id,
+                                    grammarId: g.id,
+                                  })
+                                }
+                              >
+                                {g.pattern}
+                              </button>
                             </td>
                             <td className="glossary-en">{g.meaning}</td>
                           </tr>

@@ -1,14 +1,12 @@
 import type { TocItemId } from "../data/toc";
+import { getGrammarByIds, getGrammarLessonById } from "../data/grammar";
+import type { GrammarItem } from "../types/grammar";
 
 const GRAMMAR_QUIZ_ID_RE = /^quiz-grammar-(\d+)-(\d+)$/;
-const MAX_GRAMMAR_LESSON = 20;
-const MAX_GRAMMAR_POINT = 200;
 
 /**
- * Resolve a grammar quiz TOC id to its grammar lesson id.
- * `quiz-grammar-1-10` → `grammar-lesson-01`,
- * `quiz-grammar-191-200` → `grammar-lesson-20`.
- * Returns null for vocabulary / mixed / final / unrelated ids.
+ * Resolve a grammar quiz TOC id to its batch lesson id.
+ * `quiz-grammar-1-10` → `grammar-batch-001-010`
  */
 export function getGrammarLessonIdForQuiz(
   quizTocId: TocItemId | string | null
@@ -20,14 +18,22 @@ export function getGrammarLessonIdForQuiz(
 
   const first = Number(match[1]);
   const last = Number(match[2]);
-
   if (!Number.isInteger(first) || !Number.isInteger(last)) return null;
-  if (first < 1 || last !== first + 9) return null;
-  if ((first - 1) % 10 !== 0) return null;
-  if (last > MAX_GRAMMAR_POINT) return null;
+  if (first < 1 || last < first) return null;
 
-  const lessonNumber = Math.floor((first - 1) / 10) + 1;
-  if (lessonNumber < 1 || lessonNumber > MAX_GRAMMAR_LESSON) return null;
+  const id = `grammar-batch-${String(first).padStart(3, "0")}-${String(last).padStart(3, "0")}`;
+  return getGrammarLessonById(id) ? id : null;
+}
 
-  return `grammar-lesson-${String(lessonNumber).padStart(2, "0")}`;
+/** All grammar items for a grammar quiz (batch / family pool). */
+export function getGrammarQuizItemsForToc(
+  quizTocId: TocItemId | string | null
+): GrammarItem[] {
+  const lessonId = getGrammarLessonIdForQuiz(quizTocId);
+  if (!lessonId) return [];
+  const lesson = getGrammarLessonById(lessonId);
+  if (!lesson) return [];
+  return getGrammarByIds(lesson.grammarIds).filter(
+    (g) => g.courseLevel === "N2_CORE" || g.courseLevel === "N2_SECONDARY"
+  );
 }
