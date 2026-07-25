@@ -115,6 +115,14 @@ function speakParticleKana(kana: string): string {
   return expandChoonpu(out);
 }
 
+/**
+ * Grammar slot marker 〜 / ～ / ~ — pause after each one before the next slot
+ * (〜ばかりか〜も → 〜、ばかりか〜、も).
+ */
+export function appendWaveDashSpeakPause(text: string): string {
+  return text.replace(/([〜～~])(?![、,\s]|$)/gu, "$1、");
+}
+
 function speakReadingToken(token: string): string {
   // Split on punctuation so glued chunks like 「は、さいご」 still rewrite.
   return token
@@ -163,6 +171,8 @@ const WO_BOUND_PATTERN_STEMS = [
   "だいいち",
   "ためす",
   "こころみる",
+  // 見れば may be split into 見|れば; spoken timing sees みれ first.
+  "みれ",
   "じっけん",
   "けいかく",
   "きもに",
@@ -195,6 +205,7 @@ const WO_BOUND_PATTERN_STEMS = [
   "第一",
   "試す",
   "試み",
+  "見",
   "実験",
   "計画",
   "肝に",
@@ -404,6 +415,28 @@ export function looksLikePredicateContinuation(next: string): boolean {
   );
 }
 
+/**
+ * い-adjective predicative / adverbial after subject が (日が長い / 日が長く).
+ * These should keep a natural subject pause — unlike verbs (雨が降らない).
+ */
+function isGaSubjectAdjectiveContinuation(next: string): boolean {
+  const core = next
+    .replace(/^[〜～]+/u, "")
+    .replace(/[、。！？．，!?,]+$/u, "")
+    .trim();
+  if (!core) return false;
+  // Adverbial 〜く (長く)
+  if (/く$/u.test(core)) return true;
+  // Predicative 〜い, but not 〜ない / 〜たい / 〜らしい auxiliaries
+  if (
+    /い$/u.test(core) &&
+    !/(?:ない|にくい|やすい|たい|らしい)$/u.test(core)
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /** @deprecated use looksLikePredicateContinuation */
 export function looksLikeVerbAfterWo(next: string): boolean {
   return looksLikePredicateContinuation(next);
@@ -414,8 +447,12 @@ export function shouldKeepWoTight(next: string): boolean {
   return isWoBoundPatternComplement(next) || looksLikePredicateContinuation(next);
 }
 
-/** が should stay tight with its predicate (お金があれば). */
+/**
+ * が stays tight with verbs/conditionals (お金があれば, 雨が降らない),
+ * but pauses before い-adjective forms (日が長くなる).
+ */
 export function shouldKeepGaTight(next: string): boolean {
+  if (isGaSubjectAdjectiveContinuation(next)) return false;
   return looksLikePredicateContinuation(next);
 }
 
@@ -480,7 +517,7 @@ export function buildJapaneseSpeakText(
   spacedReading?: string | null
 ): string {
   const reading = spacedReading?.trim();
-  if (!reading) return surface;
+  if (!reading) return appendWaveDashSpeakPause(surface);
 
   // Speak from spaced reading tokens so particles like は can be remapped to わ.
   // Keep spaces between tokens so TTS does not glue the particle into the next
@@ -490,13 +527,14 @@ export function buildJapaneseSpeakText(
   const tokens = reading
     .split(/\s+/)
     .filter(Boolean)
-    .map(speakReadingToken);
+    .map(speakReadingToken)
+    .map(appendWaveDashSpeakPause);
   const spoken = tokens
     .map((tok, i) => appendPhraseParticleSpeakPause(tok, tokens[i + 1]))
     .join(" ")
     .trim();
 
-  return spoken || surface;
+  return spoken || appendWaveDashSpeakPause(surface);
 }
 
 /**
@@ -504,5 +542,5 @@ export function buildJapaneseSpeakText(
  * Used for karaoke duration so timing matches what Nanami actually speaks.
  */
 export function buildJapaneseSpeakToken(token: string): string {
-  return speakReadingToken(token);
+  return appendWaveDashSpeakPause(speakReadingToken(token));
 }

@@ -15,6 +15,18 @@ describe("buildJapaneseSpeakText", () => {
     expect(shouldKeepGaTight("上がっ")).toBe(true);
   });
 
+  it("pauses after subject が before い-adjective 長く / 長い", () => {
+    expect(shouldKeepGaTight("ながく")).toBe(false);
+    expect(shouldKeepGaTight("ながい")).toBe(false);
+    expect(shouldKeepGaTight("ふらない")).toBe(true);
+    const spoken = buildJapaneseSpeakText(
+      "春になるにつれて、日が長くなる。",
+      "はる に なる に つれて、ひ が ながく なる。"
+    );
+    expect(spoken).toContain("ひ が、 ながく");
+    expect(spoken).not.toContain("ひ が ながく");
+  });
+
   it("keeps に tight in 〜ことにする / 〜ことになる", () => {
     expect(shouldKeepNiTight("した")).toBe(true);
     expect(shouldKeepNiTight("する")).toBe(true);
@@ -26,6 +38,18 @@ describe("buildJapaneseSpeakText", () => {
     );
     expect(spoken).toContain("こと に した");
     expect(spoken).not.toContain("こと に、 した");
+  });
+
+  it("keeps 証拠を tight with segmented 見れば", () => {
+    expect(shouldKeepWoTight("みれば、")).toBe(true);
+    expect(shouldKeepWoTight("みれ")).toBe(true);
+    expect(shouldKeepWoTight("見")).toBe(true);
+    const spoken = buildJapaneseSpeakText(
+      "証拠を見れば、認めざるを得ない。",
+      "しょうこ を みれば、みとめざるを えない。"
+    );
+    expect(spoken).toContain("しょうこ を みれば");
+    expect(spoken).not.toContain("しょうこ を、 みれば");
   });
 
   it("reads 間に as まに (not あいだに)", () => {
@@ -68,30 +92,30 @@ describe("buildJapaneseSpeakText", () => {
         "はる とはいえ、まだ あさ は さむい。"
       )
     ).toMatch(/^はる とわいえ/);
-    expect(buildJapaneseSpeakText("〜はずだ", "〜はずだ")).toBe("〜はずだ");
+    expect(buildJapaneseSpeakText("〜はずだ", "〜はずだ")).toBe("〜、はずだ");
     expect(buildJapaneseSpeakText("〜をはじめ", "〜をはじめ")).toBe(
-      "〜をはじめ"
+      "〜、をはじめ"
     );
     expect(buildJapaneseSpeakText("〜はんめん", "〜はんめん")).toBe(
-      "〜はんめん"
+      "〜、はんめん"
     );
     expect(buildJapaneseSpeakText("〜にはんして", "〜にはんして")).toBe(
-      "〜にはんして"
+      "〜、にはんして"
     );
   });
 
   it("rewrites grammar-pattern particle は (ては / では / 〜は…)", () => {
     expect(buildJapaneseSpeakText("〜はともかく", "〜はともかく")).toBe(
-      "〜わともかく"
+      "〜、わともかく"
     );
     expect(buildJapaneseSpeakText("〜てはいけない", "〜てはいけない")).toBe(
-      "〜てわいけない"
+      "〜、てわいけない"
     );
     expect(buildJapaneseSpeakText("〜わけではない", "〜わけではない")).toBe(
-      "〜わけでわない"
+      "〜、わけでわない"
     );
     expect(buildJapaneseSpeakText("〜ためには", "〜ためには")).toBe(
-      "〜ためにわ"
+      "〜、ためにわ"
     );
   });
 
@@ -154,7 +178,13 @@ describe("buildJapaneseSpeakText", () => {
     expect(
       buildJapaneseSpeakText("学校へ行く", "がっこう へ いく")
     ).toContain("がっこう え いく");
-    expect(buildJapaneseSpeakText("〜を経て", "〜をへて")).toBe("〜をえて");
+    expect(buildJapaneseSpeakText("〜を経て", "〜をへて")).toBe("〜、をえて");
+  });
+
+  it("pauses after every grammar-slot 〜 (〜ばかりか〜も)", () => {
+    expect(
+      buildJapaneseSpeakText("〜ばかりか〜も", "〜ばかりか〜も")
+    ).toBe("〜、ばかりか〜、も");
   });
 });
 
@@ -267,16 +297,16 @@ describe("TTS particle audit (all lesson readings)", () => {
     ).toContain("じしん わ、 まだ");
     expect(
       buildJapaneseSpeakText(g(5007).pattern, g(5007).patternReading)
-    ).toBe("〜わともかく");
+    ).toBe("〜、わともかく");
     expect(
       buildJapaneseSpeakText(g(5060).pattern, g(5060).patternReading)
-    ).toBe("〜をはじめ");
+    ).toBe("〜、をはじめ");
     expect(
       buildJapaneseSpeakText(g(5070).pattern, g(5070).patternReading)
-    ).toBe("〜はんめん");
+    ).toBe("〜、はんめん");
     expect(
       buildJapaneseSpeakText(g(5111).pattern, g(5111).patternReading)
-    ).toBe("〜てわいけない");
+    ).toBe("〜、てわいけない");
   });
 
   it("inserts a TTS pause after topic は and subject が", () => {

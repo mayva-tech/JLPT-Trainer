@@ -17,8 +17,31 @@ function applyCase(match: string, spoken: string): string {
   return spoken;
 }
 
+/** Drop register notes like "(formal)" — display keeps them; TTS should not. */
+function stripParentheticalNotes(text: string): string {
+  return text
+    .replace(/\([^)]*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,;:.!?])/g, "$1")
+    .replace(/([,;:])\s*([,;:.!?])/g, "$2")
+    .trim();
+}
+
+/**
+ * Grammar slot marker ～ / 〜 / ~ — pause after each before the next slot
+ * ("not only ～ but also" → "not only, but also").
+ */
+function appendWaveDashSpeakPause(text: string): string {
+  return text
+    .replace(/\s*[〜～~]\s*/g, ", ")
+    .replace(/\s+,/g, ",")
+    .replace(/,(?=[^\s])/g, ", ")
+    .replace(/,\s*,+/g, ",")
+    .trim();
+}
+
 export function buildEnglishSpeakText(text: string): string {
-  let out = text;
+  let out = appendWaveDashSpeakPause(stripParentheticalNotes(text));
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");
     out = out.replace(re, (match) => applyCase(match, spoken));

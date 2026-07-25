@@ -29,4 +29,28 @@ describe("buildEnglishSpeakText", () => {
     );
     expect(buildEnglishSpeakText("Lecture")).toBe("Lekcher");
   });
+
+  it("does not speak parenthetical notes like (formal)", () => {
+    expect(
+      buildEnglishSpeakText(
+        "on the occasion of; at the time of (formal)"
+      )
+    ).toBe("on the occasion of; at the time of");
+    expect(
+      buildEnglishSpeakText("must be; certainly (strong inference)")
+    ).toBe("must be; certainly");
+    expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
+      "word and more"
+    );
+  });
+
+  it("pauses after grammar-slot ～ / 〜 / ~", () => {
+    expect(buildEnglishSpeakText("not only ～ but also")).toBe(
+      "not only, but also"
+    );
+    expect(buildEnglishSpeakText("not only 〜 but also")).toBe(
+      "not only, but also"
+    );
+    expect(buildEnglishSpeakText("A ~ B ~ C")).toBe("A, B, C");
+  });
 });

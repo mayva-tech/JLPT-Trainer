@@ -130,6 +130,15 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "反", reading: "はん" },
     { text: "応", reading: "のう" },
   ],
+  // 彗 is rare in the kanji table — without this, すいせい becomes す|いせい
+  彗星: [
+    { text: "彗", reading: "すい" },
+    { text: "星", reading: "せい" },
+  ],
+  全品: [
+    { text: "全", reading: "ぜん" },
+    { text: "品", reading: "ぴん" },
+  ],
   副反応: [
     { text: "副", reading: "ふく" },
     { text: "反", reading: "はん" },

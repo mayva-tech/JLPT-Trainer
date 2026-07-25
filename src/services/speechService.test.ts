@@ -335,8 +335,8 @@ describe("speechService highlight mode", () => {
       { reading: "〜ことになっている" }
     );
     const utter = spoken[0]!;
-    // Speak text equals surface — old code waited for browser boundaries.
-    expect(utter.text).toBe(text);
+    // Wave-slot pause is inserted even when reading equals the surface.
+    expect(utter.text).toBe("〜、ことになっている");
     utter.onstart?.();
     vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights.length).toBeGreaterThanOrEqual(1);

@@ -8,6 +8,7 @@
 import {
   activeHighlightUnits,
   buildEnglishHighlightUnits,
+  buildEnglishSpokenKaraokeSteps,
   buildJapaneseHighlightUnits,
   buildJapaneseSpokenKaraokeSteps,
   estimateUnitDurationMs,
@@ -329,6 +330,7 @@ function runUtterance(
     : buildEnglishHighlightUnits(text);
 
   // Japanese + reading: schedule fallback from spoken kana tokens, not kanji weight.
+  // English with speak transforms (skipped (notes), ~ pauses): time from spoken form.
   const fallbackUnits: HighlightUnit[] =
     isJa && reading
       ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({
@@ -339,7 +341,9 @@ function runUtterance(
           spokenText: s.spokenText,
           speakGapAfter: s.speakGapAfter,
         }))
-      : activeHighlightUnits(allUnits);
+      : !isJa
+        ? buildEnglishSpokenKaraokeSteps(text)
+        : activeHighlightUnits(allUnits);
 
   const units = fallbackUnits;
 

@@ -9,6 +9,7 @@ import {
   shouldKeepNiTight,
   shouldKeepWoTight,
 } from "./japaneseSpeakText";
+import { buildEnglishSpeakText } from "./englishSpeakText";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -561,7 +562,7 @@ export function buildJapaneseHighlightUnits(text: string): HighlightUnit[] {
     text: u.text,
     kind: classifyUnit(u.text),
   }));
-  return mergeJapaneseSpeechUnits(base);
+  return splitEmbeddedWaveDashes(mergeJapaneseSpeechUnits(base));
 }
 
 /**
@@ -583,6 +584,86 @@ export function buildEnglishHighlightUnits(text: string): HighlightUnit[] {
     });
   }
   return units;
+}
+
+/** True when a display span sits inside a `(...)` note that TTS skips. */
+function spanOverlapsParenthetical(
+  text: string,
+  start: number,
+  end: number
+): boolean {
+  const re = /\([^)]*\)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const a = m.index;
+    const b = m.index + m[0].length;
+    if (start < b && end > a) return true;
+  }
+  return false;
+}
+
+/**
+ * English fallback karaoke: time from what TTS actually speaks.
+ * Skips `(formal)` notes and slot markers `~` / `～` (pause attaches to the
+ * previous word), matching `buildEnglishSpeakText`.
+ */
+export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
+  const units = activeHighlightUnits(buildEnglishHighlightUnits(text));
+  const steps: HighlightUnit[] = [];
+
+  for (const unit of units) {
+    if (spanOverlapsParenthetical(text, unit.start, unit.end)) {
+      continue;
+    }
+    const raw = unit.text.trim();
+    if (/^[〜～~]+$/u.test(raw)) {
+      const prev = steps.at(-1);
+      if (prev) {
+        const base = prev.spokenText ?? prev.text;
+        prev.spokenText = /[,，、]$/u.test(base) ? base : `${base},`;
+        prev.speakGapAfter = true;
+      }
+      continue;
+    }
+
+    const spoken = buildEnglishSpeakText(unit.text).trim();
+    if (!spoken || !/[A-Za-z0-9']/.test(spoken)) {
+      continue;
+    }
+    steps.push({
+      ...unit,
+      spokenText: spoken,
+    });
+  }
+
+  return steps.length > 0 ? steps : units;
+}
+
+/** Pull embedded grammar-slot 〜 out into its own unit (ばかりか〜も). */
+function splitEmbeddedWaveDashes(units: HighlightUnit[]): HighlightUnit[] {
+  const out: HighlightUnit[] = [];
+  for (const u of units) {
+    if (!/[〜～~]/u.test(u.text) || /^[〜～~]+$/u.test(u.text)) {
+      out.push(u);
+      continue;
+    }
+    const parts = u.text.split(/([〜～~]+)/u).filter((p) => p.length > 0);
+    if (parts.length <= 1) {
+      out.push(u);
+      continue;
+    }
+    let offset = u.start;
+    for (const part of parts) {
+      out.push({
+        start: offset,
+        end: offset + part.length,
+        text: part,
+        kind: classifyUnit(part),
+      });
+      offset += part.length;
+    }
+  }
+  return out;
 }
 
 /** Active karaoke units only (skip pure spaces). */
@@ -680,6 +761,8 @@ const SPEAK_TOKEN_GAP = 0.15;
 const JA_MORA_MS = 150;
 /** Minimum dwell for a Japanese content unit at rate 1. */
 const JA_MIN_UNIT_MS = 120;
+/** Extra dwell after grammar-slot 〜 before the next pattern piece. */
+const WAVE_DASH_PAUSE = 0.9;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -790,6 +873,14 @@ export function estimateUnitDurationMs(
     )
   ) {
     punctPause += PHRASE_PARTICLE_PAUSE;
+  }
+  // Grammar pattern slot 〜 / ～ — pause before the next piece (〜ばかりか〜も)
+  if (
+    nextUnit &&
+    /^[〜～~]+$/u.test(stripTrailingPunct(text).core) &&
+    !/^[、,]+$/u.test(stripTrailingPunct(nextUnit.text).core)
+  ) {
+    punctPause += WAVE_DASH_PAUSE;
   }
   if (unit.speakGapAfter) punctPause += SPEAK_TOKEN_GAP;
 

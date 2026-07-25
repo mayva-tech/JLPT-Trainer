@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   activeHighlightUnits,
   buildEnglishHighlightUnits,
+  buildEnglishSpokenKaraokeSteps,
   buildJapaneseHighlightUnits,
   buildJapaneseSpokenKaraokeSteps,
   estimateUnitDurationMs,
@@ -58,6 +59,37 @@ describe("buildEnglishHighlightUnits", () => {
     const mid = "Check ".length + 1; // inside "the"
     const h = findUnitForBoundary(units, mid);
     expect(h).toEqual({ start: 6, end: 9 });
+  });
+});
+
+describe("buildEnglishSpokenKaraokeSteps", () => {
+  it("skips parenthetical notes that TTS does not speak", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "on the occasion of; at the time of (formal)"
+    );
+    expect(steps.map((s) => s.text)).toEqual([
+      "on",
+      "the",
+      "occasion",
+      "of;",
+      "at",
+      "the",
+      "time",
+      "of",
+    ]);
+    expect(steps.some((s) => s.text.includes("formal"))).toBe(false);
+  });
+
+  it("turns slot ~ into a pause on the previous word", () => {
+    const steps = buildEnglishSpokenKaraokeSteps("not only ~ but also");
+    expect(steps.map((s) => s.text)).toEqual([
+      "not",
+      "only",
+      "but",
+      "also",
+    ]);
+    const only = steps.find((s) => s.text === "only");
+    expect(only?.spokenText).toMatch(/,$/);
   });
 });
 
@@ -235,6 +267,19 @@ describe("buildJapaneseHighlightUnits", () => {
     expect(volitional).toBeTruthy();
     expect(text.slice(volitional!.start, volitional!.end)).toContain("しょう");
   });
+
+  it("splits embedded grammar-slot 〜 into its own unit", () => {
+    const active = activeHighlightUnits(
+      buildJapaneseHighlightUnits("〜ばかりか〜も")
+    );
+    expect(active.map((u) => u.text)).toEqual([
+      "〜",
+      "ばかり",
+      "か",
+      "〜",
+      "も",
+    ]);
+  });
 });
 
 describe("estimateUnitDurationMs karaoke breaks", () => {
@@ -377,6 +422,58 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       spokenText: "せんしゅ",
     });
     expect(beforePredicate).toBeLessThan(beforeNoun);
+  });
+
+  it("dwells after subject が before い-adjective 長く", () => {
+    const subject = {
+      start: 0,
+      end: 2,
+      text: "日が",
+      kind: "word" as const,
+      spokenText: "ひ が",
+      speakGapAfter: true,
+    };
+    const beforeAdj = estimateUnitDurationMs(subject, "ja", {
+      start: 2,
+      end: 4,
+      text: "長く",
+      kind: "word",
+      spokenText: "ながく",
+    });
+    const beforeVerb = estimateUnitDurationMs(subject, "ja", {
+      start: 2,
+      end: 5,
+      text: "降らない",
+      kind: "word",
+      spokenText: "ふらない",
+    });
+    expect(beforeAdj).toBeGreaterThan(beforeVerb);
+  });
+
+  it("does not dwell after 証拠を before split 見れば", () => {
+    const object = {
+      start: 0,
+      end: 3,
+      text: "証拠を",
+      kind: "word" as const,
+      spokenText: "しょうこ を",
+      speakGapAfter: true,
+    };
+    const beforeMireba = estimateUnitDurationMs(object, "ja", {
+      start: 3,
+      end: 4,
+      text: "見",
+      kind: "word",
+      spokenText: "みれ",
+    });
+    const beforeNoun = estimateUnitDurationMs(object, "ja", {
+      start: 3,
+      end: 5,
+      text: "証言",
+      kind: "word",
+      spokenText: "しょうげん",
+    });
+    expect(beforeMireba).toBeLessThan(beforeNoun);
   });
 
   it("extends dwell after object を and adverbial に (日本語を / 本格的に)", () => {

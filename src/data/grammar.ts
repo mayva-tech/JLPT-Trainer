@@ -251,7 +251,7 @@ export const grammar: GrammarItem[] = [
     formation: "N + をきっかけに",
     sentence: "留学をきっかけに、日本語を本格的に勉強し始めた。",
     sentenceReading:
-      "りゅうがく を きっかけに、 にほんご を ほんかくてき に べんきょう し はじめた。",
+      "りゅうがく を きっかけ に、 にほんご を ほんかくてき に べんきょう し はじめた。",
     sentenceMeaning:
       "Prompted by studying abroad, I began studying Japanese seriously.",
     audioSentence: "/audio/n2/grammar/5013-sentence.mp3",
