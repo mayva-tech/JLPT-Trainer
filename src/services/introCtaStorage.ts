@@ -4,10 +4,17 @@ import {
   DEFAULT_INTRO,
   DEFAULT_QUIZ_AFTER,
   DEFAULT_QUIZ_PRE,
+  INTERVIEW_STORAGE_KEY,
   INTRO_STORAGE_KEY,
   QUIZ_AFTER_STORAGE_KEY,
   QUIZ_PRE_STORAGE_KEY,
 } from "../config/introCtaDefaults";
+import {
+  getInterviewSectionById,
+  interviewJapaneseText,
+  type InterviewLine,
+  type InterviewSection,
+} from "../data/interviewPrep";
 
 export type IntroHookCopy = {
   english: string;
@@ -111,3 +118,61 @@ export function resetQuizAfterComment(): QuizCommentCopy {
   localStorage.removeItem(QUIZ_AFTER_STORAGE_KEY);
   return { ...DEFAULT_QUIZ_AFTER };
 }
+
+export type InterviewSectionCopy = {
+  lines: InterviewLine[];
+  english: string;
+};
+
+type InterviewOverrides = Record<string, Partial<InterviewSectionCopy>>;
+
+function loadInterviewOverrides(): InterviewOverrides {
+  return readJson<InterviewOverrides>(INTERVIEW_STORAGE_KEY) ?? {};
+}
+
+export function loadInterviewSection(
+  sectionId: string
+): InterviewSectionCopy | null {
+  const base = getInterviewSectionById(sectionId);
+  if (!base) return null;
+  const override = loadInterviewOverrides()[sectionId];
+  return {
+    lines:
+      override?.lines && override.lines.length > 0 ? override.lines : base.lines,
+    english: override?.english?.trim() ? override.english : base.english,
+  };
+}
+
+export function saveInterviewSection(
+  sectionId: string,
+  copy: InterviewSectionCopy
+): void {
+  const all = loadInterviewOverrides();
+  all[sectionId] = copy;
+  localStorage.setItem(INTERVIEW_STORAGE_KEY, JSON.stringify(all));
+}
+
+export function resetInterviewSection(
+  sectionId: string
+): InterviewSectionCopy | null {
+  const base = getInterviewSectionById(sectionId);
+  if (!base) return null;
+  const all = loadInterviewOverrides();
+  delete all[sectionId];
+  if (Object.keys(all).length === 0) {
+    localStorage.removeItem(INTERVIEW_STORAGE_KEY);
+  } else {
+    localStorage.setItem(INTERVIEW_STORAGE_KEY, JSON.stringify(all));
+  }
+  return { lines: base.lines, english: base.english };
+}
+
+export function resolveInterviewSection(
+  section: InterviewSection
+): InterviewSection {
+  const copy = loadInterviewSection(section.id);
+  if (!copy) return section;
+  return { ...section, lines: copy.lines, english: copy.english };
+}
+
+export { interviewJapaneseText };

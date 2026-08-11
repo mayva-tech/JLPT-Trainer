@@ -47,20 +47,30 @@ export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.85;
+/** Faster Andrew English used only for interview practice. */
+export const SPEECH_RATE_INTERVIEW_EN = 1.05;
+/** Nanami rate for N3 JP+EN mix interview (raised from 0.85). */
+export const SPEECH_RATE_INTERVIEW_MIX = 0.88;
 
 const DEBUG_SPEECH = false;
 /** Wait after onstart for a real browser boundary before choosing fallback. */
 const BOUNDARY_DETECT_MS = 320;
 /**
  * Lead-in after onstart before first fallback unit (ms).
- * Keep small — a large offset makes the whole karaoke trail Nanami.
+ * Keep short — a large offset makes Japanese karaoke trail Nanami.
  */
-const FALLBACK_START_OFFSET_MS = 20;
+const FALLBACK_START_OFFSET_MS = 10;
 /**
- * Scale fallback dwell so highlights stay slightly ahead of estimated audio
- * (setTimeout jitter + React commit lag otherwise trails the voice).
+ * English fallback scale (Andrew) — leave alone while tuning Japanese.
  */
-const FALLBACK_TIMING_SCALE = 0.94;
+const FALLBACK_TIMING_SCALE_EN = 1.35;
+/**
+ * Japanese fallback scale (Nanami). Slightly under 1 offsets timer/React lag
+ * so the highlight does not trail the voice.
+ */
+const FALLBACK_TIMING_SCALE_JA = 0.97;
+/** @deprecated alias — tests / callers that expect a single scale get JA. */
+const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
 type HighlightMode = "detecting" | "boundary" | "fallback";
 
@@ -430,10 +440,12 @@ function runUtterance(
         emitHighlight({ start: unit.start, end: unit.end });
         const next = index + 1;
         if (next >= units.length) return;
+        const timingScale =
+          unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
         const dur =
           (estimateUnitDurationMs(unit, unitLang, units[next] ?? null) /
             Math.max(rate, 0.2)) *
-          FALLBACK_TIMING_SCALE;
+          timingScale;
         scheduleNext(next, dur);
       }, delayMs);
     };
@@ -646,6 +658,8 @@ export const __speechTestHooks = {
   BOUNDARY_DETECT_MS,
   FALLBACK_START_OFFSET_MS,
   FALLBACK_TIMING_SCALE,
+  FALLBACK_TIMING_SCALE_JA,
+  FALLBACK_TIMING_SCALE_EN,
 };
 
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";

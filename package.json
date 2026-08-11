@@ -9,6 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "glossary": "npx tsx scripts/generateGlossary.ts",
+    "interview-pdf": "npx tsx scripts/generateInterviewPdf.ts",
+    "interview-mix-pdf": "npx tsx scripts/generateInterviewMixPdf.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "audit:vocabulary": "npx tsx scripts/auditVocabulary.ts"

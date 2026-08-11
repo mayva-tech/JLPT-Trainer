@@ -25,3 +25,4 @@ export const INTRO_STORAGE_KEY = "jlpt-trainer-intro-hook";
 export const CTA_STORAGE_KEY = "jlpt-trainer-ending-cta";
 export const QUIZ_PRE_STORAGE_KEY = "jlpt-trainer-quiz-pre";
 export const QUIZ_AFTER_STORAGE_KEY = "jlpt-trainer-quiz-after";
+export const INTERVIEW_STORAGE_KEY = "jlpt-trainer-interview-prep";

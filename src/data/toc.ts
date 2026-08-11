@@ -4,6 +4,7 @@ import { buildN2VocabularyLessonTocItems, buildN2VocabularyQuizTocItems } from "
 import { buildN2GrammarLessonTocItems, buildN2GrammarQuizTocItems } from "./tocGrammarItems";
 import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
 import { formatN2VocabularyTocQuizId } from "../utils/vocabularyDisplay";
+import { registerSections } from "./registerPairs";
 export type TocItemId =
   | "intro-hook"
   | `word-${number}-${number}`
@@ -64,6 +65,7 @@ export type TocItemId =
   | "interview-mix-15"
   | "interview-mix-16"
   | "interview-mix-17"
+  | `register-${number}`
   | "glossary";
 
 export type TocItemKind =
@@ -76,6 +78,7 @@ export type TocItemKind =
   | "ending"
   | "interview"
   | "interview-mix"
+  | "register"
   | "glossary";
 
 export type TocItem = {
@@ -88,6 +91,8 @@ export type TocItem = {
   quizId?: string;
   /** Interview prep section id when this item opens interview practice. */
   interviewSectionId?: string;
+  /** Register section id when this item opens casual ⇄ formal practice. */
+  registerSectionId?: string;
 };
 
 export type TocGroup = {
@@ -403,6 +408,16 @@ export const tocGroups: TocGroup[] = [
     ],
   },
   {
+    id: "register",
+    title: "Practice · Casual ⇄ Formal",
+    items: registerSections.map((section, index) => ({
+      id: `register-${index + 1}` as TocItemId,
+      label: `${section.title} — ${section.subtitle}`,
+      kind: "register" as const,
+      registerSectionId: section.id,
+    })),
+  },
+  {
     id: "reference",
     title: "Reference",
     items: [
@@ -462,4 +477,12 @@ export const quizIds: TocItemId[] = [
   "quiz-grammar-151-152",
   "quiz-mixed",
   "quiz-final",
-]
+];
+
+/** Resolve the register section id backing a TOC entry. */
+export function getRegisterSectionIdForToc(
+  id: TocItemId | null
+): string | null {
+  if (!id) return null;
+  return getTocItem(id)?.registerSectionId ?? null;
+}

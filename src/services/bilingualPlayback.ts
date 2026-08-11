@@ -14,6 +14,13 @@ export type BilingualPlaybackUi = {
   setJaHighlight: (h: SpeechHighlight | null) => void;
 };
 
+export type BilingualRateOptions = {
+  /** Override English (Andrew) rate; Japanese still uses `rate`. */
+  englishRate?: number;
+  /** Override Japanese (Nanami) rate; English still uses `rate`. */
+  japaneseRate?: number;
+};
+
 /**
  * Plays two lines in a fixed order with highlight callbacks.
  * Pause/resume uses the browser speechSynthesis API via speechService.
@@ -48,7 +55,8 @@ export class BilingualPlayback {
     order: BilingualOrder,
     ui: BilingualPlaybackUi,
     rate = SPEECH_RATE_NORMAL,
-    onDone?: () => void
+    onDone?: () => void,
+    rateOptions?: BilingualRateOptions
   ): Promise<void> {
     this.abort();
     this.paused = false;
@@ -74,8 +82,13 @@ export class BilingualPlayback {
         if (sid !== this.session) return;
         if (!step.text.trim()) continue;
 
+        const stepRate =
+          step.lang === "en"
+            ? (rateOptions?.englishRate ?? rate)
+            : (rateOptions?.japaneseRate ?? rate);
+
         ui.setActiveLang(step.lang);
-        await this.speakOne(sid, step.lang, step.text, ui, rate);
+        await this.speakOne(sid, step.lang, step.text, ui, stepRate);
         if (sid !== this.session) return;
       }
     } finally {

@@ -10,6 +10,8 @@ type Props = {
   enHighlight: SpeechHighlight | null;
   /** Stage chip label */
   chip?: string;
+  /** Allow scrolling for longer paste-in scripts (interview practice). */
+  scrollable?: boolean;
 };
 
 /** Stage display for bilingual comments (JA then EN) — ending CTA & quiz comments. */
@@ -20,10 +22,17 @@ export function EndingCtaDisplay({
   jaHighlight,
   enHighlight,
   chip = "Ending CTA",
+  scrollable = false,
 }: Props) {
   return (
     <div className="safe-area safe-area--hook">
-      <div className="hook-display card-fade">
+      <div
+        className={
+          scrollable
+            ? "hook-display hook-display--scrollable card-fade"
+            : "hook-display card-fade"
+        }
+      >
         <div className="category-chip">{chip}</div>
         <HighlightedJapanese
           text={japanese}

@@ -91,6 +91,19 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     const only = steps.find((s) => s.text === "only");
     expect(only?.spokenText).toMatch(/,$/);
   });
+
+  it.each(["~", "〜", "～"])(
+    "never highlights the %s slot-marker variant",
+    (marker) => {
+      const text = `${marker}before ${marker} after`;
+      const active = activeHighlightUnits(buildEnglishHighlightUnits(text));
+      expect(active.map((u) => u.text)).toEqual(["before", "after"]);
+      expect(findUnitForBoundary(buildEnglishHighlightUnits(text), 0)).toEqual({
+        start: marker.length,
+        end: marker.length + "before".length,
+      });
+    }
+  );
 });
 
 describe("buildJapaneseHighlightUnits", () => {
@@ -157,8 +170,34 @@ describe("buildJapaneseHighlightUnits", () => {
   it("keeps はずだ as one unit so final だ is highlighted", () => {
     const text = "〜はずだ";
     const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
-    expect(active.map((u) => u.text)).toEqual(["〜", "はずだ"]);
+    expect(active.map((u) => u.text)).toEqual(["はずだ"]);
     expect(active.some((u) => u.text === "だ")).toBe(false);
+  });
+
+  it("splits にしても as に|しても (not にし|ても)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜にしても")).map(
+        (u) => u.text
+      )
+    ).toEqual(["に", "しても"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("冗談にしても")).map(
+        (u) => u.text
+      )
+    ).toEqual(["冗談", "に", "しても"]);
+  });
+
+  it("splits としても / にしては on the same boundary", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜としても")).map(
+        (u) => u.text
+      )
+    ).toEqual(["と", "しても"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("〜にしては")).map(
+        (u) => u.text
+      )
+    ).toEqual(["に", "しては"]);
   });
 
   it("keeps もと intact in grammar patterns (のもとで / をもとに)", () => {
@@ -166,12 +205,12 @@ describe("buildJapaneseHighlightUnits", () => {
       activeHighlightUnits(buildJapaneseHighlightUnits("〜のもとで")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "の", "もと", "で"]);
+    ).toEqual(["の", "もと", "で"]);
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("〜をもとに")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "を", "もと", "に"]);
+    ).toEqual(["を", "もと", "に"]);
   });
 
   it("keeps だから / こと / もの / かまわない from over-splitting", () => {
@@ -179,22 +218,22 @@ describe("buildJapaneseHighlightUnits", () => {
       activeHighlightUnits(buildJapaneseHighlightUnits("〜ものだから")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "もの", "だから"]);
+    ).toEqual(["もの", "だから"]);
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("〜ないことには")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "ないこと", "には"]);
+    ).toEqual(["ないこと", "には"]);
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("〜ものがある")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "もの", "が", "ある"]);
+    ).toEqual(["もの", "がある"]);
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("〜てもかまわない")).map(
         (u) => u.text
       )
-    ).toEqual(["〜", "ても", "かまわない"]);
+    ).toEqual(["ても", "かまわない"]);
   });
 
   it("keeps きっと and だろう as whole units", () => {
@@ -268,18 +307,20 @@ describe("buildJapaneseHighlightUnits", () => {
     expect(text.slice(volitional!.start, volitional!.end)).toContain("しょう");
   });
 
-  it("splits embedded grammar-slot 〜 into its own unit", () => {
-    const active = activeHighlightUnits(
-      buildJapaneseHighlightUnits("〜ばかりか〜も")
-    );
-    expect(active.map((u) => u.text)).toEqual([
-      "〜",
-      "ばかり",
-      "か",
-      "〜",
-      "も",
-    ]);
-  });
+  it.each(["~", "〜", "～"])(
+    "skips every %s grammar-slot marker and advances to its following word",
+    (marker) => {
+      const text = `${marker}ばかりか${marker}も`;
+      const units = buildJapaneseHighlightUnits(text);
+      const active = activeHighlightUnits(units);
+      expect(active.map((u) => u.text)).toEqual(["ばかり", "か", "も"]);
+      expect(active.some((u) => u.text.includes(marker))).toBe(false);
+      expect(findUnitForBoundary(units, 0)).toEqual({
+        start: marker.length,
+        end: marker.length + "ばかり".length,
+      });
+    }
+  );
 });
 
 describe("estimateUnitDurationMs karaoke breaks", () => {
@@ -701,11 +742,16 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
     const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
 
     for (const unit of units) {
+      const len = unit.end - unit.start;
+      const hits = new Array<boolean>(len).fill(false);
+      for (const step of steps) {
+        const a = Math.max(step.start, unit.start);
+        const b = Math.min(step.end, unit.end);
+        for (let i = a; i < b; i++) hits[i - unit.start] = true;
+      }
       expect(
-        steps.some(
-          (step) => step.start === unit.start && step.end === unit.end
-        ),
-        `missing highlight for 「${unit.text}」 in 「${surface}」`
+        hits.every(Boolean),
+        `missing highlight coverage for 「${unit.text}」 in 「${surface}」 (steps: ${steps.map((s) => s.text).join("|")})`
       ).toBe(true);
     }
 
@@ -713,6 +759,48 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
       expect(steps[i]!.start).toBeGreaterThanOrEqual(steps[i - 1]!.start);
     }
   }
+
+  it("lights がある as one span so karaoke does not linger on が", () => {
+    const surface = "専門家からみると、その設計には問題がある。";
+    const reading =
+      "せんもんか から みると、その せっけい には もんだい が ある。";
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits(surface)).map(
+        (u) => u.text
+      )
+    ).toEqual([
+      "専門家",
+      "から",
+      "みる",
+      "と、",
+      "その",
+      "設計",
+      "には",
+      "問題",
+      "がある。",
+    ]);
+
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    const texts = steps.map((s) => s.text);
+    expect(texts).toContain("問題");
+    expect(texts.some((t) => t.startsWith("がある"))).toBe(true);
+    expect(texts).not.toContain("が");
+    expect(texts).not.toContain("問題が");
+
+    const gaAru = steps.find((s) => s.text.startsWith("がある"))!;
+    expect(gaAru.spokenText.replace(/\s+/g, "")).toContain("がある");
+  });
+
+  it.each(["~", "〜", "～"])(
+    "omits %s from the spoken-reading highlight timeline",
+    (marker) => {
+      const surface = `${marker}ことになっている`;
+      const steps = buildJapaneseSpokenKaraokeSteps(surface, surface);
+      expect(steps.length).toBeGreaterThan(0);
+      expect(steps.every((step) => !step.text.includes(marker))).toBe(true);
+      expect(steps[0]!.start).toBe(marker.length);
+    }
+  );
 
   it("maps reading tokens onto surface highlight spans", async () => {
     const { seedKanjiReadingsFromDetails } = await import("./alignFurigana");

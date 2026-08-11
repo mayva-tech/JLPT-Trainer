@@ -7,7 +7,7 @@ type Props = {
   onSelect: (id: TocItemId) => void;
 };
 
-type TocPage = 1 | 2;
+type TocPage = 1 | 2 | 3 | 4 | 5;
 
 /** Short groups stacked in the first column to free space for quiz columns. */
 const COMPACT_COLUMN_IDS = new Set(["introduction", "ending", "reference"]);
@@ -15,11 +15,24 @@ const COMPACT_COLUMN_IDS = new Set(["introduction", "ending", "reference"]);
 /** Curated N1 browsing lenses — shown on TOC page 2. */
 const N1_GROUP_IDS = new Set(["vocabulary-n1", "grammar-n1", "quiz-vocab-n1"]);
 
+/** Full bilingual interview prep — TOC page 3. */
+const PRACTICE_GROUP_IDS = new Set(["practice"]);
+
+/** N3 JP+EN mix interview — TOC page 4. */
+const PRACTICE_MIX_GROUP_IDS = new Set(["practice-mix"]);
+
+/** Casual ⇄ Formal register practice — TOC page 5. */
+const REGISTER_GROUP_IDS = new Set(["register"]);
+
 function pageForSelectedId(selectedId: TocItemId | null): TocPage {
   if (!selectedId) return 1;
   for (const group of tocGroups) {
     if (group.items.some((item) => item.id === selectedId)) {
-      return N1_GROUP_IDS.has(group.id) ? 2 : 1;
+      if (N1_GROUP_IDS.has(group.id)) return 2;
+      if (PRACTICE_GROUP_IDS.has(group.id)) return 3;
+      if (PRACTICE_MIX_GROUP_IDS.has(group.id)) return 4;
+      if (REGISTER_GROUP_IDS.has(group.id)) return 5;
+      return 1;
     }
   }
   return 1;
@@ -68,9 +81,17 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
 
   const compactGroups = tocGroups.filter((g) => COMPACT_COLUMN_IDS.has(g.id));
   const page1MainGroups = tocGroups.filter(
-    (g) => !COMPACT_COLUMN_IDS.has(g.id) && !N1_GROUP_IDS.has(g.id)
+    (g) =>
+      !COMPACT_COLUMN_IDS.has(g.id) &&
+      !N1_GROUP_IDS.has(g.id) &&
+      !PRACTICE_GROUP_IDS.has(g.id) &&
+      !PRACTICE_MIX_GROUP_IDS.has(g.id) &&
+      !REGISTER_GROUP_IDS.has(g.id)
   );
   const page2Groups = tocGroups.filter((g) => N1_GROUP_IDS.has(g.id));
+  const page3Groups = tocGroups.filter((g) => PRACTICE_GROUP_IDS.has(g.id));
+  const page4Groups = tocGroups.filter((g) => PRACTICE_MIX_GROUP_IDS.has(g.id));
+  const page5Groups = tocGroups.filter((g) => REGISTER_GROUP_IDS.has(g.id));
 
   return (
     <div className="safe-area toc-safe">
@@ -85,9 +106,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
             role="tab"
             aria-selected={page === 1}
             className={
-              page === 1
-                ? "toc-page-btn toc-page-btn--active"
-                : "toc-page-btn"
+              page === 1 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
             }
             onClick={() => setPage(1)}
           >
@@ -98,13 +117,44 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
             role="tab"
             aria-selected={page === 2}
             className={
-              page === 2
-                ? "toc-page-btn toc-page-btn--active"
-                : "toc-page-btn"
+              page === 2 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
             }
             onClick={() => setPage(2)}
           >
             Page 2 · N1
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 3}
+            className={
+              page === 3 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
+            }
+            onClick={() => setPage(3)}
+          >
+            Page 3 · Interview
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 4}
+            className={
+              page === 4 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
+            }
+            onClick={() => setPage(4)}
+          >
+            Page 4 · N3 Mix
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 5}
+            className={
+              page === 5 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
+            }
+            onClick={() => setPage(5)}
+          >
+            Page 5 · Register
           </button>
         </div>
 
@@ -129,7 +179,9 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
               />
             ))}
           </div>
-        ) : (
+        ) : null}
+
+        {page === 2 ? (
           <div className="toc-groups toc-groups--page2">
             {page2Groups.map((group) => (
               <TocGroupSection
@@ -140,7 +192,46 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
               />
             ))}
           </div>
-        )}
+        ) : null}
+
+        {page === 3 ? (
+          <div className="toc-groups toc-groups--page3">
+            {page3Groups.map((group) => (
+              <TocGroupSection
+                key={group.id}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {page === 4 ? (
+          <div className="toc-groups toc-groups--page3">
+            {page4Groups.map((group) => (
+              <TocGroupSection
+                key={group.id}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {page === 5 ? (
+          <div className="toc-groups toc-groups--page3">
+            {page5Groups.map((group) => (
+              <TocGroupSection
+                key={group.id}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );

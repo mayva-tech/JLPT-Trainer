@@ -5,9 +5,11 @@ import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar"
 import type { GrammarItem } from "../types/grammar";
 import {
   findTocItemByLessonId,
+  getRegisterSectionIdForToc,
   getTocItem,
   type TocItemId,
 } from "../data/toc";
+import { getRegisterPairsForSection } from "../data/registerPairs";
 import { grammarBatchCategorySuffix, grammarBatchRangeLabel } from "../data/tocGrammarItems";
 import type { StepName } from "../types/player";
 import { CategoryCard } from "../components/CategoryCard";
@@ -21,7 +23,12 @@ import { VocabularyRangeLabel } from "../components/VocabularyRangeLabel";
 import { TableOfContents } from "../components/TableOfContents";
 import { IntroHookDisplay } from "../components/IntroHookDisplay";
 import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
+import { InterviewPracticeDisplay } from "../components/InterviewPracticeDisplay";
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
+import {
+  RegisterSplitCard,
+  type RegisterSideName,
+} from "../components/RegisterSplitCard";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -48,6 +55,8 @@ import {
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
+  SPEECH_RATE_INTERVIEW_EN,
+  SPEECH_RATE_INTERVIEW_MIX,
   type SpeechHighlight,
 } from "../services/speechService";
 import {
@@ -64,17 +73,35 @@ import { bilingualPlayback } from "../services/bilingualPlayback";
 import {
   loadEndingCta,
   loadIntroHook,
+  loadInterviewSection,
   loadQuizAfterComment,
   loadQuizPreComment,
   resetEndingCta,
   resetIntroHook,
+  resetInterviewSection,
   resetQuizAfterComment,
   resetQuizPreComment,
   saveEndingCta,
   saveIntroHook,
+  saveInterviewSection,
   saveQuizAfterComment,
   saveQuizPreComment,
 } from "../services/introCtaStorage";
+import {
+  getInterviewSectionById,
+  interviewPrepSections,
+  interviewTitleChip,
+  interviewTitleSpeakEn,
+  interviewTitleSpeakJa,
+  type InterviewLine,
+} from "../data/interviewPrep";
+import {
+  getInterviewMixSectionById,
+  interviewMixSections,
+  interviewMixTitleChip,
+  interviewMixTitleSpeakJa,
+  type InterviewMixLine,
+} from "../data/interviewPrepMix";
 import {
   quizAutoRunner,
   type QuizPhase,
@@ -110,6 +137,9 @@ type Screen =
   | "quiz-pre"
   | "quiz-after"
   | "ending"
+  | "interview"
+  | "interview-mix"
+  | "register"
   | "flow-setup";
 type SpeechUiStatus = "idle" | "speaking" | "paused";
 
@@ -165,6 +195,15 @@ export function PlayerPage() {
   const [showFurigana, setShowFurigana] = useState(true);
   const [autoState, setAutoState] = useState<AutoState>("off");
 
+  const [registerSectionId, setRegisterSectionId] = useState("register-01");
+  const registerPairs = getRegisterPairsForSection(registerSectionId);
+  const [registerIndex, setRegisterIndex] = useState(0);
+  const [registerActiveSide, setRegisterActiveSide] =
+    useState<RegisterSideName | null>(null);
+  const [registerShowFurigana, setRegisterShowFurigana] = useState(true);
+  const [registerDrillMode, setRegisterDrillMode] = useState(false);
+  const [registerRevealed, setRegisterRevealed] = useState(false);
+
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
   const grammarLesson = getGrammarLessonById(grammarLessonId);
   const grammarItems: GrammarItem[] = grammarLesson
@@ -192,6 +231,30 @@ export function PlayerPage() {
   const [quizAfterEn, setQuizAfterEn] = useState(
     () => loadQuizAfterComment().english
   );
+  const [interviewSectionId, setInterviewSectionId] = useState(
+    () => interviewPrepSections[0]!.id
+  );
+  const [interviewLines, setInterviewLines] = useState<InterviewLine[]>(() => {
+    const id = interviewPrepSections[0]!.id;
+    return loadInterviewSection(id)?.lines ?? interviewPrepSections[0]!.lines;
+  });
+  const [interviewEn, setInterviewEn] = useState(() => {
+    const id = interviewPrepSections[0]!.id;
+    return loadInterviewSection(id)?.english ?? interviewPrepSections[0]!.english;
+  });
+  const [interviewAnnouncingTitle, setInterviewAnnouncingTitle] =
+    useState(false);
+  const [interviewPlayAll, setInterviewPlayAll] = useState(false);
+  const interviewPlayAllSessionRef = useRef(0);
+  const [mixSectionId, setMixSectionId] = useState(
+    () => interviewMixSections[0]!.id
+  );
+  const [mixLines, setMixLines] = useState<InterviewMixLine[]>(
+    () => interviewMixSections[0]!.lines
+  );
+  const [mixAnnouncingTitle, setMixAnnouncingTitle] = useState(false);
+  const [mixPlayAll, setMixPlayAll] = useState(false);
+  const mixPlayAllSessionRef = useRef(0);
   const [hookActiveLang, setHookActiveLang] = useState<"en" | "ja" | null>(
     null
   );
@@ -256,6 +319,11 @@ export function PlayerPage() {
   const quizPreEnRef = useRef(quizPreEn);
   const quizAfterJaRef = useRef(quizAfterJa);
   const quizAfterEnRef = useRef(quizAfterEn);
+  const interviewLinesRef = useRef(interviewLines);
+  const interviewEnRef = useRef(interviewEn);
+  const interviewSectionIdRef = useRef(interviewSectionId);
+  const mixLinesRef = useRef(mixLines);
+  const mixSectionIdRef = useRef(mixSectionId);
   introEnRef.current = introEn;
   introJaRef.current = introJa;
   ctaEnRef.current = ctaEn;
@@ -264,6 +332,11 @@ export function PlayerPage() {
   quizPreEnRef.current = quizPreEn;
   quizAfterJaRef.current = quizAfterJa;
   quizAfterEnRef.current = quizAfterEn;
+  interviewLinesRef.current = interviewLines;
+  interviewEnRef.current = interviewEn;
+  interviewSectionIdRef.current = interviewSectionId;
+  mixLinesRef.current = mixLines;
+  mixSectionIdRef.current = mixSectionId;
 
   const quizItems: VocabularyQuizQuestion[] = buildQuizQuestions(activeTocId);
 
@@ -300,6 +373,15 @@ export function PlayerPage() {
     return STEPS[stepIndexRef.current] ?? null;
   }
 
+  function stopInterviewPlayAll() {
+    interviewPlayAllSessionRef.current += 1;
+    setInterviewPlayAll(false);
+    setInterviewAnnouncingTitle(false);
+    mixPlayAllSessionRef.current += 1;
+    setMixPlayAll(false);
+    setMixAnnouncingTitle(false);
+  }
+
   function clearSpeechUi() {
     setSpeechStatus("idle");
     setSpeechLang(null);
@@ -307,9 +389,12 @@ export function PlayerPage() {
     setHookActiveLang(null);
     setEnHighlight(null);
     setJaHighlight(null);
+    setInterviewAnnouncingTitle(false);
+    setMixAnnouncingTitle(false);
   }
 
   function stopAllAudio() {
+    stopInterviewPlayAll();
     bilingualPlayback.abort();
     quizAutoRunner.abort();
     setQuizAutoOn(false);
@@ -674,6 +759,30 @@ export function PlayerPage() {
       case "ending":
         setScreen("ending");
         break;
+      case "interview": {
+        const sectionId =
+          item.interviewSectionId ?? interviewPrepSections[0]!.id;
+        const section =
+          getInterviewSectionById(sectionId) ?? interviewPrepSections[0]!;
+        const copy = loadInterviewSection(section.id);
+        setInterviewSectionId(section.id);
+        setInterviewLines(copy?.lines ?? section.lines);
+        setInterviewEn(copy?.english ?? section.english);
+        setInterviewAnnouncingTitle(false);
+        setScreen("interview");
+        break;
+      }
+      case "interview-mix": {
+        const sectionId =
+          item.interviewSectionId ?? interviewMixSections[0]!.id;
+        const section =
+          getInterviewMixSectionById(sectionId) ?? interviewMixSections[0]!;
+        setMixSectionId(section.id);
+        setMixLines(section.lines);
+        setMixAnnouncingTitle(false);
+        setScreen("interview-mix");
+        break;
+      }
       case "quiz-pre":
         setScreen("quiz-pre");
         break;
@@ -730,6 +839,18 @@ export function PlayerPage() {
       case "glossary":
         setScreen("glossary");
         break;
+      case "register": {
+        const sectionId =
+          item.registerSectionId ??
+          getRegisterSectionIdForToc(id) ??
+          "register-01";
+        setRegisterSectionId(sectionId);
+        setRegisterIndex(0);
+        setRegisterActiveSide(null);
+        setRegisterRevealed(false);
+        setScreen("register");
+        break;
+      }
     }
   }
 
@@ -873,6 +994,100 @@ export function PlayerPage() {
       setItemIndex((i) => i - 1);
       setStepIndex(STEPS.length - 1);
     }
+  }
+
+  /** Speak one side of the current register pair with karaoke highlighting. */
+  function playRegisterSide(side: RegisterSideName) {
+    const pair = registerPairs[registerIndex] ?? null;
+    if (!pair) return;
+    if (side === "formal" && registerDrillMode && !registerRevealed) {
+      setRegisterRevealed(true);
+    }
+    const source = side === "casual" ? pair.casual : pair.formal;
+    if (!source.text.trim()) return;
+    speechService.stop();
+    setRegisterActiveSide(side);
+    setSpeechLang("ja");
+    setHighlight(null);
+    setSpeechStatus("speaking");
+    speechService.speakJapanese(
+      source.text,
+      {
+        onStart: () => setSpeechStatus("speaking"),
+        onBoundary: (h) => setHighlight(h),
+        onEnd: () => {
+          clearSpeechUi();
+          setRegisterActiveSide(null);
+        },
+        onError: () => {
+          clearSpeechUi();
+          setRegisterActiveSide(null);
+        },
+      },
+      speechRateRef.current,
+      { reading: source.reading }
+    );
+  }
+
+  /** Casual then formal back to back — the core contrast drill. */
+  function playRegisterBoth() {
+    const pair = registerPairs[registerIndex] ?? null;
+    if (!pair) return;
+    if (registerDrillMode && !registerRevealed) setRegisterRevealed(true);
+    speechService.stop();
+    setRegisterActiveSide("casual");
+    setSpeechLang("ja");
+    setHighlight(null);
+    setSpeechStatus("speaking");
+    speechService.speakJapanese(
+      pair.casual.text,
+      {
+        onStart: () => setSpeechStatus("speaking"),
+        onBoundary: (h) => setHighlight(h),
+        onEnd: () => {
+          setHighlight(null);
+          setRegisterActiveSide("formal");
+          speechService.speakJapanese(
+            pair.formal.text,
+            {
+              onBoundary: (h) => setHighlight(h),
+              onEnd: () => {
+                clearSpeechUi();
+                setRegisterActiveSide(null);
+              },
+              onError: () => {
+                clearSpeechUi();
+                setRegisterActiveSide(null);
+              },
+            },
+            speechRateRef.current,
+            { reading: pair.formal.reading }
+          );
+        },
+        onError: () => {
+          clearSpeechUi();
+          setRegisterActiveSide(null);
+        },
+      },
+      speechRateRef.current,
+      { reading: pair.casual.reading }
+    );
+  }
+
+  function goRegisterPrev() {
+    speechService.stop();
+    clearSpeechUi();
+    setRegisterActiveSide(null);
+    setRegisterRevealed(false);
+    setRegisterIndex((i) => Math.max(0, i - 1));
+  }
+
+  function goRegisterNext() {
+    speechService.stop();
+    clearSpeechUi();
+    setRegisterActiveSide(null);
+    setRegisterRevealed(false);
+    setRegisterIndex((i) => Math.min(registerPairs.length - 1, i + 1));
   }
 
   function playJapanese() {
@@ -1107,6 +1322,281 @@ export function PlayerPage() {
     );
   }
 
+  function playInterview() {
+    softStopAuto();
+    stopInterviewPlayAll();
+    const idx = interviewPrepSections.findIndex(
+      (s) => s.id === interviewSectionIdRef.current
+    );
+    void playInterviewSectionAt(idx >= 0 ? idx : 0, null);
+  }
+
+  function playInterviewAll() {
+    softStopAuto();
+    bilingualPlayback.abort();
+    clearSpeechUi();
+    const session = ++interviewPlayAllSessionRef.current;
+    setInterviewPlayAll(true);
+
+    void (async () => {
+      try {
+        for (let i = 0; i < interviewPrepSections.length; i += 1) {
+          if (session !== interviewPlayAllSessionRef.current) return;
+          const ok = await playInterviewSectionAt(i, session);
+          if (!ok) return;
+          if (i < interviewPrepSections.length - 1) {
+            await new Promise((resolve) => window.setTimeout(resolve, 450));
+          }
+        }
+      } finally {
+        if (session === interviewPlayAllSessionRef.current) {
+          setInterviewPlayAll(false);
+          setInterviewAnnouncingTitle(false);
+        }
+      }
+    })();
+  }
+
+  /** Play one interview section (title then content). Returns false if aborted. */
+  async function playInterviewSectionAt(
+    index: number,
+    playAllSession: number | null
+  ): Promise<boolean> {
+    const section = interviewPrepSections[index];
+    if (!section) return false;
+
+    const stillActive = () =>
+      playAllSession === null ||
+      playAllSession === interviewPlayAllSessionRef.current;
+
+    const copy =
+      loadInterviewSection(section.id) ?? {
+        lines: section.lines,
+        english: section.english,
+      };
+    const tocId =
+      `interview-${String(section.number).padStart(2, "0")}` as TocItemId;
+
+    setActiveTocId(tocId);
+    setInterviewSectionId(section.id);
+    setInterviewLines(copy.lines);
+    setInterviewEn(copy.english);
+    interviewSectionIdRef.current = section.id;
+    interviewLinesRef.current = copy.lines;
+    interviewEnRef.current = copy.english;
+
+    await new Promise<void>((resolve) => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => resolve());
+      });
+    });
+    if (!stillActive()) return false;
+
+    const japanese = copy.lines.map((line) => line.japanese).join("");
+
+    setInterviewAnnouncingTitle(true);
+    try {
+      await bilingualPlayback.play(
+        interviewTitleSpeakEn(section),
+        interviewTitleSpeakJa(section),
+        "ja-en",
+        bilingualUi(),
+        speechRateRef.current,
+        undefined,
+        { englishRate: SPEECH_RATE_INTERVIEW_EN }
+      );
+    } finally {
+      if (stillActive()) setInterviewAnnouncingTitle(false);
+    }
+    if (!stillActive()) return false;
+
+    await bilingualPlayback.play(
+      copy.english,
+      japanese,
+      "ja-en",
+      bilingualUi(),
+      speechRateRef.current,
+      undefined,
+      { englishRate: SPEECH_RATE_INTERVIEW_EN }
+    );
+    return stillActive();
+  }
+
+  function openInterviewSectionByIndex(index: number) {
+    const section = interviewPrepSections[index];
+    if (!section) return;
+    const tocId = `interview-${String(section.number).padStart(2, "0")}` as TocItemId;
+    openTocItem(tocId);
+  }
+
+  function goInterviewPrev() {
+    const idx = interviewPrepSections.findIndex(
+      (s) => s.id === interviewSectionIdRef.current
+    );
+    if (idx <= 0) return;
+    openInterviewSectionByIndex(idx - 1);
+  }
+
+  function goInterviewNext() {
+    const idx = interviewPrepSections.findIndex(
+      (s) => s.id === interviewSectionIdRef.current
+    );
+    if (idx < 0 || idx >= interviewPrepSections.length - 1) return;
+    openInterviewSectionByIndex(idx + 1);
+  }
+
+  function speakJapaneseLine(
+    text: string,
+    rate: number,
+    sessionCheck: () => boolean
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      if (!sessionCheck() || !text.trim()) {
+        resolve();
+        return;
+      }
+      setHookActiveLang("ja");
+      setJaHighlight(null);
+      setSpeechStatus("speaking");
+      speechService.speakJapanese(
+        text,
+        {
+          onStart: () => {
+            if (!sessionCheck()) return;
+            setSpeechStatus("speaking");
+          },
+          onBoundary: (h) => {
+            if (!sessionCheck()) return;
+            setJaHighlight(h);
+          },
+          onEnd: () => {
+            setJaHighlight(null);
+            setHookActiveLang(null);
+            setSpeechStatus("idle");
+            resolve();
+          },
+          onError: () => {
+            setJaHighlight(null);
+            setHookActiveLang(null);
+            setSpeechStatus("idle");
+            resolve();
+          },
+        },
+        rate
+      );
+    });
+  }
+
+  function playMix() {
+    softStopAuto();
+    stopInterviewPlayAll();
+    const idx = interviewMixSections.findIndex(
+      (s) => s.id === mixSectionIdRef.current
+    );
+    void playMixSectionAt(idx >= 0 ? idx : 0, null);
+  }
+
+  function playMixAll() {
+    softStopAuto();
+    stopInterviewPlayAll();
+    bilingualPlayback.abort();
+    speechService.stop();
+    clearSpeechUi();
+    const session = ++mixPlayAllSessionRef.current;
+    setMixPlayAll(true);
+
+    void (async () => {
+      try {
+        for (let i = 0; i < interviewMixSections.length; i += 1) {
+          if (session !== mixPlayAllSessionRef.current) return;
+          const ok = await playMixSectionAt(i, session);
+          if (!ok) return;
+          if (i < interviewMixSections.length - 1) {
+            await new Promise((resolve) => window.setTimeout(resolve, 450));
+          }
+        }
+      } finally {
+        if (session === mixPlayAllSessionRef.current) {
+          setMixPlayAll(false);
+          setMixAnnouncingTitle(false);
+        }
+      }
+    })();
+  }
+
+  async function playMixSectionAt(
+    index: number,
+    playAllSession: number | null
+  ): Promise<boolean> {
+    const section = interviewMixSections[index];
+    if (!section) return false;
+
+    const stillActive = () =>
+      playAllSession === null ||
+      playAllSession === mixPlayAllSessionRef.current;
+
+    const tocId =
+      `interview-mix-${String(section.number).padStart(2, "0")}` as TocItemId;
+
+    setActiveTocId(tocId);
+    setMixSectionId(section.id);
+    setMixLines(section.lines);
+    mixSectionIdRef.current = section.id;
+    mixLinesRef.current = section.lines;
+
+    await new Promise<void>((resolve) => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => resolve());
+      });
+    });
+    if (!stillActive()) return false;
+
+    const japanese = section.lines.map((line) => line.japanese).join("");
+
+    setMixAnnouncingTitle(true);
+    try {
+      await speakJapaneseLine(
+        interviewMixTitleSpeakJa(section),
+        SPEECH_RATE_INTERVIEW_MIX,
+        stillActive
+      );
+    } finally {
+      if (stillActive()) setMixAnnouncingTitle(false);
+    }
+    if (!stillActive()) return false;
+
+    await speakJapaneseLine(japanese, SPEECH_RATE_INTERVIEW_MIX, stillActive);
+    return stillActive();
+  }
+
+  function openMixSectionByIndex(index: number) {
+    const section = interviewMixSections[index];
+    if (!section) return;
+    const tocId =
+      `interview-mix-${String(section.number).padStart(2, "0")}` as TocItemId;
+    openTocItem(tocId);
+  }
+
+  function goMixPrev() {
+    const idx = interviewMixSections.findIndex(
+      (s) => s.id === mixSectionIdRef.current
+    );
+    if (idx <= 0) return;
+    openMixSectionByIndex(idx - 1);
+  }
+
+  function goMixNext() {
+    const idx = interviewMixSections.findIndex(
+      (s) => s.id === mixSectionIdRef.current
+    );
+    if (idx < 0 || idx >= interviewMixSections.length - 1) return;
+    openMixSectionByIndex(idx + 1);
+  }
+
+  function restartMix() {
+    playMix();
+  }
+
   function playQuizPreComment(): Promise<void> {
     return new Promise((resolve) => {
       softStopAuto();
@@ -1159,6 +1649,10 @@ export function PlayerPage() {
 
   function restartCta() {
     playCta(flowActiveRef.current && screen === "ending");
+  }
+
+  function restartInterview() {
+    playInterview();
   }
 
   function buildFlowQueue(config: VideoFlowConfig): TocItemId[] {
@@ -1355,6 +1849,7 @@ export function PlayerPage() {
         if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
           stopQuizAuto();
         }
+        stopInterviewPlayAll();
         bilingualPlayback.abort();
         speechService.stop();
         clearSpeechUi();
@@ -1534,6 +2029,32 @@ export function PlayerPage() {
         );
       case "glossary":
         return <GlossaryView onNavigate={openGlossaryEntry} />;
+      case "register": {
+        const pair = registerPairs[registerIndex] ?? registerPairs[0] ?? null;
+        if (!pair) {
+          return (
+            <SectionPlaceholder
+              chip="Casual ⇄ Formal"
+              title={tocItem?.label ?? "Register Practice"}
+              subtitle="Expression pairs will appear here once data is added."
+            />
+          );
+        }
+        return (
+          <>
+            <div className="progress-label">
+              {registerIndex + 1} / {registerPairs.length} · {pair.category}
+            </div>
+            <RegisterSplitCard
+              pair={pair}
+              activeSide={registerActiveSide}
+              jaHighlight={jaLessonHighlight}
+              showFurigana={registerShowFurigana}
+              formalHidden={registerDrillMode && !registerRevealed}
+            />
+          </>
+        );
+      }
       case "intro":
         return (
           <IntroHookDisplay
@@ -1554,6 +2075,40 @@ export function PlayerPage() {
             enHighlight={enHighlight}
           />
         );
+      case "interview": {
+        const section =
+          getInterviewSectionById(interviewSectionId) ??
+          interviewPrepSections[0]!;
+        return (
+          <InterviewPracticeDisplay
+            chip={interviewTitleChip(section)}
+            titleJa={interviewTitleSpeakJa(section)}
+            titleEn={interviewTitleSpeakEn(section)}
+            announcingTitle={interviewAnnouncingTitle}
+            lines={interviewLines}
+            english={interviewEn}
+            activeLang={hookActiveLang}
+            jaHighlight={jaHighlight}
+            enHighlight={enHighlight}
+          />
+        );
+      }
+      case "interview-mix": {
+        const section =
+          getInterviewMixSectionById(mixSectionId) ?? interviewMixSections[0]!;
+        return (
+          <InterviewPracticeDisplay
+            chip={interviewMixTitleChip(section)}
+            titleJa={interviewMixTitleSpeakJa(section)}
+            announcingTitle={mixAnnouncingTitle}
+            nanamiOnly
+            lines={mixLines}
+            activeLang={hookActiveLang}
+            jaHighlight={jaHighlight}
+            enHighlight={enHighlight}
+          />
+        );
+      }
       case "quiz-pre":
         return (
           <EndingCtaDisplay
@@ -1791,6 +2346,8 @@ export function PlayerPage() {
   const showProductionPanel =
     screen === "intro" ||
     screen === "ending" ||
+    screen === "interview" ||
+    screen === "interview-mix" ||
     screen === "quiz-pre" ||
     screen === "quiz-after" ||
     screen === "flow-setup" ||
@@ -1801,7 +2358,9 @@ export function PlayerPage() {
       <div
         className={
           showProductionPanel
-            ? "stage-wrapper stage-wrapper--with-panel"
+            ? screen === "interview" || screen === "interview-mix"
+              ? "stage-wrapper stage-wrapper--with-panel stage-wrapper--interview"
+              : "stage-wrapper stage-wrapper--with-panel"
             : "stage-wrapper"
         }
       >
@@ -1922,6 +2481,250 @@ export function PlayerPage() {
               {speechStatus === "paused" ? "Resume" : "Pause"}
             </button>
             <button type="button" className="btn-secondary" onClick={restartCta}>
+              Restart
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {screen === "interview" ? (
+        <div className="production-panel production-panel--interview">
+          <div className="production-panel-title">
+            Interview Prep · Section{" "}
+            {(getInterviewSectionById(interviewSectionId)?.number ?? 1)} /{" "}
+            {interviewPrepSections.length}
+            {interviewPlayAll ? " · Playing all…" : ""}
+          </div>
+          <div className="production-fields production-fields--interview">
+            <label className="production-field">
+              <span>Japanese</span>
+              <textarea
+                rows={2}
+                value={interviewLines.map((l) => l.japanese).join("\n")}
+                onChange={(e) => {
+                  const jaParts = e.target.value.split("\n");
+                  setInterviewLines((prev) => {
+                    const max = Math.max(jaParts.length, prev.length);
+                    const next: InterviewLine[] = [];
+                    for (let i = 0; i < max; i += 1) {
+                      const japanese = (jaParts[i] ?? "").trimEnd();
+                      const romaji = prev[i]?.romaji ?? "";
+                      if (!japanese.trim() && !romaji.trim()) continue;
+                      next.push({ japanese, romaji });
+                    }
+                    return next.length > 0
+                      ? next
+                      : [{ japanese: "", romaji: "" }];
+                  });
+                }}
+              />
+            </label>
+            <label className="production-field">
+              <span>Romaji</span>
+              <textarea
+                rows={2}
+                value={interviewLines.map((l) => l.romaji).join("\n")}
+                onChange={(e) => {
+                  const roParts = e.target.value.split("\n");
+                  setInterviewLines((prev) =>
+                    prev.map((line, i) => ({
+                      ...line,
+                      romaji: roParts[i] ?? "",
+                    }))
+                  );
+                }}
+              />
+            </label>
+            <label className="production-field production-field--full">
+              <span>Simple English (Andrew)</span>
+              <textarea
+                rows={2}
+                value={interviewEn}
+                onChange={(e) => setInterviewEn(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="production-actions">
+            <button
+              type="button"
+              disabled={
+                interviewPlayAll ||
+                interviewPrepSections.findIndex(
+                  (s) => s.id === interviewSectionId
+                ) <= 0
+              }
+              onClick={goInterviewPrev}
+            >
+              ← Prev Section
+            </button>
+            <button
+              type="button"
+              disabled={
+                interviewPlayAll ||
+                interviewPrepSections.findIndex(
+                  (s) => s.id === interviewSectionId
+                ) >=
+                  interviewPrepSections.length - 1
+              }
+              onClick={goInterviewNext}
+            >
+              Next Section →
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                saveInterviewSection(interviewSectionId, {
+                  lines: interviewLines,
+                  english: interviewEn,
+                });
+              }}
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                const next = resetInterviewSection(interviewSectionId);
+                if (!next) return;
+                setInterviewLines(next.lines);
+                setInterviewEn(next.english);
+              }}
+            >
+              Reset Section
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const a = document.createElement("a");
+                a.href = "/interview-prep.pdf";
+                a.download = "interview-prep-all.pdf";
+                a.rel = "noopener";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }}
+              title="Download all interview sections as one PDF"
+            >
+              Download All
+            </button>
+            <button type="button" onClick={playInterview} disabled={interviewPlayAll}>
+              Play
+            </button>
+            <button
+              type="button"
+              className={
+                interviewPlayAll
+                  ? "quiz-auto-btn quiz-auto-btn--active"
+                  : undefined
+              }
+              onClick={() => {
+                if (interviewPlayAll) {
+                  stopAllAudio();
+                  return;
+                }
+                playInterviewAll();
+              }}
+            >
+              {interviewPlayAll ? "Stop All" : "Play All"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={pauseHookPlayback}
+            >
+              {speechStatus === "paused" ? "Resume" : "Pause"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={restartInterview}
+              disabled={interviewPlayAll}
+            >
+              Restart
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {screen === "interview-mix" ? (
+        <div className="production-panel production-panel--interview">
+          <div className="production-panel-title">
+            N3 JP+EN Mix · Section{" "}
+            {(getInterviewMixSectionById(mixSectionId)?.number ?? 1)} /{" "}
+            {interviewMixSections.length}
+            {mixPlayAll ? " · Playing all…" : ""}
+            {" · Nanami 0.88"}
+          </div>
+          <div className="production-actions">
+            <button
+              type="button"
+              disabled={
+                mixPlayAll ||
+                interviewMixSections.findIndex((s) => s.id === mixSectionId) <=
+                  0
+              }
+              onClick={goMixPrev}
+            >
+              ← Prev Section
+            </button>
+            <button
+              type="button"
+              disabled={
+                mixPlayAll ||
+                interviewMixSections.findIndex((s) => s.id === mixSectionId) >=
+                  interviewMixSections.length - 1
+              }
+              onClick={goMixNext}
+            >
+              Next Section →
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const a = document.createElement("a");
+                a.href = "/interview-prep-n3-mix.pdf";
+                a.download = "interview-prep-n3-mix.pdf";
+                a.rel = "noopener";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }}
+              title="Download all N3 mix sections as one PDF"
+            >
+              Download All
+            </button>
+            <button type="button" onClick={playMix} disabled={mixPlayAll}>
+              Play
+            </button>
+            <button
+              type="button"
+              className={
+                mixPlayAll ? "quiz-auto-btn quiz-auto-btn--active" : undefined
+              }
+              onClick={() => {
+                if (mixPlayAll) {
+                  stopAllAudio();
+                  return;
+                }
+                playMixAll();
+              }}
+            >
+              {mixPlayAll ? "Stop All" : "Play All"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={pauseHookPlayback}
+            >
+              {speechStatus === "paused" ? "Resume" : "Pause"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={restartMix}
+              disabled={mixPlayAll}
+            >
               Restart
             </button>
           </div>
@@ -2226,6 +3029,120 @@ export function PlayerPage() {
           >
             Start Video Flow
           </button>
+        ) : null}
+
+        {screen === "register" && registerPairs.length > 0 ? (
+          <>
+            <button
+              onClick={goRegisterPrev}
+              disabled={registerIndex === 0}
+              tabIndex={-1}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={() => playRegisterSide("casual")}
+              tabIndex={-1}
+              title="Speak the casual form"
+              className={
+                registerActiveSide === "casual"
+                  ? "voice-btn voice-btn--active"
+                  : "voice-btn"
+              }
+            >
+              ↑ Casual
+            </button>
+            <button
+              onClick={() => playRegisterSide("formal")}
+              tabIndex={-1}
+              title="Speak the formal form"
+              className={
+                registerActiveSide === "formal"
+                  ? "voice-btn voice-btn--active"
+                  : "voice-btn"
+              }
+            >
+              ↓ Formal
+            </button>
+            <button
+              onClick={playRegisterBoth}
+              tabIndex={-1}
+              title="Play casual then formal back to back"
+              className="register-btn"
+            >
+              ▶ Both
+            </button>
+            <span className="rate-group">
+              <button
+                type="button"
+                className={
+                  speechRate === SPEECH_RATE_NORMAL
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                tabIndex={-1}
+                onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
+              >
+                Normal
+              </button>
+              <button
+                type="button"
+                className={
+                  speechRate === SPEECH_RATE_SLOW
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                tabIndex={-1}
+                onClick={() => setSpeechRate(SPEECH_RATE_SLOW)}
+              >
+                Slow
+              </button>
+            </span>
+            <button
+              type="button"
+              className={
+                registerShowFurigana ? "furi-btn furi-btn--active" : "furi-btn"
+              }
+              tabIndex={-1}
+              title="Toggle hiragana readings"
+              onClick={() => setRegisterShowFurigana((v) => !v)}
+            >
+              あ {registerShowFurigana ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={
+                registerDrillMode
+                  ? "register-btn register-btn--active"
+                  : "register-btn"
+              }
+              tabIndex={-1}
+              title="Hide the formal side and recall it yourself"
+              onClick={() => {
+                setRegisterDrillMode((v) => !v);
+                setRegisterRevealed(false);
+              }}
+            >
+              Drill {registerDrillMode ? "ON" : "OFF"}
+            </button>
+            {registerDrillMode && !registerRevealed ? (
+              <button
+                type="button"
+                className="register-btn"
+                tabIndex={-1}
+                onClick={() => setRegisterRevealed(true)}
+              >
+                Reveal
+              </button>
+            ) : null}
+            <button
+              onClick={goRegisterNext}
+              disabled={registerIndex >= registerPairs.length - 1}
+              tabIndex={-1}
+            >
+              Forward →
+            </button>
+          </>
         ) : null}
 
         {showLessonChrome ? (

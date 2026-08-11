@@ -340,6 +340,8 @@ describe("speechService highlight mode", () => {
     utter.onstart?.();
     vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights.length).toBeGreaterThanOrEqual(1);
+    expect(highlights[0]).not.toContain("〜");
+    expect(highlights[0]).toContain("こと");
     // Advance through remaining fallback steps
     vi.advanceTimersByTime(8000);
     expect(highlights.some((h) => h.includes("いる"))).toBe(true);

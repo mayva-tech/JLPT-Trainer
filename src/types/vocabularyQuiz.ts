@@ -20,7 +20,7 @@ export type QuizSourceItem = {
   sentenceReading?: string;
   sentenceMeaning?: string;
   audioWord?: string;
-  jlpt?: "N1" | "N2";
+  jlpt?: "N1" | "N2" | "N3";
 };
 
 /** Japanese word → English meaning (same shape as grammar quizzes). */

@@ -4,6 +4,7 @@ import {
   alignFuriganaWithTokenSpans,
 } from "./alignFurigana";
 import {
+  appendPhraseParticleSpeakPause,
   buildJapaneseSpeakToken,
   shouldKeepGaTight,
   shouldKeepNiTight,
@@ -51,6 +52,8 @@ export type SpeechHighlightRange = {
 
 const PUNCT_ONLY =
   /^[、。！？．，,.!?;:…・「」『』（）()[\]{}'"“”‘’\-–—/\\|]+$/u;
+/** Grammar placeholder glyphs that are displayed but never karaoke-highlighted. */
+const SLOT_MARKER_ONLY = /^[〜～~]+$/u;
 
 /** Trailing punctuation stripped for kana/particle checks. */
 const TRAILING_PUNCT_RE =
@@ -129,6 +132,8 @@ const TRAILING_PEEL = [
   "では",
   "には",
   "とは",
+  "しても",
+  "しては",
   "でも",
   "ても",
   "のは",
@@ -546,6 +551,61 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       out.push(u);
     }
   }
+
+  // 7) Bind subject が onto the following tight predicate (問題|がある)
+  //    so karaoke can light がある as one span with the voice.
+  return rebindTightGaOntoFollowingPredicate(out);
+}
+
+/**
+ * Peel a trailing subject が off the noun and glue it to the next predicate
+ * when Nanami keeps が tight (問題がある → 問題 | がある).
+ */
+function rebindTightGaOntoFollowingPredicate(
+  units: HighlightUnit[]
+): HighlightUnit[] {
+  const out: HighlightUnit[] = [];
+  for (let i = 0; i < units.length; i++) {
+    const u = units[i]!;
+    const next = units[i + 1];
+    if (!next || u.kind === "space" || next.kind === "space") {
+      out.push(u);
+      continue;
+    }
+
+    const { core, punct } = stripTrailingPunct(u.text);
+    if (!shouldKeepGaTight(next.text)) {
+      out.push(u);
+      continue;
+    }
+
+    if (core === "が") {
+      out.push(joinUnits(u, next));
+      i++;
+      continue;
+    }
+
+    if (core.length > 1 && core.endsWith("が") && punct === "") {
+      const stemText = u.text.slice(0, -1);
+      const gaUnit: HighlightUnit = {
+        start: u.end - 1,
+        end: u.end,
+        text: "が",
+        kind: "word",
+      };
+      out.push({
+        start: u.start,
+        end: u.end - 1,
+        text: stemText,
+        kind: classifyUnit(stemText),
+      });
+      out.push(joinUnits(gaUnit, next));
+      i++;
+      continue;
+    }
+
+    out.push(u);
+  }
   return out;
 }
 
@@ -583,7 +643,7 @@ export function buildEnglishHighlightUnits(text: string): HighlightUnit[] {
       kind: classifyUnit(piece),
     });
   }
-  return units;
+  return splitEmbeddedWaveDashes(units);
 }
 
 /** True when a display span sits inside a `(...)` note that TTS skips. */
@@ -608,7 +668,11 @@ function spanOverlapsParenthetical(
  * previous word), matching `buildEnglishSpeakText`.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
-  const units = activeHighlightUnits(buildEnglishHighlightUnits(text));
+  // Keep slot-marker units long enough to transfer their pause to the previous
+  // spoken word; they are never added to the returned highlight steps.
+  const units = buildEnglishHighlightUnits(text).filter(
+    (u) => u.kind !== "space"
+  );
   const steps: HighlightUnit[] = [];
 
   for (const unit of units) {
@@ -616,7 +680,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
     const raw = unit.text.trim();
-    if (/^[〜～~]+$/u.test(raw)) {
+    if (SLOT_MARKER_ONLY.test(raw)) {
       const prev = steps.at(-1);
       if (prev) {
         const base = prev.spokenText ?? prev.text;
@@ -636,10 +700,10 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
     });
   }
 
-  return steps.length > 0 ? steps : units;
+  return steps.length > 0 ? steps : activeHighlightUnits(units);
 }
 
-/** Pull embedded grammar-slot 〜 out into its own unit (ばかりか〜も). */
+/** Pull every grammar-slot variant out into its own non-highlighted unit. */
 function splitEmbeddedWaveDashes(units: HighlightUnit[]): HighlightUnit[] {
   const out: HighlightUnit[] = [];
   for (const u of units) {
@@ -666,9 +730,11 @@ function splitEmbeddedWaveDashes(units: HighlightUnit[]): HighlightUnit[] {
   return out;
 }
 
-/** Active karaoke units only (skip pure spaces). */
+/** Active karaoke units only (skip spaces and grammar-slot markers). */
 export function activeHighlightUnits(units: HighlightUnit[]): HighlightUnit[] {
-  return units.filter((u) => u.kind !== "space");
+  return units.filter(
+    (u) => u.kind !== "space" && !SLOT_MARKER_ONLY.test(u.text.trim())
+  );
 }
 
 /**
@@ -754,15 +820,17 @@ function isKana(ch: string): boolean {
 const KARAOKE_BREAK_POINT = 0.15;
 /**
  * Pause Nanami often inserts between spaced reading tokens.
- * Keep modest — stacked gaps across a sentence were lagging highlights.
+ * Tuned so JA karaoke stays near the voice (EN weights are separate).
  */
-const SPEAK_TOKEN_GAP = 0.15;
+const SPEAK_TOKEN_GAP = 0.2;
 /** ms per mora-weight at speech rate 1 (callers divide by utterance rate). */
-const JA_MORA_MS = 150;
+const JA_MORA_MS = 160;
 /** Minimum dwell for a Japanese content unit at rate 1. */
 const JA_MIN_UNIT_MS = 120;
 /** Extra dwell after grammar-slot 〜 before the next pattern piece. */
 const WAVE_DASH_PAUSE = 0.9;
+/** English ms weight multiplier at speech rate 1 — leave stable. */
+const EN_WEIGHT_MS = 400;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -797,7 +865,7 @@ const PARTICLE_BREAK_CORES = new Set([
  * longer before the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
  * Applies to standalone particles and units that end in these particles.
  */
-const PHRASE_PARTICLE_PAUSE = 1.6;
+const PHRASE_PARTICLE_PAUSE = 1.25;
 
 function isParticleBreakUnit(text: string): boolean {
   const { core } = stripTrailingPunct(text);
@@ -853,17 +921,19 @@ export function estimateUnitDurationMs(
   if (unit.kind === "space") return 0;
 
   let punctPause = 0;
-  // Commas / Japanese phrase commas (、)
-  if (/[,，、]/.test(text)) punctPause += 0.25 + KARAOKE_BREAK_POINT;
+  const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
+  // Commas / Japanese phrase commas (、) — include TTS-inserted pauses in spokenText
+  if (/[,，、]/.test(spokenForPunct)) punctPause += 0.3 + KARAOKE_BREAK_POINT;
   // Other phrase separators
-  if (/[;；:]/.test(text)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
-  if (/[.!?。！？]/.test(text)) punctPause += 0.55 + KARAOKE_BREAK_POINT;
+  if (/[;；:]/.test(spokenForPunct)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
+  if (/[.!?。！？]/.test(spokenForPunct)) punctPause += 0.5 + KARAOKE_BREAK_POINT;
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {
     punctPause += KARAOKE_BREAK_POINT;
   }
   // Phrase particles は/が/を/に — longer dwell before next word
   // (skip を/が/に when bound into をきっかけに / お金があれば / 本日に限り / …)
+  // If spokenText already has a TTS 、, top up to the particle pause (don't double).
   if (
     lang === "ja" &&
     unitHasTrailingPhraseParticle(unit) &&
@@ -872,7 +942,12 @@ export function estimateUnitDurationMs(
       nextUnit?.spokenText ?? nextUnit?.text
     )
   ) {
-    punctPause += PHRASE_PARTICLE_PAUSE;
+    const commaWeight = 0.3 + KARAOKE_BREAK_POINT;
+    if (/[,，、]/.test(spokenForPunct)) {
+      punctPause += Math.max(0, PHRASE_PARTICLE_PAUSE - commaWeight);
+    } else {
+      punctPause += PHRASE_PARTICLE_PAUSE;
+    }
   }
   // Grammar pattern slot 〜 / ～ — pause before the next piece (〜ばかりか〜も)
   if (
@@ -887,17 +962,17 @@ export function estimateUnitDurationMs(
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
     const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
-    const weight = 0.6 + Math.min(letters, 12) * 0.08 + punctPause;
-    return Math.max(120, weight * 280);
+    const weight = 0.65 + Math.min(letters, 12) * 0.09 + punctPause;
+    return Math.max(140, weight * EN_WEIGHT_MS);
   }
 
   // Prefer aligned spoken kana whenever available.
   if (unit.spokenText) {
     const mora = estimateSpokenMoraWeight(unit.spokenText);
     if (unit.kind === "punctuation") {
-      return Math.max(80, punctPause * 280);
+      return Math.max(90, punctPause * EN_WEIGHT_MS);
     }
-    const weight = Math.max(0.7, mora) + punctPause;
+    const weight = Math.max(0.75, mora) + punctPause;
     return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
   }
 
@@ -911,9 +986,9 @@ export function estimateUnitDurationMs(
     else if (!/\s/.test(ch) && !PUNCT_ONLY.test(ch)) mora += 0.5;
   }
   if (unit.kind === "punctuation") {
-    return Math.max(80, punctPause * 280);
+    return Math.max(90, punctPause * EN_WEIGHT_MS);
   }
-  const weight = Math.max(0.7, mora) + punctPause;
+  const weight = Math.max(0.75, mora) + punctPause;
   return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
 }
 
@@ -1127,6 +1202,78 @@ function mergeConsecutiveKaraokeSteps(
 }
 
 /**
+ * Bind subject が onto the following tight predicate (がある, があれば)
+ * so karaoke lights one span and does not linger on が alone.
+ */
+function mergeTightGaPredicateKaraokeSteps(
+  steps: SpokenKaraokeStep[]
+): SpokenKaraokeStep[] {
+  const out: SpokenKaraokeStep[] = [];
+  for (let i = 0; i < steps.length; i++) {
+    const cur = steps[i]!;
+    const next = steps[i + 1];
+    const curCore = stripTrailingPunct(cur.text).core;
+    if (
+      next &&
+      curCore === "が" &&
+      shouldKeepGaTight(next.spokenText || next.text)
+    ) {
+      const text = cur.text + next.text;
+      const joiner =
+        cur.speakGapAfter || /\s$/u.test(cur.spokenText) ? "" : " ";
+      const spoken = `${cur.spokenText}${joiner}${next.spokenText}`.replace(
+        /\s+/g,
+        " "
+      ).trim();
+      out.push({
+        start: cur.start,
+        end: next.end,
+        text,
+        kind: classifyUnit(text),
+        spokenText: spoken,
+        speakGapAfter: next.speakGapAfter,
+      });
+      i++;
+      continue;
+    }
+    out.push(cur);
+  }
+  return out;
+}
+
+/** True when every char of `unit` is covered by one or more karaoke steps. */
+function unitRangeCoveredBySteps(
+  unit: HighlightUnit,
+  steps: SpokenKaraokeStep[]
+): boolean {
+  const len = unit.end - unit.start;
+  if (len <= 0) return true;
+  const hits = new Array<boolean>(len).fill(false);
+  for (const step of steps) {
+    const a = Math.max(step.start, unit.start);
+    const b = Math.min(step.end, unit.end);
+    for (let i = a; i < b; i++) hits[i - unit.start] = true;
+  }
+  return hits.every(Boolean);
+}
+
+/**
+ * No extra inter-token dwell when Nanami keeps が/を/に tight with the next
+ * predicate (問題が→ある, を聞いて, に限り).
+ */
+function shouldSkipSpeakTokenGap(
+  currentToken: string,
+  nextToken?: string
+): boolean {
+  if (!nextToken) return false;
+  const { core } = stripTrailingPunct(currentToken);
+  if (core === "が" || core.endsWith("が")) return shouldKeepGaTight(nextToken);
+  if (core === "を" || core.endsWith("を")) return shouldKeepWoTight(nextToken);
+  if (core === "に" || core.endsWith("に")) return shouldKeepNiTight(nextToken);
+  return false;
+}
+
+/**
  * Insert any active word units still missing from the timeline (surface order).
  */
 function ensureWordUnitsCovered(
@@ -1138,8 +1285,7 @@ function ensureWordUnitsCovered(
   );
   if (words.length === 0) return steps;
 
-  const covered = new Set(steps.map((s) => `${s.start}:${s.end}`));
-  const missing = words.filter((u) => !covered.has(`${u.start}:${u.end}`));
+  const missing = words.filter((u) => !unitRangeCoveredBySteps(u, steps));
   if (missing.length === 0) return steps;
 
   const merged = [...steps];
@@ -1198,12 +1344,19 @@ export function buildJapaneseSpokenKaraokeSteps(
   }
 
   const steps: SpokenKaraokeStep[] = [];
+  const spokenTokens = tokenSpans.map((span) =>
+    buildJapaneseSpeakToken(span.token)
+  );
+  const spokenWithPauses = spokenTokens.map((tok, i) =>
+    appendPhraseParticleSpeakPause(tok, spokenTokens[i + 1])
+  );
+
   for (let i = 0; i < tokenSpans.length; i++) {
     const span = tokenSpans[i]!;
     const overlapping = displayUnitsForTokenSpan(units, span.start, span.end);
     if (overlapping.length === 0) continue;
 
-    const spokenToken = buildJapaneseSpeakToken(span.token);
+    const spokenToken = spokenWithPauses[i]!;
     const pieces = distributeSpokenTokenAcrossUnits(
       surface,
       span.token,
@@ -1224,18 +1377,31 @@ export function buildJapaneseSpokenKaraokeSteps(
     for (let pi = 0; pi < pieces.length; pi++) {
       const piece = pieces[pi]!;
       const isLastPiece = pi === pieces.length - 1;
+      // Clip to the reading-token surface span so glued display units like
+      // 問題が still advance 問題 → が with the voice (not one long hold).
+      const start = Math.max(piece.unit.start, span.start);
+      const end = Math.min(piece.unit.end, span.end);
+      if (end <= start) continue;
+      const text = surface.slice(start, end);
+      const nextToken = tokenSpans[i + 1]?.token;
+      const speakGapAfter =
+        isLastPiece &&
+        i < tokenSpans.length - 1 &&
+        !shouldSkipSpeakTokenGap(span.token, nextToken);
       steps.push({
-        start: piece.unit.start,
-        end: piece.unit.end,
-        text: piece.unit.text,
-        kind: piece.unit.kind,
-        spokenText: piece.spokenText || piece.unit.text,
-        speakGapAfter: isLastPiece && i < tokenSpans.length - 1,
+        start,
+        end,
+        text,
+        kind: classifyUnit(text),
+        spokenText: piece.spokenText || text,
+        speakGapAfter,
       });
     }
   }
 
-  const merged = mergeConsecutiveKaraokeSteps(steps);
+  const merged = mergeTightGaPredicateKaraokeSteps(
+    mergeConsecutiveKaraokeSteps(steps)
+  );
   const covered = ensureWordUnitsCovered(merged, units);
 
   // Enforce non-decreasing starts (drop rare regressive leftovers).

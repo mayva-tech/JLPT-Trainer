@@ -475,8 +475,9 @@ export function shouldKeepNiTight(next: string): boolean {
  * Append a phrase comma after spoken phrase particles so Nanami pauses before
  * the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
  * Skips を/が when bound to a pattern complement or governing predicate.
+ * Also used by karaoke timing so dwell matches the audio string.
  */
-function appendPhraseParticleSpeakPause(
+export function appendPhraseParticleSpeakPause(
   token: string,
   nextToken?: string
 ): string {
