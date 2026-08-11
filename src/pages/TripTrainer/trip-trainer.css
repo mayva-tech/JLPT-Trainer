@@ -1,0 +1,520 @@
+/* Visual language: JR/metro station signage — a white enamel board with a
+   coloured line bar, kanji large, romaji set small and letterspaced beneath it,
+   and the deck rendered as stops along a line.
+
+   All rules are scoped under .jt-root. */
+
+.jt-root {
+  --jt-night: #0c1a2b;
+  --jt-panel: rgba(255, 255, 255, 0.04);
+  --jt-line-faint: rgba(255, 255, 255, 0.1);
+  --jt-board: #f7f7f4;
+  --jt-ink: #14181d;
+  --jt-line: #4f9d5d; /* overridden per deck */
+  --jt-sans: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', system-ui, sans-serif;
+  --jt-sign: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18px 14px 48px;
+  background: var(--jt-night);
+  color: #e8edf3;
+  font-family: var(--jt-sans);
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.jt-root[data-deck='core'] {
+  --jt-line: #4f9d5d;
+}
+.jt-root[data-deck='streets'] {
+  --jt-line: #e07b39;
+}
+.jt-root[data-deck='survival'] {
+  --jt-line: #c8443c;
+}
+
+.jt-root *,
+.jt-root *::before,
+.jt-root *::after {
+  box-sizing: inherit;
+}
+
+.jt-root button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.jt-root :focus-visible {
+  outline: 2px solid var(--jt-line);
+  outline-offset: 3px;
+}
+
+/* ---- header ---- */
+
+.jt-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--jt-line);
+}
+
+.jt-title {
+  margin: 0;
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+
+.jt-sub {
+  margin: 0;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  opacity: 0.55;
+}
+
+.jt-voice {
+  margin: 6px 0 0;
+  font-family: var(--jt-sign);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  opacity: 0.4;
+  width: 100%;
+}
+
+/* ---- tabs, decks, register ---- */
+
+.jt-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 14px;
+  border: 1px solid var(--jt-line-faint);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.jt-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.jt-tab-btn.active {
+  background: var(--jt-line);
+  color: #fff;
+}
+
+.jt-chiprow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.jt-chip {
+  flex: 1;
+  padding: 7px 4px;
+  border: none;
+  border-top: 3px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.jt-chip.active {
+  opacity: 1;
+  font-weight: 700;
+  border-top-color: var(--jt-line);
+}
+
+.jt-registerrow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.jt-register {
+  flex: 1;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid var(--jt-line-faint);
+  background: transparent;
+  color: inherit;
+  font-family: var(--jt-sign);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.jt-register.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---- the signboard ---- */
+
+.jt-board {
+  width: 100%;
+  text-align: center;
+  background: var(--jt-board);
+  color: var(--jt-ink);
+  border: none;
+  border-top: 7px solid var(--jt-line);
+  border-radius: 3px;
+  padding: 22px 18px 20px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.jt-boardlabel {
+  font-family: var(--jt-sign);
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.jt-jp {
+  display: block;
+  font-size: 27px;
+  line-height: 2;
+  font-weight: 700;
+}
+
+.jt-ro {
+  display: block;
+  font-family: var(--jt-sign);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.jt-en {
+  display: block;
+  font-size: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  width: 100%;
+  opacity: 0.85;
+}
+
+.jt-hint {
+  font-family: var(--jt-sign);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.35;
+}
+
+/* ---- the line: stops under the board ---- */
+
+.jt-linebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 2px 4px;
+  padding: 8px 0;
+}
+
+.jt-linebar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  background: var(--jt-line);
+  opacity: 0.4;
+  transform: translateY(-50%);
+}
+
+.jt-stop {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--jt-line);
+  background: var(--jt-night);
+}
+
+.jt-stop.known {
+  background: var(--jt-line);
+}
+
+.jt-stop.current {
+  width: 17px;
+  height: 17px;
+  border-width: 3px;
+  background: var(--jt-board);
+}
+
+.jt-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  opacity: 0.5;
+  margin-bottom: 10px;
+}
+
+.jt-listen {
+  border: 1px solid var(--jt-line-faint);
+  background: var(--jt-panel);
+  color: inherit;
+  border-radius: 999px;
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.jt-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.jt-navbtn {
+  padding: 11px 13px;
+  border-radius: 6px;
+  border: 1px solid var(--jt-line-faint);
+  background: var(--jt-panel);
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.jt-knownbtn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--jt-line);
+  color: #fff;
+}
+
+.jt-knownbtn.done {
+  background: transparent;
+  border: 1.5px solid var(--jt-line);
+  color: var(--jt-line);
+}
+
+/* ---- scenarios ---- */
+
+.jt-scriptlist {
+  display: flex;
+  flex-direction: column;
+}
+
+.jt-scriptitem {
+  width: 100%;
+  text-align: left;
+  padding: 13px 12px 13px 26px;
+  border: none;
+  border-bottom: 1px solid var(--jt-line-faint);
+  background: transparent;
+  color: inherit;
+  position: relative;
+  display: block;
+}
+
+/* each scenario is a stop on the same line */
+.jt-scriptitem::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--jt-line);
+  opacity: 0.4;
+}
+
+.jt-scriptitem::after {
+  content: '';
+  position: absolute;
+  left: 3.5px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--jt-line);
+  background: var(--jt-night);
+}
+
+.jt-scriptitem.done::after {
+  background: var(--jt-line);
+}
+
+.jt-scriptname {
+  font-size: 15px;
+}
+
+.jt-scriptname small {
+  display: block;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-top: 3px;
+}
+
+.jt-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jt-bubblewrap {
+  display: flex;
+}
+
+.jt-bubblewrap.right {
+  justify-content: flex-end;
+}
+
+.jt-bubble {
+  max-width: 86%;
+  padding: 11px 13px;
+  border: none;
+  border-radius: 12px;
+  text-align: left;
+  background: var(--jt-board);
+  color: var(--jt-ink);
+}
+
+.jt-bubblewrap.right .jt-bubble {
+  background: var(--jt-line);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+}
+
+.jt-bubblewrap.left .jt-bubble {
+  border-bottom-left-radius: 3px;
+}
+
+.jt-who {
+  display: block;
+  font-family: var(--jt-sign);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.jt-bubble .jt-jp {
+  display: block;
+  font-size: 17px;
+  line-height: 2;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.jt-bubble .jt-ro {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.jt-bubble .jt-en {
+  display: block;
+  font-size: 12px;
+  padding-top: 4px;
+  border-top: none;
+  border: none;
+  opacity: 0.9;
+}
+
+.jt-backbtn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.jt-practicebtn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--jt-line);
+  color: #fff;
+}
+
+.jt-practicebtn.done {
+  background: transparent;
+  border: 1.5px solid var(--jt-line);
+  color: var(--jt-line);
+}
+
+/* ---- ruby ---- */
+
+.jt-root ruby > rt {
+  font-size: 0.42em;
+  font-weight: 400;
+  opacity: 0.7;
+  letter-spacing: 0;
+}
+
+@media (max-width: 380px) {
+  .jt-jp {
+    font-size: 23px;
+  }
+  .jt-chip {
+    font-size: 11px;
+  }
+}

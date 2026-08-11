@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { PlayerPage } from "./pages/PlayerPage";
 import KonbiniTrainer from "./pages/KonbiniTrainer/KonbiniTrainer";
+import TripTrainer from "./pages/TripTrainer/TripTrainer";
 
-type AppView = "player" | "konbini";
+type AppView = "player" | "konbini" | "trip";
 
 export default function App() {
   const [view, setView] = useState<AppView>("player");
@@ -10,7 +11,7 @@ export default function App() {
   return (
     <div
       className={
-        view === "konbini" ? "app-shell app-shell--scroll" : "app-shell"
+        view === "player" ? "app-shell" : "app-shell app-shell--scroll"
       }
     >
       <nav className="app-nav" aria-label="App views">
@@ -37,6 +38,16 @@ export default function App() {
         >
           コンビニ
         </button>
+        <button
+          type="button"
+          className={
+            view === "trip" ? "app-nav-btn app-nav-btn--active" : "app-nav-btn"
+          }
+          title="Trip Trainer"
+          onClick={() => setView("trip")}
+        >
+          旅
+        </button>
       </nav>
 
       <div
@@ -54,6 +65,15 @@ export default function App() {
         }
       >
         <KonbiniTrainer />
+      </div>
+      <div
+        className={
+          view === "trip"
+            ? "app-view app-view--scroll"
+            : "app-view app-view--hidden"
+        }
+      >
+        <TripTrainer />
       </div>
     </div>
   );

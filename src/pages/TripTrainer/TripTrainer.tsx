@@ -1,18 +1,19 @@
 import { useCallback, useMemo, useState } from 'react';
-import './konbini-trainer.css';
+import './trip-trainer.css';
 import { DECKS, SCRIPTS } from './data';
 import { Furigana } from '../../lib/japanese/furigana';
 import { useJapaneseVoice } from '../../lib/japanese/useJapaneseVoice';
 import { useProgress } from '../../lib/japanese/useProgress';
 import type { Register, Variant } from '../../lib/japanese/types';
 
-const STORAGE_KEY = 'jlpt-trainer:konbini:v1';
+const STORAGE_KEY = 'jlpt-trainer:trip:v1';
 
-/* ---- icons (inline: the repo has no icon dependency) ---- */
+const REGISTER_LABELS: Record<Register, string> = {
+  formal: 'Polite',
+  friendly: 'Casual',
+};
 
-interface IconProps {
-  size?: number;
-}
+/* ---- icons ---- */
 
 const svgProps = {
   fill: 'none',
@@ -24,39 +25,40 @@ const svgProps = {
   'aria-hidden': true,
 };
 
-const Layers = ({ size = 15 }: IconProps) => (
+const Cards = ({ size = 15 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
-    <path d="M12 2 2 7l10 5 10-5-10-5Z" />
-    <path d="m2 17 10 5 10-5" />
-    <path d="m2 12 10 5 10-5" />
+    <rect x="3" y="5" width="13" height="15" rx="2" />
+    <path d="M8 2h11a2 2 0 0 1 2 2v12" />
   </svg>
 );
 
-const MessageSquare = ({ size = 15 }: IconProps) => (
+const Route = ({ size = 15 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" />
+    <circle cx="6" cy="19" r="3" />
+    <circle cx="18" cy="5" r="3" />
+    <path d="M9 19h5a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5" />
   </svg>
 );
 
-const ChevronLeft = ({ size = 16 }: IconProps) => (
+const ChevronLeft = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
     <path d="m15 18-6-6 6-6" />
   </svg>
 );
 
-const ChevronRight = ({ size = 16 }: IconProps) => (
+const ChevronRight = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
     <path d="m9 18 6-6-6-6" />
   </svg>
 );
 
-const Check = ({ size = 15 }: IconProps) => (
+const Check = ({ size = 15 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
     <path d="M20 6 9 17l-5-5" />
   </svg>
 );
 
-const Volume = ({ size = 13 }: IconProps) => (
+const Volume = ({ size = 12 }: { size?: number }) => (
   <svg width={size} height={size} {...svgProps}>
     <path d="M11 5 6 9H2v6h4l5 4V5Z" />
     <path d="M15.5 8.5a5 5 0 0 1 0 7" />
@@ -65,8 +67,8 @@ const Volume = ({ size = 13 }: IconProps) => (
 
 /* ---- page ---- */
 
-export default function KonbiniTrainer() {
-  const [tab, setTab] = useState<'cards' | 'scripts'>('cards');
+export default function TripTrainer() {
+  const [tab, setTab] = useState<'cards' | 'scenarios'>('cards');
   const [deckId, setDeckId] = useState('core');
   const [register, setRegister] = useState<Register>('formal');
   const [index, setIndex] = useState(0);
@@ -95,56 +97,63 @@ export default function KonbiniTrainer() {
     setReveal(0);
   };
 
+  const jumpTo = (i: number) => {
+    setIndex(i);
+    setReveal(0);
+  };
+
   const script = SCRIPTS.find((s) => s.id === openScript) ?? null;
 
   return (
-    <div className="fm-root">
-      <header className="fm-header">
-        <p className="fm-title">コンビニ日本語トレーナー</p>
-        <p className="fm-sub">Family Mart Japanese Trainer</p>
-        <p className="fm-voice">
+    <div className="jt-root" data-deck={deck.id}>
+      <header className="jt-header">
+        <h2 className="jt-title">
+          <Furigana text="旅(たび)の日本語(にほんご)" />
+        </h2>
+        <p className="jt-sub">Japan Trip Trainer</p>
+        <p className="jt-voice">
           {supported ? `voice: ${voiceName ?? 'no Japanese voice installed'}` : 'audio unavailable'}
         </p>
       </header>
 
-      <nav className="fm-tabs">
+      <nav className="jt-tabs">
         <button
           type="button"
-          className={`fm-tab-btn ${tab === 'cards' ? 'active' : ''}`}
+          className={`jt-tab-btn ${tab === 'cards' ? 'active' : ''}`}
           onClick={() => setTab('cards')}
         >
-          <Layers /> Flashcards
+          <Cards /> Phrases
         </button>
         <button
           type="button"
-          className={`fm-tab-btn ${tab === 'scripts' ? 'active' : ''}`}
-          onClick={() => setTab('scripts')}
+          className={`jt-tab-btn ${tab === 'scenarios' ? 'active' : ''}`}
+          onClick={() => setTab('scenarios')}
         >
-          <MessageSquare /> Scripts
+          <Route /> Scenarios
         </button>
       </nav>
 
-      <div className="fm-registerrow">
+      <div className="jt-registerrow">
         {(['formal', 'friendly'] as const).map((r) => (
           <button
             type="button"
             key={r}
-            className={`fm-register ${register === r ? 'active' : ''}`}
+            className={`jt-register ${register === r ? 'active' : ''}`}
             onClick={() => setRegister(r)}
           >
-            {r}
+            {REGISTER_LABELS[r]}
           </button>
         ))}
       </div>
 
       {tab === 'cards' && (
         <>
-          <div className="fm-chiprow">
+          <div className="jt-chiprow">
             {DECKS.map((d) => (
               <button
                 type="button"
                 key={d.id}
-                className={`fm-chip ${deckId === d.id ? 'active' : ''}`}
+                className={`jt-chip ${deckId === d.id ? 'active' : ''}`}
                 onClick={() => selectDeck(d.id)}
               >
                 {d.label}
@@ -152,38 +161,54 @@ export default function KonbiniTrainer() {
             ))}
           </div>
 
-          <div className="fm-cardtop">
-            <p className="fm-counter">
-              {index + 1} / {deck.cards.length} · {progress.known.length} known
-            </p>
-            <button type="button" className="fm-speak" onClick={() => speak(variant.jp)}>
+          <div className="jt-meta">
+            <span>
+              {index + 1} / {deck.cards.length}
+            </span>
+            <button type="button" className="jt-listen" onClick={() => speak(variant.jp)}>
               <Volume /> listen
             </button>
           </div>
 
           <button
             type="button"
-            className="fm-card"
+            className="jt-board"
             onClick={() => setReveal((r) => Math.min(r + 1, 2))}
             aria-label="Reveal the next part of this card"
           >
-            <span className="fm-cardlabel">{card.label}</span>
-
-            <span className="fm-jp">
+            <span className="jt-boardlabel">{card.label}</span>
+            <span className="jt-jp">
               <Furigana text={variant.jp} />
             </span>
-            {reveal >= 1 && <span className="fm-ro">{variant.ro}</span>}
-            {reveal >= 2 && <span className="fm-en">{variant.en}</span>}
-            {reveal < 2 && <span className="fm-hint">tap for {reveal === 0 ? 'romaji' : 'english'}</span>}
+            {reveal >= 1 && <span className="jt-ro">{variant.ro}</span>}
+            {reveal >= 2 && <span className="jt-en">{variant.en}</span>}
+            {reveal < 2 && (
+              <span className="jt-hint">tap for {reveal === 0 ? 'romaji' : 'english'}</span>
+            )}
           </button>
 
-          <div className="fm-nav">
-            <button type="button" className="fm-navbtn" onClick={() => go(-1)} aria-label="Previous card">
+          <div className="jt-linebar">
+            {deck.cards.map((c, i) => (
+              <button
+                type="button"
+                key={c.id}
+                className={`jt-stop ${progress.known.includes(c.id) ? 'known' : ''} ${
+                  i === index ? 'current' : ''
+                }`}
+                onClick={() => jumpTo(i)}
+                aria-label={`Go to card ${i + 1}: ${c.label}`}
+                aria-current={i === index}
+              />
+            ))}
+          </div>
+
+          <div className="jt-nav">
+            <button type="button" className="jt-navbtn" onClick={() => go(-1)} aria-label="Previous">
               <ChevronLeft />
             </button>
             <button
               type="button"
-              className={`fm-knownbtn ${isKnown ? 'done' : ''}`}
+              className={`jt-knownbtn ${isKnown ? 'done' : ''}`}
               onClick={() => {
                 toggle('known', card.id);
                 if (!isKnown) go(1);
@@ -191,24 +216,23 @@ export default function KonbiniTrainer() {
             >
               <Check /> {isKnown ? 'Known' : 'Mark as known'}
             </button>
-            <button type="button" className="fm-navbtn" onClick={() => go(1)} aria-label="Next card">
+            <button type="button" className="jt-navbtn" onClick={() => go(1)} aria-label="Next">
               <ChevronRight />
             </button>
           </div>
         </>
       )}
 
-      {tab === 'scripts' && !script && (
-        <div className="fm-scriptlist">
+      {tab === 'scenarios' && !script && (
+        <div className="jt-scriptlist">
           {SCRIPTS.map((s) => (
             <button
               type="button"
               key={s.id}
-              className="fm-scriptitem"
+              className={`jt-scriptitem ${progress.practiced.includes(s.id) ? 'done' : ''}`}
               onClick={() => setOpenScript(s.id)}
             >
-              <span className={`fm-dot ${progress.practiced.includes(s.id) ? 'done' : ''}`} />
-              <span className="fm-scriptname">
+              <span className="jt-scriptname">
                 <Furigana text={s.title} />
                 <small>{s.titleEn}</small>
               </span>
@@ -217,27 +241,24 @@ export default function KonbiniTrainer() {
         </div>
       )}
 
-      {tab === 'scripts' && script && (
+      {tab === 'scenarios' && script && (
         <>
-          <button type="button" className="fm-backbtn" onClick={() => setOpenScript(null)}>
-            <ChevronLeft size={13} /> all scenarios
+          <button type="button" className="jt-backbtn" onClick={() => setOpenScript(null)}>
+            <ChevronLeft size={12} /> all scenarios
           </button>
 
-          <div className="fm-thread">
+          <div className="jt-thread">
             {script.lines.map((line, i) => {
               const text = line[register];
               return (
-                <div
-                  key={i}
-                  className={`fm-bubblewrap ${line.who === 'self' ? 'right' : 'left'}`}
-                >
-                  <button type="button" className="fm-bubble" onClick={() => speak(text.jp)}>
-                    <span className="fm-who">{line.who === 'self' ? 'you' : 'customer'}</span>
-                    <span className="fm-jp">
+                <div key={i} className={`jt-bubblewrap ${line.who === 'self' ? 'right' : 'left'}`}>
+                  <button type="button" className="jt-bubble" onClick={() => speak(text.jp)}>
+                    <span className="jt-who">{line.who === 'self' ? 'you' : 'them'}</span>
+                    <span className="jt-jp">
                       <Furigana text={text.jp} />
                     </span>
-                    <span className="fm-ro">{text.ro}</span>
-                    <span className="fm-en">{text.en}</span>
+                    <span className="jt-ro">{text.ro}</span>
+                    <span className="jt-en">{text.en}</span>
                   </button>
                 </div>
               );
@@ -246,7 +267,7 @@ export default function KonbiniTrainer() {
 
           <button
             type="button"
-            className={`fm-practicebtn ${progress.practiced.includes(script.id) ? 'done' : ''}`}
+            className={`jt-practicebtn ${progress.practiced.includes(script.id) ? 'done' : ''}`}
             onClick={() => toggle('practiced', script.id)}
           >
             <Check /> {progress.practiced.includes(script.id) ? 'Practiced' : 'Mark as practiced'}

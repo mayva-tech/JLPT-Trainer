@@ -8,7 +8,7 @@
   },
   "overrides": [
     {
-      "files": ["src/pages/KonbiniTrainer/furigana.tsx"],
+      "files": ["src/lib/japanese/furigana.tsx"],
       "rules": {
         "react/only-export-components": "off"
       }
