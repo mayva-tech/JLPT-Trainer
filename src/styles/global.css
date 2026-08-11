@@ -34,3 +34,59 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
 }
+
+.app-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.app-shell--scroll {
+  overflow: auto;
+}
+
+.app-nav {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  background: #161a22;
+  border-bottom: 1px solid #2a3140;
+  z-index: 20;
+}
+
+.app-nav-btn {
+  font-family: var(--font-en);
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  background: #3a4452;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.app-nav-btn:hover {
+  background: #4b5563;
+}
+
+.app-nav-btn--active {
+  background: #1e3a8a;
+  border-color: #1e40af;
+  color: #fff;
+}
+
+.app-view {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.app-view--scroll {
+  overflow: auto;
+}
+
+.app-view--hidden {
+  display: none;
+}

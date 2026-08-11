@@ -1,6 +1,6 @@
 /* ─── 16:9 scaling stage ───────────────────────────────────── */
 .stage-wrapper {
-  height: calc(100vh - 72px);
+  height: calc(100vh - 72px - 41px);
   width: 100vw;
   display: flex;
   align-items: center;
@@ -10,14 +10,14 @@
 }
 
 .stage-wrapper--with-panel {
-  height: calc(100vh - 260px);
+  height: calc(100vh - 260px - 41px);
   align-items: flex-start;
   padding-top: 10px;
 }
 
 .stage-wrapper--interview {
   /* Keep full stage above the fixed interview panel + nav bar */
-  height: calc(100vh - 300px);
+  height: calc(100vh - 300px - 41px);
 }
 
 .stage {
@@ -1493,11 +1493,11 @@
 /* Keep stage readable above production chrome on typical Windows desktops */
 @media (max-height: 900px) {
   .stage-wrapper--with-panel {
-    height: calc(100vh - 240px);
+    height: calc(100vh - 240px - 41px);
   }
 
   .stage-wrapper--interview {
-    height: calc(100vh - 270px);
+    height: calc(100vh - 270px - 41px);
   }
 
   .production-panel {
