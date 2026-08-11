@@ -1,8 +1,10 @@
 import type { TocItemId } from "../data/toc";
+import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
+import { formatLessonIdFromNumber } from "./vocabularyDisplay";
 
 const VOCAB_QUIZ_ID_RE = /^quiz-vocab-(\d+)-(\d+)$/;
 const N1_VOCAB_QUIZ_ID_RE = /^quiz-vocab-n1-(\d+)$/;
-const MAX_VOCAB_LESSON = 75;
+const MAX_VOCAB_LESSON = N2_VOCAB_LESSON_COUNT;
 const MAX_N1_VOCAB_LESSON = 3;
 
 /**
@@ -44,5 +46,5 @@ export function getVocabularyLessonIdForQuiz(
   const lessonNumber = Math.floor((first - 1) / 10) + 1;
   if (lessonNumber < 1 || lessonNumber > MAX_VOCAB_LESSON) return null;
 
-  return `lesson-${String(lessonNumber).padStart(2, "0")}`;
+  return formatLessonIdFromNumber(lessonNumber);
 }

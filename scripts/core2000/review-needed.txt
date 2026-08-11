@@ -1,0 +1,18 @@
+# Genuine uncertainties for human review (Core 2000 new items)
+# Format: id<TAB>word<TAB>concern
+
+# Orthography / lexical duplication risk
+4756	子ども	Course uses 子ども; 子供 is a common variant — kept one form only by design
+5998	ひとり	Kana headword; 一人 is the usual kanji form — confirm intentional kana listing
+4887	いい	Alongside 良い if both exist in course — verify not duplicate lexical entries
+
+# Multi-reading / register
+4751	私	Course reading わたし (not わたくし) — intentional for spoken trainer
+5497	ところ	Polysemous (place / just-did); example uses “〜したところ” sense
+
+# Example naturalness (spot checks)
+5444	ところで	Sentence shortened to avoid karaoke lone-です unit; confirm tone OK
+5101	授業	Discussed environmental issues — fine, but reading spacing was fragile for TTS は/わ
+
+# Part-of-speech edge cases
+# (Agents used noun / suru-verb vs noun judgment for borderline 漢語; spot-check if any feel wrong in UI)

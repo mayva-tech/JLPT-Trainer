@@ -1,0 +1,8409 @@
+{
+  "keepExisting": 750,
+  "addNew": 1250,
+  "displacedCandidates": 537,
+  "newIdStart": 4751,
+  "newIdEnd": 6000,
+  "selected": [
+    {
+      "rank": 1,
+      "word": "私",
+      "newId": 4751
+    },
+    {
+      "rank": 2,
+      "word": "あなた",
+      "newId": 4752
+    },
+    {
+      "rank": 3,
+      "word": "人",
+      "newId": 4753
+    },
+    {
+      "rank": 4,
+      "word": "男",
+      "newId": 4754
+    },
+    {
+      "rank": 5,
+      "word": "女",
+      "newId": 4755
+    },
+    {
+      "rank": 6,
+      "word": "子ども",
+      "newId": 4756
+    },
+    {
+      "rank": 7,
+      "word": "大人",
+      "newId": 4757
+    },
+    {
+      "rank": 8,
+      "word": "友達",
+      "newId": 4758
+    },
+    {
+      "rank": 9,
+      "word": "友人",
+      "newId": 4759
+    },
+    {
+      "rank": 10,
+      "word": "家族",
+      "newId": 4760
+    },
+    {
+      "rank": 11,
+      "word": "父",
+      "newId": 4761
+    },
+    {
+      "rank": 12,
+      "word": "母",
+      "newId": 4762
+    },
+    {
+      "rank": 13,
+      "word": "両親",
+      "newId": 4763
+    },
+    {
+      "rank": 14,
+      "word": "兄",
+      "newId": 4764
+    },
+    {
+      "rank": 15,
+      "word": "姉",
+      "newId": 4765
+    },
+    {
+      "rank": 16,
+      "word": "弟",
+      "newId": 4766
+    },
+    {
+      "rank": 17,
+      "word": "妹",
+      "newId": 4767
+    },
+    {
+      "rank": 18,
+      "word": "夫",
+      "newId": 4768
+    },
+    {
+      "rank": 19,
+      "word": "妻",
+      "newId": 4769
+    },
+    {
+      "rank": 20,
+      "word": "息子",
+      "newId": 4770
+    },
+    {
+      "rank": 21,
+      "word": "娘",
+      "newId": 4771
+    },
+    {
+      "rank": 22,
+      "word": "先生",
+      "newId": 4772
+    },
+    {
+      "rank": 23,
+      "word": "学生",
+      "newId": 4773
+    },
+    {
+      "rank": 24,
+      "word": "生徒",
+      "newId": 4774
+    },
+    {
+      "rank": 25,
+      "word": "日本",
+      "newId": 4775
+    },
+    {
+      "rank": 26,
+      "word": "日本人",
+      "newId": 4776
+    },
+    {
+      "rank": 27,
+      "word": "日本語",
+      "newId": 4777
+    },
+    {
+      "rank": 28,
+      "word": "英語",
+      "newId": 4778
+    },
+    {
+      "rank": 29,
+      "word": "外国",
+      "newId": 4779
+    },
+    {
+      "rank": 30,
+      "word": "外国人",
+      "newId": 4780
+    },
+    {
+      "rank": 31,
+      "word": "国",
+      "newId": 4781
+    },
+    {
+      "rank": 32,
+      "word": "世界",
+      "newId": 4782
+    },
+    {
+      "rank": 33,
+      "word": "社会",
+      "newId": 4783
+    },
+    {
+      "rank": 34,
+      "word": "会社",
+      "newId": 4784
+    },
+    {
+      "rank": 35,
+      "word": "仕事",
+      "newId": 4785
+    },
+    {
+      "rank": 36,
+      "word": "学校",
+      "newId": 4786
+    },
+    {
+      "rank": 37,
+      "word": "大学",
+      "newId": 4787
+    },
+    {
+      "rank": 38,
+      "word": "教室",
+      "newId": 4788
+    },
+    {
+      "rank": 39,
+      "word": "病院",
+      "newId": 4789
+    },
+    {
+      "rank": 40,
+      "word": "銀行",
+      "newId": 4790
+    },
+    {
+      "rank": 41,
+      "word": "駅",
+      "newId": 4791
+    },
+    {
+      "rank": 42,
+      "word": "店",
+      "newId": 4792
+    },
+    {
+      "rank": 43,
+      "word": "スーパー",
+      "newId": 4793
+    },
+    {
+      "rank": 44,
+      "word": "コンビニ",
+      "newId": 4794
+    },
+    {
+      "rank": 45,
+      "word": "家",
+      "newId": 4795
+    },
+    {
+      "rank": 46,
+      "word": "部屋",
+      "newId": 4796
+    },
+    {
+      "rank": 47,
+      "word": "台所",
+      "newId": 4797
+    },
+    {
+      "rank": 48,
+      "word": "玄関",
+      "newId": 4798
+    },
+    {
+      "rank": 49,
+      "word": "風呂",
+      "newId": 4799
+    },
+    {
+      "rank": 50,
+      "word": "トイレ",
+      "newId": 4800
+    },
+    {
+      "rank": 51,
+      "word": "窓",
+      "newId": 4801
+    },
+    {
+      "rank": 52,
+      "word": "ドア",
+      "newId": 4802
+    },
+    {
+      "rank": 53,
+      "word": "階段",
+      "newId": 4803
+    },
+    {
+      "rank": 54,
+      "word": "庭",
+      "newId": 4804
+    },
+    {
+      "rank": 57,
+      "word": "テーブル",
+      "newId": 4805
+    },
+    {
+      "rank": 58,
+      "word": "椅子",
+      "newId": 4806
+    },
+    {
+      "rank": 59,
+      "word": "ベッド",
+      "newId": 4807
+    },
+    {
+      "rank": 60,
+      "word": "今日",
+      "newId": 4808
+    },
+    {
+      "rank": 61,
+      "word": "明日",
+      "newId": 4809
+    },
+    {
+      "rank": 62,
+      "word": "昨日",
+      "newId": 4810
+    },
+    {
+      "rank": 63,
+      "word": "今",
+      "newId": 4811
+    },
+    {
+      "rank": 64,
+      "word": "朝",
+      "newId": 4812
+    },
+    {
+      "rank": 65,
+      "word": "昼",
+      "newId": 4813
+    },
+    {
+      "rank": 66,
+      "word": "夜",
+      "newId": 4814
+    },
+    {
+      "rank": 67,
+      "word": "夕方",
+      "newId": 4815
+    },
+    {
+      "rank": 68,
+      "word": "午前",
+      "newId": 4816
+    },
+    {
+      "rank": 69,
+      "word": "午後",
+      "newId": 4817
+    },
+    {
+      "rank": 70,
+      "word": "今週",
+      "newId": 4818
+    },
+    {
+      "rank": 71,
+      "word": "先週",
+      "newId": 4819
+    },
+    {
+      "rank": 72,
+      "word": "来週",
+      "newId": 4820
+    },
+    {
+      "rank": 73,
+      "word": "今月",
+      "newId": 4821
+    },
+    {
+      "rank": 74,
+      "word": "先月",
+      "newId": 4822
+    },
+    {
+      "rank": 75,
+      "word": "来月",
+      "newId": 4823
+    },
+    {
+      "rank": 76,
+      "word": "今年",
+      "newId": 4824
+    },
+    {
+      "rank": 77,
+      "word": "去年",
+      "newId": 4825
+    },
+    {
+      "rank": 78,
+      "word": "来年",
+      "newId": 4826
+    },
+    {
+      "rank": 79,
+      "word": "時間",
+      "newId": 4827
+    },
+    {
+      "rank": 80,
+      "word": "時",
+      "newId": 4828
+    },
+    {
+      "rank": 81,
+      "word": "分",
+      "newId": 4829
+    },
+    {
+      "rank": 82,
+      "word": "日",
+      "newId": 4830
+    },
+    {
+      "rank": 83,
+      "word": "週",
+      "newId": 4831
+    },
+    {
+      "rank": 84,
+      "word": "月",
+      "newId": 4832
+    },
+    {
+      "rank": 85,
+      "word": "年",
+      "newId": 4833
+    },
+    {
+      "rank": 86,
+      "word": "春",
+      "newId": 4834
+    },
+    {
+      "rank": 87,
+      "word": "夏",
+      "newId": 4835
+    },
+    {
+      "rank": 88,
+      "word": "秋",
+      "newId": 4836
+    },
+    {
+      "rank": 89,
+      "word": "冬",
+      "newId": 4837
+    },
+    {
+      "rank": 90,
+      "word": "毎日",
+      "newId": 4838
+    },
+    {
+      "rank": 91,
+      "word": "毎週",
+      "newId": 4839
+    },
+    {
+      "rank": 92,
+      "word": "毎月",
+      "newId": 4840
+    },
+    {
+      "rank": 93,
+      "word": "毎年",
+      "newId": 4841
+    },
+    {
+      "rank": 94,
+      "word": "一",
+      "newId": 4842
+    },
+    {
+      "rank": 95,
+      "word": "二",
+      "newId": 4843
+    },
+    {
+      "rank": 96,
+      "word": "三",
+      "newId": 4844
+    },
+    {
+      "rank": 97,
+      "word": "四",
+      "newId": 4845
+    },
+    {
+      "rank": 98,
+      "word": "五",
+      "newId": 4846
+    },
+    {
+      "rank": 99,
+      "word": "六",
+      "newId": 4847
+    },
+    {
+      "rank": 100,
+      "word": "七",
+      "newId": 4848
+    },
+    {
+      "rank": 101,
+      "word": "八",
+      "newId": 4849
+    },
+    {
+      "rank": 102,
+      "word": "九",
+      "newId": 4850
+    },
+    {
+      "rank": 103,
+      "word": "十",
+      "newId": 4851
+    },
+    {
+      "rank": 104,
+      "word": "百",
+      "newId": 4852
+    },
+    {
+      "rank": 105,
+      "word": "千",
+      "newId": 4853
+    },
+    {
+      "rank": 106,
+      "word": "万",
+      "newId": 4854
+    },
+    {
+      "rank": 107,
+      "word": "半",
+      "newId": 4855
+    },
+    {
+      "rank": 108,
+      "word": "一番",
+      "newId": 4856
+    },
+    {
+      "rank": 109,
+      "word": "最初",
+      "newId": 4857
+    },
+    {
+      "rank": 110,
+      "word": "最後",
+      "newId": 4858
+    },
+    {
+      "rank": 111,
+      "word": "次",
+      "newId": 4859
+    },
+    {
+      "rank": 112,
+      "word": "前",
+      "newId": 4860
+    },
+    {
+      "rank": 113,
+      "word": "後",
+      "newId": 4861
+    },
+    {
+      "rank": 114,
+      "word": "上",
+      "newId": 4862
+    },
+    {
+      "rank": 115,
+      "word": "下",
+      "newId": 4863
+    },
+    {
+      "rank": 116,
+      "word": "中",
+      "newId": 4864
+    },
+    {
+      "rank": 117,
+      "word": "外",
+      "newId": 4865
+    },
+    {
+      "rank": 118,
+      "word": "内",
+      "newId": 4866
+    },
+    {
+      "rank": 119,
+      "word": "左",
+      "newId": 4867
+    },
+    {
+      "rank": 120,
+      "word": "右",
+      "newId": 4868
+    },
+    {
+      "rank": 121,
+      "word": "東",
+      "newId": 4869
+    },
+    {
+      "rank": 122,
+      "word": "西",
+      "newId": 4870
+    },
+    {
+      "rank": 123,
+      "word": "南",
+      "newId": 4871
+    },
+    {
+      "rank": 124,
+      "word": "北",
+      "newId": 4872
+    },
+    {
+      "rank": 125,
+      "word": "ここ",
+      "newId": 4873
+    },
+    {
+      "rank": 126,
+      "word": "そこ",
+      "newId": 4874
+    },
+    {
+      "rank": 127,
+      "word": "あそこ",
+      "newId": 4875
+    },
+    {
+      "rank": 128,
+      "word": "こちら",
+      "newId": 4876
+    },
+    {
+      "rank": 129,
+      "word": "そちら",
+      "newId": 4877
+    },
+    {
+      "rank": 130,
+      "word": "どこ",
+      "newId": 4878
+    },
+    {
+      "rank": 131,
+      "word": "これ",
+      "newId": 4879
+    },
+    {
+      "rank": 132,
+      "word": "それ",
+      "newId": 4880
+    },
+    {
+      "rank": 133,
+      "word": "あれ",
+      "newId": 4881
+    },
+    {
+      "rank": 134,
+      "word": "この",
+      "newId": 4882
+    },
+    {
+      "rank": 135,
+      "word": "その",
+      "newId": 4883
+    },
+    {
+      "rank": 136,
+      "word": "あの",
+      "newId": 4884
+    },
+    {
+      "rank": 137,
+      "word": "どれ",
+      "newId": 4885
+    },
+    {
+      "rank": 138,
+      "word": "どの",
+      "newId": 4886
+    },
+    {
+      "rank": 139,
+      "word": "何",
+      "newId": 4887
+    },
+    {
+      "rank": 140,
+      "word": "誰",
+      "newId": 4888
+    },
+    {
+      "rank": 141,
+      "word": "いつ",
+      "newId": 4889
+    },
+    {
+      "rank": 142,
+      "word": "どう",
+      "newId": 4890
+    },
+    {
+      "rank": 143,
+      "word": "どうして",
+      "newId": 4891
+    },
+    {
+      "rank": 144,
+      "word": "なぜ",
+      "newId": 4892
+    },
+    {
+      "rank": 145,
+      "word": "する",
+      "newId": 4893
+    },
+    {
+      "rank": 146,
+      "word": "ある",
+      "newId": 4894
+    },
+    {
+      "rank": 147,
+      "word": "いる",
+      "newId": 4895
+    },
+    {
+      "rank": 148,
+      "word": "なる",
+      "newId": 4896
+    },
+    {
+      "rank": 149,
+      "word": "できる",
+      "newId": 4897
+    },
+    {
+      "rank": 150,
+      "word": "行く",
+      "newId": 4898
+    },
+    {
+      "rank": 151,
+      "word": "来る",
+      "newId": 4899
+    },
+    {
+      "rank": 152,
+      "word": "帰る",
+      "newId": 4900
+    },
+    {
+      "rank": 153,
+      "word": "出る",
+      "newId": 4901
+    },
+    {
+      "rank": 154,
+      "word": "入る",
+      "newId": 4902
+    },
+    {
+      "rank": 155,
+      "word": "上がる",
+      "newId": 4903
+    },
+    {
+      "rank": 156,
+      "word": "下がる",
+      "newId": 4904
+    },
+    {
+      "rank": 157,
+      "word": "乗る",
+      "newId": 4905
+    },
+    {
+      "rank": 158,
+      "word": "降りる",
+      "newId": 4906
+    },
+    {
+      "rank": 159,
+      "word": "歩く",
+      "newId": 4907
+    },
+    {
+      "rank": 160,
+      "word": "走る",
+      "newId": 4908
+    },
+    {
+      "rank": 161,
+      "word": "飛ぶ",
+      "newId": 4909
+    },
+    {
+      "rank": 162,
+      "word": "止まる",
+      "newId": 4910
+    },
+    {
+      "rank": 163,
+      "word": "見る",
+      "newId": 4911
+    },
+    {
+      "rank": 164,
+      "word": "見せる",
+      "newId": 4912
+    },
+    {
+      "rank": 165,
+      "word": "見える",
+      "newId": 4913
+    },
+    {
+      "rank": 166,
+      "word": "聞く",
+      "newId": 4914
+    },
+    {
+      "rank": 167,
+      "word": "聞こえる",
+      "newId": 4915
+    },
+    {
+      "rank": 168,
+      "word": "話す",
+      "newId": 4916
+    },
+    {
+      "rank": 169,
+      "word": "言う",
+      "newId": 4917
+    },
+    {
+      "rank": 170,
+      "word": "読む",
+      "newId": 4918
+    },
+    {
+      "rank": 171,
+      "word": "書く",
+      "newId": 4919
+    },
+    {
+      "rank": 172,
+      "word": "思う",
+      "newId": 4920
+    },
+    {
+      "rank": 173,
+      "word": "考える",
+      "newId": 4921
+    },
+    {
+      "rank": 174,
+      "word": "知る",
+      "newId": 4922
+    },
+    {
+      "rank": 175,
+      "word": "分かる",
+      "newId": 4923
+    },
+    {
+      "rank": 176,
+      "word": "覚える",
+      "newId": 4924
+    },
+    {
+      "rank": 177,
+      "word": "忘れる",
+      "newId": 4925
+    },
+    {
+      "rank": 178,
+      "word": "学ぶ",
+      "newId": 4926
+    },
+    {
+      "rank": 179,
+      "word": "教える",
+      "newId": 4927
+    },
+    {
+      "rank": 180,
+      "word": "食べる",
+      "newId": 4928
+    },
+    {
+      "rank": 181,
+      "word": "飲む",
+      "newId": 4929
+    },
+    {
+      "rank": 182,
+      "word": "作る",
+      "newId": 4930
+    },
+    {
+      "rank": 183,
+      "word": "使う",
+      "newId": 4931
+    },
+    {
+      "rank": 184,
+      "word": "買う",
+      "newId": 4932
+    },
+    {
+      "rank": 185,
+      "word": "売る",
+      "newId": 4933
+    },
+    {
+      "rank": 186,
+      "word": "払う",
+      "newId": 4934
+    },
+    {
+      "rank": 187,
+      "word": "取る",
+      "newId": 4935
+    },
+    {
+      "rank": 188,
+      "word": "持つ",
+      "newId": 4936
+    },
+    {
+      "rank": 189,
+      "word": "置く",
+      "newId": 4937
+    },
+    {
+      "rank": 190,
+      "word": "入れる",
+      "newId": 4938
+    },
+    {
+      "rank": 191,
+      "word": "出す",
+      "newId": 4939
+    },
+    {
+      "rank": 192,
+      "word": "開ける",
+      "newId": 4940
+    },
+    {
+      "rank": 193,
+      "word": "開く",
+      "newId": 4941
+    },
+    {
+      "rank": 194,
+      "word": "閉める",
+      "newId": 4942
+    },
+    {
+      "rank": 195,
+      "word": "閉まる",
+      "newId": 4943
+    },
+    {
+      "rank": 196,
+      "word": "つける",
+      "newId": 4944
+    },
+    {
+      "rank": 197,
+      "word": "消す",
+      "newId": 4945
+    },
+    {
+      "rank": 198,
+      "word": "起きる",
+      "newId": 4946
+    },
+    {
+      "rank": 199,
+      "word": "寝る",
+      "newId": 4947
+    },
+    {
+      "rank": 200,
+      "word": "休む",
+      "newId": 4948
+    },
+    {
+      "rank": 201,
+      "word": "働く",
+      "newId": 4949
+    },
+    {
+      "rank": 202,
+      "word": "勉強",
+      "newId": 4950
+    },
+    {
+      "rank": 203,
+      "word": "練習",
+      "newId": 4951
+    },
+    {
+      "rank": 204,
+      "word": "会う",
+      "newId": 4952
+    },
+    {
+      "rank": 205,
+      "word": "待つ",
+      "newId": 4953
+    },
+    {
+      "rank": 206,
+      "word": "呼ぶ",
+      "newId": 4954
+    },
+    {
+      "rank": 207,
+      "word": "送る",
+      "newId": 4955
+    },
+    {
+      "rank": 208,
+      "word": "返す",
+      "newId": 4956
+    },
+    {
+      "rank": 209,
+      "word": "借りる",
+      "newId": 4957
+    },
+    {
+      "rank": 210,
+      "word": "貸す",
+      "newId": 4958
+    },
+    {
+      "rank": 211,
+      "word": "頼む",
+      "newId": 4959
+    },
+    {
+      "rank": 212,
+      "word": "手伝う",
+      "newId": 4960
+    },
+    {
+      "rank": 213,
+      "word": "始める",
+      "newId": 4961
+    },
+    {
+      "rank": 214,
+      "word": "始まる",
+      "newId": 4962
+    },
+    {
+      "rank": 215,
+      "word": "終わる",
+      "newId": 4963
+    },
+    {
+      "rank": 216,
+      "word": "続ける",
+      "newId": 4964
+    },
+    {
+      "rank": 217,
+      "word": "続く",
+      "newId": 4965
+    },
+    {
+      "rank": 218,
+      "word": "決める",
+      "newId": 4966
+    },
+    {
+      "rank": 219,
+      "word": "決まる",
+      "newId": 4967
+    },
+    {
+      "rank": 220,
+      "word": "変える",
+      "newId": 4968
+    },
+    {
+      "rank": 221,
+      "word": "変わる",
+      "newId": 4969
+    },
+    {
+      "rank": 222,
+      "word": "増える",
+      "newId": 4970
+    },
+    {
+      "rank": 223,
+      "word": "減る",
+      "newId": 4971
+    },
+    {
+      "rank": 224,
+      "word": "選ぶ",
+      "newId": 4972
+    },
+    {
+      "rank": 225,
+      "word": "比べる",
+      "newId": 4973
+    },
+    {
+      "rank": 226,
+      "word": "探す",
+      "newId": 4974
+    },
+    {
+      "rank": 227,
+      "word": "見つける",
+      "newId": 4975
+    },
+    {
+      "rank": 228,
+      "word": "立つ",
+      "newId": 4976
+    },
+    {
+      "rank": 229,
+      "word": "座る",
+      "newId": 4977
+    },
+    {
+      "rank": 230,
+      "word": "着く",
+      "newId": 4978
+    },
+    {
+      "rank": 231,
+      "word": "住む",
+      "newId": 4979
+    },
+    {
+      "rank": 232,
+      "word": "生まれる",
+      "newId": 4980
+    },
+    {
+      "rank": 233,
+      "word": "死ぬ",
+      "newId": 4981
+    },
+    {
+      "rank": 234,
+      "word": "洗う",
+      "newId": 4982
+    },
+    {
+      "rank": 236,
+      "word": "料理",
+      "newId": 4983
+    },
+    {
+      "rank": 237,
+      "word": "運転",
+      "newId": 4984
+    },
+    {
+      "rank": 238,
+      "word": "旅行",
+      "newId": 4985
+    },
+    {
+      "rank": 239,
+      "word": "結婚",
+      "newId": 4986
+    },
+    {
+      "rank": 240,
+      "word": "大きい",
+      "newId": 4987
+    },
+    {
+      "rank": 241,
+      "word": "小さい",
+      "newId": 4988
+    },
+    {
+      "rank": 242,
+      "word": "高い",
+      "newId": 4989
+    },
+    {
+      "rank": 243,
+      "word": "低い",
+      "newId": 4990
+    },
+    {
+      "rank": 244,
+      "word": "長い",
+      "newId": 4991
+    },
+    {
+      "rank": 245,
+      "word": "短い",
+      "newId": 4992
+    },
+    {
+      "rank": 246,
+      "word": "広い",
+      "newId": 4993
+    },
+    {
+      "rank": 247,
+      "word": "狭い",
+      "newId": 4994
+    },
+    {
+      "rank": 248,
+      "word": "多い",
+      "newId": 4995
+    },
+    {
+      "rank": 249,
+      "word": "少ない",
+      "newId": 4996
+    },
+    {
+      "rank": 250,
+      "word": "新しい",
+      "newId": 4997
+    },
+    {
+      "rank": 251,
+      "word": "古い",
+      "newId": 4998
+    },
+    {
+      "rank": 252,
+      "word": "いい",
+      "newId": 4999
+    },
+    {
+      "rank": 253,
+      "word": "悪い",
+      "newId": 5000
+    },
+    {
+      "rank": 254,
+      "word": "早い",
+      "newId": 5001
+    },
+    {
+      "rank": 255,
+      "word": "遅い",
+      "newId": 5002
+    },
+    {
+      "rank": 256,
+      "word": "速い",
+      "newId": 5003
+    },
+    {
+      "rank": 257,
+      "word": "暑い",
+      "newId": 5004
+    },
+    {
+      "rank": 258,
+      "word": "寒い",
+      "newId": 5005
+    },
+    {
+      "rank": 259,
+      "word": "暖かい",
+      "newId": 5006
+    },
+    {
+      "rank": 260,
+      "word": "涼しい",
+      "newId": 5007
+    },
+    {
+      "rank": 261,
+      "word": "熱い",
+      "newId": 5008
+    },
+    {
+      "rank": 262,
+      "word": "冷たい",
+      "newId": 5009
+    },
+    {
+      "rank": 263,
+      "word": "重い",
+      "newId": 5010
+    },
+    {
+      "rank": 264,
+      "word": "軽い",
+      "newId": 5011
+    },
+    {
+      "rank": 265,
+      "word": "強い",
+      "newId": 5012
+    },
+    {
+      "rank": 266,
+      "word": "弱い",
+      "newId": 5013
+    },
+    {
+      "rank": 267,
+      "word": "難しい",
+      "newId": 5014
+    },
+    {
+      "rank": 268,
+      "word": "易しい",
+      "newId": 5015
+    },
+    {
+      "rank": 269,
+      "word": "忙しい",
+      "newId": 5016
+    },
+    {
+      "rank": 270,
+      "word": "楽しい",
+      "newId": 5017
+    },
+    {
+      "rank": 271,
+      "word": "面白い",
+      "newId": 5018
+    },
+    {
+      "rank": 272,
+      "word": "おいしい",
+      "newId": 5019
+    },
+    {
+      "rank": 273,
+      "word": "甘い",
+      "newId": 5020
+    },
+    {
+      "rank": 274,
+      "word": "辛い",
+      "newId": 5021
+    },
+    {
+      "rank": 275,
+      "word": "苦い",
+      "newId": 5022
+    },
+    {
+      "rank": 276,
+      "word": "痛い",
+      "newId": 5023
+    },
+    {
+      "rank": 277,
+      "word": "怖い",
+      "newId": 5024
+    },
+    {
+      "rank": 278,
+      "word": "うれしい",
+      "newId": 5025
+    },
+    {
+      "rank": 279,
+      "word": "悲しい",
+      "newId": 5026
+    },
+    {
+      "rank": 280,
+      "word": "かわいい",
+      "newId": 5027
+    },
+    {
+      "rank": 281,
+      "word": "美しい",
+      "newId": 5028
+    },
+    {
+      "rank": 282,
+      "word": "汚い",
+      "newId": 5029
+    },
+    {
+      "rank": 283,
+      "word": "明るい",
+      "newId": 5030
+    },
+    {
+      "rank": 284,
+      "word": "暗い",
+      "newId": 5031
+    },
+    {
+      "rank": 285,
+      "word": "近い",
+      "newId": 5032
+    },
+    {
+      "rank": 286,
+      "word": "遠い",
+      "newId": 5033
+    },
+    {
+      "rank": 287,
+      "word": "好き",
+      "newId": 5034
+    },
+    {
+      "rank": 288,
+      "word": "嫌い",
+      "newId": 5035
+    },
+    {
+      "rank": 289,
+      "word": "上手",
+      "newId": 5036
+    },
+    {
+      "rank": 290,
+      "word": "下手",
+      "newId": 5037
+    },
+    {
+      "rank": 291,
+      "word": "元気",
+      "newId": 5038
+    },
+    {
+      "rank": 292,
+      "word": "静か",
+      "newId": 5039
+    },
+    {
+      "rank": 293,
+      "word": "にぎやか",
+      "newId": 5040
+    },
+    {
+      "rank": 294,
+      "word": "便利",
+      "newId": 5041
+    },
+    {
+      "rank": 295,
+      "word": "大丈夫",
+      "newId": 5042
+    },
+    {
+      "rank": 296,
+      "word": "大切",
+      "newId": 5043
+    },
+    {
+      "rank": 297,
+      "word": "大事",
+      "newId": 5044
+    },
+    {
+      "rank": 298,
+      "word": "必要",
+      "newId": 5045
+    },
+    {
+      "rank": 299,
+      "word": "有名",
+      "newId": 5046
+    },
+    {
+      "rank": 300,
+      "word": "簡単",
+      "newId": 5047
+    },
+    {
+      "rank": 301,
+      "word": "複雑",
+      "newId": 5048
+    },
+    {
+      "rank": 302,
+      "word": "安全",
+      "newId": 5049
+    },
+    {
+      "rank": 303,
+      "word": "危険",
+      "newId": 5050
+    },
+    {
+      "rank": 304,
+      "word": "とても",
+      "newId": 5051
+    },
+    {
+      "rank": 305,
+      "word": "もっと",
+      "newId": 5052
+    },
+    {
+      "rank": 306,
+      "word": "かなり",
+      "newId": 5053
+    },
+    {
+      "rank": 307,
+      "word": "少し",
+      "newId": 5054
+    },
+    {
+      "rank": 308,
+      "word": "ちょっと",
+      "newId": 5055
+    },
+    {
+      "rank": 309,
+      "word": "たくさん",
+      "newId": 5056
+    },
+    {
+      "rank": 310,
+      "word": "あまり",
+      "newId": 5057
+    },
+    {
+      "rank": 311,
+      "word": "ほとんど",
+      "newId": 5058
+    },
+    {
+      "rank": 312,
+      "word": "すぐ",
+      "newId": 5059
+    },
+    {
+      "rank": 313,
+      "word": "ゆっくり",
+      "newId": 5060
+    },
+    {
+      "rank": 314,
+      "word": "よく",
+      "newId": 5061
+    },
+    {
+      "rank": 315,
+      "word": "いつも",
+      "newId": 5062
+    },
+    {
+      "rank": 316,
+      "word": "時々",
+      "newId": 5063
+    },
+    {
+      "rank": 317,
+      "word": "たまに",
+      "newId": 5064
+    },
+    {
+      "rank": 318,
+      "word": "もう",
+      "newId": 5065
+    },
+    {
+      "rank": 319,
+      "word": "まだ",
+      "newId": 5066
+    },
+    {
+      "rank": 320,
+      "word": "すでに",
+      "newId": 5067
+    },
+    {
+      "rank": 321,
+      "word": "まず",
+      "newId": 5068
+    },
+    {
+      "rank": 322,
+      "word": "また",
+      "newId": 5069
+    },
+    {
+      "rank": 323,
+      "word": "そして",
+      "newId": 5070
+    },
+    {
+      "rank": 324,
+      "word": "しかし",
+      "newId": 5071
+    },
+    {
+      "rank": 325,
+      "word": "だから",
+      "newId": 5072
+    },
+    {
+      "rank": 326,
+      "word": "でも",
+      "newId": 5073
+    },
+    {
+      "rank": 327,
+      "word": "もし",
+      "newId": 5074
+    },
+    {
+      "rank": 328,
+      "word": "必ず",
+      "newId": 5075
+    },
+    {
+      "rank": 329,
+      "word": "多分",
+      "newId": 5076
+    },
+    {
+      "rank": 330,
+      "word": "本当に",
+      "newId": 5077
+    },
+    {
+      "rank": 331,
+      "word": "もちろん",
+      "newId": 5078
+    },
+    {
+      "rank": 332,
+      "word": "例えば",
+      "newId": 5079
+    },
+    {
+      "rank": 333,
+      "word": "水",
+      "newId": 5080
+    },
+    {
+      "rank": 334,
+      "word": "お茶",
+      "newId": 5081
+    },
+    {
+      "rank": 335,
+      "word": "コーヒー",
+      "newId": 5082
+    },
+    {
+      "rank": 336,
+      "word": "牛乳",
+      "newId": 5083
+    },
+    {
+      "rank": 337,
+      "word": "ご飯",
+      "newId": 5084
+    },
+    {
+      "rank": 338,
+      "word": "パン",
+      "newId": 5085
+    },
+    {
+      "rank": 339,
+      "word": "肉",
+      "newId": 5086
+    },
+    {
+      "rank": 340,
+      "word": "魚",
+      "newId": 5087
+    },
+    {
+      "rank": 341,
+      "word": "野菜",
+      "newId": 5088
+    },
+    {
+      "rank": 342,
+      "word": "果物",
+      "newId": 5089
+    },
+    {
+      "rank": 343,
+      "word": "卵",
+      "newId": 5090
+    },
+    {
+      "rank": 344,
+      "word": "食事",
+      "newId": 5091
+    },
+    {
+      "rank": 345,
+      "word": "朝食",
+      "newId": 5092
+    },
+    {
+      "rank": 346,
+      "word": "昼食",
+      "newId": 5093
+    },
+    {
+      "rank": 347,
+      "word": "夕食",
+      "newId": 5094
+    },
+    {
+      "rank": 348,
+      "word": "レストラン",
+      "newId": 5095
+    },
+    {
+      "rank": 349,
+      "word": "服",
+      "newId": 5096
+    },
+    {
+      "rank": 350,
+      "word": "シャツ",
+      "newId": 5097
+    },
+    {
+      "rank": 351,
+      "word": "ズボン",
+      "newId": 5098
+    },
+    {
+      "rank": 352,
+      "word": "スカート",
+      "newId": 5099
+    },
+    {
+      "rank": 353,
+      "word": "靴",
+      "newId": 5100
+    },
+    {
+      "rank": 354,
+      "word": "帽子",
+      "newId": 5101
+    },
+    {
+      "rank": 355,
+      "word": "財布",
+      "newId": 5102
+    },
+    {
+      "rank": 356,
+      "word": "鍵",
+      "newId": 5103
+    },
+    {
+      "rank": 358,
+      "word": "本",
+      "newId": 5104
+    },
+    {
+      "rank": 359,
+      "word": "新聞",
+      "newId": 5105
+    },
+    {
+      "rank": 360,
+      "word": "雑誌",
+      "newId": 5106
+    },
+    {
+      "rank": 361,
+      "word": "辞書",
+      "newId": 5107
+    },
+    {
+      "rank": 362,
+      "word": "ノート",
+      "newId": 5108
+    },
+    {
+      "rank": 363,
+      "word": "ペン",
+      "newId": 5109
+    },
+    {
+      "rank": 364,
+      "word": "紙",
+      "newId": 5110
+    },
+    {
+      "rank": 365,
+      "word": "手紙",
+      "newId": 5111
+    },
+    {
+      "rank": 366,
+      "word": "写真",
+      "newId": 5112
+    },
+    {
+      "rank": 367,
+      "word": "電話",
+      "newId": 5113
+    },
+    {
+      "rank": 368,
+      "word": "携帯",
+      "newId": 5114
+    },
+    {
+      "rank": 369,
+      "word": "パソコン",
+      "newId": 5115
+    },
+    {
+      "rank": 370,
+      "word": "コンピュータ",
+      "newId": 5116
+    },
+    {
+      "rank": 371,
+      "word": "インターネット",
+      "newId": 5117
+    },
+    {
+      "rank": 372,
+      "word": "メール",
+      "newId": 5118
+    },
+    {
+      "rank": 373,
+      "word": "テレビ",
+      "newId": 5119
+    },
+    {
+      "rank": 374,
+      "word": "ラジオ",
+      "newId": 5120
+    },
+    {
+      "rank": 375,
+      "word": "カメラ",
+      "newId": 5121
+    },
+    {
+      "rank": 376,
+      "word": "車",
+      "newId": 5122
+    },
+    {
+      "rank": 377,
+      "word": "自転車",
+      "newId": 5123
+    },
+    {
+      "rank": 378,
+      "word": "電車",
+      "newId": 5124
+    },
+    {
+      "rank": 379,
+      "word": "地下鉄",
+      "newId": 5125
+    },
+    {
+      "rank": 380,
+      "word": "バス",
+      "newId": 5126
+    },
+    {
+      "rank": 381,
+      "word": "タクシー",
+      "newId": 5127
+    },
+    {
+      "rank": 382,
+      "word": "飛行機",
+      "newId": 5128
+    },
+    {
+      "rank": 383,
+      "word": "空港",
+      "newId": 5129
+    },
+    {
+      "rank": 384,
+      "word": "道",
+      "newId": 5130
+    },
+    {
+      "rank": 385,
+      "word": "道路",
+      "newId": 5131
+    },
+    {
+      "rank": 386,
+      "word": "地図",
+      "newId": 5132
+    },
+    {
+      "rank": 387,
+      "word": "交通",
+      "newId": 5133
+    },
+    {
+      "rank": 388,
+      "word": "天気",
+      "newId": 5134
+    },
+    {
+      "rank": 389,
+      "word": "雨",
+      "newId": 5135
+    },
+    {
+      "rank": 390,
+      "word": "雪",
+      "newId": 5136
+    },
+    {
+      "rank": 391,
+      "word": "風",
+      "newId": 5137
+    },
+    {
+      "rank": 392,
+      "word": "空",
+      "newId": 5138
+    },
+    {
+      "rank": 393,
+      "word": "海",
+      "newId": 5139
+    },
+    {
+      "rank": 394,
+      "word": "山",
+      "newId": 5140
+    },
+    {
+      "rank": 395,
+      "word": "川",
+      "newId": 5141
+    },
+    {
+      "rank": 396,
+      "word": "地震",
+      "newId": 5142
+    },
+    {
+      "rank": 399,
+      "word": "頭",
+      "newId": 5143
+    },
+    {
+      "rank": 400,
+      "word": "顔",
+      "newId": 5144
+    },
+    {
+      "rank": 401,
+      "word": "目",
+      "newId": 5145
+    },
+    {
+      "rank": 402,
+      "word": "耳",
+      "newId": 5146
+    },
+    {
+      "rank": 403,
+      "word": "鼻",
+      "newId": 5147
+    },
+    {
+      "rank": 404,
+      "word": "口",
+      "newId": 5148
+    },
+    {
+      "rank": 405,
+      "word": "歯",
+      "newId": 5149
+    },
+    {
+      "rank": 406,
+      "word": "首",
+      "newId": 5150
+    },
+    {
+      "rank": 407,
+      "word": "肩",
+      "newId": 5151
+    },
+    {
+      "rank": 408,
+      "word": "手",
+      "newId": 5152
+    },
+    {
+      "rank": 409,
+      "word": "指",
+      "newId": 5153
+    },
+    {
+      "rank": 410,
+      "word": "胸",
+      "newId": 5154
+    },
+    {
+      "rank": 411,
+      "word": "腹",
+      "newId": 5155
+    },
+    {
+      "rank": 412,
+      "word": "背中",
+      "newId": 5156
+    },
+    {
+      "rank": 413,
+      "word": "足",
+      "newId": 5157
+    },
+    {
+      "rank": 414,
+      "word": "体",
+      "newId": 5158
+    },
+    {
+      "rank": 415,
+      "word": "心",
+      "newId": 5159
+    },
+    {
+      "rank": 416,
+      "word": "病気",
+      "newId": 5160
+    },
+    {
+      "rank": 417,
+      "word": "健康",
+      "newId": 5161
+    },
+    {
+      "rank": 418,
+      "word": "医者",
+      "newId": 5162
+    },
+    {
+      "rank": 419,
+      "word": "薬",
+      "newId": 5163
+    },
+    {
+      "rank": 420,
+      "word": "痛み",
+      "newId": 5164
+    },
+    {
+      "rank": 422,
+      "word": "治療",
+      "newId": 5165
+    },
+    {
+      "rank": 423,
+      "word": "色",
+      "newId": 5166
+    },
+    {
+      "rank": 424,
+      "word": "赤",
+      "newId": 5167
+    },
+    {
+      "rank": 425,
+      "word": "青",
+      "newId": 5168
+    },
+    {
+      "rank": 426,
+      "word": "白",
+      "newId": 5169
+    },
+    {
+      "rank": 427,
+      "word": "黒",
+      "newId": 5170
+    },
+    {
+      "rank": 428,
+      "word": "緑",
+      "newId": 5171
+    },
+    {
+      "rank": 429,
+      "word": "黄色",
+      "newId": 5172
+    },
+    {
+      "rank": 430,
+      "word": "音",
+      "newId": 5173
+    },
+    {
+      "rank": 431,
+      "word": "音楽",
+      "newId": 5174
+    },
+    {
+      "rank": 432,
+      "word": "映画",
+      "newId": 5175
+    },
+    {
+      "rank": 433,
+      "word": "スポーツ",
+      "newId": 5176
+    },
+    {
+      "rank": 434,
+      "word": "ゲーム",
+      "newId": 5177
+    },
+    {
+      "rank": 436,
+      "word": "名前",
+      "newId": 5178
+    },
+    {
+      "rank": 437,
+      "word": "意味",
+      "newId": 5179
+    },
+    {
+      "rank": 438,
+      "word": "言葉",
+      "newId": 5180
+    },
+    {
+      "rank": 439,
+      "word": "問題",
+      "newId": 5181
+    },
+    {
+      "rank": 440,
+      "word": "質問",
+      "newId": 5182
+    },
+    {
+      "rank": 441,
+      "word": "答え",
+      "newId": 5183
+    },
+    {
+      "rank": 442,
+      "word": "理由",
+      "newId": 5184
+    },
+    {
+      "rank": 443,
+      "word": "方法",
+      "newId": 5185
+    },
+    {
+      "rank": 444,
+      "word": "例",
+      "newId": 5186
+    },
+    {
+      "rank": 445,
+      "word": "情報",
+      "newId": 5187
+    },
+    {
+      "rank": 448,
+      "word": "目的",
+      "newId": 5188
+    },
+    {
+      "rank": 449,
+      "word": "お金",
+      "newId": 5189
+    },
+    {
+      "rank": 450,
+      "word": "円",
+      "newId": 5190
+    },
+    {
+      "rank": 451,
+      "word": "値段",
+      "newId": 5191
+    },
+    {
+      "rank": 452,
+      "word": "価格",
+      "newId": 5192
+    },
+    {
+      "rank": 453,
+      "word": "費用",
+      "newId": 5193
+    },
+    {
+      "rank": 454,
+      "word": "料金",
+      "newId": 5194
+    },
+    {
+      "rank": 455,
+      "word": "給料",
+      "newId": 5195
+    },
+    {
+      "rank": 456,
+      "word": "収入",
+      "newId": 5196
+    },
+    {
+      "rank": 457,
+      "word": "支出",
+      "newId": 5197
+    },
+    {
+      "rank": 458,
+      "word": "買い物",
+      "newId": 5198
+    },
+    {
+      "rank": 459,
+      "word": "商品",
+      "newId": 5199
+    },
+    {
+      "rank": 460,
+      "word": "会議",
+      "newId": 5200
+    },
+    {
+      "rank": 461,
+      "word": "予定",
+      "newId": 5201
+    },
+    {
+      "rank": 464,
+      "word": "報告",
+      "newId": 5202
+    },
+    {
+      "rank": 466,
+      "word": "説明",
+      "newId": 5203
+    },
+    {
+      "rank": 467,
+      "word": "確認",
+      "newId": 5204
+    },
+    {
+      "rank": 468,
+      "word": "準備",
+      "newId": 5205
+    },
+    {
+      "rank": 470,
+      "word": "受付",
+      "newId": 5206
+    },
+    {
+      "rank": 471,
+      "word": "生活",
+      "newId": 5207
+    },
+    {
+      "rank": 475,
+      "word": "関係",
+      "newId": 5208
+    },
+    {
+      "rank": 476,
+      "word": "状況",
+      "newId": 5209
+    },
+    {
+      "rank": 477,
+      "word": "状態",
+      "newId": 5210
+    },
+    {
+      "rank": 478,
+      "word": "文化",
+      "newId": 5211
+    },
+    {
+      "rank": 479,
+      "word": "歴史",
+      "newId": 5212
+    },
+    {
+      "rank": 480,
+      "word": "自然",
+      "newId": 5213
+    },
+    {
+      "rank": 482,
+      "word": "教育",
+      "newId": 5214
+    },
+    {
+      "rank": 483,
+      "word": "経済",
+      "newId": 5215
+    },
+    {
+      "rank": 484,
+      "word": "政治",
+      "newId": 5216
+    },
+    {
+      "rank": 485,
+      "word": "法律",
+      "newId": 5217
+    },
+    {
+      "rank": 486,
+      "word": "政府",
+      "newId": 5218
+    },
+    {
+      "rank": 488,
+      "word": "国際",
+      "newId": 5219
+    },
+    {
+      "rank": 490,
+      "word": "科学",
+      "newId": 5220
+    },
+    {
+      "rank": 491,
+      "word": "研究",
+      "newId": 5221
+    },
+    {
+      "rank": 492,
+      "word": "月曜日",
+      "newId": 5222
+    },
+    {
+      "rank": 493,
+      "word": "火曜日",
+      "newId": 5223
+    },
+    {
+      "rank": 494,
+      "word": "水曜日",
+      "newId": 5224
+    },
+    {
+      "rank": 495,
+      "word": "木曜日",
+      "newId": 5225
+    },
+    {
+      "rank": 496,
+      "word": "金曜日",
+      "newId": 5226
+    },
+    {
+      "rank": 497,
+      "word": "土曜日",
+      "newId": 5227
+    },
+    {
+      "rank": 498,
+      "word": "日曜日",
+      "newId": 5228
+    },
+    {
+      "rank": 499,
+      "word": "誕生日",
+      "newId": 5229
+    },
+    {
+      "rank": 500,
+      "word": "時計",
+      "newId": 5230
+    },
+    {
+      "rank": 501,
+      "word": "番号",
+      "newId": 5231
+    },
+    {
+      "rank": 502,
+      "word": "公園",
+      "newId": 5232
+    },
+    {
+      "rank": 505,
+      "word": "映画館",
+      "newId": 5233
+    },
+    {
+      "rank": 506,
+      "word": "喫茶店",
+      "newId": 5234
+    },
+    {
+      "rank": 507,
+      "word": "食堂",
+      "newId": 5235
+    },
+    {
+      "rank": 508,
+      "word": "交番",
+      "newId": 5236
+    },
+    {
+      "rank": 509,
+      "word": "大使館",
+      "newId": 5237
+    },
+    {
+      "rank": 510,
+      "word": "入口",
+      "newId": 5238
+    },
+    {
+      "rank": 511,
+      "word": "出口",
+      "newId": 5239
+    },
+    {
+      "rank": 512,
+      "word": "建物",
+      "newId": 5240
+    },
+    {
+      "rank": 513,
+      "word": "アパート",
+      "newId": 5241
+    },
+    {
+      "rank": 514,
+      "word": "マンション",
+      "newId": 5242
+    },
+    {
+      "rank": 515,
+      "word": "駐車場",
+      "newId": 5243
+    },
+    {
+      "rank": 516,
+      "word": "売り場",
+      "newId": 5244
+    },
+    {
+      "rank": 517,
+      "word": "職場",
+      "newId": 5245
+    },
+    {
+      "rank": 518,
+      "word": "事務所",
+      "newId": 5246
+    },
+    {
+      "rank": 519,
+      "word": "会議室",
+      "newId": 5247
+    },
+    {
+      "rank": 520,
+      "word": "朝ご飯",
+      "newId": 5248
+    },
+    {
+      "rank": 521,
+      "word": "昼ご飯",
+      "newId": 5249
+    },
+    {
+      "rank": 522,
+      "word": "晩ご飯",
+      "newId": 5250
+    },
+    {
+      "rank": 523,
+      "word": "お菓子",
+      "newId": 5251
+    },
+    {
+      "rank": 524,
+      "word": "砂糖",
+      "newId": 5252
+    },
+    {
+      "rank": 525,
+      "word": "塩",
+      "newId": 5253
+    },
+    {
+      "rank": 526,
+      "word": "醤油",
+      "newId": 5254
+    },
+    {
+      "rank": 527,
+      "word": "食べ物",
+      "newId": 5255
+    },
+    {
+      "rank": 528,
+      "word": "飲み物",
+      "newId": 5256
+    },
+    {
+      "rank": 529,
+      "word": "弁当",
+      "newId": 5257
+    },
+    {
+      "rank": 530,
+      "word": "メニュー",
+      "newId": 5258
+    },
+    {
+      "rank": 531,
+      "word": "コップ",
+      "newId": 5259
+    },
+    {
+      "rank": 532,
+      "word": "カップ",
+      "newId": 5260
+    },
+    {
+      "rank": 533,
+      "word": "皿",
+      "newId": 5261
+    },
+    {
+      "rank": 534,
+      "word": "箸",
+      "newId": 5262
+    },
+    {
+      "rank": 535,
+      "word": "スプーン",
+      "newId": 5263
+    },
+    {
+      "rank": 536,
+      "word": "フォーク",
+      "newId": 5264
+    },
+    {
+      "rank": 537,
+      "word": "ナイフ",
+      "newId": 5265
+    },
+    {
+      "rank": 538,
+      "word": "上着",
+      "newId": 5266
+    },
+    {
+      "rank": 539,
+      "word": "セーター",
+      "newId": 5267
+    },
+    {
+      "rank": 540,
+      "word": "コート",
+      "newId": 5268
+    },
+    {
+      "rank": 541,
+      "word": "ネクタイ",
+      "newId": 5269
+    },
+    {
+      "rank": 542,
+      "word": "靴下",
+      "newId": 5270
+    },
+    {
+      "rank": 543,
+      "word": "ポケット",
+      "newId": 5271
+    },
+    {
+      "rank": 544,
+      "word": "ボタン",
+      "newId": 5272
+    },
+    {
+      "rank": 545,
+      "word": "ハンカチ",
+      "newId": 5273
+    },
+    {
+      "rank": 546,
+      "word": "眼鏡",
+      "newId": 5274
+    },
+    {
+      "rank": 547,
+      "word": "傘",
+      "newId": 5275
+    },
+    {
+      "rank": 548,
+      "word": "箱",
+      "newId": 5276
+    },
+    {
+      "rank": 549,
+      "word": "袋",
+      "newId": 5277
+    },
+    {
+      "rank": 550,
+      "word": "封筒",
+      "newId": 5278
+    },
+    {
+      "rank": 551,
+      "word": "切手",
+      "newId": 5279
+    },
+    {
+      "rank": 552,
+      "word": "葉書",
+      "newId": 5280
+    },
+    {
+      "rank": 553,
+      "word": "鉛筆",
+      "newId": 5281
+    },
+    {
+      "rank": 554,
+      "word": "ボールペン",
+      "newId": 5282
+    },
+    {
+      "rank": 555,
+      "word": "本棚",
+      "newId": 5283
+    },
+    {
+      "rank": 556,
+      "word": "犬",
+      "newId": 5284
+    },
+    {
+      "rank": 557,
+      "word": "猫",
+      "newId": 5285
+    },
+    {
+      "rank": 558,
+      "word": "鳥",
+      "newId": 5286
+    },
+    {
+      "rank": 559,
+      "word": "動物",
+      "newId": 5287
+    },
+    {
+      "rank": 560,
+      "word": "花",
+      "newId": 5288
+    },
+    {
+      "rank": 561,
+      "word": "木",
+      "newId": 5289
+    },
+    {
+      "rank": 562,
+      "word": "草",
+      "newId": 5290
+    },
+    {
+      "rank": 563,
+      "word": "森",
+      "newId": 5291
+    },
+    {
+      "rank": 564,
+      "word": "季節",
+      "newId": 5292
+    },
+    {
+      "rank": 565,
+      "word": "赤ちゃん",
+      "newId": 5293
+    },
+    {
+      "rank": 566,
+      "word": "親",
+      "newId": 5294
+    },
+    {
+      "rank": 567,
+      "word": "お父さん",
+      "newId": 5295
+    },
+    {
+      "rank": 568,
+      "word": "お母さん",
+      "newId": 5296
+    },
+    {
+      "rank": 569,
+      "word": "お兄さん",
+      "newId": 5297
+    },
+    {
+      "rank": 570,
+      "word": "お姉さん",
+      "newId": 5298
+    },
+    {
+      "rank": 571,
+      "word": "奥さん",
+      "newId": 5299
+    },
+    {
+      "rank": 572,
+      "word": "患者",
+      "newId": 5300
+    },
+    {
+      "rank": 573,
+      "word": "医療",
+      "newId": 5301
+    },
+    {
+      "rank": 575,
+      "word": "退院",
+      "newId": 5302
+    },
+    {
+      "rank": 577,
+      "word": "自動車",
+      "newId": 5303
+    },
+    {
+      "rank": 578,
+      "word": "運転手",
+      "newId": 5304
+    },
+    {
+      "rank": 579,
+      "word": "切符",
+      "newId": 5305
+    },
+    {
+      "rank": 580,
+      "word": "チケット",
+      "newId": 5306
+    },
+    {
+      "rank": 581,
+      "word": "信号",
+      "newId": 5307
+    },
+    {
+      "rank": 582,
+      "word": "交差点",
+      "newId": 5308
+    },
+    {
+      "rank": 583,
+      "word": "授業",
+      "newId": 5309
+    },
+    {
+      "rank": 584,
+      "word": "宿題",
+      "newId": 5310
+    },
+    {
+      "rank": 585,
+      "word": "試験",
+      "newId": 5311
+    },
+    {
+      "rank": 586,
+      "word": "テスト",
+      "newId": 5312
+    },
+    {
+      "rank": 587,
+      "word": "教科書",
+      "newId": 5313
+    },
+    {
+      "rank": 588,
+      "word": "漢字",
+      "newId": 5314
+    },
+    {
+      "rank": 589,
+      "word": "ひらがな",
+      "newId": 5315
+    },
+    {
+      "rank": 590,
+      "word": "カタカナ",
+      "newId": 5316
+    },
+    {
+      "rank": 591,
+      "word": "作文",
+      "newId": 5317
+    },
+    {
+      "rank": 593,
+      "word": "アルバイト",
+      "newId": 5318
+    },
+    {
+      "rank": 594,
+      "word": "パート",
+      "newId": 5319
+    },
+    {
+      "rank": 595,
+      "word": "店員",
+      "newId": 5320
+    },
+    {
+      "rank": 596,
+      "word": "社員",
+      "newId": 5321
+    },
+    {
+      "rank": 597,
+      "word": "課長",
+      "newId": 5322
+    },
+    {
+      "rank": 598,
+      "word": "部長",
+      "newId": 5323
+    },
+    {
+      "rank": 599,
+      "word": "社長",
+      "newId": 5324
+    },
+    {
+      "rank": 600,
+      "word": "住所",
+      "newId": 5325
+    },
+    {
+      "rank": 601,
+      "word": "郵便",
+      "newId": 5326
+    },
+    {
+      "rank": 602,
+      "word": "電話番号",
+      "newId": 5327
+    },
+    {
+      "rank": 603,
+      "word": "誕生",
+      "newId": 5328
+    },
+    {
+      "rank": 605,
+      "word": "卒業",
+      "newId": 5329
+    },
+    {
+      "rank": 606,
+      "word": "入学",
+      "newId": 5330
+    },
+    {
+      "rank": 608,
+      "word": "散歩",
+      "newId": 5331
+    },
+    {
+      "rank": 609,
+      "word": "遊ぶ",
+      "newId": 5332
+    },
+    {
+      "rank": 610,
+      "word": "泳ぐ",
+      "newId": 5333
+    },
+    {
+      "rank": 611,
+      "word": "登る",
+      "newId": 5334
+    },
+    {
+      "rank": 612,
+      "word": "歌う",
+      "newId": 5335
+    },
+    {
+      "rank": 613,
+      "word": "弾く",
+      "newId": 5336
+    },
+    {
+      "rank": 614,
+      "word": "撮る",
+      "newId": 5337
+    },
+    {
+      "rank": 615,
+      "word": "着る",
+      "newId": 5338
+    },
+    {
+      "rank": 616,
+      "word": "脱ぐ",
+      "newId": 5339
+    },
+    {
+      "rank": 617,
+      "word": "履く",
+      "newId": 5340
+    },
+    {
+      "rank": 618,
+      "word": "かぶる",
+      "newId": 5341
+    },
+    {
+      "rank": 619,
+      "word": "押す",
+      "newId": 5342
+    },
+    {
+      "rank": 620,
+      "word": "引く",
+      "newId": 5343
+    },
+    {
+      "rank": 621,
+      "word": "切る",
+      "newId": 5344
+    },
+    {
+      "rank": 622,
+      "word": "折る",
+      "newId": 5345
+    },
+    {
+      "rank": 623,
+      "word": "貼る",
+      "newId": 5346
+    },
+    {
+      "rank": 624,
+      "word": "包む",
+      "newId": 5347
+    },
+    {
+      "rank": 625,
+      "word": "拾う",
+      "newId": 5348
+    },
+    {
+      "rank": 626,
+      "word": "捨てる",
+      "newId": 5349
+    },
+    {
+      "rank": 627,
+      "word": "壊す",
+      "newId": 5350
+    },
+    {
+      "rank": 628,
+      "word": "壊れる",
+      "newId": 5351
+    },
+    {
+      "rank": 629,
+      "word": "落ちる",
+      "newId": 5352
+    },
+    {
+      "rank": 630,
+      "word": "落とす",
+      "newId": 5353
+    },
+    {
+      "rank": 631,
+      "word": "なくす",
+      "newId": 5354
+    },
+    {
+      "rank": 633,
+      "word": "届ける",
+      "newId": 5355
+    },
+    {
+      "rank": 634,
+      "word": "怒る",
+      "newId": 5356
+    },
+    {
+      "rank": 635,
+      "word": "笑う",
+      "newId": 5357
+    },
+    {
+      "rank": 636,
+      "word": "泣く",
+      "newId": 5358
+    },
+    {
+      "rank": 637,
+      "word": "喜ぶ",
+      "newId": 5359
+    },
+    {
+      "rank": 638,
+      "word": "驚く",
+      "newId": 5360
+    },
+    {
+      "rank": 639,
+      "word": "困る",
+      "newId": 5361
+    },
+    {
+      "rank": 640,
+      "word": "心配",
+      "newId": 5362
+    },
+    {
+      "rank": 642,
+      "word": "満足",
+      "newId": 5363
+    },
+    {
+      "rank": 643,
+      "word": "残念",
+      "newId": 5364
+    },
+    {
+      "rank": 644,
+      "word": "親切",
+      "newId": 5365
+    },
+    {
+      "rank": 646,
+      "word": "真面目",
+      "newId": 5366
+    },
+    {
+      "rank": 647,
+      "word": "正直",
+      "newId": 5367
+    },
+    {
+      "rank": 648,
+      "word": "特別",
+      "newId": 5368
+    },
+    {
+      "rank": 649,
+      "word": "普通",
+      "newId": 5369
+    },
+    {
+      "rank": 650,
+      "word": "自由",
+      "newId": 5370
+    },
+    {
+      "rank": 651,
+      "word": "不便",
+      "newId": 5371
+    },
+    {
+      "rank": 652,
+      "word": "無理",
+      "newId": 5372
+    },
+    {
+      "rank": 653,
+      "word": "十分",
+      "newId": 5373
+    },
+    {
+      "rank": 654,
+      "word": "細い",
+      "newId": 5374
+    },
+    {
+      "rank": 655,
+      "word": "太い",
+      "newId": 5375
+    },
+    {
+      "rank": 656,
+      "word": "厚い",
+      "newId": 5376
+    },
+    {
+      "rank": 657,
+      "word": "薄い",
+      "newId": 5377
+    },
+    {
+      "rank": 658,
+      "word": "深い",
+      "newId": 5378
+    },
+    {
+      "rank": 659,
+      "word": "浅い",
+      "newId": 5379
+    },
+    {
+      "rank": 660,
+      "word": "柔らかい",
+      "newId": 5380
+    },
+    {
+      "rank": 661,
+      "word": "固い",
+      "newId": 5381
+    },
+    {
+      "rank": 662,
+      "word": "丸い",
+      "newId": 5382
+    },
+    {
+      "rank": 663,
+      "word": "きれい",
+      "newId": 5383
+    },
+    {
+      "rank": 664,
+      "word": "うるさい",
+      "newId": 5384
+    },
+    {
+      "rank": 665,
+      "word": "つまらない",
+      "newId": 5385
+    },
+    {
+      "rank": 666,
+      "word": "おかしい",
+      "newId": 5386
+    },
+    {
+      "rank": 667,
+      "word": "恥ずかしい",
+      "newId": 5387
+    },
+    {
+      "rank": 668,
+      "word": "珍しい",
+      "newId": 5388
+    },
+    {
+      "rank": 669,
+      "word": "すばらしい",
+      "newId": 5389
+    },
+    {
+      "rank": 670,
+      "word": "一緒",
+      "newId": 5390
+    },
+    {
+      "rank": 671,
+      "word": "別々",
+      "newId": 5391
+    },
+    {
+      "rank": 672,
+      "word": "同じ",
+      "newId": 5392
+    },
+    {
+      "rank": 673,
+      "word": "違う",
+      "newId": 5393
+    },
+    {
+      "rank": 674,
+      "word": "いろいろ",
+      "newId": 5394
+    },
+    {
+      "rank": 675,
+      "word": "様々",
+      "newId": 5395
+    },
+    {
+      "rank": 676,
+      "word": "たいてい",
+      "newId": 5396
+    },
+    {
+      "rank": 677,
+      "word": "だいたい",
+      "newId": 5397
+    },
+    {
+      "rank": 678,
+      "word": "だんだん",
+      "newId": 5398
+    },
+    {
+      "rank": 679,
+      "word": "とうとう",
+      "newId": 5399
+    },
+    {
+      "rank": 680,
+      "word": "やっと",
+      "newId": 5400
+    },
+    {
+      "rank": 681,
+      "word": "ついに",
+      "newId": 5401
+    },
+    {
+      "rank": 682,
+      "word": "しっかり",
+      "newId": 5402
+    },
+    {
+      "rank": 683,
+      "word": "はっきり",
+      "newId": 5403
+    },
+    {
+      "rank": 684,
+      "word": "ちゃんと",
+      "newId": 5404
+    },
+    {
+      "rank": 685,
+      "word": "なかなか",
+      "newId": 5405
+    },
+    {
+      "rank": 686,
+      "word": "どんどん",
+      "newId": 5406
+    },
+    {
+      "rank": 687,
+      "word": "そろそろ",
+      "newId": 5407
+    },
+    {
+      "rank": 688,
+      "word": "ずっと",
+      "newId": 5408
+    },
+    {
+      "rank": 689,
+      "word": "全然",
+      "newId": 5409
+    },
+    {
+      "rank": 690,
+      "word": "まったく",
+      "newId": 5410
+    },
+    {
+      "rank": 691,
+      "word": "ぜひ",
+      "newId": 5411
+    },
+    {
+      "rank": 692,
+      "word": "それから",
+      "newId": 5412
+    },
+    {
+      "rank": 693,
+      "word": "それで",
+      "newId": 5413
+    },
+    {
+      "rank": 694,
+      "word": "それでも",
+      "newId": 5414
+    },
+    {
+      "rank": 695,
+      "word": "そこで",
+      "newId": 5415
+    },
+    {
+      "rank": 696,
+      "word": "それとも",
+      "newId": 5416
+    },
+    {
+      "rank": 697,
+      "word": "ところで",
+      "newId": 5417
+    },
+    {
+      "rank": 698,
+      "word": "可能",
+      "newId": 5418
+    },
+    {
+      "rank": 699,
+      "word": "計画",
+      "newId": 5419
+    },
+    {
+      "rank": 700,
+      "word": "機会",
+      "newId": 5420
+    },
+    {
+      "rank": 701,
+      "word": "場合",
+      "newId": 5421
+    },
+    {
+      "rank": 705,
+      "word": "体験",
+      "newId": 5422
+    },
+    {
+      "rank": 706,
+      "word": "記憶",
+      "newId": 5423
+    },
+    {
+      "rank": 707,
+      "word": "思い出",
+      "newId": 5424
+    },
+    {
+      "rank": 708,
+      "word": "夢",
+      "newId": 5425
+    },
+    {
+      "rank": 709,
+      "word": "希望",
+      "newId": 5426
+    },
+    {
+      "rank": 710,
+      "word": "期待",
+      "newId": 5427
+    },
+    {
+      "rank": 711,
+      "word": "目標",
+      "newId": 5428
+    },
+    {
+      "rank": 712,
+      "word": "努力",
+      "newId": 5429
+    },
+    {
+      "rank": 713,
+      "word": "成功",
+      "newId": 5430
+    },
+    {
+      "rank": 714,
+      "word": "失敗",
+      "newId": 5431
+    },
+    {
+      "rank": 715,
+      "word": "注意",
+      "newId": 5432
+    },
+    {
+      "rank": 717,
+      "word": "災害",
+      "newId": 5433
+    },
+    {
+      "rank": 718,
+      "word": "防止",
+      "newId": 5434
+    },
+    {
+      "rank": 722,
+      "word": "ルール",
+      "newId": 5435
+    },
+    {
+      "rank": 723,
+      "word": "条件",
+      "newId": 5436
+    },
+    {
+      "rank": 727,
+      "word": "責任",
+      "newId": 5437
+    },
+    {
+      "rank": 729,
+      "word": "文学",
+      "newId": 5438
+    },
+    {
+      "rank": 730,
+      "word": "放送",
+      "newId": 5439
+    },
+    {
+      "rank": 731,
+      "word": "ニュース",
+      "newId": 5440
+    },
+    {
+      "rank": 732,
+      "word": "市民",
+      "newId": 5441
+    },
+    {
+      "rank": 733,
+      "word": "人口",
+      "newId": 5442
+    },
+    {
+      "rank": 734,
+      "word": "地球",
+      "newId": 5443
+    },
+    {
+      "rank": 735,
+      "word": "作業",
+      "newId": 5444
+    },
+    {
+      "rank": 736,
+      "word": "業務",
+      "newId": 5445
+    },
+    {
+      "rank": 737,
+      "word": "事務",
+      "newId": 5446
+    },
+    {
+      "rank": 738,
+      "word": "営業",
+      "newId": 5447
+    },
+    {
+      "rank": 739,
+      "word": "経営",
+      "newId": 5448
+    },
+    {
+      "rank": 740,
+      "word": "企業",
+      "newId": 5449
+    },
+    {
+      "rank": 741,
+      "word": "職業",
+      "newId": 5450
+    },
+    {
+      "rank": 742,
+      "word": "製品",
+      "newId": 5451
+    },
+    {
+      "rank": 743,
+      "word": "品物",
+      "newId": 5452
+    },
+    {
+      "rank": 744,
+      "word": "販売",
+      "newId": 5453
+    },
+    {
+      "rank": 745,
+      "word": "購入",
+      "newId": 5454
+    },
+    {
+      "rank": 750,
+      "word": "預金",
+      "newId": 5455
+    },
+    {
+      "rank": 752,
+      "word": "回答",
+      "newId": 5456
+    },
+    {
+      "rank": 754,
+      "word": "案内",
+      "newId": 5457
+    },
+    {
+      "rank": 758,
+      "word": "提案",
+      "newId": 5458
+    },
+    {
+      "rank": 760,
+      "word": "決定",
+      "newId": 5459
+    },
+    {
+      "rank": 761,
+      "word": "選択",
+      "newId": 5460
+    },
+    {
+      "rank": 763,
+      "word": "書類",
+      "newId": 5461
+    },
+    {
+      "rank": 764,
+      "word": "文章",
+      "newId": 5462
+    },
+    {
+      "rank": 765,
+      "word": "文字",
+      "newId": 5463
+    },
+    {
+      "rank": 767,
+      "word": "データ",
+      "newId": 5464
+    },
+    {
+      "rank": 768,
+      "word": "機械",
+      "newId": 5465
+    },
+    {
+      "rank": 770,
+      "word": "システム",
+      "newId": 5466
+    },
+    {
+      "rank": 771,
+      "word": "プログラム",
+      "newId": 5467
+    },
+    {
+      "rank": 772,
+      "word": "ネットワーク",
+      "newId": 5468
+    },
+    {
+      "rank": 777,
+      "word": "設計",
+      "newId": 5469
+    },
+    {
+      "rank": 778,
+      "word": "ない",
+      "newId": 5470
+    },
+    {
+      "rank": 779,
+      "word": "そう",
+      "newId": 5471
+    },
+    {
+      "rank": 780,
+      "word": "自分",
+      "newId": 5472
+    },
+    {
+      "rank": 781,
+      "word": "しまう",
+      "newId": 5473
+    },
+    {
+      "rank": 782,
+      "word": "やる",
+      "newId": 5474
+    },
+    {
+      "rank": 783,
+      "word": "わけ",
+      "newId": 5475
+    },
+    {
+      "rank": 784,
+      "word": "ところ",
+      "newId": 5476
+    },
+    {
+      "rank": 785,
+      "word": "行う",
+      "newId": 5477
+    },
+    {
+      "rank": 786,
+      "word": "バック",
+      "newId": 5478
+    },
+    {
+      "rank": 787,
+      "word": "トラック",
+      "newId": 5479
+    },
+    {
+      "rank": 788,
+      "word": "いただく",
+      "newId": 5480
+    },
+    {
+      "rank": 789,
+      "word": "くださる",
+      "newId": 5481
+    },
+    {
+      "rank": 790,
+      "word": "以上",
+      "newId": 5482
+    },
+    {
+      "rank": 791,
+      "word": "人間",
+      "newId": 5483
+    },
+    {
+      "rank": 792,
+      "word": "現在",
+      "newId": 5484
+    },
+    {
+      "rank": 793,
+      "word": "感じる",
+      "newId": 5485
+    },
+    {
+      "rank": 794,
+      "word": "しれる",
+      "newId": 5486
+    },
+    {
+      "rank": 795,
+      "word": "けれども",
+      "newId": 5487
+    },
+    {
+      "rank": 796,
+      "word": "今回",
+      "newId": 5488
+    },
+    {
+      "rank": 797,
+      "word": "受ける",
+      "newId": 5489
+    },
+    {
+      "rank": 798,
+      "word": "もらう",
+      "newId": 5490
+    },
+    {
+      "rank": 799,
+      "word": "最近",
+      "newId": 5491
+    },
+    {
+      "rank": 800,
+      "word": "時代",
+      "newId": 5492
+    },
+    {
+      "rank": 801,
+      "word": "非常",
+      "newId": 5493
+    },
+    {
+      "rank": 802,
+      "word": "得る",
+      "newId": 5494
+    },
+    {
+      "rank": 803,
+      "word": "一つ",
+      "newId": 5495
+    },
+    {
+      "rank": 804,
+      "word": "ただ",
+      "newId": 5496
+    },
+    {
+      "rank": 805,
+      "word": "女性",
+      "newId": 5497
+    },
+    {
+      "rank": 806,
+      "word": "利用",
+      "newId": 5498
+    },
+    {
+      "rank": 807,
+      "word": "さらに",
+      "newId": 5499
+    },
+    {
+      "rank": 808,
+      "word": "参加",
+      "newId": 5500
+    },
+    {
+      "rank": 809,
+      "word": "大きな",
+      "newId": 5501
+    },
+    {
+      "rank": 810,
+      "word": "感じ",
+      "newId": 5502
+    },
+    {
+      "rank": 811,
+      "word": "やはり",
+      "newId": 5503
+    },
+    {
+      "rank": 812,
+      "word": "活動",
+      "newId": 5504
+    },
+    {
+      "rank": 813,
+      "word": "こんな",
+      "newId": 5505
+    },
+    {
+      "rank": 814,
+      "word": "管理",
+      "newId": 5506
+    },
+    {
+      "rank": 815,
+      "word": "特に",
+      "newId": 5507
+    },
+    {
+      "rank": 816,
+      "word": "実際",
+      "newId": 5508
+    },
+    {
+      "rank": 817,
+      "word": "個人",
+      "newId": 5509
+    },
+    {
+      "rank": 818,
+      "word": "多く",
+      "newId": 5510
+    },
+    {
+      "rank": 819,
+      "word": "存在",
+      "newId": 5511
+    },
+    {
+      "rank": 820,
+      "word": "すべて",
+      "newId": 5512
+    },
+    {
+      "rank": 821,
+      "word": "彼女",
+      "newId": 5513
+    },
+    {
+      "rank": 822,
+      "word": "理解",
+      "newId": 5514
+    },
+    {
+      "rank": 823,
+      "word": "部分",
+      "newId": 5515
+    },
+    {
+      "rank": 824,
+      "word": "日記",
+      "newId": 5516
+    },
+    {
+      "rank": 825,
+      "word": "いける",
+      "newId": 5517
+    },
+    {
+      "rank": 826,
+      "word": "使用",
+      "newId": 5518
+    },
+    {
+      "rank": 827,
+      "word": "事業",
+      "newId": 5519
+    },
+    {
+      "rank": 828,
+      "word": "固定",
+      "newId": 5520
+    },
+    {
+      "rank": 829,
+      "word": "基本",
+      "newId": 5521
+    },
+    {
+      "rank": 830,
+      "word": "関連",
+      "newId": 5522
+    },
+    {
+      "rank": 831,
+      "word": "一般",
+      "newId": 5523
+    },
+    {
+      "rank": 833,
+      "word": "重要",
+      "newId": 5524
+    },
+    {
+      "rank": 835,
+      "word": "サービス",
+      "newId": 5525
+    },
+    {
+      "rank": 836,
+      "word": "かける",
+      "newId": 5526
+    },
+    {
+      "rank": 838,
+      "word": "場所",
+      "newId": 5527
+    },
+    {
+      "rank": 840,
+      "word": "お願い",
+      "newId": 5528
+    },
+    {
+      "rank": 841,
+      "word": "労働",
+      "newId": 5529
+    },
+    {
+      "rank": 842,
+      "word": "相手",
+      "newId": 5530
+    },
+    {
+      "rank": 843,
+      "word": "自身",
+      "newId": 5531
+    },
+    {
+      "rank": 844,
+      "word": "かかる",
+      "newId": 5532
+    },
+    {
+      "rank": 845,
+      "word": "今後",
+      "newId": 5533
+    },
+    {
+      "rank": 846,
+      "word": "つまり",
+      "newId": 5534
+    },
+    {
+      "rank": 847,
+      "word": "まま",
+      "newId": 5535
+    },
+    {
+      "rank": 848,
+      "word": "与える",
+      "newId": 5536
+    },
+    {
+      "rank": 849,
+      "word": "大変",
+      "newId": 5537
+    },
+    {
+      "rank": 850,
+      "word": "彼ら",
+      "newId": 5538
+    },
+    {
+      "rank": 854,
+      "word": "これから",
+      "newId": 5539
+    },
+    {
+      "rank": 855,
+      "word": "戻る",
+      "newId": 5540
+    },
+    {
+      "rank": 856,
+      "word": "全体",
+      "newId": 5541
+    },
+    {
+      "rank": 857,
+      "word": "程度",
+      "newId": 5542
+    },
+    {
+      "rank": 858,
+      "word": "人々",
+      "newId": 5543
+    },
+    {
+      "rank": 859,
+      "word": "代表",
+      "newId": 5544
+    },
+    {
+      "rank": 860,
+      "word": "ネット",
+      "newId": 5545
+    },
+    {
+      "rank": 862,
+      "word": "それぞれ",
+      "newId": 5546
+    },
+    {
+      "rank": 863,
+      "word": "地方",
+      "newId": 5547
+    },
+    {
+      "rank": 864,
+      "word": "生きる",
+      "newId": 5548
+    },
+    {
+      "rank": 865,
+      "word": "選手",
+      "newId": 5549
+    },
+    {
+      "rank": 866,
+      "word": "みんな",
+      "newId": 5550
+    },
+    {
+      "rank": 867,
+      "word": "確か",
+      "newId": 5551
+    },
+    {
+      "rank": 868,
+      "word": "ありがとう",
+      "newId": 5552
+    },
+    {
+      "rank": 869,
+      "word": "中心",
+      "newId": 5553
+    },
+    {
+      "rank": 871,
+      "word": "提供",
+      "newId": 5554
+    },
+    {
+      "rank": 872,
+      "word": "事実",
+      "newId": 5555
+    },
+    {
+      "rank": 873,
+      "word": "当然",
+      "newId": 5556
+    },
+    {
+      "rank": 874,
+      "word": "以前",
+      "newId": 5557
+    },
+    {
+      "rank": 875,
+      "word": "示す",
+      "newId": 5558
+    },
+    {
+      "rank": 876,
+      "word": "専門",
+      "newId": 5559
+    },
+    {
+      "rank": 877,
+      "word": "初めて",
+      "newId": 5560
+    },
+    {
+      "rank": 878,
+      "word": "全く",
+      "newId": 5561
+    },
+    {
+      "rank": 880,
+      "word": "組織",
+      "newId": 5562
+    },
+    {
+      "rank": 881,
+      "word": "行動",
+      "newId": 5563
+    },
+    {
+      "rank": 882,
+      "word": "年間",
+      "newId": 5564
+    },
+    {
+      "rank": 883,
+      "word": "当時",
+      "newId": 5565
+    },
+    {
+      "rank": 884,
+      "word": "意識",
+      "newId": 5566
+    },
+    {
+      "rank": 886,
+      "word": "欲しい",
+      "newId": 5567
+    },
+    {
+      "rank": 887,
+      "word": "通り",
+      "newId": 5568
+    },
+    {
+      "rank": 888,
+      "word": "生産",
+      "newId": 5569
+    },
+    {
+      "rank": 889,
+      "word": "表現",
+      "newId": 5570
+    },
+    {
+      "rank": 890,
+      "word": "参考",
+      "newId": 5571
+    },
+    {
+      "rank": 891,
+      "word": "ひとつ",
+      "newId": 5572
+    },
+    {
+      "rank": 892,
+      "word": "やっぱり",
+      "newId": 5573
+    },
+    {
+      "rank": 893,
+      "word": "ビジネス",
+      "newId": 5574
+    },
+    {
+      "rank": 895,
+      "word": "チーム",
+      "newId": 5575
+    },
+    {
+      "rank": 896,
+      "word": "現実",
+      "newId": 5576
+    },
+    {
+      "rank": 897,
+      "word": "進む",
+      "newId": 5577
+    },
+    {
+      "rank": 898,
+      "word": "すごい",
+      "newId": 5578
+    },
+    {
+      "rank": 899,
+      "word": "価値",
+      "newId": 5579
+    },
+    {
+      "rank": 900,
+      "word": "テーマ",
+      "newId": 5580
+    },
+    {
+      "rank": 901,
+      "word": "含む",
+      "newId": 5581
+    },
+    {
+      "rank": 902,
+      "word": "一部",
+      "newId": 5582
+    },
+    {
+      "rank": 903,
+      "word": "考え",
+      "newId": 5583
+    },
+    {
+      "rank": 904,
+      "word": "残る",
+      "newId": 5584
+    },
+    {
+      "rank": 905,
+      "word": "語る",
+      "newId": 5585
+    },
+    {
+      "rank": 908,
+      "word": "言える",
+      "newId": 5586
+    },
+    {
+      "rank": 910,
+      "word": "結局",
+      "newId": 5587
+    },
+    {
+      "rank": 911,
+      "word": "消費",
+      "newId": 5588
+    },
+    {
+      "rank": 912,
+      "word": "保険",
+      "newId": 5589
+    },
+    {
+      "rank": 913,
+      "word": "具体",
+      "newId": 5590
+    },
+    {
+      "rank": 914,
+      "word": "あげる",
+      "newId": 5591
+    },
+    {
+      "rank": 915,
+      "word": "人生",
+      "newId": 5592
+    },
+    {
+      "rank": 916,
+      "word": "表示",
+      "newId": 5593
+    },
+    {
+      "rank": 917,
+      "word": "精神",
+      "newId": 5594
+    },
+    {
+      "rank": 918,
+      "word": "過去",
+      "newId": 5595
+    },
+    {
+      "rank": 919,
+      "word": "レベル",
+      "newId": 5596
+    },
+    {
+      "rank": 920,
+      "word": "我々",
+      "newId": 5597
+    },
+    {
+      "rank": 921,
+      "word": "能力",
+      "newId": 5598
+    },
+    {
+      "rank": 922,
+      "word": "指導",
+      "newId": 5599
+    },
+    {
+      "rank": 924,
+      "word": "公開",
+      "newId": 5600
+    },
+    {
+      "rank": 925,
+      "word": "皆さん",
+      "newId": 5601
+    },
+    {
+      "rank": 926,
+      "word": "ほか",
+      "newId": 5602
+    },
+    {
+      "rank": 927,
+      "word": "担当",
+      "newId": 5603
+    },
+    {
+      "rank": 930,
+      "word": "行為",
+      "newId": 5604
+    },
+    {
+      "rank": 931,
+      "word": "平成",
+      "newId": 5605
+    },
+    {
+      "rank": 932,
+      "word": "いや",
+      "newId": 5606
+    },
+    {
+      "rank": 933,
+      "word": "楽しむ",
+      "newId": 5607
+    },
+    {
+      "rank": 934,
+      "word": "登録",
+      "newId": 5608
+    },
+    {
+      "rank": 935,
+      "word": "うまい",
+      "newId": 5609
+    },
+    {
+      "rank": 937,
+      "word": "どういう",
+      "newId": 5610
+    },
+    {
+      "rank": 938,
+      "word": "述べる",
+      "newId": 5611
+    },
+    {
+      "rank": 939,
+      "word": "団体",
+      "newId": 5612
+    },
+    {
+      "rank": 940,
+      "word": "支援",
+      "newId": 5613
+    },
+    {
+      "rank": 941,
+      "word": "最も",
+      "newId": 5614
+    },
+    {
+      "rank": 942,
+      "word": "自己",
+      "newId": 5615
+    },
+    {
+      "rank": 943,
+      "word": "年度",
+      "newId": 5616
+    },
+    {
+      "rank": 944,
+      "word": "運動",
+      "newId": 5617
+    },
+    {
+      "rank": 945,
+      "word": "構造",
+      "newId": 5618
+    },
+    {
+      "rank": 947,
+      "word": "完全",
+      "newId": 5619
+    },
+    {
+      "rank": 948,
+      "word": "向かう",
+      "newId": 5620
+    },
+    {
+      "rank": 949,
+      "word": "男性",
+      "newId": 5621
+    },
+    {
+      "rank": 950,
+      "word": "結構",
+      "newId": 5622
+    },
+    {
+      "rank": 951,
+      "word": "産業",
+      "newId": 5623
+    },
+    {
+      "rank": 952,
+      "word": "人気",
+      "newId": 5624
+    },
+    {
+      "rank": 953,
+      "word": "お話",
+      "newId": 5625
+    },
+    {
+      "rank": 954,
+      "word": "描く",
+      "newId": 5626
+    },
+    {
+      "rank": 955,
+      "word": "近く",
+      "newId": 5627
+    },
+    {
+      "rank": 956,
+      "word": "最終",
+      "newId": 5628
+    },
+    {
+      "rank": 957,
+      "word": "ドル",
+      "newId": 5629
+    },
+    {
+      "rank": 958,
+      "word": "過ぎる",
+      "newId": 5630
+    },
+    {
+      "rank": 960,
+      "word": "上げる",
+      "newId": 5631
+    },
+    {
+      "rank": 961,
+      "word": "グループ",
+      "newId": 5632
+    },
+    {
+      "rank": 962,
+      "word": "ポイント",
+      "newId": 5633
+    },
+    {
+      "rank": 963,
+      "word": "センター",
+      "newId": 5634
+    },
+    {
+      "rank": 964,
+      "word": "開催",
+      "newId": 5635
+    },
+    {
+      "rank": 965,
+      "word": "方向",
+      "newId": 5636
+    },
+    {
+      "rank": 968,
+      "word": "起こる",
+      "newId": 5637
+    },
+    {
+      "rank": 969,
+      "word": "障害",
+      "newId": 5638
+    },
+    {
+      "rank": 970,
+      "word": "ヶ月",
+      "newId": 5639
+    },
+    {
+      "rank": 971,
+      "word": "協力",
+      "newId": 5640
+    },
+    {
+      "rank": 972,
+      "word": "時期",
+      "newId": 5641
+    },
+    {
+      "rank": 973,
+      "word": "考え方",
+      "newId": 5642
+    },
+    {
+      "rank": 974,
+      "word": "金融",
+      "newId": 5643
+    },
+    {
+      "rank": 975,
+      "word": "進める",
+      "newId": 5644
+    },
+    {
+      "rank": 976,
+      "word": "立場",
+      "newId": 5645
+    },
+    {
+      "rank": 978,
+      "word": "全国",
+      "newId": 5646
+    },
+    {
+      "rank": 979,
+      "word": "違い",
+      "newId": 5647
+    },
+    {
+      "rank": 980,
+      "word": "作成",
+      "newId": 5648
+    },
+    {
+      "rank": 981,
+      "word": "成長",
+      "newId": 5649
+    },
+    {
+      "rank": 982,
+      "word": "施設",
+      "newId": 5650
+    },
+    {
+      "rank": 983,
+      "word": "登場",
+      "newId": 5651
+    },
+    {
+      "rank": 984,
+      "word": "知識",
+      "newId": 5652
+    },
+    {
+      "rank": 985,
+      "word": "実現",
+      "newId": 5653
+    },
+    {
+      "rank": 986,
+      "word": "海外",
+      "newId": 5654
+    },
+    {
+      "rank": 987,
+      "word": "実施",
+      "newId": 5655
+    },
+    {
+      "rank": 988,
+      "word": "昨年",
+      "newId": 5656
+    },
+    {
+      "rank": 989,
+      "word": "認識",
+      "newId": 5657
+    },
+    {
+      "rank": 990,
+      "word": "イメージ",
+      "newId": 5658
+    },
+    {
+      "rank": 991,
+      "word": "段階",
+      "newId": 5659
+    },
+    {
+      "rank": 992,
+      "word": "発生",
+      "newId": 5660
+    },
+    {
+      "rank": 994,
+      "word": "期間",
+      "newId": 5661
+    },
+    {
+      "rank": 995,
+      "word": "トップ",
+      "newId": 5662
+    },
+    {
+      "rank": 996,
+      "word": "若い",
+      "newId": 5663
+    },
+    {
+      "rank": 998,
+      "word": "変更",
+      "newId": 5664
+    },
+    {
+      "rank": 999,
+      "word": "サッカー",
+      "newId": 5665
+    },
+    {
+      "rank": 1000,
+      "word": "限り",
+      "newId": 5666
+    },
+    {
+      "rank": 1001,
+      "word": "番組",
+      "newId": 5667
+    },
+    {
+      "rank": 1002,
+      "word": "今度",
+      "newId": 5668
+    },
+    {
+      "rank": 1003,
+      "word": "処理",
+      "newId": 5669
+    },
+    {
+      "rank": 1004,
+      "word": "絶対",
+      "newId": 5670
+    },
+    {
+      "rank": 1005,
+      "word": "伝える",
+      "newId": 5671
+    },
+    {
+      "rank": 1006,
+      "word": "守る",
+      "newId": 5672
+    },
+    {
+      "rank": 1008,
+      "word": "都市",
+      "newId": 5673
+    },
+    {
+      "rank": 1009,
+      "word": "展開",
+      "newId": 5674
+    },
+    {
+      "rank": 1010,
+      "word": "デザイン",
+      "newId": 5675
+    },
+    {
+      "rank": 1011,
+      "word": "自体",
+      "newId": 5676
+    },
+    {
+      "rank": 1012,
+      "word": "興味",
+      "newId": 5677
+    },
+    {
+      "rank": 1014,
+      "word": "含める",
+      "newId": 5678
+    },
+    {
+      "rank": 1016,
+      "word": "信じる",
+      "newId": 5679
+    },
+    {
+      "rank": 1017,
+      "word": "週間",
+      "newId": 5680
+    },
+    {
+      "rank": 1019,
+      "word": "最大",
+      "newId": 5681
+    },
+    {
+      "rank": 1020,
+      "word": "無料",
+      "newId": 5682
+    },
+    {
+      "rank": 1021,
+      "word": "ホテル",
+      "newId": 5683
+    },
+    {
+      "rank": 1022,
+      "word": "思える",
+      "newId": 5684
+    },
+    {
+      "rank": 1023,
+      "word": "全部",
+      "newId": 5685
+    },
+    {
+      "rank": 1024,
+      "word": "開始",
+      "newId": 5686
+    },
+    {
+      "rank": 1025,
+      "word": "イベント",
+      "newId": 5687
+    },
+    {
+      "rank": 1026,
+      "word": "アクセス",
+      "newId": 5688
+    },
+    {
+      "rank": 1027,
+      "word": "同時に",
+      "newId": 5689
+    },
+    {
+      "rank": 1028,
+      "word": "詳細",
+      "newId": 5690
+    },
+    {
+      "rank": 1029,
+      "word": "合う",
+      "newId": 5691
+    },
+    {
+      "rank": 1030,
+      "word": "動く",
+      "newId": 5692
+    },
+    {
+      "rank": 1031,
+      "word": "アップ",
+      "newId": 5693
+    },
+    {
+      "rank": 1032,
+      "word": "将来",
+      "newId": 5694
+    },
+    {
+      "rank": 1034,
+      "word": "通信",
+      "newId": 5695
+    },
+    {
+      "rank": 1035,
+      "word": "分野",
+      "newId": 5696
+    },
+    {
+      "rank": 1036,
+      "word": "向ける",
+      "newId": 5697
+    },
+    {
+      "rank": 1037,
+      "word": "国内",
+      "newId": 5698
+    },
+    {
+      "rank": 1038,
+      "word": "時刻",
+      "newId": 5699
+    },
+    {
+      "rank": 1039,
+      "word": "発見",
+      "newId": 5700
+    },
+    {
+      "rank": 1040,
+      "word": "とにかく",
+      "newId": 5701
+    },
+    {
+      "rank": 1041,
+      "word": "最高",
+      "newId": 5702
+    },
+    {
+      "rank": 1042,
+      "word": "頑張る",
+      "newId": 5703
+    },
+    {
+      "rank": 1044,
+      "word": "どちら",
+      "newId": 5704
+    },
+    {
+      "rank": 1045,
+      "word": "終了",
+      "newId": 5705
+    },
+    {
+      "rank": 1046,
+      "word": "出版",
+      "newId": 5706
+    },
+    {
+      "rank": 1047,
+      "word": "正しい",
+      "newId": 5707
+    },
+    {
+      "rank": 1048,
+      "word": "プロ",
+      "newId": 5708
+    },
+    {
+      "rank": 1049,
+      "word": "大会",
+      "newId": 5709
+    },
+    {
+      "rank": 1050,
+      "word": "ファン",
+      "newId": 5710
+    },
+    {
+      "rank": 1051,
+      "word": "同様",
+      "newId": 5711
+    },
+    {
+      "rank": 1052,
+      "word": "小さな",
+      "newId": 5712
+    },
+    {
+      "rank": 1053,
+      "word": "共通",
+      "newId": 5713
+    },
+    {
+      "rank": 1054,
+      "word": "つもり",
+      "newId": 5714
+    },
+    {
+      "rank": 1055,
+      "word": "現代",
+      "newId": 5715
+    },
+    {
+      "rank": 1057,
+      "word": "住宅",
+      "newId": 5716
+    },
+    {
+      "rank": 1058,
+      "word": "新た",
+      "newId": 5717
+    },
+    {
+      "rank": 1059,
+      "word": "安い",
+      "newId": 5718
+    },
+    {
+      "rank": 1060,
+      "word": "動き",
+      "newId": 5719
+    },
+    {
+      "rank": 1061,
+      "word": "本日",
+      "newId": 5720
+    },
+    {
+      "rank": 1062,
+      "word": "業界",
+      "newId": 5721
+    },
+    {
+      "rank": 1063,
+      "word": "相当",
+      "newId": 5722
+    },
+    {
+      "rank": 1064,
+      "word": "調べる",
+      "newId": 5723
+    },
+    {
+      "rank": 1065,
+      "word": "思い",
+      "newId": 5724
+    },
+    {
+      "rank": 1066,
+      "word": "メンバー",
+      "newId": 5725
+    },
+    {
+      "rank": 1067,
+      "word": "演奏",
+      "newId": 5726
+    },
+    {
+      "rank": 1068,
+      "word": "家庭",
+      "newId": 5727
+    },
+    {
+      "rank": 1069,
+      "word": "直接",
+      "newId": 5728
+    },
+    {
+      "rank": 1070,
+      "word": "聴く",
+      "newId": 5729
+    },
+    {
+      "rank": 1071,
+      "word": "構成",
+      "newId": 5730
+    },
+    {
+      "rank": 1072,
+      "word": "異なる",
+      "newId": 5731
+    },
+    {
+      "rank": 1073,
+      "word": "もと",
+      "newId": 5732
+    },
+    {
+      "rank": 1074,
+      "word": "取引",
+      "newId": 5733
+    },
+    {
+      "rank": 1075,
+      "word": "加える",
+      "newId": 5734
+    },
+    {
+      "rank": 1076,
+      "word": "運営",
+      "newId": 5735
+    },
+    {
+      "rank": 1078,
+      "word": "予想",
+      "newId": 5736
+    },
+    {
+      "rank": 1079,
+      "word": "ファイル",
+      "newId": 5737
+    },
+    {
+      "rank": 1080,
+      "word": "モデル",
+      "newId": 5738
+    },
+    {
+      "rank": 1081,
+      "word": "答える",
+      "newId": 5739
+    },
+    {
+      "rank": 1082,
+      "word": "発売",
+      "newId": 5740
+    },
+    {
+      "rank": 1083,
+      "word": "目指す",
+      "newId": 5741
+    },
+    {
+      "rank": 1084,
+      "word": "話題",
+      "newId": 5742
+    },
+    {
+      "rank": 1085,
+      "word": "建築",
+      "newId": 5743
+    },
+    {
+      "rank": 1086,
+      "word": "印象",
+      "newId": 5744
+    },
+    {
+      "rank": 1087,
+      "word": "詳しい",
+      "newId": 5745
+    },
+    {
+      "rank": 1089,
+      "word": "ライブ",
+      "newId": 5746
+    },
+    {
+      "rank": 1090,
+      "word": "ソフト",
+      "newId": 5747
+    },
+    {
+      "rank": 1091,
+      "word": "チェック",
+      "newId": 5748
+    },
+    {
+      "rank": 1092,
+      "word": "われわれ",
+      "newId": 5749
+    },
+    {
+      "rank": 1093,
+      "word": "学習",
+      "newId": 5750
+    },
+    {
+      "rank": 1094,
+      "word": "発展",
+      "newId": 5751
+    },
+    {
+      "rank": 1095,
+      "word": "計算",
+      "newId": 5752
+    },
+    {
+      "rank": 1096,
+      "word": "種類",
+      "newId": 5753
+    },
+    {
+      "rank": 1098,
+      "word": "途中",
+      "newId": 5754
+    },
+    {
+      "rank": 1099,
+      "word": "気分",
+      "newId": 5755
+    },
+    {
+      "rank": 1100,
+      "word": "昭和",
+      "newId": 5756
+    },
+    {
+      "rank": 1101,
+      "word": "移動",
+      "newId": 5757
+    },
+    {
+      "rank": 1103,
+      "word": "発行",
+      "newId": 5758
+    },
+    {
+      "rank": 1104,
+      "word": "企画",
+      "newId": 5759
+    },
+    {
+      "rank": 1105,
+      "word": "数字",
+      "newId": 5760
+    },
+    {
+      "rank": 1107,
+      "word": "自ら",
+      "newId": 5761
+    },
+    {
+      "rank": 1109,
+      "word": "土地",
+      "newId": 5762
+    },
+    {
+      "rank": 1110,
+      "word": "それら",
+      "newId": 5763
+    },
+    {
+      "rank": 1112,
+      "word": "言語",
+      "newId": 5764
+    },
+    {
+      "rank": 1113,
+      "word": "共同",
+      "newId": 5765
+    },
+    {
+      "rank": 1114,
+      "word": "年代",
+      "newId": 5766
+    },
+    {
+      "rank": 1115,
+      "word": "タイプ",
+      "newId": 5767
+    },
+    {
+      "rank": 1116,
+      "word": "観る",
+      "newId": 5768
+    },
+    {
+      "rank": 1117,
+      "word": "プロジェクト",
+      "newId": 5769
+    },
+    {
+      "rank": 1119,
+      "word": "残す",
+      "newId": 5770
+    },
+    {
+      "rank": 1120,
+      "word": "役割",
+      "newId": 5771
+    },
+    {
+      "rank": 1122,
+      "word": "きっと",
+      "newId": 5772
+    },
+    {
+      "rank": 1123,
+      "word": "ユーザー",
+      "newId": 5773
+    },
+    {
+      "rank": 1124,
+      "word": "撮影",
+      "newId": 5774
+    },
+    {
+      "rank": 1125,
+      "word": "エネルギー",
+      "newId": 5775
+    },
+    {
+      "rank": 1126,
+      "word": "知れる",
+      "newId": 5776
+    },
+    {
+      "rank": 1128,
+      "word": "憲法",
+      "newId": 5777
+    },
+    {
+      "rank": 1130,
+      "word": "感覚",
+      "newId": 5778
+    },
+    {
+      "rank": 1131,
+      "word": "高校",
+      "newId": 5779
+    },
+    {
+      "rank": 1132,
+      "word": "付ける",
+      "newId": 5780
+    },
+    {
+      "rank": 1134,
+      "word": "合わせる",
+      "newId": 5781
+    },
+    {
+      "rank": 1135,
+      "word": "実行",
+      "newId": 5782
+    },
+    {
+      "rank": 1137,
+      "word": "通常",
+      "newId": 5783
+    },
+    {
+      "rank": 1138,
+      "word": "既に",
+      "newId": 5784
+    },
+    {
+      "rank": 1139,
+      "word": "現状",
+      "newId": 5785
+    },
+    {
+      "rank": 1140,
+      "word": "建設",
+      "newId": 5786
+    },
+    {
+      "rank": 1141,
+      "word": "スタッフ",
+      "newId": 5787
+    },
+    {
+      "rank": 1142,
+      "word": "先日",
+      "newId": 5788
+    },
+    {
+      "rank": 1143,
+      "word": "最新",
+      "newId": 5789
+    },
+    {
+      "rank": 1144,
+      "word": "中央",
+      "newId": 5790
+    },
+    {
+      "rank": 1145,
+      "word": "幸せ",
+      "newId": 5791
+    },
+    {
+      "rank": 1146,
+      "word": "似る",
+      "newId": 5792
+    },
+    {
+      "rank": 1147,
+      "word": "平均",
+      "newId": 5793
+    },
+    {
+      "rank": 1148,
+      "word": "カード",
+      "newId": 5794
+    },
+    {
+      "rank": 1149,
+      "word": "物語",
+      "newId": 5795
+    },
+    {
+      "rank": 1151,
+      "word": "追加",
+      "newId": 5796
+    },
+    {
+      "rank": 1152,
+      "word": "不思議",
+      "newId": 5797
+    },
+    {
+      "rank": 1153,
+      "word": "警察",
+      "newId": 5798
+    },
+    {
+      "rank": 1154,
+      "word": "思い出す",
+      "newId": 5799
+    },
+    {
+      "rank": 1155,
+      "word": "日々",
+      "newId": 5800
+    },
+    {
+      "rank": 1156,
+      "word": "様子",
+      "newId": 5801
+    },
+    {
+      "rank": 1157,
+      "word": "いろんな",
+      "newId": 5802
+    },
+    {
+      "rank": 1158,
+      "word": "にくい",
+      "newId": 5803
+    },
+    {
+      "rank": 1159,
+      "word": "総合",
+      "newId": 5804
+    },
+    {
+      "rank": 1160,
+      "word": "使える",
+      "newId": 5805
+    },
+    {
+      "rank": 1161,
+      "word": "活用",
+      "newId": 5806
+    },
+    {
+      "rank": 1162,
+      "word": "決して",
+      "newId": 5807
+    },
+    {
+      "rank": 1164,
+      "word": "身体",
+      "newId": 5808
+    },
+    {
+      "rank": 1165,
+      "word": "整備",
+      "newId": 5809
+    },
+    {
+      "rank": 1166,
+      "word": "リスク",
+      "newId": 5810
+    },
+    {
+      "rank": 1168,
+      "word": "想像",
+      "newId": 5811
+    },
+    {
+      "rank": 1169,
+      "word": "ケース",
+      "newId": 5812
+    },
+    {
+      "rank": 1170,
+      "word": "規模",
+      "newId": 5813
+    },
+    {
+      "rank": 1171,
+      "word": "本当",
+      "newId": 5814
+    },
+    {
+      "rank": 1172,
+      "word": "以降",
+      "newId": 5815
+    },
+    {
+      "rank": 1174,
+      "word": "法人",
+      "newId": 5816
+    },
+    {
+      "rank": 1175,
+      "word": "クラス",
+      "newId": 5817
+    },
+    {
+      "rank": 1177,
+      "word": "会長",
+      "newId": 5818
+    },
+    {
+      "rank": 1178,
+      "word": "通る",
+      "newId": 5819
+    },
+    {
+      "rank": 1179,
+      "word": "なんと",
+      "newId": 5820
+    },
+    {
+      "rank": 1180,
+      "word": "超える",
+      "newId": 5821
+    },
+    {
+      "rank": 1181,
+      "word": "平和",
+      "newId": 5822
+    },
+    {
+      "rank": 1182,
+      "word": "基礎",
+      "newId": 5823
+    },
+    {
+      "rank": 1183,
+      "word": "特定",
+      "newId": 5824
+    },
+    {
+      "rank": 1184,
+      "word": "流れ",
+      "newId": 5825
+    },
+    {
+      "rank": 1185,
+      "word": "どうも",
+      "newId": 5826
+    },
+    {
+      "rank": 1186,
+      "word": "画像",
+      "newId": 5827
+    },
+    {
+      "rank": 1187,
+      "word": "少年",
+      "newId": 5828
+    },
+    {
+      "rank": 1188,
+      "word": "いえる",
+      "newId": 5829
+    },
+    {
+      "rank": 1189,
+      "word": "安定",
+      "newId": 5830
+    },
+    {
+      "rank": 1190,
+      "word": "メーカー",
+      "newId": 5831
+    },
+    {
+      "rank": 1191,
+      "word": "間違い",
+      "newId": 5832
+    },
+    {
+      "rank": 1192,
+      "word": "本人",
+      "newId": 5833
+    },
+    {
+      "rank": 1193,
+      "word": "雰囲気",
+      "newId": 5834
+    },
+    {
+      "rank": 1194,
+      "word": "気づく",
+      "newId": 5835
+    },
+    {
+      "rank": 1195,
+      "word": "会場",
+      "newId": 5836
+    },
+    {
+      "rank": 1196,
+      "word": "電子",
+      "newId": 5837
+    },
+    {
+      "rank": 1197,
+      "word": "小説",
+      "newId": 5838
+    },
+    {
+      "rank": 1198,
+      "word": "注目",
+      "newId": 5839
+    },
+    {
+      "rank": 1199,
+      "word": "維持",
+      "newId": 5840
+    },
+    {
+      "rank": 1200,
+      "word": "ほぼ",
+      "newId": 5841
+    },
+    {
+      "rank": 1201,
+      "word": "範囲",
+      "newId": 5842
+    },
+    {
+      "rank": 1202,
+      "word": "コラム",
+      "newId": 5843
+    },
+    {
+      "rank": 1203,
+      "word": "まとめる",
+      "newId": 5844
+    },
+    {
+      "rank": 1204,
+      "word": "常に",
+      "newId": 5845
+    },
+    {
+      "rank": 1205,
+      "word": "著作",
+      "newId": 5846
+    },
+    {
+      "rank": 1206,
+      "word": "失う",
+      "newId": 5847
+    },
+    {
+      "rank": 1207,
+      "word": "理論",
+      "newId": 5848
+    },
+    {
+      "rank": 1208,
+      "word": "日常",
+      "newId": 5849
+    },
+    {
+      "rank": 1210,
+      "word": "体制",
+      "newId": 5850
+    },
+    {
+      "rank": 1212,
+      "word": "やめる",
+      "newId": 5851
+    },
+    {
+      "rank": 1213,
+      "word": "住民",
+      "newId": 5852
+    },
+    {
+      "rank": 1214,
+      "word": "はじめ",
+      "newId": 5853
+    },
+    {
+      "rank": 1215,
+      "word": "疑問",
+      "newId": 5854
+    },
+    {
+      "rank": 1216,
+      "word": "当たる",
+      "newId": 5855
+    },
+    {
+      "rank": 1217,
+      "word": "繰り返す",
+      "newId": 5856
+    },
+    {
+      "rank": 1218,
+      "word": "資本",
+      "newId": 5857
+    },
+    {
+      "rank": 1219,
+      "word": "事情",
+      "newId": 5858
+    },
+    {
+      "rank": 1221,
+      "word": "コース",
+      "newId": 5859
+    },
+    {
+      "rank": 1222,
+      "word": "感想",
+      "newId": 5860
+    },
+    {
+      "rank": 1223,
+      "word": "解説",
+      "newId": 5861
+    },
+    {
+      "rank": 1224,
+      "word": "シリーズ",
+      "newId": 5862
+    },
+    {
+      "rank": 1225,
+      "word": "公共",
+      "newId": 5863
+    },
+    {
+      "rank": 1226,
+      "word": "民間",
+      "newId": 5864
+    },
+    {
+      "rank": 1227,
+      "word": "集まる",
+      "newId": 5865
+    },
+    {
+      "rank": 1228,
+      "word": "措置",
+      "newId": 5866
+    },
+    {
+      "rank": 1229,
+      "word": "本来",
+      "newId": 5867
+    },
+    {
+      "rank": 1230,
+      "word": "宇宙",
+      "newId": 5868
+    },
+    {
+      "rank": 1231,
+      "word": "クラブ",
+      "newId": 5869
+    },
+    {
+      "rank": 1232,
+      "word": "タイトル",
+      "newId": 5870
+    },
+    {
+      "rank": 1233,
+      "word": "用いる",
+      "newId": 5871
+    },
+    {
+      "rank": 1234,
+      "word": "お客様",
+      "newId": 5872
+    },
+    {
+      "rank": 1236,
+      "word": "しばらく",
+      "newId": 5873
+    },
+    {
+      "rank": 1237,
+      "word": "二つ",
+      "newId": 5874
+    },
+    {
+      "rank": 1240,
+      "word": "以来",
+      "newId": 5875
+    },
+    {
+      "rank": 1241,
+      "word": "確保",
+      "newId": 5876
+    },
+    {
+      "rank": 1242,
+      "word": "集める",
+      "newId": 5877
+    },
+    {
+      "rank": 1243,
+      "word": "離れる",
+      "newId": 5878
+    },
+    {
+      "rank": 1245,
+      "word": "映像",
+      "newId": 5879
+    },
+    {
+      "rank": 1247,
+      "word": "要素",
+      "newId": 5880
+    },
+    {
+      "rank": 1248,
+      "word": "触れる",
+      "newId": 5881
+    },
+    {
+      "rank": 1249,
+      "word": "コスト",
+      "newId": 5882
+    },
+    {
+      "rank": 1250,
+      "word": "人物",
+      "newId": 5883
+    },
+    {
+      "rank": 1251,
+      "word": "空間",
+      "newId": 5884
+    },
+    {
+      "rank": 1252,
+      "word": "記念",
+      "newId": 5885
+    },
+    {
+      "rank": 1254,
+      "word": "楽しみ",
+      "newId": 5886
+    },
+    {
+      "rank": 1256,
+      "word": "設置",
+      "newId": 5887
+    },
+    {
+      "rank": 1257,
+      "word": "位置",
+      "newId": 5888
+    },
+    {
+      "rank": 1258,
+      "word": "指定",
+      "newId": 5889
+    },
+    {
+      "rank": 1259,
+      "word": "感情",
+      "newId": 5890
+    },
+    {
+      "rank": 1260,
+      "word": "付く",
+      "newId": 5891
+    },
+    {
+      "rank": 1261,
+      "word": "さまざま",
+      "newId": 5892
+    },
+    {
+      "rank": 1262,
+      "word": "ランキング",
+      "newId": 5893
+    },
+    {
+      "rank": 1263,
+      "word": "かかわる",
+      "newId": 5894
+    },
+    {
+      "rank": 1264,
+      "word": "さすが",
+      "newId": 5895
+    },
+    {
+      "rank": 1266,
+      "word": "関わる",
+      "newId": 5896
+    },
+    {
+      "rank": 1267,
+      "word": "起こす",
+      "newId": 5897
+    },
+    {
+      "rank": 1268,
+      "word": "仲間",
+      "newId": 5898
+    },
+    {
+      "rank": 1269,
+      "word": "メッセージ",
+      "newId": 5899
+    },
+    {
+      "rank": 1270,
+      "word": "迎える",
+      "newId": 5900
+    },
+    {
+      "rank": 1271,
+      "word": "整理",
+      "newId": 5901
+    },
+    {
+      "rank": 1272,
+      "word": "協会",
+      "newId": 5902
+    },
+    {
+      "rank": 1273,
+      "word": "至る",
+      "newId": 5903
+    },
+    {
+      "rank": 1274,
+      "word": "多数",
+      "newId": 5904
+    },
+    {
+      "rank": 1275,
+      "word": "デジタル",
+      "newId": 5905
+    },
+    {
+      "rank": 1276,
+      "word": "積極",
+      "newId": 5906
+    },
+    {
+      "rank": 1277,
+      "word": "願う",
+      "newId": 5907
+    },
+    {
+      "rank": 1278,
+      "word": "独立",
+      "newId": 5908
+    },
+    {
+      "rank": 1279,
+      "word": "読者",
+      "newId": 5909
+    },
+    {
+      "rank": 1280,
+      "word": "勝つ",
+      "newId": 5910
+    },
+    {
+      "rank": 1283,
+      "word": "打つ",
+      "newId": 5911
+    },
+    {
+      "rank": 1284,
+      "word": "流れる",
+      "newId": 5912
+    },
+    {
+      "rank": 1285,
+      "word": "いらっしゃる",
+      "newId": 5913
+    },
+    {
+      "rank": 1286,
+      "word": "バー",
+      "newId": 5914
+    },
+    {
+      "rank": 1287,
+      "word": "全員",
+      "newId": 5915
+    },
+    {
+      "rank": 1288,
+      "word": "参照",
+      "newId": 5916
+    },
+    {
+      "rank": 1289,
+      "word": "少なくとも",
+      "newId": 5917
+    },
+    {
+      "rank": 1290,
+      "word": "地元",
+      "newId": 5918
+    },
+    {
+      "rank": 1291,
+      "word": "是非",
+      "newId": 5919
+    },
+    {
+      "rank": 1292,
+      "word": "明確",
+      "newId": 5920
+    },
+    {
+      "rank": 1293,
+      "word": "つながる",
+      "newId": 5921
+    },
+    {
+      "rank": 1294,
+      "word": "特徴",
+      "newId": 5922
+    },
+    {
+      "rank": 1295,
+      "word": "セット",
+      "newId": 5923
+    },
+    {
+      "rank": 1296,
+      "word": "皆様",
+      "newId": 5924
+    },
+    {
+      "rank": 1297,
+      "word": "魅力",
+      "newId": 5925
+    },
+    {
+      "rank": 1298,
+      "word": "反応",
+      "newId": 5926
+    },
+    {
+      "rank": 1299,
+      "word": "きちんと",
+      "newId": 5927
+    },
+    {
+      "rank": 1300,
+      "word": "まだまだ",
+      "newId": 5928
+    },
+    {
+      "rank": 1303,
+      "word": "工場",
+      "newId": 5929
+    },
+    {
+      "rank": 1304,
+      "word": "入力",
+      "newId": 5930
+    },
+    {
+      "rank": 1305,
+      "word": "ビデオ",
+      "newId": 5931
+    },
+    {
+      "rank": 1306,
+      "word": "集中",
+      "newId": 5932
+    },
+    {
+      "rank": 1307,
+      "word": "あまりに",
+      "newId": 5933
+    },
+    {
+      "rank": 1308,
+      "word": "一度",
+      "newId": 5934
+    },
+    {
+      "rank": 1309,
+      "word": "現象",
+      "newId": 5935
+    },
+    {
+      "rank": 1310,
+      "word": "ビル",
+      "newId": 5936
+    },
+    {
+      "rank": 1311,
+      "word": "感動",
+      "newId": 5937
+    },
+    {
+      "rank": 1313,
+      "word": "サポート",
+      "newId": 5938
+    },
+    {
+      "rank": 1314,
+      "word": "実践",
+      "newId": 5939
+    },
+    {
+      "rank": 1315,
+      "word": "職員",
+      "newId": 5940
+    },
+    {
+      "rank": 1316,
+      "word": "会員",
+      "newId": 5941
+    },
+    {
+      "rank": 1317,
+      "word": "過ごす",
+      "newId": 5942
+    },
+    {
+      "rank": 1318,
+      "word": "シーン",
+      "newId": 5943
+    },
+    {
+      "rank": 1319,
+      "word": "従来",
+      "newId": 5944
+    },
+    {
+      "rank": 1320,
+      "word": "農業",
+      "newId": 5945
+    },
+    {
+      "rank": 1321,
+      "word": "用意",
+      "newId": 5946
+    },
+    {
+      "rank": 1323,
+      "word": "世代",
+      "newId": 5947
+    },
+    {
+      "rank": 1324,
+      "word": "そうした",
+      "newId": 5948
+    },
+    {
+      "rank": 1325,
+      "word": "強化",
+      "newId": 5949
+    },
+    {
+      "rank": 1327,
+      "word": "周り",
+      "newId": 5950
+    },
+    {
+      "rank": 1329,
+      "word": "レポート",
+      "newId": 5951
+    },
+    {
+      "rank": 1330,
+      "word": "年齢",
+      "newId": 5952
+    },
+    {
+      "rank": 1331,
+      "word": "未来",
+      "newId": 5953
+    },
+    {
+      "rank": 1332,
+      "word": "舞台",
+      "newId": 5954
+    },
+    {
+      "rank": 1333,
+      "word": "前回",
+      "newId": 5955
+    },
+    {
+      "rank": 1334,
+      "word": "年金",
+      "newId": 5956
+    },
+    {
+      "rank": 1335,
+      "word": "もう少し",
+      "newId": 5957
+    },
+    {
+      "rank": 1336,
+      "word": "教師",
+      "newId": 5958
+    },
+    {
+      "rank": 1337,
+      "word": "他人",
+      "newId": 5959
+    },
+    {
+      "rank": 1338,
+      "word": "上昇",
+      "newId": 5960
+    },
+    {
+      "rank": 1340,
+      "word": "完成",
+      "newId": 5961
+    },
+    {
+      "rank": 1341,
+      "word": "大好き",
+      "newId": 5962
+    },
+    {
+      "rank": 1342,
+      "word": "扱う",
+      "newId": 5963
+    },
+    {
+      "rank": 1343,
+      "word": "修正",
+      "newId": 5964
+    },
+    {
+      "rank": 1344,
+      "word": "向上",
+      "newId": 5965
+    },
+    {
+      "rank": 1345,
+      "word": "負ける",
+      "newId": 5966
+    },
+    {
+      "rank": 1347,
+      "word": "野球",
+      "newId": 5967
+    },
+    {
+      "rank": 1349,
+      "word": "訪問",
+      "newId": 5968
+    },
+    {
+      "rank": 1351,
+      "word": "並ぶ",
+      "newId": 5969
+    },
+    {
+      "rank": 1352,
+      "word": "視点",
+      "newId": 5970
+    },
+    {
+      "rank": 1353,
+      "word": "小学校",
+      "newId": 5971
+    },
+    {
+      "rank": 1354,
+      "word": "電気",
+      "newId": 5972
+    },
+    {
+      "rank": 1356,
+      "word": "間違う",
+      "newId": 5973
+    },
+    {
+      "rank": 1357,
+      "word": "挙げる",
+      "newId": 5974
+    },
+    {
+      "rank": 1358,
+      "word": "会話",
+      "newId": 5975
+    },
+    {
+      "rank": 1359,
+      "word": "ドラマ",
+      "newId": 5976
+    },
+    {
+      "rank": 1360,
+      "word": "再び",
+      "newId": 5977
+    },
+    {
+      "rank": 1361,
+      "word": "解釈",
+      "newId": 5978
+    },
+    {
+      "rank": 1364,
+      "word": "止める",
+      "newId": 5979
+    },
+    {
+      "rank": 1365,
+      "word": "取り組む",
+      "newId": 5980
+    },
+    {
+      "rank": 1366,
+      "word": "製造",
+      "newId": 5981
+    },
+    {
+      "rank": 1367,
+      "word": "困難",
+      "newId": 5982
+    },
+    {
+      "rank": 1370,
+      "word": "母親",
+      "newId": 5983
+    },
+    {
+      "rank": 1372,
+      "word": "保障",
+      "newId": 5984
+    },
+    {
+      "rank": 1373,
+      "word": "集団",
+      "newId": 5985
+    },
+    {
+      "rank": 1374,
+      "word": "事態",
+      "newId": 5986
+    },
+    {
+      "rank": 1375,
+      "word": "立てる",
+      "newId": 5987
+    },
+    {
+      "rank": 1376,
+      "word": "画面",
+      "newId": 5988
+    },
+    {
+      "rank": 1378,
+      "word": "時点",
+      "newId": 5989
+    },
+    {
+      "rank": 1379,
+      "word": "なれる",
+      "newId": 5990
+    },
+    {
+      "rank": 1380,
+      "word": "スタート",
+      "newId": 5991
+    },
+    {
+      "rank": 1381,
+      "word": "活躍",
+      "newId": 5992
+    },
+    {
+      "rank": 1382,
+      "word": "問う",
+      "newId": 5993
+    },
+    {
+      "rank": 1383,
+      "word": "ちょうど",
+      "newId": 5994
+    },
+    {
+      "rank": 1384,
+      "word": "殺す",
+      "newId": 5995
+    },
+    {
+      "rank": 1385,
+      "word": "サイズ",
+      "newId": 5996
+    },
+    {
+      "rank": 1386,
+      "word": "限定",
+      "newId": 5997
+    },
+    {
+      "rank": 1387,
+      "word": "ひとり",
+      "newId": 5998
+    },
+    {
+      "rank": 1388,
+      "word": "医師",
+      "newId": 5999
+    },
+    {
+      "rank": 1390,
+      "word": "居る",
+      "newId": 6000
+    }
+  ],
+  "displaced": [
+    {
+      "rank": 1391,
+      "word": "現れる"
+    },
+    {
+      "rank": 1392,
+      "word": "原則"
+    },
+    {
+      "rank": 1393,
+      "word": "づくり"
+    },
+    {
+      "rank": 1394,
+      "word": "部門"
+    },
+    {
+      "rank": 1395,
+      "word": "女の子"
+    },
+    {
+      "rank": 1396,
+      "word": "出演"
+    },
+    {
+      "rank": 1397,
+      "word": "民族"
+    },
+    {
+      "rank": 1398,
+      "word": "充実"
+    },
+    {
+      "rank": 1400,
+      "word": "講演"
+    },
+    {
+      "rank": 1401,
+      "word": "瞬間"
+    },
+    {
+      "rank": 1402,
+      "word": "交流"
+    },
+    {
+      "rank": 1403,
+      "word": "大量"
+    },
+    {
+      "rank": 1404,
+      "word": "回る"
+    },
+    {
+      "rank": 1405,
+      "word": "久しぶり"
+    },
+    {
+      "rank": 1406,
+      "word": "革命"
+    },
+    {
+      "rank": 1407,
+      "word": "成果"
+    },
+    {
+      "rank": 1408,
+      "word": "コミュニケーション"
+    },
+    {
+      "rank": 1409,
+      "word": "標準"
+    },
+    {
+      "rank": 1410,
+      "word": "まるで"
+    },
+    {
+      "rank": 1411,
+      "word": "輸入"
+    },
+    {
+      "rank": 1412,
+      "word": "やつ"
+    },
+    {
+      "rank": 1414,
+      "word": "スタイル"
+    },
+    {
+      "rank": 1415,
+      "word": "協議"
+    },
+    {
+      "rank": 1416,
+      "word": "関心"
+    },
+    {
+      "rank": 1417,
+      "word": "勝手"
+    },
+    {
+      "rank": 1418,
+      "word": "一覧"
+    },
+    {
+      "rank": 1419,
+      "word": "取り上げる"
+    },
+    {
+      "rank": 1421,
+      "word": "制限"
+    },
+    {
+      "rank": 1422,
+      "word": "どうぞ"
+    },
+    {
+      "rank": 1423,
+      "word": "図る"
+    },
+    {
+      "rank": 1424,
+      "word": "若者"
+    },
+    {
+      "rank": 1425,
+      "word": "心理"
+    },
+    {
+      "rank": 1426,
+      "word": "大体"
+    },
+    {
+      "rank": 1427,
+      "word": "トン"
+    },
+    {
+      "rank": 1428,
+      "word": "前提"
+    },
+    {
+      "rank": 1429,
+      "word": "突然"
+    },
+    {
+      "rank": 1430,
+      "word": "半分"
+    },
+    {
+      "rank": 1431,
+      "word": "思想"
+    },
+    {
+      "rank": 1432,
+      "word": "オープン"
+    },
+    {
+      "rank": 1433,
+      "word": "請求"
+    },
+    {
+      "rank": 1434,
+      "word": "正確"
+    },
+    {
+      "rank": 1435,
+      "word": "周辺"
+    },
+    {
+      "rank": 1436,
+      "word": "セミナー"
+    },
+    {
+      "rank": 1437,
+      "word": "リスト"
+    },
+    {
+      "rank": 1438,
+      "word": "応じる"
+    },
+    {
+      "rank": 1439,
+      "word": "不足"
+    },
+    {
+      "rank": 1440,
+      "word": "ボール"
+    },
+    {
+      "rank": 1441,
+      "word": "コード"
+    },
+    {
+      "rank": 1442,
+      "word": "世の中"
+    },
+    {
+      "rank": 1443,
+      "word": "みなさん"
+    },
+    {
+      "rank": 1444,
+      "word": "取得"
+    },
+    {
+      "rank": 1446,
+      "word": "性格"
+    },
+    {
+      "rank": 1447,
+      "word": "顧客"
+    },
+    {
+      "rank": 1449,
+      "word": "地区"
+    },
+    {
+      "rank": 1450,
+      "word": "長期"
+    },
+    {
+      "rank": 1452,
+      "word": "著者"
+    },
+    {
+      "rank": 1453,
+      "word": "ソフトウェア"
+    },
+    {
+      "rank": 1454,
+      "word": "展示"
+    },
+    {
+      "rank": 1455,
+      "word": "訪れる"
+    },
+    {
+      "rank": 1456,
+      "word": "後半"
+    },
+    {
+      "rank": 1457,
+      "word": "福祉"
+    },
+    {
+      "rank": 1458,
+      "word": "到着"
+    },
+    {
+      "rank": 1459,
+      "word": "操作"
+    },
+    {
+      "rank": 1460,
+      "word": "支配"
+    },
+    {
+      "rank": 1461,
+      "word": "講座"
+    },
+    {
+      "rank": 1463,
+      "word": "態度"
+    },
+    {
+      "rank": 1464,
+      "word": "審査"
+    },
+    {
+      "rank": 1465,
+      "word": "過程"
+    },
+    {
+      "rank": 1466,
+      "word": "研修"
+    },
+    {
+      "rank": 1467,
+      "word": "長官"
+    },
+    {
+      "rank": 1468,
+      "word": "バランス"
+    },
+    {
+      "rank": 1469,
+      "word": "連続"
+    },
+    {
+      "rank": 1470,
+      "word": "望む"
+    },
+    {
+      "rank": 1471,
+      "word": "空気"
+    },
+    {
+      "rank": 1473,
+      "word": "広がる"
+    },
+    {
+      "rank": 1474,
+      "word": "単純"
+    },
+    {
+      "rank": 1475,
+      "word": "構築"
+    },
+    {
+      "rank": 1476,
+      "word": "論文"
+    },
+    {
+      "rank": 1478,
+      "word": "一言"
+    },
+    {
+      "rank": 1479,
+      "word": "出会う"
+    },
+    {
+      "rank": 1480,
+      "word": "内部"
+    },
+    {
+      "rank": 1481,
+      "word": "豊か"
+    },
+    {
+      "rank": 1482,
+      "word": "生命"
+    },
+    {
+      "rank": 1483,
+      "word": "所得"
+    },
+    {
+      "rank": 1484,
+      "word": "制作"
+    },
+    {
+      "rank": 1486,
+      "word": "自信"
+    },
+    {
+      "rank": 1487,
+      "word": "ベース"
+    },
+    {
+      "rank": 1488,
+      "word": "距離"
+    },
+    {
+      "rank": 1489,
+      "word": "複数"
+    },
+    {
+      "rank": 1490,
+      "word": "恋愛"
+    },
+    {
+      "rank": 1491,
+      "word": "消える"
+    },
+    {
+      "rank": 1493,
+      "word": "支持"
+    },
+    {
+      "rank": 1494,
+      "word": "インタビュー"
+    },
+    {
+      "rank": 1495,
+      "word": "交渉"
+    },
+    {
+      "rank": 1496,
+      "word": "方式"
+    },
+    {
+      "rank": 1497,
+      "word": "普段"
+    },
+    {
+      "rank": 1499,
+      "word": "アニメ"
+    },
+    {
+      "rank": 1500,
+      "word": "危機"
+    },
+    {
+      "rank": 1501,
+      "word": "次に"
+    },
+    {
+      "rank": 1502,
+      "word": "募集"
+    },
+    {
+      "rank": 1503,
+      "word": "定める"
+    },
+    {
+      "rank": 1504,
+      "word": "自宅"
+    },
+    {
+      "rank": 1505,
+      "word": "人権"
+    },
+    {
+      "rank": 1506,
+      "word": "証明"
+    },
+    {
+      "rank": 1508,
+      "word": "ツール"
+    },
+    {
+      "rank": 1509,
+      "word": "果たす"
+    },
+    {
+      "rank": 1510,
+      "word": "コンテンツ"
+    },
+    {
+      "rank": 1511,
+      "word": "単に"
+    },
+    {
+      "rank": 1513,
+      "word": "財産"
+    },
+    {
+      "rank": 1514,
+      "word": "作家"
+    },
+    {
+      "rank": 1515,
+      "word": "もたらす"
+    },
+    {
+      "rank": 1516,
+      "word": "思考"
+    },
+    {
+      "rank": 1517,
+      "word": "接続"
+    },
+    {
+      "rank": 1518,
+      "word": "ようやく"
+    },
+    {
+      "rank": 1519,
+      "word": "悩む"
+    },
+    {
+      "rank": 1520,
+      "word": "形式"
+    },
+    {
+      "rank": 1522,
+      "word": "再生"
+    },
+    {
+      "rank": 1523,
+      "word": "破壊"
+    },
+    {
+      "rank": 1524,
+      "word": "疲れる"
+    },
+    {
+      "rank": 1525,
+      "word": "仕組み"
+    },
+    {
+      "rank": 1526,
+      "word": "研究所"
+    },
+    {
+      "rank": 1527,
+      "word": "受け入れる"
+    },
+    {
+      "rank": 1528,
+      "word": "いくら"
+    },
+    {
+      "rank": 1529,
+      "word": "フリー"
+    },
+    {
+      "rank": 1530,
+      "word": "公式"
+    },
+    {
+      "rank": 1531,
+      "word": "場面"
+    },
+    {
+      "rank": 1532,
+      "word": "激しい"
+    },
+    {
+      "rank": 1533,
+      "word": "文書"
+    },
+    {
+      "rank": 1534,
+      "word": "流す"
+    },
+    {
+      "rank": 1536,
+      "word": "素敵"
+    },
+    {
+      "rank": 1537,
+      "word": "プロセス"
+    },
+    {
+      "rank": 1538,
+      "word": "当たり前"
+    },
+    {
+      "rank": 1539,
+      "word": "コピー"
+    },
+    {
+      "rank": 1540,
+      "word": "出身"
+    },
+    {
+      "rank": 1541,
+      "word": "事項"
+    },
+    {
+      "rank": 1542,
+      "word": "観点"
+    },
+    {
+      "rank": 1543,
+      "word": "連れる"
+    },
+    {
+      "rank": 1544,
+      "word": "出発"
+    },
+    {
+      "rank": 1545,
+      "word": "終える"
+    },
+    {
+      "rank": 1547,
+      "word": "形成"
+    },
+    {
+      "rank": 1548,
+      "word": "記述"
+    },
+    {
+      "rank": 1550,
+      "word": "事例"
+    },
+    {
+      "rank": 1551,
+      "word": "金額"
+    },
+    {
+      "rank": 1552,
+      "word": "支える"
+    },
+    {
+      "rank": 1553,
+      "word": "成立"
+    },
+    {
+      "rank": 1554,
+      "word": "訓練"
+    },
+    {
+      "rank": 1555,
+      "word": "食品"
+    },
+    {
+      "rank": 1556,
+      "word": "育てる"
+    },
+    {
+      "rank": 1558,
+      "word": "プレゼント"
+    },
+    {
+      "rank": 1559,
+      "word": "不明"
+    },
+    {
+      "rank": 1560,
+      "word": "アルバム"
+    },
+    {
+      "rank": 1561,
+      "word": "挑戦"
+    },
+    {
+      "rank": 1562,
+      "word": "やり方"
+    },
+    {
+      "rank": 1563,
+      "word": "バンド"
+    },
+    {
+      "rank": 1564,
+      "word": "物質"
+    },
+    {
+      "rank": 1565,
+      "word": "実に"
+    },
+    {
+      "rank": 1566,
+      "word": "いかが"
+    },
+    {
+      "rank": 1567,
+      "word": "手法"
+    },
+    {
+      "rank": 1568,
+      "word": "保存"
+    },
+    {
+      "rank": 1569,
+      "word": "相互"
+    },
+    {
+      "rank": 1570,
+      "word": "依頼"
+    },
+    {
+      "rank": 1571,
+      "word": "差別"
+    },
+    {
+      "rank": 1573,
+      "word": "設備"
+    },
+    {
+      "rank": 1574,
+      "word": "ひどい"
+    },
+    {
+      "rank": 1575,
+      "word": "お答え"
+    },
+    {
+      "rank": 1576,
+      "word": "抱える"
+    },
+    {
+      "rank": 1577,
+      "word": "答弁"
+    },
+    {
+      "rank": 1578,
+      "word": "わずか"
+    },
+    {
+      "rank": 1579,
+      "word": "意思"
+    },
+    {
+      "rank": 1580,
+      "word": "初め"
+    },
+    {
+      "rank": 1581,
+      "word": "伺う"
+    },
+    {
+      "rank": 1582,
+      "word": "保証"
+    },
+    {
+      "rank": 1583,
+      "word": "実態"
+    },
+    {
+      "rank": 1584,
+      "word": "売れる"
+    },
+    {
+      "rank": 1585,
+      "word": "当初"
+    },
+    {
+      "rank": 1586,
+      "word": "もともと"
+    },
+    {
+      "rank": 1587,
+      "word": "分ける"
+    },
+    {
+      "rank": 1589,
+      "word": "キロ"
+    },
+    {
+      "rank": 1590,
+      "word": "降る"
+    },
+    {
+      "rank": 1591,
+      "word": "所有"
+    },
+    {
+      "rank": 1592,
+      "word": "日時"
+    },
+    {
+      "rank": 1593,
+      "word": "越える"
+    },
+    {
+      "rank": 1594,
+      "word": "アプリケーション"
+    },
+    {
+      "rank": 1596,
+      "word": "無視"
+    },
+    {
+      "rank": 1597,
+      "word": "設立"
+    },
+    {
+      "rank": 1598,
+      "word": "愛す"
+    },
+    {
+      "rank": 1599,
+      "word": "ショップ"
+    },
+    {
+      "rank": 1600,
+      "word": "生物"
+    },
+    {
+      "rank": 1601,
+      "word": "改めて"
+    },
+    {
+      "rank": 1602,
+      "word": "優勝"
+    },
+    {
+      "rank": 1603,
+      "word": "多様"
+    },
+    {
+      "rank": 1604,
+      "word": "特許"
+    },
+    {
+      "rank": 1605,
+      "word": "補助"
+    },
+    {
+      "rank": 1606,
+      "word": "有る"
+    },
+    {
+      "rank": 1607,
+      "word": "優しい"
+    },
+    {
+      "rank": 1609,
+      "word": "見つかる"
+    },
+    {
+      "rank": 1610,
+      "word": "白い"
+    },
+    {
+      "rank": 1611,
+      "word": "ライン"
+    },
+    {
+      "rank": 1612,
+      "word": "承知"
+    },
+    {
+      "rank": 1613,
+      "word": "父親"
+    },
+    {
+      "rank": 1615,
+      "word": "秘密"
+    },
+    {
+      "rank": 1616,
+      "word": "誰か"
+    },
+    {
+      "rank": 1617,
+      "word": "独自"
+    },
+    {
+      "rank": 1619,
+      "word": "獲得"
+    },
+    {
+      "rank": 1620,
+      "word": "休み"
+    },
+    {
+      "rank": 1621,
+      "word": "セキュリティ"
+    },
+    {
+      "rank": 1622,
+      "word": "論理"
+    },
+    {
+      "rank": 1623,
+      "word": "メイン"
+    },
+    {
+      "rank": 1624,
+      "word": "本質"
+    },
+    {
+      "rank": 1625,
+      "word": "多少"
+    },
+    {
+      "rank": 1626,
+      "word": "出来事"
+    },
+    {
+      "rank": 1627,
+      "word": "及ぶ"
+    },
+    {
+      "rank": 1628,
+      "word": "強制"
+    },
+    {
+      "rank": 1629,
+      "word": "出かける"
+    },
+    {
+      "rank": 1630,
+      "word": "エンジン"
+    },
+    {
+      "rank": 1631,
+      "word": "チャンス"
+    },
+    {
+      "rank": 1632,
+      "word": "優先"
+    },
+    {
+      "rank": 1633,
+      "word": "オンライン"
+    },
+    {
+      "rank": 1634,
+      "word": "ソース"
+    },
+    {
+      "rank": 1636,
+      "word": "援助"
+    },
+    {
+      "rank": 1638,
+      "word": "取れる"
+    },
+    {
+      "rank": 1639,
+      "word": "除く"
+    },
+    {
+      "rank": 1640,
+      "word": "コーナー"
+    },
+    {
+      "rank": 1641,
+      "word": "ブランド"
+    },
+    {
+      "rank": 1642,
+      "word": "高速"
+    },
+    {
+      "rank": 1643,
+      "word": "マーク"
+    },
+    {
+      "rank": 1644,
+      "word": "特殊"
+    },
+    {
+      "rank": 1645,
+      "word": "こっち"
+    },
+    {
+      "rank": 1646,
+      "word": "次回"
+    },
+    {
+      "rank": 1647,
+      "word": "お知らせ"
+    },
+    {
+      "rank": 1649,
+      "word": "唯一"
+    },
+    {
+      "rank": 1650,
+      "word": "削除"
+    },
+    {
+      "rank": 1651,
+      "word": "両方"
+    },
+    {
+      "rank": 1652,
+      "word": "高める"
+    },
+    {
+      "rank": 1653,
+      "word": "本部"
+    },
+    {
+      "rank": 1654,
+      "word": "処分"
+    },
+    {
+      "rank": 1657,
+      "word": "学者"
+    },
+    {
+      "rank": 1658,
+      "word": "夫婦"
+    },
+    {
+      "rank": 1659,
+      "word": "風景"
+    },
+    {
+      "rank": 1660,
+      "word": "中小"
+    },
+    {
+      "rank": 1661,
+      "word": "追う"
+    },
+    {
+      "rank": 1663,
+      "word": "少女"
+    },
+    {
+      "rank": 1664,
+      "word": "勝利"
+    },
+    {
+      "rank": 1665,
+      "word": "スピード"
+    },
+    {
+      "rank": 1666,
+      "word": "スター"
+    },
+    {
+      "rank": 1668,
+      "word": "考慮"
+    },
+    {
+      "rank": 1669,
+      "word": "伝わる"
+    },
+    {
+      "rank": 1670,
+      "word": "主人公"
+    },
+    {
+      "rank": 1671,
+      "word": "実感"
+    },
+    {
+      "rank": 1672,
+      "word": "近代"
+    },
+    {
+      "rank": 1673,
+      "word": "航空"
+    },
+    {
+      "rank": 1674,
+      "word": "一時"
+    },
+    {
+      "rank": 1675,
+      "word": "戦後"
+    },
+    {
+      "rank": 1676,
+      "word": "分類"
+    },
+    {
+      "rank": 1678,
+      "word": "哲学"
+    },
+    {
+      "rank": 1679,
+      "word": "運ぶ"
+    },
+    {
+      "rank": 1680,
+      "word": "足りる"
+    },
+    {
+      "rank": 1681,
+      "word": "コントロール"
+    },
+    {
+      "rank": 1682,
+      "word": "遊び"
+    },
+    {
+      "rank": 1683,
+      "word": "巨大"
+    },
+    {
+      "rank": 1685,
+      "word": "同士"
+    },
+    {
+      "rank": 1686,
+      "word": "表す"
+    },
+    {
+      "rank": 1687,
+      "word": "慣れる"
+    },
+    {
+      "rank": 1688,
+      "word": "条約"
+    },
+    {
+      "rank": 1689,
+      "word": "人類"
+    },
+    {
+      "rank": 1690,
+      "word": "ワイン"
+    },
+    {
+      "rank": 1691,
+      "word": "個別"
+    },
+    {
+      "rank": 1692,
+      "word": "パターン"
+    },
+    {
+      "rank": 1693,
+      "word": "ビール"
+    },
+    {
+      "rank": 1694,
+      "word": "動かす"
+    },
+    {
+      "rank": 1695,
+      "word": "低下"
+    },
+    {
+      "rank": 1696,
+      "word": "死亡"
+    },
+    {
+      "rank": 1697,
+      "word": "設ける"
+    },
+    {
+      "rank": 1699,
+      "word": "受け取る"
+    },
+    {
+      "rank": 1700,
+      "word": "ボランティア"
+    },
+    {
+      "rank": 1701,
+      "word": "ホーム"
+    },
+    {
+      "rank": 1702,
+      "word": "抱く"
+    },
+    {
+      "rank": 1703,
+      "word": "理想"
+    },
+    {
+      "rank": 1704,
+      "word": "当局"
+    },
+    {
+      "rank": 1705,
+      "word": "書籍"
+    },
+    {
+      "rank": 1706,
+      "word": "バイト"
+    },
+    {
+      "rank": 1707,
+      "word": "ガス"
+    },
+    {
+      "rank": 1709,
+      "word": "観察"
+    },
+    {
+      "rank": 1710,
+      "word": "もう一度"
+    },
+    {
+      "rank": 1712,
+      "word": "促進"
+    },
+    {
+      "rank": 1713,
+      "word": "それでは"
+    },
+    {
+      "rank": 1714,
+      "word": "異常"
+    },
+    {
+      "rank": 1715,
+      "word": "無事"
+    },
+    {
+      "rank": 1716,
+      "word": "合意"
+    },
+    {
+      "rank": 1717,
+      "word": "戦う"
+    },
+    {
+      "rank": 1719,
+      "word": "渡る"
+    },
+    {
+      "rank": 1720,
+      "word": "キー"
+    },
+    {
+      "rank": 1721,
+      "word": "領域"
+    },
+    {
+      "rank": 1722,
+      "word": "不可能"
+    },
+    {
+      "rank": 1724,
+      "word": "周囲"
+    },
+    {
+      "rank": 1725,
+      "word": "見事"
+    },
+    {
+      "rank": 1726,
+      "word": "一切"
+    },
+    {
+      "rank": 1727,
+      "word": "素材"
+    },
+    {
+      "rank": 1728,
+      "word": "新規"
+    },
+    {
+      "rank": 1729,
+      "word": "児童"
+    },
+    {
+      "rank": 1730,
+      "word": "後ろ"
+    },
+    {
+      "rank": 1731,
+      "word": "把握"
+    },
+    {
+      "rank": 1732,
+      "word": "前後"
+    },
+    {
+      "rank": 1733,
+      "word": "リリース"
+    },
+    {
+      "rank": 1734,
+      "word": "経つ"
+    },
+    {
+      "rank": 1735,
+      "word": "権力"
+    },
+    {
+      "rank": 1736,
+      "word": "細かい"
+    },
+    {
+      "rank": 1737,
+      "word": "趣旨"
+    },
+    {
+      "rank": 1738,
+      "word": "やや"
+    },
+    {
+      "rank": 1739,
+      "word": "女子"
+    },
+    {
+      "rank": 1741,
+      "word": "オリジナル"
+    },
+    {
+      "rank": 1742,
+      "word": "びっくり"
+    },
+    {
+      "rank": 1744,
+      "word": "すっかり"
+    },
+    {
+      "rank": 1745,
+      "word": "いよいよ"
+    },
+    {
+      "rank": 1746,
+      "word": "出会い"
+    },
+    {
+      "rank": 1748,
+      "word": "博士"
+    },
+    {
+      "rank": 1749,
+      "word": "近づく"
+    },
+    {
+      "rank": 1750,
+      "word": "問い合わせ"
+    },
+    {
+      "rank": 1752,
+      "word": "代わり"
+    },
+    {
+      "rank": 1754,
+      "word": "太陽"
+    },
+    {
+      "rank": 1756,
+      "word": "テキスト"
+    },
+    {
+      "rank": 1757,
+      "word": "水準"
+    },
+    {
+      "rank": 1758,
+      "word": "作り"
+    },
+    {
+      "rank": 1759,
+      "word": "意図"
+    },
+    {
+      "rank": 1760,
+      "word": "公務員"
+    },
+    {
+      "rank": 1761,
+      "word": "復活"
+    },
+    {
+      "rank": 1762,
+      "word": "用語"
+    },
+    {
+      "rank": 1764,
+      "word": "近所"
+    },
+    {
+      "rank": 1765,
+      "word": "育つ"
+    },
+    {
+      "rank": 1767,
+      "word": "入り"
+    },
+    {
+      "rank": 1768,
+      "word": "講師"
+    },
+    {
+      "rank": 1770,
+      "word": "パワー"
+    },
+    {
+      "rank": 1771,
+      "word": "候補"
+    },
+    {
+      "rank": 1772,
+      "word": "気付く"
+    },
+    {
+      "rank": 1773,
+      "word": "指示"
+    },
+    {
+      "rank": 1774,
+      "word": "留学"
+    },
+    {
+      "rank": 1775,
+      "word": "いくつ"
+    },
+    {
+      "rank": 1776,
+      "word": "ミス"
+    },
+    {
+      "rank": 1778,
+      "word": "創造"
+    },
+    {
+      "rank": 1779,
+      "word": "直す"
+    },
+    {
+      "rank": 1780,
+      "word": "覆る"
+    },
+    {
+      "rank": 1781,
+      "word": "統一"
+    },
+    {
+      "rank": 1782,
+      "word": "たび"
+    },
+    {
+      "rank": 1783,
+      "word": "暮らす"
+    },
+    {
+      "rank": 1784,
+      "word": "致す"
+    },
+    {
+      "rank": 1785,
+      "word": "苦労"
+    },
+    {
+      "rank": 1786,
+      "word": "漫画"
+    },
+    {
+      "rank": 1787,
+      "word": "進化"
+    },
+    {
+      "rank": 1788,
+      "word": "マガジン"
+    },
+    {
+      "rank": 1790,
+      "word": "リーグ"
+    },
+    {
+      "rank": 1791,
+      "word": "ツアー"
+    },
+    {
+      "rank": 1793,
+      "word": "連合"
+    },
+    {
+      "rank": 1794,
+      "word": "ホント"
+    },
+    {
+      "rank": 1795,
+      "word": "貿易"
+    },
+    {
+      "rank": 1796,
+      "word": "発想"
+    },
+    {
+      "rank": 1797,
+      "word": "経過"
+    },
+    {
+      "rank": 1798,
+      "word": "いきなり"
+    },
+    {
+      "rank": 1799,
+      "word": "専用"
+    },
+    {
+      "rank": 1800,
+      "word": "停止"
+    },
+    {
+      "rank": 1801,
+      "word": "食う"
+    },
+    {
+      "rank": 1802,
+      "word": "隠す"
+    },
+    {
+      "rank": 1803,
+      "word": "クリスマス"
+    },
+    {
+      "rank": 1804,
+      "word": "化学"
+    },
+    {
+      "rank": 1805,
+      "word": "番目"
+    },
+    {
+      "rank": 1806,
+      "word": "事前"
+    },
+    {
+      "rank": 1807,
+      "word": "ピアノ"
+    },
+    {
+      "rank": 1808,
+      "word": "連携"
+    },
+    {
+      "rank": 1810,
+      "word": "増やす"
+    },
+    {
+      "rank": 1812,
+      "word": "高度"
+    },
+    {
+      "rank": 1813,
+      "word": "宣伝"
+    },
+    {
+      "rank": 1814,
+      "word": "支払う"
+    },
+    {
+      "rank": 1816,
+      "word": "切れる"
+    },
+    {
+      "rank": 1817,
+      "word": "主要"
+    },
+    {
+      "rank": 1819,
+      "word": "ゴール"
+    },
+    {
+      "rank": 1820,
+      "word": "確立"
+    },
+    {
+      "rank": 1821,
+      "word": "統合"
+    },
+    {
+      "rank": 1822,
+      "word": "コンサート"
+    },
+    {
+      "rank": 1823,
+      "word": "時半"
+    },
+    {
+      "rank": 1824,
+      "word": "物理"
+    },
+    {
+      "rank": 1825,
+      "word": "ストーリー"
+    },
+    {
+      "rank": 1826,
+      "word": "ゼロ"
+    },
+    {
+      "rank": 1827,
+      "word": "笑顔"
+    },
+    {
+      "rank": 1828,
+      "word": "自動"
+    },
+    {
+      "rank": 1829,
+      "word": "メモ"
+    },
+    {
+      "rank": 1830,
+      "word": "アドバイス"
+    },
+    {
+      "rank": 1831,
+      "word": "知的"
+    },
+    {
+      "rank": 1832,
+      "word": "男女"
+    },
+    {
+      "rank": 1833,
+      "word": "よろしく"
+    },
+    {
+      "rank": 1835,
+      "word": "気に入る"
+    },
+    {
+      "rank": 1836,
+      "word": "動作"
+    },
+    {
+      "rank": 1837,
+      "word": "輸出"
+    },
+    {
+      "rank": 1838,
+      "word": "落ち着く"
+    },
+    {
+      "rank": 1839,
+      "word": "先輩"
+    },
+    {
+      "rank": 1840,
+      "word": "通じる"
+    },
+    {
+      "rank": 1841,
+      "word": "本格"
+    },
+    {
+      "rank": 1842,
+      "word": "反省"
+    },
+    {
+      "rank": 1843,
+      "word": "中身"
+    },
+    {
+      "rank": 1844,
+      "word": "製作"
+    },
+    {
+      "rank": 1845,
+      "word": "診断"
+    },
+    {
+      "rank": 1846,
+      "word": "要望"
+    },
+    {
+      "rank": 1848,
+      "word": "工業"
+    },
+    {
+      "rank": 1849,
+      "word": "試す"
+    },
+    {
+      "rank": 1850,
+      "word": "ますます"
+    },
+    {
+      "rank": 1851,
+      "word": "真実"
+    },
+    {
+      "rank": 1852,
+      "word": "去る"
+    },
+    {
+      "rank": 1853,
+      "word": "プレー"
+    },
+    {
+      "rank": 1854,
+      "word": "適当"
+    },
+    {
+      "rank": 1855,
+      "word": "国立"
+    },
+    {
+      "rank": 1856,
+      "word": "喜び"
+    },
+    {
+      "rank": 1857,
+      "word": "石油"
+    },
+    {
+      "rank": 1858,
+      "word": "大幅"
+    },
+    {
+      "rank": 1859,
+      "word": "せっかく"
+    },
+    {
+      "rank": 1860,
+      "word": "だめ"
+    },
+    {
+      "rank": 1862,
+      "word": "眺める"
+    },
+    {
+      "rank": 1864,
+      "word": "サイド"
+    },
+    {
+      "rank": 1865,
+      "word": "スペース"
+    },
+    {
+      "rank": 1866,
+      "word": "つい"
+    },
+    {
+      "rank": 1867,
+      "word": "主催"
+    },
+    {
+      "rank": 1868,
+      "word": "きょう"
+    },
+    {
+      "rank": 1869,
+      "word": "調子"
+    },
+    {
+      "rank": 1870,
+      "word": "単語"
+    },
+    {
+      "rank": 1871,
+      "word": "渡す"
+    },
+    {
+      "rank": 1872,
+      "word": "表情"
+    },
+    {
+      "rank": 1873,
+      "word": "気がつく"
+    },
+    {
+      "rank": 1874,
+      "word": "ホール"
+    },
+    {
+      "rank": 1875,
+      "word": "駐車"
+    },
+    {
+      "rank": 1876,
+      "word": "比較的"
+    },
+    {
+      "rank": 1877,
+      "word": "ガラス"
+    },
+    {
+      "rank": 1879,
+      "word": "世間"
+    },
+    {
+      "rank": 1881,
+      "word": "あり方"
+    },
+    {
+      "rank": 1882,
+      "word": "単なる"
+    },
+    {
+      "rank": 1883,
+      "word": "楽しめる"
+    },
+    {
+      "rank": 1884,
+      "word": "戦い"
+    },
+    {
+      "rank": 1885,
+      "word": "限界"
+    },
+    {
+      "rank": 1886,
+      "word": "ベスト"
+    },
+    {
+      "rank": 1887,
+      "word": "ただいま"
+    },
+    {
+      "rank": 1888,
+      "word": "抜く"
+    },
+    {
+      "rank": 1889,
+      "word": "反映"
+    },
+    {
+      "rank": 1890,
+      "word": "転換"
+    },
+    {
+      "rank": 1891,
+      "word": "タイム"
+    },
+    {
+      "rank": 1892,
+      "word": "形態"
+    },
+    {
+      "rank": 1893,
+      "word": "振る"
+    },
+    {
+      "rank": 1894,
+      "word": "感染"
+    },
+    {
+      "rank": 1895,
+      "word": "逃げる"
+    },
+    {
+      "rank": 1897,
+      "word": "こうして"
+    },
+    {
+      "rank": 1898,
+      "word": "原稿"
+    },
+    {
+      "rank": 1899,
+      "word": "抜ける"
+    },
+    {
+      "rank": 1901,
+      "word": "記載"
+    },
+    {
+      "rank": 1902,
+      "word": "狙う"
+    },
+    {
+      "rank": 1903,
+      "word": "人達"
+    },
+    {
+      "rank": 1904,
+      "word": "大学院"
+    },
+    {
+      "rank": 1905,
+      "word": "拒否"
+    },
+    {
+      "rank": 1906,
+      "word": "はい"
+    },
+    {
+      "rank": 1907,
+      "word": "遅れる"
+    },
+    {
+      "rank": 1908,
+      "word": "最低"
+    },
+    {
+      "rank": 1909,
+      "word": "微妙"
+    },
+    {
+      "rank": 1910,
+      "word": "見方"
+    },
+    {
+      "rank": 1911,
+      "word": "結ぶ"
+    },
+    {
+      "rank": 1912,
+      "word": "下げる"
+    },
+    {
+      "rank": 1914,
+      "word": "青年"
+    },
+    {
+      "rank": 1915,
+      "word": "我が国"
+    },
+    {
+      "rank": 1916,
+      "word": "助ける"
+    },
+    {
+      "rank": 1917,
+      "word": "役立つ"
+    },
+    {
+      "rank": 1918,
+      "word": "劇場"
+    },
+    {
+      "rank": 1919,
+      "word": "向く"
+    },
+    {
+      "rank": 1920,
+      "word": "強調"
+    },
+    {
+      "rank": 1921,
+      "word": "世界中"
+    },
+    {
+      "rank": 1922,
+      "word": "初期"
+    },
+    {
+      "rank": 1923,
+      "word": "機構"
+    },
+    {
+      "rank": 1924,
+      "word": "真剣"
+    },
+    {
+      "rank": 1925,
+      "word": "おすすめ"
+    },
+    {
+      "rank": 1928,
+      "word": "読める"
+    },
+    {
+      "rank": 1929,
+      "word": "実質"
+    },
+    {
+      "rank": 1930,
+      "word": "貴重"
+    },
+    {
+      "rank": 1931,
+      "word": "メートル"
+    },
+    {
+      "rank": 1932,
+      "word": "収集"
+    },
+    {
+      "rank": 1934,
+      "word": "大手"
+    },
+    {
+      "rank": 1935,
+      "word": "じゃあ"
+    },
+    {
+      "rank": 1936,
+      "word": "諸国"
+    },
+    {
+      "rank": 1937,
+      "word": "そば"
+    },
+    {
+      "rank": 1938,
+      "word": "迫る"
+    },
+    {
+      "rank": 1940,
+      "word": "リーダー"
+    },
+    {
+      "rank": 1941,
+      "word": "認定"
+    },
+    {
+      "rank": 1942,
+      "word": "文庫"
+    },
+    {
+      "rank": 1943,
+      "word": "サーバー"
+    },
+    {
+      "rank": 1944,
+      "word": "各種"
+    },
+    {
+      "rank": 1945,
+      "word": "すると"
+    },
+    {
+      "rank": 1946,
+      "word": "意外"
+    },
+    {
+      "rank": 1947,
+      "word": "帰り"
+    },
+    {
+      "rank": 1948,
+      "word": "医学"
+    },
+    {
+      "rank": 1949,
+      "word": "鉄道"
+    },
+    {
+      "rank": 1950,
+      "word": "こんにちは"
+    },
+    {
+      "rank": 1951,
+      "word": "習慣"
+    },
+    {
+      "rank": 1952,
+      "word": "目立つ"
+    },
+    {
+      "rank": 1953,
+      "word": "焼く"
+    },
+    {
+      "rank": 1954,
+      "word": "都合"
+    },
+    {
+      "rank": 1955,
+      "word": "温泉"
+    },
+    {
+      "rank": 1957,
+      "word": "迷う"
+    },
+    {
+      "rank": 1958,
+      "word": "帰宅"
+    },
+    {
+      "rank": 1959,
+      "word": "必須"
+    },
+    {
+      "rank": 1960,
+      "word": "不満"
+    },
+    {
+      "rank": 1961,
+      "word": "楽器"
+    },
+    {
+      "rank": 1963,
+      "word": "読書"
+    },
+    {
+      "rank": 1964,
+      "word": "済む"
+    },
+    {
+      "rank": 1965,
+      "word": "香り"
+    },
+    {
+      "rank": 1966,
+      "word": "老人"
+    },
+    {
+      "rank": 1967,
+      "word": "週末"
+    },
+    {
+      "rank": 1968,
+      "word": "店舗"
+    },
+    {
+      "rank": 1969,
+      "word": "稼ぐ"
+    },
+    {
+      "rank": 1970,
+      "word": "広げる"
+    },
+    {
+      "rank": 1972,
+      "word": "通す"
+    },
+    {
+      "rank": 1973,
+      "word": "保つ"
+    },
+    {
+      "rank": 1974,
+      "word": "面倒"
+    },
+    {
+      "rank": 1975,
+      "word": "見学"
+    },
+    {
+      "rank": 1977,
+      "word": "道具"
+    },
+    {
+      "rank": 1978,
+      "word": "中学"
+    },
+    {
+      "rank": 1979,
+      "word": "数学"
+    },
+    {
+      "rank": 1980,
+      "word": "書店"
+    },
+    {
+      "rank": 1981,
+      "word": "眠る"
+    },
+    {
+      "rank": 1983,
+      "word": "偶然"
+    },
+    {
+      "rank": 1984,
+      "word": "お世話"
+    },
+    {
+      "rank": 1985,
+      "word": "次々"
+    },
+    {
+      "rank": 1986,
+      "word": "加工"
+    },
+    {
+      "rank": 1987,
+      "word": "ものすごい"
+    },
+    {
+      "rank": 1988,
+      "word": "たまたま"
+    },
+    {
+      "rank": 1989,
+      "word": "回転"
+    },
+    {
+      "rank": 1990,
+      "word": "ガイド"
+    },
+    {
+      "rank": 1991,
+      "word": "ステージ"
+    },
+    {
+      "rank": 1992,
+      "word": "命令"
+    },
+    {
+      "rank": 1993,
+      "word": "帰国"
+    },
+    {
+      "rank": 1994,
+      "word": "印刷"
+    },
+    {
+      "rank": 1995,
+      "word": "速度"
+    },
+    {
+      "rank": 1996,
+      "word": "幸い"
+    },
+    {
+      "rank": 1997,
+      "word": "神様"
+    },
+    {
+      "rank": 1998,
+      "word": "役に立つ"
+    },
+    {
+      "rank": 1999,
+      "word": "さっき"
+    },
+    {
+      "rank": 2000,
+      "word": "録音"
+    }
+  ]
+}

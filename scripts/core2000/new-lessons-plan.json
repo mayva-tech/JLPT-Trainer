@@ -1,0 +1,6127 @@
+[
+  {
+    "lessonNumber": 76,
+    "category": "Daily Life",
+    "subcategory": "People",
+    "folder": "core-people",
+    "title": "People & Pronouns",
+    "items": [
+      {
+        "rank": 1,
+        "word": "私"
+      },
+      {
+        "rank": 2,
+        "word": "あなた"
+      },
+      {
+        "rank": 3,
+        "word": "人"
+      },
+      {
+        "rank": 4,
+        "word": "男"
+      },
+      {
+        "rank": 5,
+        "word": "女"
+      },
+      {
+        "rank": 6,
+        "word": "子ども"
+      },
+      {
+        "rank": 7,
+        "word": "大人"
+      },
+      {
+        "rank": 8,
+        "word": "友達"
+      },
+      {
+        "rank": 9,
+        "word": "友人"
+      },
+      {
+        "rank": 10,
+        "word": "家族"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 77,
+    "category": "Daily Life",
+    "subcategory": "Family",
+    "folder": "core-family",
+    "title": "Family Members",
+    "items": [
+      {
+        "rank": 11,
+        "word": "父"
+      },
+      {
+        "rank": 12,
+        "word": "母"
+      },
+      {
+        "rank": 13,
+        "word": "両親"
+      },
+      {
+        "rank": 14,
+        "word": "兄"
+      },
+      {
+        "rank": 15,
+        "word": "姉"
+      },
+      {
+        "rank": 16,
+        "word": "弟"
+      },
+      {
+        "rank": 17,
+        "word": "妹"
+      },
+      {
+        "rank": 18,
+        "word": "夫"
+      },
+      {
+        "rank": 19,
+        "word": "妻"
+      },
+      {
+        "rank": 20,
+        "word": "息子"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 78,
+    "category": "Daily Life",
+    "subcategory": "Family",
+    "folder": "core-family",
+    "title": "Family & School Roles",
+    "items": [
+      {
+        "rank": 21,
+        "word": "娘"
+      },
+      {
+        "rank": 22,
+        "word": "先生"
+      },
+      {
+        "rank": 23,
+        "word": "学生"
+      },
+      {
+        "rank": 24,
+        "word": "生徒"
+      },
+      {
+        "rank": 26,
+        "word": "日本人"
+      },
+      {
+        "rank": 27,
+        "word": "日本語"
+      },
+      {
+        "rank": 28,
+        "word": "英語"
+      },
+      {
+        "rank": 29,
+        "word": "外国"
+      },
+      {
+        "rank": 30,
+        "word": "外国人"
+      },
+      {
+        "rank": 31,
+        "word": "国"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 79,
+    "category": "Daily Life",
+    "subcategory": "Places",
+    "folder": "core-places",
+    "title": "Places & Institutions",
+    "items": [
+      {
+        "rank": 32,
+        "word": "世界"
+      },
+      {
+        "rank": 33,
+        "word": "社会"
+      },
+      {
+        "rank": 34,
+        "word": "会社"
+      },
+      {
+        "rank": 35,
+        "word": "仕事"
+      },
+      {
+        "rank": 36,
+        "word": "学校"
+      },
+      {
+        "rank": 37,
+        "word": "大学"
+      },
+      {
+        "rank": 38,
+        "word": "教室"
+      },
+      {
+        "rank": 39,
+        "word": "病院"
+      },
+      {
+        "rank": 40,
+        "word": "銀行"
+      },
+      {
+        "rank": 41,
+        "word": "駅"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 80,
+    "category": "Daily Life",
+    "subcategory": "Shopping",
+    "folder": "core-shopping",
+    "title": "Shops & Stores",
+    "items": [
+      {
+        "rank": 42,
+        "word": "店"
+      },
+      {
+        "rank": 43,
+        "word": "スーパー"
+      },
+      {
+        "rank": 44,
+        "word": "コンビニ"
+      },
+      {
+        "rank": 45,
+        "word": "家"
+      },
+      {
+        "rank": 46,
+        "word": "部屋"
+      },
+      {
+        "rank": 47,
+        "word": "台所"
+      },
+      {
+        "rank": 48,
+        "word": "玄関"
+      },
+      {
+        "rank": 49,
+        "word": "風呂"
+      },
+      {
+        "rank": 50,
+        "word": "トイレ"
+      },
+      {
+        "rank": 51,
+        "word": "窓"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 81,
+    "category": "Daily Life",
+    "subcategory": "Home",
+    "folder": "core-home",
+    "title": "Home & Furniture",
+    "items": [
+      {
+        "rank": 52,
+        "word": "ドア"
+      },
+      {
+        "rank": 53,
+        "word": "階段"
+      },
+      {
+        "rank": 54,
+        "word": "庭"
+      },
+      {
+        "rank": 57,
+        "word": "テーブル"
+      },
+      {
+        "rank": 58,
+        "word": "椅子"
+      },
+      {
+        "rank": 59,
+        "word": "ベッド"
+      },
+      {
+        "rank": 60,
+        "word": "今日"
+      },
+      {
+        "rank": 61,
+        "word": "明日"
+      },
+      {
+        "rank": 25,
+        "word": "日本"
+      },
+      {
+        "rank": 62,
+        "word": "昨日"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 82,
+    "category": "Daily Life",
+    "subcategory": "Time",
+    "folder": "core-time",
+    "title": "Days & Time of Day",
+    "items": [
+      {
+        "rank": 63,
+        "word": "今"
+      },
+      {
+        "rank": 64,
+        "word": "朝"
+      },
+      {
+        "rank": 65,
+        "word": "昼"
+      },
+      {
+        "rank": 66,
+        "word": "夜"
+      },
+      {
+        "rank": 67,
+        "word": "夕方"
+      },
+      {
+        "rank": 68,
+        "word": "午前"
+      },
+      {
+        "rank": 69,
+        "word": "午後"
+      },
+      {
+        "rank": 70,
+        "word": "今週"
+      },
+      {
+        "rank": 71,
+        "word": "先週"
+      },
+      {
+        "rank": 72,
+        "word": "来週"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 83,
+    "category": "Daily Life",
+    "subcategory": "Time",
+    "folder": "core-time",
+    "title": "Weeks, Months & Years",
+    "items": [
+      {
+        "rank": 73,
+        "word": "今月"
+      },
+      {
+        "rank": 74,
+        "word": "先月"
+      },
+      {
+        "rank": 75,
+        "word": "来月"
+      },
+      {
+        "rank": 76,
+        "word": "今年"
+      },
+      {
+        "rank": 77,
+        "word": "去年"
+      },
+      {
+        "rank": 78,
+        "word": "来年"
+      },
+      {
+        "rank": 79,
+        "word": "時間"
+      },
+      {
+        "rank": 80,
+        "word": "時"
+      },
+      {
+        "rank": 81,
+        "word": "分"
+      },
+      {
+        "rank": 82,
+        "word": "日"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 84,
+    "category": "Daily Life",
+    "subcategory": "Time",
+    "folder": "core-time",
+    "title": "Calendar Units & Seasons",
+    "items": [
+      {
+        "rank": 83,
+        "word": "週"
+      },
+      {
+        "rank": 84,
+        "word": "月"
+      },
+      {
+        "rank": 85,
+        "word": "年"
+      },
+      {
+        "rank": 86,
+        "word": "春"
+      },
+      {
+        "rank": 87,
+        "word": "夏"
+      },
+      {
+        "rank": 88,
+        "word": "秋"
+      },
+      {
+        "rank": 89,
+        "word": "冬"
+      },
+      {
+        "rank": 90,
+        "word": "毎日"
+      },
+      {
+        "rank": 91,
+        "word": "毎週"
+      },
+      {
+        "rank": 92,
+        "word": "毎月"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 85,
+    "category": "Daily Life",
+    "subcategory": "Numbers",
+    "folder": "core-numbers",
+    "title": "Numbers 1–10",
+    "items": [
+      {
+        "rank": 93,
+        "word": "毎年"
+      },
+      {
+        "rank": 94,
+        "word": "一"
+      },
+      {
+        "rank": 95,
+        "word": "二"
+      },
+      {
+        "rank": 96,
+        "word": "三"
+      },
+      {
+        "rank": 97,
+        "word": "四"
+      },
+      {
+        "rank": 98,
+        "word": "五"
+      },
+      {
+        "rank": 99,
+        "word": "六"
+      },
+      {
+        "rank": 100,
+        "word": "七"
+      },
+      {
+        "rank": 101,
+        "word": "八"
+      },
+      {
+        "rank": 102,
+        "word": "九"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 86,
+    "category": "Daily Life",
+    "subcategory": "Numbers",
+    "folder": "core-numbers",
+    "title": "Larger Numbers & Order",
+    "items": [
+      {
+        "rank": 103,
+        "word": "十"
+      },
+      {
+        "rank": 104,
+        "word": "百"
+      },
+      {
+        "rank": 105,
+        "word": "千"
+      },
+      {
+        "rank": 106,
+        "word": "万"
+      },
+      {
+        "rank": 107,
+        "word": "半"
+      },
+      {
+        "rank": 108,
+        "word": "一番"
+      },
+      {
+        "rank": 109,
+        "word": "最初"
+      },
+      {
+        "rank": 110,
+        "word": "最後"
+      },
+      {
+        "rank": 111,
+        "word": "次"
+      },
+      {
+        "rank": 112,
+        "word": "前"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 87,
+    "category": "Daily Life",
+    "subcategory": "Position",
+    "folder": "core-position",
+    "title": "Position & Direction",
+    "items": [
+      {
+        "rank": 113,
+        "word": "後"
+      },
+      {
+        "rank": 114,
+        "word": "上"
+      },
+      {
+        "rank": 115,
+        "word": "下"
+      },
+      {
+        "rank": 116,
+        "word": "中"
+      },
+      {
+        "rank": 117,
+        "word": "外"
+      },
+      {
+        "rank": 118,
+        "word": "内"
+      },
+      {
+        "rank": 119,
+        "word": "左"
+      },
+      {
+        "rank": 120,
+        "word": "右"
+      },
+      {
+        "rank": 121,
+        "word": "東"
+      },
+      {
+        "rank": 122,
+        "word": "西"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 88,
+    "category": "Daily Life",
+    "subcategory": "Position",
+    "folder": "core-position",
+    "title": "Directions & Demonstratives",
+    "items": [
+      {
+        "rank": 123,
+        "word": "南"
+      },
+      {
+        "rank": 124,
+        "word": "北"
+      },
+      {
+        "rank": 125,
+        "word": "ここ"
+      },
+      {
+        "rank": 126,
+        "word": "そこ"
+      },
+      {
+        "rank": 127,
+        "word": "あそこ"
+      },
+      {
+        "rank": 130,
+        "word": "どこ"
+      },
+      {
+        "rank": 128,
+        "word": "こちら"
+      },
+      {
+        "rank": 129,
+        "word": "そちら"
+      },
+      {
+        "rank": 131,
+        "word": "これ"
+      },
+      {
+        "rank": 132,
+        "word": "それ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 89,
+    "category": "Daily Life",
+    "subcategory": "Demonstratives",
+    "folder": "core-demo",
+    "title": "This & That",
+    "items": [
+      {
+        "rank": 133,
+        "word": "あれ"
+      },
+      {
+        "rank": 137,
+        "word": "どれ"
+      },
+      {
+        "rank": 134,
+        "word": "この"
+      },
+      {
+        "rank": 135,
+        "word": "その"
+      },
+      {
+        "rank": 136,
+        "word": "あの"
+      },
+      {
+        "rank": 138,
+        "word": "どの"
+      },
+      {
+        "rank": 140,
+        "word": "誰"
+      },
+      {
+        "rank": 139,
+        "word": "何"
+      },
+      {
+        "rank": 692,
+        "word": "それから"
+      },
+      {
+        "rank": 693,
+        "word": "それで"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 90,
+    "category": "Daily Life",
+    "subcategory": "Questions",
+    "folder": "core-questions",
+    "title": "Question Words",
+    "items": [
+      {
+        "rank": 141,
+        "word": "いつ"
+      },
+      {
+        "rank": 142,
+        "word": "どう"
+      },
+      {
+        "rank": 144,
+        "word": "なぜ"
+      },
+      {
+        "rank": 143,
+        "word": "どうして"
+      },
+      {
+        "rank": 1044,
+        "word": "どちら"
+      },
+      {
+        "rank": 315,
+        "word": "いつも"
+      },
+      {
+        "rank": 937,
+        "word": "どういう"
+      },
+      {
+        "rank": 1185,
+        "word": "どうも"
+      },
+      {
+        "rank": 145,
+        "word": "する"
+      },
+      {
+        "rank": 146,
+        "word": "ある"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 91,
+    "category": "Daily Life",
+    "subcategory": "Daily Actions",
+    "folder": "core-verbs-a",
+    "title": "Core Verbs A",
+    "items": [
+      {
+        "rank": 147,
+        "word": "いる"
+      },
+      {
+        "rank": 1390,
+        "word": "居る"
+      },
+      {
+        "rank": 150,
+        "word": "行く"
+      },
+      {
+        "rank": 151,
+        "word": "来る"
+      },
+      {
+        "rank": 152,
+        "word": "帰る"
+      },
+      {
+        "rank": 855,
+        "word": "戻る"
+      },
+      {
+        "rank": 180,
+        "word": "食べる"
+      },
+      {
+        "rank": 181,
+        "word": "飲む"
+      },
+      {
+        "rank": 1233,
+        "word": "用いる"
+      },
+      {
+        "rank": 148,
+        "word": "なる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 92,
+    "category": "Daily Life",
+    "subcategory": "Daily Actions",
+    "folder": "core-verbs-b",
+    "title": "Core Verbs B",
+    "items": [
+      {
+        "rank": 163,
+        "word": "見る"
+      },
+      {
+        "rank": 166,
+        "word": "聞く"
+      },
+      {
+        "rank": 169,
+        "word": "言う"
+      },
+      {
+        "rank": 168,
+        "word": "話す"
+      },
+      {
+        "rank": 170,
+        "word": "読む"
+      },
+      {
+        "rank": 171,
+        "word": "書く"
+      },
+      {
+        "rank": 184,
+        "word": "買う"
+      },
+      {
+        "rank": 185,
+        "word": "売る"
+      },
+      {
+        "rank": 188,
+        "word": "持つ"
+      },
+      {
+        "rank": 205,
+        "word": "待つ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 93,
+    "category": "Daily Life",
+    "subcategory": "Daily Actions",
+    "folder": "core-verbs-c",
+    "title": "Core Verbs C",
+    "items": [
+      {
+        "rank": 228,
+        "word": "立つ"
+      },
+      {
+        "rank": 229,
+        "word": "座る"
+      },
+      {
+        "rank": 159,
+        "word": "歩く"
+      },
+      {
+        "rank": 160,
+        "word": "走る"
+      },
+      {
+        "rank": 610,
+        "word": "泳ぐ"
+      },
+      {
+        "rank": 199,
+        "word": "寝る"
+      },
+      {
+        "rank": 198,
+        "word": "起きる"
+      },
+      {
+        "rank": 192,
+        "word": "開ける"
+      },
+      {
+        "rank": 194,
+        "word": "閉める"
+      },
+      {
+        "rank": 1132,
+        "word": "付ける"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 94,
+    "category": "Daily Life",
+    "subcategory": "Daily Actions",
+    "folder": "core-verbs-d",
+    "title": "Core Verbs D",
+    "items": [
+      {
+        "rank": 197,
+        "word": "消す"
+      },
+      {
+        "rank": 191,
+        "word": "出す"
+      },
+      {
+        "rank": 190,
+        "word": "入れる"
+      },
+      {
+        "rank": 187,
+        "word": "取る"
+      },
+      {
+        "rank": 189,
+        "word": "置く"
+      },
+      {
+        "rank": 182,
+        "word": "作る"
+      },
+      {
+        "rank": 183,
+        "word": "使う"
+      },
+      {
+        "rank": 175,
+        "word": "分かる"
+      },
+      {
+        "rank": 174,
+        "word": "知る"
+      },
+      {
+        "rank": 172,
+        "word": "思う"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 95,
+    "category": "Daily Life",
+    "subcategory": "Daily Actions",
+    "folder": "core-verbs-e",
+    "title": "Core Verbs E",
+    "items": [
+      {
+        "rank": 173,
+        "word": "考える"
+      },
+      {
+        "rank": 179,
+        "word": "教える"
+      },
+      {
+        "rank": 178,
+        "word": "学ぶ"
+      },
+      {
+        "rank": 201,
+        "word": "働く"
+      },
+      {
+        "rank": 200,
+        "word": "休む"
+      },
+      {
+        "rank": 609,
+        "word": "遊ぶ"
+      },
+      {
+        "rank": 204,
+        "word": "会う"
+      },
+      {
+        "rank": 207,
+        "word": "送る"
+      },
+      {
+        "rank": 798,
+        "word": "もらう"
+      },
+      {
+        "rank": 149,
+        "word": "できる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 96,
+    "category": "Daily Life",
+    "subcategory": "Giving & Receiving",
+    "folder": "core-give",
+    "title": "Give & Receive",
+    "items": [
+      {
+        "rank": 914,
+        "word": "あげる"
+      },
+      {
+        "rank": 782,
+        "word": "やる"
+      },
+      {
+        "rank": 209,
+        "word": "借りる"
+      },
+      {
+        "rank": 210,
+        "word": "貸す"
+      },
+      {
+        "rank": 208,
+        "word": "返す"
+      },
+      {
+        "rank": 633,
+        "word": "届ける"
+      },
+      {
+        "rank": 1217,
+        "word": "繰り返す"
+      },
+      {
+        "rank": 153,
+        "word": "出る"
+      },
+      {
+        "rank": 154,
+        "word": "入る"
+      },
+      {
+        "rank": 155,
+        "word": "上がる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 97,
+    "category": "Daily Life",
+    "subcategory": "Adjectives",
+    "folder": "core-iadj-a",
+    "title": "Common I-Adjectives A",
+    "items": [
+      {
+        "rank": 240,
+        "word": "大きい"
+      },
+      {
+        "rank": 241,
+        "word": "小さい"
+      },
+      {
+        "rank": 250,
+        "word": "新しい"
+      },
+      {
+        "rank": 251,
+        "word": "古い"
+      },
+      {
+        "rank": 242,
+        "word": "高い"
+      },
+      {
+        "rank": 1059,
+        "word": "安い"
+      },
+      {
+        "rank": 243,
+        "word": "低い"
+      },
+      {
+        "rank": 244,
+        "word": "長い"
+      },
+      {
+        "rank": 245,
+        "word": "短い"
+      },
+      {
+        "rank": 246,
+        "word": "広い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 98,
+    "category": "Daily Life",
+    "subcategory": "Adjectives",
+    "folder": "core-iadj-b",
+    "title": "Common I-Adjectives B",
+    "items": [
+      {
+        "rank": 247,
+        "word": "狭い"
+      },
+      {
+        "rank": 256,
+        "word": "速い"
+      },
+      {
+        "rank": 254,
+        "word": "早い"
+      },
+      {
+        "rank": 255,
+        "word": "遅い"
+      },
+      {
+        "rank": 265,
+        "word": "強い"
+      },
+      {
+        "rank": 266,
+        "word": "弱い"
+      },
+      {
+        "rank": 263,
+        "word": "重い"
+      },
+      {
+        "rank": 264,
+        "word": "軽い"
+      },
+      {
+        "rank": 257,
+        "word": "暑い"
+      },
+      {
+        "rank": 258,
+        "word": "寒い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 99,
+    "category": "Daily Life",
+    "subcategory": "Adjectives",
+    "folder": "core-iadj-c",
+    "title": "Common I-Adjectives C",
+    "items": [
+      {
+        "rank": 261,
+        "word": "熱い"
+      },
+      {
+        "rank": 260,
+        "word": "涼しい"
+      },
+      {
+        "rank": 259,
+        "word": "暖かい"
+      },
+      {
+        "rank": 252,
+        "word": "いい"
+      },
+      {
+        "rank": 253,
+        "word": "悪い"
+      },
+      {
+        "rank": 270,
+        "word": "楽しい"
+      },
+      {
+        "rank": 280,
+        "word": "かわいい"
+      },
+      {
+        "rank": 156,
+        "word": "下がる"
+      },
+      {
+        "rank": 157,
+        "word": "乗る"
+      },
+      {
+        "rank": 158,
+        "word": "降りる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 100,
+    "category": "Daily Life",
+    "subcategory": "Adjectives",
+    "folder": "core-iadj-d",
+    "title": "Common I-Adjectives D",
+    "items": [
+      {
+        "rank": 271,
+        "word": "面白い"
+      },
+      {
+        "rank": 279,
+        "word": "悲しい"
+      },
+      {
+        "rank": 277,
+        "word": "怖い"
+      },
+      {
+        "rank": 276,
+        "word": "痛い"
+      },
+      {
+        "rank": 269,
+        "word": "忙しい"
+      },
+      {
+        "rank": 267,
+        "word": "難しい"
+      },
+      {
+        "rank": 161,
+        "word": "飛ぶ"
+      },
+      {
+        "rank": 162,
+        "word": "止まる"
+      },
+      {
+        "rank": 164,
+        "word": "見せる"
+      },
+      {
+        "rank": 165,
+        "word": "見える"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 101,
+    "category": "Daily Life",
+    "subcategory": "Na-Adjectives",
+    "folder": "core-naadj",
+    "title": "Na-Adjectives",
+    "items": [
+      {
+        "rank": 292,
+        "word": "静か"
+      },
+      {
+        "rank": 299,
+        "word": "有名"
+      },
+      {
+        "rank": 294,
+        "word": "便利"
+      },
+      {
+        "rank": 651,
+        "word": "不便"
+      },
+      {
+        "rank": 291,
+        "word": "元気"
+      },
+      {
+        "rank": 287,
+        "word": "好き"
+      },
+      {
+        "rank": 288,
+        "word": "嫌い"
+      },
+      {
+        "rank": 289,
+        "word": "上手"
+      },
+      {
+        "rank": 290,
+        "word": "下手"
+      },
+      {
+        "rank": 300,
+        "word": "簡単"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 102,
+    "category": "Daily Life",
+    "subcategory": "Food",
+    "folder": "core-food-a",
+    "title": "Food & Drink A",
+    "items": [
+      {
+        "rank": 337,
+        "word": "ご飯"
+      },
+      {
+        "rank": 333,
+        "word": "水"
+      },
+      {
+        "rank": 334,
+        "word": "お茶"
+      },
+      {
+        "rank": 335,
+        "word": "コーヒー"
+      },
+      {
+        "rank": 336,
+        "word": "牛乳"
+      },
+      {
+        "rank": 338,
+        "word": "パン"
+      },
+      {
+        "rank": 339,
+        "word": "肉"
+      },
+      {
+        "rank": 340,
+        "word": "魚"
+      },
+      {
+        "rank": 341,
+        "word": "野菜"
+      },
+      {
+        "rank": 342,
+        "word": "果物"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 103,
+    "category": "Daily Life",
+    "subcategory": "Food",
+    "folder": "core-food-b",
+    "title": "Food & Drink B",
+    "items": [
+      {
+        "rank": 343,
+        "word": "卵"
+      },
+      {
+        "rank": 525,
+        "word": "塩"
+      },
+      {
+        "rank": 524,
+        "word": "砂糖"
+      },
+      {
+        "rank": 526,
+        "word": "醤油"
+      },
+      {
+        "rank": 167,
+        "word": "聞こえる"
+      },
+      {
+        "rank": 176,
+        "word": "覚える"
+      },
+      {
+        "rank": 177,
+        "word": "忘れる"
+      },
+      {
+        "rank": 186,
+        "word": "払う"
+      },
+      {
+        "rank": 193,
+        "word": "開く"
+      },
+      {
+        "rank": 195,
+        "word": "閉まる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 104,
+    "category": "Daily Life",
+    "subcategory": "Food",
+    "folder": "core-food-c",
+    "title": "Meals & Taste",
+    "items": [
+      {
+        "rank": 345,
+        "word": "朝食"
+      },
+      {
+        "rank": 346,
+        "word": "昼食"
+      },
+      {
+        "rank": 347,
+        "word": "夕食"
+      },
+      {
+        "rank": 529,
+        "word": "弁当"
+      },
+      {
+        "rank": 273,
+        "word": "甘い"
+      },
+      {
+        "rank": 274,
+        "word": "辛い"
+      },
+      {
+        "rank": 275,
+        "word": "苦い"
+      },
+      {
+        "rank": 437,
+        "word": "意味"
+      },
+      {
+        "rank": 1012,
+        "word": "興味"
+      },
+      {
+        "rank": 196,
+        "word": "つける"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 105,
+    "category": "Daily Life",
+    "subcategory": "Body",
+    "folder": "core-body",
+    "title": "Body & Health Basics",
+    "items": [
+      {
+        "rank": 414,
+        "word": "体"
+      },
+      {
+        "rank": 399,
+        "word": "頭"
+      },
+      {
+        "rank": 400,
+        "word": "顔"
+      },
+      {
+        "rank": 401,
+        "word": "目"
+      },
+      {
+        "rank": 402,
+        "word": "耳"
+      },
+      {
+        "rank": 404,
+        "word": "口"
+      },
+      {
+        "rank": 403,
+        "word": "鼻"
+      },
+      {
+        "rank": 408,
+        "word": "手"
+      },
+      {
+        "rank": 413,
+        "word": "足"
+      },
+      {
+        "rank": 212,
+        "word": "手伝う"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 106,
+    "category": "Daily Life",
+    "subcategory": "Health",
+    "folder": "core-health",
+    "title": "Health & Illness",
+    "items": [
+      {
+        "rank": 416,
+        "word": "病気"
+      },
+      {
+        "rank": 419,
+        "word": "薬"
+      },
+      {
+        "rank": 418,
+        "word": "医者"
+      },
+      {
+        "rank": 422,
+        "word": "治療"
+      },
+      {
+        "rank": 417,
+        "word": "健康"
+      },
+      {
+        "rank": 202,
+        "word": "勉強"
+      },
+      {
+        "rank": 203,
+        "word": "練習"
+      },
+      {
+        "rank": 206,
+        "word": "呼ぶ"
+      },
+      {
+        "rank": 211,
+        "word": "頼む"
+      },
+      {
+        "rank": 213,
+        "word": "始める"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 107,
+    "category": "Daily Life",
+    "subcategory": "Transportation",
+    "folder": "core-transport",
+    "title": "Transportation",
+    "items": [
+      {
+        "rank": 378,
+        "word": "電車"
+      },
+      {
+        "rank": 380,
+        "word": "バス"
+      },
+      {
+        "rank": 381,
+        "word": "タクシー"
+      },
+      {
+        "rank": 376,
+        "word": "車"
+      },
+      {
+        "rank": 377,
+        "word": "自転車"
+      },
+      {
+        "rank": 382,
+        "word": "飛行機"
+      },
+      {
+        "rank": 379,
+        "word": "地下鉄"
+      },
+      {
+        "rank": 579,
+        "word": "切符"
+      },
+      {
+        "rank": 515,
+        "word": "駐車場"
+      },
+      {
+        "rank": 577,
+        "word": "自動車"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 108,
+    "category": "Daily Life",
+    "subcategory": "Travel",
+    "folder": "core-travel",
+    "title": "Travel Basics",
+    "items": [
+      {
+        "rank": 238,
+        "word": "旅行"
+      },
+      {
+        "rank": 1021,
+        "word": "ホテル"
+      },
+      {
+        "rank": 386,
+        "word": "地図"
+      },
+      {
+        "rank": 384,
+        "word": "道"
+      },
+      {
+        "rank": 383,
+        "word": "空港"
+      },
+      {
+        "rank": 385,
+        "word": "道路"
+      },
+      {
+        "rank": 214,
+        "word": "始まる"
+      },
+      {
+        "rank": 215,
+        "word": "終わる"
+      },
+      {
+        "rank": 216,
+        "word": "続ける"
+      },
+      {
+        "rank": 217,
+        "word": "続く"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 109,
+    "category": "Daily Life",
+    "subcategory": "Weather",
+    "folder": "core-weather",
+    "title": "Weather Basics",
+    "items": [
+      {
+        "rank": 388,
+        "word": "天気"
+      },
+      {
+        "rank": 389,
+        "word": "雨"
+      },
+      {
+        "rank": 390,
+        "word": "雪"
+      },
+      {
+        "rank": 391,
+        "word": "風"
+      },
+      {
+        "rank": 392,
+        "word": "空"
+      },
+      {
+        "rank": 1251,
+        "word": "空間"
+      },
+      {
+        "rank": 218,
+        "word": "決める"
+      },
+      {
+        "rank": 219,
+        "word": "決まる"
+      },
+      {
+        "rank": 220,
+        "word": "変える"
+      },
+      {
+        "rank": 221,
+        "word": "変わる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 110,
+    "category": "Daily Life",
+    "subcategory": "Clothing",
+    "folder": "core-clothes",
+    "title": "Clothes",
+    "items": [
+      {
+        "rank": 349,
+        "word": "服"
+      },
+      {
+        "rank": 350,
+        "word": "シャツ"
+      },
+      {
+        "rank": 351,
+        "word": "ズボン"
+      },
+      {
+        "rank": 352,
+        "word": "スカート"
+      },
+      {
+        "rank": 353,
+        "word": "靴"
+      },
+      {
+        "rank": 354,
+        "word": "帽子"
+      },
+      {
+        "rank": 540,
+        "word": "コート"
+      },
+      {
+        "rank": 546,
+        "word": "眼鏡"
+      },
+      {
+        "rank": 500,
+        "word": "時計"
+      },
+      {
+        "rank": 542,
+        "word": "靴下"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 111,
+    "category": "Daily Life",
+    "subcategory": "School",
+    "folder": "core-school",
+    "title": "School Life",
+    "items": [
+      {
+        "rank": 583,
+        "word": "授業"
+      },
+      {
+        "rank": 584,
+        "word": "宿題"
+      },
+      {
+        "rank": 585,
+        "word": "試験"
+      },
+      {
+        "rank": 586,
+        "word": "テスト"
+      },
+      {
+        "rank": 587,
+        "word": "教科書"
+      },
+      {
+        "rank": 362,
+        "word": "ノート"
+      },
+      {
+        "rank": 553,
+        "word": "鉛筆"
+      },
+      {
+        "rank": 363,
+        "word": "ペン"
+      },
+      {
+        "rank": 554,
+        "word": "ボールペン"
+      },
+      {
+        "rank": 222,
+        "word": "増える"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 112,
+    "category": "Work & Business",
+    "subcategory": "Work",
+    "folder": "core-work",
+    "title": "Work Basics",
+    "items": [
+      {
+        "rank": 596,
+        "word": "社員"
+      },
+      {
+        "rank": 598,
+        "word": "部長"
+      },
+      {
+        "rank": 597,
+        "word": "課長"
+      },
+      {
+        "rank": 460,
+        "word": "会議"
+      },
+      {
+        "rank": 455,
+        "word": "給料"
+      },
+      {
+        "rank": 519,
+        "word": "会議室"
+      },
+      {
+        "rank": 223,
+        "word": "減る"
+      },
+      {
+        "rank": 224,
+        "word": "選ぶ"
+      },
+      {
+        "rank": 225,
+        "word": "比べる"
+      },
+      {
+        "rank": 226,
+        "word": "探す"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 113,
+    "category": "Work & Business",
+    "subcategory": "Money",
+    "folder": "core-money",
+    "title": "Money Basics",
+    "items": [
+      {
+        "rank": 449,
+        "word": "お金"
+      },
+      {
+        "rank": 1148,
+        "word": "カード"
+      },
+      {
+        "rank": 355,
+        "word": "財布"
+      },
+      {
+        "rank": 451,
+        "word": "値段"
+      },
+      {
+        "rank": 454,
+        "word": "料金"
+      },
+      {
+        "rank": 453,
+        "word": "費用"
+      },
+      {
+        "rank": 227,
+        "word": "見つける"
+      },
+      {
+        "rank": 230,
+        "word": "着く"
+      },
+      {
+        "rank": 231,
+        "word": "住む"
+      },
+      {
+        "rank": 232,
+        "word": "生まれる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 114,
+    "category": "Daily Life",
+    "subcategory": "Communication",
+    "folder": "core-comms",
+    "title": "Communication",
+    "items": [
+      {
+        "rank": 365,
+        "word": "手紙"
+      },
+      {
+        "rank": 367,
+        "word": "電話"
+      },
+      {
+        "rank": 372,
+        "word": "メール"
+      },
+      {
+        "rank": 1358,
+        "word": "会話"
+      },
+      {
+        "rank": 440,
+        "word": "質問"
+      },
+      {
+        "rank": 441,
+        "word": "答え"
+      },
+      {
+        "rank": 466,
+        "word": "説明"
+      },
+      {
+        "rank": 602,
+        "word": "電話番号"
+      },
+      {
+        "rank": 1081,
+        "word": "答える"
+      },
+      {
+        "rank": 233,
+        "word": "死ぬ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 115,
+    "category": "Daily Life",
+    "subcategory": "Emotions",
+    "folder": "core-emotions",
+    "title": "Emotions",
+    "items": [
+      {
+        "rank": 1259,
+        "word": "感情"
+      },
+      {
+        "rank": 708,
+        "word": "夢"
+      },
+      {
+        "rank": 709,
+        "word": "希望"
+      },
+      {
+        "rank": 640,
+        "word": "心配"
+      },
+      {
+        "rank": 642,
+        "word": "満足"
+      },
+      {
+        "rank": 234,
+        "word": "洗う"
+      },
+      {
+        "rank": 236,
+        "word": "料理"
+      },
+      {
+        "rank": 237,
+        "word": "運転"
+      },
+      {
+        "rank": 239,
+        "word": "結婚"
+      },
+      {
+        "rank": 248,
+        "word": "多い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 116,
+    "category": "Technology & Science",
+    "subcategory": "Technology",
+    "folder": "core-tech",
+    "title": "Technology Basics",
+    "items": [
+      {
+        "rank": 369,
+        "word": "パソコン"
+      },
+      {
+        "rank": 368,
+        "word": "携帯"
+      },
+      {
+        "rank": 371,
+        "word": "インターネット"
+      },
+      {
+        "rank": 767,
+        "word": "データ"
+      },
+      {
+        "rank": 1079,
+        "word": "ファイル"
+      },
+      {
+        "rank": 249,
+        "word": "少ない"
+      },
+      {
+        "rank": 262,
+        "word": "冷たい"
+      },
+      {
+        "rank": 268,
+        "word": "易しい"
+      },
+      {
+        "rank": 272,
+        "word": "おいしい"
+      },
+      {
+        "rank": 278,
+        "word": "うれしい"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 117,
+    "category": "Society & Public Affairs",
+    "subcategory": "Society",
+    "folder": "core-society",
+    "title": "Society Basics",
+    "items": [
+      {
+        "rank": 484,
+        "word": "政治"
+      },
+      {
+        "rank": 483,
+        "word": "経済"
+      },
+      {
+        "rank": 485,
+        "word": "法律"
+      },
+      {
+        "rank": 486,
+        "word": "政府"
+      },
+      {
+        "rank": 732,
+        "word": "市民"
+      },
+      {
+        "rank": 1213,
+        "word": "住民"
+      },
+      {
+        "rank": 1225,
+        "word": "公共"
+      },
+      {
+        "rank": 281,
+        "word": "美しい"
+      },
+      {
+        "rank": 282,
+        "word": "汚い"
+      },
+      {
+        "rank": 283,
+        "word": "明るい"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 118,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract",
+    "folder": "core-abstract",
+    "title": "Abstract Nouns A",
+    "items": [
+      {
+        "rank": 439,
+        "word": "問題"
+      },
+      {
+        "rank": 442,
+        "word": "理由"
+      },
+      {
+        "rank": 448,
+        "word": "目的"
+      },
+      {
+        "rank": 443,
+        "word": "方法"
+      },
+      {
+        "rank": 701,
+        "word": "場合"
+      },
+      {
+        "rank": 477,
+        "word": "状態"
+      },
+      {
+        "rank": 476,
+        "word": "状況"
+      },
+      {
+        "rank": 284,
+        "word": "暗い"
+      },
+      {
+        "rank": 285,
+        "word": "近い"
+      },
+      {
+        "rank": 286,
+        "word": "遠い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 119,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 119",
+    "items": [
+      {
+        "rank": 293,
+        "word": "にぎやか"
+      },
+      {
+        "rank": 295,
+        "word": "大丈夫"
+      },
+      {
+        "rank": 296,
+        "word": "大切"
+      },
+      {
+        "rank": 297,
+        "word": "大事"
+      },
+      {
+        "rank": 298,
+        "word": "必要"
+      },
+      {
+        "rank": 301,
+        "word": "複雑"
+      },
+      {
+        "rank": 302,
+        "word": "安全"
+      },
+      {
+        "rank": 303,
+        "word": "危険"
+      },
+      {
+        "rank": 304,
+        "word": "とても"
+      },
+      {
+        "rank": 305,
+        "word": "もっと"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 120,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 120",
+    "items": [
+      {
+        "rank": 306,
+        "word": "かなり"
+      },
+      {
+        "rank": 307,
+        "word": "少し"
+      },
+      {
+        "rank": 308,
+        "word": "ちょっと"
+      },
+      {
+        "rank": 309,
+        "word": "たくさん"
+      },
+      {
+        "rank": 310,
+        "word": "あまり"
+      },
+      {
+        "rank": 311,
+        "word": "ほとんど"
+      },
+      {
+        "rank": 312,
+        "word": "すぐ"
+      },
+      {
+        "rank": 313,
+        "word": "ゆっくり"
+      },
+      {
+        "rank": 314,
+        "word": "よく"
+      },
+      {
+        "rank": 316,
+        "word": "時々"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 121,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 121",
+    "items": [
+      {
+        "rank": 317,
+        "word": "たまに"
+      },
+      {
+        "rank": 318,
+        "word": "もう"
+      },
+      {
+        "rank": 319,
+        "word": "まだ"
+      },
+      {
+        "rank": 320,
+        "word": "すでに"
+      },
+      {
+        "rank": 321,
+        "word": "まず"
+      },
+      {
+        "rank": 322,
+        "word": "また"
+      },
+      {
+        "rank": 323,
+        "word": "そして"
+      },
+      {
+        "rank": 324,
+        "word": "しかし"
+      },
+      {
+        "rank": 325,
+        "word": "だから"
+      },
+      {
+        "rank": 326,
+        "word": "でも"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 122,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 122",
+    "items": [
+      {
+        "rank": 327,
+        "word": "もし"
+      },
+      {
+        "rank": 328,
+        "word": "必ず"
+      },
+      {
+        "rank": 329,
+        "word": "多分"
+      },
+      {
+        "rank": 330,
+        "word": "本当に"
+      },
+      {
+        "rank": 331,
+        "word": "もちろん"
+      },
+      {
+        "rank": 332,
+        "word": "例えば"
+      },
+      {
+        "rank": 344,
+        "word": "食事"
+      },
+      {
+        "rank": 348,
+        "word": "レストラン"
+      },
+      {
+        "rank": 356,
+        "word": "鍵"
+      },
+      {
+        "rank": 358,
+        "word": "本"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 123,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 123",
+    "items": [
+      {
+        "rank": 359,
+        "word": "新聞"
+      },
+      {
+        "rank": 360,
+        "word": "雑誌"
+      },
+      {
+        "rank": 361,
+        "word": "辞書"
+      },
+      {
+        "rank": 364,
+        "word": "紙"
+      },
+      {
+        "rank": 366,
+        "word": "写真"
+      },
+      {
+        "rank": 370,
+        "word": "コンピュータ"
+      },
+      {
+        "rank": 373,
+        "word": "テレビ"
+      },
+      {
+        "rank": 374,
+        "word": "ラジオ"
+      },
+      {
+        "rank": 375,
+        "word": "カメラ"
+      },
+      {
+        "rank": 387,
+        "word": "交通"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 124,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 124",
+    "items": [
+      {
+        "rank": 393,
+        "word": "海"
+      },
+      {
+        "rank": 394,
+        "word": "山"
+      },
+      {
+        "rank": 395,
+        "word": "川"
+      },
+      {
+        "rank": 396,
+        "word": "地震"
+      },
+      {
+        "rank": 405,
+        "word": "歯"
+      },
+      {
+        "rank": 406,
+        "word": "首"
+      },
+      {
+        "rank": 407,
+        "word": "肩"
+      },
+      {
+        "rank": 409,
+        "word": "指"
+      },
+      {
+        "rank": 410,
+        "word": "胸"
+      },
+      {
+        "rank": 411,
+        "word": "腹"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 125,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 125",
+    "items": [
+      {
+        "rank": 412,
+        "word": "背中"
+      },
+      {
+        "rank": 415,
+        "word": "心"
+      },
+      {
+        "rank": 420,
+        "word": "痛み"
+      },
+      {
+        "rank": 423,
+        "word": "色"
+      },
+      {
+        "rank": 424,
+        "word": "赤"
+      },
+      {
+        "rank": 425,
+        "word": "青"
+      },
+      {
+        "rank": 426,
+        "word": "白"
+      },
+      {
+        "rank": 427,
+        "word": "黒"
+      },
+      {
+        "rank": 428,
+        "word": "緑"
+      },
+      {
+        "rank": 429,
+        "word": "黄色"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 126,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 126",
+    "items": [
+      {
+        "rank": 430,
+        "word": "音"
+      },
+      {
+        "rank": 431,
+        "word": "音楽"
+      },
+      {
+        "rank": 432,
+        "word": "映画"
+      },
+      {
+        "rank": 433,
+        "word": "スポーツ"
+      },
+      {
+        "rank": 434,
+        "word": "ゲーム"
+      },
+      {
+        "rank": 436,
+        "word": "名前"
+      },
+      {
+        "rank": 438,
+        "word": "言葉"
+      },
+      {
+        "rank": 444,
+        "word": "例"
+      },
+      {
+        "rank": 445,
+        "word": "情報"
+      },
+      {
+        "rank": 450,
+        "word": "円"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 127,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 127",
+    "items": [
+      {
+        "rank": 452,
+        "word": "価格"
+      },
+      {
+        "rank": 456,
+        "word": "収入"
+      },
+      {
+        "rank": 457,
+        "word": "支出"
+      },
+      {
+        "rank": 458,
+        "word": "買い物"
+      },
+      {
+        "rank": 459,
+        "word": "商品"
+      },
+      {
+        "rank": 461,
+        "word": "予定"
+      },
+      {
+        "rank": 464,
+        "word": "報告"
+      },
+      {
+        "rank": 467,
+        "word": "確認"
+      },
+      {
+        "rank": 468,
+        "word": "準備"
+      },
+      {
+        "rank": 470,
+        "word": "受付"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 128,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 128",
+    "items": [
+      {
+        "rank": 471,
+        "word": "生活"
+      },
+      {
+        "rank": 475,
+        "word": "関係"
+      },
+      {
+        "rank": 478,
+        "word": "文化"
+      },
+      {
+        "rank": 479,
+        "word": "歴史"
+      },
+      {
+        "rank": 480,
+        "word": "自然"
+      },
+      {
+        "rank": 482,
+        "word": "教育"
+      },
+      {
+        "rank": 488,
+        "word": "国際"
+      },
+      {
+        "rank": 490,
+        "word": "科学"
+      },
+      {
+        "rank": 491,
+        "word": "研究"
+      },
+      {
+        "rank": 492,
+        "word": "月曜日"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 129,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 129",
+    "items": [
+      {
+        "rank": 493,
+        "word": "火曜日"
+      },
+      {
+        "rank": 494,
+        "word": "水曜日"
+      },
+      {
+        "rank": 495,
+        "word": "木曜日"
+      },
+      {
+        "rank": 496,
+        "word": "金曜日"
+      },
+      {
+        "rank": 497,
+        "word": "土曜日"
+      },
+      {
+        "rank": 498,
+        "word": "日曜日"
+      },
+      {
+        "rank": 499,
+        "word": "誕生日"
+      },
+      {
+        "rank": 501,
+        "word": "番号"
+      },
+      {
+        "rank": 502,
+        "word": "公園"
+      },
+      {
+        "rank": 505,
+        "word": "映画館"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 130,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 130",
+    "items": [
+      {
+        "rank": 506,
+        "word": "喫茶店"
+      },
+      {
+        "rank": 507,
+        "word": "食堂"
+      },
+      {
+        "rank": 508,
+        "word": "交番"
+      },
+      {
+        "rank": 509,
+        "word": "大使館"
+      },
+      {
+        "rank": 510,
+        "word": "入口"
+      },
+      {
+        "rank": 511,
+        "word": "出口"
+      },
+      {
+        "rank": 512,
+        "word": "建物"
+      },
+      {
+        "rank": 513,
+        "word": "アパート"
+      },
+      {
+        "rank": 514,
+        "word": "マンション"
+      },
+      {
+        "rank": 516,
+        "word": "売り場"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 131,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 131",
+    "items": [
+      {
+        "rank": 517,
+        "word": "職場"
+      },
+      {
+        "rank": 518,
+        "word": "事務所"
+      },
+      {
+        "rank": 520,
+        "word": "朝ご飯"
+      },
+      {
+        "rank": 521,
+        "word": "昼ご飯"
+      },
+      {
+        "rank": 522,
+        "word": "晩ご飯"
+      },
+      {
+        "rank": 523,
+        "word": "お菓子"
+      },
+      {
+        "rank": 527,
+        "word": "食べ物"
+      },
+      {
+        "rank": 528,
+        "word": "飲み物"
+      },
+      {
+        "rank": 530,
+        "word": "メニュー"
+      },
+      {
+        "rank": 531,
+        "word": "コップ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 132,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 132",
+    "items": [
+      {
+        "rank": 532,
+        "word": "カップ"
+      },
+      {
+        "rank": 533,
+        "word": "皿"
+      },
+      {
+        "rank": 534,
+        "word": "箸"
+      },
+      {
+        "rank": 535,
+        "word": "スプーン"
+      },
+      {
+        "rank": 536,
+        "word": "フォーク"
+      },
+      {
+        "rank": 537,
+        "word": "ナイフ"
+      },
+      {
+        "rank": 538,
+        "word": "上着"
+      },
+      {
+        "rank": 539,
+        "word": "セーター"
+      },
+      {
+        "rank": 541,
+        "word": "ネクタイ"
+      },
+      {
+        "rank": 543,
+        "word": "ポケット"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 133,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 133",
+    "items": [
+      {
+        "rank": 544,
+        "word": "ボタン"
+      },
+      {
+        "rank": 545,
+        "word": "ハンカチ"
+      },
+      {
+        "rank": 547,
+        "word": "傘"
+      },
+      {
+        "rank": 548,
+        "word": "箱"
+      },
+      {
+        "rank": 549,
+        "word": "袋"
+      },
+      {
+        "rank": 550,
+        "word": "封筒"
+      },
+      {
+        "rank": 551,
+        "word": "切手"
+      },
+      {
+        "rank": 552,
+        "word": "葉書"
+      },
+      {
+        "rank": 555,
+        "word": "本棚"
+      },
+      {
+        "rank": 556,
+        "word": "犬"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 134,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 134",
+    "items": [
+      {
+        "rank": 557,
+        "word": "猫"
+      },
+      {
+        "rank": 558,
+        "word": "鳥"
+      },
+      {
+        "rank": 559,
+        "word": "動物"
+      },
+      {
+        "rank": 560,
+        "word": "花"
+      },
+      {
+        "rank": 561,
+        "word": "木"
+      },
+      {
+        "rank": 562,
+        "word": "草"
+      },
+      {
+        "rank": 563,
+        "word": "森"
+      },
+      {
+        "rank": 564,
+        "word": "季節"
+      },
+      {
+        "rank": 565,
+        "word": "赤ちゃん"
+      },
+      {
+        "rank": 566,
+        "word": "親"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 135,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 135",
+    "items": [
+      {
+        "rank": 567,
+        "word": "お父さん"
+      },
+      {
+        "rank": 568,
+        "word": "お母さん"
+      },
+      {
+        "rank": 569,
+        "word": "お兄さん"
+      },
+      {
+        "rank": 570,
+        "word": "お姉さん"
+      },
+      {
+        "rank": 571,
+        "word": "奥さん"
+      },
+      {
+        "rank": 572,
+        "word": "患者"
+      },
+      {
+        "rank": 573,
+        "word": "医療"
+      },
+      {
+        "rank": 575,
+        "word": "退院"
+      },
+      {
+        "rank": 578,
+        "word": "運転手"
+      },
+      {
+        "rank": 580,
+        "word": "チケット"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 136,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 136",
+    "items": [
+      {
+        "rank": 581,
+        "word": "信号"
+      },
+      {
+        "rank": 582,
+        "word": "交差点"
+      },
+      {
+        "rank": 588,
+        "word": "漢字"
+      },
+      {
+        "rank": 589,
+        "word": "ひらがな"
+      },
+      {
+        "rank": 590,
+        "word": "カタカナ"
+      },
+      {
+        "rank": 591,
+        "word": "作文"
+      },
+      {
+        "rank": 593,
+        "word": "アルバイト"
+      },
+      {
+        "rank": 594,
+        "word": "パート"
+      },
+      {
+        "rank": 595,
+        "word": "店員"
+      },
+      {
+        "rank": 599,
+        "word": "社長"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 137,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 137",
+    "items": [
+      {
+        "rank": 600,
+        "word": "住所"
+      },
+      {
+        "rank": 601,
+        "word": "郵便"
+      },
+      {
+        "rank": 603,
+        "word": "誕生"
+      },
+      {
+        "rank": 605,
+        "word": "卒業"
+      },
+      {
+        "rank": 606,
+        "word": "入学"
+      },
+      {
+        "rank": 608,
+        "word": "散歩"
+      },
+      {
+        "rank": 611,
+        "word": "登る"
+      },
+      {
+        "rank": 612,
+        "word": "歌う"
+      },
+      {
+        "rank": 613,
+        "word": "弾く"
+      },
+      {
+        "rank": 614,
+        "word": "撮る"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 138,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 138",
+    "items": [
+      {
+        "rank": 615,
+        "word": "着る"
+      },
+      {
+        "rank": 616,
+        "word": "脱ぐ"
+      },
+      {
+        "rank": 617,
+        "word": "履く"
+      },
+      {
+        "rank": 618,
+        "word": "かぶる"
+      },
+      {
+        "rank": 619,
+        "word": "押す"
+      },
+      {
+        "rank": 620,
+        "word": "引く"
+      },
+      {
+        "rank": 621,
+        "word": "切る"
+      },
+      {
+        "rank": 622,
+        "word": "折る"
+      },
+      {
+        "rank": 623,
+        "word": "貼る"
+      },
+      {
+        "rank": 624,
+        "word": "包む"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 139,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 139",
+    "items": [
+      {
+        "rank": 625,
+        "word": "拾う"
+      },
+      {
+        "rank": 626,
+        "word": "捨てる"
+      },
+      {
+        "rank": 627,
+        "word": "壊す"
+      },
+      {
+        "rank": 628,
+        "word": "壊れる"
+      },
+      {
+        "rank": 629,
+        "word": "落ちる"
+      },
+      {
+        "rank": 630,
+        "word": "落とす"
+      },
+      {
+        "rank": 631,
+        "word": "なくす"
+      },
+      {
+        "rank": 634,
+        "word": "怒る"
+      },
+      {
+        "rank": 635,
+        "word": "笑う"
+      },
+      {
+        "rank": 636,
+        "word": "泣く"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 140,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 140",
+    "items": [
+      {
+        "rank": 637,
+        "word": "喜ぶ"
+      },
+      {
+        "rank": 638,
+        "word": "驚く"
+      },
+      {
+        "rank": 639,
+        "word": "困る"
+      },
+      {
+        "rank": 643,
+        "word": "残念"
+      },
+      {
+        "rank": 644,
+        "word": "親切"
+      },
+      {
+        "rank": 646,
+        "word": "真面目"
+      },
+      {
+        "rank": 647,
+        "word": "正直"
+      },
+      {
+        "rank": 648,
+        "word": "特別"
+      },
+      {
+        "rank": 649,
+        "word": "普通"
+      },
+      {
+        "rank": 650,
+        "word": "自由"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 141,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 141",
+    "items": [
+      {
+        "rank": 652,
+        "word": "無理"
+      },
+      {
+        "rank": 653,
+        "word": "十分"
+      },
+      {
+        "rank": 654,
+        "word": "細い"
+      },
+      {
+        "rank": 655,
+        "word": "太い"
+      },
+      {
+        "rank": 656,
+        "word": "厚い"
+      },
+      {
+        "rank": 657,
+        "word": "薄い"
+      },
+      {
+        "rank": 658,
+        "word": "深い"
+      },
+      {
+        "rank": 659,
+        "word": "浅い"
+      },
+      {
+        "rank": 660,
+        "word": "柔らかい"
+      },
+      {
+        "rank": 661,
+        "word": "固い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 142,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 142",
+    "items": [
+      {
+        "rank": 662,
+        "word": "丸い"
+      },
+      {
+        "rank": 663,
+        "word": "きれい"
+      },
+      {
+        "rank": 664,
+        "word": "うるさい"
+      },
+      {
+        "rank": 665,
+        "word": "つまらない"
+      },
+      {
+        "rank": 666,
+        "word": "おかしい"
+      },
+      {
+        "rank": 667,
+        "word": "恥ずかしい"
+      },
+      {
+        "rank": 668,
+        "word": "珍しい"
+      },
+      {
+        "rank": 669,
+        "word": "すばらしい"
+      },
+      {
+        "rank": 670,
+        "word": "一緒"
+      },
+      {
+        "rank": 671,
+        "word": "別々"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 143,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 143",
+    "items": [
+      {
+        "rank": 672,
+        "word": "同じ"
+      },
+      {
+        "rank": 673,
+        "word": "違う"
+      },
+      {
+        "rank": 674,
+        "word": "いろいろ"
+      },
+      {
+        "rank": 675,
+        "word": "様々"
+      },
+      {
+        "rank": 676,
+        "word": "たいてい"
+      },
+      {
+        "rank": 677,
+        "word": "だいたい"
+      },
+      {
+        "rank": 678,
+        "word": "だんだん"
+      },
+      {
+        "rank": 679,
+        "word": "とうとう"
+      },
+      {
+        "rank": 680,
+        "word": "やっと"
+      },
+      {
+        "rank": 681,
+        "word": "ついに"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 144,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 144",
+    "items": [
+      {
+        "rank": 682,
+        "word": "しっかり"
+      },
+      {
+        "rank": 683,
+        "word": "はっきり"
+      },
+      {
+        "rank": 684,
+        "word": "ちゃんと"
+      },
+      {
+        "rank": 685,
+        "word": "なかなか"
+      },
+      {
+        "rank": 686,
+        "word": "どんどん"
+      },
+      {
+        "rank": 687,
+        "word": "そろそろ"
+      },
+      {
+        "rank": 688,
+        "word": "ずっと"
+      },
+      {
+        "rank": 689,
+        "word": "全然"
+      },
+      {
+        "rank": 690,
+        "word": "まったく"
+      },
+      {
+        "rank": 691,
+        "word": "ぜひ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 145,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 145",
+    "items": [
+      {
+        "rank": 694,
+        "word": "それでも"
+      },
+      {
+        "rank": 695,
+        "word": "そこで"
+      },
+      {
+        "rank": 696,
+        "word": "それとも"
+      },
+      {
+        "rank": 697,
+        "word": "ところで"
+      },
+      {
+        "rank": 698,
+        "word": "可能"
+      },
+      {
+        "rank": 699,
+        "word": "計画"
+      },
+      {
+        "rank": 700,
+        "word": "機会"
+      },
+      {
+        "rank": 705,
+        "word": "体験"
+      },
+      {
+        "rank": 706,
+        "word": "記憶"
+      },
+      {
+        "rank": 707,
+        "word": "思い出"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 146,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 146",
+    "items": [
+      {
+        "rank": 710,
+        "word": "期待"
+      },
+      {
+        "rank": 711,
+        "word": "目標"
+      },
+      {
+        "rank": 712,
+        "word": "努力"
+      },
+      {
+        "rank": 713,
+        "word": "成功"
+      },
+      {
+        "rank": 714,
+        "word": "失敗"
+      },
+      {
+        "rank": 715,
+        "word": "注意"
+      },
+      {
+        "rank": 717,
+        "word": "災害"
+      },
+      {
+        "rank": 718,
+        "word": "防止"
+      },
+      {
+        "rank": 722,
+        "word": "ルール"
+      },
+      {
+        "rank": 723,
+        "word": "条件"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 147,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 147",
+    "items": [
+      {
+        "rank": 727,
+        "word": "責任"
+      },
+      {
+        "rank": 729,
+        "word": "文学"
+      },
+      {
+        "rank": 730,
+        "word": "放送"
+      },
+      {
+        "rank": 731,
+        "word": "ニュース"
+      },
+      {
+        "rank": 733,
+        "word": "人口"
+      },
+      {
+        "rank": 734,
+        "word": "地球"
+      },
+      {
+        "rank": 735,
+        "word": "作業"
+      },
+      {
+        "rank": 736,
+        "word": "業務"
+      },
+      {
+        "rank": 737,
+        "word": "事務"
+      },
+      {
+        "rank": 738,
+        "word": "営業"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 148,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 148",
+    "items": [
+      {
+        "rank": 739,
+        "word": "経営"
+      },
+      {
+        "rank": 740,
+        "word": "企業"
+      },
+      {
+        "rank": 741,
+        "word": "職業"
+      },
+      {
+        "rank": 742,
+        "word": "製品"
+      },
+      {
+        "rank": 743,
+        "word": "品物"
+      },
+      {
+        "rank": 744,
+        "word": "販売"
+      },
+      {
+        "rank": 745,
+        "word": "購入"
+      },
+      {
+        "rank": 750,
+        "word": "預金"
+      },
+      {
+        "rank": 752,
+        "word": "回答"
+      },
+      {
+        "rank": 754,
+        "word": "案内"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 149,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 149",
+    "items": [
+      {
+        "rank": 758,
+        "word": "提案"
+      },
+      {
+        "rank": 760,
+        "word": "決定"
+      },
+      {
+        "rank": 761,
+        "word": "選択"
+      },
+      {
+        "rank": 763,
+        "word": "書類"
+      },
+      {
+        "rank": 764,
+        "word": "文章"
+      },
+      {
+        "rank": 765,
+        "word": "文字"
+      },
+      {
+        "rank": 768,
+        "word": "機械"
+      },
+      {
+        "rank": 770,
+        "word": "システム"
+      },
+      {
+        "rank": 771,
+        "word": "プログラム"
+      },
+      {
+        "rank": 772,
+        "word": "ネットワーク"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 150,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 150",
+    "items": [
+      {
+        "rank": 777,
+        "word": "設計"
+      },
+      {
+        "rank": 778,
+        "word": "ない"
+      },
+      {
+        "rank": 779,
+        "word": "そう"
+      },
+      {
+        "rank": 780,
+        "word": "自分"
+      },
+      {
+        "rank": 781,
+        "word": "しまう"
+      },
+      {
+        "rank": 783,
+        "word": "わけ"
+      },
+      {
+        "rank": 784,
+        "word": "ところ"
+      },
+      {
+        "rank": 785,
+        "word": "行う"
+      },
+      {
+        "rank": 786,
+        "word": "バック"
+      },
+      {
+        "rank": 787,
+        "word": "トラック"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 151,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 151",
+    "items": [
+      {
+        "rank": 788,
+        "word": "いただく"
+      },
+      {
+        "rank": 789,
+        "word": "くださる"
+      },
+      {
+        "rank": 790,
+        "word": "以上"
+      },
+      {
+        "rank": 791,
+        "word": "人間"
+      },
+      {
+        "rank": 792,
+        "word": "現在"
+      },
+      {
+        "rank": 793,
+        "word": "感じる"
+      },
+      {
+        "rank": 794,
+        "word": "しれる"
+      },
+      {
+        "rank": 795,
+        "word": "けれども"
+      },
+      {
+        "rank": 796,
+        "word": "今回"
+      },
+      {
+        "rank": 797,
+        "word": "受ける"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 152,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 152",
+    "items": [
+      {
+        "rank": 799,
+        "word": "最近"
+      },
+      {
+        "rank": 800,
+        "word": "時代"
+      },
+      {
+        "rank": 801,
+        "word": "非常"
+      },
+      {
+        "rank": 802,
+        "word": "得る"
+      },
+      {
+        "rank": 803,
+        "word": "一つ"
+      },
+      {
+        "rank": 804,
+        "word": "ただ"
+      },
+      {
+        "rank": 805,
+        "word": "女性"
+      },
+      {
+        "rank": 806,
+        "word": "利用"
+      },
+      {
+        "rank": 807,
+        "word": "さらに"
+      },
+      {
+        "rank": 808,
+        "word": "参加"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 153,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 153",
+    "items": [
+      {
+        "rank": 809,
+        "word": "大きな"
+      },
+      {
+        "rank": 810,
+        "word": "感じ"
+      },
+      {
+        "rank": 811,
+        "word": "やはり"
+      },
+      {
+        "rank": 812,
+        "word": "活動"
+      },
+      {
+        "rank": 813,
+        "word": "こんな"
+      },
+      {
+        "rank": 814,
+        "word": "管理"
+      },
+      {
+        "rank": 815,
+        "word": "特に"
+      },
+      {
+        "rank": 816,
+        "word": "実際"
+      },
+      {
+        "rank": 817,
+        "word": "個人"
+      },
+      {
+        "rank": 818,
+        "word": "多く"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 154,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 154",
+    "items": [
+      {
+        "rank": 819,
+        "word": "存在"
+      },
+      {
+        "rank": 820,
+        "word": "すべて"
+      },
+      {
+        "rank": 821,
+        "word": "彼女"
+      },
+      {
+        "rank": 822,
+        "word": "理解"
+      },
+      {
+        "rank": 823,
+        "word": "部分"
+      },
+      {
+        "rank": 824,
+        "word": "日記"
+      },
+      {
+        "rank": 825,
+        "word": "いける"
+      },
+      {
+        "rank": 826,
+        "word": "使用"
+      },
+      {
+        "rank": 827,
+        "word": "事業"
+      },
+      {
+        "rank": 828,
+        "word": "固定"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 155,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 155",
+    "items": [
+      {
+        "rank": 829,
+        "word": "基本"
+      },
+      {
+        "rank": 830,
+        "word": "関連"
+      },
+      {
+        "rank": 831,
+        "word": "一般"
+      },
+      {
+        "rank": 833,
+        "word": "重要"
+      },
+      {
+        "rank": 835,
+        "word": "サービス"
+      },
+      {
+        "rank": 836,
+        "word": "かける"
+      },
+      {
+        "rank": 838,
+        "word": "場所"
+      },
+      {
+        "rank": 840,
+        "word": "お願い"
+      },
+      {
+        "rank": 841,
+        "word": "労働"
+      },
+      {
+        "rank": 842,
+        "word": "相手"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 156,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 156",
+    "items": [
+      {
+        "rank": 843,
+        "word": "自身"
+      },
+      {
+        "rank": 844,
+        "word": "かかる"
+      },
+      {
+        "rank": 845,
+        "word": "今後"
+      },
+      {
+        "rank": 846,
+        "word": "つまり"
+      },
+      {
+        "rank": 847,
+        "word": "まま"
+      },
+      {
+        "rank": 848,
+        "word": "与える"
+      },
+      {
+        "rank": 849,
+        "word": "大変"
+      },
+      {
+        "rank": 850,
+        "word": "彼ら"
+      },
+      {
+        "rank": 854,
+        "word": "これから"
+      },
+      {
+        "rank": 856,
+        "word": "全体"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 157,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 157",
+    "items": [
+      {
+        "rank": 857,
+        "word": "程度"
+      },
+      {
+        "rank": 858,
+        "word": "人々"
+      },
+      {
+        "rank": 859,
+        "word": "代表"
+      },
+      {
+        "rank": 860,
+        "word": "ネット"
+      },
+      {
+        "rank": 862,
+        "word": "それぞれ"
+      },
+      {
+        "rank": 863,
+        "word": "地方"
+      },
+      {
+        "rank": 864,
+        "word": "生きる"
+      },
+      {
+        "rank": 865,
+        "word": "選手"
+      },
+      {
+        "rank": 866,
+        "word": "みんな"
+      },
+      {
+        "rank": 867,
+        "word": "確か"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 158,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 158",
+    "items": [
+      {
+        "rank": 868,
+        "word": "ありがとう"
+      },
+      {
+        "rank": 869,
+        "word": "中心"
+      },
+      {
+        "rank": 871,
+        "word": "提供"
+      },
+      {
+        "rank": 872,
+        "word": "事実"
+      },
+      {
+        "rank": 873,
+        "word": "当然"
+      },
+      {
+        "rank": 874,
+        "word": "以前"
+      },
+      {
+        "rank": 875,
+        "word": "示す"
+      },
+      {
+        "rank": 876,
+        "word": "専門"
+      },
+      {
+        "rank": 877,
+        "word": "初めて"
+      },
+      {
+        "rank": 878,
+        "word": "全く"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 159,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 159",
+    "items": [
+      {
+        "rank": 880,
+        "word": "組織"
+      },
+      {
+        "rank": 881,
+        "word": "行動"
+      },
+      {
+        "rank": 882,
+        "word": "年間"
+      },
+      {
+        "rank": 883,
+        "word": "当時"
+      },
+      {
+        "rank": 884,
+        "word": "意識"
+      },
+      {
+        "rank": 886,
+        "word": "欲しい"
+      },
+      {
+        "rank": 887,
+        "word": "通り"
+      },
+      {
+        "rank": 888,
+        "word": "生産"
+      },
+      {
+        "rank": 889,
+        "word": "表現"
+      },
+      {
+        "rank": 890,
+        "word": "参考"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 160,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 160",
+    "items": [
+      {
+        "rank": 891,
+        "word": "ひとつ"
+      },
+      {
+        "rank": 892,
+        "word": "やっぱり"
+      },
+      {
+        "rank": 893,
+        "word": "ビジネス"
+      },
+      {
+        "rank": 895,
+        "word": "チーム"
+      },
+      {
+        "rank": 896,
+        "word": "現実"
+      },
+      {
+        "rank": 897,
+        "word": "進む"
+      },
+      {
+        "rank": 898,
+        "word": "すごい"
+      },
+      {
+        "rank": 899,
+        "word": "価値"
+      },
+      {
+        "rank": 900,
+        "word": "テーマ"
+      },
+      {
+        "rank": 901,
+        "word": "含む"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 161,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 161",
+    "items": [
+      {
+        "rank": 902,
+        "word": "一部"
+      },
+      {
+        "rank": 903,
+        "word": "考え"
+      },
+      {
+        "rank": 904,
+        "word": "残る"
+      },
+      {
+        "rank": 905,
+        "word": "語る"
+      },
+      {
+        "rank": 908,
+        "word": "言える"
+      },
+      {
+        "rank": 910,
+        "word": "結局"
+      },
+      {
+        "rank": 911,
+        "word": "消費"
+      },
+      {
+        "rank": 912,
+        "word": "保険"
+      },
+      {
+        "rank": 913,
+        "word": "具体"
+      },
+      {
+        "rank": 915,
+        "word": "人生"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 162,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 162",
+    "items": [
+      {
+        "rank": 916,
+        "word": "表示"
+      },
+      {
+        "rank": 917,
+        "word": "精神"
+      },
+      {
+        "rank": 918,
+        "word": "過去"
+      },
+      {
+        "rank": 919,
+        "word": "レベル"
+      },
+      {
+        "rank": 920,
+        "word": "我々"
+      },
+      {
+        "rank": 921,
+        "word": "能力"
+      },
+      {
+        "rank": 922,
+        "word": "指導"
+      },
+      {
+        "rank": 924,
+        "word": "公開"
+      },
+      {
+        "rank": 925,
+        "word": "皆さん"
+      },
+      {
+        "rank": 926,
+        "word": "ほか"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 163,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 163",
+    "items": [
+      {
+        "rank": 927,
+        "word": "担当"
+      },
+      {
+        "rank": 930,
+        "word": "行為"
+      },
+      {
+        "rank": 931,
+        "word": "平成"
+      },
+      {
+        "rank": 932,
+        "word": "いや"
+      },
+      {
+        "rank": 933,
+        "word": "楽しむ"
+      },
+      {
+        "rank": 934,
+        "word": "登録"
+      },
+      {
+        "rank": 935,
+        "word": "うまい"
+      },
+      {
+        "rank": 938,
+        "word": "述べる"
+      },
+      {
+        "rank": 939,
+        "word": "団体"
+      },
+      {
+        "rank": 940,
+        "word": "支援"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 164,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 164",
+    "items": [
+      {
+        "rank": 941,
+        "word": "最も"
+      },
+      {
+        "rank": 942,
+        "word": "自己"
+      },
+      {
+        "rank": 943,
+        "word": "年度"
+      },
+      {
+        "rank": 944,
+        "word": "運動"
+      },
+      {
+        "rank": 945,
+        "word": "構造"
+      },
+      {
+        "rank": 947,
+        "word": "完全"
+      },
+      {
+        "rank": 948,
+        "word": "向かう"
+      },
+      {
+        "rank": 949,
+        "word": "男性"
+      },
+      {
+        "rank": 950,
+        "word": "結構"
+      },
+      {
+        "rank": 951,
+        "word": "産業"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 165,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 165",
+    "items": [
+      {
+        "rank": 952,
+        "word": "人気"
+      },
+      {
+        "rank": 953,
+        "word": "お話"
+      },
+      {
+        "rank": 954,
+        "word": "描く"
+      },
+      {
+        "rank": 955,
+        "word": "近く"
+      },
+      {
+        "rank": 956,
+        "word": "最終"
+      },
+      {
+        "rank": 957,
+        "word": "ドル"
+      },
+      {
+        "rank": 958,
+        "word": "過ぎる"
+      },
+      {
+        "rank": 960,
+        "word": "上げる"
+      },
+      {
+        "rank": 961,
+        "word": "グループ"
+      },
+      {
+        "rank": 962,
+        "word": "ポイント"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 166,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 166",
+    "items": [
+      {
+        "rank": 963,
+        "word": "センター"
+      },
+      {
+        "rank": 964,
+        "word": "開催"
+      },
+      {
+        "rank": 965,
+        "word": "方向"
+      },
+      {
+        "rank": 968,
+        "word": "起こる"
+      },
+      {
+        "rank": 969,
+        "word": "障害"
+      },
+      {
+        "rank": 970,
+        "word": "ヶ月"
+      },
+      {
+        "rank": 971,
+        "word": "協力"
+      },
+      {
+        "rank": 972,
+        "word": "時期"
+      },
+      {
+        "rank": 973,
+        "word": "考え方"
+      },
+      {
+        "rank": 974,
+        "word": "金融"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 167,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 167",
+    "items": [
+      {
+        "rank": 975,
+        "word": "進める"
+      },
+      {
+        "rank": 976,
+        "word": "立場"
+      },
+      {
+        "rank": 978,
+        "word": "全国"
+      },
+      {
+        "rank": 979,
+        "word": "違い"
+      },
+      {
+        "rank": 980,
+        "word": "作成"
+      },
+      {
+        "rank": 981,
+        "word": "成長"
+      },
+      {
+        "rank": 982,
+        "word": "施設"
+      },
+      {
+        "rank": 983,
+        "word": "登場"
+      },
+      {
+        "rank": 984,
+        "word": "知識"
+      },
+      {
+        "rank": 985,
+        "word": "実現"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 168,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 168",
+    "items": [
+      {
+        "rank": 986,
+        "word": "海外"
+      },
+      {
+        "rank": 987,
+        "word": "実施"
+      },
+      {
+        "rank": 988,
+        "word": "昨年"
+      },
+      {
+        "rank": 989,
+        "word": "認識"
+      },
+      {
+        "rank": 990,
+        "word": "イメージ"
+      },
+      {
+        "rank": 991,
+        "word": "段階"
+      },
+      {
+        "rank": 992,
+        "word": "発生"
+      },
+      {
+        "rank": 994,
+        "word": "期間"
+      },
+      {
+        "rank": 995,
+        "word": "トップ"
+      },
+      {
+        "rank": 996,
+        "word": "若い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 169,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 169",
+    "items": [
+      {
+        "rank": 998,
+        "word": "変更"
+      },
+      {
+        "rank": 999,
+        "word": "サッカー"
+      },
+      {
+        "rank": 1000,
+        "word": "限り"
+      },
+      {
+        "rank": 1001,
+        "word": "番組"
+      },
+      {
+        "rank": 1002,
+        "word": "今度"
+      },
+      {
+        "rank": 1003,
+        "word": "処理"
+      },
+      {
+        "rank": 1004,
+        "word": "絶対"
+      },
+      {
+        "rank": 1005,
+        "word": "伝える"
+      },
+      {
+        "rank": 1006,
+        "word": "守る"
+      },
+      {
+        "rank": 1008,
+        "word": "都市"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 170,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 170",
+    "items": [
+      {
+        "rank": 1009,
+        "word": "展開"
+      },
+      {
+        "rank": 1010,
+        "word": "デザイン"
+      },
+      {
+        "rank": 1011,
+        "word": "自体"
+      },
+      {
+        "rank": 1014,
+        "word": "含める"
+      },
+      {
+        "rank": 1016,
+        "word": "信じる"
+      },
+      {
+        "rank": 1017,
+        "word": "週間"
+      },
+      {
+        "rank": 1019,
+        "word": "最大"
+      },
+      {
+        "rank": 1020,
+        "word": "無料"
+      },
+      {
+        "rank": 1022,
+        "word": "思える"
+      },
+      {
+        "rank": 1023,
+        "word": "全部"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 171,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 171",
+    "items": [
+      {
+        "rank": 1024,
+        "word": "開始"
+      },
+      {
+        "rank": 1025,
+        "word": "イベント"
+      },
+      {
+        "rank": 1026,
+        "word": "アクセス"
+      },
+      {
+        "rank": 1027,
+        "word": "同時に"
+      },
+      {
+        "rank": 1028,
+        "word": "詳細"
+      },
+      {
+        "rank": 1029,
+        "word": "合う"
+      },
+      {
+        "rank": 1030,
+        "word": "動く"
+      },
+      {
+        "rank": 1031,
+        "word": "アップ"
+      },
+      {
+        "rank": 1032,
+        "word": "将来"
+      },
+      {
+        "rank": 1034,
+        "word": "通信"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 172,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 172",
+    "items": [
+      {
+        "rank": 1035,
+        "word": "分野"
+      },
+      {
+        "rank": 1036,
+        "word": "向ける"
+      },
+      {
+        "rank": 1037,
+        "word": "国内"
+      },
+      {
+        "rank": 1038,
+        "word": "時刻"
+      },
+      {
+        "rank": 1039,
+        "word": "発見"
+      },
+      {
+        "rank": 1040,
+        "word": "とにかく"
+      },
+      {
+        "rank": 1041,
+        "word": "最高"
+      },
+      {
+        "rank": 1042,
+        "word": "頑張る"
+      },
+      {
+        "rank": 1045,
+        "word": "終了"
+      },
+      {
+        "rank": 1046,
+        "word": "出版"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 173,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 173",
+    "items": [
+      {
+        "rank": 1047,
+        "word": "正しい"
+      },
+      {
+        "rank": 1048,
+        "word": "プロ"
+      },
+      {
+        "rank": 1049,
+        "word": "大会"
+      },
+      {
+        "rank": 1050,
+        "word": "ファン"
+      },
+      {
+        "rank": 1051,
+        "word": "同様"
+      },
+      {
+        "rank": 1052,
+        "word": "小さな"
+      },
+      {
+        "rank": 1053,
+        "word": "共通"
+      },
+      {
+        "rank": 1054,
+        "word": "つもり"
+      },
+      {
+        "rank": 1055,
+        "word": "現代"
+      },
+      {
+        "rank": 1057,
+        "word": "住宅"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 174,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 174",
+    "items": [
+      {
+        "rank": 1058,
+        "word": "新た"
+      },
+      {
+        "rank": 1060,
+        "word": "動き"
+      },
+      {
+        "rank": 1061,
+        "word": "本日"
+      },
+      {
+        "rank": 1062,
+        "word": "業界"
+      },
+      {
+        "rank": 1063,
+        "word": "相当"
+      },
+      {
+        "rank": 1064,
+        "word": "調べる"
+      },
+      {
+        "rank": 1065,
+        "word": "思い"
+      },
+      {
+        "rank": 1066,
+        "word": "メンバー"
+      },
+      {
+        "rank": 1067,
+        "word": "演奏"
+      },
+      {
+        "rank": 1068,
+        "word": "家庭"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 175,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 175",
+    "items": [
+      {
+        "rank": 1069,
+        "word": "直接"
+      },
+      {
+        "rank": 1070,
+        "word": "聴く"
+      },
+      {
+        "rank": 1071,
+        "word": "構成"
+      },
+      {
+        "rank": 1072,
+        "word": "異なる"
+      },
+      {
+        "rank": 1073,
+        "word": "もと"
+      },
+      {
+        "rank": 1074,
+        "word": "取引"
+      },
+      {
+        "rank": 1075,
+        "word": "加える"
+      },
+      {
+        "rank": 1076,
+        "word": "運営"
+      },
+      {
+        "rank": 1078,
+        "word": "予想"
+      },
+      {
+        "rank": 1080,
+        "word": "モデル"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 176,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 176",
+    "items": [
+      {
+        "rank": 1082,
+        "word": "発売"
+      },
+      {
+        "rank": 1083,
+        "word": "目指す"
+      },
+      {
+        "rank": 1084,
+        "word": "話題"
+      },
+      {
+        "rank": 1085,
+        "word": "建築"
+      },
+      {
+        "rank": 1086,
+        "word": "印象"
+      },
+      {
+        "rank": 1087,
+        "word": "詳しい"
+      },
+      {
+        "rank": 1089,
+        "word": "ライブ"
+      },
+      {
+        "rank": 1090,
+        "word": "ソフト"
+      },
+      {
+        "rank": 1091,
+        "word": "チェック"
+      },
+      {
+        "rank": 1092,
+        "word": "われわれ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 177,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 177",
+    "items": [
+      {
+        "rank": 1093,
+        "word": "学習"
+      },
+      {
+        "rank": 1094,
+        "word": "発展"
+      },
+      {
+        "rank": 1095,
+        "word": "計算"
+      },
+      {
+        "rank": 1096,
+        "word": "種類"
+      },
+      {
+        "rank": 1098,
+        "word": "途中"
+      },
+      {
+        "rank": 1099,
+        "word": "気分"
+      },
+      {
+        "rank": 1100,
+        "word": "昭和"
+      },
+      {
+        "rank": 1101,
+        "word": "移動"
+      },
+      {
+        "rank": 1103,
+        "word": "発行"
+      },
+      {
+        "rank": 1104,
+        "word": "企画"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 178,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 178",
+    "items": [
+      {
+        "rank": 1105,
+        "word": "数字"
+      },
+      {
+        "rank": 1107,
+        "word": "自ら"
+      },
+      {
+        "rank": 1109,
+        "word": "土地"
+      },
+      {
+        "rank": 1110,
+        "word": "それら"
+      },
+      {
+        "rank": 1112,
+        "word": "言語"
+      },
+      {
+        "rank": 1113,
+        "word": "共同"
+      },
+      {
+        "rank": 1114,
+        "word": "年代"
+      },
+      {
+        "rank": 1115,
+        "word": "タイプ"
+      },
+      {
+        "rank": 1116,
+        "word": "観る"
+      },
+      {
+        "rank": 1117,
+        "word": "プロジェクト"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 179,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 179",
+    "items": [
+      {
+        "rank": 1119,
+        "word": "残す"
+      },
+      {
+        "rank": 1120,
+        "word": "役割"
+      },
+      {
+        "rank": 1122,
+        "word": "きっと"
+      },
+      {
+        "rank": 1123,
+        "word": "ユーザー"
+      },
+      {
+        "rank": 1124,
+        "word": "撮影"
+      },
+      {
+        "rank": 1125,
+        "word": "エネルギー"
+      },
+      {
+        "rank": 1126,
+        "word": "知れる"
+      },
+      {
+        "rank": 1128,
+        "word": "憲法"
+      },
+      {
+        "rank": 1130,
+        "word": "感覚"
+      },
+      {
+        "rank": 1131,
+        "word": "高校"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 180,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 180",
+    "items": [
+      {
+        "rank": 1134,
+        "word": "合わせる"
+      },
+      {
+        "rank": 1135,
+        "word": "実行"
+      },
+      {
+        "rank": 1137,
+        "word": "通常"
+      },
+      {
+        "rank": 1138,
+        "word": "既に"
+      },
+      {
+        "rank": 1139,
+        "word": "現状"
+      },
+      {
+        "rank": 1140,
+        "word": "建設"
+      },
+      {
+        "rank": 1141,
+        "word": "スタッフ"
+      },
+      {
+        "rank": 1142,
+        "word": "先日"
+      },
+      {
+        "rank": 1143,
+        "word": "最新"
+      },
+      {
+        "rank": 1144,
+        "word": "中央"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 181,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 181",
+    "items": [
+      {
+        "rank": 1145,
+        "word": "幸せ"
+      },
+      {
+        "rank": 1146,
+        "word": "似る"
+      },
+      {
+        "rank": 1147,
+        "word": "平均"
+      },
+      {
+        "rank": 1149,
+        "word": "物語"
+      },
+      {
+        "rank": 1151,
+        "word": "追加"
+      },
+      {
+        "rank": 1152,
+        "word": "不思議"
+      },
+      {
+        "rank": 1153,
+        "word": "警察"
+      },
+      {
+        "rank": 1154,
+        "word": "思い出す"
+      },
+      {
+        "rank": 1155,
+        "word": "日々"
+      },
+      {
+        "rank": 1156,
+        "word": "様子"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 182,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 182",
+    "items": [
+      {
+        "rank": 1157,
+        "word": "いろんな"
+      },
+      {
+        "rank": 1158,
+        "word": "にくい"
+      },
+      {
+        "rank": 1159,
+        "word": "総合"
+      },
+      {
+        "rank": 1160,
+        "word": "使える"
+      },
+      {
+        "rank": 1161,
+        "word": "活用"
+      },
+      {
+        "rank": 1162,
+        "word": "決して"
+      },
+      {
+        "rank": 1164,
+        "word": "身体"
+      },
+      {
+        "rank": 1165,
+        "word": "整備"
+      },
+      {
+        "rank": 1166,
+        "word": "リスク"
+      },
+      {
+        "rank": 1168,
+        "word": "想像"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 183,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 183",
+    "items": [
+      {
+        "rank": 1169,
+        "word": "ケース"
+      },
+      {
+        "rank": 1170,
+        "word": "規模"
+      },
+      {
+        "rank": 1171,
+        "word": "本当"
+      },
+      {
+        "rank": 1172,
+        "word": "以降"
+      },
+      {
+        "rank": 1174,
+        "word": "法人"
+      },
+      {
+        "rank": 1175,
+        "word": "クラス"
+      },
+      {
+        "rank": 1177,
+        "word": "会長"
+      },
+      {
+        "rank": 1178,
+        "word": "通る"
+      },
+      {
+        "rank": 1179,
+        "word": "なんと"
+      },
+      {
+        "rank": 1180,
+        "word": "超える"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 184,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 184",
+    "items": [
+      {
+        "rank": 1181,
+        "word": "平和"
+      },
+      {
+        "rank": 1182,
+        "word": "基礎"
+      },
+      {
+        "rank": 1183,
+        "word": "特定"
+      },
+      {
+        "rank": 1184,
+        "word": "流れ"
+      },
+      {
+        "rank": 1186,
+        "word": "画像"
+      },
+      {
+        "rank": 1187,
+        "word": "少年"
+      },
+      {
+        "rank": 1188,
+        "word": "いえる"
+      },
+      {
+        "rank": 1189,
+        "word": "安定"
+      },
+      {
+        "rank": 1190,
+        "word": "メーカー"
+      },
+      {
+        "rank": 1191,
+        "word": "間違い"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 185,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 185",
+    "items": [
+      {
+        "rank": 1192,
+        "word": "本人"
+      },
+      {
+        "rank": 1193,
+        "word": "雰囲気"
+      },
+      {
+        "rank": 1194,
+        "word": "気づく"
+      },
+      {
+        "rank": 1195,
+        "word": "会場"
+      },
+      {
+        "rank": 1196,
+        "word": "電子"
+      },
+      {
+        "rank": 1197,
+        "word": "小説"
+      },
+      {
+        "rank": 1198,
+        "word": "注目"
+      },
+      {
+        "rank": 1199,
+        "word": "維持"
+      },
+      {
+        "rank": 1200,
+        "word": "ほぼ"
+      },
+      {
+        "rank": 1201,
+        "word": "範囲"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 186,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 186",
+    "items": [
+      {
+        "rank": 1202,
+        "word": "コラム"
+      },
+      {
+        "rank": 1203,
+        "word": "まとめる"
+      },
+      {
+        "rank": 1204,
+        "word": "常に"
+      },
+      {
+        "rank": 1205,
+        "word": "著作"
+      },
+      {
+        "rank": 1206,
+        "word": "失う"
+      },
+      {
+        "rank": 1207,
+        "word": "理論"
+      },
+      {
+        "rank": 1208,
+        "word": "日常"
+      },
+      {
+        "rank": 1210,
+        "word": "体制"
+      },
+      {
+        "rank": 1212,
+        "word": "やめる"
+      },
+      {
+        "rank": 1214,
+        "word": "はじめ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 187,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 187",
+    "items": [
+      {
+        "rank": 1215,
+        "word": "疑問"
+      },
+      {
+        "rank": 1216,
+        "word": "当たる"
+      },
+      {
+        "rank": 1218,
+        "word": "資本"
+      },
+      {
+        "rank": 1219,
+        "word": "事情"
+      },
+      {
+        "rank": 1221,
+        "word": "コース"
+      },
+      {
+        "rank": 1222,
+        "word": "感想"
+      },
+      {
+        "rank": 1223,
+        "word": "解説"
+      },
+      {
+        "rank": 1224,
+        "word": "シリーズ"
+      },
+      {
+        "rank": 1226,
+        "word": "民間"
+      },
+      {
+        "rank": 1227,
+        "word": "集まる"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 188,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 188",
+    "items": [
+      {
+        "rank": 1228,
+        "word": "措置"
+      },
+      {
+        "rank": 1229,
+        "word": "本来"
+      },
+      {
+        "rank": 1230,
+        "word": "宇宙"
+      },
+      {
+        "rank": 1231,
+        "word": "クラブ"
+      },
+      {
+        "rank": 1232,
+        "word": "タイトル"
+      },
+      {
+        "rank": 1234,
+        "word": "お客様"
+      },
+      {
+        "rank": 1236,
+        "word": "しばらく"
+      },
+      {
+        "rank": 1237,
+        "word": "二つ"
+      },
+      {
+        "rank": 1240,
+        "word": "以来"
+      },
+      {
+        "rank": 1241,
+        "word": "確保"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 189,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 189",
+    "items": [
+      {
+        "rank": 1242,
+        "word": "集める"
+      },
+      {
+        "rank": 1243,
+        "word": "離れる"
+      },
+      {
+        "rank": 1245,
+        "word": "映像"
+      },
+      {
+        "rank": 1247,
+        "word": "要素"
+      },
+      {
+        "rank": 1248,
+        "word": "触れる"
+      },
+      {
+        "rank": 1249,
+        "word": "コスト"
+      },
+      {
+        "rank": 1250,
+        "word": "人物"
+      },
+      {
+        "rank": 1252,
+        "word": "記念"
+      },
+      {
+        "rank": 1254,
+        "word": "楽しみ"
+      },
+      {
+        "rank": 1256,
+        "word": "設置"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 190,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 190",
+    "items": [
+      {
+        "rank": 1257,
+        "word": "位置"
+      },
+      {
+        "rank": 1258,
+        "word": "指定"
+      },
+      {
+        "rank": 1260,
+        "word": "付く"
+      },
+      {
+        "rank": 1261,
+        "word": "さまざま"
+      },
+      {
+        "rank": 1262,
+        "word": "ランキング"
+      },
+      {
+        "rank": 1263,
+        "word": "かかわる"
+      },
+      {
+        "rank": 1264,
+        "word": "さすが"
+      },
+      {
+        "rank": 1266,
+        "word": "関わる"
+      },
+      {
+        "rank": 1267,
+        "word": "起こす"
+      },
+      {
+        "rank": 1268,
+        "word": "仲間"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 191,
+    "category": "Daily Life",
+    "subcategory": "Common Adjectives",
+    "folder": "core-adj-more",
+    "title": "Common Adjectives 191",
+    "items": [
+      {
+        "rank": 1269,
+        "word": "メッセージ"
+      },
+      {
+        "rank": 1270,
+        "word": "迎える"
+      },
+      {
+        "rank": 1271,
+        "word": "整理"
+      },
+      {
+        "rank": 1272,
+        "word": "協会"
+      },
+      {
+        "rank": 1273,
+        "word": "至る"
+      },
+      {
+        "rank": 1274,
+        "word": "多数"
+      },
+      {
+        "rank": 1275,
+        "word": "デジタル"
+      },
+      {
+        "rank": 1276,
+        "word": "積極"
+      },
+      {
+        "rank": 1277,
+        "word": "願う"
+      },
+      {
+        "rank": 1278,
+        "word": "独立"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 192,
+    "category": "Work & Business",
+    "subcategory": "Business Basics",
+    "folder": "core-business",
+    "title": "Business Vocabulary 192",
+    "items": [
+      {
+        "rank": 1279,
+        "word": "読者"
+      },
+      {
+        "rank": 1280,
+        "word": "勝つ"
+      },
+      {
+        "rank": 1283,
+        "word": "打つ"
+      },
+      {
+        "rank": 1284,
+        "word": "流れる"
+      },
+      {
+        "rank": 1285,
+        "word": "いらっしゃる"
+      },
+      {
+        "rank": 1286,
+        "word": "バー"
+      },
+      {
+        "rank": 1287,
+        "word": "全員"
+      },
+      {
+        "rank": 1288,
+        "word": "参照"
+      },
+      {
+        "rank": 1289,
+        "word": "少なくとも"
+      },
+      {
+        "rank": 1290,
+        "word": "地元"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 193,
+    "category": "Society & Public Affairs",
+    "subcategory": "Public Life",
+    "folder": "core-public",
+    "title": "Public Life 193",
+    "items": [
+      {
+        "rank": 1291,
+        "word": "是非"
+      },
+      {
+        "rank": 1292,
+        "word": "明確"
+      },
+      {
+        "rank": 1293,
+        "word": "つながる"
+      },
+      {
+        "rank": 1294,
+        "word": "特徴"
+      },
+      {
+        "rank": 1295,
+        "word": "セット"
+      },
+      {
+        "rank": 1296,
+        "word": "皆様"
+      },
+      {
+        "rank": 1297,
+        "word": "魅力"
+      },
+      {
+        "rank": 1298,
+        "word": "反応"
+      },
+      {
+        "rank": 1299,
+        "word": "きちんと"
+      },
+      {
+        "rank": 1300,
+        "word": "まだまだ"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 194,
+    "category": "Academic & Abstract",
+    "subcategory": "Abstract Concepts",
+    "folder": "core-abstract-more",
+    "title": "Abstract Concepts 194",
+    "items": [
+      {
+        "rank": 1303,
+        "word": "工場"
+      },
+      {
+        "rank": 1304,
+        "word": "入力"
+      },
+      {
+        "rank": 1305,
+        "word": "ビデオ"
+      },
+      {
+        "rank": 1306,
+        "word": "集中"
+      },
+      {
+        "rank": 1307,
+        "word": "あまりに"
+      },
+      {
+        "rank": 1308,
+        "word": "一度"
+      },
+      {
+        "rank": 1309,
+        "word": "現象"
+      },
+      {
+        "rank": 1310,
+        "word": "ビル"
+      },
+      {
+        "rank": 1311,
+        "word": "感動"
+      },
+      {
+        "rank": 1313,
+        "word": "サポート"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 195,
+    "category": "Technology & Science",
+    "subcategory": "Science & Tech",
+    "folder": "core-science",
+    "title": "Science & Technology 195",
+    "items": [
+      {
+        "rank": 1314,
+        "word": "実践"
+      },
+      {
+        "rank": 1315,
+        "word": "職員"
+      },
+      {
+        "rank": 1316,
+        "word": "会員"
+      },
+      {
+        "rank": 1317,
+        "word": "過ごす"
+      },
+      {
+        "rank": 1318,
+        "word": "シーン"
+      },
+      {
+        "rank": 1319,
+        "word": "従来"
+      },
+      {
+        "rank": 1320,
+        "word": "農業"
+      },
+      {
+        "rank": 1321,
+        "word": "用意"
+      },
+      {
+        "rank": 1323,
+        "word": "世代"
+      },
+      {
+        "rank": 1324,
+        "word": "そうした"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 196,
+    "category": "Daily Life",
+    "subcategory": "Nature",
+    "folder": "core-nature",
+    "title": "Nature & Environment 196",
+    "items": [
+      {
+        "rank": 1325,
+        "word": "強化"
+      },
+      {
+        "rank": 1327,
+        "word": "周り"
+      },
+      {
+        "rank": 1329,
+        "word": "レポート"
+      },
+      {
+        "rank": 1330,
+        "word": "年齢"
+      },
+      {
+        "rank": 1331,
+        "word": "未来"
+      },
+      {
+        "rank": 1332,
+        "word": "舞台"
+      },
+      {
+        "rank": 1333,
+        "word": "前回"
+      },
+      {
+        "rank": 1334,
+        "word": "年金"
+      },
+      {
+        "rank": 1335,
+        "word": "もう少し"
+      },
+      {
+        "rank": 1336,
+        "word": "教師"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 197,
+    "category": "Daily Life",
+    "subcategory": "Media",
+    "folder": "core-media",
+    "title": "Media & Culture 197",
+    "items": [
+      {
+        "rank": 1337,
+        "word": "他人"
+      },
+      {
+        "rank": 1338,
+        "word": "上昇"
+      },
+      {
+        "rank": 1340,
+        "word": "完成"
+      },
+      {
+        "rank": 1341,
+        "word": "大好き"
+      },
+      {
+        "rank": 1342,
+        "word": "扱う"
+      },
+      {
+        "rank": 1343,
+        "word": "修正"
+      },
+      {
+        "rank": 1344,
+        "word": "向上"
+      },
+      {
+        "rank": 1345,
+        "word": "負ける"
+      },
+      {
+        "rank": 1347,
+        "word": "野球"
+      },
+      {
+        "rank": 1349,
+        "word": "訪問"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 198,
+    "category": "Academic & Abstract",
+    "subcategory": "N2 Reading",
+    "folder": "core-n2-reading",
+    "title": "N2 Reading Vocabulary 198",
+    "items": [
+      {
+        "rank": 1351,
+        "word": "並ぶ"
+      },
+      {
+        "rank": 1352,
+        "word": "視点"
+      },
+      {
+        "rank": 1353,
+        "word": "小学校"
+      },
+      {
+        "rank": 1354,
+        "word": "電気"
+      },
+      {
+        "rank": 1356,
+        "word": "間違う"
+      },
+      {
+        "rank": 1357,
+        "word": "挙げる"
+      },
+      {
+        "rank": 1359,
+        "word": "ドラマ"
+      },
+      {
+        "rank": 1360,
+        "word": "再び"
+      },
+      {
+        "rank": 1361,
+        "word": "解釈"
+      },
+      {
+        "rank": 1364,
+        "word": "止める"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 199,
+    "category": "Daily Life",
+    "subcategory": "Daily Vocabulary",
+    "folder": "core-daily",
+    "title": "Daily Vocabulary 199",
+    "items": [
+      {
+        "rank": 1365,
+        "word": "取り組む"
+      },
+      {
+        "rank": 1366,
+        "word": "製造"
+      },
+      {
+        "rank": 1367,
+        "word": "困難"
+      },
+      {
+        "rank": 1370,
+        "word": "母親"
+      },
+      {
+        "rank": 1372,
+        "word": "保障"
+      },
+      {
+        "rank": 1373,
+        "word": "集団"
+      },
+      {
+        "rank": 1374,
+        "word": "事態"
+      },
+      {
+        "rank": 1375,
+        "word": "立てる"
+      },
+      {
+        "rank": 1376,
+        "word": "画面"
+      },
+      {
+        "rank": 1378,
+        "word": "時点"
+      }
+    ]
+  },
+  {
+    "lessonNumber": 200,
+    "category": "Daily Life",
+    "subcategory": "Common Verbs",
+    "folder": "core-verbs-more",
+    "title": "Common Verbs 200",
+    "items": [
+      {
+        "rank": 1379,
+        "word": "なれる"
+      },
+      {
+        "rank": 1380,
+        "word": "スタート"
+      },
+      {
+        "rank": 1381,
+        "word": "活躍"
+      },
+      {
+        "rank": 1382,
+        "word": "問う"
+      },
+      {
+        "rank": 1383,
+        "word": "ちょうど"
+      },
+      {
+        "rank": 1384,
+        "word": "殺す"
+      },
+      {
+        "rank": 1385,
+        "word": "サイズ"
+      },
+      {
+        "rank": 1386,
+        "word": "限定"
+      },
+      {
+        "rank": 1387,
+        "word": "ひとり"
+      },
+      {
+        "rank": 1388,
+        "word": "医師"
+      }
+    ]
+  }
+]

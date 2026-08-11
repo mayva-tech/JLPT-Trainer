@@ -87,12 +87,13 @@ export function buildN2GrammarQuizTocItems(): TocItem[] {
       const quizId = `quiz-grammar-${range.first}-${range.last}`;
       if (getGrammarLessonIdForQuiz(quizId) !== lesson.id) return null;
       const base = grammarBatchDisplayLabel(lesson.id);
-      return {
+      const item: TocItem = {
         id: quizId as TocItemId,
         label: base ? `Quiz ${base}` : `Quiz ${range.first}–${range.last}`,
-        kind: "quiz" as const,
+        kind: "quiz",
         quizId,
       };
+      return item;
     })
     .filter((item): item is TocItem => item !== null);
 }

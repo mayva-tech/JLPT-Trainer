@@ -1,4 +1,5 @@
 ﻿import type { Lesson } from "../types/lesson";
+import { core2000Lessons } from "./lessonsCore2000";
 
 /** Vocabulary ids for one lesson: 4001–4010, 4011–4020, … */
 function idRange(start: number): number[] {
@@ -681,6 +682,8 @@ export const lessons: Lesson[] = [
     subcategories: ["Abstract", "Verbs"],
     vocabularyIds: idRange(4741),
   },
+
+  ...core2000Lessons,
 
   // -- N1 Vocabulary Lessons -----------------------------------------------
   // Curated view: references existing N1-level words by their original ids.

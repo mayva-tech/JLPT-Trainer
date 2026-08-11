@@ -7,7 +7,7 @@ export type VocabularyDisplayRange = {
   lastWordNumber: number;
 };
 
-const LESSON_ID_RE = /^lesson-(\d{2})$/;
+const LESSON_ID_RE = /^lesson-(\d+)$/;
 
 /** Display ordinal from a data vocabulary id (4001 → 1, 4750 → 750). */
 export function vocabularyIdToDisplayNumber(id: number): number {

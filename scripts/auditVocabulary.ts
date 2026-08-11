@@ -4,6 +4,10 @@ import { quizIds } from "../src/data/toc";
 import { getLessonById } from "../src/data/lessons";
 import { getVocabularyLessonIdForQuiz } from "../src/utils/quizVocabLesson";
 import { getVocabularyItemsForQuiz } from "../src/utils/vocabularyQuiz";
+import {
+  N2_VOCAB_ID_START,
+  N2_VOCAB_ITEM_COUNT,
+} from "../src/config/vocabularyCourse";
 
 const ALLOWED_CATEGORIES = new Set([
   "Daily Life",
@@ -41,7 +45,7 @@ function main() {
   }
 
   const expectedIds = new Set(
-    Array.from({ length: 750 }, (_, i) => 4001 + i)
+    Array.from({ length: N2_VOCAB_ITEM_COUNT }, (_, i) => N2_VOCAB_ID_START + i)
   );
   const presentIds = new Set(ids);
   const missingIds = [...expectedIds].filter((id) => !presentIds.has(id));

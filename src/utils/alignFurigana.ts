@@ -36,6 +36,7 @@ function isPunct(ch: string): boolean {
 function toHiragana(text: string): string {
   return [...text]
     .map((ch) => {
+      if (ch === "ヶ") return "か";
       const code = ch.codePointAt(0)!;
       if (code >= 0x30a1 && code <= 0x30f6) {
         return String.fromCodePoint(code - 0x60);
@@ -1265,7 +1266,102 @@ export function alignFurigana(
   surface: string,
   spacedReading: string
 ): FuriganaSegment[] {
-  return alignFuriganaWithTokenSpans(surface, spacedReading).segments;
+  const aligned = alignFuriganaWithTokenSpans(surface, spacedReading).segments;
+  const hasUnalignedKanji = aligned.some(
+    (seg) =>
+      !seg.reading &&
+      [...seg.text].some((ch) => isKanji(ch) || isIterationMark(ch))
+  );
+  if (!hasUnalignedKanji) return aligned;
+
+  return alignByKanaAnchors(surface, spacedReading) ?? aligned;
+}
+
+/**
+ * Dictionary-free fallback for valid corpus transcriptions. Literal kana are
+ * treated as hard anchors and the intervening reading is distributed over
+ * kanji. The stricter token aligner remains the primary path; this only keeps
+ * an uncommon or irregular kanji reading from being rendered with no ruby.
+ */
+function alignByKanaAnchors(
+  surface: string,
+  spacedReading: string
+): FuriganaSegment[] | null {
+  const surfaceChars = [...surface];
+  const readingChars = [...spacedReading.replace(/\s+/g, "")];
+  type AnchorResult = { cost: number; ends: number[] };
+  const memo = new Map<string, AnchorResult | null>();
+
+  const solve = (si: number, ri: number): AnchorResult | null => {
+    const key = `${si}:${ri}`;
+    if (memo.has(key)) return memo.get(key)!;
+    if (si === surfaceChars.length) {
+      const trailing = readingChars.slice(ri);
+      const result =
+        trailing.every(isPunct)
+          ? { cost: trailing.length, ends: [] }
+          : null;
+      memo.set(key, result);
+      return result;
+    }
+
+    const ch = surfaceChars[si]!;
+    let best: AnchorResult | null = null;
+    const consider = (nextRi: number, cost: number): void => {
+      const rest = solve(si + 1, nextRi);
+      if (!rest) return;
+      const candidate = {
+        cost: cost + rest.cost,
+        ends: [nextRi, ...rest.ends],
+      };
+      if (!best || candidate.cost < best.cost) best = candidate;
+    };
+
+    if (isKanji(ch) || isIterationMark(ch)) {
+      const remaining = surfaceChars
+        .slice(si)
+        .filter((c) => isKanji(c) || isIterationMark(c)).length;
+      const maxEnd = Math.min(
+        readingChars.length - (remaining - 1),
+        ri + 8
+      );
+      for (let end = ri + 1; end <= maxEnd; end++) {
+        if (readingChars.slice(ri, end).some(isPunct)) break;
+        consider(end, Math.abs(end - ri - 2));
+      }
+    } else if (isPunct(ch)) {
+      if (readingChars[ri] && isPunct(readingChars[ri]!)) {
+        consider(ri + 1, 0);
+      }
+      consider(ri, 1);
+    } else {
+      const actual = readingChars[ri];
+      if (actual && toHiragana(actual) === toHiragana(ch)) {
+        consider(ri + 1, 0);
+      }
+    }
+
+    memo.set(key, best);
+    return best;
+  };
+
+  const result = solve(0, 0);
+  if (!result) return null;
+
+  const positions = [0, ...result.ends];
+  const segments: FuriganaSegment[] = [];
+  for (let i = 0; i < surfaceChars.length; i++) {
+    const text = surfaceChars[i]!;
+    if (isKanji(text) || isIterationMark(text)) {
+      const reading = readingChars
+        .slice(positions[i]!, positions[i + 1]!)
+        .join("");
+      segments.push({ text, reading: reading || undefined });
+    } else {
+      segments.push({ text });
+    }
+  }
+  return mergePlain(segments);
 }
 
 /** One reading token mapped onto a UTF-16 surface span. */

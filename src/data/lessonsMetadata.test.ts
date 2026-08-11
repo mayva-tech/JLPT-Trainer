@@ -4,6 +4,7 @@ import type { VocabularyLessonCategory } from "../types/lesson";
 import { getVocabularyDisplayRange } from "../utils/vocabularyDisplay";
 import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 import { getVocabularyItemsForQuiz } from "../utils/vocabularyQuiz";
+import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
 
 const ALLOWED_CATEGORIES: VocabularyLessonCategory[] = [
   "Daily Life",
@@ -16,8 +17,8 @@ const ALLOWED_CATEGORIES: VocabularyLessonCategory[] = [
 describe("N2 vocabulary lesson metadata", () => {
   const n2Lessons = lessons.filter((lesson) => lesson.id.startsWith("lesson-"));
 
-  it("has exactly 75 N2 vocabulary lessons", () => {
-    expect(n2Lessons).toHaveLength(75);
+  it("has exactly 200 N2 vocabulary lessons", () => {
+    expect(n2Lessons).toHaveLength(N2_VOCAB_LESSON_COUNT);
   });
 
   it("gives each N2 lesson exactly 10 vocabulary ids", () => {
@@ -73,7 +74,7 @@ describe("N2 vocabulary lesson metadata", () => {
   });
 
   it("maps every N2 vocabulary quiz to its lesson", () => {
-    for (let n = 1; n <= 75; n++) {
+    for (let n = 1; n <= N2_VOCAB_LESSON_COUNT; n++) {
       const first = (n - 1) * 10 + 1;
       const last = n * 10;
       const quizId = `quiz-vocab-${first}-${last}`;

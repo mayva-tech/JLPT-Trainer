@@ -1,0 +1,2001 @@
+final_position	id	word	candidate_rank	source	existing_id	lesson_number	category	subcategory	folder	lesson_title
+1	4001	品切れ		existing	4001	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+2	4002	在庫		existing	4002	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+3	4003	割引		existing	4003	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+4	4004	値上がり		existing	4004	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+5	4005	賞味期限		existing	4005	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+6	4006	消費期限		existing	4006	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+7	4007	日用品		existing	4007	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+8	4008	まとめ買い		existing	4008	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+9	4009	返品		existing	4009	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+10	4010	レシート		existing	4010	1	Daily Life	Shopping	shopping	Shopping • Supermarket
+11	4011	家賃		existing	4011	2	Daily Life	Apartment	apartment	Apartment • Renting
+12	4012	敷金		existing	4012	2	Daily Life	Apartment	apartment	Apartment • Renting
+13	4013	契約		existing	4013	2	Daily Life	Apartment	apartment	Apartment • Renting
+14	4014	大家		existing	4014	2	Daily Life	Apartment	apartment	Apartment • Renting
+15	4015	更新		existing	4015	2	Daily Life	Apartment	apartment	Apartment • Renting
+16	4016	引っ越し		existing	4016	2	Daily Life	Apartment	apartment	Apartment • Renting
+17	4017	騒音		existing	4017	2	Daily Life	Apartment	apartment	Apartment • Renting
+18	4018	家具		existing	4018	2	Daily Life	Apartment	apartment	Apartment • Renting
+19	4019	収納		existing	4019	2	Daily Life	Apartment	apartment	Apartment • Renting
+20	4020	光熱費		existing	4020	2	Daily Life	Apartment	apartment	Apartment • Renting
+21	4021	天気予報		existing	4021	3	Daily Life	Weather	weather	Weather • Forecast
+22	4022	気温		existing	4022	3	Daily Life	Weather	weather	Weather • Forecast
+23	4023	湿度		existing	4023	3	Daily Life	Weather	weather	Weather • Forecast
+24	4024	台風		existing	4024	3	Daily Life	Weather	weather	Weather • Forecast
+25	4025	降水確率		existing	4025	3	Daily Life	Weather	weather	Weather • Forecast
+26	4026	晴天		existing	4026	3	Daily Life	Weather	weather	Weather • Forecast
+27	4027	曇り		existing	4027	3	Daily Life	Weather	weather	Weather • Forecast
+28	4028	大雨		existing	4028	3	Daily Life	Weather	weather	Weather • Forecast
+29	4029	蒸し暑い		existing	4029	3	Daily Life	Weather	weather	Weather • Forecast
+30	4030	猛暑		existing	4030	3	Daily Life	Weather	weather	Weather • Forecast
+31	4031	定期券		existing	4031	4	Daily Life	Transportation	transportation	Trains • Commuting
+32	4032	満員		existing	4032	4	Daily Life	Transportation	transportation	Trains • Commuting
+33	4033	遅延		existing	4033	4	Daily Life	Transportation	transportation	Trains • Commuting
+34	4034	乗り換え		existing	4034	4	Daily Life	Transportation	transportation	Trains • Commuting
+35	4035	各駅停車		existing	4035	4	Daily Life	Transportation	transportation	Trains • Commuting
+36	4036	改札		existing	4036	4	Daily Life	Transportation	transportation	Trains • Commuting
+37	4037	渋滞		existing	4037	4	Daily Life	Transportation	transportation	Trains • Commuting
+38	4038	終電		existing	4038	4	Daily Life	Transportation	transportation	Trains • Commuting
+39	4039	運賃		existing	4039	4	Daily Life	Transportation	transportation	Trains • Commuting
+40	4040	通勤		existing	4040	4	Daily Life	Transportation	transportation	Trains • Commuting
+41	4041	症状		existing	4041	5	Daily Life	Health	health	Health • Hospital
+42	4042	診察		existing	4042	5	Daily Life	Health	health	Health • Hospital
+43	4043	処方		existing	4043	5	Daily Life	Health	health	Health • Hospital
+44	4044	保険証		existing	4044	5	Daily Life	Health	health	Health • Hospital
+45	4045	熱中症		existing	4045	5	Daily Life	Health	health	Health • Hospital
+46	4046	花粉症		existing	4046	5	Daily Life	Health	health	Health • Hospital
+47	4047	検査		existing	4047	5	Daily Life	Health	health	Health • Hospital
+48	4048	入院		existing	4048	5	Daily Life	Health	health	Health • Hospital
+49	4049	疲労		existing	4049	5	Daily Life	Health	health	Health • Hospital
+50	4050	副作用		existing	4050	5	Daily Life	Health	health	Health • Hospital
+51	4051	残業		existing	4051	6	Work & Business	Work	work	Work • Office
+52	4052	出張		existing	4052	6	Work & Business	Work	work	Work • Office
+53	4053	上司		existing	4053	6	Work & Business	Work	work	Work • Office
+54	4054	部下		existing	4054	6	Work & Business	Work	work	Work • Office
+55	4055	提出		existing	4055	6	Work & Business	Work	work	Work • Office
+56	4056	資料		existing	4056	6	Work & Business	Work	work	Work • Office
+57	4057	有給休暇		existing	4057	6	Work & Business	Work	work	Work • Office
+58	4058	昇進		existing	4058	6	Work & Business	Work	work	Work • Office
+59	4059	転職		existing	4059	6	Work & Business	Work	work	Work • Office
+60	4060	面接		existing	4060	6	Work & Business	Work	work	Work • Office
+61	4061	口座		existing	4061	7	Work & Business	Money	money	Money • Banking
+62	4062	振り込み		existing	4062	7	Work & Business	Money	money	Money • Banking
+63	4063	手数料		existing	4063	7	Work & Business	Money	money	Money • Banking
+64	4064	残高		existing	4064	7	Work & Business	Money	money	Money • Banking
+65	4065	貯金		existing	4065	7	Work & Business	Money	money	Money • Banking
+66	4066	支払い		existing	4066	7	Work & Business	Money	money	Money • Banking
+67	4067	家計		existing	4067	7	Work & Business	Money	money	Money • Banking
+68	4068	節約		existing	4068	7	Work & Business	Money	money	Money • Banking
+69	4069	税金		existing	4069	7	Work & Business	Money	money	Money • Banking
+70	4070	現金		existing	4070	7	Work & Business	Money	money	Money • Banking
+71	4071	材料		existing	4071	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+72	4072	冷凍		existing	4072	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+73	4073	沸騰		existing	4073	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+74	4074	焦げる		existing	4074	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+75	4075	味付け		existing	4075	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+76	4076	分量		existing	4076	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+77	4077	包丁		existing	4077	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+78	4078	弱火		existing	4078	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+79	4079	混ぜる		existing	4079	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+80	4080	蒸す		existing	4080	8	Daily Life	Cooking	cooking	Cooking • Kitchen
+81	4081	講義		existing	4081	9	Daily Life	School	school	School • Study
+82	4082	単位		existing	4082	9	Daily Life	School	school	School • Study
+83	4083	課題		existing	4083	9	Daily Life	School	school	School • Study
+84	4084	復習		existing	4084	9	Daily Life	School	school	School • Study
+85	4085	予習		existing	4085	9	Daily Life	School	school	School • Study
+86	4086	合格		existing	4086	9	Daily Life	School	school	School • Study
+87	4087	成績		existing	4087	9	Daily Life	School	school	School • Study
+88	4088	受験		existing	4088	9	Daily Life	School	school	School • Study
+89	4089	奨学金		existing	4089	9	Daily Life	School	school	School • Study
+90	4090	発表		existing	4090	9	Daily Life	School	school	School • Study
+91	4091	連絡		existing	4091	10	Daily Life	Communication	communication	Communication • Manners
+92	4092	返事		existing	4092	10	Daily Life	Communication	communication	Communication • Manners
+93	4093	相談		existing	4093	10	Daily Life	Communication	communication	Communication • Manners
+94	4094	迷惑		existing	4094	10	Daily Life	Communication	communication	Communication • Manners
+95	4095	敬語		existing	4095	10	Daily Life	Communication	communication	Communication • Manners
+96	4096	誤解		existing	4096	10	Daily Life	Communication	communication	Communication • Manners
+97	4097	挨拶		existing	4097	10	Daily Life	Communication	communication	Communication • Manners
+98	4098	約束		existing	4098	10	Daily Life	Communication	communication	Communication • Manners
+99	4099	遠慮		existing	4099	10	Daily Life	Communication	communication	Communication • Manners
+100	4100	感謝		existing	4100	10	Daily Life	Communication	communication	Communication • Manners
+101	4101	洗濯		existing	4101	11	Daily Life	Fashion	fashion	Fashion • Clothing
+102	4102	縮む		existing	4102	11	Daily Life	Fashion	fashion	Fashion • Clothing
+103	4103	綿素材		existing	4103	11	Daily Life	Fashion	fashion	Fashion • Clothing
+104	4104	丈		existing	4104	11	Daily Life	Fashion	fashion	Fashion • Clothing
+105	4105	袖		existing	4105	11	Daily Life	Fashion	fashion	Fashion • Clothing
+106	4106	柄		existing	4106	11	Daily Life	Fashion	fashion	Fashion • Clothing
+107	4107	試着		existing	4107	11	Daily Life	Fashion	fashion	Fashion • Clothing
+108	4108	丁寧		existing	4108	11	Daily Life	Fashion	fashion	Fashion • Clothing
+109	4109	流行		existing	4109	11	Daily Life	Fashion	fashion	Fashion • Clothing
+110	4110	着替え		existing	4110	11	Daily Life	Fashion	fashion	Fashion • Clothing
+111	4111	宿泊		existing	4111	12	Daily Life	Travel	travel	Travel • Accommodation
+112	4112	観光		existing	4112	12	Daily Life	Travel	travel	Travel • Accommodation
+113	4113	予約		existing	4113	12	Daily Life	Travel	travel	Travel • Accommodation
+114	4114	土産		existing	4114	12	Daily Life	Travel	travel	Travel • Accommodation
+115	4115	旅館		existing	4115	12	Daily Life	Travel	travel	Travel • Accommodation
+116	4116	チェックイン		existing	4116	12	Daily Life	Travel	travel	Travel • Accommodation
+117	4117	空席		existing	4117	12	Daily Life	Travel	travel	Travel • Accommodation
+118	4118	模様替え		existing	4118	12	Daily Life	Travel	travel	Travel • Accommodation
+119	4119	眠れない		existing	4119	12	Daily Life	Travel	travel	Travel • Accommodation
+120	4120	選択肢		existing	4120	12	Daily Life	Travel	travel	Travel • Accommodation
+121	4121	目覚まし		existing	4121	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+122	4122	寝坊		existing	4122	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+123	4123	枕		existing	4123	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+124	4124	布団		existing	4124	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+125	4125	掃除		existing	4125	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+126	4126	片付け		existing	4126	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+127	4127	ゴミ出し		existing	4127	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+128	4128	趣味		existing	4128	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+129	4129	汚れ		existing	4129	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+130	4130	節水		existing	4130	13	Daily Life	Daily Routine	daily-routine	Daily Routine • Home Life
+131	4131	環境		existing	4131	14	Society & Public Affairs	Environment	environment	Environment • Nature
+132	4132	資源		existing	4132	14	Society & Public Affairs	Environment	environment	Environment • Nature
+133	4133	省エネ		existing	4133	14	Society & Public Affairs	Environment	environment	Environment • Nature
+134	4134	リサイクル		existing	4134	14	Society & Public Affairs	Environment	environment	Environment • Nature
+135	4135	廃棄		existing	4135	14	Society & Public Affairs	Environment	environment	Environment • Nature
+136	4136	排気ガス		existing	4136	14	Society & Public Affairs	Environment	environment	Environment • Nature
+137	4137	植物		existing	4137	14	Society & Public Affairs	Environment	environment	Environment • Nature
+138	4138	地球温暖化		existing	4138	14	Society & Public Affairs	Environment	environment	Environment • Nature
+139	4139	自然災害		existing	4139	14	Society & Public Affairs	Environment	environment	Environment • Nature
+140	4140	節電		existing	4140	14	Society & Public Affairs	Environment	environment	Environment • Nature
+141	4141	礼儀		existing	4141	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+142	4142	招待		existing	4142	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+143	4143	断り		existing	4143	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+144	4144	許可		existing	4144	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+145	4145	謝罪		existing	4145	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+146	4146	誘い		existing	4146	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+147	4147	信頼		existing	4147	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+148	4148	否定		existing	4148	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+149	4149	心遣い		existing	4149	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+150	4150	要求		existing	4150	15	Daily Life	Etiquette	etiquette	Manners • Etiquette
+151	4151	薬局		existing	4151	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+152	4152	処方箋		existing	4152	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+153	4153	市販薬		existing	4153	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+154	4154	服用		existing	4154	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+155	4155	副反応		existing	4155	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+156	4156	点滴		existing	4156	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+157	4157	採血		existing	4157	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+158	4158	手術		existing	4158	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+159	4159	回復		existing	4159	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+160	4160	通院		existing	4160	16	Daily Life	Medicine	medicine	Medicine • Pharmacy
+161	4161	自治会		existing	4161	17	Daily Life	Community	community	Community • Neighbourhood
+162	4162	回覧板		existing	4162	17	Daily Life	Community	community	Community • Neighbourhood
+163	4163	粗大ゴミ		existing	4163	17	Daily Life	Community	community	Community • Neighbourhood
+164	4164	近所付き合い		existing	4164	17	Daily Life	Community	community	Community • Neighbourhood
+165	4165	防犯		existing	4165	17	Daily Life	Community	community	Community • Neighbourhood
+166	4166	避難場所		existing	4166	17	Daily Life	Community	community	Community • Neighbourhood
+167	4167	地域		existing	4167	17	Daily Life	Community	community	Community • Neighbourhood
+168	4168	掲示板		existing	4168	17	Daily Life	Community	community	Community • Neighbourhood
+169	4169	町内会		existing	4169	17	Daily Life	Community	community	Community • Neighbourhood
+170	4170	共有スペース		existing	4170	17	Daily Life	Community	community	Community • Neighbourhood
+171	4171	アプリ		existing	4171	18	Technology & Science	Technology	technology	Technology • Internet
+172	4172	パスワード		existing	4172	18	Technology & Science	Technology	technology	Technology • Internet
+173	4173	検索		existing	4173	18	Technology & Science	Technology	technology	Technology • Internet
+174	4174	ダウンロード		existing	4174	18	Technology & Science	Technology	technology	Technology • Internet
+175	4175	充電		existing	4175	18	Technology & Science	Technology	technology	Technology • Internet
+176	4176	通知		existing	4176	18	Technology & Science	Technology	technology	Technology • Internet
+177	4177	設定		existing	4177	18	Technology & Science	Technology	technology	Technology • Internet
+178	4178	バックアップ		existing	4178	18	Technology & Science	Technology	technology	Technology • Internet
+179	4179	データ通信		existing	4179	18	Technology & Science	Technology	technology	Technology • Internet
+180	4180	ウイルス対策		existing	4180	18	Technology & Science	Technology	technology	Technology • Internet
+181	4181	準備運動		existing	4181	19	Daily Life	Sports	sports	Sport • Exercise
+182	4182	筋肉痛		existing	4182	19	Daily Life	Sports	sports	Sport • Exercise
+183	4183	体力		existing	4183	19	Daily Life	Sports	sports	Sport • Exercise
+184	4184	柔軟		existing	4184	19	Daily Life	Sports	sports	Sport • Exercise
+185	4185	試合		existing	4185	19	Daily Life	Sports	sports	Sport • Exercise
+186	4186	審判		existing	4186	19	Daily Life	Sports	sports	Sport • Exercise
+187	4187	記録		existing	4187	19	Daily Life	Sports	sports	Sport • Exercise
+188	4188	応援		existing	4188	19	Daily Life	Sports	sports	Sport • Exercise
+189	4189	練習試合		existing	4189	19	Daily Life	Sports	sports	Sport • Exercise
+190	4190	引き分け		existing	4190	19	Daily Life	Sports	sports	Sport • Exercise
+191	4191	不安		existing	4191	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+192	4192	緊張		existing	4192	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+193	4193	焦り		existing	4193	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+194	4194	落ち込む		existing	4194	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+195	4195	励ます		existing	4195	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+196	4196	我慢		existing	4196	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+197	4197	気持ち		existing	4197	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+198	4198	ストレス		existing	4198	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+199	4199	安心		existing	4199	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+200	4200	やる気		existing	4200	20	Daily Life	Emotions	emotions	Emotions • Mental Health
+201	4201	予約席		existing	4201	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+202	4202	注文		existing	4202	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+203	4203	個室		existing	4203	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+204	4204	盛り付け		existing	4204	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+205	4205	辛口		existing	4205	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+206	4206	薄味		existing	4206	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+207	4207	好み		existing	4207	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+208	4208	偏食		existing	4208	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+209	4209	会計		existing	4209	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+210	4210	割り勘		existing	4210	21	Daily Life	Dining Out	dining	Dining Out • Restaurant
+211	4211	保険料		existing	4211	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+212	4212	契約書		existing	4212	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+213	4213	賠償		existing	4213	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+214	4214	訴える		existing	4214	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+215	4215	裁判		existing	4215	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+216	4216	弁護士		existing	4216	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+217	4217	違反		existing	4217	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+218	4218	罰金		existing	4218	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+219	4219	保証人		existing	4219	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+220	4220	適用		existing	4220	22	Society & Public Affairs	Insurance & Legal	legal	Insurance • Legal Matters
+221	4221	親戚		existing	4221	23	Daily Life	Family & Relationships	family	Family • Relationships
+222	4222	孫		existing	4222	23	Daily Life	Family & Relationships	family	Family • Relationships
+223	4223	甥		existing	4223	23	Daily Life	Family & Relationships	family	Family • Relationships
+224	4224	離婚		existing	4224	23	Daily Life	Family & Relationships	family	Family • Relationships
+225	4225	扶養		existing	4225	23	Daily Life	Family & Relationships	family	Family • Relationships
+226	4226	介護		existing	4226	23	Daily Life	Family & Relationships	family	Family • Relationships
+227	4227	甘やかす		existing	4227	23	Daily Life	Family & Relationships	family	Family • Relationships
+228	4228	厳しい		existing	4228	23	Daily Life	Family & Relationships	family	Family • Relationships
+229	4229	仲		existing	4229	23	Daily Life	Family & Relationships	family	Family • Relationships
+230	4230	円満		existing	4230	23	Daily Life	Family & Relationships	family	Family • Relationships
+231	4231	水漏れ		existing	4231	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+232	4232	排水管		existing	4232	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+233	4233	修繕		existing	4233	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+234	4234	塗装		existing	4234	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+235	4235	腐食		existing	4235	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+236	4236	補修		existing	4236	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+237	4237	業者		existing	4237	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+238	4238	見積もり		existing	4238	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+239	4239	工事		existing	4239	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+240	4240	点検		existing	4240	24	Daily Life	Housing Maintenance	housing-repairs	Housing Maintenance • Repairs
+241	4241	報道		existing	4241	25	Society & Public Affairs	Media & News	media	Media • News
+242	4242	記事		existing	4242	25	Society & Public Affairs	Media & News	media	Media • News
+243	4243	取材		existing	4243	25	Society & Public Affairs	Media & News	media	Media • News
+244	4244	編集		existing	4244	25	Society & Public Affairs	Media & News	media	Media • News
+245	4245	掲載		existing	4245	25	Society & Public Affairs	Media & News	media	Media • News
+246	4246	偏向報道		existing	4246	25	Society & Public Affairs	Media & News	media	Media • News
+247	4247	広告		existing	4247	25	Society & Public Affairs	Media & News	media	Media • News
+248	4248	虚偽		existing	4248	25	Society & Public Affairs	Media & News	media	Media • News
+249	4249	視聴率		existing	4249	25	Society & Public Affairs	Media & News	media	Media • News
+250	4250	配信		existing	4250	25	Society & Public Affairs	Media & News	media	Media • News
+251	4251	求人		existing	4251	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+252	4252	応募		existing	4252	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+253	4253	履歴書		existing	4253	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+254	4254	内定		existing	4254	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+255	4255	就職		existing	4255	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+256	4256	経験		existing	4256	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+257	4257	資格		existing	4257	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+258	4258	志望動機		existing	4258	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+259	4259	採用		existing	4259	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+260	4260	評価		existing	4260	26	Work & Business	Job Hunting	job-hunting	Job Hunting • Career
+261	4261	郵便局		existing	4261	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+262	4262	荷物		existing	4262	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+263	4263	届く		existing	4263	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+264	4264	配達		existing	4264	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+265	4265	追跡番号		existing	4265	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+266	4266	宛先		existing	4266	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+267	4267	差出人		existing	4267	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+268	4268	受取人		existing	4268	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+269	4269	再配達		existing	4269	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+270	4270	郵送		existing	4270	27	Daily Life	Postal Services	postal	Postal Services • Deliveries
+271	4271	保育園		existing	4271	28	Daily Life	Childcare	childcare	Childcare • Early Education
+272	4272	幼児		existing	4272	28	Daily Life	Childcare	childcare	Childcare • Early Education
+273	4273	託児所		existing	4273	28	Daily Life	Childcare	childcare	Childcare • Early Education
+274	4274	発達		existing	4274	28	Daily Life	Childcare	childcare	Childcare • Early Education
+275	4275	しつけ		existing	4275	28	Daily Life	Childcare	childcare	Childcare • Early Education
+276	4276	叱る		existing	4276	28	Daily Life	Childcare	childcare	Childcare • Early Education
+277	4277	褒める		existing	4277	28	Daily Life	Childcare	childcare	Childcare • Early Education
+278	4278	遊具		existing	4278	28	Daily Life	Childcare	childcare	Childcare • Early Education
+279	4279	習い事		existing	4279	28	Daily Life	Childcare	childcare	Childcare • Early Education
+280	4280	生活習慣		existing	4280	28	Daily Life	Childcare	childcare	Childcare • Early Education
+281	4281	役所		existing	4281	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+282	4282	窓口		existing	4282	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+283	4283	証明書		existing	4283	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+284	4284	手続き		existing	4284	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+285	4285	申請		existing	4285	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+286	4286	交付		existing	4286	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+287	4287	住民票		existing	4287	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+288	4288	戸籍		existing	4288	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+289	4289	図書館		existing	4289	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+290	4290	公共施設		existing	4290	29	Daily Life	Public Facilities	public-facilities	Public Facilities • Government Offices
+291	4291	展覧会		existing	4291	30	Daily Life	Art & Culture	art-culture	Art • Culture
+292	4292	作品		existing	4292	30	Daily Life	Art & Culture	art-culture	Art • Culture
+293	4293	創作		existing	4293	30	Daily Life	Art & Culture	art-culture	Art • Culture
+294	4294	芸術		existing	4294	30	Daily Life	Art & Culture	art-culture	Art • Culture
+295	4295	彫刻		existing	4295	30	Daily Life	Art & Culture	art-culture	Art • Culture
+296	4296	絵画		existing	4296	30	Daily Life	Art & Culture	art-culture	Art • Culture
+297	4297	陶芸		existing	4297	30	Daily Life	Art & Culture	art-culture	Art • Culture
+298	4298	個性		existing	4298	30	Daily Life	Art & Culture	art-culture	Art • Culture
+299	4299	伝統		existing	4299	30	Daily Life	Art & Culture	art-culture	Art • Culture
+300	4300	鑑賞		existing	4300	30	Daily Life	Art & Culture	art-culture	Art • Culture
+301	4301	融資		existing	4301	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+302	4302	投資		existing	4302	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+303	4303	株式		existing	4303	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+304	4304	利息		existing	4304	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+305	4305	元本		existing	4305	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+306	4306	返済		existing	4306	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+307	4307	借金		existing	4307	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+308	4308	資産		existing	4308	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+309	4309	運用		existing	4309	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+310	4310	損失		existing	4310	31	Work & Business	Banking & Investment	banking-investment	Banking • Investment
+311	4311	避難		existing	4311	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+312	4312	備蓄		existing	4312	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+313	4313	緊急		existing	4313	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+314	4314	警報		existing	4314	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+315	4315	震度		existing	4315	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+316	4316	津波		existing	4316	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+317	4317	避難所		existing	4317	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+318	4318	救助		existing	4318	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+319	4319	防災グッズ		existing	4319	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+320	4320	被害		existing	4320	32	Society & Public Affairs	Emergency Preparedness	emergency-preparedness	Emergency • Disaster Preparedness
+321	4321	筋力		existing	4321	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+322	4322	鍛える		existing	4322	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+323	4323	有酸素運動		existing	4323	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+324	4324	負荷		existing	4324	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+325	4325	姿勢		existing	4325	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+326	4326	持続		existing	4326	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+327	4327	器具		existing	4327	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+328	4328	指導員		existing	4328	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+329	4329	体幹		existing	4329	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+330	4330	効果		existing	4330	33	Daily Life	Fitness & Gym	fitness	Fitness • Gym
+331	4331	調理器具		existing	4331	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+332	4332	鍋		existing	4332	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+333	4333	刃物		existing	4333	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+334	4334	炊飯器		existing	4334	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+335	4335	解凍		existing	4335	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+336	4336	圧力鍋		existing	4336	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+337	4337	計量		existing	4337	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+338	4338	真空パック		existing	4338	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+339	4339	焦げ付く		existing	4339	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+340	4340	下ごしらえ		existing	4340	34	Daily Life	Kitchen Equipment	kitchen-equipment	Kitchen Equipment • Cooking Techniques
+341	4341	人工知能		existing	4341	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+342	4342	革新		existing	4342	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+343	4343	自動化		existing	4343	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+344	4344	装置		existing	4344	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+345	4345	仮想現実		existing	4345	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+346	4346	先端		existing	4346	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+347	4347	普及		existing	4347	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+348	4348	効率		existing	4348	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+349	4349	継続		existing	4349	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+350	4350	端末		existing	4350	35	Technology & Science	Innovation & AI	innovation-ai	Innovation • AI Technology
+351	4351	妊娠		existing	4351	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+352	4352	妊婦		existing	4352	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+353	4353	出産		existing	4353	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+354	4354	陣痛		existing	4354	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+355	4355	育児休暇		existing	4355	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+356	4356	母乳		existing	4356	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+357	4357	胎児		existing	4357	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+358	4358	検診		existing	4358	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+359	4359	予定日		existing	4359	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+360	4360	産休		existing	4360	36	Daily Life	Pregnancy & Childbirth	pregnancy	Pregnancy • Childbirth
+361	4361	不動産		existing	4361	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+362	4362	仲介		existing	4362	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+363	4363	物件		existing	4363	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+364	4364	内見		existing	4364	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+365	4365	頭金		existing	4365	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+366	4366	住宅ローン		existing	4366	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+367	4367	登記		existing	4367	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+368	4368	名義		existing	4368	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+369	4369	築年数		existing	4369	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+370	4370	間取り		existing	4370	37	Daily Life	Real Estate	real-estate	Real Estate • Home Buying
+371	4371	運転免許		existing	4371	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+372	4372	交通違反		existing	4372	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+373	4373	駐車違反		existing	4373	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+374	4374	取り締まり		existing	4374	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+375	4375	速度違反		existing	4375	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+376	4376	標識		existing	4376	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+377	4377	踏切		existing	4377	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+378	4378	横断歩道		existing	4378	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+379	4379	追い越し		existing	4379	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+380	4380	接触事故		existing	4380	38	Daily Life	Traffic & Driving	traffic-driving	Traffic • Driving
+381	4381	議事録		existing	4381	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+382	4382	出席		existing	4382	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+383	4383	欠席		existing	4383	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+384	4384	議題		existing	4384	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+385	4385	発言		existing	4385	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+386	4386	共有		existing	4386	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+387	4387	進行		existing	4387	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+388	4388	司会		existing	4388	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+389	4389	延期		existing	4389	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+390	4390	資料共有		existing	4390	39	Work & Business	Office & Meetings	office-meetings	Office Equipment • Meetings
+391	4391	寄付		existing	4391	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+392	4392	募金		existing	4392	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+393	4393	奉仕活動		existing	4393	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+394	4394	支援団体		existing	4394	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+395	4395	恩恵		existing	4395	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+396	4396	貢献		existing	4396	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+397	4397	貧困		existing	4397	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+398	4398	困っている人		existing	4398	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+399	4399	施設訪問		existing	4399	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+400	4400	無償		existing	4400	40	Daily Life	Volunteering & Charity	volunteering	Volunteering • Charity
+401	4401	高齢		existing	4401	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+402	4402	衰える		existing	4402	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+403	4403	認知症		existing	4403	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+404	4404	介護施設		existing	4404	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+405	4405	寿命		existing	4405	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+406	4406	孤独		existing	4406	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+407	4407	独居		existing	4407	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+408	4408	看護		existing	4408	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+409	4409	見守る		existing	4409	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+410	4410	延命		existing	4410	41	Daily Life	Aging & Elder Care	elder-care	Aging • Elder Care
+411	4411	結婚式		existing	4411	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+412	4412	披露宴		existing	4412	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+413	4413	新郎新婦		existing	4413	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+414	4414	祝儀		existing	4414	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+415	4415	誓いの言葉		existing	4415	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+416	4416	仲人		existing	4416	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+417	4417	招待状		existing	4417	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+418	4418	乾杯		existing	4418	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+419	4419	式場		existing	4419	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+420	4420	祝う		existing	4420	42	Daily Life	Weddings & Ceremonies	weddings	Weddings • Ceremonies
+421	4421	接客		existing	4421	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+422	4422	陳列		existing	4422	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+423	4423	棚卸し		existing	4423	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+424	4424	在庫確認		existing	4424	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+425	4425	発注		existing	4425	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+426	4426	返金		existing	4426	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+427	4427	交換		existing	4427	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+428	4428	苦情		existing	4428	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+429	4429	対応		existing	4429	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+430	4430	常連客		existing	4430	43	Daily Life	Retail & Customer Service	retail	Retail • Customer Service
+431	4431	語学留学		existing	4431	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+432	4432	習得		existing	4432	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+433	4433	発音		existing	4433	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+434	4434	通訳		existing	4434	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+435	4435	翻訳		existing	4435	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+436	4436	滞在		existing	4436	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+437	4437	現地		existing	4437	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+438	4438	上達		existing	4438	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+439	4439	語彙		existing	4439	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+440	4440	母語		existing	4440	44	Daily Life	Language Learning	language-learning	Language Learning • Study Abroad
+441	4441	優先順位		existing	4441	45	Work & Business	Time Management	time-management	Time Management • Productivity
+442	4442	締め切り		existing	4442	45	Work & Business	Time Management	time-management	Time Management • Productivity
+443	4443	達成		existing	4443	45	Work & Business	Time Management	time-management	Time Management • Productivity
+444	4444	先延ばし		existing	4444	45	Work & Business	Time Management	time-management	Time Management • Productivity
+445	4445	無駄		existing	4445	45	Work & Business	Time Management	time-management	Time Management • Productivity
+446	4446	効率化		existing	4446	45	Work & Business	Time Management	time-management	Time Management • Productivity
+447	4447	習慣化		existing	4447	45	Work & Business	Time Management	time-management	Time Management • Productivity
+448	4448	集中力		existing	4448	45	Work & Business	Time Management	time-management	Time Management • Productivity
+449	4449	計画的		existing	4449	45	Work & Business	Time Management	time-management	Time Management • Productivity
+450	4450	余裕		existing	4450	45	Work & Business	Time Management	time-management	Time Management • Productivity
+451	4451	葬式		existing	4451	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+452	4452	喪服		existing	4452	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+453	4453	遺族		existing	4453	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+454	4454	弔問		existing	4454	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+455	4455	香典		existing	4455	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+456	4456	火葬		existing	4456	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+457	4457	お墓		existing	4457	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+458	4458	悲しむ		existing	4458	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+459	4459	追悼		existing	4459	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+460	4460	訃報		existing	4460	46	Society & Public Affairs	Funerals & Bereavement	funerals	Funerals • Bereavement
+461	4461	家電製品		existing	4461	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+462	4462	洗濯機		existing	4462	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+463	4463	冷蔵庫		existing	4463	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+464	4464	掃除機		existing	4464	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+465	4465	暖房		existing	4465	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+466	4466	換気扇		existing	4466	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+467	4467	故障		existing	4467	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+468	4468	保証書		existing	4468	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+469	4469	説明書		existing	4469	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+470	4470	省エネ性能		existing	4470	47	Technology & Science	Home Appliances	home-appliances	Home Appliances • Electronics
+471	4471	睡眠		existing	4471	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+472	4472	不眠		existing	4472	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+473	4473	熟睡		existing	4473	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+474	4474	寝室		existing	4474	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+475	4475	目覚める		existing	4475	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+476	4476	横になる		existing	4476	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+477	4477	仮眠		existing	4477	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+478	4478	眠気		existing	4478	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+479	4479	休養		existing	4479	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+480	4480	疲れが取れる		existing	4480	48	Daily Life	Sleep & Rest	sleep-rest	Sleep • Rest
+481	4481	人脈		existing	4481	49	Work & Business	Networking	networking	Networking • Social Connections
+482	4482	名刺交換		existing	4482	49	Work & Business	Networking	networking	Networking • Social Connections
+483	4483	交流会		existing	4483	49	Work & Business	Networking	networking	Networking • Social Connections
+484	4484	繋がり		existing	4484	49	Work & Business	Networking	networking	Networking • Social Connections
+485	4485	孤立		existing	4485	49	Work & Business	Networking	networking	Networking • Social Connections
+486	4486	疎遠		existing	4486	49	Work & Business	Networking	networking	Networking • Social Connections
+487	4487	絆		existing	4487	49	Work & Business	Networking	networking	Networking • Social Connections
+488	4488	紹介		existing	4488	49	Work & Business	Networking	networking	Networking • Social Connections
+489	4489	縁		existing	4489	49	Work & Business	Networking	networking	Networking • Social Connections
+490	4490	気軽に話す		existing	4490	49	Work & Business	Networking	networking	Networking • Social Connections
+491	4491	家計簿		existing	4491	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+492	4492	浪費		existing	4492	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+493	4493	出費		existing	4493	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+494	4494	積み立て		existing	4494	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+495	4495	予算		existing	4495	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+496	4496	固定費		existing	4496	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+497	4497	変動費		existing	4497	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+498	4498	生活費		existing	4498	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+499	4499	収支		existing	4499	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+500	4500	貯蓄		existing	4500	50	Daily Life	Personal Finance	personal-finance	Personal Finance • Budgeting
+501	4501	気候		existing	4501	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+502	4502	気圧		existing	4502	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+503	4503	寒波		existing	4503	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+504	4504	熱帯夜		existing	4504	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+505	4505	日照		existing	4505	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+506	4506	積雪		existing	4506	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+507	4507	暴風		existing	4507	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+508	4508	洪水		existing	4508	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+509	4509	乾燥		existing	4509	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+510	4510	注意報		existing	4510	51	Daily Life	Weather & Climate	advanced-weather	Weather • Climate
+511	4511	配慮		existing	4511	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+512	4512	気遣い		existing	4512	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+513	4513	謙遜		existing	4513	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+514	4514	作法		existing	4514	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+515	4515	常識		existing	4515	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+516	4516	失礼		existing	4516	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+517	4517	控える		existing	4517	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+518	4518	譲る		existing	4518	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+519	4519	慎む		existing	4519	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+520	4520	わきまえる		existing	4520	52	Daily Life	Etiquette & Consideration	etiquette-consideration	Etiquette • Consideration
+521	4521	配布		existing	4521	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+522	4522	周知		existing	4522	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+523	4523	確認事項		existing	4523	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+524	4524	引き継ぎ		existing	4524	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+525	4525	進捗		existing	4525	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+526	4526	調整		existing	4526	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+527	4527	回覧		existing	4527	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+528	4528	承認		existing	4528	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+529	4529	了承		existing	4529	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+530	4530	催促		existing	4530	53	Work & Business	Workplace Communication	workplace-communication	Workplace • Communication
+531	4531	判断		existing	4531	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+532	4532	決断		existing	4532	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+533	4533	検討		existing	4533	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+534	4534	対処		existing	4534	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+535	4535	解決		existing	4535	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+536	4536	改善		existing	4536	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+537	4537	工夫		existing	4537	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+538	4538	方針		existing	4538	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+539	4539	手段		existing	4539	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+540	4540	妥当		existing	4540	54	Work & Business	Decisions & Problem Solving	decisions-problems	Decisions • Problem Solving
+541	4541	品質		existing	4541	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+542	4542	不良		existing	4542	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+543	4543	欠陥		existing	4543	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+544	4544	耐久性		existing	4544	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+545	4545	精度		existing	4545	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+546	4546	寸法		existing	4546	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+547	4547	誤差		existing	4547	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+548	4548	仕様		existing	4548	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+549	4549	試作		existing	4549	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+550	4550	検品		existing	4550	55	Work & Business	Quality & Manufacturing	quality-manufacturing	Quality • Manufacturing
+551	4551	調査		existing	4551	56	Academic & Abstract	Research & Data	research-data	Research • Data
+552	4552	分析		existing	4552	56	Academic & Abstract	Research & Data	research-data	Research • Data
+553	4553	統計		existing	4553	56	Academic & Abstract	Research & Data	research-data	Research • Data
+554	4554	傾向		existing	4554	56	Academic & Abstract	Research & Data	research-data	Research • Data
+555	4555	仮説		existing	4555	56	Academic & Abstract	Research & Data	research-data	Research • Data
+556	4556	根拠		existing	4556	56	Academic & Abstract	Research & Data	research-data	Research • Data
+557	4557	検証		existing	4557	56	Academic & Abstract	Research & Data	research-data	Research • Data
+558	4558	対象		existing	4558	56	Academic & Abstract	Research & Data	research-data	Research • Data
+559	4559	数値		existing	4559	56	Academic & Abstract	Research & Data	research-data	Research • Data
+560	4560	比率		existing	4560	56	Academic & Abstract	Research & Data	research-data	Research • Data
+561	4561	主張		existing	4561	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+562	4562	意見		existing	4562	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+563	4563	見解		existing	4563	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+564	4564	賛成		existing	4564	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+565	4565	反対		existing	4565	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+566	4566	批判		existing	4566	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+567	4567	反論		existing	4567	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+568	4568	指摘		existing	4568	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+569	4569	説得		existing	4569	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+570	4570	納得		existing	4570	57	Academic & Abstract	Opinions & Arguments	opinions-arguments	Opinions • Arguments
+571	4571	穏やか		existing	4571	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+572	4572	素直		existing	4572	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+573	4573	慎重		existing	4573	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+574	4574	大胆		existing	4574	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+575	4575	冷静		existing	4575	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+576	4576	責任感		existing	4576	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+577	4577	協調性		existing	4577	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+578	4578	頑固		existing	4578	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+579	4579	向上心		existing	4579	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+580	4580	弾力		existing	4580	58	Academic & Abstract	Personality & Character	personality-character	Personality • Character
+581	4581	対立		existing	4581	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+582	4582	衝突		existing	4582	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+583	4583	仲直り		existing	4583	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+584	4584	信用		existing	4584	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+585	4585	裏切る		existing	4585	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+586	4586	責める		existing	4586	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+587	4587	許す		existing	4587	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+588	4588	誤る		existing	4588	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+589	4589	尊重		existing	4589	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+590	4590	歩み寄る		existing	4590	59	Academic & Abstract	Conflict & Relationships	conflict-relationships	Conflict • Relationships
+591	4591	規則		existing	4591	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+592	4592	規定		existing	4592	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+593	4593	基準		existing	4593	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+594	4594	逸脱		existing	4594	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+595	4595	義務		existing	4595	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+596	4596	権利		existing	4596	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+597	4597	厳守		existing	4597	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+598	4598	禁止		existing	4598	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+599	4599	施行		existing	4599	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+600	4600	例外		existing	4600	60	Society & Public Affairs	Rules & Compliance	rules-compliance	Rules • Compliance
+601	4601	政策		existing	4601	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+602	4602	制度		existing	4602	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+603	4603	行政		existing	4603	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+604	4604	議会		existing	4604	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+605	4605	選挙		existing	4605	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+606	4606	投票		existing	4606	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+607	4607	改革		existing	4607	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+608	4608	国民		existing	4608	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+609	4609	財政		existing	4609	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+610	4610	自治体		existing	4610	61	Society & Public Affairs	Government & Politics	government-politics	Government • Politics
+611	4611	景気		existing	4611	62	Work & Business	Economy & Business	economy-business	Economy • Business
+612	4612	不況		existing	4612	62	Work & Business	Economy & Business	economy-business	Economy • Business
+613	4613	物価		existing	4613	62	Work & Business	Economy & Business	economy-business	Economy • Business
+614	4614	需要		existing	4614	62	Work & Business	Economy & Business	economy-business	Economy • Business
+615	4615	供給		existing	4615	62	Work & Business	Economy & Business	economy-business	Economy • Business
+616	4616	利益		existing	4616	62	Work & Business	Economy & Business	economy-business	Economy • Business
+617	4617	欠損		existing	4617	62	Work & Business	Economy & Business	economy-business	Economy • Business
+618	4618	市場		existing	4618	62	Work & Business	Economy & Business	economy-business	Economy • Business
+619	4619	競争		existing	4619	62	Work & Business	Economy & Business	economy-business	Economy • Business
+620	4620	成長率		existing	4620	62	Work & Business	Economy & Business	economy-business	Economy • Business
+621	4621	雇用		existing	4621	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+622	4622	登用		existing	4622	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+623	4623	解雇		existing	4623	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+624	4624	待遇		existing	4624	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+625	4625	給与		existing	4625	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+626	4626	手当		existing	4626	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+627	4627	勤務		existing	4627	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+628	4628	定年		existing	4628	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+629	4629	人材		existing	4629	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+630	4630	労働力		existing	4630	63	Work & Business	Employment Conditions	employment-conditions	Employment • Labor
+631	4631	温暖化		existing	4631	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+632	4632	排出		existing	4632	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+633	4633	原料		existing	4633	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+634	4634	再生可能		existing	4634	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+635	4635	生態系		existing	4635	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+636	4636	汚染		existing	4636	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+637	4637	廃棄物		existing	4637	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+638	4638	削減		existing	4638	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+639	4639	保護		existing	4639	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+640	4640	持続可能		existing	4640	64	Society & Public Affairs	Environment & Sustainability	environment-sustainability	Environment • Sustainability
+641	4641	犯罪		existing	4641	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+642	4642	事件		existing	4642	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+643	4643	容疑者		existing	4643	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+644	4644	被害者		existing	4644	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+645	4645	逮捕		existing	4645	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+646	4646	捜査		existing	4646	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+647	4647	証拠		existing	4647	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+648	4648	警備		existing	4648	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+649	4649	通報		existing	4649	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+650	4650	不審者		existing	4650	65	Society & Public Affairs	Crime & Public Safety	crime-safety	Crime • Public Safety
+651	4651	事故		existing	4651	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+652	4652	負傷		existing	4652	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+653	4653	救出		existing	4653	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+654	4654	救急車		existing	4654	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+655	4655	現場		existing	4655	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+656	4656	損害		existing	4656	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+657	4657	補償		existing	4657	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+658	4658	過失		existing	4658	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+659	4659	目撃者		existing	4659	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+660	4660	届け出		existing	4660	66	Society & Public Affairs	Accidents & Insurance	accidents-insurance	Accidents • Insurance
+661	4661	特集		existing	4661	67	Society & Public Affairs	News & Media	news-media	News • Media
+662	4662	論説		existing	4662	67	Society & Public Affairs	News & Media	news-media	News • Media
+663	4663	見出し		existing	4663	67	Society & Public Affairs	News & Media	news-media	News • Media
+664	4664	速報		existing	4664	67	Society & Public Affairs	News & Media	news-media	News • Media
+665	4665	会見		existing	4665	67	Society & Public Affairs	News & Media	news-media	News • Media
+666	4666	記者		existing	4666	67	Society & Public Affairs	News & Media	news-media	News • Media
+667	4667	世論		existing	4667	67	Society & Public Affairs	News & Media	news-media	News • Media
+668	4668	公表		existing	4668	67	Society & Public Affairs	News & Media	news-media	News • Media
+669	4669	情報源		existing	4669	67	Society & Public Affairs	News & Media	news-media	News • Media
+670	4670	訂正		existing	4670	67	Society & Public Affairs	News & Media	news-media	News • Media
+671	4671	個人情報		existing	4671	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+672	4672	漏えい		existing	4672	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+673	4673	認証		existing	4673	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+674	4674	暗号化		existing	4674	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+675	4675	不正アクセス		existing	4675	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+676	4676	脅威		existing	4676	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+677	4677	対策		existing	4677	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+678	4678	監視		existing	4678	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+679	4679	復旧		existing	4679	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+680	4680	脆弱性		existing	4680	68	Society & Public Affairs	Digital Security & Privacy	digital-security	Digital Security • Privacy
+681	4681	技術		existing	4681	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+682	4682	開発		existing	4682	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+683	4683	発明		existing	4683	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+684	4684	機器		existing	4684	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+685	4685	機能		existing	4685	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+686	4686	性能		existing	4686	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+687	4687	実験		existing	4687	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+688	4688	導入		existing	4688	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+689	4689	機械化		existing	4689	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+690	4690	先端技術		existing	4690	69	Technology & Science	Science & Technology	science-technology	Science • Technology
+691	4691	変化		existing	4691	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+692	4692	変動		existing	4692	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+693	4693	推移		existing	4693	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+694	4694	拡大		existing	4694	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+695	4695	縮小		existing	4695	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+696	4696	増加		existing	4696	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+697	4697	減少		existing	4697	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+698	4698	急増		existing	4698	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+699	4699	浸透		existing	4699	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+700	4700	衰退		existing	4700	70	Academic & Abstract	Changes & Trends	changes-trends	Changes • Trends
+701	4701	原因		existing	4701	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+702	4702	要因		existing	4702	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+703	4703	背景		existing	4703	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+704	4704	影響		existing	4704	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+705	4705	結果		existing	4705	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+706	4706	効力		existing	4706	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+707	4707	打撃		existing	4707	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+708	4708	負担		existing	4708	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+709	4709	きっかけ		existing	4709	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+710	4710	招く		existing	4710	71	Academic & Abstract	Causes & Consequences	causes-consequences	Causes • Consequences
+711	4711	可能性		existing	4711	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+712	4712	見込み		existing	4712	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+713	4713	予測		existing	4713	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+714	4714	推測		existing	4714	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+715	4715	想定		existing	4715	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+716	4716	確実		existing	4716	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+717	4717	明らか		existing	4717	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+718	4718	おそらく		existing	4718	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+719	4719	万一		existing	4719	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+720	4720	見通し		existing	4720	72	Academic & Abstract	Possibility & Prediction	possibility-prediction	Possibility • Prediction
+721	4721	査定		existing	4721	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+722	4722	比較		existing	4722	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+723	4723	優れる		existing	4723	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+724	4724	劣る		existing	4724	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+725	4725	適切		existing	4725	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+726	4726	不十分		existing	4726	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+727	4727	有効		existing	4727	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+728	4728	無効		existing	4728	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+729	4729	公平		existing	4729	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+730	4730	客観的		existing	4730	73	Work & Business	Evaluation & Comparison	evaluation-comparison	Evaluation • Comparison
+731	4731	概要		existing	4731	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+732	4732	内容		existing	4732	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+733	4733	項目		existing	4733	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+734	4734	要点		existing	4734	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+735	4735	具体例		existing	4735	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+736	4736	定義		existing	4736	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+737	4737	概念		existing	4737	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+738	4738	文脈		existing	4738	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+739	4739	引用		existing	4739	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+740	4740	結論		existing	4740	74	Academic & Abstract	Academic Reading	academic-reading	Academic • Reading
+741	4741	生じる		existing	4741	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+742	4742	及ぼす		existing	4742	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+743	4743	伴う		existing	4743	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+744	4744	基づく		existing	4744	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+745	4745	占める		existing	4745	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+746	4746	防ぐ		existing	4746	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+747	4747	避ける		existing	4747	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+748	4748	認める		existing	4748	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+749	4749	求める		existing	4749	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+750	4750	限る		existing	4750	75	Academic & Abstract	Abstract Verbs	abstract-verbs	Abstract • High-Frequency Verbs
+751	4751	私	1	candidate		76	Daily Life	People	core-people	People & Pronouns
+752	4752	あなた	2	candidate		76	Daily Life	People	core-people	People & Pronouns
+753	4753	人	3	candidate		76	Daily Life	People	core-people	People & Pronouns
+754	4754	男	4	candidate		76	Daily Life	People	core-people	People & Pronouns
+755	4755	女	5	candidate		76	Daily Life	People	core-people	People & Pronouns
+756	4756	子ども	6	candidate		76	Daily Life	People	core-people	People & Pronouns
+757	4757	大人	7	candidate		76	Daily Life	People	core-people	People & Pronouns
+758	4758	友達	8	candidate		76	Daily Life	People	core-people	People & Pronouns
+759	4759	友人	9	candidate		76	Daily Life	People	core-people	People & Pronouns
+760	4760	家族	10	candidate		76	Daily Life	People	core-people	People & Pronouns
+761	4761	父	11	candidate		77	Daily Life	Family	core-family	Family Members
+762	4762	母	12	candidate		77	Daily Life	Family	core-family	Family Members
+763	4763	両親	13	candidate		77	Daily Life	Family	core-family	Family Members
+764	4764	兄	14	candidate		77	Daily Life	Family	core-family	Family Members
+765	4765	姉	15	candidate		77	Daily Life	Family	core-family	Family Members
+766	4766	弟	16	candidate		77	Daily Life	Family	core-family	Family Members
+767	4767	妹	17	candidate		77	Daily Life	Family	core-family	Family Members
+768	4768	夫	18	candidate		77	Daily Life	Family	core-family	Family Members
+769	4769	妻	19	candidate		77	Daily Life	Family	core-family	Family Members
+770	4770	息子	20	candidate		77	Daily Life	Family	core-family	Family Members
+771	4771	娘	21	candidate		78	Daily Life	Family	core-family	Family & School Roles
+772	4772	先生	22	candidate		78	Daily Life	Family	core-family	Family & School Roles
+773	4773	学生	23	candidate		78	Daily Life	Family	core-family	Family & School Roles
+774	4774	生徒	24	candidate		78	Daily Life	Family	core-family	Family & School Roles
+775	4775	日本人	26	candidate		78	Daily Life	Family	core-family	Family & School Roles
+776	4776	日本語	27	candidate		78	Daily Life	Family	core-family	Family & School Roles
+777	4777	英語	28	candidate		78	Daily Life	Family	core-family	Family & School Roles
+778	4778	外国	29	candidate		78	Daily Life	Family	core-family	Family & School Roles
+779	4779	外国人	30	candidate		78	Daily Life	Family	core-family	Family & School Roles
+780	4780	国	31	candidate		78	Daily Life	Family	core-family	Family & School Roles
+781	4781	世界	32	candidate		79	Daily Life	Places	core-places	Places & Institutions
+782	4782	社会	33	candidate		79	Daily Life	Places	core-places	Places & Institutions
+783	4783	会社	34	candidate		79	Daily Life	Places	core-places	Places & Institutions
+784	4784	仕事	35	candidate		79	Daily Life	Places	core-places	Places & Institutions
+785	4785	学校	36	candidate		79	Daily Life	Places	core-places	Places & Institutions
+786	4786	大学	37	candidate		79	Daily Life	Places	core-places	Places & Institutions
+787	4787	教室	38	candidate		79	Daily Life	Places	core-places	Places & Institutions
+788	4788	病院	39	candidate		79	Daily Life	Places	core-places	Places & Institutions
+789	4789	銀行	40	candidate		79	Daily Life	Places	core-places	Places & Institutions
+790	4790	駅	41	candidate		79	Daily Life	Places	core-places	Places & Institutions
+791	4791	店	42	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+792	4792	スーパー	43	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+793	4793	コンビニ	44	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+794	4794	家	45	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+795	4795	部屋	46	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+796	4796	台所	47	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+797	4797	玄関	48	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+798	4798	風呂	49	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+799	4799	トイレ	50	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+800	4800	窓	51	candidate		80	Daily Life	Shopping	core-shopping	Shops & Stores
+801	4801	ドア	52	candidate		81	Daily Life	Home	core-home	Home & Furniture
+802	4802	階段	53	candidate		81	Daily Life	Home	core-home	Home & Furniture
+803	4803	庭	54	candidate		81	Daily Life	Home	core-home	Home & Furniture
+804	4804	テーブル	57	candidate		81	Daily Life	Home	core-home	Home & Furniture
+805	4805	椅子	58	candidate		81	Daily Life	Home	core-home	Home & Furniture
+806	4806	ベッド	59	candidate		81	Daily Life	Home	core-home	Home & Furniture
+807	4807	今日	60	candidate		81	Daily Life	Home	core-home	Home & Furniture
+808	4808	明日	61	candidate		81	Daily Life	Home	core-home	Home & Furniture
+809	4809	日本	25	candidate		81	Daily Life	Home	core-home	Home & Furniture
+810	4810	昨日	62	candidate		81	Daily Life	Home	core-home	Home & Furniture
+811	4811	今	63	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+812	4812	朝	64	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+813	4813	昼	65	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+814	4814	夜	66	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+815	4815	夕方	67	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+816	4816	午前	68	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+817	4817	午後	69	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+818	4818	今週	70	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+819	4819	先週	71	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+820	4820	来週	72	candidate		82	Daily Life	Time	core-time	Days & Time of Day
+821	4821	今月	73	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+822	4822	先月	74	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+823	4823	来月	75	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+824	4824	今年	76	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+825	4825	去年	77	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+826	4826	来年	78	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+827	4827	時間	79	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+828	4828	時	80	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+829	4829	分	81	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+830	4830	日	82	candidate		83	Daily Life	Time	core-time	Weeks, Months & Years
+831	4831	週	83	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+832	4832	月	84	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+833	4833	年	85	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+834	4834	春	86	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+835	4835	夏	87	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+836	4836	秋	88	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+837	4837	冬	89	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+838	4838	毎日	90	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+839	4839	毎週	91	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+840	4840	毎月	92	candidate		84	Daily Life	Time	core-time	Calendar Units & Seasons
+841	4841	毎年	93	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+842	4842	一	94	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+843	4843	二	95	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+844	4844	三	96	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+845	4845	四	97	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+846	4846	五	98	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+847	4847	六	99	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+848	4848	七	100	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+849	4849	八	101	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+850	4850	九	102	candidate		85	Daily Life	Numbers	core-numbers	Numbers 1–10
+851	4851	十	103	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+852	4852	百	104	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+853	4853	千	105	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+854	4854	万	106	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+855	4855	半	107	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+856	4856	一番	108	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+857	4857	最初	109	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+858	4858	最後	110	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+859	4859	次	111	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+860	4860	前	112	candidate		86	Daily Life	Numbers	core-numbers	Larger Numbers & Order
+861	4861	後	113	candidate		87	Daily Life	Position	core-position	Position & Direction
+862	4862	上	114	candidate		87	Daily Life	Position	core-position	Position & Direction
+863	4863	下	115	candidate		87	Daily Life	Position	core-position	Position & Direction
+864	4864	中	116	candidate		87	Daily Life	Position	core-position	Position & Direction
+865	4865	外	117	candidate		87	Daily Life	Position	core-position	Position & Direction
+866	4866	内	118	candidate		87	Daily Life	Position	core-position	Position & Direction
+867	4867	左	119	candidate		87	Daily Life	Position	core-position	Position & Direction
+868	4868	右	120	candidate		87	Daily Life	Position	core-position	Position & Direction
+869	4869	東	121	candidate		87	Daily Life	Position	core-position	Position & Direction
+870	4870	西	122	candidate		87	Daily Life	Position	core-position	Position & Direction
+871	4871	南	123	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+872	4872	北	124	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+873	4873	ここ	125	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+874	4874	そこ	126	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+875	4875	あそこ	127	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+876	4876	どこ	130	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+877	4877	こちら	128	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+878	4878	そちら	129	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+879	4879	これ	131	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+880	4880	それ	132	candidate		88	Daily Life	Position	core-position	Directions & Demonstratives
+881	4881	あれ	133	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+882	4882	どれ	137	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+883	4883	この	134	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+884	4884	その	135	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+885	4885	あの	136	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+886	4886	どの	138	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+887	4887	誰	140	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+888	4888	何	139	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+889	4889	それから	692	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+890	4890	それで	693	candidate		89	Daily Life	Demonstratives	core-demo	This & That
+891	4891	いつ	141	candidate		90	Daily Life	Questions	core-questions	Question Words
+892	4892	どう	142	candidate		90	Daily Life	Questions	core-questions	Question Words
+893	4893	なぜ	144	candidate		90	Daily Life	Questions	core-questions	Question Words
+894	4894	どうして	143	candidate		90	Daily Life	Questions	core-questions	Question Words
+895	4895	どちら	1044	candidate		90	Daily Life	Questions	core-questions	Question Words
+896	4896	いつも	315	candidate		90	Daily Life	Questions	core-questions	Question Words
+897	4897	どういう	937	candidate		90	Daily Life	Questions	core-questions	Question Words
+898	4898	どうも	1185	candidate		90	Daily Life	Questions	core-questions	Question Words
+899	4899	する	145	candidate		90	Daily Life	Questions	core-questions	Question Words
+900	4900	ある	146	candidate		90	Daily Life	Questions	core-questions	Question Words
+901	4901	いる	147	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+902	4902	居る	1390	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+903	4903	行く	150	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+904	4904	来る	151	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+905	4905	帰る	152	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+906	4906	戻る	855	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+907	4907	食べる	180	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+908	4908	飲む	181	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+909	4909	用いる	1233	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+910	4910	なる	148	candidate		91	Daily Life	Daily Actions	core-verbs-a	Core Verbs A
+911	4911	見る	163	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+912	4912	聞く	166	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+913	4913	言う	169	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+914	4914	話す	168	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+915	4915	読む	170	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+916	4916	書く	171	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+917	4917	買う	184	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+918	4918	売る	185	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+919	4919	持つ	188	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+920	4920	待つ	205	candidate		92	Daily Life	Daily Actions	core-verbs-b	Core Verbs B
+921	4921	立つ	228	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+922	4922	座る	229	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+923	4923	歩く	159	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+924	4924	走る	160	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+925	4925	泳ぐ	610	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+926	4926	寝る	199	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+927	4927	起きる	198	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+928	4928	開ける	192	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+929	4929	閉める	194	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+930	4930	付ける	1132	candidate		93	Daily Life	Daily Actions	core-verbs-c	Core Verbs C
+931	4931	消す	197	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+932	4932	出す	191	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+933	4933	入れる	190	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+934	4934	取る	187	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+935	4935	置く	189	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+936	4936	作る	182	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+937	4937	使う	183	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+938	4938	分かる	175	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+939	4939	知る	174	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+940	4940	思う	172	candidate		94	Daily Life	Daily Actions	core-verbs-d	Core Verbs D
+941	4941	考える	173	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+942	4942	教える	179	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+943	4943	学ぶ	178	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+944	4944	働く	201	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+945	4945	休む	200	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+946	4946	遊ぶ	609	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+947	4947	会う	204	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+948	4948	送る	207	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+949	4949	もらう	798	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+950	4950	できる	149	candidate		95	Daily Life	Daily Actions	core-verbs-e	Core Verbs E
+951	4951	あげる	914	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+952	4952	やる	782	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+953	4953	借りる	209	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+954	4954	貸す	210	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+955	4955	返す	208	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+956	4956	届ける	633	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+957	4957	繰り返す	1217	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+958	4958	出る	153	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+959	4959	入る	154	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+960	4960	上がる	155	candidate		96	Daily Life	Giving & Receiving	core-give	Give & Receive
+961	4961	大きい	240	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+962	4962	小さい	241	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+963	4963	新しい	250	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+964	4964	古い	251	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+965	4965	高い	242	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+966	4966	安い	1059	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+967	4967	低い	243	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+968	4968	長い	244	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+969	4969	短い	245	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+970	4970	広い	246	candidate		97	Daily Life	Adjectives	core-iadj-a	Common I-Adjectives A
+971	4971	狭い	247	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+972	4972	速い	256	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+973	4973	早い	254	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+974	4974	遅い	255	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+975	4975	強い	265	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+976	4976	弱い	266	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+977	4977	重い	263	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+978	4978	軽い	264	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+979	4979	暑い	257	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+980	4980	寒い	258	candidate		98	Daily Life	Adjectives	core-iadj-b	Common I-Adjectives B
+981	4981	熱い	261	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+982	4982	涼しい	260	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+983	4983	暖かい	259	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+984	4984	いい	252	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+985	4985	悪い	253	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+986	4986	楽しい	270	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+987	4987	かわいい	280	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+988	4988	下がる	156	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+989	4989	乗る	157	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+990	4990	降りる	158	candidate		99	Daily Life	Adjectives	core-iadj-c	Common I-Adjectives C
+991	4991	面白い	271	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+992	4992	悲しい	279	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+993	4993	怖い	277	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+994	4994	痛い	276	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+995	4995	忙しい	269	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+996	4996	難しい	267	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+997	4997	飛ぶ	161	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+998	4998	止まる	162	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+999	4999	見せる	164	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+1000	5000	見える	165	candidate		100	Daily Life	Adjectives	core-iadj-d	Common I-Adjectives D
+1001	5001	静か	292	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1002	5002	有名	299	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1003	5003	便利	294	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1004	5004	不便	651	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1005	5005	元気	291	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1006	5006	好き	287	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1007	5007	嫌い	288	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1008	5008	上手	289	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1009	5009	下手	290	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1010	5010	簡単	300	candidate		101	Daily Life	Na-Adjectives	core-naadj	Na-Adjectives
+1011	5011	ご飯	337	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1012	5012	水	333	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1013	5013	お茶	334	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1014	5014	コーヒー	335	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1015	5015	牛乳	336	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1016	5016	パン	338	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1017	5017	肉	339	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1018	5018	魚	340	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1019	5019	野菜	341	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1020	5020	果物	342	candidate		102	Daily Life	Food	core-food-a	Food & Drink A
+1021	5021	卵	343	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1022	5022	塩	525	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1023	5023	砂糖	524	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1024	5024	醤油	526	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1025	5025	聞こえる	167	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1026	5026	覚える	176	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1027	5027	忘れる	177	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1028	5028	払う	186	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1029	5029	開く	193	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1030	5030	閉まる	195	candidate		103	Daily Life	Food	core-food-b	Food & Drink B
+1031	5031	朝食	345	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1032	5032	昼食	346	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1033	5033	夕食	347	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1034	5034	弁当	529	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1035	5035	甘い	273	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1036	5036	辛い	274	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1037	5037	苦い	275	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1038	5038	意味	437	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1039	5039	興味	1012	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1040	5040	つける	196	candidate		104	Daily Life	Food	core-food-c	Meals & Taste
+1041	5041	体	414	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1042	5042	頭	399	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1043	5043	顔	400	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1044	5044	目	401	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1045	5045	耳	402	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1046	5046	口	404	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1047	5047	鼻	403	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1048	5048	手	408	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1049	5049	足	413	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1050	5050	手伝う	212	candidate		105	Daily Life	Body	core-body	Body & Health Basics
+1051	5051	病気	416	candidate		106	Daily Life	Health	core-health	Health & Illness
+1052	5052	薬	419	candidate		106	Daily Life	Health	core-health	Health & Illness
+1053	5053	医者	418	candidate		106	Daily Life	Health	core-health	Health & Illness
+1054	5054	治療	422	candidate		106	Daily Life	Health	core-health	Health & Illness
+1055	5055	健康	417	candidate		106	Daily Life	Health	core-health	Health & Illness
+1056	5056	勉強	202	candidate		106	Daily Life	Health	core-health	Health & Illness
+1057	5057	練習	203	candidate		106	Daily Life	Health	core-health	Health & Illness
+1058	5058	呼ぶ	206	candidate		106	Daily Life	Health	core-health	Health & Illness
+1059	5059	頼む	211	candidate		106	Daily Life	Health	core-health	Health & Illness
+1060	5060	始める	213	candidate		106	Daily Life	Health	core-health	Health & Illness
+1061	5061	電車	378	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1062	5062	バス	380	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1063	5063	タクシー	381	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1064	5064	車	376	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1065	5065	自転車	377	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1066	5066	飛行機	382	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1067	5067	地下鉄	379	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1068	5068	切符	579	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1069	5069	駐車場	515	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1070	5070	自動車	577	candidate		107	Daily Life	Transportation	core-transport	Transportation
+1071	5071	旅行	238	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1072	5072	ホテル	1021	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1073	5073	地図	386	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1074	5074	道	384	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1075	5075	空港	383	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1076	5076	道路	385	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1077	5077	始まる	214	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1078	5078	終わる	215	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1079	5079	続ける	216	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1080	5080	続く	217	candidate		108	Daily Life	Travel	core-travel	Travel Basics
+1081	5081	天気	388	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1082	5082	雨	389	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1083	5083	雪	390	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1084	5084	風	391	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1085	5085	空	392	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1086	5086	空間	1251	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1087	5087	決める	218	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1088	5088	決まる	219	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1089	5089	変える	220	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1090	5090	変わる	221	candidate		109	Daily Life	Weather	core-weather	Weather Basics
+1091	5091	服	349	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1092	5092	シャツ	350	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1093	5093	ズボン	351	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1094	5094	スカート	352	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1095	5095	靴	353	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1096	5096	帽子	354	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1097	5097	コート	540	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1098	5098	眼鏡	546	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1099	5099	時計	500	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1100	5100	靴下	542	candidate		110	Daily Life	Clothing	core-clothes	Clothes
+1101	5101	授業	583	candidate		111	Daily Life	School	core-school	School Life
+1102	5102	宿題	584	candidate		111	Daily Life	School	core-school	School Life
+1103	5103	試験	585	candidate		111	Daily Life	School	core-school	School Life
+1104	5104	テスト	586	candidate		111	Daily Life	School	core-school	School Life
+1105	5105	教科書	587	candidate		111	Daily Life	School	core-school	School Life
+1106	5106	ノート	362	candidate		111	Daily Life	School	core-school	School Life
+1107	5107	鉛筆	553	candidate		111	Daily Life	School	core-school	School Life
+1108	5108	ペン	363	candidate		111	Daily Life	School	core-school	School Life
+1109	5109	ボールペン	554	candidate		111	Daily Life	School	core-school	School Life
+1110	5110	増える	222	candidate		111	Daily Life	School	core-school	School Life
+1111	5111	社員	596	candidate		112	Work & Business	Work	core-work	Work Basics
+1112	5112	部長	598	candidate		112	Work & Business	Work	core-work	Work Basics
+1113	5113	課長	597	candidate		112	Work & Business	Work	core-work	Work Basics
+1114	5114	会議	460	candidate		112	Work & Business	Work	core-work	Work Basics
+1115	5115	給料	455	candidate		112	Work & Business	Work	core-work	Work Basics
+1116	5116	会議室	519	candidate		112	Work & Business	Work	core-work	Work Basics
+1117	5117	減る	223	candidate		112	Work & Business	Work	core-work	Work Basics
+1118	5118	選ぶ	224	candidate		112	Work & Business	Work	core-work	Work Basics
+1119	5119	比べる	225	candidate		112	Work & Business	Work	core-work	Work Basics
+1120	5120	探す	226	candidate		112	Work & Business	Work	core-work	Work Basics
+1121	5121	お金	449	candidate		113	Work & Business	Money	core-money	Money Basics
+1122	5122	カード	1148	candidate		113	Work & Business	Money	core-money	Money Basics
+1123	5123	財布	355	candidate		113	Work & Business	Money	core-money	Money Basics
+1124	5124	値段	451	candidate		113	Work & Business	Money	core-money	Money Basics
+1125	5125	料金	454	candidate		113	Work & Business	Money	core-money	Money Basics
+1126	5126	費用	453	candidate		113	Work & Business	Money	core-money	Money Basics
+1127	5127	見つける	227	candidate		113	Work & Business	Money	core-money	Money Basics
+1128	5128	着く	230	candidate		113	Work & Business	Money	core-money	Money Basics
+1129	5129	住む	231	candidate		113	Work & Business	Money	core-money	Money Basics
+1130	5130	生まれる	232	candidate		113	Work & Business	Money	core-money	Money Basics
+1131	5131	手紙	365	candidate		114	Daily Life	Communication	core-comms	Communication
+1132	5132	電話	367	candidate		114	Daily Life	Communication	core-comms	Communication
+1133	5133	メール	372	candidate		114	Daily Life	Communication	core-comms	Communication
+1134	5134	会話	1358	candidate		114	Daily Life	Communication	core-comms	Communication
+1135	5135	質問	440	candidate		114	Daily Life	Communication	core-comms	Communication
+1136	5136	答え	441	candidate		114	Daily Life	Communication	core-comms	Communication
+1137	5137	説明	466	candidate		114	Daily Life	Communication	core-comms	Communication
+1138	5138	電話番号	602	candidate		114	Daily Life	Communication	core-comms	Communication
+1139	5139	答える	1081	candidate		114	Daily Life	Communication	core-comms	Communication
+1140	5140	死ぬ	233	candidate		114	Daily Life	Communication	core-comms	Communication
+1141	5141	感情	1259	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1142	5142	夢	708	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1143	5143	希望	709	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1144	5144	心配	640	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1145	5145	満足	642	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1146	5146	洗う	234	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1147	5147	料理	236	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1148	5148	運転	237	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1149	5149	結婚	239	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1150	5150	多い	248	candidate		115	Daily Life	Emotions	core-emotions	Emotions
+1151	5151	パソコン	369	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1152	5152	携帯	368	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1153	5153	インターネット	371	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1154	5154	データ	767	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1155	5155	ファイル	1079	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1156	5156	少ない	249	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1157	5157	冷たい	262	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1158	5158	易しい	268	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1159	5159	おいしい	272	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1160	5160	うれしい	278	candidate		116	Technology & Science	Technology	core-tech	Technology Basics
+1161	5161	政治	484	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1162	5162	経済	483	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1163	5163	法律	485	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1164	5164	政府	486	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1165	5165	市民	732	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1166	5166	住民	1213	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1167	5167	公共	1225	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1168	5168	美しい	281	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1169	5169	汚い	282	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1170	5170	明るい	283	candidate		117	Society & Public Affairs	Society	core-society	Society Basics
+1171	5171	問題	439	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1172	5172	理由	442	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1173	5173	目的	448	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1174	5174	方法	443	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1175	5175	場合	701	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1176	5176	状態	477	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1177	5177	状況	476	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1178	5178	暗い	284	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1179	5179	近い	285	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1180	5180	遠い	286	candidate		118	Academic & Abstract	Abstract	core-abstract	Abstract Nouns A
+1181	5181	にぎやか	293	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1182	5182	大丈夫	295	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1183	5183	大切	296	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1184	5184	大事	297	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1185	5185	必要	298	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1186	5186	複雑	301	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1187	5187	安全	302	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1188	5188	危険	303	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1189	5189	とても	304	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1190	5190	もっと	305	candidate		119	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 119
+1191	5191	かなり	306	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1192	5192	少し	307	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1193	5193	ちょっと	308	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1194	5194	たくさん	309	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1195	5195	あまり	310	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1196	5196	ほとんど	311	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1197	5197	すぐ	312	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1198	5198	ゆっくり	313	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1199	5199	よく	314	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1200	5200	時々	316	candidate		120	Daily Life	Common Verbs	core-verbs-more	Common Verbs 120
+1201	5201	たまに	317	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1202	5202	もう	318	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1203	5203	まだ	319	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1204	5204	すでに	320	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1205	5205	まず	321	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1206	5206	また	322	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1207	5207	そして	323	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1208	5208	しかし	324	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1209	5209	だから	325	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1210	5210	でも	326	candidate		121	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 121
+1211	5211	もし	327	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1212	5212	必ず	328	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1213	5213	多分	329	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1214	5214	本当に	330	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1215	5215	もちろん	331	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1216	5216	例えば	332	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1217	5217	食事	344	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1218	5218	レストラン	348	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1219	5219	鍵	356	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1220	5220	本	358	candidate		122	Work & Business	Business Basics	core-business	Business Vocabulary 122
+1221	5221	新聞	359	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1222	5222	雑誌	360	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1223	5223	辞書	361	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1224	5224	紙	364	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1225	5225	写真	366	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1226	5226	コンピュータ	370	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1227	5227	テレビ	373	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1228	5228	ラジオ	374	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1229	5229	カメラ	375	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1230	5230	交通	387	candidate		123	Society & Public Affairs	Public Life	core-public	Public Life 123
+1231	5231	海	393	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1232	5232	山	394	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1233	5233	川	395	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1234	5234	地震	396	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1235	5235	歯	405	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1236	5236	首	406	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1237	5237	肩	407	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1238	5238	指	409	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1239	5239	胸	410	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1240	5240	腹	411	candidate		124	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 124
+1241	5241	背中	412	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1242	5242	心	415	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1243	5243	痛み	420	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1244	5244	色	423	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1245	5245	赤	424	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1246	5246	青	425	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1247	5247	白	426	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1248	5248	黒	427	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1249	5249	緑	428	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1250	5250	黄色	429	candidate		125	Technology & Science	Science & Tech	core-science	Science & Technology 125
+1251	5251	音	430	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1252	5252	音楽	431	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1253	5253	映画	432	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1254	5254	スポーツ	433	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1255	5255	ゲーム	434	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1256	5256	名前	436	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1257	5257	言葉	438	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1258	5258	例	444	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1259	5259	情報	445	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1260	5260	円	450	candidate		126	Daily Life	Nature	core-nature	Nature & Environment 126
+1261	5261	価格	452	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1262	5262	収入	456	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1263	5263	支出	457	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1264	5264	買い物	458	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1265	5265	商品	459	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1266	5266	予定	461	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1267	5267	報告	464	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1268	5268	確認	467	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1269	5269	準備	468	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1270	5270	受付	470	candidate		127	Daily Life	Media	core-media	Media & Culture 127
+1271	5271	生活	471	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1272	5272	関係	475	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1273	5273	文化	478	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1274	5274	歴史	479	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1275	5275	自然	480	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1276	5276	教育	482	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1277	5277	国際	488	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1278	5278	科学	490	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1279	5279	研究	491	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1280	5280	月曜日	492	candidate		128	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 128
+1281	5281	火曜日	493	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1282	5282	水曜日	494	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1283	5283	木曜日	495	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1284	5284	金曜日	496	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1285	5285	土曜日	497	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1286	5286	日曜日	498	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1287	5287	誕生日	499	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1288	5288	番号	501	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1289	5289	公園	502	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1290	5290	映画館	505	candidate		129	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 129
+1291	5291	喫茶店	506	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1292	5292	食堂	507	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1293	5293	交番	508	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1294	5294	大使館	509	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1295	5295	入口	510	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1296	5296	出口	511	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1297	5297	建物	512	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1298	5298	アパート	513	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1299	5299	マンション	514	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1300	5300	売り場	516	candidate		130	Daily Life	Common Verbs	core-verbs-more	Common Verbs 130
+1301	5301	職場	517	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1302	5302	事務所	518	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1303	5303	朝ご飯	520	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1304	5304	昼ご飯	521	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1305	5305	晩ご飯	522	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1306	5306	お菓子	523	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1307	5307	食べ物	527	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1308	5308	飲み物	528	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1309	5309	メニュー	530	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1310	5310	コップ	531	candidate		131	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 131
+1311	5311	カップ	532	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1312	5312	皿	533	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1313	5313	箸	534	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1314	5314	スプーン	535	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1315	5315	フォーク	536	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1316	5316	ナイフ	537	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1317	5317	上着	538	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1318	5318	セーター	539	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1319	5319	ネクタイ	541	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1320	5320	ポケット	543	candidate		132	Work & Business	Business Basics	core-business	Business Vocabulary 132
+1321	5321	ボタン	544	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1322	5322	ハンカチ	545	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1323	5323	傘	547	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1324	5324	箱	548	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1325	5325	袋	549	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1326	5326	封筒	550	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1327	5327	切手	551	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1328	5328	葉書	552	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1329	5329	本棚	555	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1330	5330	犬	556	candidate		133	Society & Public Affairs	Public Life	core-public	Public Life 133
+1331	5331	猫	557	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1332	5332	鳥	558	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1333	5333	動物	559	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1334	5334	花	560	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1335	5335	木	561	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1336	5336	草	562	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1337	5337	森	563	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1338	5338	季節	564	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1339	5339	赤ちゃん	565	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1340	5340	親	566	candidate		134	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 134
+1341	5341	お父さん	567	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1342	5342	お母さん	568	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1343	5343	お兄さん	569	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1344	5344	お姉さん	570	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1345	5345	奥さん	571	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1346	5346	患者	572	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1347	5347	医療	573	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1348	5348	退院	575	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1349	5349	運転手	578	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1350	5350	チケット	580	candidate		135	Technology & Science	Science & Tech	core-science	Science & Technology 135
+1351	5351	信号	581	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1352	5352	交差点	582	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1353	5353	漢字	588	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1354	5354	ひらがな	589	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1355	5355	カタカナ	590	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1356	5356	作文	591	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1357	5357	アルバイト	593	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1358	5358	パート	594	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1359	5359	店員	595	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1360	5360	社長	599	candidate		136	Daily Life	Nature	core-nature	Nature & Environment 136
+1361	5361	住所	600	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1362	5362	郵便	601	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1363	5363	誕生	603	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1364	5364	卒業	605	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1365	5365	入学	606	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1366	5366	散歩	608	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1367	5367	登る	611	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1368	5368	歌う	612	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1369	5369	弾く	613	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1370	5370	撮る	614	candidate		137	Daily Life	Media	core-media	Media & Culture 137
+1371	5371	着る	615	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1372	5372	脱ぐ	616	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1373	5373	履く	617	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1374	5374	かぶる	618	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1375	5375	押す	619	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1376	5376	引く	620	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1377	5377	切る	621	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1378	5378	折る	622	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1379	5379	貼る	623	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1380	5380	包む	624	candidate		138	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 138
+1381	5381	拾う	625	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1382	5382	捨てる	626	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1383	5383	壊す	627	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1384	5384	壊れる	628	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1385	5385	落ちる	629	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1386	5386	落とす	630	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1387	5387	なくす	631	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1388	5388	怒る	634	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1389	5389	笑う	635	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1390	5390	泣く	636	candidate		139	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 139
+1391	5391	喜ぶ	637	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1392	5392	驚く	638	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1393	5393	困る	639	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1394	5394	残念	643	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1395	5395	親切	644	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1396	5396	真面目	646	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1397	5397	正直	647	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1398	5398	特別	648	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1399	5399	普通	649	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1400	5400	自由	650	candidate		140	Daily Life	Common Verbs	core-verbs-more	Common Verbs 140
+1401	5401	無理	652	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1402	5402	十分	653	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1403	5403	細い	654	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1404	5404	太い	655	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1405	5405	厚い	656	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1406	5406	薄い	657	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1407	5407	深い	658	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1408	5408	浅い	659	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1409	5409	柔らかい	660	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1410	5410	固い	661	candidate		141	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 141
+1411	5411	丸い	662	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1412	5412	きれい	663	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1413	5413	うるさい	664	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1414	5414	つまらない	665	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1415	5415	おかしい	666	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1416	5416	恥ずかしい	667	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1417	5417	珍しい	668	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1418	5418	すばらしい	669	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1419	5419	一緒	670	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1420	5420	別々	671	candidate		142	Work & Business	Business Basics	core-business	Business Vocabulary 142
+1421	5421	同じ	672	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1422	5422	違う	673	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1423	5423	いろいろ	674	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1424	5424	様々	675	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1425	5425	たいてい	676	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1426	5426	だいたい	677	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1427	5427	だんだん	678	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1428	5428	とうとう	679	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1429	5429	やっと	680	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1430	5430	ついに	681	candidate		143	Society & Public Affairs	Public Life	core-public	Public Life 143
+1431	5431	しっかり	682	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1432	5432	はっきり	683	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1433	5433	ちゃんと	684	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1434	5434	なかなか	685	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1435	5435	どんどん	686	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1436	5436	そろそろ	687	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1437	5437	ずっと	688	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1438	5438	全然	689	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1439	5439	まったく	690	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1440	5440	ぜひ	691	candidate		144	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 144
+1441	5441	それでも	694	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1442	5442	そこで	695	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1443	5443	それとも	696	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1444	5444	ところで	697	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1445	5445	可能	698	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1446	5446	計画	699	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1447	5447	機会	700	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1448	5448	体験	705	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1449	5449	記憶	706	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1450	5450	思い出	707	candidate		145	Technology & Science	Science & Tech	core-science	Science & Technology 145
+1451	5451	期待	710	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1452	5452	目標	711	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1453	5453	努力	712	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1454	5454	成功	713	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1455	5455	失敗	714	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1456	5456	注意	715	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1457	5457	災害	717	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1458	5458	防止	718	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1459	5459	ルール	722	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1460	5460	条件	723	candidate		146	Daily Life	Nature	core-nature	Nature & Environment 146
+1461	5461	責任	727	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1462	5462	文学	729	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1463	5463	放送	730	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1464	5464	ニュース	731	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1465	5465	人口	733	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1466	5466	地球	734	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1467	5467	作業	735	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1468	5468	業務	736	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1469	5469	事務	737	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1470	5470	営業	738	candidate		147	Daily Life	Media	core-media	Media & Culture 147
+1471	5471	経営	739	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1472	5472	企業	740	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1473	5473	職業	741	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1474	5474	製品	742	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1475	5475	品物	743	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1476	5476	販売	744	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1477	5477	購入	745	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1478	5478	預金	750	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1479	5479	回答	752	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1480	5480	案内	754	candidate		148	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 148
+1481	5481	提案	758	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1482	5482	決定	760	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1483	5483	選択	761	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1484	5484	書類	763	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1485	5485	文章	764	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1486	5486	文字	765	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1487	5487	機械	768	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1488	5488	システム	770	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1489	5489	プログラム	771	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1490	5490	ネットワーク	772	candidate		149	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 149
+1491	5491	設計	777	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1492	5492	ない	778	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1493	5493	そう	779	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1494	5494	自分	780	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1495	5495	しまう	781	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1496	5496	わけ	783	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1497	5497	ところ	784	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1498	5498	行う	785	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1499	5499	バック	786	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1500	5500	トラック	787	candidate		150	Daily Life	Common Verbs	core-verbs-more	Common Verbs 150
+1501	5501	いただく	788	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1502	5502	くださる	789	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1503	5503	以上	790	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1504	5504	人間	791	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1505	5505	現在	792	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1506	5506	感じる	793	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1507	5507	しれる	794	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1508	5508	けれども	795	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1509	5509	今回	796	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1510	5510	受ける	797	candidate		151	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 151
+1511	5511	最近	799	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1512	5512	時代	800	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1513	5513	非常	801	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1514	5514	得る	802	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1515	5515	一つ	803	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1516	5516	ただ	804	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1517	5517	女性	805	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1518	5518	利用	806	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1519	5519	さらに	807	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1520	5520	参加	808	candidate		152	Work & Business	Business Basics	core-business	Business Vocabulary 152
+1521	5521	大きな	809	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1522	5522	感じ	810	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1523	5523	やはり	811	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1524	5524	活動	812	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1525	5525	こんな	813	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1526	5526	管理	814	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1527	5527	特に	815	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1528	5528	実際	816	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1529	5529	個人	817	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1530	5530	多く	818	candidate		153	Society & Public Affairs	Public Life	core-public	Public Life 153
+1531	5531	存在	819	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1532	5532	すべて	820	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1533	5533	彼女	821	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1534	5534	理解	822	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1535	5535	部分	823	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1536	5536	日記	824	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1537	5537	いける	825	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1538	5538	使用	826	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1539	5539	事業	827	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1540	5540	固定	828	candidate		154	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 154
+1541	5541	基本	829	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1542	5542	関連	830	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1543	5543	一般	831	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1544	5544	重要	833	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1545	5545	サービス	835	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1546	5546	かける	836	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1547	5547	場所	838	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1548	5548	お願い	840	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1549	5549	労働	841	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1550	5550	相手	842	candidate		155	Technology & Science	Science & Tech	core-science	Science & Technology 155
+1551	5551	自身	843	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1552	5552	かかる	844	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1553	5553	今後	845	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1554	5554	つまり	846	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1555	5555	まま	847	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1556	5556	与える	848	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1557	5557	大変	849	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1558	5558	彼ら	850	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1559	5559	これから	854	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1560	5560	全体	856	candidate		156	Daily Life	Nature	core-nature	Nature & Environment 156
+1561	5561	程度	857	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1562	5562	人々	858	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1563	5563	代表	859	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1564	5564	ネット	860	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1565	5565	それぞれ	862	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1566	5566	地方	863	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1567	5567	生きる	864	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1568	5568	選手	865	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1569	5569	みんな	866	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1570	5570	確か	867	candidate		157	Daily Life	Media	core-media	Media & Culture 157
+1571	5571	ありがとう	868	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1572	5572	中心	869	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1573	5573	提供	871	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1574	5574	事実	872	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1575	5575	当然	873	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1576	5576	以前	874	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1577	5577	示す	875	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1578	5578	専門	876	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1579	5579	初めて	877	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1580	5580	全く	878	candidate		158	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 158
+1581	5581	組織	880	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1582	5582	行動	881	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1583	5583	年間	882	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1584	5584	当時	883	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1585	5585	意識	884	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1586	5586	欲しい	886	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1587	5587	通り	887	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1588	5588	生産	888	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1589	5589	表現	889	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1590	5590	参考	890	candidate		159	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 159
+1591	5591	ひとつ	891	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1592	5592	やっぱり	892	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1593	5593	ビジネス	893	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1594	5594	チーム	895	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1595	5595	現実	896	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1596	5596	進む	897	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1597	5597	すごい	898	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1598	5598	価値	899	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1599	5599	テーマ	900	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1600	5600	含む	901	candidate		160	Daily Life	Common Verbs	core-verbs-more	Common Verbs 160
+1601	5601	一部	902	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1602	5602	考え	903	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1603	5603	残る	904	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1604	5604	語る	905	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1605	5605	言える	908	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1606	5606	結局	910	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1607	5607	消費	911	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1608	5608	保険	912	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1609	5609	具体	913	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1610	5610	人生	915	candidate		161	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 161
+1611	5611	表示	916	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1612	5612	精神	917	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1613	5613	過去	918	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1614	5614	レベル	919	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1615	5615	我々	920	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1616	5616	能力	921	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1617	5617	指導	922	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1618	5618	公開	924	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1619	5619	皆さん	925	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1620	5620	ほか	926	candidate		162	Work & Business	Business Basics	core-business	Business Vocabulary 162
+1621	5621	担当	927	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1622	5622	行為	930	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1623	5623	平成	931	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1624	5624	いや	932	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1625	5625	楽しむ	933	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1626	5626	登録	934	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1627	5627	うまい	935	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1628	5628	述べる	938	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1629	5629	団体	939	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1630	5630	支援	940	candidate		163	Society & Public Affairs	Public Life	core-public	Public Life 163
+1631	5631	最も	941	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1632	5632	自己	942	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1633	5633	年度	943	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1634	5634	運動	944	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1635	5635	構造	945	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1636	5636	完全	947	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1637	5637	向かう	948	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1638	5638	男性	949	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1639	5639	結構	950	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1640	5640	産業	951	candidate		164	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 164
+1641	5641	人気	952	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1642	5642	お話	953	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1643	5643	描く	954	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1644	5644	近く	955	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1645	5645	最終	956	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1646	5646	ドル	957	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1647	5647	過ぎる	958	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1648	5648	上げる	960	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1649	5649	グループ	961	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1650	5650	ポイント	962	candidate		165	Technology & Science	Science & Tech	core-science	Science & Technology 165
+1651	5651	センター	963	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1652	5652	開催	964	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1653	5653	方向	965	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1654	5654	起こる	968	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1655	5655	障害	969	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1656	5656	ヶ月	970	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1657	5657	協力	971	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1658	5658	時期	972	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1659	5659	考え方	973	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1660	5660	金融	974	candidate		166	Daily Life	Nature	core-nature	Nature & Environment 166
+1661	5661	進める	975	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1662	5662	立場	976	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1663	5663	全国	978	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1664	5664	違い	979	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1665	5665	作成	980	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1666	5666	成長	981	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1667	5667	施設	982	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1668	5668	登場	983	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1669	5669	知識	984	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1670	5670	実現	985	candidate		167	Daily Life	Media	core-media	Media & Culture 167
+1671	5671	海外	986	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1672	5672	実施	987	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1673	5673	昨年	988	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1674	5674	認識	989	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1675	5675	イメージ	990	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1676	5676	段階	991	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1677	5677	発生	992	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1678	5678	期間	994	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1679	5679	トップ	995	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1680	5680	若い	996	candidate		168	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 168
+1681	5681	変更	998	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1682	5682	サッカー	999	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1683	5683	限り	1000	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1684	5684	番組	1001	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1685	5685	今度	1002	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1686	5686	処理	1003	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1687	5687	絶対	1004	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1688	5688	伝える	1005	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1689	5689	守る	1006	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1690	5690	都市	1008	candidate		169	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 169
+1691	5691	展開	1009	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1692	5692	デザイン	1010	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1693	5693	自体	1011	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1694	5694	含める	1014	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1695	5695	信じる	1016	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1696	5696	週間	1017	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1697	5697	最大	1019	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1698	5698	無料	1020	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1699	5699	思える	1022	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1700	5700	全部	1023	candidate		170	Daily Life	Common Verbs	core-verbs-more	Common Verbs 170
+1701	5701	開始	1024	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1702	5702	イベント	1025	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1703	5703	アクセス	1026	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1704	5704	同時に	1027	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1705	5705	詳細	1028	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1706	5706	合う	1029	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1707	5707	動く	1030	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1708	5708	アップ	1031	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1709	5709	将来	1032	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1710	5710	通信	1034	candidate		171	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 171
+1711	5711	分野	1035	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1712	5712	向ける	1036	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1713	5713	国内	1037	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1714	5714	時刻	1038	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1715	5715	発見	1039	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1716	5716	とにかく	1040	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1717	5717	最高	1041	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1718	5718	頑張る	1042	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1719	5719	終了	1045	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1720	5720	出版	1046	candidate		172	Work & Business	Business Basics	core-business	Business Vocabulary 172
+1721	5721	正しい	1047	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1722	5722	プロ	1048	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1723	5723	大会	1049	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1724	5724	ファン	1050	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1725	5725	同様	1051	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1726	5726	小さな	1052	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1727	5727	共通	1053	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1728	5728	つもり	1054	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1729	5729	現代	1055	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1730	5730	住宅	1057	candidate		173	Society & Public Affairs	Public Life	core-public	Public Life 173
+1731	5731	新た	1058	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1732	5732	動き	1060	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1733	5733	本日	1061	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1734	5734	業界	1062	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1735	5735	相当	1063	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1736	5736	調べる	1064	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1737	5737	思い	1065	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1738	5738	メンバー	1066	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1739	5739	演奏	1067	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1740	5740	家庭	1068	candidate		174	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 174
+1741	5741	直接	1069	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1742	5742	聴く	1070	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1743	5743	構成	1071	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1744	5744	異なる	1072	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1745	5745	もと	1073	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1746	5746	取引	1074	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1747	5747	加える	1075	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1748	5748	運営	1076	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1749	5749	予想	1078	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1750	5750	モデル	1080	candidate		175	Technology & Science	Science & Tech	core-science	Science & Technology 175
+1751	5751	発売	1082	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1752	5752	目指す	1083	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1753	5753	話題	1084	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1754	5754	建築	1085	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1755	5755	印象	1086	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1756	5756	詳しい	1087	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1757	5757	ライブ	1089	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1758	5758	ソフト	1090	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1759	5759	チェック	1091	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1760	5760	われわれ	1092	candidate		176	Daily Life	Nature	core-nature	Nature & Environment 176
+1761	5761	学習	1093	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1762	5762	発展	1094	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1763	5763	計算	1095	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1764	5764	種類	1096	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1765	5765	途中	1098	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1766	5766	気分	1099	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1767	5767	昭和	1100	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1768	5768	移動	1101	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1769	5769	発行	1103	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1770	5770	企画	1104	candidate		177	Daily Life	Media	core-media	Media & Culture 177
+1771	5771	数字	1105	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1772	5772	自ら	1107	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1773	5773	土地	1109	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1774	5774	それら	1110	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1775	5775	言語	1112	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1776	5776	共同	1113	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1777	5777	年代	1114	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1778	5778	タイプ	1115	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1779	5779	観る	1116	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1780	5780	プロジェクト	1117	candidate		178	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 178
+1781	5781	残す	1119	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1782	5782	役割	1120	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1783	5783	きっと	1122	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1784	5784	ユーザー	1123	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1785	5785	撮影	1124	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1786	5786	エネルギー	1125	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1787	5787	知れる	1126	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1788	5788	憲法	1128	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1789	5789	感覚	1130	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1790	5790	高校	1131	candidate		179	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 179
+1791	5791	合わせる	1134	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1792	5792	実行	1135	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1793	5793	通常	1137	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1794	5794	既に	1138	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1795	5795	現状	1139	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1796	5796	建設	1140	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1797	5797	スタッフ	1141	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1798	5798	先日	1142	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1799	5799	最新	1143	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1800	5800	中央	1144	candidate		180	Daily Life	Common Verbs	core-verbs-more	Common Verbs 180
+1801	5801	幸せ	1145	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1802	5802	似る	1146	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1803	5803	平均	1147	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1804	5804	物語	1149	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1805	5805	追加	1151	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1806	5806	不思議	1152	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1807	5807	警察	1153	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1808	5808	思い出す	1154	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1809	5809	日々	1155	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1810	5810	様子	1156	candidate		181	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 181
+1811	5811	いろんな	1157	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1812	5812	にくい	1158	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1813	5813	総合	1159	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1814	5814	使える	1160	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1815	5815	活用	1161	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1816	5816	決して	1162	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1817	5817	身体	1164	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1818	5818	整備	1165	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1819	5819	リスク	1166	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1820	5820	想像	1168	candidate		182	Work & Business	Business Basics	core-business	Business Vocabulary 182
+1821	5821	ケース	1169	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1822	5822	規模	1170	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1823	5823	本当	1171	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1824	5824	以降	1172	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1825	5825	法人	1174	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1826	5826	クラス	1175	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1827	5827	会長	1177	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1828	5828	通る	1178	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1829	5829	なんと	1179	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1830	5830	超える	1180	candidate		183	Society & Public Affairs	Public Life	core-public	Public Life 183
+1831	5831	平和	1181	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1832	5832	基礎	1182	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1833	5833	特定	1183	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1834	5834	流れ	1184	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1835	5835	画像	1186	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1836	5836	少年	1187	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1837	5837	いえる	1188	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1838	5838	安定	1189	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1839	5839	メーカー	1190	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1840	5840	間違い	1191	candidate		184	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 184
+1841	5841	本人	1192	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1842	5842	雰囲気	1193	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1843	5843	気づく	1194	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1844	5844	会場	1195	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1845	5845	電子	1196	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1846	5846	小説	1197	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1847	5847	注目	1198	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1848	5848	維持	1199	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1849	5849	ほぼ	1200	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1850	5850	範囲	1201	candidate		185	Technology & Science	Science & Tech	core-science	Science & Technology 185
+1851	5851	コラム	1202	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1852	5852	まとめる	1203	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1853	5853	常に	1204	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1854	5854	著作	1205	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1855	5855	失う	1206	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1856	5856	理論	1207	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1857	5857	日常	1208	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1858	5858	体制	1210	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1859	5859	やめる	1212	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1860	5860	はじめ	1214	candidate		186	Daily Life	Nature	core-nature	Nature & Environment 186
+1861	5861	疑問	1215	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1862	5862	当たる	1216	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1863	5863	資本	1218	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1864	5864	事情	1219	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1865	5865	コース	1221	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1866	5866	感想	1222	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1867	5867	解説	1223	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1868	5868	シリーズ	1224	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1869	5869	民間	1226	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1870	5870	集まる	1227	candidate		187	Daily Life	Media	core-media	Media & Culture 187
+1871	5871	措置	1228	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1872	5872	本来	1229	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1873	5873	宇宙	1230	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1874	5874	クラブ	1231	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1875	5875	タイトル	1232	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1876	5876	お客様	1234	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1877	5877	しばらく	1236	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1878	5878	二つ	1237	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1879	5879	以来	1240	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1880	5880	確保	1241	candidate		188	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 188
+1881	5881	集める	1242	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1882	5882	離れる	1243	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1883	5883	映像	1245	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1884	5884	要素	1247	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1885	5885	触れる	1248	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1886	5886	コスト	1249	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1887	5887	人物	1250	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1888	5888	記念	1252	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1889	5889	楽しみ	1254	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1890	5890	設置	1256	candidate		189	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 189
+1891	5891	位置	1257	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1892	5892	指定	1258	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1893	5893	付く	1260	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1894	5894	さまざま	1261	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1895	5895	ランキング	1262	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1896	5896	かかわる	1263	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1897	5897	さすが	1264	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1898	5898	関わる	1266	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1899	5899	起こす	1267	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1900	5900	仲間	1268	candidate		190	Daily Life	Common Verbs	core-verbs-more	Common Verbs 190
+1901	5901	メッセージ	1269	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1902	5902	迎える	1270	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1903	5903	整理	1271	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1904	5904	協会	1272	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1905	5905	至る	1273	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1906	5906	多数	1274	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1907	5907	デジタル	1275	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1908	5908	積極	1276	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1909	5909	願う	1277	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1910	5910	独立	1278	candidate		191	Daily Life	Common Adjectives	core-adj-more	Common Adjectives 191
+1911	5911	読者	1279	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1912	5912	勝つ	1280	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1913	5913	打つ	1283	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1914	5914	流れる	1284	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1915	5915	いらっしゃる	1285	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1916	5916	バー	1286	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1917	5917	全員	1287	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1918	5918	参照	1288	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1919	5919	少なくとも	1289	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1920	5920	地元	1290	candidate		192	Work & Business	Business Basics	core-business	Business Vocabulary 192
+1921	5921	是非	1291	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1922	5922	明確	1292	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1923	5923	つながる	1293	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1924	5924	特徴	1294	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1925	5925	セット	1295	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1926	5926	皆様	1296	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1927	5927	魅力	1297	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1928	5928	反応	1298	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1929	5929	きちんと	1299	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1930	5930	まだまだ	1300	candidate		193	Society & Public Affairs	Public Life	core-public	Public Life 193
+1931	5931	工場	1303	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1932	5932	入力	1304	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1933	5933	ビデオ	1305	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1934	5934	集中	1306	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1935	5935	あまりに	1307	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1936	5936	一度	1308	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1937	5937	現象	1309	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1938	5938	ビル	1310	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1939	5939	感動	1311	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1940	5940	サポート	1313	candidate		194	Academic & Abstract	Abstract Concepts	core-abstract-more	Abstract Concepts 194
+1941	5941	実践	1314	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1942	5942	職員	1315	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1943	5943	会員	1316	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1944	5944	過ごす	1317	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1945	5945	シーン	1318	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1946	5946	従来	1319	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1947	5947	農業	1320	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1948	5948	用意	1321	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1949	5949	世代	1323	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1950	5950	そうした	1324	candidate		195	Technology & Science	Science & Tech	core-science	Science & Technology 195
+1951	5951	強化	1325	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1952	5952	周り	1327	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1953	5953	レポート	1329	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1954	5954	年齢	1330	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1955	5955	未来	1331	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1956	5956	舞台	1332	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1957	5957	前回	1333	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1958	5958	年金	1334	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1959	5959	もう少し	1335	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1960	5960	教師	1336	candidate		196	Daily Life	Nature	core-nature	Nature & Environment 196
+1961	5961	他人	1337	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1962	5962	上昇	1338	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1963	5963	完成	1340	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1964	5964	大好き	1341	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1965	5965	扱う	1342	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1966	5966	修正	1343	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1967	5967	向上	1344	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1968	5968	負ける	1345	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1969	5969	野球	1347	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1970	5970	訪問	1349	candidate		197	Daily Life	Media	core-media	Media & Culture 197
+1971	5971	並ぶ	1351	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1972	5972	視点	1352	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1973	5973	小学校	1353	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1974	5974	電気	1354	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1975	5975	間違う	1356	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1976	5976	挙げる	1357	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1977	5977	ドラマ	1359	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1978	5978	再び	1360	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1979	5979	解釈	1361	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1980	5980	止める	1364	candidate		198	Academic & Abstract	N2 Reading	core-n2-reading	N2 Reading Vocabulary 198
+1981	5981	取り組む	1365	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1982	5982	製造	1366	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1983	5983	困難	1367	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1984	5984	母親	1370	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1985	5985	保障	1372	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1986	5986	集団	1373	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1987	5987	事態	1374	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1988	5988	立てる	1375	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1989	5989	画面	1376	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1990	5990	時点	1378	candidate		199	Daily Life	Daily Vocabulary	core-daily	Daily Vocabulary 199
+1991	5991	なれる	1379	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1992	5992	スタート	1380	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1993	5993	活躍	1381	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1994	5994	問う	1382	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1995	5995	ちょうど	1383	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1996	5996	殺す	1384	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1997	5997	サイズ	1385	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1998	5998	限定	1386	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+1999	5999	ひとり	1387	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200
+2000	6000	医師	1388	candidate		200	Daily Life	Common Verbs	core-verbs-more	Common Verbs 200

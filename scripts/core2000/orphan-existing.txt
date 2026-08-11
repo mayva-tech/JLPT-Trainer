@@ -1,0 +1,537 @@
+4001	品切れ	しなぎれ	out of stock
+4002	在庫	ざいこ	stock
+4003	割引	わりびき	discount
+4004	値上がり	ねあがり	price increase
+4005	賞味期限	しょうみきげん	best-before date
+4006	消費期限	しょうひきげん	use-by date
+4007	日用品	にちようひん	daily necessities
+4008	まとめ買い	まとめがい	bulk buying
+4009	返品	へんぴん	return
+4010	レシート	レシート	receipt
+4011	家賃	やちん	rent
+4012	敷金	しききん	security deposit
+4014	大家	おおや	landlord
+4016	引っ越し	ひっこし	moving house
+4017	騒音	そうおん	noise
+4019	収納	しゅうのう	storage
+4020	光熱費	こうねつひ	utility costs
+4021	天気予報	てんきよほう	weather forecast
+4023	湿度	しつど	humidity
+4025	降水確率	こうすいかくりつ	chance of rain
+4026	晴天	せいてん	clear weather
+4027	曇り	くもり	cloudy weather
+4028	大雨	おおあめ	heavy rain
+4029	蒸し暑い	むしあつい	hot and humid
+4030	猛暑	もうしょ	extreme heat
+4031	定期券	ていきけん	commuter pass
+4032	満員	まんいん	full; packed
+4033	遅延	ちえん	delay
+4034	乗り換え	のりかえ	transfer
+4035	各駅停車	かくえきていしゃ	local train
+4036	改札	かいさつ	ticket gate
+4037	渋滞	じゅうたい	traffic jam
+4038	終電	しゅうでん	last train
+4039	運賃	うんちん	fare
+4040	通勤	つうきん	commuting
+4042	診察	しんさつ	medical examination
+4043	処方	しょほう	prescription
+4044	保険証	ほけんしょう	insurance card
+4045	熱中症	ねっちゅうしょう	heatstroke
+4046	花粉症	かふんしょう	hay fever
+4049	疲労	ひろう	fatigue
+4050	副作用	ふくさよう	side effect
+4051	残業	ざんぎょう	overtime
+4052	出張	しゅっちょう	business trip
+4053	上司	じょうし	boss; superior
+4054	部下	ぶか	subordinate
+4057	有給休暇	ゆうきゅうきゅうか	paid leave
+4058	昇進	しょうしん	promotion
+4059	転職	てんしょく	changing jobs
+4060	面接	めんせつ	job interview
+4061	口座	こうざ	bank account
+4062	振り込み	ふりこみ	bank transfer
+4063	手数料	てすうりょう	handling fee
+4064	残高	ざんだか	balance
+4067	家計	かけい	household budget
+4068	節約	せつやく	saving; economizing
+4072	冷凍	れいとう	freezing
+4073	沸騰	ふっとう	boiling
+4074	焦げる	こげる	to get burnt
+4075	味付け	あじつけ	seasoning
+4076	分量	ぶんりょう	quantity; amount
+4077	包丁	ほうちょう	kitchen knife
+4078	弱火	よわび	low heat
+4079	混ぜる	まぜる	to mix
+4080	蒸す	むす	to steam
+4084	復習	ふくしゅう	review
+4085	予習	よしゅう	preparation for class
+4089	奨学金	しょうがくきん	scholarship
+4095	敬語	けいご	honorific language
+4096	誤解	ごかい	misunderstanding
+4099	遠慮	えんりょ	reserve; holding back
+4101	洗濯	せんたく	laundry; washing
+4102	縮む	ちぢむ	to shrink
+4103	綿素材	めんそざい	cotton material
+4104	丈	たけ	length; height (of clothing)
+4105	袖	そで	sleeve
+4106	柄	がら	pattern; design (on fabric)
+4107	試着	しちゃく	trying on (clothes)
+4109	流行	りゅうこう	fashion; trend; fad
+4110	着替え	きがえ	change of clothes; getting changed
+4111	宿泊	しゅくはく	accommodation; lodging; stay
+4114	土産	みやげ	souvenir; local specialty gift
+4115	旅館	りょかん	Japanese inn; ryokan
+4116	チェックイン	ちぇっくいん	check-in
+4117	空席	くうせき	vacant seat; available seat
+4118	模様替え	もようがえ	redecorating; rearranging the room
+4119	眠れない	ねむれない	unable to sleep
+4120	選択肢	せんたくし	option; choice; alternative
+4121	目覚まし	めざまし	alarm clock; waking up
+4122	寝坊	ねぼう	oversleeping; sleeping in
+4123	枕	まくら	pillow
+4124	布団	ふとん	futon; Japanese bedding
+4126	片付け	かたづけ	tidying up; putting things away
+4127	ゴミ出し	ごみだし	taking out the rubbish; garbage collection
+4129	汚れ	よごれ	dirt; stain; grime
+4130	節水	せっすい	water conservation; saving water
+4133	省エネ	しょうえね	energy conservation; energy saving
+4134	リサイクル	りさいくる	recycling
+4135	廃棄	はいき	disposal; waste; discarding
+4136	排気ガス	はいきがす	exhaust fumes; vehicle emissions
+4138	地球温暖化	ちきゅうおんだんか	global warming
+4139	自然災害	しぜんさいがい	natural disaster
+4140	節電	せつでん	saving electricity; power saving
+4141	礼儀	れいぎ	manners; etiquette; courtesy
+4142	招待	しょうたい	invitation
+4143	断り	ことわり	refusal; declining; notice
+4145	謝罪	しゃざい	apology; expression of regret
+4146	誘い	さそい	invitation; temptation; enticement
+4149	心遣い	こころづかい	consideration; thoughtfulness; care
+4152	処方箋	しょほうせん	prescription (written by a doctor)
+4153	市販薬	しはんやく	over-the-counter medicine
+4154	服用	ふくよう	taking medicine; oral administration
+4155	副反応	ふくはんのう	side reaction; adverse reaction (e.g. to a vaccine)
+4156	点滴	てんてき	intravenous drip; IV
+4157	採血	さいけつ	blood sampling; drawing blood
+4160	通院	つういん	going to the hospital (as an outpatient)
+4161	自治会	じちかい	neighborhood association; residents' association
+4162	回覧板	かいらんばん	circular notice board (passed among neighbors)
+4163	粗大ゴミ	そだいごみ	oversized garbage; bulky waste
+4164	近所付き合い	きんじょづきあい	neighborly relations; getting along with neighbors
+4165	防犯	ぼうはん	crime prevention; security
+4166	避難場所	ひなんばしょ	evacuation site; shelter
+4168	掲示板	けいじばん	notice board; bulletin board
+4169	町内会	ちょうないかい	neighborhood association (town block)
+4170	共有スペース	きょうゆうすぺーす	shared space; common area
+4171	アプリ	あぷり	app; application (software)
+4172	パスワード	ぱすわーど	password
+4174	ダウンロード	だうんろーど	download
+4175	充電	じゅうでん	charging (a battery)
+4176	通知	つうち	notification; notice
+4178	バックアップ	ばっくあっぷ	backup (of data)
+4179	データ通信	でーたつうしん	mobile data communication
+4180	ウイルス対策	ういるすたいさく	antivirus measures; virus protection
+4181	準備運動	じゅんびうんどう	warm-up exercise
+4182	筋肉痛	きんにくつう	muscle soreness; delayed onset muscle pain
+4183	体力	たいりょく	physical strength; stamina
+4184	柔軟	じゅうなん	flexible; limber; pliable
+4186	審判	しんぱん	referee; umpire; judgment
+4189	練習試合	れんしゅうじあい	practice match; scrimmage
+4190	引き分け	ひきわけ	a draw; a tie
+4193	焦り	あせり	impatience; haste; feeling rushed
+4194	落ち込む	おちこむ	to feel down; to get depressed
+4195	励ます	はげます	to encourage; to cheer up
+4196	我慢	がまん	patience; endurance; self-control
+4200	やる気	やるき	motivation; willingness; drive
+4201	予約席	よやくせき	reserved seat (at a restaurant)
+4203	個室	こしつ	private room (at a restaurant)
+4204	盛り付け	もりつけ	plating; food presentation
+4205	辛口	からくち	spicy taste; dry (drink)
+4206	薄味	うすあじ	light seasoning; mild flavor
+4207	好み	このみ	preference; taste
+4208	偏食	へんしょく	picky eating; unbalanced diet
+4210	割り勘	わりかん	splitting the bill
+4211	保険料	ほけんりょう	insurance premium
+4212	契約書	けいやくしょ	contract document
+4213	賠償	ばいしょう	compensation; indemnity
+4215	裁判	さいばん	trial; judgement; lawsuit
+4216	弁護士	べんごし	lawyer; attorney
+4218	罰金	ばっきん	fine; penalty
+4219	保証人	ほしょうにん	guarantor
+4221	親戚	しんせき	relative; relation
+4222	孫	まご	grandchild
+4223	甥	おい	nephew
+4224	離婚	りこん	divorce
+4225	扶養	ふよう	support; dependency (financial)
+4227	甘やかす	あまやかす	to spoil (a child); to pamper
+4229	仲	なか	relationship; terms (with someone)
+4230	円満	えんまん	harmonious; amicable
+4231	水漏れ	みずもれ	water leak
+4232	排水管	はいすいかん	drainpipe
+4233	修繕	しゅうぜん	repair; mending
+4234	塗装	とそう	painting; coating
+4235	腐食	ふしょく	corrosion; decay
+4236	補修	ほしゅう	repair; patching
+4238	見積もり	みつもり	estimate; quotation
+4240	点検	てんけん	inspection; checkup
+4241	報道	ほうどう	news report; media coverage
+4242	記事	きじ	article (news, magazine)
+4246	偏向報道	へんこうほうどう	biased reporting
+4248	虚偽	きょぎ	falsehood; fabrication
+4249	視聴率	しちょうりつ	viewer rating (TV)
+4251	求人	きゅうじん	job opening; job advertisement
+4253	履歴書	りれきしょ	résumé; curriculum vitae
+4254	内定	ないてい	informal job offer
+4258	志望動機	しぼうどうき	motivation for applying; reason for wanting the job
+4264	配達	はいたつ	delivery
+4265	追跡番号	ついせきばんごう	tracking number
+4266	宛先	あてさき	destination address; addressee
+4267	差出人	さしだしにん	sender
+4268	受取人	うけとりにん	recipient; addressee
+4269	再配達	さいはいたつ	redelivery
+4270	郵送	ゆうそう	mailing; sending by post
+4271	保育園	ほいくえん	nursery school; daycare center
+4272	幼児	ようじ	young child; infant
+4273	託児所	たくじしょ	childcare facility; nursery
+4274	発達	はったつ	development (of a child, skill)
+4275	しつけ	しつけ	discipline; upbringing
+4276	叱る	しかる	to scold
+4277	褒める	ほめる	to praise
+4278	遊具	ゆうぐ	playground equipment
+4279	習い事	ならいごと	lessons; extracurricular activities (for children)
+4280	生活習慣	せいかつしゅうかん	lifestyle habits; daily routine
+4281	役所	やくしょ	government office; city hall
+4282	窓口	まどぐち	counter; window (service point)
+4283	証明書	しょうめいしょ	certificate; proof document
+4284	手続き	てつづき	procedure; formalities
+4286	交付	こうふ	issuance (of a document, certificate)
+4287	住民票	じゅうみんひょう	residence certificate
+4288	戸籍	こせき	family register
+4290	公共施設	こうきょうしせつ	public facility
+4291	展覧会	てんらんかい	exhibition
+4293	創作	そうさく	creation; original work
+4295	彫刻	ちょうこく	sculpture; carving
+4296	絵画	かいが	painting (as an art form)
+4297	陶芸	とうげい	ceramic art; pottery
+4300	鑑賞	かんしょう	appreciation (of art, film, etc.)
+4301	融資	ゆうし	financing; loan (from a bank)
+4303	株式	かぶしき	stock; share
+4304	利息	りそく	interest (on savings, loans)
+4305	元本	がんぽん	principal (the original invested amount)
+4306	返済	へんさい	repayment (of a loan, debt)
+4307	借金	しゃっきん	debt; borrowed money
+4310	損失	そんしつ	loss (financial)
+4311	避難	ひなん	evacuation; taking refuge
+4312	備蓄	びちく	stockpile; emergency reserves
+4314	警報	けいほう	warning; alarm (weather, disaster)
+4315	震度	しんど	seismic intensity
+4316	津波	つなみ	tsunami
+4317	避難所	ひなんじょ	evacuation shelter
+4318	救助	きゅうじょ	rescue
+4319	防災グッズ	ぼうさいぐっず	disaster preparedness kit; emergency supplies
+4321	筋力	きんりょく	muscular strength
+4322	鍛える	きたえる	to train; to build up (body, skill)
+4323	有酸素運動	ゆうさんそうんどう	aerobic exercise
+4324	負荷	ふか	load; strain; burden (physical, mechanical)
+4326	持続	じぞく	continuation; sustaining
+4327	器具	きぐ	equipment; apparatus
+4328	指導員	しどういん	instructor; trainer
+4329	体幹	たいかん	core (of the body)
+4331	調理器具	ちょうりきぐ	cooking equipment; kitchen utensils
+4332	鍋	なべ	pot; pan
+4333	刃物	はもの	blade; cutlery; edged tool
+4334	炊飯器	すいはんき	rice cooker
+4335	解凍	かいとう	defrosting; thawing
+4336	圧力鍋	あつりょくなべ	pressure cooker
+4337	計量	けいりょう	measuring (quantity, weight)
+4338	真空パック	しんくうぱっく	vacuum pack; vacuum-sealed package
+4339	焦げ付く	こげつく	to burn onto (a pan); to get scorched
+4340	下ごしらえ	したごしらえ	food preparation; prepping ingredients
+4341	人工知能	じんこうちのう	artificial intelligence
+4342	革新	かくしん	innovation; reform
+4343	自動化	じどうか	automation
+4345	仮想現実	かそうげんじつ	virtual reality
+4346	先端	せんたん	cutting-edge; forefront; tip
+4350	端末	たんまつ	terminal (device); endpoint
+4351	妊娠	にんしん	pregnancy
+4352	妊婦	にんぷ	pregnant woman
+4353	出産	しゅっさん	childbirth; giving birth
+4354	陣痛	じんつう	labor pains
+4355	育児休暇	いくじきゅうか	childcare leave; parental leave
+4356	母乳	ぼにゅう	breast milk
+4357	胎児	たいじ	fetus; unborn baby
+4358	検診	けんしん	medical checkup; screening
+4359	予定日	よていび	expected date (of delivery)
+4360	産休	さんきゅう	maternity leave
+4362	仲介	ちゅうかい	mediation; brokerage
+4363	物件	ぶっけん	property; real estate listing
+4364	内見	ないけん	property viewing; house viewing
+4365	頭金	あたまきん	down payment
+4366	住宅ローン	じゅうたくろーん	home loan; mortgage
+4367	登記	とうき	registration (of property ownership)
+4368	名義	めいぎ	name; title (of ownership)
+4369	築年数	ちくねんすう	age of a building (years since construction)
+4370	間取り	まどり	floor plan; room layout
+4371	運転免許	うんてんめんきょ	driver's license
+4372	交通違反	こうつういはん	traffic violation
+4373	駐車違反	ちゅうしゃいはん	parking violation
+4374	取り締まり	とりしまり	crackdown; enforcement (traffic, regulations)
+4375	速度違反	そくどいはん	speeding violation
+4376	標識	ひょうしき	sign; signpost
+4377	踏切	ふみきり	railroad crossing
+4378	横断歩道	おうだんほどう	pedestrian crossing; crosswalk
+4379	追い越し	おいこし	overtaking; passing (a vehicle)
+4380	接触事故	せっしょくじこ	minor collision; fender bender
+4381	議事録	ぎじろく	meeting minutes
+4383	欠席	けっせき	absence
+4384	議題	ぎだい	agenda item; topic for discussion
+4388	司会	しかい	moderator; emcee
+4389	延期	えんき	postponement
+4390	資料共有	しりょうきょうゆう	sharing documents; document sharing
+4391	寄付	きふ	donation
+4392	募金	ぼきん	fundraising; collecting donations
+4393	奉仕活動	ほうしかつどう	volunteer service; community service
+4394	支援団体	しえんだんたい	support organization; aid group
+4395	恩恵	おんけい	benefit; blessing; grace
+4397	貧困	ひんこん	poverty
+4398	困っている人	こまっているひと	someone in need; person in trouble
+4399	施設訪問	しせつほうもん	facility visit (e.g. nursing home, orphanage)
+4400	無償	むしょう	free of charge; without compensation
+4402	衰える	おとろえる	to decline; to weaken
+4403	認知症	にんちしょう	dementia
+4404	介護施設	かいごしせつ	care facility; nursing home
+4405	寿命	じゅみょう	lifespan
+4406	孤独	こどく	loneliness; solitude
+4407	独居	どっきょ	living alone (typically of elderly)
+4408	看護	かんご	nursing care
+4409	見守る	みまもる	to watch over; to keep an eye on
+4410	延命	えんめい	life-prolonging; extending life
+4412	披露宴	ひろうえん	wedding reception
+4413	新郎新婦	しんろうしんぷ	bride and groom
+4414	祝儀	しゅうぎ	monetary wedding gift; celebratory gift
+4415	誓いの言葉	ちかいのことば	wedding vows
+4416	仲人	なこうど	matchmaker; go-between
+4417	招待状	しょうたいじょう	invitation card
+4418	乾杯	かんぱい	toast; cheers
+4419	式場	しきじょう	ceremony venue
+4420	祝う	いわう	to celebrate
+4421	接客	せっきゃく	customer service
+4422	陳列	ちんれつ	display; arrangement (of goods)
+4423	棚卸し	たなおろし	inventory check; stocktaking
+4424	在庫確認	ざいこかくにん	stock check; inventory confirmation
+4425	発注	はっちゅう	placing an order (from a supplier)
+4426	返金	へんきん	refund
+4428	苦情	くじょう	complaint
+4430	常連客	じょうれんきゃく	regular customer
+4431	語学留学	ごがくりゅうがく	language study abroad
+4432	習得	しゅうとく	mastery; acquisition (of a skill, language)
+4434	通訳	つうやく	interpretation; interpreter
+4438	上達	じょうたつ	improvement; progress (in a skill)
+4439	語彙	ごい	vocabulary
+4440	母語	ぼご	native language; mother tongue
+4441	優先順位	ゆうせんじゅんい	priority; order of priority
+4442	締め切り	しめきり	deadline
+4444	先延ばし	さきのばし	procrastination; postponement
+4446	効率化	こうりつか	streamlining; making more efficient
+4447	習慣化	しゅうかんか	habit formation; making into a habit
+4448	集中力	しゅうちゅうりょく	concentration; focus
+4449	計画的	けいかくてき	planned; systematic
+4451	葬式	そうしき	funeral
+4452	喪服	もふく	mourning clothes
+4453	遺族	いぞく	bereaved family
+4454	弔問	ちょうもん	condolence visit
+4455	香典	こうでん	condolence money
+4456	火葬	かそう	cremation
+4457	お墓	おはか	grave
+4458	悲しむ	かなしむ	to grieve; to be sad
+4459	追悼	ついとう	mourning; memorial (for the deceased)
+4460	訃報	ふほう	obituary; news of death
+4461	家電製品	かでんせいひん	home electrical appliance
+4462	洗濯機	せんたくき	washing machine
+4464	掃除機	そうじき	vacuum cleaner
+4465	暖房	だんぼう	heating
+4466	換気扇	かんきせん	ventilation fan; exhaust fan
+4467	故障	こしょう	breakdown; malfunction
+4468	保証書	ほしょうしょ	warranty card
+4469	説明書	せつめいしょ	instruction manual; explanatory document
+4470	省エネ性能	しょうえねせいのう	energy-saving performance
+4471	睡眠	すいみん	sleep
+4472	不眠	ふみん	insomnia; sleeplessness
+4473	熟睡	じゅくすい	deep sleep; sound sleep
+4474	寝室	しんしつ	bedroom
+4475	目覚める	めざめる	to wake up
+4476	横になる	よこになる	to lie down
+4477	仮眠	かみん	nap; short sleep
+4478	眠気	ねむけ	drowsiness; sleepiness
+4479	休養	きゅうよう	rest; recuperation
+4480	疲れが取れる	つかれがとれる	to recover from fatigue
+4481	人脈	じんみゃく	personal network; connections
+4482	名刺交換	めいしこうかん	business card exchange
+4483	交流会	こうりゅうかい	networking event; social gathering
+4484	繋がり	つながり	connection; tie; relationship
+4485	孤立	こりつ	isolation
+4486	疎遠	そえん	estrangement; drifting apart
+4487	絆	きずな	bond; tie (emotional)
+4489	縁	えん	connection; fate; relationship
+4490	気軽に話す	きがるにはなす	to talk casually; to chat freely
+4491	家計簿	かけいぼ	household account book; budget ledger
+4492	浪費	ろうひ	wasteful spending; squandering
+4493	出費	しゅっぴ	expense; expenditure
+4494	積み立て	つみたて	savings accumulation; installment savings
+4496	固定費	こていひ	fixed costs; fixed expenses
+4497	変動費	へんどうひ	variable costs; variable expenses
+4498	生活費	せいかつひ	living expenses; cost of living
+4499	収支	しゅうし	income and expenditure; balance
+4500	貯蓄	ちょちく	savings
+4501	気候	きこう	climate
+4502	気圧	きあつ	atmospheric pressure
+4503	寒波	かんぱ	cold wave
+4504	熱帯夜	ねったいや	sweltering night
+4505	日照	にっしょう	sunlight; sunshine duration
+4506	積雪	せきせつ	accumulated snow
+4507	暴風	ぼうふう	violent wind
+4508	洪水	こうずい	flood
+4509	乾燥	かんそう	dryness
+4510	注意報	ちゅういほう	weather advisory; warning bulletin
+4512	気遣い	きづかい	thoughtfulness
+4513	謙遜	けんそん	modesty; humility
+4514	作法	さほう	manners; etiquette
+4516	失礼	しつれい	rudeness; discourtesy
+4517	控える	ひかえる	to refrain from
+4518	譲る	ゆずる	to yield; give way
+4519	慎む	つつしむ	to be discreet; refrain
+4520	わきまえる	わきまえる	to understand one's position
+4521	配布	はいふ	distribution; handout
+4522	周知	しゅうち	making something widely known
+4523	確認事項	かくにんじこう	points requiring confirmation
+4524	引き継ぎ	ひきつぎ	handover
+4525	進捗	しんちょく	progress
+4527	回覧	かいらん	circulation of a document
+4528	承認	しょうにん	approval
+4529	了承	りょうしょう	acknowledgment; consent
+4530	催促	さいそく	reminder; urging
+4532	決断	けつだん	decision
+4540	妥当	だとう	reasonable; appropriate
+4542	不良	ふりょう	defect; faulty condition
+4543	欠陥	けっかん	defect; flaw
+4544	耐久性	たいきゅうせい	durability
+4545	精度	せいど	precision; accuracy
+4546	寸法	すんぽう	dimensions
+4547	誤差	ごさ	error; margin of error
+4548	仕様	しよう	specification
+4549	試作	しさく	prototype production
+4550	検品	けんぴん	product inspection
+4555	仮説	かせつ	hypothesis
+4557	検証	けんしょう	verification
+4559	数値	すうち	numerical value
+4560	比率	ひりつ	ratio
+4566	批判	ひはん	criticism
+4567	反論	はんろん	counterargument
+4569	説得	せっとく	persuasion
+4571	穏やか	おだやか	calm; gentle
+4572	素直	すなお	honest; obedient
+4573	慎重	しんちょう	cautious
+4574	大胆	だいたん	bold; daring
+4575	冷静	れいせい	calm; composed
+4576	責任感	せきにんかん	sense of responsibility
+4577	協調性	きょうちょうせい	cooperativeness
+4578	頑固	がんこ	stubborn
+4579	向上心	こうじょうしん	desire for self-improvement
+4580	弾力	だんりょく	elasticity; resilience
+4581	対立	たいりつ	conflict; opposition
+4582	衝突	しょうとつ	collision; clash
+4583	仲直り	なかなおり	reconciliation
+4585	裏切る	うらぎる	to betray
+4586	責める	せめる	to blame
+4588	誤る	あやまる	to make a mistake
+4589	尊重	そんちょう	respect
+4590	歩み寄る	あゆみよる	to make a compromise
+4594	逸脱	いつだつ	deviation; departure from norms
+4597	厳守	げんしゅ	strict observance
+4599	施行	しこう	enforcement; putting into effect
+4600	例外	れいがい	exception
+4601	政策	せいさく	policy
+4604	議会	ぎかい	assembly; parliament
+4605	選挙	せんきょ	election
+4606	投票	とうひょう	voting
+4610	自治体	じちたい	local government
+4612	不況	ふきょう	recession
+4617	欠損	けっそん	deficit; shortfall
+4620	成長率	せいちょうりつ	growth rate
+4622	登用	とうよう	appointment; promotion to a post
+4623	解雇	かいこ	dismissal
+4624	待遇	たいぐう	treatment; employment conditions
+4625	給与	きゅうよ	salary
+4626	手当	てあて	allowance
+4628	定年	ていねん	retirement age
+4630	労働力	ろうどうりょく	labor force
+4631	温暖化	おんだんか	global warming
+4632	排出	はいしゅつ	emission; discharge
+4633	原料	げんりょう	raw material
+4634	再生可能	さいせいかのう	renewable
+4635	生態系	せいたいけい	ecosystem
+4636	汚染	おせん	pollution
+4637	廃棄物	はいきぶつ	waste material
+4640	持続可能	じぞくかのう	sustainable
+4643	容疑者	ようぎしゃ	suspect
+4644	被害者	ひがいしゃ	victim
+4645	逮捕	たいほ	arrest
+4648	警備	けいび	security; guard
+4649	通報	つうほう	report to authorities
+4650	不審者	ふしんしゃ	suspicious person
+4652	負傷	ふしょう	injury
+4653	救出	きゅうしゅつ	rescue; extrication
+4654	救急車	きゅうきゅうしゃ	ambulance
+4656	損害	そんがい	damage; loss
+4657	補償	ほしょう	compensation; indemnity
+4658	過失	かしつ	negligence; fault
+4659	目撃者	もくげきしゃ	witness
+4660	届け出	とどけで	official notification
+4662	論説	ろんせつ	editorial; opinion article
+4663	見出し	みだし	headline
+4664	速報	そくほう	breaking news
+4665	会見	かいけん	press conference; interview
+4667	世論	せろん	public opinion
+4668	公表	こうひょう	public announcement
+4669	情報源	じょうほうげん	information source
+4670	訂正	ていせい	correction
+4671	個人情報	こじんじょうほう	personal information
+4672	漏えい	ろうえい	leak; disclosure
+4673	認証	にんしょう	authentication
+4674	暗号化	あんごうか	encryption
+4675	不正アクセス	ふせいアクセス	unauthorized access
+4676	脅威	きょうい	threat
+4679	復旧	ふっきゅう	restoration; recovery
+4680	脆弱性	ぜいじゃくせい	vulnerability
+4683	発明	はつめい	invention
+4686	性能	せいのう	performance; capability
+4689	機械化	きかいか	mechanization
+4690	先端技術	せんたんぎじゅつ	cutting-edge technology
+4692	変動	へんどう	fluctuation
+4693	推移	すいい	transition; development
+4695	縮小	しゅくしょう	reduction; contraction
+4698	急増	きゅうぞう	rapid increase
+4699	浸透	しんとう	penetration; permeation; spread
+4700	衰退	すいたい	decline
+4706	効力	こうりょく	efficacy; legal effect
+4707	打撃	だげき	blow; hit; serious damage
+4710	招く	まねく	to cause; invite
+4711	可能性	かのうせい	possibility
+4712	見込み	みこみ	prospect; likelihood
+4714	推測	すいそく	conjecture; estimation
+4715	想定	そうてい	assumption; supposition
+4718	おそらく	おそらく	probably
+4719	万一	まんいち	in the unlikely event
+4720	見通し	みとおし	outlook; forecast
+4721	査定	さてい	assessment; appraisal
+4724	劣る	おとる	to be inferior
+4726	不十分	ふじゅうぶん	insufficient
+4728	無効	むこう	invalid; ineffective
+4729	公平	こうへい	fair; impartial
+4730	客観的	きゃっかんてき	objective
+4731	概要	がいよう	outline; overview
+4734	要点	ようてん	main point
+4735	具体例	ぐたいれい	concrete example
+4738	文脈	ぶんみゃく	context
+4742	及ぼす	およぼす	to exert; cause
+4746	防ぐ	ふせぐ	to prevent

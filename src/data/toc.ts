@@ -2,102 +2,15 @@
 
 import { buildN2VocabularyLessonTocItems, buildN2VocabularyQuizTocItems } from "./tocVocabularyItems";
 import { buildN2GrammarLessonTocItems, buildN2GrammarQuizTocItems } from "./tocGrammarItems";
+import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
+import { formatN2VocabularyTocQuizId } from "../utils/vocabularyDisplay";
 export type TocItemId =
   | "intro-hook"
-  | "word-1-10"
-  | "word-11-20"
-  | "word-21-30"
-  | "word-31-40"
-  | "word-41-50"
-  | "word-51-60"
-  | "word-61-70"
-  | "word-71-80"
-  | "word-81-90"
-  | "word-91-100"
-  | "word-101-110"
-  | "word-111-120"
-  | "word-121-130"
-  | "word-131-140"
-  | "word-141-150"
-  | "word-151-160"
-  | "word-161-170"
-  | "word-171-180"
-  | "word-181-190"
-  | "word-191-200"
-  | "word-201-210"
-  | "word-211-220"
-  | "word-221-230"
-  | "word-231-240"
-  | "word-241-250"
-  | "word-251-260"
-  | "word-261-270"
-  | "word-271-280"
-  | "word-281-290"
-  | "word-291-300"
-  | "word-301-310"
-  | "word-311-320"
-  | "word-321-330"
-  | "word-331-340"
-  | "word-341-350"
-  | "word-351-360"
-  | "word-361-370"
-  | "word-371-380"
-  | "word-381-390"
-  | "word-391-400"
-  | "word-401-410"
-  | "word-411-420"
-  | "word-421-430"
-  | "word-431-440"
-  | "word-441-450"
-  | "word-451-460"
-  | "word-461-470"
-  | "word-471-480"
-  | "word-481-490"
-  | "word-491-500"
-| "word-501-510"
-  | "word-511-520"
-  | "word-521-530"
-  | "word-531-540"
-  | "word-541-550"
-  | "word-551-560"
-  | "word-561-570"
-  | "word-571-580"
-  | "word-581-590"
-  | "word-591-600"
-  | "word-601-610"
-  | "word-611-620"
-  | "word-621-630"
-  | "word-631-640"
-  | "word-641-650"
-  | "word-651-660"
-  | "word-661-670"
-  | "word-671-680"
-  | "word-681-690"
-  | "word-691-700"
-  | "word-701-710"
-  | "word-711-720"
-  | "word-721-730"
-  | "word-731-740"
-  | "word-741-750"
+  | `word-${number}-${number}`
   | "word-n1-01"
   | "word-n1-02"
   | "word-n1-03"
-  | "grammar-f1-10"
-  | "grammar-f11-20"
-  | "grammar-f21-30"
-  | "grammar-f31-40"
-  | "grammar-f41-50"
-  | "grammar-f51-60"
-  | "grammar-f61-70"
-  | "grammar-f71-80"
-  | "grammar-f81-90"
-  | "grammar-f91-100"
-  | "grammar-f101-110"
-  | "grammar-f111-120"
-  | "grammar-f121-130"
-  | "grammar-f131-140"
-  | "grammar-f141-150"
-  | "grammar-f151-152"
+  | `grammar-f${number}-${number}`
   | "n1-grammar-01"
   | "n1-grammar-02"
   | "n1-grammar-03"
@@ -108,105 +21,49 @@ export type TocItemId =
   | "n1-grammar-08"
   | "n1-grammar-09"
   | "quiz-pre-comment"
-  | "quiz-vocab-1-10"
-  | "quiz-vocab-11-20"
-  | "quiz-vocab-21-30"
-  | "quiz-vocab-31-40"
-  | "quiz-vocab-41-50"
-  | "quiz-vocab-51-60"
-  | "quiz-vocab-61-70"
-  | "quiz-vocab-71-80"
-  | "quiz-vocab-81-90"
-  | "quiz-vocab-91-100"
-  | "quiz-vocab-101-110"
-  | "quiz-vocab-111-120"
-  | "quiz-vocab-121-130"
-  | "quiz-vocab-131-140"
-  | "quiz-vocab-141-150"
-  | "quiz-vocab-151-160"
-  | "quiz-vocab-161-170"
-  | "quiz-vocab-171-180"
-  | "quiz-vocab-181-190"
-  | "quiz-vocab-191-200"
-  | "quiz-vocab-201-210"
-  | "quiz-vocab-211-220"
-  | "quiz-vocab-221-230"
-  | "quiz-vocab-231-240"
-  | "quiz-vocab-241-250"
-  | "quiz-vocab-251-260"
-  | "quiz-vocab-261-270"
-  | "quiz-vocab-271-280"
-  | "quiz-vocab-281-290"
-  | "quiz-vocab-291-300"
-  | "quiz-vocab-301-310"
-  | "quiz-vocab-311-320"
-  | "quiz-vocab-321-330"
-  | "quiz-vocab-331-340"
-  | "quiz-vocab-341-350"
-  | "quiz-vocab-351-360"
-  | "quiz-vocab-361-370"
-  | "quiz-vocab-371-380"
-  | "quiz-vocab-381-390"
-  | "quiz-vocab-391-400"
-  | "quiz-vocab-401-410"
-  | "quiz-vocab-411-420"
-  | "quiz-vocab-421-430"
-  | "quiz-vocab-431-440"
-  | "quiz-vocab-441-450"
-  | "quiz-vocab-451-460"
-  | "quiz-vocab-461-470"
-  | "quiz-vocab-471-480"
-  | "quiz-vocab-481-490"
-  | "quiz-vocab-491-500"
-  | "quiz-vocab-501-510"
-  | "quiz-vocab-511-520"
-  | "quiz-vocab-521-530"
-  | "quiz-vocab-531-540"
-  | "quiz-vocab-541-550"
-  | "quiz-vocab-551-560"
-  | "quiz-vocab-561-570"
-  | "quiz-vocab-571-580"
-  | "quiz-vocab-581-590"
-  | "quiz-vocab-591-600"
-  | "quiz-vocab-601-610"
-  | "quiz-vocab-611-620"
-  | "quiz-vocab-621-630"
-  | "quiz-vocab-631-640"
-  | "quiz-vocab-641-650"
-  | "quiz-vocab-651-660"
-  | "quiz-vocab-661-670"
-  | "quiz-vocab-671-680"
-  | "quiz-vocab-681-690"
-  | "quiz-vocab-691-700"
-  | "quiz-vocab-701-710"
-  | "quiz-vocab-711-720"
-  | "quiz-vocab-721-730"
-  | "quiz-vocab-731-740"
-  | "quiz-vocab-741-750"
+  | `quiz-vocab-${number}-${number}`
   | "quiz-vocab-n1-01"
   | "quiz-vocab-n1-02"
   | "quiz-vocab-n1-03"
-  
-  | "quiz-grammar-1-10"
-  | "quiz-grammar-11-20"
-  | "quiz-grammar-21-30"
-  | "quiz-grammar-31-40"
-  | "quiz-grammar-41-50"
-  | "quiz-grammar-51-60"
-  | "quiz-grammar-61-70"
-  | "quiz-grammar-71-80"
-  | "quiz-grammar-81-90"
-  | "quiz-grammar-91-100"
-  | "quiz-grammar-101-110"
-  | "quiz-grammar-111-120"
-  | "quiz-grammar-121-130"
-  | "quiz-grammar-131-140"
-  | "quiz-grammar-141-150"
-  | "quiz-grammar-151-152"
+  | `quiz-grammar-${number}-${number}`
   | "quiz-mixed"
   | "quiz-final"
   | "quiz-after-comment"
   | "ending-cta"
+  | "interview-01"
+  | "interview-02"
+  | "interview-03"
+  | "interview-04"
+  | "interview-05"
+  | "interview-06"
+  | "interview-07"
+  | "interview-08"
+  | "interview-09"
+  | "interview-10"
+  | "interview-11"
+  | "interview-12"
+  | "interview-13"
+  | "interview-14"
+  | "interview-15"
+  | "interview-16"
+  | "interview-17"
+  | "interview-mix-01"
+  | "interview-mix-02"
+  | "interview-mix-03"
+  | "interview-mix-04"
+  | "interview-mix-05"
+  | "interview-mix-06"
+  | "interview-mix-07"
+  | "interview-mix-08"
+  | "interview-mix-09"
+  | "interview-mix-10"
+  | "interview-mix-11"
+  | "interview-mix-12"
+  | "interview-mix-13"
+  | "interview-mix-14"
+  | "interview-mix-15"
+  | "interview-mix-16"
+  | "interview-mix-17"
   | "glossary";
 
 export type TocItemKind =
@@ -217,6 +74,8 @@ export type TocItemKind =
   | "quiz-pre"
   | "quiz-after"
   | "ending"
+  | "interview"
+  | "interview-mix"
   | "glossary";
 
 export type TocItem = {
@@ -227,6 +86,8 @@ export type TocItem = {
   lessonId?: string;
   /** Quiz id when this item opens a quiz screen. */
   quizId?: string;
+  /** Interview prep section id when this item opens interview practice. */
+  interviewSectionId?: string;
 };
 
 export type TocGroup = {
@@ -326,6 +187,222 @@ export const tocGroups: TocGroup[] = [
     items: [{ id: "ending-cta", label: "Custom Ending CTA", kind: "ending" }],
   },
   {
+    id: "practice",
+    title: "Practice · Interview Prep",
+    items: [
+      {
+        id: "interview-01",
+        label: "1. Zoom接続・開始",
+        kind: "interview",
+        interviewSectionId: "01-join",
+      },
+      {
+        id: "interview-02",
+        label: "2. 最初のあいさつ",
+        kind: "interview",
+        interviewSectionId: "02-greeting",
+      },
+      {
+        id: "interview-03",
+        label: "3. 自己紹介",
+        kind: "interview",
+        interviewSectionId: "03-self-intro",
+      },
+      {
+        id: "interview-04",
+        label: "4. 現在の仕事内容",
+        kind: "interview",
+        interviewSectionId: "04-current-job",
+      },
+      {
+        id: "interview-05",
+        label: "5. Imatestの経験",
+        kind: "interview",
+        interviewSectionId: "05-imatest",
+      },
+      {
+        id: "interview-06",
+        label: "6. Pythonの経験",
+        kind: "interview",
+        interviewSectionId: "06-python",
+      },
+      {
+        id: "interview-07",
+        label: "7. なぜ転職を考えているか",
+        kind: "interview",
+        interviewSectionId: "07-why-change",
+      },
+      {
+        id: "interview-08",
+        label: "8. なぜQuest Globalか",
+        kind: "interview",
+        interviewSectionId: "08-why-quest",
+      },
+      {
+        id: "interview-09",
+        label: "9. あなたの強み",
+        kind: "interview",
+        interviewSectionId: "09-strengths",
+      },
+      {
+        id: "interview-10",
+        label: "10. あなたの弱み",
+        kind: "interview",
+        interviewSectionId: "10-weaknesses",
+      },
+      {
+        id: "interview-11",
+        label: "11. 日本語について",
+        kind: "interview",
+        interviewSectionId: "11-japanese",
+      },
+      {
+        id: "interview-12",
+        label: "12. 年収について",
+        kind: "interview",
+        interviewSectionId: "12-salary",
+      },
+      {
+        id: "interview-13",
+        label: "13. 入社可能時期",
+        kind: "interview",
+        interviewSectionId: "13-start-date",
+      },
+      {
+        id: "interview-14",
+        label: "14. ビザについて",
+        kind: "interview",
+        interviewSectionId: "14-visa",
+      },
+      {
+        id: "interview-15",
+        label: "15. 転勤は可能か",
+        kind: "interview",
+        interviewSectionId: "15-relocation",
+      },
+      {
+        id: "interview-16",
+        label: "16. こちらからの質問",
+        kind: "interview",
+        interviewSectionId: "16-questions",
+      },
+      {
+        id: "interview-17",
+        label: "17. 面接の最後",
+        kind: "interview",
+        interviewSectionId: "17-closing",
+      },
+    ],
+  },
+  {
+    id: "practice-mix",
+    title: "Practice · N3 JP+EN Mix",
+    items: [
+      {
+        id: "interview-mix-01",
+        label: "1. Zoomの最初",
+        kind: "interview-mix",
+        interviewSectionId: "01-zoom",
+      },
+      {
+        id: "interview-mix-02",
+        label: "2. 自己紹介",
+        kind: "interview-mix",
+        interviewSectionId: "02-intro",
+      },
+      {
+        id: "interview-mix-03",
+        label: "3. 今の仕事内容",
+        kind: "interview-mix",
+        interviewSectionId: "03-job",
+      },
+      {
+        id: "interview-mix-04",
+        label: "4. Imatestの経験",
+        kind: "interview-mix",
+        interviewSectionId: "04-imatest",
+      },
+      {
+        id: "interview-mix-05",
+        label: "5. Pythonの経験",
+        kind: "interview-mix",
+        interviewSectionId: "05-python",
+      },
+      {
+        id: "interview-mix-06",
+        label: "6. なぜ転職したいですか",
+        kind: "interview-mix",
+        interviewSectionId: "06-why-change",
+      },
+      {
+        id: "interview-mix-07",
+        label: "7. なぜQuest Globalですか",
+        kind: "interview-mix",
+        interviewSectionId: "07-why-quest",
+      },
+      {
+        id: "interview-mix-08",
+        label: "8. 強み",
+        kind: "interview-mix",
+        interviewSectionId: "08-strengths",
+      },
+      {
+        id: "interview-mix-09",
+        label: "9. 弱み",
+        kind: "interview-mix",
+        interviewSectionId: "09-weaknesses",
+      },
+      {
+        id: "interview-mix-10",
+        label: "10. 日本語について",
+        kind: "interview-mix",
+        interviewSectionId: "10-japanese",
+      },
+      {
+        id: "interview-mix-11",
+        label: "11. 年収",
+        kind: "interview-mix",
+        interviewSectionId: "11-salary",
+      },
+      {
+        id: "interview-mix-12",
+        label: "12. 入社時期",
+        kind: "interview-mix",
+        interviewSectionId: "12-start",
+      },
+      {
+        id: "interview-mix-13",
+        label: "13. ビザ",
+        kind: "interview-mix",
+        interviewSectionId: "13-visa",
+      },
+      {
+        id: "interview-mix-14",
+        label: "14. 転勤",
+        kind: "interview-mix",
+        interviewSectionId: "14-relocation",
+      },
+      {
+        id: "interview-mix-15",
+        label: "15. 分からない質問が来たとき",
+        kind: "interview-mix",
+        interviewSectionId: "15-clarify",
+      },
+      {
+        id: "interview-mix-16",
+        label: "16. こちらからの質問",
+        kind: "interview-mix",
+        interviewSectionId: "16-questions",
+      },
+      {
+        id: "interview-mix-17",
+        label: "17. 最後",
+        kind: "interview-mix",
+        interviewSectionId: "17-closing",
+      },
+    ],
+  },
+  {
     id: "reference",
     title: "Reference",
     items: [
@@ -351,222 +428,19 @@ export function findTocItemByLessonId(lessonId: string): TocItem | undefined {
   return undefined;
 }
 
-export const lessonGroupIds: TocItemId[] = [
-  "word-1-10",
-  "word-11-20",
-  "word-21-30",
-  "word-31-40",
-  "word-41-50",
-  "word-51-60",
-  "word-61-70",
-  "word-71-80",
-  "word-81-90",
-  "word-91-100",
-  "word-101-110",
-  "word-111-120",
-  "word-121-130",
-  "word-131-140",
-  "word-141-150",
-  "word-151-160",
-  "word-161-170",
-  "word-171-180",
-  "word-181-190",
-  "word-191-200",
-  "word-201-210",
-  "word-211-220",
-  "word-221-230",
-  "word-231-240",
-  "word-241-250",
-  "word-251-260",
-  "word-261-270",
-  "word-271-280",
-  "word-281-290",
-  "word-291-300",
-  "word-301-310",
-  "word-311-320",
-  "word-321-330",
-  "word-331-340",
-  "word-341-350",
-  "word-351-360",
-  "word-361-370",
-  "word-371-380",
-  "word-381-390",
-  "word-391-400",
-  "word-401-410",
-  "word-411-420",
-  "word-421-430",
-  "word-431-440",
-  "word-441-450",
-  "word-451-460",
-  "word-461-470",
-  "word-471-480",
-  "word-481-490",
-  "word-491-500",
-  "word-501-510",
-  "word-511-520",
-  "word-521-530",
-  "word-531-540",
-  "word-541-550",
-  "word-551-560",
-  "word-561-570",
-  "word-571-580",
-  "word-581-590",
-  "word-591-600",
-  "word-601-610",
-  "word-611-620",
-  "word-621-630",
-  "word-631-640",
-  "word-641-650",
-  "word-651-660",
-  "word-661-670",
-  "word-671-680",
-  "word-681-690",
-  "word-691-700",
-  "word-701-710",
-  "word-711-720",
-  "word-721-730",
-  "word-731-740",
-  "word-741-750",
-  "word-n1-01",
-  "word-n1-02",
-  "word-n1-03",
-  "grammar-1-10",
-  "grammar-11-20",
-  "grammar-21-30",
-  "grammar-31-40",
-  "grammar-41-50",
-  "grammar-51-60",
-  "grammar-61-70",
-  "grammar-71-80",
-  "grammar-81-90",
-  "grammar-91-100",
-  "grammar-101-110",
-  "grammar-111-120",
-  "grammar-121-130",
-  "grammar-131-140",
-  "grammar-141-150",
-  "grammar-151-160",
-  "grammar-161-170",
-  "grammar-171-180",
-  "grammar-181-190",
-  "grammar-191-200",
-  "grammar-201-210",
-  "grammar-211-220",
-  "grammar-221-230",
-  "grammar-231-240",
-  "grammar-241-250",
-  "grammar-251-260",
-  "grammar-261-270",
-  "grammar-271-280",
-  "grammar-281-290",
-  "grammar-291-300",
-  "grammar-301-310",
-  "grammar-311-320",
-  "grammar-321-330",
-  "grammar-331-340",
-  "grammar-341-350",
-  "grammar-351-360",
-  "grammar-361-370",
-  "grammar-371-380",
-  "grammar-381-390",
-  "grammar-391-400",
-  "grammar-401-410",
-  "grammar-411-420",
-  "grammar-421-430",
-  "grammar-431-440",
-  "grammar-441-450",
-  "grammar-451-460",
-  "grammar-461-470",
-  "grammar-471-480",
-  "grammar-481-490",
-  "grammar-491-500",
-  "n1-grammar-01",
-  "n1-grammar-02",
-  "n1-grammar-03",
-  "n1-grammar-04",
-  "n1-grammar-05",
-  "n1-grammar-06",
-  "n1-grammar-07",
-  "n1-grammar-08",
-  "n1-grammar-09",
-];
+export const lessonGroupIds: TocItemId[] = tocGroups
+  .filter((group) =>
+    group.id === "vocabulary" ||
+    group.id === "vocabulary-n1" ||
+    group.id === "grammar" ||
+    group.id === "grammar-n1"
+  )
+  .flatMap((group) => group.items.map((item) => item.id));
 
 export const quizIds: TocItemId[] = [
-  "quiz-vocab-1-10",
-  "quiz-vocab-11-20",
-  "quiz-vocab-21-30",
-  "quiz-vocab-31-40",
-  "quiz-vocab-41-50",
-  "quiz-vocab-51-60",
-  "quiz-vocab-61-70",
-  "quiz-vocab-71-80",
-  "quiz-vocab-81-90",
-  "quiz-vocab-91-100",
-  "quiz-vocab-101-110",
-  "quiz-vocab-111-120",
-  "quiz-vocab-121-130",
-  "quiz-vocab-131-140",
-  "quiz-vocab-141-150",
-  "quiz-vocab-151-160",
-  "quiz-vocab-161-170",
-  "quiz-vocab-171-180",
-  "quiz-vocab-181-190",
-  "quiz-vocab-191-200",
-  "quiz-vocab-201-210",
-  "quiz-vocab-211-220",
-  "quiz-vocab-221-230",
-  "quiz-vocab-231-240",
-  "quiz-vocab-241-250",
-  "quiz-vocab-251-260",
-  "quiz-vocab-261-270",
-  "quiz-vocab-271-280",
-  "quiz-vocab-281-290",
-  "quiz-vocab-291-300",
-  "quiz-vocab-301-310",
-  "quiz-vocab-311-320",
-  "quiz-vocab-321-330",
-  "quiz-vocab-331-340",
-  "quiz-vocab-341-350",
-  "quiz-vocab-351-360",
-  "quiz-vocab-361-370",
-  "quiz-vocab-371-380",
-  "quiz-vocab-381-390",
-  "quiz-vocab-391-400",
-  "quiz-vocab-401-410",
-  "quiz-vocab-411-420",
-  "quiz-vocab-421-430",
-  "quiz-vocab-431-440",
-  "quiz-vocab-441-450",
-  "quiz-vocab-451-460",
-  "quiz-vocab-461-470",
-  "quiz-vocab-471-480",
-  "quiz-vocab-481-490",
-  "quiz-vocab-491-500",
-  "quiz-vocab-501-510",
-  "quiz-vocab-511-520",
-  "quiz-vocab-521-530",
-  "quiz-vocab-531-540",
-  "quiz-vocab-541-550",
-  "quiz-vocab-551-560",
-  "quiz-vocab-561-570",
-  "quiz-vocab-571-580",
-  "quiz-vocab-581-590",
-  "quiz-vocab-591-600",
-  "quiz-vocab-601-610",
-  "quiz-vocab-611-620",
-  "quiz-vocab-621-630",
-  "quiz-vocab-631-640",
-  "quiz-vocab-641-650",
-  "quiz-vocab-651-660",
-  "quiz-vocab-661-670",
-  "quiz-vocab-671-680",
-  "quiz-vocab-681-690",
-  "quiz-vocab-691-700",
-  "quiz-vocab-701-710",
-  "quiz-vocab-711-720",
-  "quiz-vocab-721-730",
-  "quiz-vocab-731-740",
-  "quiz-vocab-741-750",
+  ...Array.from({ length: N2_VOCAB_LESSON_COUNT }, (_, index) =>
+    formatN2VocabularyTocQuizId(index + 1) as TocItemId
+  ),
   "quiz-vocab-n1-01",
   "quiz-vocab-n1-02",
   "quiz-vocab-n1-03",
@@ -588,4 +462,4 @@ export const quizIds: TocItemId[] = [
   "quiz-grammar-151-152",
   "quiz-mixed",
   "quiz-final",
-];
+]
