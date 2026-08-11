@@ -7,7 +7,7 @@ const typeStart = s.indexOf("export type TocItemId =");
 const typeEnd = s.indexOf("export type TocItemKind");
 if (typeStart < 0 || typeEnd < 0) throw new Error("TocItemId bounds not found");
 
-const newType = `export type TocItemId =
+const _newType = `export type TocItemId =
   | "intro-hook"
   | \\\`word-\\\${number}-\\\${number}\\\`
   | "word-n1-01"

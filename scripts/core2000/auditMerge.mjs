@@ -84,7 +84,7 @@ const report = {
   uniqueCandidateWords: seen.size,
   matchedCandidates: matched.length,
   missingCandidates: missing.length,
-  orphanExisting: orphanExisting.length,
+  orphanExistingCount: orphanExisting.length,
   duplicateCandidateSpellings: dupCands.length,
   finalIfKeepAllExistingAndFill: finalIfKeepAll,
   displaceNeeded,

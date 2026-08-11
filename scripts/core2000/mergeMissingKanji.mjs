@@ -47,7 +47,7 @@ const list = fs
   .split(/\r?\n/)
   .map((l) => l.trim())
   .filter(Boolean);
-const stillMissing = list.filter((k) => !src.includes(`\n  ${k}: {`) && !src.includes(`\n  ${k}: {`));
+const _stillMissing = list.filter((k) => !src.includes(`\n  ${k}: {`) && !src.includes(`\n  ${k}: {`));
 // simpler check
 const still = [];
 for (const k of list) {

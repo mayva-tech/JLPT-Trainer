@@ -1,40 +1,42 @@
-# Core 2000 merge status
+# Core 2000 — Import Complete
 
-## Audit (exact spelling match)
+Vocabulary course expanded from 750 to 2,000 items (IDs 4001–6000).
+
+## Final numbers
 
 | Metric | Count |
 |---|---|
-| Existing trainer words | 750 (IDs 4001–4750) |
-| Candidate list | 2000 unique |
-| Exact matches (preserve existing metadata) | 213 |
-| Existing not in candidate list (KEEP) | 537 |
-| Candidates missing from trainer | 1787 |
-| New items to add (to reach 2000) | 1250 |
-| Candidates displaced | 537 (ranks ~1391–2000 among missing) |
-| New ID range | 4751–6000 |
+| Existing trainer words preserved | 750 (IDs 4001–4750) |
+| New items added | 1,250 (IDs 4751–6000) |
+| Final vocabulary count | 2,000 |
+| Unique words | 2,000 |
+| Lessons | 200 (10 words each) |
+| Quizzes | 200 |
+| Candidate overlap (exact match) | 213 |
+| Existing not in candidate list (kept) | 537 |
+| Candidates displaced | 537 |
+| Missing kanji resolved | 195 |
 
-## Selection rule applied
+## Merge strategy applied
 
-Keep all 750 existing → add highest-priority missing candidates by rank → displace lowest-priority leftover candidates.
+Keep all 750 existing → add 1,250 highest-priority missing candidates by rank → displace 537 lowest-priority candidates.
 
-Artifacts:
-- `scripts/core2000/merge-audit.json`
-- `scripts/core2000/selection-plan.json`
-- `scripts/core2000/to-add.txt`
-- `scripts/core2000/displaced.txt`
+## Key files
 
-## Infrastructure done
+| Purpose | Path |
+|---|---|
+| Course constants | `src/config/vocabularyCourse.ts` |
+| New seeds (generated TS) | `src/data/vocabularyCore2000Seeds.ts` |
+| New lessons 76–200 | `src/data/lessonsCore2000.ts` |
+| Course-wide test | `src/data/core2000Course.test.ts` |
+| Audit artifacts | `scripts/core2000/` |
+| Seed JSON batches | `scripts/core2000/seeds/` |
+| Full inventory | `scripts/core2000/final-selection.tsv` |
+| Human review items | `scripts/core2000/review-needed.txt` |
 
-- `src/config/vocabularyCourse.ts` (counts still 750/75 until content lands)
-- Lesson id regex supports `lesson-100+`
-- TOC vocab builders + quiz mapping use course constants
-- `TocItemId` uses template literals; `quizIds` generated from lesson count
-- Audit script uses `N2_VOCAB_ITEM_COUNT`
+## Validation
 
-## Still required for full import
-
-1. Author 1250 new VocabularySeed records (reading, meaning, phrase, sentence, wordType, folder, kanji)
-2. Append to `vocabulary.ts` + KANJI map updates
-3. Add lessons 76–200 (+ thematic regroup if desired)
-4. Bump `N2_VOCAB_ITEM_COUNT` → 2000 and `N2_VOCAB_LESSON_COUNT` → 200
-5. Update tests; run build / test / lint / audit:vocabulary
+- `npm run build` — pass
+- `npm run test` — 161/161 pass
+- `npm run lint` — pass (pre-existing React hook warnings only)
+- `npm run audit:vocabulary` — exit 0

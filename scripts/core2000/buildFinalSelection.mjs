@@ -94,7 +94,7 @@ const THEME_SPECS = [
 ];
 
 /** Heuristic theme tags for remaining words (order = lesson packing priority). */
-const HEURISTICS = [
+const _HEURISTICS = [
   { key: "demonstratives", category: "Daily Life", subcategory: "Communication", folder: "core-communication", title: "Demonstratives & Questions", test: (w) => /^(これ|それ|あれ|どれ|この|その|あの|どの|誰|何|いつ|どう|なぜ|どうして|どれ|どちら)$/.test(w) },
   { key: "basic-verbs-1", category: "Daily Life", subcategory: "Daily Actions", folder: "core-verbs", title: "Basic Verbs I", test: (w) => /^(する|ある|いる|行く|来る|帰る|食べる|飲む|見る|聞く|言う|話す|読む|書く|買う|売る|持つ|待つ|立つ|座る|歩く|走る|泳ぐ|寝る|起きる|開ける|閉じる|閉める|付ける|消す|出す|入れる|取る|置く|作る|使う|分かる|知る|思う|考える|教える|習う|学ぶ|働く|休む|遊ぶ|会う|送る|もらう|あげる|くれる|始める|終わる|続ける|決める|選ぶ|探す|見つける|忘れる|覚える|手伝う|頼む|断る|許す|謝る|喜ぶ|悲しむ|怒る|笑う|泣く)$/.test(w) },
   { key: "i-adj", category: "Daily Life", subcategory: "Adjectives", folder: "core-adjectives", title: "I-Adjectives", test: (w) => /い$/.test(w) && w.length <= 5 && !/する$/.test(w) && /^(大き|小さ|新し|古|高|安|低|長|短|広|狭|厚|薄|速|早|遅|強|弱|重|軽|暑|熱|寒|涼|暖|温|良|悪|美味|まず|楽し|面白|悲し|嬉し|怖|痛|痒|眠|忙しい|難しい|易しい|優し|厳し|正し|すごい|やばい|近い|遠い|多い|少ない|若い|欲しい|可愛い|美しい|汚い|明るい|暗い|静か|静か)/.test(w) === false ? /い$/.test(w) && !/[する]$/.test(w) : /^(大きい|小さい|新しい|古い|高い|安い|低い|長い|短い|広い|狭い|速い|早い|遅い|強い|弱い|重い|軽い|暑い|熱い|寒い|涼しい|暖かい|温かい|良い|いい|悪い|美味しい|まずい|楽しい|面白い|悲しい|嬉しい|怖い|痛い|眠い|忙しい|難しい|易しい|優しい|厳しい|正しい|近い|遠い|多い|少ない|若い|欲しい|可愛い|美しい|汚い|明るい|暗い|太い|細い|厚い|薄い|甘い|辛い|苦い|塩辛い|酸っぱい|恥ずかしい|寂しい|凄い)$/.test(w) },
@@ -275,7 +275,7 @@ if (used.size !== 1250) {
 let nextId = 4751;
 const newRows = [];
 for (const lesson of newLessons) {
-  lesson.items.forEach((item, idx) => {
+  lesson.items.forEach((item, _idx) => {
     const id = nextId++;
     newRows.push({
       final_position: id - 4000,
