@@ -27,21 +27,42 @@ function stripParentheticalNotes(text: string): string {
     .trim();
 }
 
+function normalizeSpeakCommas(text: string): string {
+  return text
+    .replace(/\s+,/g, ",")
+    .replace(/,(?=[^\s])/g, ", ")
+    .replace(/,\s*,+/g, ",")
+    .replace(/^,\s*/, "")
+    .replace(/,\s*$/, "")
+    .trim();
+}
+
 /**
  * Grammar slot marker ～ / 〜 / ~ — pause after each before the next slot
  * ("not only ～ but also" → "not only, but also").
  */
 function appendWaveDashSpeakPause(text: string): string {
+  return normalizeSpeakCommas(text.replace(/\s*[〜～~]\s*/g, ", "));
+}
+
+/**
+ * Alternates joined by "/" (make/let) — do not say "slash"; insert a longer
+ * ellipsis pause so the voice leaves space between the two words.
+ */
+function appendSlashSpeakPause(text: string): string {
   return text
-    .replace(/\s*[〜～~]\s*/g, ", ")
-    .replace(/\s+,/g, ",")
-    .replace(/,(?=[^\s])/g, ", ")
-    .replace(/,\s*,+/g, ",")
+    .replace(/\s*\/\s*/g, " ... ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s*\.{3,}\s*/g, " ... ")
+    .replace(/^\s*\.{3}\s*/, "")
+    .replace(/\s*\.{3}\s*$/, "")
     .trim();
 }
 
 export function buildEnglishSpeakText(text: string): string {
-  let out = appendWaveDashSpeakPause(stripParentheticalNotes(text));
+  let out = appendSlashSpeakPause(
+    appendWaveDashSpeakPause(stripParentheticalNotes(text))
+  );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");
     out = out.replace(re, (match) => applyCase(match, spoken));

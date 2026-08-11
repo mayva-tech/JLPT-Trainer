@@ -92,6 +92,21 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     expect(only?.spokenText).toMatch(/,$/);
   });
 
+  it("keeps slash alternates speakable with an ellipsis pause", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "to make/let someone do (causative)"
+    );
+    const slashWord = steps.find((s) => s.text.includes("/"));
+    expect(slashWord?.text).toBe("make/let");
+    expect(slashWord?.spokenText).toBe("make ... let");
+    const withSlash = estimateUnitDurationMs(slashWord!, "en");
+    const plain = estimateUnitDurationMs(
+      { start: 0, end: 8, text: "makelet", kind: "word", spokenText: "makelet" },
+      "en"
+    );
+    expect(withSlash).toBeGreaterThan(plain);
+  });
+
   it.each(["~", "〜", "～"])(
     "never highlights the %s slot-marker variant",
     (marker) => {

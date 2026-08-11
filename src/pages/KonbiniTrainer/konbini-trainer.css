@@ -209,15 +209,18 @@
   font-size: 26px;
   line-height: 2;
   font-weight: 600;
+  display: block;
 }
 
 .fm-ro {
+  display: block;
   font-family: var(--fm-mono);
   font-size: 13px;
   opacity: 0.75;
 }
 
 .fm-en {
+  display: block;
   font-size: 14px;
   opacity: 0.9;
 }
@@ -367,6 +370,7 @@
 }
 
 .fm-who {
+  display: block;
   font-family: var(--fm-mono);
   font-size: 9px;
   text-transform: uppercase;
@@ -378,16 +382,18 @@
 .fm-bubble .fm-jp {
   font-size: 17px;
   line-height: 2;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .fm-bubble .fm-ro {
   font-size: 12px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  opacity: 0.8;
 }
 
 .fm-bubble .fm-en {
   font-size: 12px;
+  opacity: 0.95;
 }
 
 .fm-backbtn {

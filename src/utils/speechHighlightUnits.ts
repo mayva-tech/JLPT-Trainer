@@ -829,6 +829,8 @@ const JA_MORA_MS = 160;
 const JA_MIN_UNIT_MS = 120;
 /** Extra dwell after grammar-slot 〜 before the next pattern piece. */
 const WAVE_DASH_PAUSE = 0.9;
+/** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
+const SLASH_PAUSE = 0.85;
 /** English ms weight multiplier at speech rate 1 — leave stable. */
 const EN_WEIGHT_MS = 400;
 
@@ -924,9 +926,15 @@ export function estimateUnitDurationMs(
   const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
   // Commas / Japanese phrase commas (、) — include TTS-inserted pauses in spokenText
   if (/[,，、]/.test(spokenForPunct)) punctPause += 0.3 + KARAOKE_BREAK_POINT;
+  // "/" alternates → spoken as " ... " — longer gap between the two words
+  if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
+    punctPause += SLASH_PAUSE;
+  }
   // Other phrase separators
   if (/[;；:]/.test(spokenForPunct)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
-  if (/[.!?。！？]/.test(spokenForPunct)) punctPause += 0.5 + KARAOKE_BREAK_POINT;
+  if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
+    punctPause += 0.5 + KARAOKE_BREAK_POINT;
+  }
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {
     punctPause += KARAOKE_BREAK_POINT;

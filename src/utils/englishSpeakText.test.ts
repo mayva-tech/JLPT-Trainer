@@ -53,4 +53,12 @@ describe("buildEnglishSpeakText", () => {
     );
     expect(buildEnglishSpeakText("A ~ B ~ C")).toBe("A, B, C");
   });
+
+  it('pauses on "/" instead of saying "slash"', () => {
+    expect(
+      buildEnglishSpeakText("to make/let someone do (causative)")
+    ).toBe("to make ... let someone do");
+    expect(buildEnglishSpeakText("〜せる / させる")).toBe("せる ... させる");
+    expect(buildEnglishSpeakText("make / let")).toBe("make ... let");
+  });
 });
