@@ -7,6 +7,7 @@ import {
   getGrammarItemsForLesson,
 } from "../data/grammar";
 import { grammarBatchDisplayLabel } from "../data/tocGrammarItems";
+import { FuriganaWrapText } from "./FuriganaWrapText";
 
 type Tab = "words" | "grammar";
 type GlossaryPage = 1 | 2;
@@ -187,11 +188,13 @@ export function GlossaryView({ onNavigate }: Props) {
                                   })
                                 }
                               >
-                                {v.word}
+                                <FuriganaWrapText
+                                  surface={v.word}
+                                  reading={v.reading}
+                                  className="glossary-furi"
+                                  showFurigana
+                                />
                               </button>
-                            </td>
-                            <td className="glossary-reading" lang="ja">
-                              {v.reading}
                             </td>
                             <td className="glossary-en">{v.meaning}</td>
                           </tr>
@@ -227,7 +230,12 @@ export function GlossaryView({ onNavigate }: Props) {
                                   })
                                 }
                               >
-                                {g.pattern}
+                                <FuriganaWrapText
+                                  surface={g.pattern}
+                                  reading={g.patternReading}
+                                  className="glossary-furi"
+                                  showFurigana
+                                />
                               </button>
                             </td>
                             <td className="glossary-en">{g.meaning}</td>

@@ -1,4 +1,3 @@
-import { HighlightedJapanese } from "./HighlightedJapanese";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { FitScale } from "./FitScale";
@@ -68,45 +67,30 @@ export function QuizQuestionCard({
 
         <div className="quiz-split">
           <div className="quiz-word-panel">
-            {readingMode === "ruby" ? (
-              <FitScale
-                maxLines={2}
-                watch={`${prompt}|${question.item.reading}|${showReadingLine}`}
-              >
-                <FuriganaWrapText
-                  surface={prompt}
-                  reading={question.item.reading}
-                  className="quiz-word-ja"
-                  highlight={phase === "example" ? null : jaHighlight}
-                  showFurigana={showReadingLine}
-                />
-              </FitScale>
-            ) : (
-              <>
-                <FitScale maxLines={3} watch={prompt}>
-                  <HighlightedJapanese
-                    text={prompt}
-                    className="quiz-word-ja"
-                    highlight={phase === "example" ? null : jaHighlight}
-                  />
-                </FitScale>
-                {showReadingLine ? (
-                  <div className="quiz-word-reading" aria-hidden="true">
-                    {question.item.reading}
-                  </div>
-                ) : null}
-              </>
-            )}
+            <FitScale
+              maxLines={readingMode === "ruby" ? 2 : 3}
+              watch={`${prompt}|${question.item.reading}|${showReadingLine}`}
+            >
+              <FuriganaWrapText
+                surface={prompt}
+                reading={question.item.reading}
+                className="quiz-word-ja"
+                highlight={phase === "example" ? null : jaHighlight}
+                showFurigana={showReadingLine}
+              />
+            </FitScale>
           </div>
 
           <div className="quiz-choices-panel">
             {phase === "example" && example ? (
               <div className="quiz-example-panel">
                 <div className="quiz-prompt">Example</div>
-                <HighlightedJapanese
-                  text={example.text}
+                <FuriganaWrapText
+                  surface={example.text}
+                  reading={example.reading ?? ""}
                   className="quiz-example-ja"
                   highlight={jaHighlight}
+                  showFurigana={Boolean(example.reading)}
                 />
                 {example.meaning ? (
                   <HighlightedEnglish
@@ -165,10 +149,12 @@ export function QuizQuestionCard({
                 {showExampleWithAnswer && example ? (
                   <div className="quiz-example-panel quiz-example-panel--review">
                     <div className="quiz-prompt">Example</div>
-                    <HighlightedJapanese
-                      text={example.text}
+                    <FuriganaWrapText
+                      surface={example.text}
+                      reading={example.reading ?? ""}
                       className="quiz-example-ja"
                       highlight={null}
+                      showFurigana={Boolean(example.reading)}
                     />
                     {example.meaning ? (
                       <HighlightedEnglish

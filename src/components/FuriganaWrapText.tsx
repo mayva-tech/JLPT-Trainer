@@ -149,7 +149,6 @@ function FuriCell({
     <span
       className={`furi-cell ${reading ? "" : "furi-cell--plain"} ${state}`.trim()}
     >
-      <span className="furi-surface">{segment.text}</span>
       {reading ? (
         <span className="furi-reading" aria-hidden="true">
           {reading}
@@ -157,6 +156,7 @@ function FuriCell({
       ) : reserveReadingSpace ? (
         <span className="furi-reading furi-reading--spacer" aria-hidden="true" />
       ) : null}
+      <span className="furi-surface">{segment.text}</span>
     </span>
   );
 }

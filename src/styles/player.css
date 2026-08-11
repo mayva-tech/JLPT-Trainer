@@ -103,13 +103,10 @@
   color: #000;
 }
 
-.word-reading {
-  font-family: var(--font-jp);
-  font-size: 3.4cqw;
-  font-weight: 700;
-  color: #000;
-  margin-top: 1.8cqh;
-  letter-spacing: 0.06em;
+.word-main.jp-wrap,
+.word-main.furigana-wrap {
+  max-height: none;
+  line-height: 1.15;
 }
 
 .word-meaning {
@@ -119,7 +116,7 @@
   margin-top: 1.8cqh;
 }
 
-/* Shared: word-wrapped JP lines + furigana under kanji (fits safe-area) */
+/* Shared: word-wrapped JP lines + furigana ABOVE kanji (fits safe-area) */
 .jp-wrap {
   max-width: 100%;
   max-height: 48cqh;
@@ -128,7 +125,7 @@
 }
 
 /*
- * Wrapped lines each keep kanji + under-reading. Cap height so FitScale
+ * Wrapped lines each keep reading + kanji as one unit. Cap height so FitScale
  * can shrink instead of letting furigana rows collide with top chrome.
  */
 .furigana-wrap.jp-wrap {
@@ -136,14 +133,13 @@
 }
 
 .furigana-wrap .jp-wrap-line {
-  /* Keep under-readings visible when a row wraps */
-  align-items: flex-start;
+  /* Align kanji baselines; readings sit above each cell */
+  align-items: flex-end;
   row-gap: 0.55em;
 }
 
 .furigana-wrap .jp-word {
-  /* Align kanji tops so each wrapped row keeps readings under its own line */
-  align-items: flex-start;
+  align-items: flex-end;
 }
 
 .jp-wrap-line {
@@ -167,32 +163,37 @@
   max-width: 100%;
 }
 
-/* Furigana under kanji — real DOM nodes (not ::after) for reliable display */
+/* Furigana ABOVE kanji — real DOM nodes (not ::after) for reliable display */
 .furigana-wrap .furi-cell {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   flex: 0 0 auto;
   line-height: 1.1;
   white-space: nowrap;
   max-width: 100%;
+  vertical-align: bottom;
   transition: none;
 }
 
 .furigana-wrap .furi-surface {
   display: inline-block;
+  order: 1;
   white-space: nowrap;
 }
 
 .furigana-wrap .furi-reading {
   display: block;
+  order: 0;
   font-family: var(--font-jp);
   font-weight: 700;
   font-size: 0.38em;
   color: #000;
   letter-spacing: 0;
   line-height: 1.15;
-  margin-top: 0.12em;
+  margin-top: 0;
+  margin-bottom: 0.10em;
   user-select: none;
   pointer-events: none;
 }
@@ -201,7 +202,8 @@
   visibility: hidden;
   content: "";
   height: 1.15em;
-  margin-top: 0.12em;
+  margin-top: 0;
+  margin-bottom: 0.10em;
 }
 
 .furigana-wrap.furigana-hidden .furi-reading {
@@ -293,12 +295,10 @@
   line-height: 1;
 }
 
-.review-reading {
-  font-family: var(--font-jp);
-  font-size: 3.4cqw;
-  font-weight: 700;
-  color: #000;
-  margin-top: 1.8cqh;
+.review-word.jp-wrap,
+.review-word.furigana-wrap {
+  max-height: none;
+  line-height: 1.15;
 }
 
 .review-meaning {
@@ -757,10 +757,19 @@
   outline: none;
 }
 
-.glossary-reading {
-  font-family: var(--font-jp);
-  color: #444;
-  white-space: nowrap;
+.glossary-furi.jp-wrap,
+.glossary-furi.furigana-wrap {
+  max-height: none;
+  max-width: 100%;
+  font-size: 1em;
+  line-height: 1.2;
+  display: inline-block;
+  text-align: left;
+}
+
+.glossary-furi .furi-reading {
+  font-size: 0.55em;
+  color: #555;
 }
 
 .glossary-en {
@@ -979,15 +988,6 @@
   max-height: none;
 }
 
-.quiz-word-reading {
-  font-family: var(--font-jp);
-  font-size: 2.6cqw;
-  font-weight: 700;
-  color: #000;
-  margin-top: 1.4cqh;
-  letter-spacing: 0.06em;
-}
-
 .quiz-example-panel {
   display: flex;
   flex-direction: column;
@@ -1020,6 +1020,11 @@
   line-height: 1.4;
   color: #111;
   margin-top: 0.2cqh;
+}
+
+.quiz-example-ja.jp-wrap,
+.quiz-example-ja.furigana-wrap {
+  max-height: none;
 }
 
 .quiz-example-meaning {
@@ -1324,15 +1329,6 @@
 
 .grammar-pattern--review {
   font-size: 8cqw;
-}
-
-.grammar-reading {
-  font-family: var(--font-jp);
-  font-size: 3.2cqw;
-  font-weight: 600;
-  color: #000;
-  margin-top: 1.6cqh;
-  letter-spacing: 0.06em;
 }
 
 .grammar-meaning {

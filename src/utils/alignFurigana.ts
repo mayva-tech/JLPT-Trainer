@@ -1,6 +1,6 @@
 export type FuriganaSegment = {
   text: string;
-  /** Hiragana under kanji only; omit for kana / punctuation. */
+  /** Hiragana reading for kanji segments only; omit for kana / punctuation. */
   reading?: string;
 };
 
