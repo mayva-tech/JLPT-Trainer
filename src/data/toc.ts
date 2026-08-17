@@ -5,6 +5,11 @@ import { buildN2GrammarLessonTocItems, buildN2GrammarQuizTocItems } from "./tocG
 import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
 import { formatN2VocabularyTocQuizId } from "../utils/vocabularyDisplay";
 import { registerSections } from "./registerPairs";
+import {
+  ONOMATOPOEIA_LEVELS,
+  onomatopoeiaCountByLevel,
+} from "./onomatopoeia";
+import type { OnomatopoeiaJlptLevel } from "../types/onomatopoeia";
 export type TocItemId =
   | "intro-hook"
   | `word-${number}-${number}`
@@ -66,6 +71,10 @@ export type TocItemId =
   | "interview-mix-16"
   | "interview-mix-17"
   | `register-${number}`
+  | "ono-n5"
+  | "ono-n4"
+  | "ono-n3"
+  | "ono-n2"
   | "glossary";
 
 export type TocItemKind =
@@ -79,6 +88,7 @@ export type TocItemKind =
   | "interview"
   | "interview-mix"
   | "register"
+  | "onomatopoeia"
   | "glossary";
 
 export type TocItem = {
@@ -93,6 +103,8 @@ export type TocItem = {
   interviewSectionId?: string;
   /** Register section id when this item opens casual ⇄ formal practice. */
   registerSectionId?: string;
+  /** JLPT band when this item opens オノマトペ practice. */
+  onomatopoeiaLevel?: OnomatopoeiaJlptLevel;
 };
 
 export type TocGroup = {
@@ -418,6 +430,16 @@ export const tocGroups: TocGroup[] = [
     })),
   },
   {
+    id: "onomatopoeia",
+    title: "Practice · オノマトペ",
+    items: ONOMATOPOEIA_LEVELS.map((level) => ({
+      id: `ono-${level.toLowerCase()}` as TocItemId,
+      label: `${level} — ${onomatopoeiaCountByLevel[level]} expressions`,
+      kind: "onomatopoeia" as const,
+      onomatopoeiaLevel: level,
+    })),
+  },
+  {
     id: "reference",
     title: "Reference",
     items: [
@@ -485,4 +507,12 @@ export function getRegisterSectionIdForToc(
 ): string | null {
   if (!id) return null;
   return getTocItem(id)?.registerSectionId ?? null;
+}
+
+/** Resolve the オノマトペ JLPT band backing a TOC entry. */
+export function getOnomatopoeiaLevelForToc(
+  id: TocItemId | null
+): OnomatopoeiaJlptLevel | null {
+  if (!id) return null;
+  return getTocItem(id)?.onomatopoeiaLevel ?? null;
 }

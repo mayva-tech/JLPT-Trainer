@@ -1,12 +1,15 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import './konbini-trainer.css';
 import { DECKS, SCRIPTS } from './data';
-import { Furigana } from '../../lib/japanese/furigana';
+import { Furigana, stripFurigana } from '../../lib/japanese/furigana';
 import { useJapaneseVoice } from '../../lib/japanese/useJapaneseVoice';
 import { useProgress } from '../../lib/japanese/useProgress';
-import type { Register, Variant } from '../../lib/japanese/types';
+import type { Register, Script, Variant } from '../../lib/japanese/types';
+import { speechService, SPEECH_RATE_NORMAL } from '../../services/speechService';
 
 const STORAGE_KEY = 'jlpt-trainer:konbini:v1';
+
+type PlayPart = 'jp' | 'en';
 
 /* ---- icons (inline: the repo has no icon dependency) ---- */
 
@@ -72,30 +75,237 @@ export default function KonbiniTrainer() {
   const [index, setIndex] = useState(0);
   const [reveal, setReveal] = useState(0);
   const [openScript, setOpenScript] = useState<string | null>(null);
+  const [playingCard, setPlayingCard] = useState(false);
+  const [playingAll, setPlayingAll] = useState(false);
+  const [playPart, setPlayPart] = useState<PlayPart | null>(null);
+  const [playRegister, setPlayRegister] = useState<Register | null>(null);
+  const [playLineIndex, setPlayLineIndex] = useState<number | null>(null);
+  const playSessionRef = useRef(0);
 
   const { progress, toggle } = useProgress(STORAGE_KEY);
   const { speak, voiceName, supported } = useJapaneseVoice();
 
   const deck = useMemo(() => DECKS.find((d) => d.id === deckId) ?? DECKS[0], [deckId]);
   const card = deck.cards[Math.min(index, deck.cards.length - 1)];
-  const variant: Variant = card[register];
+  const shownRegister = playRegister ?? register;
+  const variant: Variant = card[shownRegister];
   const isKnown = progress.known.includes(card.id);
+  const script = SCRIPTS.find((s) => s.id === openScript) ?? null;
+  const playDisabled = tab === 'scripts' && !script;
 
-  const go = useCallback(
-    (delta: number) => {
-      setIndex((i) => (i + delta + deck.cards.length) % deck.cards.length);
-      setReveal(0);
-    },
-    [deck.cards.length],
-  );
+  function stopAuto() {
+    playSessionRef.current += 1;
+    setPlayingCard(false);
+    setPlayingAll(false);
+    setPlayPart(null);
+    setPlayRegister(null);
+    setPlayLineIndex(null);
+  }
 
-  const selectDeck = (id: string) => {
+  function go(delta: number) {
+    speechService.stop();
+    stopAuto();
+    setIndex((i) => (i + delta + deck.cards.length) % deck.cards.length);
+    setReveal(0);
+  }
+
+  function selectDeck(id: string) {
+    speechService.stop();
+    stopAuto();
     setDeckId(id);
     setIndex(0);
     setReveal(0);
-  };
+  }
 
-  const script = SCRIPTS.find((s) => s.id === openScript) ?? null;
+  function playVariantSequence(
+    source: Variant,
+    session: number,
+    onComplete: () => void,
+  ) {
+    const alive = () => session === playSessionRef.current;
+    const finish = () => {
+      if (!alive()) return;
+      onComplete();
+    };
+
+    const speakJa = (onEnd: () => void) => {
+      if (!alive()) return;
+      const plain = stripFurigana(source.jp);
+      if (!plain.trim()) {
+        onEnd();
+        return;
+      }
+      setPlayPart('jp');
+      speechService.speakJapanese(
+        plain,
+        { onEnd, onError: finish },
+        SPEECH_RATE_NORMAL,
+      );
+    };
+
+    const speakEn = (onEnd: () => void) => {
+      if (!alive()) return;
+      if (!source.en.trim()) {
+        onEnd();
+        return;
+      }
+      setPlayPart('en');
+      speechService.speakEnglish(
+        source.en,
+        { onEnd, onError: finish },
+        SPEECH_RATE_NORMAL,
+      );
+    };
+
+    speakJa(() => speakEn(() => speakJa(finish)));
+  }
+
+  function playBothRegisters(
+    formal: Variant,
+    friendly: Variant,
+    session: number,
+    onComplete: () => void,
+  ) {
+    const alive = () => session === playSessionRef.current;
+    const sameLine = formal.jp === friendly.jp && formal.en === friendly.en;
+    if (sameLine) {
+      setPlayRegister(null);
+      playVariantSequence(formal, session, onComplete);
+      return;
+    }
+    setPlayRegister('formal');
+    playVariantSequence(formal, session, () => {
+      if (!alive()) return;
+      setPlayRegister('friendly');
+      playVariantSequence(friendly, session, onComplete);
+    });
+  }
+
+  function playScriptSequence(
+    target: Script,
+    session: number,
+    onComplete: () => void,
+  ) {
+    const alive = () => session === playSessionRef.current;
+
+    const runLine = (lineIndex: number) => {
+      if (!alive()) return;
+      const line = target.lines[lineIndex];
+      if (!line) {
+        onComplete();
+        return;
+      }
+      setPlayLineIndex(lineIndex);
+      playBothRegisters(line.formal, line.friendly, session, () => {
+        if (!alive()) return;
+        runLine(lineIndex + 1);
+      });
+    };
+
+    runLine(0);
+  }
+
+  function playCurrent() {
+    if (playDisabled) return;
+    speechService.stop();
+    const session = ++playSessionRef.current;
+    setPlayingAll(false);
+    setPlayingCard(true);
+    setPlayLineIndex(null);
+
+    const done = () => {
+      if (session !== playSessionRef.current) return;
+      setPlayingCard(false);
+      setPlayPart(null);
+      setPlayRegister(null);
+      setPlayLineIndex(null);
+    };
+
+    if (tab === 'cards') {
+      setReveal(2);
+      playBothRegisters(card.formal, card.friendly, session, done);
+      return;
+    }
+
+    if (!script) {
+      done();
+      return;
+    }
+    playScriptSequence(script, session, done);
+  }
+
+  function playAll() {
+    if (playingAll) {
+      speechService.stop();
+      stopAuto();
+      return;
+    }
+
+    speechService.stop();
+    const session = ++playSessionRef.current;
+    setPlayingCard(false);
+    setPlayingAll(true);
+    const alive = () => session === playSessionRef.current;
+
+    if (tab === 'cards') {
+      const cards = deck.cards;
+      if (cards.length === 0) {
+        stopAuto();
+        return;
+      }
+      setIndex(0);
+      setReveal(2);
+
+      const run = (cardIndex: number) => {
+        if (!alive()) return;
+        const item = cards[cardIndex];
+        if (!item) {
+          stopAuto();
+          return;
+        }
+        setIndex(cardIndex);
+        setReveal(2);
+        playBothRegisters(item.formal, item.friendly, session, () => {
+          if (!alive()) return;
+          const next = cardIndex + 1;
+          if (next >= cards.length) {
+            stopAuto();
+            return;
+          }
+          run(next);
+        });
+      };
+
+      run(0);
+      return;
+    }
+
+    if (SCRIPTS.length === 0) {
+      stopAuto();
+      return;
+    }
+
+    const runScript = (scriptIndex: number) => {
+      if (!alive()) return;
+      const item = SCRIPTS[scriptIndex];
+      if (!item) {
+        stopAuto();
+        return;
+      }
+      setOpenScript(item.id);
+      playScriptSequence(item, session, () => {
+        if (!alive()) return;
+        const next = scriptIndex + 1;
+        if (next >= SCRIPTS.length) {
+          stopAuto();
+          return;
+        }
+        runScript(next);
+      });
+    };
+
+    runScript(0);
+  }
 
   return (
     <div className="fm-root">
@@ -111,14 +321,22 @@ export default function KonbiniTrainer() {
         <button
           type="button"
           className={`fm-tab-btn ${tab === 'cards' ? 'active' : ''}`}
-          onClick={() => setTab('cards')}
+          onClick={() => {
+            speechService.stop();
+            stopAuto();
+            setTab('cards');
+          }}
         >
           <Layers /> Flashcards
         </button>
         <button
           type="button"
           className={`fm-tab-btn ${tab === 'scripts' ? 'active' : ''}`}
-          onClick={() => setTab('scripts')}
+          onClick={() => {
+            speechService.stop();
+            stopAuto();
+            setTab('scripts');
+          }}
         >
           <MessageSquare /> Scripts
         </button>
@@ -129,12 +347,46 @@ export default function KonbiniTrainer() {
           <button
             type="button"
             key={r}
-            className={`fm-register ${register === r ? 'active' : ''}`}
-            onClick={() => setRegister(r)}
+            className={`fm-register fm-register--${r} ${shownRegister === r ? 'active' : ''}`}
+            onClick={() => {
+              speechService.stop();
+              stopAuto();
+              setRegister(r);
+            }}
           >
             {r}
           </button>
         ))}
+      </div>
+
+      <div className="fm-playrow">
+        <button
+          type="button"
+          className={`fm-playbtn ${playingCard ? 'active' : ''}`}
+          disabled={playDisabled}
+          title={
+            tab === 'cards'
+              ? 'Play this card: formal, then casual polite'
+              : script
+                ? 'Play this scenario: formal, then casual polite on each line'
+                : 'Open a scenario to play it'
+          }
+          onClick={playCurrent}
+        >
+          ▶ Play
+        </button>
+        <button
+          type="button"
+          className={`fm-playbtn ${playingAll ? 'active' : ''}`}
+          title={
+            tab === 'cards'
+              ? 'Play every card in this deck from the start'
+              : 'Play every scenario from the start'
+          }
+          onClick={playAll}
+        >
+          {playingAll ? '■ Stop All' : '▶ Play All'}
+        </button>
       </div>
 
       {tab === 'cards' && (
@@ -156,7 +408,15 @@ export default function KonbiniTrainer() {
             <p className="fm-counter">
               {index + 1} / {deck.cards.length} · {progress.known.length} known
             </p>
-            <button type="button" className="fm-speak" onClick={() => speak(variant.jp)}>
+            <button
+              type="button"
+              className="fm-speak"
+              onClick={() => {
+                speechService.stop();
+                stopAuto();
+                speak(variant.jp);
+              }}
+            >
               <Volume /> listen
             </button>
           </div>
@@ -169,12 +429,20 @@ export default function KonbiniTrainer() {
           >
             <span className="fm-cardlabel">{card.label}</span>
 
-            <span className="fm-jp">
+            <span className={`fm-jp${playPart === 'jp' ? ' fm-speaking' : ''}`}>
               <Furigana text={variant.jp} />
             </span>
-            {reveal >= 1 && <span className="fm-ro">{variant.ro}</span>}
-            {reveal >= 2 && <span className="fm-en">{variant.en}</span>}
-            {reveal < 2 && <span className="fm-hint">tap for {reveal === 0 ? 'romaji' : 'english'}</span>}
+            {(reveal >= 1 || playingCard || playingAll) && (
+              <span className="fm-ro">{variant.ro}</span>
+            )}
+            {(reveal >= 2 || playingCard || playingAll) && (
+              <span className={`fm-en${playPart === 'en' ? ' fm-speaking' : ''}`}>
+                {variant.en}
+              </span>
+            )}
+            {reveal < 2 && !playingCard && !playingAll && (
+              <span className="fm-hint">tap for {reveal === 0 ? 'romaji' : 'english'}</span>
+            )}
           </button>
 
           <div className="fm-nav">
@@ -205,7 +473,11 @@ export default function KonbiniTrainer() {
               type="button"
               key={s.id}
               className="fm-scriptitem"
-              onClick={() => setOpenScript(s.id)}
+              onClick={() => {
+                speechService.stop();
+                stopAuto();
+                setOpenScript(s.id);
+              }}
             >
               <span className={`fm-dot ${progress.practiced.includes(s.id) ? 'done' : ''}`} />
               <span className="fm-scriptname">
@@ -219,25 +491,44 @@ export default function KonbiniTrainer() {
 
       {tab === 'scripts' && script && (
         <>
-          <button type="button" className="fm-backbtn" onClick={() => setOpenScript(null)}>
+          <button
+            type="button"
+            className="fm-backbtn"
+            onClick={() => {
+              speechService.stop();
+              stopAuto();
+              setOpenScript(null);
+            }}
+          >
             <ChevronLeft size={13} /> all scenarios
           </button>
 
           <div className="fm-thread">
             {script.lines.map((line, i) => {
-              const text = line[register];
+              const text = line[shownRegister];
+              const lineActive = playLineIndex === i && (playingCard || playingAll);
               return (
                 <div
                   key={i}
                   className={`fm-bubblewrap ${line.who === 'self' ? 'right' : 'left'}`}
                 >
-                  <button type="button" className="fm-bubble" onClick={() => speak(text.jp)}>
+                  <button
+                    type="button"
+                    className={`fm-bubble${lineActive ? ' fm-line-active' : ''}`}
+                    onClick={() => {
+                      speechService.stop();
+                      stopAuto();
+                      speak(text.jp);
+                    }}
+                  >
                     <span className="fm-who">{line.who === 'self' ? 'you' : 'customer'}</span>
-                    <span className="fm-jp">
+                    <span className={`fm-jp${lineActive && playPart === 'jp' ? ' fm-speaking' : ''}`}>
                       <Furigana text={text.jp} />
                     </span>
                     <span className="fm-ro">{text.ro}</span>
-                    <span className="fm-en">{text.en}</span>
+                    <span className={`fm-en${lineActive && playPart === 'en' ? ' fm-speaking' : ''}`}>
+                      {text.en}
+                    </span>
                   </button>
                 </div>
               );

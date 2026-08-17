@@ -30,11 +30,112 @@ function stripParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
-    .replace(/,(?=[^\s])/g, ", ")
+    // Do not split thousand separators (1,000 → "one, zero zero zero").
+    .replace(/(?<!\d),(?=\S)/g, ", ")
     .replace(/,\s*,+/g, ",")
     .replace(/^,\s*/, "")
     .replace(/,\s*$/, "")
     .trim();
+}
+
+const ONES = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen",
+] as const;
+
+const TENS = [
+  "",
+  "",
+  "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety",
+] as const;
+
+function underThousand(n: number): string {
+  const parts: string[] = [];
+  const hundreds = Math.floor(n / 100);
+  const rest = n % 100;
+  if (hundreds > 0) parts.push(`${ONES[hundreds]} hundred`);
+  if (rest === 0) return parts.join(" ");
+  if (rest < 20) {
+    parts.push(ONES[rest]!);
+  } else {
+    const ten = Math.floor(rest / 10);
+    const one = rest % 10;
+    parts.push(one > 0 ? `${TENS[ten]}-${ONES[one]}` : TENS[ten]!);
+  }
+  return parts.join(" ");
+}
+
+function integerToWords(n: number): string {
+  if (!Number.isFinite(n) || n < 0) return String(n);
+  if (n === 0) return "zero";
+  const scales: Array<[number, string]> = [
+    [1_000_000_000, "billion"],
+    [1_000_000, "million"],
+    [1_000, "thousand"],
+  ];
+  const parts: string[] = [];
+  let rest = Math.floor(n);
+  for (const [value, name] of scales) {
+    if (rest >= value) {
+      parts.push(`${underThousand(Math.floor(rest / value))} ${name}`);
+      rest %= value;
+    }
+  }
+  if (rest > 0) parts.push(underThousand(rest));
+  return parts.join(" ");
+}
+
+function numeralToWords(raw: string): string {
+  const [intRaw, fracRaw] = raw.replace(/,/g, "").split(".");
+  const intWords = integerToWords(Number(intRaw));
+  if (fracRaw == null || fracRaw === "") return intWords;
+  const fracWords = [...fracRaw]
+    .map((digit) => ONES[Number(digit)] ?? digit)
+    .join(" ");
+  return `${intWords} point ${fracWords}`;
+}
+
+/**
+ * Speak money amounts as words so TTS does not read 1,000 as "one zero zero zero".
+ * Grouped thousands (1,000) and any number attached to "yen" are expanded.
+ * Display text is unchanged — only the spoken string is rewritten.
+ */
+function expandSpokenMoney(text: string): string {
+  return text.replace(
+    /(?:¥\s*)?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?:\s*-?\s*yen\b)?/gi,
+    (full, intPart: string, fracPart: string | undefined) => {
+      const grouped = intPart.includes(",");
+      const hasYen = /yen/i.test(full);
+      if (!grouped && !hasYen) return full;
+      const words = numeralToWords(`${intPart}${fracPart ?? ""}`);
+      return hasYen ? `${words} yen` : words;
+    }
+  );
 }
 
 /**
@@ -61,7 +162,7 @@ function appendSlashSpeakPause(text: string): string {
 
 export function buildEnglishSpeakText(text: string): string {
   let out = appendSlashSpeakPause(
-    appendWaveDashSpeakPause(stripParentheticalNotes(text))
+    appendWaveDashSpeakPause(expandSpokenMoney(stripParentheticalNotes(text)))
   );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");

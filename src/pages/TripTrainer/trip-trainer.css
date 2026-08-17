@@ -63,14 +63,14 @@
 
 .jt-title {
   margin: 0;
-  font-size: 19px;
+  font-size: 23px;
   letter-spacing: 1px;
 }
 
 .jt-sub {
   margin: 0;
   font-family: var(--jt-sign);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2.5px;
   opacity: 0.55;
@@ -79,7 +79,7 @@
 .jt-voice {
   margin: 6px 0 0;
   font-family: var(--jt-sign);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1.5px;
   opacity: 0.4;
   width: 100%;
@@ -106,7 +106,7 @@
   border: none;
   background: transparent;
   color: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -128,7 +128,7 @@
   border-top: 3px solid rgba(255, 255, 255, 0.14);
   background: transparent;
   color: inherit;
-  font-size: 12px;
+  font-size: 14px;
   opacity: 0.6;
 }
 
@@ -152,15 +152,87 @@
   background: transparent;
   color: inherit;
   font-family: var(--jt-sign);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
 }
 
 .jt-register.active {
-  background: rgba(255, 255, 255, 0.12);
   color: #fff;
   font-weight: 700;
+}
+
+.jt-register--formal.active {
+  background: color-mix(in srgb, var(--jt-line) 28%, transparent);
+  border-color: var(--jt-line);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--jt-line) 55%, #fff),
+    0 0 14px color-mix(in srgb, var(--jt-line) 80%, transparent),
+    0 0 28px color-mix(in srgb, var(--jt-line) 45%, transparent);
+}
+
+.jt-register--friendly.active {
+  background: rgba(240, 193, 74, 0.22);
+  border-color: #ffd56a;
+  box-shadow:
+    0 0 0 1px rgba(255, 213, 106, 0.5),
+    0 0 14px rgba(240, 193, 74, 0.8),
+    0 0 28px rgba(240, 193, 74, 0.42);
+}
+
+.jt-playrow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.jt-playbtn {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--jt-line-faint);
+  background: var(--jt-panel);
+  color: inherit;
+  font-family: var(--jt-sign);
+  font-size: 14px;
+  letter-spacing: 0.6px;
+}
+
+.jt-playbtn.active {
+  background: var(--jt-line);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+}
+
+.jt-playbtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.jt-board .jt-jp.jt-speaking,
+.jt-board .jt-en.jt-speaking {
+  color: var(--jt-line);
+}
+
+.jt-bubblewrap.left .jt-jp.jt-speaking,
+.jt-bubblewrap.left .jt-en.jt-speaking {
+  color: var(--jt-line);
+}
+
+.jt-bubblewrap.right .jt-jp.jt-speaking,
+.jt-bubblewrap.right .jt-en.jt-speaking {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.jt-bubble.jt-line-active {
+  box-shadow: 0 0 0 2px #ffd56a;
 }
 
 /* ---- the signboard ---- */
@@ -173,8 +245,8 @@
   border: none;
   border-top: 7px solid var(--jt-line);
   border-radius: 3px;
-  padding: 22px 18px 20px;
-  min-height: 190px;
+  padding: 24px 20px 24px;
+  min-height: 230px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -185,15 +257,15 @@
 
 .jt-boardlabel {
   font-family: var(--jt-sign);
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 0.55;
 }
 
 .jt-jp {
   display: block;
-  font-size: 27px;
+  font-size: 34px;
   line-height: 2;
   font-weight: 700;
 }
@@ -201,27 +273,27 @@
 .jt-ro {
   display: block;
   font-family: var(--jt-sign);
-  font-size: 12px;
-  letter-spacing: 3px;
+  font-size: 17px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .jt-en {
   display: block;
-  font-size: 14px;
+  font-size: 20px;
   padding-top: 10px;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   width: 100%;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .jt-hint {
   font-family: var(--jt-sign);
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.35;
+  opacity: 0.4;
 }
 
 /* ---- the line: stops under the board ---- */
@@ -273,9 +345,9 @@
   justify-content: space-between;
   align-items: center;
   font-family: var(--jt-sign);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1.5px;
-  opacity: 0.5;
+  opacity: 0.55;
   margin-bottom: 10px;
 }
 
@@ -289,7 +361,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--jt-sign);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   opacity: 0.9;
@@ -318,7 +390,7 @@
   border-radius: 6px;
   border: none;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,16 +454,16 @@
 }
 
 .jt-scriptname {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .jt-scriptname small {
   display: block;
   font-family: var(--jt-sign);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  opacity: 0.45;
+  opacity: 0.5;
   margin-top: 3px;
 }
 
@@ -432,16 +504,16 @@
 .jt-who {
   display: block;
   font-family: var(--jt-sign);
-  font-size: 9px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  opacity: 0.6;
+  opacity: 0.65;
   margin-bottom: 4px;
 }
 
 .jt-bubble .jt-jp {
   display: block;
-  font-size: 17px;
+  font-size: 22px;
   line-height: 2;
   font-weight: 400;
   margin-bottom: 4px;
@@ -449,7 +521,7 @@
 
 .jt-bubble .jt-ro {
   display: block;
-  font-size: 11px;
+  font-size: 15px;
   letter-spacing: 1.5px;
   margin-top: 2px;
   margin-bottom: 4px;
@@ -457,7 +529,7 @@
 
 .jt-bubble .jt-en {
   display: block;
-  font-size: 12px;
+  font-size: 16px;
   padding-top: 4px;
   border-top: none;
   border: none;
@@ -469,7 +541,7 @@
   border: none;
   color: inherit;
   font-family: var(--jt-sign);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   opacity: 0.7;
@@ -486,7 +558,7 @@
   border-radius: 6px;
   border: none;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -504,17 +576,17 @@
 /* ---- ruby ---- */
 
 .jt-root ruby > rt {
-  font-size: 0.42em;
+  font-size: 0.5em;
   font-weight: 400;
-  opacity: 0.7;
+  opacity: 0.8;
   letter-spacing: 0;
 }
 
 @media (max-width: 380px) {
   .jt-jp {
-    font-size: 23px;
+    font-size: 28px;
   }
   .jt-chip {
-    font-size: 11px;
+    font-size: 12px;
   }
 }

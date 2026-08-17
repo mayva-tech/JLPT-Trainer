@@ -94,8 +94,16 @@ export const CORE_PHRASES: Card[] = [
   {
     id: 'c8',
     label: 'Stating an amount',
-    formal: { jp: '○○円(えん)でございます', ro: '~en de gozaimasu', en: 'That will be ~ yen' },
-    friendly: { jp: '○○円(えん)です', ro: '~en desu', en: "That's ~ yen" },
+    formal: {
+      jp: '二百円(にひゃくえん)でございます',
+      ro: 'Nihyaku-en de gozaimasu',
+      en: 'That will be 200 yen',
+    },
+    friendly: {
+      jp: '二百円(にひゃくえん)です',
+      ro: 'Nihyaku-en desu',
+      en: "That's 200 yen",
+    },
   },
   {
     id: 'c9',

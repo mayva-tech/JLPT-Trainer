@@ -1559,16 +1559,44 @@
 /* ─── Casual ⇄ Formal register split ────────────────────────── */
 .register-safe {
   justify-content: flex-start;
-  padding-top: 1cqh;
+  align-items: stretch;
+  padding-top: 0.4cqh;
+  gap: 1.2cqh;
+  overflow: hidden;
 }
 
 .register-meaning {
+  flex: 0 0 auto;
   font-family: var(--font-en);
-  font-size: 3.4cqw;
+  font-size: 2.8cqw;
   font-weight: 600;
   color: var(--text);
-  margin-bottom: 2.5cqh;
+  margin-bottom: 0;
   text-align: center;
+  padding: 0.4cqh 1.2cqw;
+  border-radius: 1cqw;
+  max-width: 100%;
+}
+
+.register-meaning--active {
+  background: rgba(30, 58, 138, 0.06);
+}
+
+.register-meaning-text {
+  font-family: var(--font-en);
+  font-size: calc(2.8cqw * var(--fit-scale, 1));
+  font-weight: 600;
+  color: #000;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.register-meaning-text .speech-line--en {
+  white-space: nowrap;
+}
+
+.register-meaning-text .speech-line--en {
+  white-space: nowrap;
 }
 
 .register-split {
@@ -1577,19 +1605,22 @@
   justify-content: center;
   width: 100%;
   gap: 0;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
+  overflow: hidden;
 }
 
 .register-col {
   flex: 1 1 0;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2cqh 2.5cqw;
+  justify-content: flex-start;
+  padding: 0.6cqh 1.6cqw 0.8cqh;
   border-radius: 1.2cqw;
+  overflow: hidden;
   transition: background 0.2s ease, opacity 0.2s ease;
 }
 
@@ -1605,14 +1636,15 @@
 }
 
 .register-label {
+  flex: 0 0 auto;
   font-family: var(--font-en);
-  font-size: 2.1cqw;
+  font-size: 1.7cqw;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.5cqh 1.4cqw;
-  border-radius: 0.6cqw;
-  margin-bottom: 2cqh;
+  padding: 0.35cqh 1.2cqw;
+  border-radius: 0.5cqw;
+  margin-bottom: 0.8cqh;
 }
 
 .register-label--casual {
@@ -1625,20 +1657,54 @@
   color: #14532d;
 }
 
+.register-jp-slot {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.register-jp-slot .fit-scale {
+  width: 100%;
+  max-height: 100%;
+}
+
 .register-jp {
   font-family: var(--font-jp);
-  font-size: 4.2cqw;
-  line-height: 1.5;
+  font-size: calc(3.2cqw * var(--fit-scale, 1));
+  line-height: 1.35;
   color: var(--text);
   text-align: center;
+  width: 100%;
+}
+
+.register-jp.jp-wrap,
+.register-jp.furigana-wrap {
+  max-height: 100%;
+}
+
+.register-jp .jp-wrap-line {
+  row-gap: 0.28em;
+}
+
+.register-jp .jp-wrap-line {
+  row-gap: 0.28em;
 }
 
 .register-romaji {
+  flex: 0 0 auto;
+  width: 100%;
   font-family: var(--font-en);
-  font-size: 2.3cqw;
+  font-size: 1.7cqw;
+  line-height: 1.3;
   color: var(--text-softer);
-  margin-top: 1.4cqh;
+  margin-top: 0.8cqh;
   text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .register-col--hidden .register-jp,
@@ -1647,23 +1713,29 @@
 }
 
 .register-hidden-cue {
+  flex: 1 1 auto;
   font-family: var(--font-en);
-  font-size: 2.1cqw;
+  font-size: 1.8cqw;
   color: var(--text-softer);
   text-align: center;
-  padding: 0 2cqw;
+  padding: 0 1.2cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .register-note {
+  flex: 0 0 auto;
   font-family: var(--font-en);
-  font-size: 2cqw;
-  line-height: 1.5;
+  font-size: 1.7cqw;
+  line-height: 1.35;
   color: var(--text-soft);
-  opacity: 0.75;
+  opacity: 0.8;
   text-align: center;
-  margin-top: 2cqh;
-  max-width: 80%;
+  margin-top: 0;
+  max-width: 96%;
   align-self: center;
+  overflow-wrap: anywhere;
 }
 
 .register-btn {
@@ -1686,5 +1758,103 @@
   background: #0d9488 !important;
   border-color: #0f766e !important;
   color: #fff !important;
+}
+
+/* ─── オノマトペ practice card ──────────────────────────────── */
+.ono-safe {
+  justify-content: flex-start;
+  padding-top: 1cqh;
+  gap: 1.2cqh;
+}
+
+.ono-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2cqw;
+}
+
+.ono-level {
+  font-family: var(--font-en);
+  font-size: 1.8cqw;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.3cqh 1.1cqw;
+  border-radius: 0.5cqw;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.ono-category {
+  font-family: var(--font-jp);
+  font-size: 2cqw;
+  color: var(--text-soft);
+}
+
+.ono-word {
+  text-align: center;
+  padding: 0.8cqh 1.5cqw;
+  border-radius: 1cqw;
+}
+
+.ono-word--active,
+.ono-example--active {
+  background: rgba(30, 58, 138, 0.06);
+}
+
+.ono-jp {
+  font-family: var(--font-jp);
+  font-size: 7.2cqw;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.ono-meaning {
+  font-family: var(--font-en);
+  font-size: 2.8cqw;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.ono-collocation {
+  font-family: var(--font-jp);
+  font-size: 2.4cqw;
+  color: var(--accent);
+  text-align: center;
+}
+
+.ono-nuance {
+  font-family: var(--font-en);
+  font-size: 2cqw;
+  line-height: 1.4;
+  color: var(--text-soft);
+  text-align: center;
+  max-width: 86%;
+  opacity: 0.85;
+}
+
+.ono-example {
+  margin-top: 0.6cqh;
+  padding: 1.2cqh 2cqw;
+  border-radius: 1cqw;
+  text-align: center;
+  width: 92%;
+}
+
+.ono-example-jp {
+  font-family: var(--font-jp);
+  font-size: 3.4cqw;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.ono-example-en {
+  font-family: var(--font-en);
+  font-size: 2.2cqw;
+  color: #000;
+  margin-top: 0.8cqh;
 }
 

@@ -50,14 +50,14 @@
 
 .fm-title {
   margin: 0;
-  font-size: 20px;
+  font-size: 24px;
   letter-spacing: 2px;
 }
 
 .fm-sub {
   margin: 4px 0 0;
   font-family: var(--fm-mono);
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
   opacity: 0.55;
@@ -66,7 +66,7 @@
 .fm-voice {
   margin: 6px 0 0;
   font-family: var(--fm-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
   opacity: 0.45;
 }
@@ -90,7 +90,7 @@
   border: 1px solid var(--fm-line);
   background: var(--fm-panel);
   color: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -113,7 +113,7 @@
   border: 1px solid var(--fm-line);
   background: transparent;
   color: inherit;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .fm-chip.active {
@@ -137,15 +137,87 @@
   background: transparent;
   color: inherit;
   font-family: var(--fm-mono);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 1px;
   text-transform: uppercase;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
 }
 
 .fm-register.active {
-  background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-weight: 700;
+}
+
+.fm-register--formal.active {
+  background: rgba(44, 157, 120, 0.22);
+  border-color: #5ee0b5;
+  box-shadow:
+    0 0 0 1px rgba(94, 224, 181, 0.45),
+    0 0 14px rgba(44, 157, 120, 0.75),
+    0 0 28px rgba(44, 157, 120, 0.4);
+}
+
+.fm-register--friendly.active {
+  background: rgba(242, 177, 52, 0.22);
+  border-color: #ffd36a;
+  box-shadow:
+    0 0 0 1px rgba(255, 211, 106, 0.5),
+    0 0 14px rgba(242, 177, 52, 0.8),
+    0 0 28px rgba(242, 177, 52, 0.42);
+}
+
+.fm-playrow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.fm-playbtn {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--fm-line);
+  background: var(--fm-panel);
+  color: inherit;
+  font-family: var(--fm-mono);
+  font-size: 14px;
+  letter-spacing: 0.4px;
+}
+
+.fm-playbtn.active {
+  background: var(--fm-mint);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+}
+
+.fm-playbtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.fm-card .fm-jp.fm-speaking,
+.fm-card .fm-en.fm-speaking {
+  color: var(--fm-mint-deep);
+}
+
+.fm-bubblewrap.left .fm-jp.fm-speaking,
+.fm-bubblewrap.left .fm-en.fm-speaking {
+  color: var(--fm-mint-deep);
+}
+
+.fm-bubblewrap.right .fm-jp.fm-speaking,
+.fm-bubblewrap.right .fm-en.fm-speaking {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fm-bubble.fm-line-active {
+  box-shadow: 0 0 0 2px var(--fm-amber);
 }
 
 /* ---- flashcard ---- */
@@ -159,9 +231,9 @@
 
 .fm-counter {
   font-family: var(--fm-mono);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1px;
-  opacity: 0.5;
+  opacity: 0.55;
   margin: 0;
 }
 
@@ -172,11 +244,11 @@
   color: var(--fm-ink);
   border: none;
   border-radius: 4px;
-  padding: 20px 18px 24px;
-  min-height: 200px;
+  padding: 22px 20px 28px;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
   position: relative;
 }
@@ -196,17 +268,17 @@
 
 .fm-cardlabel {
   font-family: var(--fm-mono);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  opacity: 0.6;
+  opacity: 0.65;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .fm-jp {
-  font-size: 26px;
+  font-size: 34px;
   line-height: 2;
   font-weight: 600;
   display: block;
@@ -215,22 +287,22 @@
 .fm-ro {
   display: block;
   font-family: var(--fm-mono);
-  font-size: 13px;
-  opacity: 0.75;
+  font-size: 18px;
+  opacity: 0.8;
 }
 
 .fm-en {
   display: block;
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 20px;
+  opacity: 0.95;
 }
 
 .fm-hint {
   margin-top: auto;
   font-family: var(--fm-mono);
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1px;
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 .fm-speak {
@@ -243,7 +315,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--fm-mono);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.5px;
 }
 
@@ -270,7 +342,7 @@
   border-radius: 10px;
   border: none;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -319,14 +391,14 @@
 }
 
 .fm-scriptname {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .fm-scriptname small {
   display: block;
   font-family: var(--fm-mono);
-  font-size: 10px;
-  opacity: 0.5;
+  font-size: 13px;
+  opacity: 0.55;
   letter-spacing: 0.5px;
   margin-top: 2px;
 }
@@ -372,27 +444,27 @@
 .fm-who {
   display: block;
   font-family: var(--fm-mono);
-  font-size: 9px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  opacity: 0.65;
+  opacity: 0.7;
   margin-bottom: 3px;
 }
 
 .fm-bubble .fm-jp {
-  font-size: 17px;
+  font-size: 22px;
   line-height: 2;
   margin-bottom: 4px;
 }
 
 .fm-bubble .fm-ro {
-  font-size: 12px;
+  font-size: 15px;
   margin-bottom: 4px;
   opacity: 0.8;
 }
 
 .fm-bubble .fm-en {
-  font-size: 12px;
+  font-size: 16px;
   opacity: 0.95;
 }
 
@@ -401,7 +473,7 @@
   border: none;
   color: inherit;
   font-family: var(--fm-mono);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 1px;
   opacity: 0.7;
   padding: 0 0 10px;
@@ -417,7 +489,7 @@
   border-radius: 10px;
   border: none;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -435,9 +507,9 @@
 /* ---- ruby ---- */
 
 .fm-root ruby > rt {
-  font-size: 0.45em;
+  font-size: 0.5em;
   font-weight: 400;
-  opacity: 0.75;
+  opacity: 0.8;
   letter-spacing: 0;
 }
 

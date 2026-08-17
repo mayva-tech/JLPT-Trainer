@@ -7,7 +7,7 @@ type Props = {
   onSelect: (id: TocItemId) => void;
 };
 
-type TocPage = 1 | 2 | 3 | 4 | 5;
+type TocPage = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** Short groups stacked in the first column to free space for quiz columns. */
 const COMPACT_COLUMN_IDS = new Set(["introduction", "ending", "reference"]);
@@ -24,6 +24,9 @@ const PRACTICE_MIX_GROUP_IDS = new Set(["practice-mix"]);
 /** Casual ⇄ Formal register practice — TOC page 5. */
 const REGISTER_GROUP_IDS = new Set(["register"]);
 
+/** オノマトペ corpus — TOC page 6. */
+const ONOMATOPOEIA_GROUP_IDS = new Set(["onomatopoeia"]);
+
 function pageForSelectedId(selectedId: TocItemId | null): TocPage {
   if (!selectedId) return 1;
   for (const group of tocGroups) {
@@ -32,6 +35,7 @@ function pageForSelectedId(selectedId: TocItemId | null): TocPage {
       if (PRACTICE_GROUP_IDS.has(group.id)) return 3;
       if (PRACTICE_MIX_GROUP_IDS.has(group.id)) return 4;
       if (REGISTER_GROUP_IDS.has(group.id)) return 5;
+      if (ONOMATOPOEIA_GROUP_IDS.has(group.id)) return 6;
       return 1;
     }
   }
@@ -86,12 +90,14 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
       !N1_GROUP_IDS.has(g.id) &&
       !PRACTICE_GROUP_IDS.has(g.id) &&
       !PRACTICE_MIX_GROUP_IDS.has(g.id) &&
-      !REGISTER_GROUP_IDS.has(g.id)
+      !REGISTER_GROUP_IDS.has(g.id) &&
+      !ONOMATOPOEIA_GROUP_IDS.has(g.id)
   );
   const page2Groups = tocGroups.filter((g) => N1_GROUP_IDS.has(g.id));
   const page3Groups = tocGroups.filter((g) => PRACTICE_GROUP_IDS.has(g.id));
   const page4Groups = tocGroups.filter((g) => PRACTICE_MIX_GROUP_IDS.has(g.id));
   const page5Groups = tocGroups.filter((g) => REGISTER_GROUP_IDS.has(g.id));
+  const page6Groups = tocGroups.filter((g) => ONOMATOPOEIA_GROUP_IDS.has(g.id));
 
   return (
     <div className="safe-area toc-safe">
@@ -155,6 +161,17 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
             onClick={() => setPage(5)}
           >
             Page 5 · Register
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 6}
+            className={
+              page === 6 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
+            }
+            onClick={() => setPage(6)}
+          >
+            Page 6 · オノマトペ
           </button>
         </div>
 
@@ -223,6 +240,19 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
         {page === 5 ? (
           <div className="toc-groups toc-groups--page3">
             {page5Groups.map((group) => (
+              <TocGroupSection
+                key={group.id}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {page === 6 ? (
+          <div className="toc-groups toc-groups--page3">
+            {page6Groups.map((group) => (
               <TocGroupSection
                 key={group.id}
                 group={group}
