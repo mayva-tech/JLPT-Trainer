@@ -625,7 +625,7 @@
   padding-bottom: 1cqh;
 }
 
-/* Compact (intro/ending/ref) + N2 Vocab + Grammar + Word Quizzes + Grammar Quizzes */
+/* Compact (intro/ending/glossary/interview) + N2 Vocab + Grammar + quizzes */
 .toc-groups--page1 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
@@ -635,7 +635,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* Interview prep sections */
+/* Register / オノマトペ lists */
 .toc-groups--page3 {
   grid-template-columns: minmax(0, 1fr);
   max-width: 42cqw;
@@ -649,6 +649,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.6cqh;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
 }
 
 .toc-column--compact .toc-group-title {
