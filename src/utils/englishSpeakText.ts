@@ -7,6 +7,14 @@ const WORD_OVERRIDES: Readonly<Record<string, string>> = {
   fare: "fair",
   // Isolated "lecture" often comes out clipped / non-native on Edge neural voices.
   lecture: "lekcher",
+  // Verb /lɪv/, not adjective /laɪv/ ("live TV").
+  live: "liv",
+  // /daɪ/, not "dee".
+  die: "dai",
+  // /streɪndʒ/ as one word — "straynj" is spelled out by neural voices.
+  strange: "straynge",
+  // Isolated "odd" often comes out as "ode".
+  odd: "awd",
 };
 
 function applyCase(match: string, spoken: string): string {
@@ -30,6 +38,8 @@ function stripParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
+    // Dictionary glosses ("strange; odd") — pause like a comma, do not swallow ";".
+    .replace(/\s*;\s*/g, ", ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").
     .replace(/(?<!\d),(?=\S)/g, ", ")
     .replace(/,\s*,+/g, ",")

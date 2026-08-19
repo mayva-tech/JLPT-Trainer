@@ -30,15 +30,29 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("Lecture")).toBe("Lekcher");
   });
 
+  it('speaks verb "live" as /lɪv/ and "die" as /daɪ/', () => {
+    expect(buildEnglishSpeakText("to live")).toBe("to liv");
+    expect(buildEnglishSpeakText("to die")).toBe("to dai");
+    expect(buildEnglishSpeakText("Live")).toBe("Liv");
+    expect(buildEnglishSpeakText("Die")).toBe("Dai");
+  });
+
+  it('speaks "strange; odd" under 変 as two clear words', () => {
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, awd");
+    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge, funny");
+    expect(buildEnglishSpeakText("Strange")).toBe("Straynge");
+    expect(buildEnglishSpeakText("odd")).toBe("awd");
+  });
+
   it("does not speak parenthetical notes like (formal)", () => {
     expect(
       buildEnglishSpeakText(
         "on the occasion of; at the time of (formal)"
       )
-    ).toBe("on the occasion of; at the time of");
+    ).toBe("on the occasion of, at the time of");
     expect(
       buildEnglishSpeakText("must be; certainly (strong inference)")
-    ).toBe("must be; certainly");
+    ).toBe("must be, certainly");
     expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
       "word and more"
     );

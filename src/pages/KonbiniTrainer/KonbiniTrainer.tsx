@@ -491,17 +491,23 @@ export default function KonbiniTrainer() {
 
       {tab === 'scripts' && script && (
         <>
-          <button
-            type="button"
-            className="fm-backbtn"
-            onClick={() => {
-              speechService.stop();
-              stopAuto();
-              setOpenScript(null);
-            }}
-          >
-            <ChevronLeft size={13} /> all scenarios
-          </button>
+          <div className="fm-scenehead">
+            <button
+              type="button"
+              className="fm-backbtn"
+              onClick={() => {
+                speechService.stop();
+                stopAuto();
+                setOpenScript(null);
+              }}
+            >
+              <ChevronLeft size={13} /> all scenarios
+            </button>
+            <h3 className="fm-scenetitle">
+              <Furigana text={script.title} />
+            </h3>
+            <p className="fm-scenesub">{script.titleEn}</p>
+          </div>
 
           <div className="fm-thread">
             {script.lines.map((line, i) => {
@@ -521,7 +527,14 @@ export default function KonbiniTrainer() {
                       speak(text.jp);
                     }}
                   >
-                    <span className="fm-who">{line.who === 'self' ? 'you' : 'customer'}</span>
+                    <span className="fm-who-row">
+                      <span className="fm-who">
+                        {line.who === 'self' ? 'you' : 'customer'}
+                      </span>
+                      <span className={`fm-regtag fm-regtag--${shownRegister}`}>
+                        {shownRegister}
+                      </span>
+                    </span>
                     <span className={`fm-jp${lineActive && playPart === 'jp' ? ' fm-speaking' : ''}`}>
                       <Furigana text={text.jp} />
                     </span>

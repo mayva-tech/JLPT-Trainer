@@ -9,6 +9,8 @@ type Props = {
   className: string;
   highlight?: SpeechHighlight | null;
   showFurigana?: boolean;
+  /** Keep a reading row even when no kanji, so mixed pairs share a baseline. */
+  reserveReadingSpace?: boolean;
 };
 
 type Piece = {
@@ -29,12 +31,14 @@ export function FuriganaWrapText({
   className,
   highlight = null,
   showFurigana = true,
+  reserveReadingSpace = false,
 }: Props) {
   const segments = alignFurigana(surface, reading);
   const pieces = segmentsToPieces(segments);
   const units = buildJapaneseHighlightUnits(surface);
   const groups = assignPiecesToWordUnits(pieces, units);
   const anyReading = showFurigana && pieces.some((p) => !!p.reading);
+  const reserve = reserveReadingSpace || anyReading;
 
   return (
     <div
@@ -58,7 +62,7 @@ export function FuriganaWrapText({
                   segment={{ text: piece.text, reading: piece.reading }}
                   state={state}
                   showFurigana={showFurigana}
-                  reserveReadingSpace={anyReading}
+                  reserveReadingSpace={reserve}
                 />
               );
             })}

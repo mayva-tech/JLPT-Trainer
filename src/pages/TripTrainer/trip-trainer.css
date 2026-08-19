@@ -501,6 +501,14 @@
   border-bottom-left-radius: 3px;
 }
 
+.jt-who-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 .jt-who {
   display: block;
   font-family: var(--jt-sign);
@@ -508,7 +516,39 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   opacity: 0.65;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.jt-regtag {
+  flex: none;
+  font-family: var(--jt-sign);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  line-height: 1.3;
+}
+
+.jt-regtag--formal {
+  background: color-mix(in srgb, var(--jt-line) 22%, #fff);
+  color: var(--jt-line);
+}
+
+.jt-regtag--friendly {
+  background: #fde68a;
+  color: #78350f;
+}
+
+.jt-bubblewrap.right .jt-regtag--formal {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.jt-bubblewrap.right .jt-regtag--friendly {
+  background: #fde68a;
+  color: #78350f;
 }
 
 .jt-bubble .jt-jp {
@@ -536,6 +576,12 @@
   opacity: 0.9;
 }
 
+.jt-scenehead {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--jt-line);
+}
+
 .jt-backbtn {
   background: none;
   border: none;
@@ -545,10 +591,26 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   opacity: 0.7;
-  padding: 0 0 12px;
+  padding: 0 0 8px;
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.jt-scenetitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.jt-scenesub {
+  margin: 2px 0 0;
+  font-family: var(--jt-sign);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.55;
 }
 
 .jt-practicebtn {

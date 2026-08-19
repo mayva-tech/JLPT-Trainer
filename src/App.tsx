@@ -2,8 +2,9 @@ import { useState } from "react";
 import { PlayerPage } from "./pages/PlayerPage";
 import KonbiniTrainer from "./pages/KonbiniTrainer/KonbiniTrainer";
 import TripTrainer from "./pages/TripTrainer/TripTrainer";
+import RelationTrainer from "./pages/RelationTrainer/RelationTrainer";
 
-type AppView = "player" | "konbini" | "trip";
+type AppView = "player" | "konbini" | "trip" | "relations";
 
 export default function App() {
   const [view, setView] = useState<AppView>("player");
@@ -48,6 +49,18 @@ export default function App() {
         >
           旅
         </button>
+        <button
+          type="button"
+          className={
+            view === "relations"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Synonyms & Antonyms — 類義語・反対語"
+          onClick={() => setView("relations")}
+        >
+          類義
+        </button>
       </nav>
 
       <div
@@ -74,6 +87,15 @@ export default function App() {
         }
       >
         <TripTrainer />
+      </div>
+      <div
+        className={
+          view === "relations"
+            ? "app-view app-view--scroll"
+            : "app-view app-view--hidden"
+        }
+      >
+        <RelationTrainer />
       </div>
     </div>
   );

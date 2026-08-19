@@ -52,3 +52,14 @@ export interface OnomatopoeiaItem {
 }
 
 export type OnomatopoeiaAudioPart = 'word' | 'sentence';
+
+/** Highlighted line while the card Play sequence is speaking. */
+export type OnomatopoeiaPart =
+  | 'categoryJa'
+  | 'categoryEn'
+  | 'word'
+  | 'meaning'
+  | 'collocation'
+  | 'nuance'
+  | 'example'
+  | 'exampleEn';

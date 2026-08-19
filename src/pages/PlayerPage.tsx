@@ -38,6 +38,8 @@ import {
   OnomatopoeiaCard,
   type OnomatopoeiaPart,
 } from "../components/OnomatopoeiaCard";
+import { buildOnoPlaySteps } from "../utils/onomatopoeiaPlayback";
+import { splitNuanceForSpeech } from "../utils/nuanceSpeech";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -68,6 +70,7 @@ import {
   SPEECH_RATE_INTERVIEW_MIX,
   type SpeechHighlight,
 } from "../services/speechService";
+import { autoModeTiming } from "../config/autoModeTiming";
 import {
   autoModeRunner,
   type AutoModeUi,
@@ -216,6 +219,7 @@ export function PlayerPage() {
   const [registerPlayingAll, setRegisterPlayingAll] = useState(false);
   const [registerPlayingSection, setRegisterPlayingSection] = useState(false);
   const registerPlaySessionRef = useRef(0);
+  const registerGapTimerRef = useRef<number | null>(null);
 
   const [onoLevel, setOnoLevel] = useState<OnomatopoeiaJlptLevel>("N5");
   const onoItems = getOnomatopoeiaForLevel(onoLevel);
@@ -227,6 +231,7 @@ export function PlayerPage() {
   const [onoPlayingAll, setOnoPlayingAll] = useState(false);
   const [onoPlayingLevel, setOnoPlayingLevel] = useState(false);
   const onoPlayLevelSessionRef = useRef(0);
+  const onoGapTimerRef = useRef<number | null>(null);
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
   const grammarLesson = getGrammarLessonById(grammarLessonId);
@@ -1122,6 +1127,10 @@ export function PlayerPage() {
 
   function stopRegisterAuto() {
     registerPlaySessionRef.current += 1;
+    if (registerGapTimerRef.current != null) {
+      window.clearTimeout(registerGapTimerRef.current);
+      registerGapTimerRef.current = null;
+    }
     setRegisterPlayingAll(false);
     setRegisterPlayingSection(false);
     setRegisterActiveSide(null);
@@ -1187,10 +1196,77 @@ export function PlayerPage() {
       );
     };
 
+    const speakNote = (onEnd: () => void) => {
+      if (!alive()) return;
+      const note = pair.note?.trim() ?? "";
+      if (!note) {
+        onEnd();
+        return;
+      }
+      const segments = splitNuanceForSpeech(note);
+      if (segments.length === 0) {
+        onEnd();
+        return;
+      }
+
+      const run = (index: number) => {
+        if (!alive()) return;
+        const segment = segments[index];
+        if (!segment) {
+          onEnd();
+          return;
+        }
+        const text = segment.text.trim();
+        if (!text) {
+          run(index + 1);
+          return;
+        }
+        setHighlight(null);
+        setRegisterActiveSide("note");
+        setSpeechLang(segment.lang);
+        const advance = () => run(index + 1);
+        if (segment.lang === "ja") {
+          speechService.speakJapanese(
+            text,
+            {
+              onStart: () => {
+                if (alive()) setSpeechStatus("speaking");
+              },
+              onBoundary: (h) => {
+                if (alive()) setHighlight(h);
+              },
+              onEnd: advance,
+              onError: finish,
+            },
+            speechRateRef.current
+          );
+        } else {
+          speechService.speakEnglish(
+            text,
+            {
+              onStart: () => {
+                if (alive()) setSpeechStatus("speaking");
+              },
+              onBoundary: (h) => {
+                if (alive()) setHighlight(h);
+              },
+              onEnd: advance,
+              onError: finish,
+            },
+            speechRateRef.current
+          );
+        }
+      };
+
+      run(0);
+    };
+
     speakJa("casual", () =>
       speakMeaning(() =>
         speakJa("casual", () =>
-          speakJa("formal", () => speakMeaning(() => speakJa("formal", finish)))
+          speakJa("formal", () =>
+            speakMeaning(() => speakJa("formal", () => speakNote(finish)))
+          )
         )
       )
     );
@@ -1250,7 +1326,13 @@ export function PlayerPage() {
           clearSpeechUi();
           return;
         }
-        run(next);
+        clearSpeechUi();
+        setRegisterActiveSide(null);
+        registerGapTimerRef.current = window.setTimeout(() => {
+          registerGapTimerRef.current = null;
+          if (session !== registerPlaySessionRef.current) return;
+          run(next);
+        }, autoModeTiming.betweenItemsPause);
       });
     };
 
@@ -1408,6 +1490,10 @@ export function PlayerPage() {
 
   function stopOnoAuto() {
     onoPlayLevelSessionRef.current += 1;
+    if (onoGapTimerRef.current != null) {
+      window.clearTimeout(onoGapTimerRef.current);
+      onoGapTimerRef.current = null;
+    }
     setOnoPlayingAll(false);
     setOnoPlayingLevel(false);
     setOnoActivePart(null);
@@ -1425,100 +1511,56 @@ export function PlayerPage() {
       onComplete();
     };
 
-    const speakWordJa = (onEnd: () => void) => {
-      if (!alive()) return;
-      setHighlight(null);
-      setOnoActivePart("word");
-      setSpeechLang("ja");
-      speechService.speakJapanese(
-        item.japanese,
-        {
-          onStart: () => {
-            if (alive()) setSpeechStatus("speaking");
-          },
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd,
-          onError: finish,
-        },
-        speechRateRef.current,
-        { reading: item.reading }
-      );
-    };
+    const steps = buildOnoPlaySteps(item);
+    if (steps.length === 0) {
+      finish();
+      return;
+    }
 
-    const speakExampleJa = (onEnd: () => void) => {
+    const run = (index: number) => {
       if (!alive()) return;
-      if (!item.exampleJapanese.trim()) {
-        onEnd();
-        return;
-      }
-      setHighlight(null);
-      setOnoActivePart("example");
-      setSpeechLang("ja");
-      speechService.speakJapanese(
-        item.exampleJapanese,
-        {
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd,
-          onError: finish,
-        },
-        speechRateRef.current,
-        { reading: item.exampleReading }
-      );
-    };
-
-    const playExampleEnThenRepeatJa = () => {
-      if (!alive()) return;
-      if (!item.exampleEnglish.trim()) {
+      const step = steps[index];
+      if (!step) {
         finish();
         return;
       }
-      setHighlight(null);
-      setOnoActivePart("exampleEn");
-      setSpeechLang("en");
-      speechService.speakEnglish(
-        item.exampleEnglish,
-        {
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd: () => speakExampleJa(finish),
-          onError: finish,
-        },
-        speechRateRef.current
-      );
-    };
 
-    const playMeaningThenRepeatJa = () => {
-      if (!alive()) return;
-      const afterWord = () => speakExampleJa(playExampleEnThenRepeatJa);
-      if (!item.meaning.trim()) {
-        afterWord();
-        return;
+      setHighlight(null);
+      setOnoActivePart(step.part);
+      setSpeechLang(step.lang);
+
+      const advance = () => run(index + 1);
+      const callbacks = {
+        onStart: () => {
+          if (alive()) setSpeechStatus("speaking");
+        },
+        onBoundary: (h: SpeechHighlight) => {
+          if (alive()) setHighlight(h);
+        },
+        onEnd: advance,
+        onError: finish,
+      };
+
+      if (step.lang === "ja") {
+        speechService.speakJapanese(
+          step.text,
+          callbacks,
+          speechRateRef.current,
+          step.reading ? { reading: step.reading } : undefined
+        );
+      } else {
+        speechService.speakEnglish(
+          step.text,
+          callbacks,
+          speechRateRef.current
+        );
       }
-      setHighlight(null);
-      setOnoActivePart("meaning");
-      setSpeechLang("en");
-      speechService.speakEnglish(
-        item.meaning,
-        {
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd: () => speakWordJa(afterWord),
-          onError: finish,
-        },
-        speechRateRef.current
-      );
     };
 
-    speakWordJa(playMeaningThenRepeatJa);
+    run(0);
   }
 
-  /** Word JP → meaning EN → example JP → example EN for the current card. */
+  /** Every visible line: category, word, meaning, collocation, nuance, example. */
   function playOnoAll() {
     const item = onoItems[onoIndex] ?? null;
     if (!item) return;
@@ -1572,7 +1614,13 @@ export function PlayerPage() {
           clearSpeechUi();
           return;
         }
-        run(next);
+        clearSpeechUi();
+        setOnoActivePart(null);
+        onoGapTimerRef.current = window.setTimeout(() => {
+          onoGapTimerRef.current = null;
+          if (session !== onoPlayLevelSessionRef.current) return;
+          run(next);
+        }, autoModeTiming.betweenItemsPause);
       });
     };
 
@@ -3750,7 +3798,7 @@ export function PlayerPage() {
             <button
               onClick={playOnoAll}
               tabIndex={-1}
-              title="Play word JP+EN, then example JP+EN"
+              title="Play every line on this card, Japanese then English"
               className={
                 onoPlayingAll
                   ? "register-btn register-btn--active"

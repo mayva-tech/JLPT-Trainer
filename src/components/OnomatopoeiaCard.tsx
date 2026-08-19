@@ -1,10 +1,10 @@
-import type { OnomatopoeiaItem } from "../types/onomatopoeia";
+import type { OnomatopoeiaItem, OnomatopoeiaPart } from "../types/onomatopoeia";
 import type { SpeechHighlight } from "../services/speechService";
 import { getOnomatopoeiaCategory } from "../data/onomatopoeia";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 
-export type OnomatopoeiaPart = "word" | "meaning" | "example" | "exampleEn";
+export type { OnomatopoeiaPart };
 
 type Props = {
   item: OnomatopoeiaItem;
@@ -13,6 +13,13 @@ type Props = {
   enHighlight?: SpeechHighlight | null;
   showFurigana?: boolean;
 };
+
+function partClass(
+  base: string,
+  active: boolean
+): string {
+  return active ? `${base} ${base}--active` : base;
+}
 
 export function OnomatopoeiaCard({
   item,
@@ -29,15 +36,29 @@ export function OnomatopoeiaCard({
         <span className="ono-level">{item.jlptLevel}</span>
         {category ? (
           <span className="ono-category">
-            {category.japanese} · {category.english}
+            <span
+              lang="ja"
+              className={
+                activePart === "categoryJa" ? "ono-inline ono-inline--active" : "ono-inline"
+              }
+            >
+              {category.japanese}
+            </span>
+            <span aria-hidden="true"> · </span>
+            <span
+              lang="en"
+              className={
+                activePart === "categoryEn" ? "ono-inline ono-inline--active" : "ono-inline"
+              }
+            >
+              {category.english}
+            </span>
           </span>
         ) : null}
       </div>
 
       <div
-        className={
-          activePart === "word" ? "ono-word ono-word--active" : "ono-word"
-        }
+        className={partClass("ono-word", activePart === "word")}
         lang="ja"
       >
         <FuriganaWrapText
@@ -49,7 +70,10 @@ export function OnomatopoeiaCard({
         />
       </div>
 
-      <div aria-hidden="true">
+      <div
+        className={partClass("ono-meaning-wrap", activePart === "meaning")}
+        aria-hidden="true"
+      >
         <HighlightedEnglish
           text={item.meaning}
           className="ono-meaning"
@@ -57,17 +81,21 @@ export function OnomatopoeiaCard({
         />
       </div>
 
-      <div className="ono-collocation" lang="ja">
+      <div
+        className={partClass("ono-collocation", activePart === "collocation")}
+        lang="ja"
+      >
         {item.collocation}
       </div>
-      <div className="ono-nuance">{item.nuance}</div>
+      <div className={partClass("ono-nuance", activePart === "nuance")}>
+        {item.nuance}
+      </div>
 
       <div
-        className={
+        className={partClass(
+          "ono-example",
           activePart === "example" || activePart === "exampleEn"
-            ? "ono-example ono-example--active"
-            : "ono-example"
-        }
+        )}
       >
         <div lang="ja">
           <FuriganaWrapText

@@ -515,17 +515,23 @@ export default function TripTrainer() {
 
       {tab === 'scenarios' && script && (
         <>
-          <button
-            type="button"
-            className="jt-backbtn"
-            onClick={() => {
-              speechService.stop();
-              stopAuto();
-              setOpenScript(null);
-            }}
-          >
-            <ChevronLeft size={12} /> all scenarios
-          </button>
+          <div className="jt-scenehead">
+            <button
+              type="button"
+              className="jt-backbtn"
+              onClick={() => {
+                speechService.stop();
+                stopAuto();
+                setOpenScript(null);
+              }}
+            >
+              <ChevronLeft size={12} /> all scenarios
+            </button>
+            <h3 className="jt-scenetitle">
+              <Furigana text={script.title} />
+            </h3>
+            <p className="jt-scenesub">{script.titleEn}</p>
+          </div>
 
           <div className="jt-thread">
             {script.lines.map((line, i) => {
@@ -542,7 +548,14 @@ export default function TripTrainer() {
                       speak(text.jp);
                     }}
                   >
-                    <span className="jt-who">{line.who === 'self' ? 'you' : 'them'}</span>
+                    <span className="jt-who-row">
+                      <span className="jt-who">
+                        {line.who === 'self' ? 'you' : 'them'}
+                      </span>
+                      <span className={`jt-regtag jt-regtag--${shownRegister}`}>
+                        {REGISTER_LABELS[shownRegister]}
+                      </span>
+                    </span>
                     <span className={`jt-jp${lineActive && playPart === 'jp' ? ' jt-speaking' : ''}`}>
                       <Furigana text={text.jp} />
                     </span>
