@@ -123,6 +123,40 @@ export function appendWaveDashSpeakPause(text: string): string {
   return text.replace(/([〜～~])(?![、,\s]|$)/gu, "$1、");
 }
 
+/**
+ * 〇〇 (placeholder for a variable name/value) is read まるまる, not れいれい.
+ * Handles both ideographic circle 〇 and fullwidth ○, in any count.
+ */
+function normalizePlaceholderCircles(text: string): string {
+  return text.replace(/[〇○]{2,}/gu, (match) => "まる".repeat(match.length));
+}
+
+/**
+ * Digit sequences (090, 1234) should be read per-digit the way Japanese
+ * speakers actually say phone numbers, addresses, etc.:
+ *   0 → ゼロ  1 → いち  2 → に  3 → さん  4 → よん
+ *   5 → ご    6 → ろく  7 → なな 8 → はち  9 → きゅう
+ * Spaces between kana tokens keep Nanami from gluing them together.
+ */
+const DIGIT_KANA: Record<string, string> = {
+  "0": "ゼロ",
+  "1": "いち",
+  "2": "に",
+  "3": "さん",
+  "4": "よん",
+  "5": "ご",
+  "6": "ろく",
+  "7": "なな",
+  "8": "はち",
+  "9": "きゅう",
+};
+
+function splitDigitsForTTS(text: string): string {
+  return text.replace(/\d{2,}/g, (match) =>
+    match.split("").map((d) => DIGIT_KANA[d] ?? d).join(" ")
+  );
+}
+
 function speakReadingToken(token: string): string {
   // Split on punctuation so glued chunks like 「は、さいご」 still rewrite.
   return token
@@ -518,7 +552,7 @@ export function buildJapaneseSpeakText(
   spacedReading?: string | null
 ): string {
   const reading = spacedReading?.trim();
-  if (!reading) return appendWaveDashSpeakPause(surface);
+  if (!reading) return splitDigitsForTTS(normalizePlaceholderCircles(appendWaveDashSpeakPause(surface)));
 
   // Speak from spaced reading tokens so particles like は can be remapped to わ.
   // Keep spaces between tokens so TTS does not glue the particle into the next
@@ -535,7 +569,7 @@ export function buildJapaneseSpeakText(
     .join(" ")
     .trim();
 
-  return spoken || appendWaveDashSpeakPause(surface);
+  return splitDigitsForTTS(normalizePlaceholderCircles(spoken)) || splitDigitsForTTS(normalizePlaceholderCircles(appendWaveDashSpeakPause(surface)));
 }
 
 /**
@@ -543,5 +577,5 @@ export function buildJapaneseSpeakText(
  * Used for karaoke duration so timing matches what Nanami actually speaks.
  */
 export function buildJapaneseSpeakToken(token: string): string {
-  return appendWaveDashSpeakPause(speakReadingToken(token));
+  return splitDigitsForTTS(normalizePlaceholderCircles(appendWaveDashSpeakPause(speakReadingToken(token))));
 }

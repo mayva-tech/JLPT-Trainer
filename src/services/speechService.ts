@@ -621,7 +621,7 @@ export const speechService = {
     options?: SpeakJapaneseOptions
   ) {
     const reading = options?.reading ?? null;
-    const speakText = reading ? buildJapaneseSpeakText(text, reading) : text;
+    const speakText = buildJapaneseSpeakText(text, reading);
     runUtterance(
       text,
       "ja-JP",

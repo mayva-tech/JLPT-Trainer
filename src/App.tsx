@@ -3,8 +3,9 @@ import { PlayerPage } from "./pages/PlayerPage";
 import KonbiniTrainer from "./pages/KonbiniTrainer/KonbiniTrainer";
 import TripTrainer from "./pages/TripTrainer/TripTrainer";
 import RelationTrainer from "./pages/RelationTrainer/RelationTrainer";
+import PhoneTrainer from "./pages/PhoneTrainer/PhoneTrainer";
 
-type AppView = "player" | "konbini" | "trip" | "relations";
+type AppView = "player" | "konbini" | "trip" | "relations" | "phone";
 
 export default function App() {
   const [view, setView] = useState<AppView>("player");
@@ -61,6 +62,18 @@ export default function App() {
         >
           類義
         </button>
+        <button
+          type="button"
+          className={
+            view === "phone"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Phone Conversation Scripts — 電話会話"
+          onClick={() => setView("phone")}
+        >
+          電話
+        </button>
       </nav>
 
       <div
@@ -96,6 +109,15 @@ export default function App() {
         }
       >
         <RelationTrainer />
+      </div>
+      <div
+        className={
+          view === "phone"
+            ? "app-view app-view--scroll"
+            : "app-view app-view--hidden"
+        }
+      >
+        <PhoneTrainer />
       </div>
     </div>
   );
