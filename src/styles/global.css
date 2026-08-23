@@ -58,14 +58,29 @@ body {
 }
 
 .app-nav-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
   font-family: var(--font-en);
-  font-size: 13px;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border: 1px solid #4b5563;
   border-radius: 8px;
   background: #3a4452;
   color: #e5e7eb;
   cursor: pointer;
+  line-height: 1.15;
+}
+
+.app-nav-en {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.app-nav-jp {
+  font-family: var(--font-jp);
+  font-size: 11px;
+  opacity: 0.85;
 }
 
 .app-nav-btn:hover {
@@ -76,6 +91,10 @@ body {
   background: #1e3a8a;
   border-color: #1e40af;
   color: #fff;
+}
+
+.app-nav-btn--active .app-nav-jp {
+  opacity: 0.95;
 }
 
 .app-view {

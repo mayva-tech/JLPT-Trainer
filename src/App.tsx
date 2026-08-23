@@ -65,9 +65,13 @@ export default function App() {
               ? "app-nav-btn app-nav-btn--active"
               : "app-nav-btn"
           }
+          title="Player — プレイヤー"
           onClick={() => setView("player")}
         >
-          Player
+          <span className="app-nav-en">Player</span>
+          <span className="app-nav-jp" lang="ja">
+            プレイヤー
+          </span>
         </button>
         <button
           type="button"
@@ -76,20 +80,26 @@ export default function App() {
               ? "app-nav-btn app-nav-btn--active"
               : "app-nav-btn"
           }
-          title="Konbini Trainer"
+          title="Konbini Trainer — コンビニ"
           onClick={() => setView("konbini")}
         >
-          コンビニ
+          <span className="app-nav-en">Konbini</span>
+          <span className="app-nav-jp" lang="ja">
+            コンビニ
+          </span>
         </button>
         <button
           type="button"
           className={
             view === "trip" ? "app-nav-btn app-nav-btn--active" : "app-nav-btn"
           }
-          title="Trip Trainer"
+          title="Trip Trainer — 旅"
           onClick={() => setView("trip")}
         >
-          旅
+          <span className="app-nav-en">Trip</span>
+          <span className="app-nav-jp" lang="ja">
+            旅
+          </span>
         </button>
         <button
           type="button"
@@ -101,7 +111,10 @@ export default function App() {
           title="Synonyms & Antonyms — 類義語・反対語"
           onClick={() => setView("relations")}
         >
-          類義
+          <span className="app-nav-en">Synonyms</span>
+          <span className="app-nav-jp" lang="ja">
+            類義
+          </span>
         </button>
         <button
           type="button"
@@ -113,7 +126,10 @@ export default function App() {
           title="Phone Conversation Scripts — 電話会話"
           onClick={() => setView("phone")}
         >
-          電話
+          <span className="app-nav-en">Phone</span>
+          <span className="app-nav-jp" lang="ja">
+            電話
+          </span>
         </button>
         <button
           type="button"
@@ -125,7 +141,10 @@ export default function App() {
           title="Masculine, Feminine & Neutral Japanese — 話し方"
           onClick={() => setView("style")}
         >
-          話し方
+          <span className="app-nav-en">Speech</span>
+          <span className="app-nav-jp" lang="ja">
+            話し方
+          </span>
         </button>
       </nav>
 
