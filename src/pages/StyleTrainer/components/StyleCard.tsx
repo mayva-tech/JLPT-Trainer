@@ -9,12 +9,33 @@ import {
 
 interface StyleCardProps {
   item: StyleExpression;
-  onSpeak: (text: string) => void;
+  onSpeakJp: (text: string, reading?: string) => void;
+  active?: boolean;
+  selected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
-export function StyleCard({ item, onSpeak }: StyleCardProps) {
+function cardClassName(active: boolean, selected: boolean): string {
+  const parts = ["ss-card"];
+  if (selected) parts.push("ss-card--selected");
+  if (active) parts.push("ss-card--playing");
+  return parts.join(" ");
+}
+
+export function StyleCard({
+  item,
+  onSpeakJp,
+  active = false,
+  selected = false,
+  onSelect,
+}: StyleCardProps) {
   return (
-    <article className="ss-card" data-strength={item.strength}>
+    <article
+      className={cardClassName(active, selected)}
+      data-strength={item.strength}
+      aria-pressed={selected}
+      onClick={() => onSelect?.(item.id)}
+    >
       <div className="ss-card-head">
         <span className="ss-strength" data-strength={item.strength}>
           {STRENGTH_LABELS[item.strength]}
@@ -35,8 +56,11 @@ export function StyleCard({ item, onSpeak }: StyleCardProps) {
         <button
           type="button"
           className="ss-speak"
-          aria-label={`Speak ${item.japanese}`}
-          onClick={() => onSpeak(item.japanese)}
+          aria-label={`Speak Japanese: ${item.japanese}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            onSpeakJp(item.japanese, item.reading);
+          }}
         >
           🔊
         </button>
@@ -50,7 +74,9 @@ export function StyleCard({ item, onSpeak }: StyleCardProps) {
       {item.warning ? (
         <p className="ss-warning">
           <span className="ss-warning-label">Warning</span>
-          {item.warning}
+          <span className="ss-warning-body">
+            {item.warning}
+          </span>
         </p>
       ) : null}
 
@@ -60,8 +86,11 @@ export function StyleCard({ item, onSpeak }: StyleCardProps) {
           <button
             type="button"
             className="ss-speak"
-            aria-label="Speak example"
-            onClick={() => onSpeak(item.example.japanese)}
+            aria-label="Speak Japanese example"
+            onClick={(event) => {
+              event.stopPropagation();
+              onSpeakJp(item.example.japanese, item.example.reading);
+            }}
           >
             🔊
           </button>

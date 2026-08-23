@@ -69,7 +69,6 @@ interface StyleFiltersProps {
   showAnime: boolean;
   onShowAnime: (value: boolean) => void;
   total: number;
-  onRandom: () => void;
 }
 
 export function StyleFilters({
@@ -90,7 +89,6 @@ export function StyleFilters({
   showAnime,
   onShowAnime,
   total,
-  onRandom,
 }: StyleFiltersProps) {
   return (
     <div className="ss-filters">
@@ -249,9 +247,6 @@ export function StyleFilters({
 
       <div className="ss-filter-foot">
         <p className="ss-result-count">{total} matching</p>
-        <button type="button" className="ss-btn" onClick={onRandom}>
-          Random expression
-        </button>
       </div>
     </div>
   );

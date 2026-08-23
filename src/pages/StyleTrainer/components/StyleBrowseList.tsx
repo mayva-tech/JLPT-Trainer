@@ -1,0 +1,54 @@
+import type { StyleExpression } from "../../../types/speechStyle";
+import type { StyleCategoryGroup } from "../../../utils/speechStyles";
+import { StyleCard } from "./StyleCard";
+
+interface StyleBrowseListProps {
+  groups: StyleCategoryGroup[];
+  onSpeakJp: (text: string, reading?: string) => void;
+  activePlayId?: string | null;
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
+  showCategoryHeaders?: boolean;
+}
+
+export function StyleBrowseList({
+  groups,
+  onSpeakJp,
+  activePlayId = null,
+  selectedId = null,
+  onSelect,
+  showCategoryHeaders = true,
+}: StyleBrowseListProps) {
+  return (
+    <div className="ss-browse-sections">
+      {groups.map(({ category, items }) => (
+        <section key={category.id} className="ss-category-section">
+          {showCategoryHeaders ? (
+            <header className="ss-category-head">
+              <div className="ss-category-head-main">
+                <h2 className="ss-category-title">
+                  <span lang="ja">{category.japanese}</span>
+                  <span className="ss-category-en">{category.english}</span>
+                </h2>
+                <span className="ss-category-count">{items.length}</span>
+              </div>
+              <p className="ss-category-desc">{category.description}</p>
+            </header>
+          ) : null}
+          <div className="ss-grid">
+            {items.map((item: StyleExpression) => (
+              <StyleCard
+                key={item.id}
+                item={item}
+                onSpeakJp={onSpeakJp}
+                active={activePlayId === item.id}
+                selected={selectedId === item.id}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}

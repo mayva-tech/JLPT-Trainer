@@ -9,7 +9,7 @@ import {
 
 interface StyleQuizProps {
   pool: readonly StyleExpression[];
-  onSpeak: (text: string) => void;
+  onSpeakJp: (text: string, reading?: string) => void;
 }
 
 type Phase = "setup" | "active" | "results";
@@ -22,7 +22,10 @@ const KIND_LABEL: Record<StyleQuizQuestion["kind"], string> = {
   rewrite: "Rewrite it",
 };
 
-export function StyleQuiz({ pool, onSpeak }: StyleQuizProps) {
+export function StyleQuiz({
+  pool,
+  onSpeakJp,
+}: StyleQuizProps) {
   const [phase, setPhase] = useState<Phase>("setup");
   const [questions, setQuestions] = useState<StyleQuizQuestion[]>([]);
   const [index, setIndex] = useState(0);
@@ -166,16 +169,21 @@ export function StyleQuiz({ pool, onSpeak }: StyleQuizProps) {
       </div>
 
       <p className="ss-quiz-prompt">{question.prompt}</p>
-      <p className="ss-quiz-focus" lang="ja">
+      <p
+        className="ss-quiz-focus"
+        lang={question.focusReading ? "ja" : undefined}
+      >
         {question.focus}
-        <button
-          type="button"
-          className="ss-speak"
-          aria-label="Speak focus"
-          onClick={() => onSpeak(question.focus)}
-        >
-          🔊
-        </button>
+        {question.focusReading ? (
+          <button
+            type="button"
+            className="ss-speak"
+            aria-label="Speak focus"
+            onClick={() => onSpeakJp(question.focus, question.focusReading)}
+          >
+            🔊
+          </button>
+        ) : null}
       </p>
       {question.focusReading ? (
         <p className="ss-quiz-focus-reading" lang="ja">
@@ -224,7 +232,9 @@ export function StyleQuiz({ pool, onSpeak }: StyleQuizProps) {
           >
             {selected === question.correctOptionId ? "Correct" : "Not quite"}
           </p>
-          <p className="ss-explanation">{question.explanation}</p>
+          <p className="ss-explanation">
+            {question.explanation}
+          </p>
           <div className="ss-controls">
             <button
               type="button"

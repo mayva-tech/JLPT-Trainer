@@ -1,10 +1,18 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./style-trainer.css";
+import { registerShifts } from "../../data/registerShifts";
 import { styleExpressions } from "../../data/speechStyles";
-import { useJapaneseVoice } from "../../lib/japanese/useJapaneseVoice";
+import {
+  speechService,
+  SPEECH_RATE_NORMAL,
+} from "../../services/speechService";
+import type { StyleExpression } from "../../types/speechStyle";
+import { splitNuanceForSpeech } from "../../utils/nuanceSpeech";
 import {
   buildComparisons,
   filterStyles,
+  groupStylesByCategory,
+  limitGroupedStyles,
   pickRandomStyle,
   styleStats,
   styleTotal,
@@ -13,6 +21,7 @@ import {
   type LevelFilter,
   type PolitenessFilter,
 } from "../../utils/speechStyles";
+import { StyleBrowseList } from "./components/StyleBrowseList";
 import { StyleCard } from "./components/StyleCard";
 import { StyleComparisonList } from "./components/StyleComparison";
 import { StyleFilters, StyleStatsBar } from "./components/StyleControls";
@@ -30,6 +39,88 @@ const MODES: { id: Mode; label: string }[] = [
 
 const PAGE = 40;
 
+function speakJpAsync(text: string, reading?: string): Promise<void> {
+  const trimmed = text.trim();
+  if (!trimmed) return Promise.resolve();
+  return new Promise((resolve) => {
+    speechService.speakJapanese(
+      trimmed,
+      { onEnd: () => resolve(), onError: () => resolve() },
+      SPEECH_RATE_NORMAL,
+      reading ? { reading } : undefined
+    );
+  });
+}
+
+function speakEnAsync(text: string): Promise<void> {
+  const trimmed = text.trim();
+  if (!trimmed) return Promise.resolve();
+  return new Promise((resolve) => {
+    speechService.speakEnglish(
+      trimmed,
+      { onEnd: () => resolve(), onError: () => resolve() },
+      SPEECH_RATE_NORMAL
+    );
+  });
+}
+
+/** Speak mixed JP/EN explanation text with the matching voice per run. */
+async function speakMixedAsync(
+  text: string,
+  cancelled?: () => boolean
+): Promise<void> {
+  const segments = splitNuanceForSpeech(text);
+  if (segments.length === 0) return;
+  for (const segment of segments) {
+    if (cancelled?.()) return;
+    const chunk = segment.text.trim();
+    if (!chunk) continue;
+    if (segment.lang === "ja") {
+      await speakJpAsync(chunk);
+    } else {
+      await speakEnAsync(chunk);
+    }
+  }
+}
+
+function pause(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function playExpression(
+  item: StyleExpression,
+  cancelled: () => boolean,
+  onActive: (id: string | null) => void
+): Promise<void> {
+  onActive(item.id);
+  if (cancelled()) return;
+  await speakJpAsync(item.japanese, item.reading);
+  if (cancelled()) return;
+  await pause(280);
+  if (cancelled()) return;
+  await speakEnAsync(item.english);
+  if (cancelled()) return;
+  await pause(280);
+  if (item.example.japanese) {
+    if (cancelled()) return;
+    await speakJpAsync(item.example.japanese, item.example.reading);
+    if (cancelled()) return;
+    await pause(280);
+  }
+  if (item.example.english) {
+    if (cancelled()) return;
+    await speakEnAsync(item.example.english);
+    if (cancelled()) return;
+    await pause(280);
+  }
+  if (item.warning?.trim()) {
+    if (cancelled()) return;
+    await speakMixedAsync(item.warning, cancelled);
+    if (cancelled()) return;
+  }
+  await pause(450);
+}
+
 export default function StyleTrainer() {
   const [mode, setMode] = useState<Mode>("compare");
   const [search, setSearch] = useState("");
@@ -42,13 +133,40 @@ export default function StyleTrainer() {
   const [showAnime, setShowAnime] = useState(true);
   const [shown, setShown] = useState(PAGE);
   const [spotlight, setSpotlight] = useState<string | null>(null);
+  const [playingAll, setPlayingAll] = useState(false);
+  const [activePlayId, setActivePlayId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const cancelRef = useRef(false);
 
-  const voice = useJapaneseVoice();
-  const speak = useCallback(
-    (text: string) => {
-      if (text) voice.speak(text);
+  const stopPlayAll = useCallback(() => {
+    cancelRef.current = true;
+    speechService.stop();
+    setPlayingAll(false);
+    setActivePlayId(null);
+  }, []);
+
+  const selectItem = useCallback((id: string) => {
+    setSelectedId((current) => (current === id ? null : id));
+  }, []);
+
+  const markPlayingCard = useCallback((id: string | null) => {
+    setActivePlayId(id);
+    if (id) setSelectedId(id);
+  }, []);
+
+  const speakJp = useCallback(
+    (text: string, reading?: string) => {
+      if (playingAll) stopPlayAll();
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      speechService.speakJapanese(
+        trimmed,
+        undefined,
+        SPEECH_RATE_NORMAL,
+        reading ? { reading } : undefined
+      );
     },
-    [voice]
+    [playingAll, stopPlayAll]
   );
 
   const filtered = useMemo(
@@ -68,6 +186,14 @@ export default function StyleTrainer() {
 
   const comparisons = useMemo(() => buildComparisons(filtered), [filtered]);
   const stats = useMemo(() => styleStats(filtered), [filtered]);
+  const groupedBrowse = useMemo(
+    () => groupStylesByCategory(filtered),
+    [filtered]
+  );
+  const visibleBrowseGroups = useMemo(
+    () => limitGroupedStyles(groupedBrowse, shown),
+    [groupedBrowse, shown]
+  );
 
   const spotlightItem = spotlight
     ? filtered.find((item) => item.id === spotlight)
@@ -80,6 +206,89 @@ export default function StyleTrainer() {
       setMode("browse");
     }
   }, [filtered]);
+
+  const playAll = useCallback(() => {
+    if (playingAll) {
+      stopPlayAll();
+      return;
+    }
+
+    cancelRef.current = false;
+    setPlayingAll(true);
+
+    const cancelled = () => cancelRef.current;
+
+    const startFrom = <T extends { id: string }>(list: T[]): T[] => {
+      if (!selectedId) return list;
+      const index = list.findIndex((item) => item.id === selectedId);
+      return index >= 0 ? list.slice(index) : list;
+    };
+
+    const run = async () => {
+      if (mode === "shifts") {
+        const shiftPlaylist = registerShifts.flatMap((shift) => [
+          { id: shift.id, kind: "summary" as const, shift },
+          ...shift.contexts.map((ctx) => ({
+            id: `${shift.id}:${ctx.context}`,
+            kind: "context" as const,
+            shift,
+            ctx,
+          })),
+        ]);
+        const queue = startFrom(shiftPlaylist);
+        for (const entry of queue) {
+          if (cancelled()) break;
+          markPlayingCard(entry.id);
+          if (entry.kind === "summary") {
+            await speakMixedAsync(entry.shift.summary, cancelled);
+            if (cancelled()) break;
+            await pause(300);
+          } else {
+            await speakJpAsync(entry.ctx.japanese);
+            if (cancelled()) break;
+            await pause(250);
+            if (cancelled()) break;
+            await speakMixedAsync(entry.ctx.note, cancelled);
+            if (cancelled()) break;
+            await pause(400);
+          }
+        }
+      } else if (mode === "compare") {
+        const playlist = comparisons.flatMap((group) => group.members);
+        for (const item of startFrom(playlist)) {
+          if (cancelled()) break;
+          await playExpression(item, cancelled, markPlayingCard);
+        }
+      } else if (mode === "browse") {
+        const list = filtered.slice(0, shown);
+        for (const item of startFrom(list)) {
+          if (cancelled()) break;
+          await playExpression(item, cancelled, markPlayingCard);
+        }
+      }
+
+      if (!cancelled()) {
+        setPlayingAll(false);
+        setActivePlayId(null);
+      }
+    };
+
+    void run();
+  }, [
+    playingAll,
+    stopPlayAll,
+    mode,
+    comparisons,
+    filtered,
+    shown,
+    selectedId,
+    markPlayingCard,
+  ]);
+
+  useEffect(() => {
+    stopPlayAll();
+    setSelectedId(null);
+  }, [mode, stopPlayAll]);
 
   return (
     <div className="ss-root">
@@ -116,6 +325,32 @@ export default function StyleTrainer() {
         ))}
       </nav>
 
+      {mode !== "quiz" ? (
+        <div className="ss-sticky-actions">
+          <p className="ss-sticky-hint">
+            {selectedId
+              ? "Play All starts from the orange card"
+              : "Tap a card, then Play All"}
+          </p>
+          <div className="ss-filter-actions">
+            <button
+              type="button"
+              className={
+                playingAll ? "ss-btn ss-btn--primary" : "ss-btn ss-btn--play-all"
+              }
+              onClick={playAll}
+            >
+              {playingAll ? "⏹ Stop" : "▶ Play All"}
+            </button>
+            {mode !== "shifts" ? (
+              <button type="button" className="ss-btn" onClick={randomise}>
+                Random expression
+              </button>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       {mode !== "shifts" ? (
         <>
           <StyleStatsBar stats={stats} />
@@ -140,13 +375,19 @@ export default function StyleTrainer() {
             showAnime={showAnime}
             onShowAnime={setShowAnime}
             total={filtered.length}
-            onRandom={randomise}
           />
         </>
       ) : null}
 
       {mode === "compare" ? (
-        <StyleComparisonList comparisons={comparisons} onSpeak={speak} />
+        <StyleComparisonList
+          comparisons={comparisons}
+          onSpeakJp={speakJp}
+          activePlayId={activePlayId}
+          selectedId={selectedId}
+          onSelect={selectItem}
+          showCategoryHeaders={category === "all"}
+        />
       ) : null}
 
       {mode === "browse" ? (
@@ -163,7 +404,13 @@ export default function StyleTrainer() {
                   Clear
                 </button>
               </div>
-              <StyleCard item={spotlightItem} onSpeak={speak} />
+              <StyleCard
+                item={spotlightItem}
+                onSpeakJp={speakJp}
+                active={activePlayId === spotlightItem.id}
+                selected={selectedId === spotlightItem.id}
+                onSelect={selectItem}
+              />
             </div>
           ) : null}
 
@@ -174,11 +421,14 @@ export default function StyleTrainer() {
             </p>
           ) : (
             <>
-              <div className="ss-grid">
-                {filtered.slice(0, shown).map((item) => (
-                  <StyleCard key={item.id} item={item} onSpeak={speak} />
-                ))}
-              </div>
+              <StyleBrowseList
+                groups={visibleBrowseGroups}
+                onSpeakJp={speakJp}
+                activePlayId={activePlayId}
+                selectedId={selectedId}
+                onSelect={selectItem}
+                showCategoryHeaders={category === "all"}
+              />
               {shown < filtered.length ? (
                 <button
                   type="button"
@@ -193,9 +443,21 @@ export default function StyleTrainer() {
         </div>
       ) : null}
 
-      {mode === "shifts" ? <StyleRegisterShifts /> : null}
+      {mode === "shifts" ? (
+        <StyleRegisterShifts
+          onSpeakJp={speakJp}
+          activePlayId={activePlayId}
+          selectedId={selectedId}
+          onSelect={selectItem}
+        />
+      ) : null}
 
-      {mode === "quiz" ? <StyleQuiz pool={filtered} onSpeak={speak} /> : null}
+      {mode === "quiz" ? (
+        <StyleQuiz
+          pool={filtered}
+          onSpeakJp={speakJp}
+        />
+      ) : null}
     </div>
   );
 }

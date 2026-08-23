@@ -28,6 +28,12 @@
   position: relative;
   overflow: hidden;
   container-type: size; /* enables cqw / cqh */
+
+  /* Lesson card typography (JP + EN) */
+  --lesson-jp-word: 14cqw;
+  --lesson-jp-line: 10.5cqw;
+  --lesson-en-word: 5.6cqw;
+  --lesson-en-line: 4.5cqw;
 }
 
 /* YouTube-safe inner area */
@@ -140,7 +146,7 @@
 .word-main {
   font-family: var(--font-jp);
   font-weight: 700;
-  font-size: 12cqw;
+  font-size: var(--lesson-jp-word);
   line-height: 1;
   color: #000;
 }
@@ -153,7 +159,7 @@
 
 .word-meaning {
   font-family: var(--font-en);
-  font-size: 4.8cqw;
+  font-size: var(--lesson-en-word);
   color: #000;
   margin-top: 1.8cqh;
 }
@@ -262,13 +268,13 @@
 }
 
 .phrase-main {
-  font-size: 9cqw;
+  font-size: var(--lesson-jp-line);
   color: #000;
 }
 
 .sentence-main,
 .shadowing-phrase {
-  font-size: calc(9cqw * var(--fit-scale, 1));
+  font-size: calc(var(--lesson-jp-line) * var(--fit-scale, 1));
   color: #000;
 }
 
@@ -281,7 +287,7 @@
 }
 
 .phrase-meaning {
-  font-size: 3.8cqw;
+  font-size: var(--lesson-en-line);
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -294,7 +300,7 @@
 /* Sentence EN: always one line — FitScale shrinks --fit-scale to fit. */
 .sentence-meaning {
   width: 100%;
-  font-size: calc(3.8cqw * var(--fit-scale, 1));
+  font-size: calc(var(--lesson-en-line) * var(--fit-scale, 1));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
@@ -332,7 +338,7 @@
 .review-word {
   font-family: var(--font-jp);
   font-weight: 700;
-  font-size: 12cqw;
+  font-size: var(--lesson-jp-word);
   color: #000;
   line-height: 1;
 }
@@ -345,7 +351,7 @@
 
 .review-meaning {
   font-family: var(--font-en);
-  font-size: 4.4cqw;
+  font-size: var(--lesson-en-word);
   color: #000;
   margin-top: 1.5cqh;
 }
@@ -1526,31 +1532,31 @@
 .grammar-pattern {
   font-family: var(--font-jp);
   font-weight: 700;
-  font-size: 9cqw;
+  font-size: var(--lesson-jp-line);
   line-height: 1.15;
   color: #000;
   letter-spacing: 0.02em;
 }
 
 .grammar-pattern--review {
-  font-size: 8cqw;
+  font-size: calc(var(--lesson-jp-line) * 0.9);
 }
 
 .grammar-meaning {
   font-family: var(--font-en);
-  font-size: 3.8cqw;
+  font-size: var(--lesson-en-line);
   color: #000;
   margin-top: 1.8cqh;
 }
 
 .grammar-meaning--review {
-  font-size: 3.8cqw;
+  font-size: var(--lesson-en-line);
   margin-top: 2.5cqh;
 }
 
 .grammar-formation {
   font-family: var(--font-en);
-  font-size: 3.8cqw;
+  font-size: var(--lesson-en-line);
   color: #000;
   margin-top: 3cqh;
   line-height: 1.5;

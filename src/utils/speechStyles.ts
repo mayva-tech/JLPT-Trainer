@@ -175,6 +175,83 @@ export interface StyleComparison {
   members: StyleExpression[];
 }
 
+export interface StyleCategoryGroup {
+  category: StyleCategory;
+  items: StyleExpression[];
+}
+
+export interface StyleCategoryComparisonGroup {
+  category: StyleCategory;
+  comparisons: StyleComparison[];
+}
+
+/** Filtered items in corpus category order, omitting empty sections. */
+export function groupStylesByCategory(
+  items: readonly StyleExpression[]
+): StyleCategoryGroup[] {
+  const byCategory = new Map<StyleCategoryId, StyleExpression[]>();
+
+  for (const item of items) {
+    const existing = byCategory.get(item.category) ?? [];
+    existing.push(item);
+    byCategory.set(item.category, existing);
+  }
+
+  return STYLE_CATEGORIES.filter(
+    (category) => (byCategory.get(category.id)?.length ?? 0) > 0
+  ).map((category) => ({
+    category,
+    items: byCategory.get(category.id)!,
+  }));
+}
+
+/** Keep category sections intact while capping total visible cards. */
+export function limitGroupedStyles(
+  groups: readonly StyleCategoryGroup[],
+  limit: number
+): StyleCategoryGroup[] {
+  let remaining = limit;
+  const result: StyleCategoryGroup[] = [];
+
+  for (const group of groups) {
+    if (remaining <= 0) break;
+    if (group.items.length <= remaining) {
+      result.push(group);
+      remaining -= group.items.length;
+    } else {
+      result.push({
+        category: group.category,
+        items: group.items.slice(0, remaining),
+      });
+      remaining = 0;
+    }
+  }
+
+  return result;
+}
+
+/** Side-by-side groups bucketed by their members' category. */
+export function groupComparisonsByCategory(
+  comparisons: readonly StyleComparison[]
+): StyleCategoryComparisonGroup[] {
+  const byCategory = new Map<StyleCategoryId, StyleComparison[]>();
+
+  for (const comparison of comparisons) {
+    const categoryId = comparison.members[0]?.category;
+    if (!categoryId) continue;
+    const existing = byCategory.get(categoryId) ?? [];
+    existing.push(comparison);
+    byCategory.set(categoryId, existing);
+  }
+
+  return STYLE_CATEGORIES.filter(
+    (category) => (byCategory.get(category.id)?.length ?? 0) > 0
+  ).map((category) => ({
+    category,
+    comparisons: byCategory.get(category.id)!,
+  }));
+}
+
 /** Groups with two or more members, i.e. everything worth comparing. */
 export function buildComparisons(
   items: readonly StyleExpression[]
