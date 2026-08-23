@@ -1,10 +1,24 @@
-import { useState } from "react";
-import { PlayerPage } from "./pages/PlayerPage";
-import KonbiniTrainer from "./pages/KonbiniTrainer/KonbiniTrainer";
-import TripTrainer from "./pages/TripTrainer/TripTrainer";
-import RelationTrainer from "./pages/RelationTrainer/RelationTrainer";
-import PhoneTrainer from "./pages/PhoneTrainer/PhoneTrainer";
-import StyleTrainer from "./pages/StyleTrainer/StyleTrainer";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { speechService } from "./services/speechService";
+
+/**
+ * Trainers are lazy so that opening the app does not download every corpus at
+ * once. Each import() below becomes its own chunk, and only the selected
+ * trainer is mounted — inactive ones are unloaded rather than hidden by CSS.
+ */
+const PlayerPage = lazy(() =>
+  // Named export, so map it onto the default shape lazy() expects.
+  import("./pages/PlayerPage").then((m) => ({ default: m.PlayerPage }))
+);
+const KonbiniTrainer = lazy(
+  () => import("./pages/KonbiniTrainer/KonbiniTrainer")
+);
+const TripTrainer = lazy(() => import("./pages/TripTrainer/TripTrainer"));
+const RelationTrainer = lazy(
+  () => import("./pages/RelationTrainer/RelationTrainer")
+);
+const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
+const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
 
 type AppView =
   | "player"
@@ -14,8 +28,28 @@ type AppView =
   | "phone"
   | "style";
 
+const VIEW_COMPONENTS: Record<AppView, React.ComponentType> = {
+  player: PlayerPage,
+  konbini: KonbiniTrainer,
+  trip: TripTrainer,
+  relations: RelationTrainer,
+  phone: PhoneTrainer,
+  style: StyleTrainer,
+};
+
+function TrainerFallback() {
+  return <div className="app-loading">読み込み中…</div>;
+}
+
 export default function App() {
   const [view, setView] = useState<AppView>("player");
+  const ActiveTrainer = VIEW_COMPONENTS[view];
+
+  // Switching views now unmounts the previous trainer, which would otherwise
+  // leave its audio playing with no controls left on screen to stop it.
+  useEffect(() => {
+    return () => speechService.stop();
+  }, [view]);
 
   return (
     <div
@@ -97,55 +131,12 @@ export default function App() {
 
       <div
         className={
-          view === "player" ? "app-view" : "app-view app-view--hidden"
+          view === "player" ? "app-view" : "app-view app-view--scroll"
         }
       >
-        <PlayerPage />
-      </div>
-      <div
-        className={
-          view === "konbini"
-            ? "app-view app-view--scroll"
-            : "app-view app-view--hidden"
-        }
-      >
-        <KonbiniTrainer />
-      </div>
-      <div
-        className={
-          view === "trip"
-            ? "app-view app-view--scroll"
-            : "app-view app-view--hidden"
-        }
-      >
-        <TripTrainer />
-      </div>
-      <div
-        className={
-          view === "relations"
-            ? "app-view app-view--scroll"
-            : "app-view app-view--hidden"
-        }
-      >
-        <RelationTrainer />
-      </div>
-      <div
-        className={
-          view === "phone"
-            ? "app-view app-view--scroll"
-            : "app-view app-view--hidden"
-        }
-      >
-        <PhoneTrainer />
-      </div>
-      <div
-        className={
-          view === "style"
-            ? "app-view app-view--scroll"
-            : "app-view app-view--hidden"
-        }
-      >
-        <StyleTrainer />
+        <Suspense fallback={<TrainerFallback />}>
+          <ActiveTrainer />
+        </Suspense>
       </div>
     </div>
   );

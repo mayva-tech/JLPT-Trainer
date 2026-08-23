@@ -91,3 +91,13 @@ body {
 .app-view--hidden {
   display: none;
 }
+
+.app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-softer);
+  font-family: var(--font-en);
+  font-size: 14px;
+}
