@@ -4,8 +4,15 @@ import KonbiniTrainer from "./pages/KonbiniTrainer/KonbiniTrainer";
 import TripTrainer from "./pages/TripTrainer/TripTrainer";
 import RelationTrainer from "./pages/RelationTrainer/RelationTrainer";
 import PhoneTrainer from "./pages/PhoneTrainer/PhoneTrainer";
+import StyleTrainer from "./pages/StyleTrainer/StyleTrainer";
 
-type AppView = "player" | "konbini" | "trip" | "relations" | "phone";
+type AppView =
+  | "player"
+  | "konbini"
+  | "trip"
+  | "relations"
+  | "phone"
+  | "style";
 
 export default function App() {
   const [view, setView] = useState<AppView>("player");
@@ -74,6 +81,18 @@ export default function App() {
         >
           電話
         </button>
+        <button
+          type="button"
+          className={
+            view === "style"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Masculine, Feminine & Neutral Japanese — 話し方"
+          onClick={() => setView("style")}
+        >
+          話し方
+        </button>
       </nav>
 
       <div
@@ -118,6 +137,15 @@ export default function App() {
         }
       >
         <PhoneTrainer />
+      </div>
+      <div
+        className={
+          view === "style"
+            ? "app-view app-view--scroll"
+            : "app-view app-view--hidden"
+        }
+      >
+        <StyleTrainer />
       </div>
     </div>
   );
