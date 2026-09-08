@@ -33,6 +33,7 @@
   --ss-jp-head: 28px;
   --ss-jp-body: 19px;
   --ss-jp-read: 15px;
+  --ss-romaji: 18px;
   --ss-en-body: 16px;
   --ss-en-small: 14px;
   --ss-mini-jp: 24px;
@@ -496,6 +497,87 @@
   gap: 14px;
 }
 
+/* ---- furigana above kanji ---- */
+
+.ss-root .furigana-wrap .jp-wrap-line {
+  align-items: flex-end;
+  row-gap: 0.55em;
+}
+
+.ss-root .furigana-wrap .jp-word {
+  align-items: flex-end;
+}
+
+.ss-root .furigana-wrap .furi-cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  line-height: 1.1;
+  vertical-align: bottom;
+}
+
+.ss-root .furigana-wrap .furi-surface {
+  display: inline-block;
+  order: 1;
+}
+
+.ss-root .furigana-wrap .furi-reading {
+  display: block;
+  order: 0;
+  font-family: var(--ss-jp);
+  font-weight: 700;
+  font-size: 0.42em;
+  color: var(--ss-ink-soft);
+  line-height: 1.15;
+  margin-bottom: 0.12em;
+  user-select: none;
+  pointer-events: none;
+}
+
+.ss-root .furigana-wrap .furi-reading--spacer {
+  visibility: hidden;
+  height: 1.15em;
+  margin-bottom: 0.12em;
+}
+
+.ss-root .furigana-wrap .furi-cell.speech-active {
+  color: #000 !important;
+  background: rgba(245, 196, 70, 0.4);
+  border-radius: 0.08em;
+}
+
+.ss-root .furigana-wrap .furi-cell.speech-spoken {
+  opacity: 1;
+  color: inherit;
+}
+
+/* ---- speech highlight (TTS karaoke) ---- */
+
+.ss-root .jp-wrap {
+  display: inline;
+}
+
+.ss-root .jp-wrap-line {
+  display: inline;
+}
+
+.ss-root .speech-char {
+  display: inline;
+  border-radius: 0.08em;
+}
+
+.ss-root .speech-spoken {
+  opacity: 1;
+  color: inherit;
+}
+
+.ss-root .speech-active {
+  color: #000 !important;
+  background: rgba(245, 196, 70, 0.4);
+  opacity: 1;
+}
+
 /* ---- cards ---- */
 
 .ss-grid {
@@ -535,28 +617,26 @@
 
 .ss-jp {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 6px;
   margin: 0;
+}
+
+.ss-jp-line.furigana-wrap {
   font-family: var(--ss-jp);
   font-size: var(--ss-jp-head);
   font-weight: 700;
   line-height: 1.3;
+  max-height: none;
 }
 
-.ss-reading {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+.ss-romaji-line {
   margin: 2px 0 0;
-  font-family: var(--ss-jp);
-  font-size: var(--ss-jp-read);
-  color: var(--ss-ink-soft);
-}
-
-.ss-romaji {
   font-family: var(--ss-en);
+  font-size: var(--ss-romaji);
   font-style: italic;
+  color: var(--ss-ink-soft);
 }
 
 .ss-english {
@@ -625,20 +705,18 @@
 
 .ss-example-jp {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 6px;
   margin: 0;
+}
+
+.ss-example-line.furigana-wrap {
   font-family: var(--ss-jp);
   font-size: var(--ss-jp-body);
   font-weight: 600;
   line-height: 1.55;
-}
-
-.ss-example-reading {
-  margin: 2px 0 0;
-  font-family: var(--ss-jp);
-  font-size: var(--ss-jp-read);
-  color: var(--ss-ink-soft);
+  max-height: none;
 }
 
 .ss-example-en {
@@ -719,19 +797,17 @@
 
 .ss-mini-jp {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 5px;
   margin: 0;
+}
+
+.ss-mini-jp-line.furigana-wrap {
   font-family: var(--ss-jp);
   font-size: var(--ss-mini-jp);
   font-weight: 700;
-}
-
-.ss-mini-reading {
-  margin: 1px 0 6px;
-  font-family: var(--ss-jp);
-  font-size: var(--ss-mini-read);
-  color: var(--ss-ink-soft);
+  max-height: none;
 }
 
 .ss-mini .ss-meta {
@@ -755,20 +831,18 @@
 
 .ss-mini-example-jp {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 5px;
   margin: 0;
+}
+
+.ss-mini-example-line.furigana-wrap {
   font-family: var(--ss-jp);
   font-size: var(--ss-mini-body);
   font-weight: 600;
   line-height: 1.45;
-}
-
-.ss-mini-example-reading {
-  margin: 1px 0 0;
-  font-family: var(--ss-jp);
-  font-size: var(--ss-mini-read);
-  color: var(--ss-ink-soft);
+  max-height: none;
 }
 
 .ss-mini-example-en {
@@ -919,20 +993,18 @@
 
 .ss-quiz-focus {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 8px 0 0;
+}
+
+.ss-quiz-focus-line.furigana-wrap {
   font-family: var(--ss-jp);
   font-size: 27px;
   font-weight: 700;
   line-height: 1.35;
-}
-
-.ss-quiz-focus-reading {
-  margin: 1px 0 0;
-  font-family: var(--ss-jp);
-  font-size: 13px;
-  color: var(--ss-ink-soft);
+  max-height: none;
 }
 
 .ss-options {

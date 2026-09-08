@@ -1,7 +1,14 @@
+import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import type { SpeechHighlight } from "../../../services/speechService";
 import {
   groupComparisonsByCategory,
   type StyleComparison,
 } from "../../../utils/speechStyles";
+import {
+  fieldHighlight,
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+} from "../styleSpeech";
 import {
   NATURALNESS_LABELS,
   POLITENESS_LABELS,
@@ -10,7 +17,9 @@ import {
 
 interface StyleComparisonListProps {
   comparisons: StyleComparison[];
-  onSpeakJp: (text: string, reading?: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget?: StyleSpeechTarget | null;
+  highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
   selectedId?: string | null;
   onSelect?: (id: string) => void;
@@ -31,12 +40,16 @@ function miniClassName(
 function ComparisonBlock({
   comparison,
   onSpeakJp,
+  speechTarget,
+  highlight,
   activePlayId,
   selectedId,
   onSelect,
 }: {
   comparison: StyleComparison;
-  onSpeakJp: (text: string, reading?: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget: StyleSpeechTarget | null;
+  highlight: SpeechHighlight | null;
   activePlayId: string | null;
   selectedId: string | null;
   onSelect?: (id: string) => void;
@@ -68,23 +81,33 @@ function ComparisonBlock({
               }
             }}
           >
-            <p className="ss-mini-jp" lang="ja">
-              {item.japanese}
+            <div className="ss-mini-jp" lang="ja">
+              <FuriganaWrapText
+                surface={item.japanese}
+                reading={item.reading}
+                className="ss-mini-jp-line"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  item.id,
+                  "headword"
+                )}
+              />
               <button
                 type="button"
                 className="ss-speak"
                 aria-label={`Speak Japanese: ${item.japanese}`}
                 onClick={(event) => {
                   event.stopPropagation();
-                  onSpeakJp(item.japanese, item.reading);
+                  onSpeakJp(item.japanese, item.reading, {
+                    id: item.id,
+                    field: "headword",
+                  });
                 }}
               >
                 🔊
               </button>
-            </p>
-            <p className="ss-mini-reading" lang="ja">
-              {item.reading}
-            </p>
+            </div>
             <span className="ss-strength" data-strength={item.strength}>
               {STRENGTH_LABELS[item.strength]}
             </span>
@@ -99,25 +122,33 @@ function ComparisonBlock({
             <p className="ss-mini-en">{item.english}</p>
             {item.example.japanese ? (
               <div className="ss-mini-example">
-                <p className="ss-mini-example-jp" lang="ja">
-                  {item.example.japanese}
+                <div className="ss-mini-example-jp" lang="ja">
+                  <FuriganaWrapText
+                    surface={item.example.japanese}
+                    reading={item.example.reading}
+                    className="ss-mini-example-line"
+                    highlight={fieldHighlight(
+                      speechTarget,
+                      highlight,
+                      item.id,
+                      "example"
+                    )}
+                  />
                   <button
                     type="button"
                     className="ss-speak"
                     aria-label="Speak Japanese example"
                     onClick={(event) => {
                       event.stopPropagation();
-                      onSpeakJp(item.example.japanese, item.example.reading);
+                      onSpeakJp(item.example.japanese, item.example.reading, {
+                        id: item.id,
+                        field: "example",
+                      });
                     }}
                   >
                     🔊
                   </button>
-                </p>
-                {item.example.reading ? (
-                  <p className="ss-mini-example-reading" lang="ja">
-                    {item.example.reading}
-                  </p>
-                ) : null}
+                </div>
                 {item.example.english ? (
                   <p className="ss-mini-example-en">{item.example.english}</p>
                 ) : null}
@@ -136,6 +167,8 @@ function ComparisonBlock({
 export function StyleComparisonList({
   comparisons,
   onSpeakJp,
+  speechTarget = null,
+  highlight = null,
   activePlayId = null,
   selectedId = null,
   onSelect,
@@ -176,6 +209,8 @@ export function StyleComparisonList({
                 key={comparison.group}
                 comparison={comparison}
                 onSpeakJp={onSpeakJp}
+                speechTarget={speechTarget}
+                highlight={highlight}
                 activePlayId={activePlayId}
                 selectedId={selectedId}
                 onSelect={onSelect}

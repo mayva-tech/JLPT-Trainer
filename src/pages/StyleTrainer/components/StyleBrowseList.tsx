@@ -1,10 +1,16 @@
-import type { StyleExpression } from "../../../types/speechStyle";
+import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleCategoryGroup } from "../../../utils/speechStyles";
+import {
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+} from "../styleSpeech";
 import { StyleCard } from "./StyleCard";
 
 interface StyleBrowseListProps {
   groups: StyleCategoryGroup[];
-  onSpeakJp: (text: string, reading?: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget?: StyleSpeechTarget | null;
+  highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
   selectedId?: string | null;
   onSelect?: (id: string) => void;
@@ -14,6 +20,8 @@ interface StyleBrowseListProps {
 export function StyleBrowseList({
   groups,
   onSpeakJp,
+  speechTarget = null,
+  highlight = null,
   activePlayId = null,
   selectedId = null,
   onSelect,
@@ -36,11 +44,13 @@ export function StyleBrowseList({
             </header>
           ) : null}
           <div className="ss-grid">
-            {items.map((item: StyleExpression) => (
+            {items.map((item) => (
               <StyleCard
                 key={item.id}
                 item={item}
                 onSpeakJp={onSpeakJp}
+                speechTarget={speechTarget}
+                highlight={highlight}
                 active={activePlayId === item.id}
                 selected={selectedId === item.id}
                 onSelect={onSelect}

@@ -5,8 +5,9 @@ import { styleExpressions } from "../../data/speechStyles";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
+  type SpeechHighlight,
 } from "../../services/speechService";
-import type { StyleExpression } from "../../types/speechStyle";
+import type { StyleCategoryId, StyleExpression } from "../../types/speechStyle";
 import { splitNuanceForSpeech } from "../../utils/nuanceSpeech";
 import {
   buildComparisons,
@@ -27,6 +28,15 @@ import { StyleComparisonList } from "./components/StyleComparison";
 import { StyleFilters, StyleStatsBar } from "./components/StyleControls";
 import { StyleQuiz } from "./components/StyleQuiz";
 import { StyleRegisterShifts } from "./components/StyleRegisterShifts";
+import {
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+  type StyleSpeechUi,
+} from "./styleSpeech";
+import {
+  buildCategorySpeech,
+  buildItemClassificationSpeech,
+} from "./styleSpeechIntro";
 
 type Mode = "compare" | "browse" | "shifts" | "quiz";
 
@@ -39,13 +49,33 @@ const MODES: { id: Mode; label: string }[] = [
 
 const PAGE = 40;
 
-function speakJpAsync(text: string, reading?: string): Promise<void> {
+function speakJpAsync(
+  text: string,
+  reading: string | undefined,
+  target: StyleSpeechTarget,
+  ui: StyleSpeechUi,
+  cancelled?: () => boolean
+): Promise<void> {
   const trimmed = text.trim();
-  if (!trimmed) return Promise.resolve();
+  if (!trimmed || cancelled?.()) return Promise.resolve();
   return new Promise((resolve) => {
+    ui.onTarget(target);
+    ui.onHighlight(null);
     speechService.speakJapanese(
       trimmed,
-      { onEnd: () => resolve(), onError: () => resolve() },
+      {
+        onBoundary: (h) => ui.onHighlight(h),
+        onEnd: () => {
+          ui.onTarget(null);
+          ui.onHighlight(null);
+          resolve();
+        },
+        onError: () => {
+          ui.onTarget(null);
+          ui.onHighlight(null);
+          resolve();
+        },
+      },
       SPEECH_RATE_NORMAL,
       reading ? { reading } : undefined
     );
@@ -67,6 +97,7 @@ function speakEnAsync(text: string): Promise<void> {
 /** Speak mixed JP/EN explanation text with the matching voice per run. */
 async function speakMixedAsync(
   text: string,
+  ui: StyleSpeechUi,
   cancelled?: () => boolean
 ): Promise<void> {
   const segments = splitNuanceForSpeech(text);
@@ -76,7 +107,13 @@ async function speakMixedAsync(
     const chunk = segment.text.trim();
     if (!chunk) continue;
     if (segment.lang === "ja") {
-      await speakJpAsync(chunk);
+      await speakJpAsync(
+        chunk,
+        undefined,
+        { id: "mixed", field: "headword" },
+        ui,
+        cancelled
+      );
     } else {
       await speakEnAsync(chunk);
     }
@@ -87,14 +124,41 @@ function pause(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function speakClassificationIntro(
+  text: string,
+  ui: StyleSpeechUi,
+  cancelled?: () => boolean
+): Promise<void> {
+  const trimmed = text.trim();
+  if (!trimmed || cancelled?.()) return;
+  ui.onTarget(null);
+  ui.onHighlight(null);
+  await speakEnAsync(trimmed);
+  if (cancelled?.()) return;
+  await pause(320);
+}
+
 async function playExpression(
   item: StyleExpression,
   cancelled: () => boolean,
-  onActive: (id: string | null) => void
+  onActive: (id: string | null) => void,
+  ui: StyleSpeechUi
 ): Promise<void> {
   onActive(item.id);
   if (cancelled()) return;
-  await speakJpAsync(item.japanese, item.reading);
+  await speakClassificationIntro(
+    buildItemClassificationSpeech(item),
+    ui,
+    cancelled
+  );
+  if (cancelled()) return;
+  await speakJpAsync(
+    item.japanese,
+    item.reading,
+    { id: item.id, field: "headword" },
+    ui,
+    cancelled
+  );
   if (cancelled()) return;
   await pause(280);
   if (cancelled()) return;
@@ -103,7 +167,13 @@ async function playExpression(
   await pause(280);
   if (item.example.japanese) {
     if (cancelled()) return;
-    await speakJpAsync(item.example.japanese, item.example.reading);
+    await speakJpAsync(
+      item.example.japanese,
+      item.example.reading,
+      { id: item.id, field: "example" },
+      ui,
+      cancelled
+    );
     if (cancelled()) return;
     await pause(280);
   }
@@ -115,7 +185,7 @@ async function playExpression(
   }
   if (item.warning?.trim()) {
     if (cancelled()) return;
-    await speakMixedAsync(item.warning, cancelled);
+    await speakMixedAsync(item.warning, ui, cancelled);
     if (cancelled()) return;
   }
   await pause(450);
@@ -136,14 +206,32 @@ export default function StyleTrainer() {
   const [playingAll, setPlayingAll] = useState(false);
   const [activePlayId, setActivePlayId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [speechTarget, setSpeechTarget] = useState<StyleSpeechTarget | null>(
+    null
+  );
+  const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
   const cancelRef = useRef(false);
+
+  const clearSpeechUi = useCallback(() => {
+    setSpeechTarget(null);
+    setHighlight(null);
+  }, []);
+
+  const speechUi = useMemo<StyleSpeechUi>(
+    () => ({
+      onTarget: setSpeechTarget,
+      onHighlight: setHighlight,
+    }),
+    []
+  );
 
   const stopPlayAll = useCallback(() => {
     cancelRef.current = true;
     speechService.stop();
     setPlayingAll(false);
     setActivePlayId(null);
-  }, []);
+    clearSpeechUi();
+  }, [clearSpeechUi]);
 
   const selectItem = useCallback((id: string) => {
     setSelectedId((current) => (current === id ? null : id));
@@ -154,19 +242,25 @@ export default function StyleTrainer() {
     if (id) setSelectedId(id);
   }, []);
 
-  const speakJp = useCallback(
-    (text: string, reading?: string) => {
+  const speakJp = useCallback<StyleSpeakJp>(
+    (text, reading, target) => {
       if (playingAll) stopPlayAll();
       const trimmed = text.trim();
       if (!trimmed) return;
+      speechUi.onTarget(target);
+      speechUi.onHighlight(null);
       speechService.speakJapanese(
         trimmed,
-        undefined,
+        {
+          onBoundary: (h) => speechUi.onHighlight(h),
+          onEnd: clearSpeechUi,
+          onError: clearSpeechUi,
+        },
         SPEECH_RATE_NORMAL,
         reading ? { reading } : undefined
       );
     },
-    [playingAll, stopPlayAll]
+    [playingAll, stopPlayAll, speechUi, clearSpeechUi]
   );
 
   const filtered = useMemo(
@@ -240,36 +334,73 @@ export default function StyleTrainer() {
           if (cancelled()) break;
           markPlayingCard(entry.id);
           if (entry.kind === "summary") {
-            await speakMixedAsync(entry.shift.summary, cancelled);
+            await speakClassificationIntro(entry.shift.speaker, speechUi, cancelled);
+            if (cancelled()) break;
+            await speakMixedAsync(entry.shift.summary, speechUi, cancelled);
             if (cancelled()) break;
             await pause(300);
           } else {
-            await speakJpAsync(entry.ctx.japanese);
+            await speakClassificationIntro(entry.ctx.context, speechUi, cancelled);
+            if (cancelled()) break;
+            await speakJpAsync(
+              entry.ctx.japanese,
+              undefined,
+              { id: entry.id, field: "shift-jp" },
+              speechUi,
+              cancelled
+            );
             if (cancelled()) break;
             await pause(250);
             if (cancelled()) break;
-            await speakMixedAsync(entry.ctx.note, cancelled);
+            await speakMixedAsync(entry.ctx.note, speechUi, cancelled);
             if (cancelled()) break;
             await pause(400);
           }
         }
       } else if (mode === "compare") {
         const playlist = comparisons.flatMap((group) => group.members);
+        let lastCategory: StyleCategoryId | null = null;
         for (const item of startFrom(playlist)) {
           if (cancelled()) break;
-          await playExpression(item, cancelled, markPlayingCard);
+          if (item.category !== lastCategory) {
+            lastCategory = item.category;
+            const categorySpeech = buildCategorySpeech(item.category);
+            if (categorySpeech) {
+              await speakClassificationIntro(
+                categorySpeech,
+                speechUi,
+                cancelled
+              );
+              if (cancelled()) break;
+            }
+          }
+          await playExpression(item, cancelled, markPlayingCard, speechUi);
         }
       } else if (mode === "browse") {
         const list = filtered.slice(0, shown);
+        let lastCategory: StyleCategoryId | null = null;
         for (const item of startFrom(list)) {
           if (cancelled()) break;
-          await playExpression(item, cancelled, markPlayingCard);
+          if (item.category !== lastCategory) {
+            lastCategory = item.category;
+            const categorySpeech = buildCategorySpeech(item.category);
+            if (categorySpeech) {
+              await speakClassificationIntro(
+                categorySpeech,
+                speechUi,
+                cancelled
+              );
+              if (cancelled()) break;
+            }
+          }
+          await playExpression(item, cancelled, markPlayingCard, speechUi);
         }
       }
 
       if (!cancelled()) {
         setPlayingAll(false);
         setActivePlayId(null);
+        clearSpeechUi();
       }
     };
 
@@ -283,6 +414,8 @@ export default function StyleTrainer() {
     shown,
     selectedId,
     markPlayingCard,
+    speechUi,
+    clearSpeechUi,
   ]);
 
   useEffect(() => {
@@ -383,6 +516,8 @@ export default function StyleTrainer() {
         <StyleComparisonList
           comparisons={comparisons}
           onSpeakJp={speakJp}
+          speechTarget={speechTarget}
+          highlight={highlight}
           activePlayId={activePlayId}
           selectedId={selectedId}
           onSelect={selectItem}
@@ -407,6 +542,8 @@ export default function StyleTrainer() {
               <StyleCard
                 item={spotlightItem}
                 onSpeakJp={speakJp}
+                speechTarget={speechTarget}
+                highlight={highlight}
                 active={activePlayId === spotlightItem.id}
                 selected={selectedId === spotlightItem.id}
                 onSelect={selectItem}
@@ -424,6 +561,8 @@ export default function StyleTrainer() {
               <StyleBrowseList
                 groups={visibleBrowseGroups}
                 onSpeakJp={speakJp}
+                speechTarget={speechTarget}
+                highlight={highlight}
                 activePlayId={activePlayId}
                 selectedId={selectedId}
                 onSelect={selectItem}
@@ -446,6 +585,8 @@ export default function StyleTrainer() {
       {mode === "shifts" ? (
         <StyleRegisterShifts
           onSpeakJp={speakJp}
+          speechTarget={speechTarget}
+          highlight={highlight}
           activePlayId={activePlayId}
           selectedId={selectedId}
           onSelect={selectItem}
@@ -456,6 +597,8 @@ export default function StyleTrainer() {
         <StyleQuiz
           pool={filtered}
           onSpeakJp={speakJp}
+          speechTarget={speechTarget}
+          highlight={highlight}
         />
       ) : null}
     </div>

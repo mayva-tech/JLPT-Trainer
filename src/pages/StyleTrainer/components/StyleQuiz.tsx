@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
 import {
   buildStyleQuiz,
@@ -6,10 +8,17 @@ import {
   type StyleQuizAnswer,
   type StyleQuizQuestion,
 } from "../../../utils/speechStyleQuiz";
+import {
+  fieldHighlight,
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+} from "../styleSpeech";
 
 interface StyleQuizProps {
   pool: readonly StyleExpression[];
-  onSpeakJp: (text: string, reading?: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget?: StyleSpeechTarget | null;
+  highlight?: SpeechHighlight | null;
 }
 
 type Phase = "setup" | "active" | "results";
@@ -25,6 +34,8 @@ const KIND_LABEL: Record<StyleQuizQuestion["kind"], string> = {
 export function StyleQuiz({
   pool,
   onSpeakJp,
+  speechTarget = null,
+  highlight = null,
 }: StyleQuizProps) {
   const [phase, setPhase] = useState<Phase>("setup");
   const [questions, setQuestions] = useState<StyleQuizQuestion[]>([]);
@@ -169,27 +180,41 @@ export function StyleQuiz({
       </div>
 
       <p className="ss-quiz-prompt">{question.prompt}</p>
-      <p
+      <div
         className="ss-quiz-focus"
         lang={question.focusReading ? "ja" : undefined}
       >
-        {question.focus}
+        {question.focusReading ? (
+          <FuriganaWrapText
+            surface={question.focus}
+            reading={question.focusReading}
+            className="ss-quiz-focus-line"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              question.id,
+              "focus"
+            )}
+          />
+        ) : (
+          question.focus
+        )}
         {question.focusReading ? (
           <button
             type="button"
             className="ss-speak"
             aria-label="Speak focus"
-            onClick={() => onSpeakJp(question.focus, question.focusReading)}
+            onClick={() =>
+              onSpeakJp(question.focus, question.focusReading, {
+                id: question.id,
+                field: "focus",
+              })
+            }
           >
             🔊
           </button>
         ) : null}
-      </p>
-      {question.focusReading ? (
-        <p className="ss-quiz-focus-reading" lang="ja">
-          {question.focusReading}
-        </p>
-      ) : null}
+      </div>
 
       <ul className="ss-options">
         {question.options.map((option) => {

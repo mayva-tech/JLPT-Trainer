@@ -1,4 +1,11 @@
+import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
+import {
+  fieldHighlight,
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+} from "../styleSpeech";
 import {
   NATURALNESS_LABELS,
   POLITENESS_LABELS,
@@ -9,7 +16,9 @@ import {
 
 interface StyleCardProps {
   item: StyleExpression;
-  onSpeakJp: (text: string, reading?: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget?: StyleSpeechTarget | null;
+  highlight?: SpeechHighlight | null;
   active?: boolean;
   selected?: boolean;
   onSelect?: (id: string) => void;
@@ -25,6 +34,8 @@ function cardClassName(active: boolean, selected: boolean): string {
 export function StyleCard({
   item,
   onSpeakJp,
+  speechTarget = null,
+  highlight = null,
   active = false,
   selected = false,
   onSelect,
@@ -51,53 +62,71 @@ export function StyleCard({
         </span>
       </div>
 
-      <p className="ss-jp" lang="ja">
-        {item.japanese}
+      <div className="ss-jp" lang="ja">
+        <FuriganaWrapText
+          surface={item.japanese}
+          reading={item.reading}
+          className="ss-jp-line"
+          highlight={fieldHighlight(
+            speechTarget,
+            highlight,
+            item.id,
+            "headword"
+          )}
+        />
         <button
           type="button"
           className="ss-speak"
           aria-label={`Speak Japanese: ${item.japanese}`}
           onClick={(event) => {
             event.stopPropagation();
-            onSpeakJp(item.japanese, item.reading);
+            onSpeakJp(item.japanese, item.reading, {
+              id: item.id,
+              field: "headword",
+            });
           }}
         >
           🔊
         </button>
-      </p>
-      <p className="ss-reading" lang="ja">
-        {item.reading}
-        <span className="ss-romaji">{item.romaji}</span>
-      </p>
+      </div>
+      {item.romaji ? <p className="ss-romaji-line">{item.romaji}</p> : null}
       <p className="ss-english">{item.english}</p>
 
       {item.warning ? (
         <p className="ss-warning">
           <span className="ss-warning-label">Warning</span>
-          <span className="ss-warning-body">
-            {item.warning}
-          </span>
+          <span className="ss-warning-body">{item.warning}</span>
         </p>
       ) : null}
 
       <div className="ss-detail">
-        <p className="ss-example-jp" lang="ja">
-          {item.example.japanese}
+        <div className="ss-example-jp" lang="ja">
+          <FuriganaWrapText
+            surface={item.example.japanese}
+            reading={item.example.reading}
+            className="ss-example-line"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              item.id,
+              "example"
+            )}
+          />
           <button
             type="button"
             className="ss-speak"
             aria-label="Speak Japanese example"
             onClick={(event) => {
               event.stopPropagation();
-              onSpeakJp(item.example.japanese, item.example.reading);
+              onSpeakJp(item.example.japanese, item.example.reading, {
+                id: item.id,
+                field: "example",
+              });
             }}
           >
             🔊
           </button>
-        </p>
-        <p className="ss-example-reading" lang="ja">
-          {item.example.reading}
-        </p>
+        </div>
         <p className="ss-example-en">{item.example.english}</p>
 
         <dl className="ss-usage">

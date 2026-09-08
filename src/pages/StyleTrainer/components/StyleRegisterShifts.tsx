@@ -1,7 +1,16 @@
+import { HighlightedJapanese } from "../../../components/HighlightedJapanese";
+import type { SpeechHighlight } from "../../../services/speechService";
 import { registerShifts } from "../../../data/registerShifts";
+import {
+  fieldHighlight,
+  type StyleSpeakJp,
+  type StyleSpeechTarget,
+} from "../styleSpeech";
 
 interface StyleRegisterShiftsProps {
-  onSpeakJp: (text: string) => void;
+  onSpeakJp: StyleSpeakJp;
+  speechTarget?: StyleSpeechTarget | null;
+  highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
   selectedId?: string | null;
   onSelect?: (id: string) => void;
@@ -9,6 +18,8 @@ interface StyleRegisterShiftsProps {
 
 export function StyleRegisterShifts({
   onSpeakJp,
+  speechTarget = null,
+  highlight = null,
   activePlayId = null,
   selectedId = null,
   onSelect,
@@ -40,9 +51,7 @@ export function StyleRegisterShifts({
             onClick={() => onSelect?.(shift.id)}
           >
             <h3 className="ss-shift-speaker">{shift.speaker}</h3>
-            <p className="ss-shift-summary">
-              {shift.summary}
-            </p>
+            <p className="ss-shift-summary">{shift.summary}</p>
             <ul className="ss-shift-list">
               {shift.contexts.map((ctx) => {
                 const ctxId = `${shift.id}:${ctx.context}`;
@@ -61,23 +70,33 @@ export function StyleRegisterShifts({
                     }}
                   >
                     <span className="ss-shift-context">{ctx.context}</span>
-                    <p className="ss-shift-jp" lang="ja">
-                      {ctx.japanese}
+                    <div className="ss-shift-jp" lang="ja">
+                      <HighlightedJapanese
+                        text={ctx.japanese}
+                        className="ss-shift-jp-line"
+                        highlight={fieldHighlight(
+                          speechTarget,
+                          highlight,
+                          ctxId,
+                          "shift-jp"
+                        )}
+                      />
                       <button
                         type="button"
                         className="ss-speak"
                         aria-label={`Speak Japanese: ${ctx.japanese}`}
                         onClick={(event) => {
                           event.stopPropagation();
-                          onSpeakJp(ctx.japanese);
+                          onSpeakJp(ctx.japanese, undefined, {
+                            id: ctxId,
+                            field: "shift-jp",
+                          });
                         }}
                       >
                         🔊
                       </button>
-                    </p>
-                    <p className="ss-shift-note">
-                      {ctx.note}
-                    </p>
+                    </div>
+                    <p className="ss-shift-note">{ctx.note}</p>
                   </li>
                 );
               })}
