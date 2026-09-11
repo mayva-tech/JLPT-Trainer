@@ -81,7 +81,7 @@ export function GlossaryView({ onNavigate }: Props) {
             g.meaning.toLowerCase().includes(q)
         ),
       })),
-    [q, wantN1, grammarLessonList]
+    [q, grammarLessonList]
   );
 
   const pageWordCount = useMemo(

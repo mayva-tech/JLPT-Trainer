@@ -34,6 +34,7 @@ export type TocItemId =
   | `quiz-grammar-${number}-${number}`
   | "quiz-mixed"
   | "quiz-final"
+  | "quiz-weak-retest"
   | "quiz-after-comment"
   | "ending-cta"
   | "interview-01"
@@ -75,7 +76,8 @@ export type TocItemId =
   | "ono-n4"
   | "ono-n3"
   | "ono-n2"
-  | "glossary";
+  | "glossary"
+  | "weak-words";
 
 export type TocItemKind =
   | "intro"
@@ -89,7 +91,8 @@ export type TocItemKind =
   | "interview-mix"
   | "register"
   | "onomatopoeia"
-  | "glossary";
+  | "glossary"
+  | "weak-words";
 
 export type TocItem = {
   id: TocItemId;
@@ -444,6 +447,7 @@ export const tocGroups: TocGroup[] = [
     title: "Reference",
     items: [
       { id: "glossary", label: "Content Glossary", kind: "glossary" },
+      { id: "weak-words", label: "Weak Words", kind: "weak-words" },
     ],
   },
 ];

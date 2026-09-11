@@ -338,7 +338,7 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
     };
 
     next();
-  }, [playing, scenario.dialogue]);
+  }, [playing, scenario]);
 
   const soloFor = (id: string) =>
     soloId === id ? soloHighlight : null;

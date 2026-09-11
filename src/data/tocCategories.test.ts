@@ -44,5 +44,12 @@ describe("grammar TOC categories", () => {
     const vocab = tocGroups.find((g) => g.id === "vocabulary")!;
     expect(vocab.items[0]?.label).toBe(formatN2VocabularyTocLessonLabel(1));
     expect(vocab.items[0]?.label).toContain("Shopping");
+    const reference = tocGroups.find((g) => g.id === "reference")!;
+    expect(reference.items.some((item) => item.id === "glossary")).toBe(true);
+    expect(reference.items).toContainEqual({
+      id: "weak-words",
+      label: "Weak Words",
+      kind: "weak-words",
+    });
   });
 });

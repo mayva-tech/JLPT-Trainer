@@ -7,6 +7,8 @@ import type {
   VocabularyQuizQuestion,
   VocabularyQuizQuestionType,
 } from "../types/vocabularyQuiz";
+import { N2_VOCAB_ITEMS_PER_LESSON } from "../config/vocabularyCourse";
+import { lessons } from "../data/lessons";
 import { getVocabularyByIds } from "../data/vocabulary";
 
 export type VocabularyQuizLevel = "N1" | "N2";
@@ -63,6 +65,38 @@ export function getVocabularyItemsForQuiz(options: {
     return items.filter((item) => item.jlpt === "N1");
   }
   return items.filter((item) => item.jlpt === "N2");
+}
+
+/**
+ * All N2-tagged items from `lesson-*` course lessons (not `n1-lesson-*`).
+ * Order follows the lessons array, then each lesson's remaining N2 ids.
+ */
+export function getN2VocabularyCoursePool(): VocabularyItem[] {
+  const pool: VocabularyItem[] = [];
+  const seen = new Set<number>();
+  for (const lesson of lessons) {
+    if (!lesson.id.startsWith("lesson-")) continue;
+    for (const item of getVocabularyItemsForQuiz({
+      lesson,
+      quizLevel: "N2",
+    })) {
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      pool.push(item);
+    }
+  }
+  return pool;
+}
+
+/**
+ * Deterministic 10-item sample from the N2 course pool.
+ * Seeds as `${quizId}:pool` so quiz-mixed and quiz-final differ.
+ */
+export function sampleN2CourseQuizItems(quizId: string): VocabularyItem[] {
+  return seededShuffle(getN2VocabularyCoursePool(), `${quizId}:pool`).slice(
+    0,
+    N2_VOCAB_ITEMS_PER_LESSON
+  );
 }
 
 export function assignQuestionTypes(
@@ -166,16 +200,20 @@ function buildQuestion(
 /**
  * Build a deterministic Japanese→English vocabulary quiz for one lesson.
  * One question per available quiz item (after N1/N2 filtering).
+ * Optional `distractorPool` supplies wrong answers without adding targets
+ * (used by Weak Words Retest when the target set is tiny).
  */
 export function buildVocabularyQuizQuestions(
   items: VocabularyItem[],
-  quizId: string
+  quizId: string,
+  options?: { distractorPool?: VocabularyItem[] }
 ): VocabularyQuizQuestion[] {
   if (items.length === 0) return [];
 
   const orderedItems = seededShuffle(items, `${quizId}:items`);
+  const distractorPool = options?.distractorPool ?? orderedItems;
   return orderedItems.map((item, index) =>
-    buildQuestion(item, orderedItems, `${quizId}:q${index}`)
+    buildQuestion(item, distractorPool, `${quizId}:q${index}`)
   );
 }
 

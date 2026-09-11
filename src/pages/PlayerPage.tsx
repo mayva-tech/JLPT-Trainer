@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getLessonById } from "../data/lessons";
-import { getVocabularyByIds } from "../data/vocabulary";
+import { getVocabularyByIds, vocabulary } from "../data/vocabulary";
 import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar";
 import type { GrammarItem } from "../types/grammar";
 import {
@@ -10,10 +10,6 @@ import {
   getTocItem,
   type TocItemId,
 } from "../data/toc";
-import type { RegisterPair } from "../types/register";
-import { getRegisterPairsForSection } from "../data/registerPairs";
-import { getOnomatopoeiaForLevel } from "../data/onomatopoeia";
-import type { OnomatopoeiaItem, OnomatopoeiaJlptLevel } from "../types/onomatopoeia";
 import { grammarBatchCategorySuffix, grammarBatchRangeLabel } from "../data/tocGrammarItems";
 import type { StepName } from "../types/player";
 import { CategoryCard } from "../components/CategoryCard";
@@ -29,17 +25,8 @@ import { IntroHookDisplay } from "../components/IntroHookDisplay";
 import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
 import { InterviewPracticeDisplay } from "../components/InterviewPracticeDisplay";
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
-import {
-  RegisterSplitCard,
-  type RegisterPlayPart,
-  type RegisterSideName,
-} from "../components/RegisterSplitCard";
-import {
-  OnomatopoeiaCard,
-  type OnomatopoeiaPart,
-} from "../components/OnomatopoeiaCard";
-import { buildOnoPlaySteps } from "../utils/onomatopoeiaPlayback";
-import { splitNuanceForSpeech } from "../utils/nuanceSpeech";
+import { RegisterSplitCard } from "../components/RegisterSplitCard";
+import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -123,9 +110,30 @@ import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 import { getGrammarLessonIdForQuiz } from "../utils/quizGrammarLesson";
 import { getQuizExample } from "../utils/quizPresentation";
 import {
+  quizNextReviewIndex,
+  quizPrevReviewIndex,
+  quizQuestionAt,
+} from "../utils/quizManualNav";
+import {
+  getVocabQuizSummary,
+  getWeakVocabItemIds,
+  isVocabularyQuizId,
+  loadVocabQuizStats,
+  recordVocabQuizAnswer,
+} from "../utils/vocabQuizStats";
+import {
+  getWeakVocabularyReviewItems,
+  getWeakVocabularyRetestItems,
+  WEAK_WORDS_RETEST_QUIZ_ID,
+} from "../utils/weakVocabularyReview";
+import { shouldShowWeakWordsQuizCta } from "../utils/weakWordsDiscoverability";
+import { useRegisterSession } from "../hooks/useRegisterSession";
+import { useOnomatopoeiaSession } from "../hooks/useOnomatopoeiaSession";
+import {
   buildGrammarQuizQuestions,
   buildVocabularyQuizQuestions,
   getVocabularyItemsForQuiz,
+  sampleN2CourseQuizItems,
   seededShuffle,
 } from "../utils/vocabularyQuiz";
 
@@ -168,12 +176,15 @@ function buildQuizQuestions(
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel });
     return buildVocabularyQuizQuestions(items, quizTocId ?? vocabLessonId);
   }
-  // Mixed / final still use lesson 1 until a dedicated pool exists.
   if (quizTocId === "quiz-mixed" || quizTocId === "quiz-final") {
-    const lesson = getLessonById("lesson-01");
-    if (!lesson) return [];
-    const items = getVocabularyItemsForQuiz({ lesson, quizLevel: "N2" });
+    const items = sampleN2CourseQuizItems(quizTocId);
     return buildVocabularyQuizQuestions(items, quizTocId);
+  }
+  if (quizTocId === WEAK_WORDS_RETEST_QUIZ_ID) {
+    const items = getWeakVocabularyRetestItems();
+    return buildVocabularyQuizQuestions(items, quizTocId, {
+      distractorPool: vocabulary,
+    });
   }
   const grammarLessonId = getGrammarLessonIdForQuiz(quizTocId);
   if (grammarLessonId) {
@@ -195,9 +206,17 @@ export function PlayerPage() {
   screenRef.current = screen;
   const [activeTocId, setActiveTocId] = useState<TocItemId | null>(null);
   const [lessonId, setLessonId] = useState("lesson-01");
+  // Setter-only: bumping forces a re-read of localStorage-derived weak stats.
+  const [, setVocabStatsVersion] = useState(0);
 
+  const isWeakWordsReview = activeTocId === "weak-words";
   const lesson = getLessonById(lessonId);
-  const items = lesson ? getVocabularyByIds(lesson.vocabularyIds) : [];
+  const weakCount = getWeakVocabItemIds(loadVocabQuizStats()).length;
+  const items = isWeakWordsReview
+    ? getWeakVocabularyReviewItems()
+    : lesson
+      ? getVocabularyByIds(lesson.vocabularyIds)
+      : [];
 
   const [itemIndex, setItemIndex] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
@@ -207,31 +226,6 @@ export function PlayerPage() {
   const [speechRate, setSpeechRate] = useState(SPEECH_RATE_NORMAL);
   const [showFurigana, setShowFurigana] = useState(true);
   const [autoState, setAutoState] = useState<AutoState>("off");
-
-  const [registerSectionId, setRegisterSectionId] = useState("register-01");
-  const registerPairs = getRegisterPairsForSection(registerSectionId);
-  const [registerIndex, setRegisterIndex] = useState(0);
-  const [registerActiveSide, setRegisterActiveSide] =
-    useState<RegisterPlayPart | null>(null);
-  const [registerShowFurigana, setRegisterShowFurigana] = useState(true);
-  const [registerDrillMode, setRegisterDrillMode] = useState(false);
-  const [registerRevealed, setRegisterRevealed] = useState(false);
-  const [registerPlayingAll, setRegisterPlayingAll] = useState(false);
-  const [registerPlayingSection, setRegisterPlayingSection] = useState(false);
-  const registerPlaySessionRef = useRef(0);
-  const registerGapTimerRef = useRef<number | null>(null);
-
-  const [onoLevel, setOnoLevel] = useState<OnomatopoeiaJlptLevel>("N5");
-  const onoItems = getOnomatopoeiaForLevel(onoLevel);
-  const [onoIndex, setOnoIndex] = useState(0);
-  const [onoActivePart, setOnoActivePart] = useState<OnomatopoeiaPart | null>(
-    null
-  );
-  const [onoShowFurigana, setOnoShowFurigana] = useState(true);
-  const [onoPlayingAll, setOnoPlayingAll] = useState(false);
-  const [onoPlayingLevel, setOnoPlayingLevel] = useState(false);
-  const onoPlayLevelSessionRef = useRef(0);
-  const onoGapTimerRef = useRef<number | null>(null);
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
   const grammarLesson = getGrammarLessonById(grammarLessonId);
@@ -422,6 +416,65 @@ export function PlayerPage() {
     setMixAnnouncingTitle(false);
   }
 
+  const register = useRegisterSession({
+    getSpeechRate: () => speechRateRef.current,
+    setSpeechStatus,
+    setSpeechLang,
+    setHighlight,
+    clearSpeechUi,
+    isRegisterScreen: () => screenRef.current === "register",
+    betweenItemsPause: autoModeTiming.betweenItemsPause,
+  });
+  const {
+    pairs: registerPairs,
+    index: registerIndex,
+    activeSide: registerActiveSide,
+    showFurigana: registerShowFurigana,
+    drillMode: registerDrillMode,
+    revealed: registerRevealed,
+    playingAll: registerPlayingAll,
+    playingSection: registerPlayingSection,
+    open: openRegister,
+    stop: stopRegisterAuto,
+    playSide: playRegisterSide,
+    playBoth: playRegisterBoth,
+    play: playRegisterPlay,
+    playAll: playRegisterSection,
+    goPrev: goRegisterPrev,
+    goNext: goRegisterNext,
+    toggleFurigana: toggleRegisterFurigana,
+    toggleDrill: toggleRegisterDrill,
+    reveal: revealRegister,
+  } = register;
+
+  const ono = useOnomatopoeiaSession({
+    getSpeechRate: () => speechRateRef.current,
+    setSpeechStatus,
+    setSpeechLang,
+    setHighlight,
+    clearSpeechUi,
+    isOnomatopoeiaScreen: () => screenRef.current === "onomatopoeia",
+    betweenItemsPause: autoModeTiming.betweenItemsPause,
+  });
+  const {
+    items: onoItems,
+    index: onoIndex,
+    activePart: onoActivePart,
+    showFurigana: onoShowFurigana,
+    playingAll: onoPlayingAll,
+    playingLevel: onoPlayingLevel,
+    open: openOno,
+    stop: stopOnoAuto,
+    playWord: playOnoWord,
+    playEnglish: playOnoEnglish,
+    playExample: playOnoExample,
+    play: playOnoAll,
+    playAll: playOnoLevel,
+    goPrev: goOnoPrev,
+    goNext: goOnoNext,
+    toggleFurigana: toggleOnoFurigana,
+  } = ono;
+
   function stopAllAudio() {
     stopInterviewPlayAll();
     bilingualPlayback.abort();
@@ -556,7 +609,7 @@ export function PlayerPage() {
   }
 
   /** Leave auto / comment screens and show a real quiz question for manual control. */
-  function enterManualQuiz(index = quizIndex) {
+  function enterManualQuiz(index = quizIndexRef.current) {
     stopQuizAuto();
     const deck =
       quizDeckRef.current.length > 0
@@ -588,8 +641,9 @@ export function PlayerPage() {
       showQuizReview(last, deck);
       return;
     }
-    if (quizIndex <= 0) return;
-    showQuizReview(quizIndex - 1);
+    const prev = quizPrevReviewIndex(quizIndexRef.current);
+    if (prev === null) return;
+    showQuizReview(prev);
   }
 
   function goQuizNext() {
@@ -610,11 +664,12 @@ export function PlayerPage() {
     if (quizPhaseRef.current === "finished") return;
 
     const total = quizDeckRef.current.length || quizItemsRef.current.length;
-    if (quizIndex >= total - 1) {
+    const next = quizNextReviewIndex(quizIndexRef.current, total);
+    if (next === "finished") {
       setQuizPhase("finished");
       return;
     }
-    showQuizReview(quizIndex + 1);
+    showQuizReview(next);
   }
 
   function toggleQuizAuto() {
@@ -644,10 +699,21 @@ export function PlayerPage() {
 
     const question = quizDeckRef.current[quizIndexRef.current];
     const correct = question?.correctChoiceIndex ?? -1;
-    if (choiceIndex === correct) {
+    const isCorrect = choiceIndex === correct;
+    if (isCorrect) {
       const next = quizScoreRef.current + 1;
       quizScoreRef.current = next;
       setQuizScore(next);
+    }
+    if (question && isVocabularyQuizId(activeTocId)) {
+      const recorded = recordVocabQuizAnswer({
+        quizId: activeTocId,
+        itemId: question.item.id,
+        correct: isCorrect,
+      });
+      if (recorded) {
+        setVocabStatsVersion((v) => v + 1);
+      }
     }
 
     if (quizAutoRunner.isActive()) {
@@ -734,6 +800,35 @@ export function PlayerPage() {
     setFlowPos(0);
     setScreen("toc");
     // Keep activeTocId so the last opened section stays highlighted.
+  }
+
+  /** Open existing quiz screen with currently weak vocabulary only. */
+  function startWeakWordsRetest() {
+    const targets = getWeakVocabularyRetestItems();
+    if (targets.length === 0) return;
+
+    stopAllAudio();
+    setFlowActive(false);
+    setFlowQueue([]);
+    setFlowPos(0);
+
+    setActiveTocId(WEAK_WORDS_RETEST_QUIZ_ID);
+    setItemIndex(0);
+    setStepIndex(0);
+    setQuizScore(0);
+    quizScoreRef.current = 0;
+    stopQuizAuto();
+    setShowFurigana(true);
+    setQuizAutoOn(false);
+    setQuizSelectedIndex(null);
+    setQuizPhase("asking");
+    setQuizShowReading(false);
+    setQuizIndex(0);
+    setScreen("quiz");
+    const list = buildQuizQuestions(WEAK_WORDS_RETEST_QUIZ_ID);
+    const deck = reshuffleQuizDeck(list, WEAK_WORDS_RETEST_QUIZ_ID);
+    quizItemsRef.current = list;
+    resetQuizQuestion(0, deck);
   }
 
   function openTocItem(
@@ -870,18 +965,15 @@ export function PlayerPage() {
       case "glossary":
         setScreen("glossary");
         break;
+      case "weak-words":
+        setScreen("lesson");
+        break;
       case "register": {
         const sectionId =
           item.registerSectionId ??
           getRegisterSectionIdForToc(id) ??
           "register-01";
-        setRegisterSectionId(sectionId);
-        setRegisterIndex(0);
-        setRegisterActiveSide(null);
-        setRegisterRevealed(false);
-        setRegisterPlayingAll(false);
-        setRegisterPlayingSection(false);
-        registerPlaySessionRef.current += 1;
+        openRegister(sectionId);
         setScreen("register");
         break;
       }
@@ -890,13 +982,7 @@ export function PlayerPage() {
           item.onomatopoeiaLevel ??
           getOnomatopoeiaLevelForToc(id) ??
           "N5";
-        setOnoLevel(level);
-        setOnoIndex(0);
-        setOnoActivePart(null);
-        setOnoShowFurigana(true);
-        setOnoPlayingAll(false);
-        setOnoPlayingLevel(false);
-        onoPlayLevelSessionRef.current += 1;
+        openOno(level);
         setScreen("onomatopoeia");
         break;
       }
@@ -1045,609 +1131,13 @@ export function PlayerPage() {
     }
   }
 
-  /** Speak one side of the current register pair with karaoke highlighting. */
-  function playRegisterSide(side: RegisterSideName) {
-    const pair = registerPairs[registerIndex] ?? null;
-    if (!pair) return;
-    if (side === "formal" && registerDrillMode && !registerRevealed) {
-      setRegisterRevealed(true);
-    }
-    const source = side === "casual" ? pair.casual : pair.formal;
-    if (!source.text.trim()) return;
-    speechService.stop();
-    stopRegisterAuto();
-    setRegisterActiveSide(side);
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakJapanese(
-      source.text,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          clearSpeechUi();
-          setRegisterActiveSide(null);
-        },
-        onError: () => {
-          clearSpeechUi();
-          setRegisterActiveSide(null);
-        },
-      },
-      speechRateRef.current,
-      { reading: source.reading }
-    );
-  }
-
-  /** Casual then formal back to back — the core contrast drill. */
-  function playRegisterBoth() {
-    const pair = registerPairs[registerIndex] ?? null;
-    if (!pair) return;
-    if (registerDrillMode && !registerRevealed) setRegisterRevealed(true);
-    speechService.stop();
-    stopRegisterAuto();
-    setRegisterActiveSide("casual");
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakJapanese(
-      pair.casual.text,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          setHighlight(null);
-          setRegisterActiveSide("formal");
-          speechService.speakJapanese(
-            pair.formal.text,
-            {
-              onBoundary: (h) => setHighlight(h),
-              onEnd: () => {
-                clearSpeechUi();
-                setRegisterActiveSide(null);
-              },
-              onError: () => {
-                clearSpeechUi();
-                setRegisterActiveSide(null);
-              },
-            },
-            speechRateRef.current,
-            { reading: pair.formal.reading }
-          );
-        },
-        onError: () => {
-          clearSpeechUi();
-          setRegisterActiveSide(null);
-        },
-      },
-      speechRateRef.current,
-      { reading: pair.casual.reading }
-    );
-  }
-
-  function stopRegisterAuto() {
-    registerPlaySessionRef.current += 1;
-    if (registerGapTimerRef.current != null) {
-      window.clearTimeout(registerGapTimerRef.current);
-      registerGapTimerRef.current = null;
-    }
-    setRegisterPlayingAll(false);
-    setRegisterPlayingSection(false);
-    setRegisterActiveSide(null);
-  }
-
-  function playRegisterPairSequence(
-    pair: RegisterPair,
-    session: number,
-    onComplete: () => void
-  ) {
-    const alive = () => session === registerPlaySessionRef.current;
-    const finish = () => {
-      if (!alive()) return;
-      onComplete();
-    };
-
-    const speakJa = (side: RegisterSideName, onEnd: () => void) => {
-      if (!alive()) return;
-      const source = side === "casual" ? pair.casual : pair.formal;
-      if (!source.text.trim()) {
-        onEnd();
-        return;
-      }
-      setHighlight(null);
-      setRegisterActiveSide(side);
-      setSpeechLang("ja");
-      speechService.speakJapanese(
-        source.text,
-        {
-          onStart: () => {
-            if (alive()) setSpeechStatus("speaking");
-          },
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd,
-          onError: finish,
-        },
-        speechRateRef.current,
-        { reading: source.reading }
-      );
-    };
-
-    const speakMeaning = (onEnd: () => void) => {
-      if (!alive()) return;
-      if (!pair.meaning.trim()) {
-        onEnd();
-        return;
-      }
-      setHighlight(null);
-      setRegisterActiveSide("meaning");
-      setSpeechLang("en");
-      speechService.speakEnglish(
-        pair.meaning,
-        {
-          onBoundary: (h) => {
-            if (alive()) setHighlight(h);
-          },
-          onEnd,
-          onError: finish,
-        },
-        speechRateRef.current
-      );
-    };
-
-    const speakNote = (onEnd: () => void) => {
-      if (!alive()) return;
-      const note = pair.note?.trim() ?? "";
-      if (!note) {
-        onEnd();
-        return;
-      }
-      const segments = splitNuanceForSpeech(note);
-      if (segments.length === 0) {
-        onEnd();
-        return;
-      }
-
-      const run = (index: number) => {
-        if (!alive()) return;
-        const segment = segments[index];
-        if (!segment) {
-          onEnd();
-          return;
-        }
-        const text = segment.text.trim();
-        if (!text) {
-          run(index + 1);
-          return;
-        }
-        setHighlight(null);
-        setRegisterActiveSide("note");
-        setSpeechLang(segment.lang);
-        const advance = () => run(index + 1);
-        if (segment.lang === "ja") {
-          speechService.speakJapanese(
-            text,
-            {
-              onStart: () => {
-                if (alive()) setSpeechStatus("speaking");
-              },
-              onBoundary: (h) => {
-                if (alive()) setHighlight(h);
-              },
-              onEnd: advance,
-              onError: finish,
-            },
-            speechRateRef.current
-          );
-        } else {
-          speechService.speakEnglish(
-            text,
-            {
-              onStart: () => {
-                if (alive()) setSpeechStatus("speaking");
-              },
-              onBoundary: (h) => {
-                if (alive()) setHighlight(h);
-              },
-              onEnd: advance,
-              onError: finish,
-            },
-            speechRateRef.current
-          );
-        }
-      };
-
-      run(0);
-    };
-
-    speakJa("casual", () =>
-      speakMeaning(() =>
-        speakJa("casual", () =>
-          speakJa("formal", () =>
-            speakMeaning(() => speakJa("formal", () => speakNote(finish)))
-          )
-        )
-      )
-    );
-  }
-
-  function playRegisterPlay() {
-    const pair = registerPairs[registerIndex] ?? null;
-    if (!pair) return;
-    if (registerDrillMode && !registerRevealed) setRegisterRevealed(true);
-    speechService.stop();
-    const session = ++registerPlaySessionRef.current;
-    setRegisterPlayingSection(false);
-    setRegisterPlayingAll(true);
-    playRegisterPairSequence(pair, session, () => {
-      if (session !== registerPlaySessionRef.current) return;
-      clearSpeechUi();
-      setRegisterActiveSide(null);
-      setRegisterPlayingAll(false);
-    });
-  }
-
-  function playRegisterSection() {
-    if (registerPlayingSection) {
-      speechService.stop();
-      stopRegisterAuto();
-      clearSpeechUi();
-      return;
-    }
-    const pairs = registerPairs;
-    if (pairs.length === 0) return;
-    if (registerDrillMode) setRegisterRevealed(true);
-    speechService.stop();
-    const session = ++registerPlaySessionRef.current;
-    setRegisterPlayingAll(false);
-    setRegisterPlayingSection(true);
-    setRegisterIndex(0);
-
-    const run = (index: number) => {
-      if (session !== registerPlaySessionRef.current) return;
-      if (screenRef.current !== "register") {
-        stopRegisterAuto();
-        clearSpeechUi();
-        return;
-      }
-      const pair = pairs[index];
-      if (!pair) {
-        stopRegisterAuto();
-        clearSpeechUi();
-        return;
-      }
-      setRegisterIndex(index);
-      playRegisterPairSequence(pair, session, () => {
-        if (session !== registerPlaySessionRef.current) return;
-        const next = index + 1;
-        if (next >= pairs.length) {
-          stopRegisterAuto();
-          clearSpeechUi();
-          return;
-        }
-        clearSpeechUi();
-        setRegisterActiveSide(null);
-        registerGapTimerRef.current = window.setTimeout(() => {
-          registerGapTimerRef.current = null;
-          if (session !== registerPlaySessionRef.current) return;
-          run(next);
-        }, autoModeTiming.betweenItemsPause);
-      });
-    };
-
-    run(0);
-  }
-
-  function goRegisterPrev() {
-    speechService.stop();
-    stopRegisterAuto();
-    clearSpeechUi();
-    setRegisterRevealed(false);
-    setRegisterIndex((i) => Math.max(0, i - 1));
-  }
-
-  function goRegisterNext() {
-    speechService.stop();
-    stopRegisterAuto();
-    clearSpeechUi();
-    setRegisterRevealed(false);
-    setRegisterIndex((i) => Math.min(registerPairs.length - 1, i + 1));
-  }
-
-  function playOnoWord() {
-    const item = onoItems[onoIndex] ?? null;
-    if (!item) return;
-    speechService.stop();
-    stopOnoAuto();
-    setOnoActivePart("word");
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakJapanese(
-      item.japanese,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          clearSpeechUi();
-          setOnoActivePart(null);
-        },
-        onError: () => {
-          clearSpeechUi();
-          setOnoActivePart(null);
-        },
-      },
-      speechRateRef.current,
-      { reading: item.reading }
-    );
-  }
-
-  function playOnoEnglish() {
-    const item = onoItems[onoIndex] ?? null;
-    if (!item?.meaning.trim()) return;
-    speechService.stop();
-    stopOnoAuto();
-    setOnoActivePart("meaning");
-    setSpeechLang("en");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakEnglish(
-      item.meaning,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          setHighlight(null);
-          setOnoActivePart("word");
-          setSpeechLang("ja");
-          speechService.speakJapanese(
-            item.japanese,
-            {
-              onBoundary: (h) => setHighlight(h),
-              onEnd: () => {
-                clearSpeechUi();
-                setOnoActivePart(null);
-              },
-              onError: () => {
-                clearSpeechUi();
-                setOnoActivePart(null);
-              },
-            },
-            speechRateRef.current,
-            { reading: item.reading }
-          );
-        },
-        onError: () => {
-          clearSpeechUi();
-          setOnoActivePart(null);
-        },
-      },
-      speechRateRef.current
-    );
-  }
-
-  function playOnoExample() {
-    const item = onoItems[onoIndex] ?? null;
-    if (!item?.exampleJapanese.trim()) return;
-    speechService.stop();
-    stopOnoAuto();
-    setOnoActivePart("example");
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-
-    const finishExample = () => {
-      clearSpeechUi();
-      setOnoActivePart(null);
-    };
-
-    const repeatExampleJa = () => {
-      setHighlight(null);
-      setOnoActivePart("example");
-      setSpeechLang("ja");
-      speechService.speakJapanese(
-        item.exampleJapanese,
-        {
-          onBoundary: (h) => setHighlight(h),
-          onEnd: finishExample,
-          onError: finishExample,
-        },
-        speechRateRef.current,
-        { reading: item.exampleReading }
-      );
-    };
-
-    speechService.speakJapanese(
-      item.exampleJapanese,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          if (!item.exampleEnglish.trim()) {
-            finishExample();
-            return;
-          }
-          setHighlight(null);
-          setOnoActivePart("exampleEn");
-          setSpeechLang("en");
-          speechService.speakEnglish(
-            item.exampleEnglish,
-            {
-              onBoundary: (h) => setHighlight(h),
-              onEnd: repeatExampleJa,
-              onError: finishExample,
-            },
-            speechRateRef.current
-          );
-        },
-        onError: finishExample,
-      },
-      speechRateRef.current,
-      { reading: item.exampleReading }
-    );
-  }
-
-  function stopOnoAuto() {
-    onoPlayLevelSessionRef.current += 1;
-    if (onoGapTimerRef.current != null) {
-      window.clearTimeout(onoGapTimerRef.current);
-      onoGapTimerRef.current = null;
-    }
-    setOnoPlayingAll(false);
-    setOnoPlayingLevel(false);
-    setOnoActivePart(null);
-  }
-
-  function playOnoCardSequence(
-    item: OnomatopoeiaItem,
-    session: number,
-    onComplete: () => void
-  ) {
-    const alive = () => session === onoPlayLevelSessionRef.current;
-
-    const finish = () => {
-      if (!alive()) return;
-      onComplete();
-    };
-
-    const steps = buildOnoPlaySteps(item);
-    if (steps.length === 0) {
-      finish();
-      return;
-    }
-
-    const run = (index: number) => {
-      if (!alive()) return;
-      const step = steps[index];
-      if (!step) {
-        finish();
-        return;
-      }
-
-      setHighlight(null);
-      setOnoActivePart(step.part);
-      setSpeechLang(step.lang);
-
-      const advance = () => run(index + 1);
-      const callbacks = {
-        onStart: () => {
-          if (alive()) setSpeechStatus("speaking");
-        },
-        onBoundary: (h: SpeechHighlight) => {
-          if (alive()) setHighlight(h);
-        },
-        onEnd: advance,
-        onError: finish,
-      };
-
-      if (step.lang === "ja") {
-        speechService.speakJapanese(
-          step.text,
-          callbacks,
-          speechRateRef.current,
-          step.reading ? { reading: step.reading } : undefined
-        );
-      } else {
-        speechService.speakEnglish(
-          step.text,
-          callbacks,
-          speechRateRef.current
-        );
-      }
-    };
-
-    run(0);
-  }
-
-  /** Every visible line: category, word, meaning, collocation, nuance, example. */
-  function playOnoAll() {
-    const item = onoItems[onoIndex] ?? null;
-    if (!item) return;
-    speechService.stop();
-    const session = ++onoPlayLevelSessionRef.current;
-    setOnoPlayingLevel(false);
-    setOnoPlayingAll(true);
-    playOnoCardSequence(item, session, () => {
-      if (session !== onoPlayLevelSessionRef.current) return;
-      clearSpeechUi();
-      setOnoActivePart(null);
-      setOnoPlayingAll(false);
-    });
-  }
-
-  /** Play every expression in the current JLPT band from the start. */
-  function playOnoLevel() {
-    if (onoPlayingLevel) {
-      speechService.stop();
-      stopOnoAuto();
-      clearSpeechUi();
-      return;
-    }
-    const items = onoItems;
-    if (items.length === 0) return;
-    speechService.stop();
-    const session = ++onoPlayLevelSessionRef.current;
-    setOnoPlayingAll(false);
-    setOnoPlayingLevel(true);
-    setOnoIndex(0);
-
-    const run = (index: number) => {
-      if (session !== onoPlayLevelSessionRef.current) return;
-      if (screenRef.current !== "onomatopoeia") {
-        stopOnoAuto();
-        clearSpeechUi();
-        return;
-      }
-      const item = items[index];
-      if (!item) {
-        stopOnoAuto();
-        clearSpeechUi();
-        return;
-      }
-      setOnoIndex(index);
-      playOnoCardSequence(item, session, () => {
-        if (session !== onoPlayLevelSessionRef.current) return;
-        const next = index + 1;
-        if (next >= items.length) {
-          stopOnoAuto();
-          clearSpeechUi();
-          return;
-        }
-        clearSpeechUi();
-        setOnoActivePart(null);
-        onoGapTimerRef.current = window.setTimeout(() => {
-          onoGapTimerRef.current = null;
-          if (session !== onoPlayLevelSessionRef.current) return;
-          run(next);
-        }, autoModeTiming.betweenItemsPause);
-      });
-    };
-
-    run(0);
-  }
-
-  function goOnoPrev() {
-    speechService.stop();
-    stopOnoAuto();
-    clearSpeechUi();
-    setOnoIndex((i) => Math.max(0, i - 1));
-  }
-
-  function goOnoNext() {
-    speechService.stop();
-    stopOnoAuto();
-    clearSpeechUi();
-    setOnoIndex((i) => Math.min(onoItems.length - 1, i + 1));
-  }
-
   function playJapanese() {
     softStopAuto();
     if (screenRef.current === "quiz") {
       // Full quiz-auto owns the timeline; manual reveal may be interrupted.
       if (quizAutoOnRef.current) return;
       if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-      const question = quizDeckRef.current[quizIndex];
+      const question = quizQuestionAt(quizDeckRef.current, quizIndexRef.current);
       if (!question) return;
       const phase = quizPhaseRef.current;
       if (
@@ -1730,7 +1220,7 @@ export function PlayerPage() {
     if (screenRef.current === "quiz") {
       if (quizAutoOnRef.current) return;
       if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-      const question = quizDeckRef.current[quizIndex];
+      const question = quizQuestionAt(quizDeckRef.current, quizIndexRef.current);
       if (!question) return;
       const phase = quizPhaseRef.current;
       let text: string | null = null;
@@ -1807,7 +1297,7 @@ export function PlayerPage() {
   function replayQuizExample() {
     if (quizAutoOnRef.current) return;
     if (quizAutoRunner.isActive()) quizAutoRunner.abort();
-    const question = quizDeckRef.current[quizIndex];
+    const question = quizQuestionAt(quizDeckRef.current, quizIndexRef.current);
     const example = question ? getQuizExample(question) : null;
     if (!example?.text.trim()) return;
     const phase = quizPhaseRef.current;
@@ -2241,6 +1731,10 @@ export function PlayerPage() {
   }
 
   // When flow opens a section, kick off its automatic playback.
+  // Intentionally keyed on section identity (flowActive/screen/toc/lesson/items),
+  // not on playIntro/playCta/start*Auto/advanceFlow — those helpers are recreated
+  // each render and read live values via refs. Adding them as deps would restart
+  // playback every render.
   useEffect(() => {
     if (!flowActive) return;
 
@@ -2513,12 +2007,66 @@ export function PlayerPage() {
   const jaLessonHighlight = speechLang === "ja" ? highlight : null;
   const enLessonHighlight = speechLang === "en" ? highlight : null;
 
+  function renderWeakWordsProgressSummary() {
+    const summary = getVocabQuizSummary(loadVocabQuizStats());
+    const accuracyLabel =
+      summary.accuracyPercent === null ? "—" : `${summary.accuracyPercent}%`;
+
+    return (
+      <div className="weak-progress-summary">
+        <div className="weak-progress-summary__title">Progress Summary</div>
+        {summary.uniqueItemsAttempted === 0 ? (
+          <p className="weak-progress-summary__empty">
+            No vocabulary quiz answers yet.
+            <br />
+            Answer vocabulary quizzes, including Weak Words Retest, to see
+            progress.
+          </p>
+        ) : (
+          <dl className="weak-progress-summary__stats">
+            <div>
+              <dt>Items attempted</dt>
+              <dd>{summary.uniqueItemsAttempted}</dd>
+            </div>
+            <div>
+              <dt>Total answers</dt>
+              <dd>{summary.totalAttempts}</dd>
+            </div>
+            <div>
+              <dt>Correct</dt>
+              <dd>{summary.totalCorrect}</dd>
+            </div>
+            <div>
+              <dt>Incorrect</dt>
+              <dd>{summary.totalIncorrect}</dd>
+            </div>
+            <div>
+              <dt>Accuracy</dt>
+              <dd>{accuracyLabel}</dd>
+            </div>
+            <div>
+              <dt>Currently weak</dt>
+              <dd>{summary.weakCount}</dd>
+            </div>
+            <div>
+              <dt>Reviewed and currently not weak</dt>
+              <dd>{summary.nonWeakAttemptedCount}</dd>
+            </div>
+          </dl>
+        )}
+      </div>
+    );
+  }
+
   function renderStep() {
     if (!item) return null;
     switch (step) {
       case "category":
         return (
-          <CategoryCard item={item} description={lesson?.subtitle} />
+          <CategoryCard
+            item={item}
+            description={isWeakWordsReview ? undefined : lesson?.subtitle}
+          />
         );
       case "word":
         return (
@@ -2576,6 +2124,7 @@ export function PlayerPage() {
           <TableOfContents
             selectedId={activeTocId}
             onSelect={(id) => openTocItem(id)}
+            weakWordsCount={weakCount}
           />
         );
       case "glossary":
@@ -2813,10 +2362,16 @@ export function PlayerPage() {
             );
         }
       }
-      case "quiz":
+      case "quiz": {
+        const showWeakCta = shouldShowWeakWordsQuizCta(activeTocId, weakCount);
         return (
           <QuizCard
-            title={tocItem?.label ?? "Quiz"}
+            title={
+              tocItem?.label ??
+              (activeTocId === WEAK_WORDS_RETEST_QUIZ_ID
+                ? "Weak Words Retest"
+                : "Quiz")
+            }
             question={quizDeck[quizIndex] ?? null}
             index={quizIndex}
             total={Math.max(quizDeck.length || quizItems.length, 1)}
@@ -2835,9 +2390,49 @@ export function PlayerPage() {
             afterJapanese={quizAfterJa}
             afterEnglish={quizAfterEn}
             commentActiveLang={hookActiveLang}
+            onReviewWeakWords={
+              showWeakCta ? () => openTocItem("weak-words") : undefined
+            }
+            onRetestWeakWords={
+              showWeakCta ? () => startWeakWordsRetest() : undefined
+            }
           />
         );
+      }
       case "lesson":
+        if (isWeakWordsReview) {
+          if (items.length === 0) {
+            return (
+              <>
+                <SectionPlaceholder
+                  chip="Weak Words"
+                  title={tocItem?.label ?? "Weak Words"}
+                  subtitle="No missed vocabulary yet. Words you miss in vocabulary quizzes will appear here."
+                />
+                {renderWeakWordsProgressSummary()}
+              </>
+            );
+          }
+          return (
+            <>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={startWeakWordsRetest}
+                title="Quiz currently weak vocabulary"
+              >
+                Retest
+              </button>
+              {renderWeakWordsProgressSummary()}
+              <ProgressIndicator
+                current={itemIndex}
+                total={items.length}
+                step={step}
+              />
+              {renderStep()}
+            </>
+          );
+        }
         if (!lesson || items.length === 0) {
           return (
             <SectionPlaceholder
@@ -3707,7 +3302,7 @@ export function PlayerPage() {
               }
               tabIndex={-1}
               title="Toggle hiragana readings"
-              onClick={() => setRegisterShowFurigana((v) => !v)}
+              onClick={toggleRegisterFurigana}
             >
               あ {registerShowFurigana ? "ON" : "OFF"}
             </button>
@@ -3720,13 +3315,7 @@ export function PlayerPage() {
               }
               tabIndex={-1}
               title="Hide the formal side and recall it yourself"
-              onClick={() => {
-                speechService.stop();
-                stopRegisterAuto();
-                clearSpeechUi();
-                setRegisterDrillMode((v) => !v);
-                setRegisterRevealed(false);
-              }}
+              onClick={toggleRegisterDrill}
             >
               Drill {registerDrillMode ? "ON" : "OFF"}
             </button>
@@ -3735,7 +3324,7 @@ export function PlayerPage() {
                 type="button"
                 className="register-btn"
                 tabIndex={-1}
-                onClick={() => setRegisterRevealed(true)}
+                onClick={revealRegister}
               >
                 Reveal
               </button>
@@ -3852,7 +3441,7 @@ export function PlayerPage() {
               }
               tabIndex={-1}
               title="Toggle hiragana readings"
-              onClick={() => setOnoShowFurigana((v) => !v)}
+              onClick={toggleOnoFurigana}
             >
               あ {onoShowFurigana ? "ON" : "OFF"}
             </button>

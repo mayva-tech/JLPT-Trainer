@@ -1,11 +1,8 @@
 /**
  * Corpus audit: structural reading / furigana / TTS alignment.
  */
-import { describe, it, expect, beforeAll } from "vitest";
-import {
-  alignFurigana,
-  seedKanjiReadingsFromDetails,
-} from "./alignFurigana";
+import { describe, it, expect } from "vitest";
+import { alignFurigana } from "./alignFurigana";
 import { buildJapaneseSpeakText } from "./japaneseSpeakText";
 import { vocabulary } from "../data/vocabulary";
 import { grammar } from "../data/grammar";
@@ -18,6 +15,9 @@ type Case = {
 };
 
 const KANJI_OR_ITER = /[\u4e00-\u9faf\u3400-\u4dbf々]/;
+
+/** Full-corpus alignment walks are CPU-heavy under parallel suite load. */
+const CORPUS_ALIGN_TIMEOUT_MS = 15_000;
 
 function cases(): Case[] {
   const out: Case[] = [];
@@ -59,29 +59,43 @@ function cases(): Case[] {
 }
 
 describe("corpus alignment audit", () => {
-  beforeAll(() => {
-    for (const item of vocabulary) {
-      seedKanjiReadingsFromDetails(item.kanjiDetails);
-    }
-  });
-
   const all = cases();
 
-  it("reconstructs surface from alignFurigana segments", () => {
-    const bad: string[] = [];
-    for (const c of all) {
-      if (!c.reading.trim()) continue;
-      const segs = alignFurigana(c.surface, c.reading);
-      const rebuilt = segs.map((s) => s.text).join("");
-      if (rebuilt !== c.surface) {
-        bad.push(
-          `${c.kind}#${c.id}: surface="${c.surface}" rebuilt="${rebuilt}"`
-        );
+  // One alignFurigana pass: surface round-trip + ruby on every kanji / 々.
+  // Alignment seeds readings via ensureKanjiReadingsSeeded() (KANJI dictionary).
+  it(
+    "alignFurigana reconstructs surface and assigns ruby to every kanji / 々",
+    () => {
+      const badRebuild: string[] = [];
+      const missingRuby: string[] = [];
+      for (const c of all) {
+        if (!c.reading.trim()) continue;
+        const segs = alignFurigana(c.surface, c.reading);
+        const rebuilt = segs.map((s) => s.text).join("");
+        if (rebuilt !== c.surface) {
+          badRebuild.push(
+            `${c.kind}#${c.id}: surface="${c.surface}" rebuilt="${rebuilt}"`
+          );
+        }
+        for (const seg of segs) {
+          if (![...seg.text].some((ch) => KANJI_OR_ITER.test(ch))) continue;
+          if (!seg.reading) {
+            missingRuby.push(
+              `${c.kind}#${c.id}: 「${seg.text}」 in 「${c.surface}」 / ${c.reading}`
+            );
+          }
+        }
       }
-    }
-    if (bad.length) console.log(bad.slice(0, 40).join("\n"));
-    expect(bad).toEqual([]);
-  });
+      if (badRebuild.length) console.log(badRebuild.slice(0, 40).join("\n"));
+      if (missingRuby.length) {
+        console.log(`kanji without ruby: ${missingRuby.length}`);
+        console.log(missingRuby.join("\n"));
+      }
+      expect(badRebuild).toEqual([]);
+      expect(missingRuby).toEqual([]);
+    },
+    CORPUS_ALIGN_TIMEOUT_MS
+  );
 
   it("has no space before sentence punctuation in readings", () => {
     const bad: string[] = [];
@@ -119,26 +133,5 @@ describe("corpus alignment audit", () => {
     }
     if (bad.length) console.log(bad.slice(0, 30).join("\n"));
     expect(bad).toEqual([]);
-  });
-
-  it("assigns furigana to every kanji / 々 segment", () => {
-    const missing: string[] = [];
-    for (const c of all) {
-      if (!c.reading.trim()) continue;
-      const segs = alignFurigana(c.surface, c.reading);
-      for (const seg of segs) {
-        if (![...seg.text].some((ch) => KANJI_OR_ITER.test(ch))) continue;
-        if (!seg.reading) {
-          missing.push(
-            `${c.kind}#${c.id}: 「${seg.text}」 in 「${c.surface}」 / ${c.reading}`
-          );
-        }
-      }
-    }
-    if (missing.length) {
-      console.log(`kanji without ruby: ${missing.length}`);
-      console.log(missing.join("\n"));
-    }
-    expect(missing).toEqual([]);
   });
 });

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import type { TocGroup, TocItemId } from "../data/toc";
+import type { TocGroup, TocItem, TocItemId } from "../data/toc";
 import { tocGroups } from "../data/toc";
+import { formatWeakWordsTocLabel } from "../utils/weakWordsDiscoverability";
 
 type Props = {
   selectedId: TocItemId | null;
   onSelect: (id: TocItemId) => void;
+  /** Live weak-item count for runtime Weak Words label only. */
+  weakWordsCount?: number;
 };
 
 type TocPage = 1 | 2 | 3 | 4;
@@ -45,14 +48,23 @@ function pageForSelectedId(selectedId: TocItemId | null): TocPage {
   return 1;
 }
 
+function tocItemLabel(item: TocItem, weakWordsCount: number): string {
+  if (item.id === "weak-words") {
+    return formatWeakWordsTocLabel(weakWordsCount);
+  }
+  return item.label;
+}
+
 function TocGroupSection({
   group,
   selectedId,
   onSelect,
+  weakWordsCount,
 }: {
   group: TocGroup;
   selectedId: TocItemId | null;
   onSelect: (id: TocItemId) => void;
+  weakWordsCount: number;
 }) {
   return (
     <section className="toc-group">
@@ -67,7 +79,7 @@ function TocGroupSection({
                 className={active ? "toc-item toc-item--active" : "toc-item"}
                 onClick={() => onSelect(item.id)}
               >
-                {item.label}
+                {tocItemLabel(item, weakWordsCount)}
               </button>
             </li>
           );
@@ -77,7 +89,11 @@ function TocGroupSection({
   );
 }
 
-export function TableOfContents({ selectedId, onSelect }: Props) {
+export function TableOfContents({
+  selectedId,
+  onSelect,
+  weakWordsCount = 0,
+}: Props) {
   const [page, setPage] = useState<TocPage>(() =>
     pageForSelectedId(selectedId)
   );
@@ -165,6 +181,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
                   group={group}
                   selectedId={selectedId}
                   onSelect={onSelect}
+                  weakWordsCount={weakWordsCount}
                 />
               ))}
             </div>
@@ -174,6 +191,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                weakWordsCount={weakWordsCount}
               />
             ))}
           </div>
@@ -187,6 +205,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                weakWordsCount={weakWordsCount}
               />
             ))}
           </div>
@@ -200,6 +219,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                weakWordsCount={weakWordsCount}
               />
             ))}
           </div>
@@ -213,6 +233,7 @@ export function TableOfContents({ selectedId, onSelect }: Props) {
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                weakWordsCount={weakWordsCount}
               />
             ))}
           </div>

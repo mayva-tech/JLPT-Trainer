@@ -34,6 +34,15 @@ export type SpeakCallbacks = {
   onError?: (error?: unknown) => void;
 };
 
+/** Marker passed to `onError` when playback is cancelled (Stop or superseded). */
+export const SpeechCancelled = Object.freeze({
+  name: "SpeechCancelled" as const,
+});
+
+export function isSpeechCancelled(error: unknown): boolean {
+  return error === SpeechCancelled;
+}
+
 export type SpeakJapaneseOptions = {
   /**
    * Space-separated kana reading (same as furigana data).
@@ -81,6 +90,10 @@ let gapFillTimer: number | null = null;
 let pendingStartTimer: number | null = null;
 let pendingVoicesChangedHandler: (() => void) | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
+let activePlayback: {
+  callbacks?: SpeakCallbacks;
+  settled: boolean;
+} | null = null;
 
 function debug(...args: unknown[]) {
   if (DEBUG_SPEECH) console.log("[speech]", ...args);
@@ -280,6 +293,15 @@ function clearPlaybackHandles() {
   activeUtterance = null;
 }
 
+/** Settle the in-flight waiter as cancelled. Does not call `onEnd`. */
+function settleActiveAsCancelled(): void {
+  const current = activePlayback;
+  if (!current || current.settled) return;
+  current.settled = true;
+  debug("cancel", playbackGeneration);
+  current.callbacks?.onError?.(SpeechCancelled);
+}
+
 function isUsefulBoundaryName(name: string | undefined): boolean {
   return !name || name === "word" || name === "sentence";
 }
@@ -311,14 +333,17 @@ function runUtterance(
   const forceFallback =
     withHighlight && (audioText !== text || (isJa && reading.length > 0));
 
-  // New generation invalidates any in-flight utterance callbacks.
+  // New generation invalidates any in-flight karaoke / start callbacks.
   playbackGeneration += 1;
   const playbackId = playbackGeneration;
   clearPlaybackHandles();
+  settleActiveAsCancelled();
   window.speechSynthesis.cancel();
 
   const utter = new SpeechSynthesisUtterance(audioText);
   activeUtterance = utter;
+  const playback = { callbacks, settled: false };
+  activePlayback = playback;
   const unitLang: "ja" | "en" = isJa ? "ja" : "en";
   utter.lang = lang;
   // Voice must be set before rate — Chromium resets rate when voice is assigned.
@@ -361,7 +386,6 @@ function runUtterance(
   let lastBoundaryStart = -1;
   let lastBoundaryEnd = -1;
   let utteranceStarted = false;
-  let finished = false;
 
   const alive = () => playbackId === playbackGeneration;
 
@@ -519,8 +543,8 @@ function runUtterance(
   };
 
   const finish = (kind: "end" | "error", error?: unknown) => {
-    if (!alive() || finished) return;
-    finished = true;
+    if (!alive() || playback.settled) return;
+    playback.settled = true;
     // Browser TTS sometimes skips the final unit's boundary. Light that one
     // remaining span once — never rush a multi-unit 80ms sweep (fake sync).
     if (withHighlight && mode === "boundary") {
@@ -595,6 +619,7 @@ export const speechService = {
   stop() {
     playbackGeneration += 1;
     clearPlaybackHandles();
+    settleActiveAsCancelled();
     debug("stop", playbackGeneration);
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();

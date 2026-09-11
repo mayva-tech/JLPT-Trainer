@@ -360,15 +360,17 @@ export class QuizAutoRunner {
             ui.setJaHighlight(h);
           },
           onEnd: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+            }
             resolve();
           },
           onError: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+            }
             resolve();
           },
         },
@@ -407,15 +409,17 @@ export class QuizAutoRunner {
             ui.setEnHighlight(h);
           },
           onEnd: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+            }
             resolve();
           },
           onError: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+            }
             resolve();
           },
         },

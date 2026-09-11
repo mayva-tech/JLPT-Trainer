@@ -204,17 +204,19 @@ export class AutoModeRunner {
             ui.setHighlight(h);
           },
           onEnd: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
-            if (this.softStop) this.clearPauses();
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+              if (this.softStop) this.clearPauses();
+            }
             resolve();
           },
           onError: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
-            if (this.softStop) this.clearPauses();
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+              if (this.softStop) this.clearPauses();
+            }
             resolve();
           },
         },
@@ -253,17 +255,19 @@ export class AutoModeRunner {
             ui.setHighlight(h);
           },
           onEnd: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
-            if (this.softStop) this.clearPauses();
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+              if (this.softStop) this.clearPauses();
+            }
             resolve();
           },
           onError: () => {
-            if (sid !== this.session) return;
-            this.speaking = false;
-            this.clearSpeechUi(ui);
-            if (this.softStop) this.clearPauses();
+            if (sid === this.session) {
+              this.speaking = false;
+              this.clearSpeechUi(ui);
+              if (this.softStop) this.clearPauses();
+            }
             resolve();
           },
         },

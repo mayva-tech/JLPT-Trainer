@@ -23,6 +23,8 @@ type Props = {
   afterJapanese?: string;
   afterEnglish?: string;
   commentActiveLang?: "ja" | "en" | null;
+  onReviewWeakWords?: () => void;
+  onRetestWeakWords?: () => void;
 };
 
 /**
@@ -47,6 +49,8 @@ export function QuizCard({
   afterJapanese = "",
   afterEnglish = "",
   commentActiveLang = null,
+  onReviewWeakWords,
+  onRetestWeakWords,
 }: Props) {
   if (phase === "pre" || phase === "after") {
     return (
@@ -61,6 +65,18 @@ export function QuizCard({
     );
   }
 
+  if (phase === "finished") {
+    return (
+      <QuizResultScreen
+        title={title}
+        score={score}
+        total={total}
+        onReviewWeakWords={onReviewWeakWords}
+        onRetestWeakWords={onRetestWeakWords}
+      />
+    );
+  }
+
   if (!question) {
     return (
       <div className="safe-area">
@@ -70,12 +86,6 @@ export function QuizCard({
           <div className="placeholder-subtitle">Quiz content coming soon.</div>
         </div>
       </div>
-    );
-  }
-
-  if (phase === "finished") {
-    return (
-      <QuizResultScreen title={title} score={score} total={total} />
     );
   }
 

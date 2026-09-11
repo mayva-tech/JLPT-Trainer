@@ -1,3 +1,5 @@
+import { KANJI } from "../data/kanji";
+
 export type FuriganaSegment = {
   text: string;
   /** Hiragana reading for kanji segments only; omit for kana / punctuation. */
@@ -492,7 +494,7 @@ function normalizeKunyomi(raw: string): string[] {
   return [...new Set([toHiragana(stem)].filter(Boolean))];
 }
 
-/** Seed per-kanji reading candidates from vocabulary kanjiDetails. */
+/** Seed per-kanji reading candidates from on/kun details. */
 export function seedKanjiReadingsFromDetails(
   details: {
     character: string;
@@ -508,6 +510,23 @@ export function seedKanjiReadingsFromDetails(
     const readings = base.flatMap(withRendakuVariants);
     registerKanjiReadingCandidates(detail.character, readings);
   }
+}
+
+let kanjiReadingsSeeded = false;
+
+/**
+ * Fill the reading-candidate cache from the shared KANJI dictionary.
+ * Idempotent: later calls are no-ops so first alignment stays cheap.
+ */
+export function ensureKanjiReadingsSeeded(): void {
+  if (kanjiReadingsSeeded) return;
+  kanjiReadingsSeeded = true;
+  seedKanjiReadingsFromDetails(
+    Object.entries(KANJI).map(([character, entry]) => ({
+      character,
+      ...entry,
+    }))
+  );
 }
 
 type Candidate = {
@@ -1379,6 +1398,7 @@ export function alignFuriganaWithTokenSpans(
   surface: string,
   spacedReading: string
 ): { segments: FuriganaSegment[]; tokenSpans: ReadingTokenSpan[] } {
+  ensureKanjiReadingsSeeded();
   const tokens = tokenizeReading(spacedReading);
   const segments: FuriganaSegment[] = [];
   const tokenSpans: ReadingTokenSpan[] = [];

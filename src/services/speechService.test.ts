@@ -175,6 +175,119 @@ describe("speechService playback generation", () => {
     vi.advanceTimersByTime(300);
     expect(spoken.length).toBe(0);
   });
+
+  it("stop during an utterance settles the waiter once via cancel, not onEnd", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, isSpeechCancelled } = await import("./speechService");
+
+    let ends = 0;
+    let errors = 0;
+    const errorsSeen: unknown[] = [];
+    const settled = new Promise<string>((resolve) => {
+      speechService.speakEnglish("Hello world", {
+        onEnd: () => {
+          ends += 1;
+          resolve("end");
+        },
+        onError: (error) => {
+          errors += 1;
+          errorsSeen.push(error);
+          resolve("error");
+        },
+      });
+    });
+
+    const first = spoken[0]!;
+    speechService.stop();
+    await expect(settled).resolves.toBe("error");
+    expect(ends).toBe(0);
+    expect(errors).toBe(1);
+    expect(isSpeechCancelled(errorsSeen[0])).toBe(true);
+
+    first.onstart?.();
+    first.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
+    first.onend?.();
+    first.onerror?.({ error: "interrupted" });
+    expect(ends).toBe(0);
+    expect(errors).toBe(1);
+  });
+
+  it("ignores stale fallback timers after stop", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish("Hello world", {
+      onBoundary: (h) => highlights.push(h),
+    });
+    spoken[0]!.onstart?.();
+    speechService.stop();
+    vi.advanceTimersByTime(
+      __speechTestHooks.BOUNDARY_DETECT_MS +
+        __speechTestHooks.FALLBACK_START_OFFSET_MS +
+        2000
+    );
+    expect(highlights.length).toBe(0);
+  });
+
+  it("starting a new utterance cancels the previous without onEnd and plays the new one", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, isSpeechCancelled } = await import("./speechService");
+
+    let firstEnds = 0;
+    let firstErrors = 0;
+    speechService.speakEnglish("Hello world", {
+      onEnd: () => {
+        firstEnds += 1;
+      },
+      onError: (error) => {
+        firstErrors += 1;
+        expect(isSpeechCancelled(error)).toBe(true);
+      },
+    });
+    const first = spoken[0]!;
+
+    const highlights: number[] = [];
+    speechService.speakEnglish("Next line", {
+      onBoundary: (h) => highlights.push(h.start),
+    });
+    expect(firstEnds).toBe(0);
+    expect(firstErrors).toBe(1);
+
+    first.onstart?.();
+    first.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
+    first.onend?.();
+    expect(firstEnds).toBe(0);
+    expect(firstErrors).toBe(1);
+    expect(highlights.length).toBe(0);
+
+    const second = spoken[1]!;
+    second.onstart?.();
+    second.onboundary?.({ name: "word", charIndex: 0, charLength: 4 });
+    expect(highlights).toEqual([0]);
+  });
+
+  it("cancellation does not advance a callback-chained next clip", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    let advanced = false;
+    speechService.speakEnglish("Hello", {
+      onEnd: () => {
+        advanced = true;
+        speechService.speakEnglish("World");
+      },
+      onError: () => {
+        // cancel path — must not start the next clip
+      },
+    });
+    speechService.stop();
+    expect(advanced).toBe(false);
+    expect(spoken.length).toBe(1);
+    spoken[0]!.onend?.();
+    expect(advanced).toBe(false);
+    expect(spoken.length).toBe(1);
+  });
 });
 
 describe("speechService highlight mode", () => {
