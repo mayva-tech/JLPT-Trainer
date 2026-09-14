@@ -169,7 +169,7 @@ export function SurvivalMode({ onBack }: Props) {
         <GameHeader title="❤️ Survival Mode" onBack={onBack} />
         <GameResultScreen
           title="Game Over"
-          headline={`You survived ${survived} correct answers`}
+          headline={`You survived ${survived} correct answer${survived === 1 ? "" : "s"}`}
           isPersonalBest={isPb}
           reviewing={phase === "review"}
           mistakes={mistakes}
