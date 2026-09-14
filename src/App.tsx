@@ -19,6 +19,7 @@ const RelationTrainer = lazy(
 );
 const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
 const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
+const GameMode = lazy(() => import("./pages/GameMode/GameMode"));
 
 type AppView =
   | "player"
@@ -26,7 +27,8 @@ type AppView =
   | "trip"
   | "relations"
   | "phone"
-  | "style";
+  | "style"
+  | "game";
 
 const VIEW_COMPONENTS: Record<AppView, React.ComponentType> = {
   player: PlayerPage,
@@ -35,6 +37,7 @@ const VIEW_COMPONENTS: Record<AppView, React.ComponentType> = {
   relations: RelationTrainer,
   phone: PhoneTrainer,
   style: StyleTrainer,
+  game: GameMode,
 };
 
 function TrainerFallback() {
@@ -144,6 +147,21 @@ export default function App() {
           <span className="app-nav-en">Speech</span>
           <span className="app-nav-jp" lang="ja">
             話し方
+          </span>
+        </button>
+        <button
+          type="button"
+          className={
+            view === "game"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Game Mode — ゲーム"
+          onClick={() => setView("game")}
+        >
+          <span className="app-nav-en">Game Mode 🎮</span>
+          <span className="app-nav-jp" lang="ja">
+            ゲーム
           </span>
         </button>
       </nav>
