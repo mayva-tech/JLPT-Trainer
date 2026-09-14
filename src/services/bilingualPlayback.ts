@@ -19,6 +19,12 @@ export type BilingualRateOptions = {
   englishRate?: number;
   /** Override Japanese (Nanami) rate; English still uses `rate`. */
   japaneseRate?: number;
+  /**
+   * Space-separated kana reading for the Japanese line, forwarded verbatim to
+   * `speechService.speakJapanese`. Karaoke timing lives entirely in
+   * speechService — this class only passes the reading through.
+   */
+  japaneseReading?: string | null;
 };
 
 /**
@@ -88,7 +94,14 @@ export class BilingualPlayback {
             : (rateOptions?.japaneseRate ?? rate);
 
         ui.setActiveLang(step.lang);
-        await this.speakOne(sid, step.lang, step.text, ui, stepRate);
+        await this.speakOne(
+          sid,
+          step.lang,
+          step.text,
+          ui,
+          stepRate,
+          step.lang === "ja" ? (rateOptions?.japaneseReading ?? null) : null
+        );
         if (sid !== this.session) return;
       }
     } finally {
@@ -107,7 +120,8 @@ export class BilingualPlayback {
     lang: "en" | "ja",
     text: string,
     ui: BilingualPlaybackUi,
-    rate: number
+    rate: number,
+    japaneseReading: string | null = null
   ): Promise<void> {
     return new Promise((resolve) => {
       if (sid !== this.session) {
@@ -148,8 +162,13 @@ export class BilingualPlayback {
         },
       };
 
-      if (lang === "en") speechService.speakEnglish(text, callbacks, rate);
-      else speechService.speakJapanese(text, callbacks, rate);
+      if (lang === "en") {
+        speechService.speakEnglish(text, callbacks, rate);
+      } else {
+        speechService.speakJapanese(text, callbacks, rate, {
+          reading: japaneseReading,
+        });
+      }
     });
   }
 }

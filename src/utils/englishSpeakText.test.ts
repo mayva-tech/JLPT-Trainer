@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { buildEnglishSpeakText } from "./englishSpeakText";
 
 describe("buildEnglishSpeakText", () => {
+  it("expands Mt / Mt. to Mount so TTS does not spell M-T", () => {
+    expect(buildEnglishSpeakText("Mt Fuji")).toBe("Mount Fuji");
+    expect(buildEnglishSpeakText("Mt. Fuji")).toBe("Mount Fuji");
+    expect(buildEnglishSpeakText("near Mt Fuji.")).toBe("near Mount Fuji.");
+    expect(buildEnglishSpeakText("MT FUJI")).toBe("MOUNT FUJI");
+  });
+
   it('speaks "fare" as "fair" (not "far")', () => {
     expect(buildEnglishSpeakText("fare")).toBe("fair");
   });

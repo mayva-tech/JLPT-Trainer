@@ -5,6 +5,7 @@ import {
   buildEnglishSpokenKaraokeSteps,
   buildJapaneseHighlightUnits,
   buildJapaneseSpokenKaraokeSteps,
+  deriveSpacedReadingForUnits,
   estimateUnitDurationMs,
   findUnitForBoundary,
 } from "./speechHighlightUnits";
@@ -107,6 +108,32 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     expect(withSlash).toBeGreaterThan(plain);
   });
 
+  it("dwells longer on English words that end with a comma", () => {
+    const plain = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 9,
+        text: "carefully",
+        kind: "word",
+        spokenText: "carefully",
+      },
+      "en"
+    );
+    const withComma = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 10,
+        text: "carefully,",
+        kind: "word",
+        spokenText: "carefully",
+      },
+      "en"
+    );
+    // Andrew's post-comma gap is often ~500–700ms; require a real clause
+    // pause in the estimate (speechService still scales this down slightly).
+    expect(withComma - plain).toBeGreaterThanOrEqual(550);
+  });
+
   it.each(["~", "〜", "～"])(
     "never highlights the %s slot-marker variant",
     (marker) => {
@@ -187,6 +214,158 @@ describe("buildJapaneseHighlightUnits", () => {
     const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
     expect(active.map((u) => u.text)).toEqual(["はずだ"]);
     expect(active.some((u) => u.text === "だ")).toBe(false);
+  });
+
+  it("keeps べき as one wrap word (not べ|き / 洗うべ|きだ)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("洗うべきだ")).map(
+        (u) => u.text
+      )
+    ).toEqual(["洗う", "べきだ"]);
+    expect(
+      activeHighlightUnits(
+        buildJapaneseHighlightUnits("衣類はなるべく丁寧に洗うべきだ。")
+      ).map((u) => u.text)
+    ).toEqual(["衣類は", "なるべく", "丁寧に", "洗う", "べきだ。"]);
+    const texts = activeHighlightUnits(
+      buildJapaneseHighlightUnits("聞くべきです")
+    ).map((u) => u.text);
+    expect(texts).toContain("べきです");
+    expect(texts.some((t) => /^べ([^き]|$)/.test(t))).toBe(false);
+  });
+
+  it("keeps なった as one wrap word (not な|った)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("少なくなった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["少なくなった"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("すくなくなった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["すくなくなった"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("人が少なくなった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["人", "が少なくなった"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("多くなった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["多くなった"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("なくなった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["なくなった"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("わかった")).map(
+        (u) => u.text
+      )
+    ).toEqual(["わかった"]);
+  });
+
+  it("keeps te-form って with its stem (not な|って / しま|って)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("なって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["なって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("おかしくなって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["おかしくなって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("元気になって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["元気", "になって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("しまって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["しまって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("わかって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["わかって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("あって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["あって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("によって")).map(
+        (u) => u.text
+      )
+    ).toEqual(["によって"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("なってきた")).map(
+        (u) => u.text
+      )
+    ).toEqual(["なって", "きた"]);
+  });
+
+  it("keeps ください as one wrap word (not くだ|さい)", () => {
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("確認してください。")).map(
+        (u) => u.text
+      )
+    ).toEqual(["確認", "して", "ください。"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("聞いてください")).map(
+        (u) => u.text
+      )
+    ).toEqual(["聞", "いて", "ください"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("ご注意ください")).map(
+        (u) => u.text
+      )
+    ).toEqual(["ご注意", "ください"]);
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits("確認して下さい。")).map(
+        (u) => u.text
+      )
+    ).toEqual(["確認", "して", "下さい。"]);
+  });
+
+  it("keeps other Segmenter-split auxiliaries as whole wrap words", () => {
+    const cases: Array<[string, string]> = [
+      ["でしょう", "でしょう"],
+      ["でしょうか", "でしょうか"],
+      ["ございます", "ございます"],
+      ["でございます", "でございます"],
+      ["ございません", "ございません"],
+      ["なさい", "なさい"],
+      ["なさいます", "なさいます"],
+      ["いただけます", "いただけます"],
+      ["いただけません", "いただけません"],
+      ["くださいませんか", "くださいませんか"],
+      ["かもしれない", "かもしれない"],
+      ["かもしれません", "かもしれません"],
+      ["なければならない", "なければならない"],
+      ["なければいけない", "なければいけない"],
+      ["べからず", "べからず"],
+      ["べく", "べく"],
+      ["おいでになる", "おいでになる"],
+      ["ありがとうございます", "ございます"],
+      ["おはようございます", "ございます"],
+      ["ありがとうございました", "ございました"],
+      ["申し訳ございません", "ございません"],
+    ];
+    for (const [input, whole] of cases) {
+      const texts = activeHighlightUnits(
+        buildJapaneseHighlightUnits(input)
+      ).map((u) => u.text);
+      expect(
+        texts.some((t) => t.replace(/[。！？.]+$/u, "") === whole),
+        `${input} should contain whole unit ${whole}, got ${texts.join("|")}`
+      ).toBe(true);
+    }
   });
 
   it("splits にしても as に|しても (not にし|ても)", () => {
@@ -919,5 +1098,28 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
         `いる missing spoken timing in 「${surface}」`
       ).toBe(true);
     }
+  });
+});
+
+describe("deriveSpacedReadingForUnits", () => {
+  it("splits an unspaced reading onto karaoke units", () => {
+    const text = "私も行きます。";
+    const units = buildJapaneseHighlightUnits(text);
+    expect(deriveSpacedReadingForUnits(text, "わたしもいきます。", units)).toBe(
+      "わたしも いきます。"
+    );
+  });
+
+  it("keeps an already spaced reading usable", () => {
+    const text = "あたしも行く。";
+    const units = buildJapaneseHighlightUnits(text);
+    const derived = deriveSpacedReadingForUnits(text, "あたしもいく。", units);
+    expect(derived?.replace(/\s+/g, "")).toBe("あたしもいく。");
+  });
+
+  it("returns null when the reading does not match the surface", () => {
+    const text = "私も行きます。";
+    const units = buildJapaneseHighlightUnits(text);
+    expect(deriveSpacedReadingForUnits(text, "まったくちがう", units)).toBeNull();
   });
 });

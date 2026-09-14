@@ -212,22 +212,22 @@ describe("speechService playback generation", () => {
     expect(errors).toBe(1);
   });
 
-  it("ignores stale fallback timers after stop", async () => {
+  it("ignores stale karaoke timers after stop", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
+    const { speechService } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world", {
+    speechService.speakEnglish("Hello world today", {
       onBoundary: (h) => highlights.push(h),
     });
     spoken[0]!.onstart?.();
+    // The timeline starts immediately, so exactly the first unit is lit.
+    const afterStart = highlights.length;
+    expect(afterStart).toBe(1);
+
     speechService.stop();
-    vi.advanceTimersByTime(
-      __speechTestHooks.BOUNDARY_DETECT_MS +
-        __speechTestHooks.FALLBACK_START_OFFSET_MS +
-        2000
-    );
-    expect(highlights.length).toBe(0);
+    vi.advanceTimersByTime(5000);
+    expect(highlights.length).toBe(afterStart);
   });
 
   it("starting a new utterance cancels the previous without onEnd and plays the new one", async () => {
@@ -290,89 +290,229 @@ describe("speechService playback generation", () => {
   });
 });
 
-describe("speechService highlight mode", () => {
+describe("speechService karaoke timeline", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.useRealTimers();
     vi.resetModules();
   });
 
-  it("selects boundary mode when a boundary arrives during detection", async () => {
+  /** Planned absolute offsets (ms) of each karaoke unit from the timeline origin. */
+  async function plannedEnglishOffsets(text: string, rate: number) {
+    const { buildEnglishSpokenKaraokeSteps, estimateUnitDurationMs } =
+      await import("../utils/speechHighlightUnits");
+    const { __speechTestHooks } = await import("./speechService");
+    const units = buildEnglishSpokenKaraokeSteps(text);
+    const offsets: number[] = [];
+    let acc = __speechTestHooks.FALLBACK_START_OFFSET_MS;
+    // Mirror speechService EN rate handling (neural Andrew is nonlinear < 0.9).
+    const rateDivisor = Math.max(rate, 0.9);
+    for (let i = 0; i < units.length; i += 1) {
+      offsets.push(acc);
+      acc +=
+        (estimateUnitDurationMs(units[i]!, "en", units[i + 1] ?? null) /
+          rateDivisor) *
+        __speechTestHooks.FALLBACK_TIMING_SCALE_EN;
+    }
+    return offsets;
+  }
+
+  it("highlights the first unit immediately on onstart, with no detection window", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
+    const { speechService } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world", {
-      onBoundary: (h) => highlights.push(h),
-    });
-    const utter = spoken[0]!;
-    utter.onstart?.();
-    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
-    expect(highlights[0]).toEqual({ start: 0, end: 5 });
-
-    vi.advanceTimersByTime(__speechTestHooks.BOUNDARY_DETECT_MS + 50);
-    const before = highlights.length;
-    vi.advanceTimersByTime(2000);
-    expect(highlights.length).toBe(before);
-  });
-
-  it("selects fallback when no boundary arrives", async () => {
-    const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
-
-    const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world", {
-      onBoundary: (h) => highlights.push(h),
-    });
-    const utter = spoken[0]!;
-    utter.onstart?.();
-    expect(highlights.length).toBe(0);
-
-    vi.advanceTimersByTime(
-      __speechTestHooks.BOUNDARY_DETECT_MS +
-        __speechTestHooks.FALLBACK_START_OFFSET_MS +
-        10
+    speechService.speakEnglish(
+      "Hello world today",
+      { onBoundary: (h) => highlights.push(h) },
+      1
     );
-    expect(highlights.length).toBeGreaterThanOrEqual(1);
-    expect(highlights[0]).toEqual({ start: 0, end: 5 });
-  });
-
-  it("ignores late boundaries after fallback mode starts", async () => {
-    const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
-
-    const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world today", {
-      onBoundary: (h) => highlights.push(h),
-    });
     const utter = spoken[0]!;
     utter.onstart?.();
-    vi.advanceTimersByTime(
-      __speechTestHooks.BOUNDARY_DETECT_MS +
-        __speechTestHooks.FALLBACK_START_OFFSET_MS +
-        10
-    );
-    expect(highlights.length).toBeGreaterThanOrEqual(1);
-
-    utter.onboundary?.({ name: "word", charIndex: 12, charLength: 5 });
-    expect(highlights.at(-1)?.start).toBe(0);
+    // Synchronous — no timers advanced at all.
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
   });
 
-  it("does not begin fallback before onstart", async () => {
+  it("does not highlight anything before onstart", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
+    const { speechService } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello", {
-      onBoundary: (h) => highlights.push(h),
-    });
+    speechService.speakEnglish("Hello", { onBoundary: (h) => highlights.push(h) }, 1);
     expect(spoken.length).toBe(1);
 
-    vi.advanceTimersByTime(__speechTestHooks.BOUNDARY_DETECT_MS + 50);
+    vi.advanceTimersByTime(2000);
     expect(highlights.length).toBe(0);
+  });
+
+  it("a later browser boundary corrects an already-running fallback timeline", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish(
+      "Hello world today",
+      { onBoundary: (h) => highlights.push(h) },
+      1
+    );
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+
+    // Fallback is running; the browser then reports the real position.
+    vi.advanceTimersByTime(60);
+    utter.onboundary?.({ name: "word", charIndex: 6, charLength: 5 });
+    expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
+
+    // Timeline was rebased onto that boundary: the next unit is a full unit
+    // away from the boundary instant, not from the original origin.
+    const planned = await plannedEnglishOffsets("Hello world today", 1);
+    const gap = planned[2]! - planned[1]!;
+    vi.advanceTimersByTime(gap - 20);
+    expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
+    vi.advanceTimersByTime(40);
+    expect(highlights.at(-1)).toEqual({ start: 12, end: 17 });
+  });
+
+  it("snaps straight to a browser jump instead of replaying skipped units", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "Hello world today and tomorrow";
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish(text, { onBoundary: (h) => highlights.push(h) }, 1);
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+
+    // Browser skips "world" and "today" and reports "and".
+    utter.onboundary?.({ name: "word", charIndex: 18, charLength: 3 });
+    expect(highlights.at(-1)).toEqual({ start: 18, end: 21 });
+    // Synchronous snap — the skipped units are never lit, then or later.
+    expect(highlights).toHaveLength(2);
+    vi.advanceTimersByTime(300);
+    expect(highlights.some((h) => h.start === 6 || h.start === 12)).toBe(false);
+  });
+
+  it("snaps a Japanese browser jump without replaying skipped units", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, splitHighlightUnits } = await import("./speechService");
+
+    // No speak-text transformation → browser boundaries are usable.
+    const text = "在庫を確認する";
+    const units = splitHighlightUnits(text);
+    expect(units.length).toBeGreaterThanOrEqual(3);
+    const last = units.at(-1)!;
+
+    const highlights: string[] = [];
+    speechService.speakJapanese(
+      text,
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
+      1
+    );
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    const first = highlights.length;
+
+    utter.onboundary?.({
+      name: "word",
+      charIndex: last.start,
+      charLength: last.end - last.start,
+    });
+    expect(highlights.at(-1)).toBe(text.slice(last.start, last.end));
+    expect(highlights.length).toBe(first + 1);
+  });
+
+  it("never moves the highlight backwards on a stale boundary", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish(
+      "Hello world today",
+      { onBoundary: (h) => highlights.push(h) },
+      1
+    );
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    utter.onboundary?.({ name: "word", charIndex: 12, charLength: 5 });
+    expect(highlights.at(-1)).toEqual({ start: 12, end: 17 });
+
+    const count = highlights.length;
+    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
+    utter.onboundary?.({ name: "word", charIndex: 6, charLength: 5 });
+    expect(highlights.length).toBe(count);
+    expect(highlights.at(-1)).toEqual({ start: 12, end: 17 });
+  });
+
+  it("absolute deadlines do not accumulate timer drift", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "Hello world today and tomorrow";
+    const planned = await plannedEnglishOffsets(text, 1);
+
+    // Simulate each highlight callback costing 30 ms of wall clock that the
+    // timer queue does not know about. Chained relative timeouts would fall
+    // 30 ms further behind on every unit.
+    const LAG = 30;
+    let extraLag = 0;
+    const baseNow = performance.now.bind(performance);
+    vi.spyOn(performance, "now").mockImplementation(() => baseNow() + extraLag);
+
+    const firedAt: number[] = [];
+    speechService.speakEnglish(
+      text,
+      {
+        onBoundary: () => {
+          firedAt.push(performance.now());
+          extraLag += LAG;
+        },
+      },
+      1
+    );
+    const utter = spoken[0]!;
+    const origin = performance.now();
+    utter.onstart?.();
+    vi.advanceTimersByTime(10000);
+
+    expect(firedAt.length).toBe(planned.length);
+    for (let i = 0; i < firedAt.length; i += 1) {
+      const error = Math.abs(firedAt[i]! - (origin + planned[i]!));
+      expect(error).toBeLessThanOrEqual(LAG + 5);
+    }
+  });
+
+  it("pause freezes karaoke and resume preserves sync", async () => {
+    const { spoken, synth } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "Hello world today";
+    const planned = await plannedEnglishOffsets(text, 1);
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish(text, { onBoundary: (h) => highlights.push(h) }, 1);
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    expect(highlights.length).toBe(1);
+
+    vi.advanceTimersByTime(50);
+    speechService.pause();
+    expect(synth.pause).toHaveBeenCalled();
+
+    // Frozen: a long pause must not fire any karaoke step.
+    vi.advanceTimersByTime(10000);
+    expect(highlights.length).toBe(1);
+
+    speechService.resume();
+    // Remaining time to unit 1 is what was left when we paused, not zero.
+    vi.advanceTimersByTime(planned[1]! - 50 - 20);
+    expect(highlights.length).toBe(1);
+    vi.advanceTimersByTime(40);
+    expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
   });
 
   it("highlights the last unit on end when browser skipped its boundary", async () => {
@@ -380,9 +520,11 @@ describe("speechService highlight mode", () => {
     const { speechService } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world", {
-      onBoundary: (h) => highlights.push(h),
-    });
+    speechService.speakEnglish(
+      "Hello world",
+      { onBoundary: (h) => highlights.push(h) },
+      1
+    );
     const utter = spoken[0]!;
     utter.onstart?.();
     utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
@@ -397,12 +539,13 @@ describe("speechService highlight mode", () => {
     const { speechService } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
-    speechService.speakEnglish("Hello world today", {
-      onBoundary: (h) => highlights.push(h),
-    });
+    speechService.speakEnglish(
+      "Hello world today",
+      { onBoundary: (h) => highlights.push(h) },
+      1
+    );
     const utter = spoken[0]!;
     utter.onstart?.();
-    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
     expect(highlights).toEqual([{ start: 0, end: 5 }]);
 
     utter.onend?.();
@@ -414,36 +557,75 @@ describe("speechService highlight mode", () => {
 
   it("uses spoken-kana fallback timing when a reading is provided", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
+    const { speechService } = await import("./speechService");
 
     const highlights: string[] = [];
     const text = "妊娠";
     speechService.speakJapanese(
       text,
-      {
-        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
-      },
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
       1,
       { reading: "にんしん" }
     );
     const utter = spoken[0]!;
     expect(utter.text).toContain("にんしん");
     utter.onstart?.();
-    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights[0]).toBe("妊娠");
+  });
+
+  it("ignores browser boundaries when audio text differs from visible text", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "妊娠";
+    const highlights: string[] = [];
+    speechService.speakJapanese(
+      text,
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
+      1,
+      { reading: "にんしん" }
+    );
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    const count = highlights.length;
+    // charIndex refers to にんしん, not 妊娠 — must not be mapped.
+    utter.onboundary?.({ name: "word", charIndex: 3, charLength: 2 });
+    expect(highlights.length).toBe(count);
+  });
+
+  it("recovers unit timing when the reading is an unspaced kana blob", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    // Speech-styles style data: kana reading with no token boundaries.
+    const text = "私も行きます。";
+    const highlights: string[] = [];
+    speechService.speakJapanese(
+      text,
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
+      1,
+      { reading: "わたしもいきます。" }
+    );
+    const utter = spoken[0]!;
+    // Audio still uses the reading.
+    expect(utter.text).toContain("わたし");
+    utter.onstart?.();
+    // Each unit is timed by its own kana, not by a positional pairing that
+    // would give 私も the reading わたし.
+    expect(highlights[0]).toBe("私も");
+    vi.advanceTimersByTime(8000);
+    expect(highlights).toContain("行きます。");
   });
 
   it("uses fallback karaoke when Japanese reading equals the surface (ている patterns)", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService, __speechTestHooks } = await import("./speechService");
+    const { speechService } = await import("./speechService");
 
     const text = "〜ことになっている";
     const highlights: string[] = [];
     speechService.speakJapanese(
       text,
-      {
-        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
-      },
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
       1,
       { reading: "〜ことになっている" }
     );
@@ -451,7 +633,6 @@ describe("speechService highlight mode", () => {
     // Wave-slot pause is inserted even when reading equals the surface.
     expect(utter.text).toBe("〜、ことになっている");
     utter.onstart?.();
-    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights.length).toBeGreaterThanOrEqual(1);
     expect(highlights[0]).not.toContain("〜");
     expect(highlights[0]).toContain("こと");
@@ -460,26 +641,27 @@ describe("speechService highlight mode", () => {
     expect(highlights.some((h) => h.includes("いる"))).toBe(true);
   });
 
-  it("fills skipped みる when browser jumps から→と in 〜からみると", async () => {
+  it("rebases English karaoke from spoken audio even when display has (notes)", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");
 
-    const text = "〜からみると";
-    const highlights: string[] = [];
-    // No reading → browser boundary mode (audioText === text)
-    speechService.speakJapanese(text, {
-      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
-    });
+    const text = "to return (goods)";
+    const highlights: Array<{ start: number; end: number }> = [];
+    speechService.speakEnglish(
+      text,
+      { onBoundary: (h) => highlights.push(h) },
+      1
+    );
     const utter = spoken[0]!;
+    // Parenthetical is stripped from audio but kept on the display string.
+    expect(utter.text).toBe("to return");
+    expect(utter.text).not.toEqual(text);
+
     utter.onstart?.();
-    // Boundary reports index inside から (may gap-fill 〜 first)
-    utter.onboundary?.({ name: "word", charIndex: 1, charLength: 2 });
-    vi.advanceTimersByTime(500);
-    expect(highlights).toContain("から");
-    // Browser skips みる and jumps to と
-    utter.onboundary?.({ name: "word", charIndex: 5, charLength: 1 });
-    vi.advanceTimersByTime(500);
-    expect(highlights).toContain("みる");
-    expect(highlights.at(-1)).toBe("と");
+    expect(highlights[0]).toEqual({ start: 0, end: 2 }); // "to"
+
+    // Andrew reports the second spoken word; map onto display "return".
+    utter.onboundary?.({ name: "word", charIndex: 3, charLength: 6 });
+    expect(highlights.at(-1)).toEqual({ start: 3, end: 9 });
   });
 });

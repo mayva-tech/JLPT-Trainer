@@ -1,0 +1,2955 @@
+{
+  "families": [
+    {
+      "id": "certainty-judgment",
+      "title": "Certainty & Judgment",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5030,
+      "memberIds": [
+        5030,
+        5104,
+        5106
+      ],
+      "lessonId": "grammar-lesson-001"
+    },
+    {
+      "id": "condition-concession",
+      "title": "Condition Concession",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5092,
+      "memberIds": [
+        5092,
+        5152,
+        5176
+      ],
+      "lessonId": "grammar-lesson-002"
+    },
+    {
+      "id": "no-alternative",
+      "title": "No Alternative",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5049,
+      "memberIds": [
+        5049,
+        5277,
+        5295
+      ],
+      "lessonId": "grammar-lesson-003"
+    },
+    {
+      "id": "formal-timing",
+      "title": "Formal Timing",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5055,
+      "memberIds": [
+        5055,
+        5050
+      ],
+      "lessonId": "grammar-lesson-004"
+    },
+    {
+      "id": "gradual-change",
+      "title": "Gradual Change",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5072,
+      "memberIds": [
+        5072,
+        5014,
+        5071,
+        5076
+      ],
+      "lessonId": "grammar-lesson-005"
+    },
+    {
+      "id": "trigger-opportunity",
+      "title": "Trigger & Opportunity",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5013,
+      "memberIds": [
+        5013,
+        5015,
+        5431
+      ],
+      "lessonId": "grammar-lesson-006"
+    },
+    {
+      "id": "strong-feeling",
+      "title": "Strong Feeling",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5028,
+      "memberIds": [
+        5028,
+        5029
+      ],
+      "lessonId": "grammar-lesson-007"
+    },
+    {
+      "id": "explanation-wake",
+      "title": "Explanation わけ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5095,
+      "memberIds": [
+        5095,
+        5096,
+        5113
+      ],
+      "lessonId": "grammar-lesson-008"
+    },
+    {
+      "id": "not-only",
+      "title": "Not Only…But Also",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5024,
+      "memberIds": [
+        5024,
+        5062,
+        5068,
+        5069
+      ],
+      "lessonId": "grammar-lesson-009"
+    },
+    {
+      "id": "limits-kagiru",
+      "title": "Limits 限る",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5271,
+      "memberIds": [
+        5271,
+        5273,
+        5275
+      ],
+      "lessonId": "grammar-lesson-010"
+    },
+    {
+      "id": "regardless",
+      "title": "Regardless",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5051,
+      "memberIds": [
+        5051,
+        5178
+      ],
+      "lessonId": "grammar-lesson-011"
+    },
+    {
+      "id": "basis-source",
+      "title": "Basis & Source",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5121,
+      "memberIds": [
+        5121,
+        5047,
+        5200,
+        5268
+      ],
+      "lessonId": "grammar-lesson-012"
+    },
+    {
+      "id": "viewpoint",
+      "title": "Viewpoint",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5093,
+      "memberIds": [
+        5093,
+        5091,
+        5232
+      ],
+      "lessonId": "grammar-lesson-013"
+    },
+    {
+      "id": "mono-family",
+      "title": "もの Family",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5164,
+      "memberIds": [
+        5164,
+        5002,
+        5097,
+        5108,
+        5120,
+        5159,
+        5234,
+        5308
+      ],
+      "lessonId": "grammar-lesson-014"
+    },
+    {
+      "id": "koto-family",
+      "title": "こと Family",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5170,
+      "memberIds": [
+        5170,
+        5094,
+        5244
+      ],
+      "lessonId": "grammar-lesson-015"
+    },
+    {
+      "id": "appearance-tendency",
+      "title": "Appearance & Tendency",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5042,
+      "memberIds": [
+        5042,
+        5036,
+        5038
+      ],
+      "lessonId": "grammar-lesson-016"
+    },
+    {
+      "id": "possibility-risk",
+      "title": "Possibility & Risk",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5040,
+      "memberIds": [
+        5040,
+        5084,
+        5119,
+        5283
+      ],
+      "lessonId": "grammar-lesson-017"
+    },
+    {
+      "id": "obligation-must",
+      "title": "Obligation",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5048,
+      "memberIds": [
+        5048,
+        5087,
+        5102,
+        5116,
+        5117
+      ],
+      "lessonId": "grammar-lesson-018"
+    },
+    {
+      "id": "cause-consequence",
+      "title": "Cause & Consequence",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5442,
+      "memberIds": [
+        5442,
+        5010,
+        5134,
+        5167,
+        5379,
+        5441
+      ],
+      "lessonId": "grammar-lesson-019"
+    },
+    {
+      "id": "since-now-that",
+      "title": "Since / Now That",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5162,
+      "memberIds": [
+        5162,
+        5018,
+        5163
+      ],
+      "lessonId": "grammar-lesson-020"
+    },
+    {
+      "id": "contrast-concession",
+      "title": "Contrast & Concession",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5001,
+      "memberIds": [
+        5001,
+        5003,
+        5009,
+        5034,
+        5064,
+        5260
+      ],
+      "lessonId": "grammar-lesson-021"
+    },
+    {
+      "id": "contrast-aspect",
+      "title": "Contrast Aspects",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5006,
+      "memberIds": [
+        5006,
+        5070
+      ],
+      "lessonId": "grammar-lesson-022"
+    },
+    {
+      "id": "addition",
+      "title": "Addition",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5061,
+      "memberIds": [
+        5061
+      ],
+      "lessonId": "grammar-lesson-023"
+    },
+    {
+      "id": "emphasis-sae",
+      "title": "Emphasis さえ／すら／こそ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5025,
+      "memberIds": [
+        5025,
+        5011,
+        5065
+      ],
+      "lessonId": "grammar-lesson-024"
+    },
+    {
+      "id": "exception-nuki",
+      "title": "Exception & Exclusion",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5272,
+      "memberIds": [
+        5272,
+        5007
+      ],
+      "lessonId": "grammar-lesson-025"
+    },
+    {
+      "id": "extent-degree",
+      "title": "Extent & Degree",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5085,
+      "memberIds": [
+        5085,
+        5300
+      ],
+      "lessonId": "grammar-lesson-026"
+    },
+    {
+      "id": "time-sequence",
+      "title": "Time & Sequence",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5298,
+      "memberIds": [
+        5298,
+        5043,
+        5077,
+        5123,
+        5128,
+        5129,
+        5130,
+        5139,
+        5140,
+        5342
+      ],
+      "lessonId": "grammar-lesson-027"
+    },
+    {
+      "id": "conditions-assumptions",
+      "title": "Conditions & Assumptions",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5231,
+      "memberIds": [
+        5231,
+        5012,
+        5086,
+        5151
+      ],
+      "lessonId": "grammar-lesson-028"
+    },
+    {
+      "id": "judgment-limit",
+      "title": "Judgment Limits",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5023,
+      "memberIds": [
+        5023,
+        5100
+      ],
+      "lessonId": "grammar-lesson-029"
+    },
+    {
+      "id": "means-relation",
+      "title": "Means & Relation",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5016,
+      "memberIds": [
+        5016,
+        5044,
+        5045,
+        5046,
+        5052,
+        5053,
+        5054,
+        5126
+      ],
+      "lessonId": "grammar-lesson-030"
+    },
+    {
+      "id": "change-direction",
+      "title": "One-way Change",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5345,
+      "memberIds": [
+        5345
+      ],
+      "lessonId": "grammar-lesson-031"
+    },
+    {
+      "id": "response-oujiru",
+      "title": "Response 応じ／応え",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5020,
+      "memberIds": [
+        5020
+      ],
+      "lessonId": "grammar-lesson-032"
+    },
+    {
+      "id": "state-completion",
+      "title": "State & Completion",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5312,
+      "memberIds": [
+        5312,
+        5035
+      ],
+      "lessonId": "grammar-lesson-033"
+    },
+    {
+      "id": "feelings-eval",
+      "title": "Feelings & Evaluation",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5169,
+      "memberIds": [
+        5169
+      ],
+      "lessonId": "grammar-lesson-034"
+    },
+    {
+      "id": "thanks-blame",
+      "title": "Thanks & Blame",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5166,
+      "memberIds": [
+        5166,
+        5110,
+        5165,
+        5270
+      ],
+      "lessonId": "grammar-lesson-035"
+    },
+    {
+      "id": "halfway-kake",
+      "title": "Halfway かけ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5079,
+      "memberIds": [
+        5079
+      ],
+      "lessonId": "grammar-lesson-036"
+    },
+    {
+      "id": "mai-conjecture",
+      "title": "Conjecture まい",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5240,
+      "memberIds": [
+        5240
+      ],
+      "lessonId": "grammar-lesson-037"
+    },
+    {
+      "id": "kiru-only",
+      "title": "きり / っきり",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5026,
+      "memberIds": [
+        5026
+      ],
+      "lessonId": "grammar-lesson-038"
+    },
+    {
+      "id": "core-おりに",
+      "title": "〜折に",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5227,
+      "memberIds": [
+        5227
+      ],
+      "lessonId": "grammar-lesson-039"
+    },
+    {
+      "id": "core-か-ないかのうちに",
+      "title": "〜か〜ないかのうちに",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5132,
+      "memberIds": [
+        5132
+      ],
+      "lessonId": "grammar-lesson-040"
+    },
+    {
+      "id": "core-かぎり",
+      "title": "〜限り",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5022,
+      "memberIds": [
+        5022
+      ],
+      "lessonId": "grammar-lesson-041"
+    },
+    {
+      "id": "core-が濃厚だ",
+      "title": "〜が濃厚だ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5338,
+      "memberIds": [
+        5338
+      ],
+      "lessonId": "grammar-lesson-042"
+    },
+    {
+      "id": "core-ことになっている",
+      "title": "〜ことになっている",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5099,
+      "memberIds": [
+        5099
+      ],
+      "lessonId": "grammar-lesson-043"
+    },
+    {
+      "id": "core-ことによって",
+      "title": "〜ことによって",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5266,
+      "memberIds": [
+        5266
+      ],
+      "lessonId": "grammar-lesson-044"
+    },
+    {
+      "id": "core-ことはない",
+      "title": "〜ことはない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5103,
+      "memberIds": [
+        5103
+      ],
+      "lessonId": "grammar-lesson-045"
+    },
+    {
+      "id": "core-ずにはすまない",
+      "title": "〜ずにはすまない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5114,
+      "memberIds": [
+        5114
+      ],
+      "lessonId": "grammar-lesson-046"
+    },
+    {
+      "id": "core-そのものだ",
+      "title": "〜そのものだ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5318,
+      "memberIds": [
+        5318
+      ],
+      "lessonId": "grammar-lesson-047"
+    },
+    {
+      "id": "core-つつ",
+      "title": "〜つつ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5221,
+      "memberIds": [
+        5221
+      ],
+      "lessonId": "grammar-lesson-048"
+    },
+    {
+      "id": "core-てしようがない",
+      "title": "〜てしようがない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5305,
+      "memberIds": [
+        5305
+      ],
+      "lessonId": "grammar-lesson-049"
+    },
+    {
+      "id": "core-てはすまされない",
+      "title": "〜てはすまされない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5286,
+      "memberIds": [
+        5286
+      ],
+      "lessonId": "grammar-lesson-050"
+    },
+    {
+      "id": "core-てはたまらない",
+      "title": "〜てはたまらない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5306,
+      "memberIds": [
+        5306
+      ],
+      "lessonId": "grammar-lesson-051"
+    },
+    {
+      "id": "core-てはならない",
+      "title": "〜てはならない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5115,
+      "memberIds": [
+        5115
+      ],
+      "lessonId": "grammar-lesson-052"
+    },
+    {
+      "id": "core-てもかまわない",
+      "title": "〜てもかまわない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5112,
+      "memberIds": [
+        5112
+      ],
+      "lessonId": "grammar-lesson-053"
+    },
+    {
+      "id": "core-て間もなく",
+      "title": "〜て間もなく",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5229,
+      "memberIds": [
+        5229
+      ],
+      "lessonId": "grammar-lesson-054"
+    },
+    {
+      "id": "core-であれ-であれ",
+      "title": "〜であれ〜であれ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5153,
+      "memberIds": [
+        5153
+      ],
+      "lessonId": "grammar-lesson-055"
+    },
+    {
+      "id": "core-であればあるほど",
+      "title": "〜であればあるほど",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5257,
+      "memberIds": [
+        5257
+      ],
+      "lessonId": "grammar-lesson-056"
+    },
+    {
+      "id": "core-であろうと-であろうと",
+      "title": "〜であろうと〜であろうと",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5258,
+      "memberIds": [
+        5258
+      ],
+      "lessonId": "grammar-lesson-057"
+    },
+    {
+      "id": "core-というより",
+      "title": "〜というより",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5027,
+      "memberIds": [
+        5027
+      ],
+      "lessonId": "grammar-lesson-058"
+    },
+    {
+      "id": "core-という声がある",
+      "title": "〜という声がある",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5336,
+      "memberIds": [
+        5336
+      ],
+      "lessonId": "grammar-lesson-059"
+    },
+    {
+      "id": "core-という見方もある",
+      "title": "〜という見方もある",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5335,
+      "memberIds": [
+        5335
+      ],
+      "lessonId": "grammar-lesson-060"
+    },
+    {
+      "id": "core-といった",
+      "title": "〜といった",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5171,
+      "memberIds": [
+        5171
+      ],
+      "lessonId": "grammar-lesson-061"
+    },
+    {
+      "id": "core-ところで",
+      "title": "〜ところで",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5136,
+      "memberIds": [
+        5136
+      ],
+      "lessonId": "grammar-lesson-062"
+    },
+    {
+      "id": "core-ところに",
+      "title": "〜ところに",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5135,
+      "memberIds": [
+        5135
+      ],
+      "lessonId": "grammar-lesson-063"
+    },
+    {
+      "id": "core-として",
+      "title": "〜として",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5122,
+      "memberIds": [
+        5122
+      ],
+      "lessonId": "grammar-lesson-064"
+    },
+    {
+      "id": "core-とのことだ",
+      "title": "〜とのことだ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5033,
+      "memberIds": [
+        5033
+      ],
+      "lessonId": "grammar-lesson-065"
+    },
+    {
+      "id": "core-との見解を示す",
+      "title": "〜との見解を示す",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5337,
+      "memberIds": [
+        5337
+      ],
+      "lessonId": "grammar-lesson-066"
+    },
+    {
+      "id": "core-とはいうものの",
+      "title": "〜とはいうものの",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5158,
+      "memberIds": [
+        5158
+      ],
+      "lessonId": "grammar-lesson-067"
+    },
+    {
+      "id": "core-とは限らない",
+      "title": "〜とは限らない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5105,
+      "memberIds": [
+        5105
+      ],
+      "lessonId": "grammar-lesson-068"
+    },
+    {
+      "id": "core-とみなされる",
+      "title": "〜とみなされる",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5334,
+      "memberIds": [
+        5334
+      ],
+      "lessonId": "grammar-lesson-069"
+    },
+    {
+      "id": "core-と仮定すると",
+      "title": "〜と仮定すると",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5233,
+      "memberIds": [
+        5233
+      ],
+      "lessonId": "grammar-lesson-070"
+    },
+    {
+      "id": "core-と化す",
+      "title": "〜と化す",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5329,
+      "memberIds": [
+        5329
+      ],
+      "lessonId": "grammar-lesson-071"
+    },
+    {
+      "id": "core-と取り返しがつかない",
+      "title": "〜と取り返しがつかない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5285,
+      "memberIds": [
+        5285
+      ],
+      "lessonId": "grammar-lesson-072"
+    },
+    {
+      "id": "core-と同時に",
+      "title": "〜と同時に",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5226,
+      "memberIds": [
+        5226
+      ],
+      "lessonId": "grammar-lesson-073"
+    },
+    {
+      "id": "core-と大変なことになる",
+      "title": "〜と大変なことになる",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5281,
+      "memberIds": [
+        5281
+      ],
+      "lessonId": "grammar-lesson-074"
+    },
+    {
+      "id": "core-と対照的に",
+      "title": "〜と対照的に",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5256,
+      "memberIds": [
+        5256
+      ],
+      "lessonId": "grammar-lesson-075"
+    },
+    {
+      "id": "core-と思いきや",
+      "title": "〜と思いきや",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5238,
+      "memberIds": [
+        5238
+      ],
+      "lessonId": "grammar-lesson-076"
+    },
+    {
+      "id": "core-と成り果てる",
+      "title": "〜と成り果てる",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5330,
+      "memberIds": [
+        5330
+      ],
+      "lessonId": "grammar-lesson-077"
+    },
+    {
+      "id": "core-と推測される",
+      "title": "〜と推測される",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5332,
+      "memberIds": [
+        5332
+      ],
+      "lessonId": "grammar-lesson-078"
+    },
+    {
+      "id": "core-と目される",
+      "title": "〜と目される",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5321,
+      "memberIds": [
+        5321
+      ],
+      "lessonId": "grammar-lesson-079"
+    },
+    {
+      "id": "core-と言っても過言ではない",
+      "title": "〜と言っても過言ではない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5237,
+      "memberIds": [
+        5237
+      ],
+      "lessonId": "grammar-lesson-080"
+    },
+    {
+      "id": "core-と言わざるをえない",
+      "title": "〜と言わざるを得ない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5288,
+      "memberIds": [
+        5288
+      ],
+      "lessonId": "grammar-lesson-081"
+    },
+    {
+      "id": "core-と言わんばかりに",
+      "title": "〜と言わんばかりに",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5309,
+      "memberIds": [
+        5309
+      ],
+      "lessonId": "grammar-lesson-082"
+    },
+    {
+      "id": "core-と評される",
+      "title": "〜と評される",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5322,
+      "memberIds": [
+        5322
+      ],
+      "lessonId": "grammar-lesson-083"
+    },
+    {
+      "id": "core-ながらも",
+      "title": "〜ながらも",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5008,
+      "memberIds": [
+        5008
+      ],
+      "lessonId": "grammar-lesson-084"
+    },
+    {
+      "id": "core-なくてはならない",
+      "title": "〜なくてはならない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5291,
+      "memberIds": [
+        5291
+      ],
+      "lessonId": "grammar-lesson-085"
+    },
+    {
+      "id": "core-なければ話にならない",
+      "title": "〜なければ話にならない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5299,
+      "memberIds": [
+        5299
+      ],
+      "lessonId": "grammar-lesson-086"
+    },
+    {
+      "id": "core-など",
+      "title": "〜など / なんか",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5146,
+      "memberIds": [
+        5146
+      ],
+      "lessonId": "grammar-lesson-087"
+    },
+    {
+      "id": "core-なり-なり",
+      "title": "〜なり〜なり",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5172,
+      "memberIds": [
+        5172
+      ],
+      "lessonId": "grammar-lesson-088"
+    },
+    {
+      "id": "core-にくらべ",
+      "title": "〜に比べ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5251,
+      "memberIds": [
+        5251
+      ],
+      "lessonId": "grammar-lesson-089"
+    },
+    {
+      "id": "core-にご注意ください",
+      "title": "〜にご注意ください",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5284,
+      "memberIds": [
+        5284
+      ],
+      "lessonId": "grammar-lesson-090"
+    },
+    {
+      "id": "core-について",
+      "title": "〜について",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5057,
+      "memberIds": [
+        5057
+      ],
+      "lessonId": "grammar-lesson-091"
+    },
+    {
+      "id": "core-にとって",
+      "title": "〜にとって",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5056,
+      "memberIds": [
+        5056
+      ],
+      "lessonId": "grammar-lesson-092"
+    },
+    {
+      "id": "core-にひけをとらない",
+      "title": "〜にひけをとらない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5259,
+      "memberIds": [
+        5259
+      ],
+      "lessonId": "grammar-lesson-093"
+    },
+    {
+      "id": "core-に伴う",
+      "title": "〜に伴う",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5269,
+      "memberIds": [
+        5269
+      ],
+      "lessonId": "grammar-lesson-094"
+    },
+    {
+      "id": "core-に加えて",
+      "title": "〜に加えて",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5063,
+      "memberIds": [
+        5063
+      ],
+      "lessonId": "grammar-lesson-095"
+    },
+    {
+      "id": "core-に匹敵する",
+      "title": "〜に匹敵する",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5255,
+      "memberIds": [
+        5255
+      ],
+      "lessonId": "grammar-lesson-096"
+    },
+    {
+      "id": "core-に反し",
+      "title": "〜に反し",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5252,
+      "memberIds": [
+        5252
+      ],
+      "lessonId": "grammar-lesson-097"
+    },
+    {
+      "id": "core-に反して",
+      "title": "〜に反して",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5005,
+      "memberIds": [
+        5005
+      ],
+      "lessonId": "grammar-lesson-098"
+    },
+    {
+      "id": "core-に反する",
+      "title": "〜に反する",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5058,
+      "memberIds": [
+        5058
+      ],
+      "lessonId": "grammar-lesson-099"
+    },
+    {
+      "id": "core-に端を発する",
+      "title": "〜に端を発する",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5264,
+      "memberIds": [
+        5264
+      ],
+      "lessonId": "grammar-lesson-100"
+    },
+    {
+      "id": "core-に至って",
+      "title": "〜に至って",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5147,
+      "memberIds": [
+        5147
+      ],
+      "lessonId": "grammar-lesson-101"
+    },
+    {
+      "id": "core-に起因して",
+      "title": "〜に起因して",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5263,
+      "memberIds": [
+        5263
+      ],
+      "lessonId": "grammar-lesson-102"
+    },
+    {
+      "id": "core-に起因する",
+      "title": "〜に起因する",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5262,
+      "memberIds": [
+        5262
+      ],
+      "lessonId": "grammar-lesson-103"
+    },
+    {
+      "id": "core-に越したことはない",
+      "title": "〜に越したことはない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5078,
+      "memberIds": [
+        5078
+      ],
+      "lessonId": "grammar-lesson-104"
+    },
+    {
+      "id": "core-に限った話ではない",
+      "title": "〜に限った話ではない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5278,
+      "memberIds": [
+        5278
+      ],
+      "lessonId": "grammar-lesson-105"
+    },
+    {
+      "id": "core-ねばならない",
+      "title": "〜ねばならない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5292,
+      "memberIds": [
+        5292
+      ],
+      "lessonId": "grammar-lesson-106"
+    },
+    {
+      "id": "core-のみ",
+      "title": "〜のみ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5274,
+      "memberIds": [
+        5274
+      ],
+      "lessonId": "grammar-lesson-107"
+    },
+    {
+      "id": "core-はずがない",
+      "title": "〜はずがない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5098,
+      "memberIds": [
+        5098
+      ],
+      "lessonId": "grammar-lesson-108"
+    },
+    {
+      "id": "core-はずだ",
+      "title": "〜はずだ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5101,
+      "memberIds": [
+        5101
+      ],
+      "lessonId": "grammar-lesson-109"
+    },
+    {
+      "id": "core-はずはない",
+      "title": "〜はずはない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5109,
+      "memberIds": [
+        5109
+      ],
+      "lessonId": "grammar-lesson-110"
+    },
+    {
+      "id": "core-ばかり",
+      "title": "〜ばかり",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5142,
+      "memberIds": [
+        5142
+      ],
+      "lessonId": "grammar-lesson-111"
+    },
+    {
+      "id": "core-ばよかった",
+      "title": "〜ばよかった",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5241,
+      "memberIds": [
+        5241
+      ],
+      "lessonId": "grammar-lesson-112"
+    },
+    {
+      "id": "core-べきだった",
+      "title": "〜べきだった",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5242,
+      "memberIds": [
+        5242
+      ],
+      "lessonId": "grammar-lesson-113"
+    },
+    {
+      "id": "core-ほど",
+      "title": "〜ほど",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5141,
+      "memberIds": [
+        5141
+      ],
+      "lessonId": "grammar-lesson-114"
+    },
+    {
+      "id": "core-まで",
+      "title": "〜まで",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5066,
+      "memberIds": [
+        5066
+      ],
+      "lessonId": "grammar-lesson-115"
+    },
+    {
+      "id": "core-までもない",
+      "title": "〜までもない",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5144,
+      "memberIds": [
+        5144
+      ],
+      "lessonId": "grammar-lesson-116"
+    },
+    {
+      "id": "core-ゆえの",
+      "title": "〜ゆえの",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5267,
+      "memberIds": [
+        5267
+      ],
+      "lessonId": "grammar-lesson-117"
+    },
+    {
+      "id": "core-をへて",
+      "title": "〜を経て",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5198,
+      "memberIds": [
+        5198
+      ],
+      "lessonId": "grammar-lesson-118"
+    },
+    {
+      "id": "core-を前に",
+      "title": "〜を前に",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5138,
+      "memberIds": [
+        5138
+      ],
+      "lessonId": "grammar-lesson-119"
+    },
+    {
+      "id": "core-を肝に銘じる",
+      "title": "〜を肝に銘じる",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5290,
+      "memberIds": [
+        5290
+      ],
+      "lessonId": "grammar-lesson-120"
+    },
+    {
+      "id": "core-を要する",
+      "title": "〜を要する",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5293,
+      "memberIds": [
+        5293
+      ],
+      "lessonId": "grammar-lesson-121"
+    },
+    {
+      "id": "core-を除けば",
+      "title": "〜を除けば",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5276,
+      "memberIds": [
+        5276
+      ],
+      "lessonId": "grammar-lesson-122"
+    },
+    {
+      "id": "core-上で",
+      "title": "〜上で",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5019,
+      "memberIds": [
+        5019
+      ],
+      "lessonId": "grammar-lesson-123"
+    },
+    {
+      "id": "core-向きだ",
+      "title": "〜向きだ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5080,
+      "memberIds": [
+        5080
+      ],
+      "lessonId": "grammar-lesson-124"
+    },
+    {
+      "id": "core-必至だ",
+      "title": "〜必至だ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5297,
+      "memberIds": [
+        5297
+      ],
+      "lessonId": "grammar-lesson-125"
+    },
+    {
+      "id": "core-極みだ",
+      "title": "〜極みだ",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5310,
+      "memberIds": [
+        5310
+      ],
+      "lessonId": "grammar-lesson-126"
+    },
+    {
+      "id": "core-然とした",
+      "title": "〜然とした",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5319,
+      "memberIds": [
+        5319
+      ],
+      "lessonId": "grammar-lesson-127"
+    },
+    {
+      "id": "core-由-しき",
+      "title": "〜由々しき",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5289,
+      "memberIds": [
+        5289
+      ],
+      "lessonId": "grammar-lesson-128"
+    },
+    {
+      "id": "core-矢先に",
+      "title": "〜矢先に",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5228,
+      "memberIds": [
+        5228
+      ],
+      "lessonId": "grammar-lesson-129"
+    },
+    {
+      "id": "core-義務がある",
+      "title": "〜義務がある",
+      "courseLevel": "N2_CORE",
+      "primaryId": 5294,
+      "memberIds": [
+        5294
+      ],
+      "lessonId": "grammar-lesson-130"
+    },
+    {
+      "id": "secondary-honorifics",
+      "title": "Honorifics & Humble Forms",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5211,
+      "memberIds": [
+        5211,
+        5212,
+        5213,
+        5214,
+        5215,
+        5216
+      ],
+      "lessonId": "grammar-lesson-131"
+    },
+    {
+      "id": "secondary-voice",
+      "title": "Voice & Benefactives",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5201,
+      "memberIds": [
+        5201,
+        5202,
+        5203,
+        5204,
+        5205,
+        5206,
+        5207,
+        5208
+      ],
+      "lessonId": "grammar-lesson-132"
+    },
+    {
+      "id": "secondary-hearsay-impression",
+      "title": "Hearsay & Impression",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5037,
+      "memberIds": [
+        5037,
+        5039,
+        5182,
+        5183,
+        5184,
+        5185,
+        5186,
+        5187,
+        5189,
+        5190
+      ],
+      "lessonId": "grammar-lesson-133"
+    },
+    {
+      "id": "secondary-formal-written",
+      "title": "Formal Written Connectors",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5041,
+      "memberIds": [
+        5041,
+        5059,
+        5060,
+        5067,
+        5090,
+        5192,
+        5193,
+        5196
+      ],
+      "lessonId": "grammar-lesson-134"
+    },
+    {
+      "id": "secondary-discourse",
+      "title": "Discourse & Topic",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5156,
+      "memberIds": [
+        5156,
+        5174,
+        5179,
+        5250,
+        5496,
+        5497
+      ],
+      "lessonId": "grammar-lesson-135"
+    },
+    {
+      "id": "sec-bucket-advice-recommendation",
+      "title": "〜たらどうか",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5351,
+      "memberIds": [
+        5351,
+        5352,
+        5354,
+        5355,
+        5356,
+        5357,
+        5358,
+        5359,
+        5360
+      ],
+      "lessonId": "grammar-lesson-136"
+    },
+    {
+      "id": "sec-bucket-attempt-trial",
+      "title": "〜てみるものだ",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5411,
+      "memberIds": [
+        5411,
+        5412,
+        5413,
+        5414,
+        5415,
+        5416,
+        5417,
+        5418,
+        5419,
+        5420
+      ],
+      "lessonId": "grammar-lesson-137"
+    },
+    {
+      "id": "sec-bucket-confirmation-certainty",
+      "title": "〜間違いない",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5461,
+      "memberIds": [
+        5461,
+        5462,
+        5463,
+        5464,
+        5465,
+        5466,
+        5467,
+        5468,
+        5469,
+        5470
+      ],
+      "lessonId": "grammar-lesson-138"
+    },
+    {
+      "id": "sec-bucket-continuity-persistence",
+      "title": "〜通す",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5421,
+      "memberIds": [
+        5421,
+        5422,
+        5423,
+        5424,
+        5425,
+        5426,
+        5427,
+        5428,
+        5429,
+        5430
+      ],
+      "lessonId": "grammar-lesson-139"
+    },
+    {
+      "id": "sec-bucket-contradiction-paradox",
+      "title": "〜と裏腹に",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5381,
+      "memberIds": [
+        5381,
+        5382,
+        5383,
+        5384,
+        5385,
+        5386,
+        5387,
+        5388,
+        5389,
+        5390
+      ],
+      "lessonId": "grammar-lesson-140"
+    },
+    {
+      "id": "sec-bucket-exaggeration-understatement",
+      "title": "〜といってもいいすぎではない",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5471,
+      "memberIds": [
+        5471,
+        5472,
+        5473,
+        5474,
+        5475,
+        5476,
+        5477,
+        5478,
+        5479,
+        5480
+      ],
+      "lessonId": "grammar-lesson-141"
+    },
+    {
+      "id": "sec-bucket-formal-written-register",
+      "title": "〜に鑑み",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5393,
+      "memberIds": [
+        5393,
+        5394,
+        5395,
+        5396,
+        5399,
+        5400
+      ],
+      "lessonId": "grammar-lesson-142"
+    },
+    {
+      "id": "sec-bucket-habitual-actions-recurring-pat",
+      "title": "〜ては〜ては",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5341,
+      "memberIds": [
+        5341,
+        5343,
+        5347,
+        5348,
+        5349,
+        5350
+      ],
+      "lessonId": "grammar-lesson-143"
+    },
+    {
+      "id": "sec-bucket-purpose-intention",
+      "title": "〜んがための",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5361,
+      "memberIds": [
+        5361,
+        5362,
+        5363,
+        5364,
+        5365,
+        5366,
+        5368,
+        5369,
+        5370
+      ],
+      "lessonId": "grammar-lesson-144"
+    },
+    {
+      "id": "sec-bucket-result-consequence",
+      "title": "〜に終わる",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5443,
+      "memberIds": [
+        5443,
+        5445,
+        5446,
+        5447,
+        5448,
+        5449,
+        5450
+      ],
+      "lessonId": "grammar-lesson-145"
+    },
+    {
+      "id": "sec-bucket-selection-preference",
+      "title": "〜に軍配が上がる",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5451,
+      "memberIds": [
+        5451,
+        5452,
+        5453,
+        5454,
+        5455,
+        5456,
+        5457,
+        5458,
+        5459,
+        5460
+      ],
+      "lessonId": "grammar-lesson-146"
+    },
+    {
+      "id": "sec-bucket-similarity-equivalence",
+      "title": "〜も同様に",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5401,
+      "memberIds": [
+        5401,
+        5402,
+        5403,
+        5404,
+        5405,
+        5406,
+        5407,
+        5408,
+        5409,
+        5410
+      ],
+      "lessonId": "grammar-lesson-147"
+    },
+    {
+      "id": "sec-bucket-summary-conclusion",
+      "title": "〜と言えよう",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5491,
+      "memberIds": [
+        5491,
+        5493,
+        5494,
+        5495,
+        5498,
+        5499,
+        5500
+      ],
+      "lessonId": "grammar-lesson-148"
+    },
+    {
+      "id": "sec-bucket-timing-opportunity",
+      "title": "〜潮時だ",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5433,
+      "memberIds": [
+        5433,
+        5434,
+        5435,
+        5436,
+        5437,
+        5438,
+        5439,
+        5440
+      ],
+      "lessonId": "grammar-lesson-149"
+    },
+    {
+      "id": "sec-merged-5217",
+      "title": "〜くださる",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5217,
+      "memberIds": [
+        5217,
+        5218,
+        5219,
+        5220,
+        5490,
+        5492
+      ],
+      "lessonId": "grammar-lesson-150"
+    },
+    {
+      "id": "sec-merged-5333",
+      "title": "〜と考えられる",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5333,
+      "memberIds": [
+        5333,
+        5339,
+        5340,
+        5481,
+        5482,
+        5483,
+        5484,
+        5485
+      ],
+      "lessonId": "grammar-lesson-151"
+    },
+    {
+      "id": "sec-merged-5374",
+      "title": "〜たらありゃしない",
+      "courseLevel": "N2_SECONDARY",
+      "primaryId": 5374,
+      "memberIds": [
+        5374,
+        5375,
+        5376,
+        5377,
+        5380,
+        5486,
+        5487,
+        5488,
+        5489
+      ],
+      "lessonId": "grammar-lesson-152"
+    },
+    {
+      "id": "n3-うちに",
+      "title": "〜うちに",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5137,
+      "memberIds": [
+        5137
+      ],
+      "lessonId": "n3-grammar-lesson-153"
+    },
+    {
+      "id": "n3-おきに",
+      "title": "〜おきに",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5344,
+      "memberIds": [
+        5344
+      ],
+      "lessonId": "n3-grammar-lesson-154"
+    },
+    {
+      "id": "n3-くらい",
+      "title": "〜くらい / ぐらい",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5145,
+      "memberIds": [
+        5145
+      ],
+      "lessonId": "n3-grammar-lesson-155"
+    },
+    {
+      "id": "n3-しか～ない",
+      "title": "〜しか〜ない",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5143,
+      "memberIds": [
+        5143
+      ],
+      "lessonId": "n3-grammar-lesson-156"
+    },
+    {
+      "id": "n3-たとたんに",
+      "title": "〜たとたんに",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5131,
+      "memberIds": [
+        5131
+      ],
+      "lessonId": "n3-grammar-lesson-157"
+    },
+    {
+      "id": "n3-ためには",
+      "title": "〜ためには",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5017,
+      "memberIds": [
+        5017
+      ],
+      "lessonId": "n3-grammar-lesson-158"
+    },
+    {
+      "id": "n3-つもりで",
+      "title": "〜つもりで",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5367,
+      "memberIds": [
+        5367
+      ],
+      "lessonId": "n3-grammar-lesson-159"
+    },
+    {
+      "id": "n3-ていく",
+      "title": "〜ていく",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5073,
+      "memberIds": [
+        5073
+      ],
+      "lessonId": "n3-grammar-lesson-160"
+    },
+    {
+      "id": "n3-てくる",
+      "title": "〜てくる",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5074,
+      "memberIds": [
+        5074
+      ],
+      "lessonId": "n3-grammar-lesson-161"
+    },
+    {
+      "id": "n3-てはいけない",
+      "title": "〜てはいけない",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5111,
+      "memberIds": [
+        5111
+      ],
+      "lessonId": "n3-grammar-lesson-162"
+    },
+    {
+      "id": "n3-によると",
+      "title": "〜によると",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5125,
+      "memberIds": [
+        5125
+      ],
+      "lessonId": "n3-grammar-lesson-163"
+    },
+    {
+      "id": "n3-ほど～ない",
+      "title": "〜ほど〜ない",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5021,
+      "memberIds": [
+        5021
+      ],
+      "lessonId": "n3-grammar-lesson-164"
+    },
+    {
+      "id": "n3-ようだ",
+      "title": "〜ようだ",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5032,
+      "memberIds": [
+        5032
+      ],
+      "lessonId": "n3-grammar-lesson-165"
+    },
+    {
+      "id": "n3-ようとする",
+      "title": "〜ようとする",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5081,
+      "memberIds": [
+        5081
+      ],
+      "lessonId": "n3-grammar-lesson-166"
+    },
+    {
+      "id": "n3-ようにする",
+      "title": "〜ようにする",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5082,
+      "memberIds": [
+        5082
+      ],
+      "lessonId": "n3-grammar-lesson-167"
+    },
+    {
+      "id": "n3-ようにと",
+      "title": "〜ようにと",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5089,
+      "memberIds": [
+        5089
+      ],
+      "lessonId": "n3-grammar-lesson-168"
+    },
+    {
+      "id": "n3-ようになる",
+      "title": "〜ようになる",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5075,
+      "memberIds": [
+        5075
+      ],
+      "lessonId": "n3-grammar-lesson-169"
+    },
+    {
+      "id": "n3-らしい",
+      "title": "〜らしい",
+      "courseLevel": "N3_REVIEW",
+      "primaryId": 5031,
+      "memberIds": [
+        5031
+      ],
+      "lessonId": "n3-grammar-lesson-170"
+    },
+    {
+      "id": "n1-5004",
+      "title": "〜とはいえ",
+      "courseLevel": "N1",
+      "primaryId": 5004,
+      "memberIds": [
+        5004
+      ],
+      "lessonId": "n1-grammar-lesson-171"
+    },
+    {
+      "id": "n1-5083",
+      "title": "〜てみせる",
+      "courseLevel": "N1",
+      "primaryId": 5083,
+      "memberIds": [
+        5083
+      ],
+      "lessonId": "n1-grammar-lesson-172"
+    },
+    {
+      "id": "n1-5088",
+      "title": "〜を余儀なくされる",
+      "courseLevel": "N1",
+      "primaryId": 5088,
+      "memberIds": [
+        5088
+      ],
+      "lessonId": "n1-grammar-lesson-173"
+    },
+    {
+      "id": "n1-5107",
+      "title": "〜ないとも限らない",
+      "courseLevel": "N1",
+      "primaryId": 5107,
+      "memberIds": [
+        5107
+      ],
+      "lessonId": "n1-grammar-lesson-174"
+    },
+    {
+      "id": "n1-5118",
+      "title": "〜ないではおかない",
+      "courseLevel": "N1",
+      "primaryId": 5118,
+      "memberIds": [
+        5118
+      ],
+      "lessonId": "n1-grammar-lesson-175"
+    },
+    {
+      "id": "n1-5124",
+      "title": "〜をもって",
+      "courseLevel": "N1",
+      "primaryId": 5124,
+      "memberIds": [
+        5124
+      ],
+      "lessonId": "n1-grammar-lesson-176"
+    },
+    {
+      "id": "n1-5127",
+      "title": "〜に即して",
+      "courseLevel": "N1",
+      "primaryId": 5127,
+      "memberIds": [
+        5127
+      ],
+      "lessonId": "n1-grammar-lesson-177"
+    },
+    {
+      "id": "n1-5133",
+      "title": "〜てからというもの",
+      "courseLevel": "N1",
+      "primaryId": 5133,
+      "memberIds": [
+        5133
+      ],
+      "lessonId": "n1-grammar-lesson-178"
+    },
+    {
+      "id": "n1-5148",
+      "title": "〜極まりない",
+      "courseLevel": "N1",
+      "primaryId": 5148,
+      "memberIds": [
+        5148
+      ],
+      "lessonId": "n1-grammar-lesson-179"
+    },
+    {
+      "id": "n1-5149",
+      "title": "〜にとどまらず",
+      "courseLevel": "N1",
+      "primaryId": 5149,
+      "memberIds": [
+        5149
+      ],
+      "lessonId": "n1-grammar-lesson-180"
+    },
+    {
+      "id": "n1-5150",
+      "title": "〜に足る",
+      "courseLevel": "N1",
+      "primaryId": 5150,
+      "memberIds": [
+        5150
+      ],
+      "lessonId": "n1-grammar-lesson-181"
+    },
+    {
+      "id": "n1-5154",
+      "title": "〜はさておき",
+      "courseLevel": "N1",
+      "primaryId": 5154,
+      "memberIds": [
+        5154
+      ],
+      "lessonId": "n1-grammar-lesson-182"
+    },
+    {
+      "id": "n1-5155",
+      "title": "〜もさることながら",
+      "courseLevel": "N1",
+      "primaryId": 5155,
+      "memberIds": [
+        5155
+      ],
+      "lessonId": "n1-grammar-lesson-183"
+    },
+    {
+      "id": "n1-5157",
+      "title": "〜ないまでも",
+      "courseLevel": "N1",
+      "primaryId": 5157,
+      "memberIds": [
+        5157
+      ],
+      "lessonId": "n1-grammar-lesson-184"
+    },
+    {
+      "id": "n1-5160",
+      "title": "〜たところで",
+      "courseLevel": "N1",
+      "primaryId": 5160,
+      "memberIds": [
+        5160
+      ],
+      "lessonId": "n1-grammar-lesson-185"
+    },
+    {
+      "id": "n1-5161",
+      "title": "〜ゆえに",
+      "courseLevel": "N1",
+      "primaryId": 5161,
+      "memberIds": [
+        5161
+      ],
+      "lessonId": "n1-grammar-lesson-186"
+    },
+    {
+      "id": "n1-5168",
+      "title": "〜とあって",
+      "courseLevel": "N1",
+      "primaryId": 5168,
+      "memberIds": [
+        5168
+      ],
+      "lessonId": "n1-grammar-lesson-187"
+    },
+    {
+      "id": "n1-5173",
+      "title": "〜であれ",
+      "courseLevel": "N1",
+      "primaryId": 5173,
+      "memberIds": [
+        5173
+      ],
+      "lessonId": "n1-grammar-lesson-188"
+    },
+    {
+      "id": "n1-5175",
+      "title": "〜ときたら",
+      "courseLevel": "N1",
+      "primaryId": 5175,
+      "memberIds": [
+        5175
+      ],
+      "lessonId": "n1-grammar-lesson-189"
+    },
+    {
+      "id": "n1-5177",
+      "title": "〜はおろか",
+      "courseLevel": "N1",
+      "primaryId": 5177,
+      "memberIds": [
+        5177
+      ],
+      "lessonId": "n1-grammar-lesson-190"
+    },
+    {
+      "id": "n1-5180",
+      "title": "〜なんて",
+      "courseLevel": "N1",
+      "primaryId": 5180,
+      "memberIds": [
+        5180
+      ],
+      "lessonId": "n1-grammar-lesson-191"
+    },
+    {
+      "id": "n1-5181",
+      "title": "〜も同然だ",
+      "courseLevel": "N1",
+      "primaryId": 5181,
+      "memberIds": [
+        5181
+      ],
+      "lessonId": "n1-grammar-lesson-192"
+    },
+    {
+      "id": "n1-5188",
+      "title": "〜めく",
+      "courseLevel": "N1",
+      "primaryId": 5188,
+      "memberIds": [
+        5188
+      ],
+      "lessonId": "n1-grammar-lesson-193"
+    },
+    {
+      "id": "n1-5191",
+      "title": "〜を踏まえて",
+      "courseLevel": "N1",
+      "primaryId": 5191,
+      "memberIds": [
+        5191
+      ],
+      "lessonId": "n1-grammar-lesson-194"
+    },
+    {
+      "id": "n1-5194",
+      "title": "〜のいかんによらず",
+      "courseLevel": "N1",
+      "primaryId": 5194,
+      "memberIds": [
+        5194
+      ],
+      "lessonId": "n1-grammar-lesson-195"
+    },
+    {
+      "id": "n1-5195",
+      "title": "〜かたがた",
+      "courseLevel": "N1",
+      "primaryId": 5195,
+      "memberIds": [
+        5195
+      ],
+      "lessonId": "n1-grammar-lesson-196"
+    },
+    {
+      "id": "n1-5197",
+      "title": "〜かたわら",
+      "courseLevel": "N1",
+      "primaryId": 5197,
+      "memberIds": [
+        5197
+      ],
+      "lessonId": "n1-grammar-lesson-197"
+    },
+    {
+      "id": "n1-5199",
+      "title": "〜に至るまで",
+      "courseLevel": "N1",
+      "primaryId": 5199,
+      "memberIds": [
+        5199
+      ],
+      "lessonId": "n1-grammar-lesson-198"
+    },
+    {
+      "id": "n1-5209",
+      "title": "〜んばかりに",
+      "courseLevel": "N1",
+      "primaryId": 5209,
+      "memberIds": [
+        5209
+      ],
+      "lessonId": "n1-grammar-lesson-199"
+    },
+    {
+      "id": "n1-5210",
+      "title": "〜んがために",
+      "courseLevel": "N1",
+      "primaryId": 5210,
+      "memberIds": [
+        5210
+      ],
+      "lessonId": "n1-grammar-lesson-200"
+    },
+    {
+      "id": "n1-5222",
+      "title": "〜がてら",
+      "courseLevel": "N1",
+      "primaryId": 5222,
+      "memberIds": [
+        5222
+      ],
+      "lessonId": "n1-grammar-lesson-201"
+    },
+    {
+      "id": "n1-5223",
+      "title": "〜や否や",
+      "courseLevel": "N1",
+      "primaryId": 5223,
+      "memberIds": [
+        5223
+      ],
+      "lessonId": "n1-grammar-lesson-202"
+    },
+    {
+      "id": "n1-5224",
+      "title": "〜そばから",
+      "courseLevel": "N1",
+      "primaryId": 5224,
+      "memberIds": [
+        5224
+      ],
+      "lessonId": "n1-grammar-lesson-203"
+    },
+    {
+      "id": "n1-5225",
+      "title": "〜なり",
+      "courseLevel": "N1",
+      "primaryId": 5225,
+      "memberIds": [
+        5225
+      ],
+      "lessonId": "n1-grammar-lesson-204"
+    },
+    {
+      "id": "n1-5230",
+      "title": "〜が早いか",
+      "courseLevel": "N1",
+      "primaryId": 5230,
+      "memberIds": [
+        5230
+      ],
+      "lessonId": "n1-grammar-lesson-205"
+    },
+    {
+      "id": "n1-5235",
+      "title": "〜なくしては",
+      "courseLevel": "N1",
+      "primaryId": 5235,
+      "memberIds": [
+        5235
+      ],
+      "lessonId": "n1-grammar-lesson-206"
+    },
+    {
+      "id": "n1-5236",
+      "title": "〜あっての",
+      "courseLevel": "N1",
+      "primaryId": 5236,
+      "memberIds": [
+        5236
+      ],
+      "lessonId": "n1-grammar-lesson-207"
+    },
+    {
+      "id": "n1-5239",
+      "title": "〜たら最後",
+      "courseLevel": "N1",
+      "primaryId": 5239,
+      "memberIds": [
+        5239
+      ],
+      "lessonId": "n1-grammar-lesson-208"
+    },
+    {
+      "id": "n1-5243",
+      "title": "〜とは",
+      "courseLevel": "N1",
+      "primaryId": 5243,
+      "memberIds": [
+        5243
+      ],
+      "lessonId": "n1-grammar-lesson-209"
+    },
+    {
+      "id": "n1-5245",
+      "title": "〜きらいがある",
+      "courseLevel": "N1",
+      "primaryId": 5245,
+      "memberIds": [
+        5245
+      ],
+      "lessonId": "n1-grammar-lesson-210"
+    },
+    {
+      "id": "n1-5246",
+      "title": "〜てしかるべきだ",
+      "courseLevel": "N1",
+      "primaryId": 5246,
+      "memberIds": [
+        5246
+      ],
+      "lessonId": "n1-grammar-lesson-211"
+    },
+    {
+      "id": "n1-5247",
+      "title": "〜まじき",
+      "courseLevel": "N1",
+      "primaryId": 5247,
+      "memberIds": [
+        5247
+      ],
+      "lessonId": "n1-grammar-lesson-212"
+    },
+    {
+      "id": "n1-5248",
+      "title": "〜たりとも〜ない",
+      "courseLevel": "N1",
+      "primaryId": 5248,
+      "memberIds": [
+        5248
+      ],
+      "lessonId": "n1-grammar-lesson-213"
+    },
+    {
+      "id": "n1-5249",
+      "title": "〜には当たらない",
+      "courseLevel": "N1",
+      "primaryId": 5249,
+      "memberIds": [
+        5249
+      ],
+      "lessonId": "n1-grammar-lesson-214"
+    },
+    {
+      "id": "n1-5253",
+      "title": "〜にひきかえ",
+      "courseLevel": "N1",
+      "primaryId": 5253,
+      "memberIds": [
+        5253
+      ],
+      "lessonId": "n1-grammar-lesson-215"
+    },
+    {
+      "id": "n1-5254",
+      "title": "〜にもまして",
+      "courseLevel": "N1",
+      "primaryId": 5254,
+      "memberIds": [
+        5254
+      ],
+      "lessonId": "n1-grammar-lesson-216"
+    },
+    {
+      "id": "n1-5261",
+      "title": "〜ばこそ",
+      "courseLevel": "N1",
+      "primaryId": 5261,
+      "memberIds": [
+        5261
+      ],
+      "lessonId": "n1-grammar-lesson-217"
+    },
+    {
+      "id": "n1-5265",
+      "title": "〜がゆえに",
+      "courseLevel": "N1",
+      "primaryId": 5265,
+      "memberIds": [
+        5265
+      ],
+      "lessonId": "n1-grammar-lesson-218"
+    },
+    {
+      "id": "n1-5279",
+      "title": "〜ならいざしらず",
+      "courseLevel": "N1",
+      "primaryId": 5279,
+      "memberIds": [
+        5279
+      ],
+      "lessonId": "n1-grammar-lesson-219"
+    },
+    {
+      "id": "n1-5280",
+      "title": "〜でなくてなんだろう",
+      "courseLevel": "N1",
+      "primaryId": 5280,
+      "memberIds": [
+        5280
+      ],
+      "lessonId": "n1-grammar-lesson-220"
+    },
+    {
+      "id": "n1-5282",
+      "title": "〜には及ばない",
+      "courseLevel": "N1",
+      "primaryId": 5282,
+      "memberIds": [
+        5282
+      ],
+      "lessonId": "n1-grammar-lesson-221"
+    },
+    {
+      "id": "n1-5287",
+      "title": "〜にも程がある",
+      "courseLevel": "N1",
+      "primaryId": 5287,
+      "memberIds": [
+        5287
+      ],
+      "lessonId": "n1-grammar-lesson-222"
+    },
+    {
+      "id": "n1-5296",
+      "title": "〜べからず",
+      "courseLevel": "N1",
+      "primaryId": 5296,
+      "memberIds": [
+        5296
+      ],
+      "lessonId": "n1-grammar-lesson-223"
+    },
+    {
+      "id": "n1-5301",
+      "title": "〜てやまない",
+      "courseLevel": "N1",
+      "primaryId": 5301,
+      "memberIds": [
+        5301
+      ],
+      "lessonId": "n1-grammar-lesson-224"
+    },
+    {
+      "id": "n1-5302",
+      "title": "〜んばかりだ",
+      "courseLevel": "N1",
+      "primaryId": 5302,
+      "memberIds": [
+        5302
+      ],
+      "lessonId": "n1-grammar-lesson-225"
+    },
+    {
+      "id": "n1-5303",
+      "title": "〜すら",
+      "courseLevel": "N1",
+      "primaryId": 5303,
+      "memberIds": [
+        5303
+      ],
+      "lessonId": "n1-grammar-lesson-226"
+    },
+    {
+      "id": "n1-5304",
+      "title": "〜だに",
+      "courseLevel": "N1",
+      "primaryId": 5304,
+      "memberIds": [
+        5304
+      ],
+      "lessonId": "n1-grammar-lesson-227"
+    },
+    {
+      "id": "n1-5307",
+      "title": "〜べく",
+      "courseLevel": "N1",
+      "primaryId": 5307,
+      "memberIds": [
+        5307
+      ],
+      "lessonId": "n1-grammar-lesson-228"
+    },
+    {
+      "id": "n1-5311",
+      "title": "〜ずくめ",
+      "courseLevel": "N1",
+      "primaryId": 5311,
+      "memberIds": [
+        5311
+      ],
+      "lessonId": "n1-grammar-lesson-229"
+    },
+    {
+      "id": "n1-5313",
+      "title": "〜たきり",
+      "courseLevel": "N1",
+      "primaryId": 5313,
+      "memberIds": [
+        5313
+      ],
+      "lessonId": "n1-grammar-lesson-230"
+    },
+    {
+      "id": "n1-5314",
+      "title": "〜まみれ",
+      "courseLevel": "N1",
+      "primaryId": 5314,
+      "memberIds": [
+        5314
+      ],
+      "lessonId": "n1-grammar-lesson-231"
+    },
+    {
+      "id": "n1-5315",
+      "title": "〜づくし",
+      "courseLevel": "N1",
+      "primaryId": 5315,
+      "memberIds": [
+        5315
+      ],
+      "lessonId": "n1-grammar-lesson-232"
+    },
+    {
+      "id": "n1-5316",
+      "title": "〜三昧",
+      "courseLevel": "N1",
+      "primaryId": 5316,
+      "memberIds": [
+        5316
+      ],
+      "lessonId": "n1-grammar-lesson-233"
+    },
+    {
+      "id": "n1-5317",
+      "title": "〜一辺倒",
+      "courseLevel": "N1",
+      "primaryId": 5317,
+      "memberIds": [
+        5317
+      ],
+      "lessonId": "n1-grammar-lesson-234"
+    },
+    {
+      "id": "n1-5320",
+      "title": "〜がましい",
+      "courseLevel": "N1",
+      "primaryId": 5320,
+      "memberIds": [
+        5320
+      ],
+      "lessonId": "n1-grammar-lesson-235"
+    },
+    {
+      "id": "n1-5323",
+      "title": "〜めいた",
+      "courseLevel": "N1",
+      "primaryId": 5323,
+      "memberIds": [
+        5323
+      ],
+      "lessonId": "n1-grammar-lesson-236"
+    },
+    {
+      "id": "n1-5324",
+      "title": "〜さながら",
+      "courseLevel": "N1",
+      "primaryId": 5324,
+      "memberIds": [
+        5324
+      ],
+      "lessonId": "n1-grammar-lesson-237"
+    },
+    {
+      "id": "n1-5325",
+      "title": "〜たるもの",
+      "courseLevel": "N1",
+      "primaryId": 5325,
+      "memberIds": [
+        5325
+      ],
+      "lessonId": "n1-grammar-lesson-238"
+    },
+    {
+      "id": "n1-5326",
+      "title": "〜と相まって",
+      "courseLevel": "N1",
+      "primaryId": 5326,
+      "memberIds": [
+        5326
+      ],
+      "lessonId": "n1-grammar-lesson-239"
+    },
+    {
+      "id": "n1-5327",
+      "title": "〜にして",
+      "courseLevel": "N1",
+      "primaryId": 5327,
+      "memberIds": [
+        5327
+      ],
+      "lessonId": "n1-grammar-lesson-240"
+    },
+    {
+      "id": "n1-5328",
+      "title": "〜ながらに",
+      "courseLevel": "N1",
+      "primaryId": 5328,
+      "memberIds": [
+        5328
+      ],
+      "lessonId": "n1-grammar-lesson-241"
+    },
+    {
+      "id": "n1-5331",
+      "title": "〜のではあるまいか",
+      "courseLevel": "N1",
+      "primaryId": 5331,
+      "memberIds": [
+        5331
+      ],
+      "lessonId": "n1-grammar-lesson-242"
+    },
+    {
+      "id": "n1-5346",
+      "title": "〜といい〜といい",
+      "courseLevel": "N1",
+      "primaryId": 5346,
+      "memberIds": [
+        5346
+      ],
+      "lessonId": "n1-grammar-lesson-243"
+    },
+    {
+      "id": "n1-5353",
+      "title": "〜ものを",
+      "courseLevel": "N1",
+      "primaryId": 5353,
+      "memberIds": [
+        5353
+      ],
+      "lessonId": "n1-grammar-lesson-244"
+    },
+    {
+      "id": "n1-5371",
+      "title": "〜極まる",
+      "courseLevel": "N1",
+      "primaryId": 5371,
+      "memberIds": [
+        5371
+      ],
+      "lessonId": "n1-grammar-lesson-245"
+    },
+    {
+      "id": "n1-5372",
+      "title": "〜この上ない",
+      "courseLevel": "N1",
+      "primaryId": 5372,
+      "memberIds": [
+        5372
+      ],
+      "lessonId": "n1-grammar-lesson-246"
+    },
+    {
+      "id": "n1-5373",
+      "title": "〜と言ったらない",
+      "courseLevel": "N1",
+      "primaryId": 5373,
+      "memberIds": [
+        5373
+      ],
+      "lessonId": "n1-grammar-lesson-247"
+    },
+    {
+      "id": "n1-5378",
+      "title": "〜至極",
+      "courseLevel": "N1",
+      "primaryId": 5378,
+      "memberIds": [
+        5378
+      ],
+      "lessonId": "n1-grammar-lesson-248"
+    },
+    {
+      "id": "n1-5391",
+      "title": "〜べからざる",
+      "courseLevel": "N1",
+      "primaryId": 5391,
+      "memberIds": [
+        5391
+      ],
+      "lessonId": "n1-grammar-lesson-249"
+    },
+    {
+      "id": "n1-5392",
+      "title": "〜いかんによっては",
+      "courseLevel": "N1",
+      "primaryId": 5392,
+      "memberIds": [
+        5392
+      ],
+      "lessonId": "n1-grammar-lesson-250"
+    },
+    {
+      "id": "n1-5397",
+      "title": "〜に足りない",
+      "courseLevel": "N1",
+      "primaryId": 5397,
+      "memberIds": [
+        5397
+      ],
+      "lessonId": "n1-grammar-lesson-251"
+    },
+    {
+      "id": "n1-5398",
+      "title": "〜に忍びない",
+      "courseLevel": "N1",
+      "primaryId": 5398,
+      "memberIds": [
+        5398
+      ],
+      "lessonId": "n1-grammar-lesson-252"
+    },
+    {
+      "id": "n1-5432",
+      "title": "〜を境に",
+      "courseLevel": "N1",
+      "primaryId": 5432,
+      "memberIds": [
+        5432
+      ],
+      "lessonId": "n1-grammar-lesson-253"
+    },
+    {
+      "id": "n1-5444",
+      "title": "〜に至る",
+      "courseLevel": "N1",
+      "primaryId": 5444,
+      "memberIds": [
+        5444
+      ],
+      "lessonId": "n1-grammar-lesson-254"
+    }
+  ],
+  "counts": {
+    "rawN2": 398,
+    "rawN1": 84,
+    "rawN3": 18,
+    "coreFamilies": 130,
+    "secondaryFamilies": 22,
+    "totalN2Families": 152,
+    "n3Families": 18,
+    "n1Families": 84,
+    "lessons": 254
+  },
+  "n2LessonIds": [
+    "grammar-lesson-001",
+    "grammar-lesson-002",
+    "grammar-lesson-003",
+    "grammar-lesson-004",
+    "grammar-lesson-005",
+    "grammar-lesson-006",
+    "grammar-lesson-007",
+    "grammar-lesson-008",
+    "grammar-lesson-009",
+    "grammar-lesson-010",
+    "grammar-lesson-011",
+    "grammar-lesson-012",
+    "grammar-lesson-013",
+    "grammar-lesson-014",
+    "grammar-lesson-015",
+    "grammar-lesson-016",
+    "grammar-lesson-017",
+    "grammar-lesson-018",
+    "grammar-lesson-019",
+    "grammar-lesson-020",
+    "grammar-lesson-021",
+    "grammar-lesson-022",
+    "grammar-lesson-023",
+    "grammar-lesson-024",
+    "grammar-lesson-025",
+    "grammar-lesson-026",
+    "grammar-lesson-027",
+    "grammar-lesson-028",
+    "grammar-lesson-029",
+    "grammar-lesson-030",
+    "grammar-lesson-031",
+    "grammar-lesson-032",
+    "grammar-lesson-033",
+    "grammar-lesson-034",
+    "grammar-lesson-035",
+    "grammar-lesson-036",
+    "grammar-lesson-037",
+    "grammar-lesson-038",
+    "grammar-lesson-039",
+    "grammar-lesson-040",
+    "grammar-lesson-041",
+    "grammar-lesson-042",
+    "grammar-lesson-043",
+    "grammar-lesson-044",
+    "grammar-lesson-045",
+    "grammar-lesson-046",
+    "grammar-lesson-047",
+    "grammar-lesson-048",
+    "grammar-lesson-049",
+    "grammar-lesson-050",
+    "grammar-lesson-051",
+    "grammar-lesson-052",
+    "grammar-lesson-053",
+    "grammar-lesson-054",
+    "grammar-lesson-055",
+    "grammar-lesson-056",
+    "grammar-lesson-057",
+    "grammar-lesson-058",
+    "grammar-lesson-059",
+    "grammar-lesson-060",
+    "grammar-lesson-061",
+    "grammar-lesson-062",
+    "grammar-lesson-063",
+    "grammar-lesson-064",
+    "grammar-lesson-065",
+    "grammar-lesson-066",
+    "grammar-lesson-067",
+    "grammar-lesson-068",
+    "grammar-lesson-069",
+    "grammar-lesson-070",
+    "grammar-lesson-071",
+    "grammar-lesson-072",
+    "grammar-lesson-073",
+    "grammar-lesson-074",
+    "grammar-lesson-075",
+    "grammar-lesson-076",
+    "grammar-lesson-077",
+    "grammar-lesson-078",
+    "grammar-lesson-079",
+    "grammar-lesson-080",
+    "grammar-lesson-081",
+    "grammar-lesson-082",
+    "grammar-lesson-083",
+    "grammar-lesson-084",
+    "grammar-lesson-085",
+    "grammar-lesson-086",
+    "grammar-lesson-087",
+    "grammar-lesson-088",
+    "grammar-lesson-089",
+    "grammar-lesson-090",
+    "grammar-lesson-091",
+    "grammar-lesson-092",
+    "grammar-lesson-093",
+    "grammar-lesson-094",
+    "grammar-lesson-095",
+    "grammar-lesson-096",
+    "grammar-lesson-097",
+    "grammar-lesson-098",
+    "grammar-lesson-099",
+    "grammar-lesson-100",
+    "grammar-lesson-101",
+    "grammar-lesson-102",
+    "grammar-lesson-103",
+    "grammar-lesson-104",
+    "grammar-lesson-105",
+    "grammar-lesson-106",
+    "grammar-lesson-107",
+    "grammar-lesson-108",
+    "grammar-lesson-109",
+    "grammar-lesson-110",
+    "grammar-lesson-111",
+    "grammar-lesson-112",
+    "grammar-lesson-113",
+    "grammar-lesson-114",
+    "grammar-lesson-115",
+    "grammar-lesson-116",
+    "grammar-lesson-117",
+    "grammar-lesson-118",
+    "grammar-lesson-119",
+    "grammar-lesson-120",
+    "grammar-lesson-121",
+    "grammar-lesson-122",
+    "grammar-lesson-123",
+    "grammar-lesson-124",
+    "grammar-lesson-125",
+    "grammar-lesson-126",
+    "grammar-lesson-127",
+    "grammar-lesson-128",
+    "grammar-lesson-129",
+    "grammar-lesson-130",
+    "grammar-lesson-131",
+    "grammar-lesson-132",
+    "grammar-lesson-133",
+    "grammar-lesson-134",
+    "grammar-lesson-135",
+    "grammar-lesson-136",
+    "grammar-lesson-137",
+    "grammar-lesson-138",
+    "grammar-lesson-139",
+    "grammar-lesson-140",
+    "grammar-lesson-141",
+    "grammar-lesson-142",
+    "grammar-lesson-143",
+    "grammar-lesson-144",
+    "grammar-lesson-145",
+    "grammar-lesson-146",
+    "grammar-lesson-147",
+    "grammar-lesson-148",
+    "grammar-lesson-149",
+    "grammar-lesson-150",
+    "grammar-lesson-151",
+    "grammar-lesson-152"
+  ]
+}

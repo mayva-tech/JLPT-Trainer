@@ -19,16 +19,18 @@ const RelationTrainer = lazy(
 );
 const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
 const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
+const GameMode = lazy(() => import("./pages/GameMode/GameMode"));
 
 type AppView =
   | "player"
+  | "game"
   | "konbini"
   | "trip"
   | "relations"
   | "phone"
   | "style";
 
-const VIEW_COMPONENTS: Record<AppView, React.ComponentType> = {
+const VIEW_COMPONENTS: Record<Exclude<AppView, "game">, React.ComponentType> = {
   player: PlayerPage,
   konbini: KonbiniTrainer,
   trip: TripTrainer,
@@ -43,7 +45,7 @@ function TrainerFallback() {
 
 export default function App() {
   const [view, setView] = useState<AppView>("player");
-  const ActiveTrainer = VIEW_COMPONENTS[view];
+  const ActiveTrainer = view === "game" ? null : VIEW_COMPONENTS[view];
 
   // Switching views now unmounts the previous trainer, which would otherwise
   // leave its audio playing with no controls left on screen to stop it.
@@ -71,6 +73,21 @@ export default function App() {
           <span className="app-nav-en">Player</span>
           <span className="app-nav-jp" lang="ja">
             プレイヤー
+          </span>
+        </button>
+        <button
+          type="button"
+          className={
+            view === "game"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="ペラペラクエスト — Pera Pera Quest"
+          onClick={() => setView("game")}
+        >
+          <span className="app-nav-en">Pera Pera Quest</span>
+          <span className="app-nav-jp" lang="ja">
+            ペラペラ
           </span>
         </button>
         <button
@@ -154,7 +171,11 @@ export default function App() {
         }
       >
         <Suspense fallback={<TrainerFallback />}>
-          <ActiveTrainer />
+          {view === "game" ? (
+            <GameMode onOpenTrainer={() => setView("player")} />
+          ) : ActiveTrainer ? (
+            <ActiveTrainer />
+          ) : null}
         </Suspense>
       </div>
     </div>

@@ -1,8 +1,12 @@
 ﻿/**
  * Browser speech synthesis with generation-safe karaoke highlighting.
  *
- * Per utterance: wait for onstart -> briefly detect browser word boundaries ->
- * lock into either `boundary` mode OR weighted `fallback` mode (never both).
+ * Per utterance there is exactly ONE karaoke timeline, started synchronously
+ * from `onstart`, driven by absolute cumulative deadlines measured with
+ * `performance.now()`. Browser `onboundary` events do not switch modes: a
+ * useful forward boundary snaps the highlight to the reported unit and rebases
+ * the timeline origin so every later deadline is corrected. Stale/backward
+ * boundaries are ignored, and skipped units are never visually replayed.
  */
 
 import {
@@ -11,6 +15,7 @@ import {
   buildEnglishSpokenKaraokeSteps,
   buildJapaneseHighlightUnits,
   buildJapaneseSpokenKaraokeSteps,
+  deriveSpacedReadingForUnits,
   estimateUnitDurationMs,
   findUnitForBoundary,
   type HighlightUnit,
@@ -62,31 +67,43 @@ export const SPEECH_RATE_INTERVIEW_EN = 1.05;
 export const SPEECH_RATE_INTERVIEW_MIX = 0.88;
 
 const DEBUG_SPEECH = false;
-/** Wait after onstart for a real browser boundary before choosing fallback. */
-const BOUNDARY_DETECT_MS = 320;
 /**
- * Lead-in after onstart before first fallback unit (ms).
- * Keep short — a large offset makes Japanese karaoke trail Nanami.
+ * Lead-in after onstart before the first karaoke unit (ms).
+ * 0 = highlight the first unit synchronously inside `onstart`.
  */
-const FALLBACK_START_OFFSET_MS = 10;
+const FALLBACK_START_OFFSET_MS = 0;
 /**
- * English fallback scale (Andrew) — leave alone while tuning Japanese.
+ * English (Andrew) estimate scale.
+ * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — a 1.0
+ * scale with /rate stretches karaoke past the voice (especially quiz meanings
+ * that strip notes and therefore get no boundary rebase). Slightly under 1
+ * keeps the estimate near the voice; boundaries still correct when present.
  */
-const FALLBACK_TIMING_SCALE_EN = 1.35;
+const FALLBACK_TIMING_SCALE_EN = 0.88;
 /**
- * Japanese fallback scale (Nanami). Slightly under 1 offsets timer/React lag
- * so the highlight does not trail the voice.
+ * Japanese fallback scale (Nanami). Under 1 pulls karaoke slightly ahead of
+ * the voice so example sentences do not trail after particle/mora estimates.
  */
-const FALLBACK_TIMING_SCALE_JA = 0.97;
+const FALLBACK_TIMING_SCALE_JA = 0.91;
 /** @deprecated alias — tests / callers that expect a single scale get JA. */
 const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
-type HighlightMode = "detecting" | "boundary" | "fallback";
+/** Monotonic clock for karaoke scheduling. */
+function nowMs(): number {
+  return typeof performance !== "undefined" && typeof performance.now === "function"
+    ? performance.now()
+    : Date.now();
+}
+
+/** Pause/resume handle for the karaoke timeline of the live utterance. */
+type KaraokeTimeline = {
+  pause: () => void;
+  resume: () => void;
+};
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
-let boundaryDetectionTimer: number | null = null;
-let gapFillTimer: number | null = null;
+let activeTimeline: KaraokeTimeline | null = null;
 let pendingStartTimer: number | null = null;
 let pendingVoicesChangedHandler: (() => void) | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
@@ -256,20 +273,6 @@ function clearFallbackTimer() {
   }
 }
 
-function clearGapFillTimer() {
-  if (gapFillTimer !== null) {
-    window.clearTimeout(gapFillTimer);
-    gapFillTimer = null;
-  }
-}
-
-function clearBoundaryDetectionTimer() {
-  if (boundaryDetectionTimer !== null) {
-    window.clearTimeout(boundaryDetectionTimer);
-    boundaryDetectionTimer = null;
-  }
-}
-
 function clearPendingStartOnly() {
   if (pendingStartTimer !== null) {
     window.clearTimeout(pendingStartTimer);
@@ -287,9 +290,8 @@ function clearPendingStartOnly() {
 /** Clear timers/listeners for the current utterance lifecycle (not generation). */
 function clearPlaybackHandles() {
   clearFallbackTimer();
-  clearGapFillTimer();
-  clearBoundaryDetectionTimer();
   clearPendingStartOnly();
+  activeTimeline = null;
   activeUtterance = null;
 }
 
@@ -304,6 +306,37 @@ function settleActiveAsCancelled(): void {
 
 function isUsefulBoundaryName(name: string | undefined): boolean {
   return !name || name === "word" || name === "sentence";
+}
+
+/**
+ * Map an Andrew boundary in `audioText` onto a display karaoke unit when the
+ * spoken string differs from the visible gloss (stripped notes, overrides).
+ * Walks units by their spoken form so quiz meanings like "to return (goods)"
+ * still rebase instead of running estimate-only.
+ */
+function findEnglishSpokenBoundaryUnit(
+  units: HighlightUnit[],
+  audioText: string,
+  charIndex: number
+): SpeechHighlight | null {
+  if (units.length === 0) return null;
+  let searchFrom = 0;
+  for (let i = 0; i < units.length; i += 1) {
+    const spoken = (units[i]!.spokenText ?? units[i]!.text).trim();
+    if (!spoken) continue;
+    const at = audioText.indexOf(spoken, searchFrom);
+    if (at < 0) continue;
+    const end = at + spoken.length;
+    if (charIndex >= at && charIndex < Math.max(end, at + 1)) {
+      return { start: units[i]!.start, end: units[i]!.end };
+    }
+    if (charIndex < at) {
+      return { start: units[i]!.start, end: units[i]!.end };
+    }
+    searchFrom = end;
+  }
+  const last = units[units.length - 1]!;
+  return { start: last.start, end: last.end };
 }
 
 function runUtterance(
@@ -364,11 +397,34 @@ function runUtterance(
     ? buildJapaneseHighlightUnits(text)
     : buildEnglishHighlightUnits(text);
 
-  // Japanese + reading: schedule fallback from spoken kana tokens, not kanji weight.
-  // English with speak transforms (skipped (notes), ~ pauses): time from spoken form.
+  // A kana reading can only drive karaoke when it can be aligned to the visible
+  // units: either it is space-separated by word unit, or the surface is a
+  // single unit, or the reading is the surface itself. Some corpora (speech
+  // styles) store one unspaced kana blob instead; pairing that against the
+  // units positionally shifts every highlight, so recover the token boundaries
+  // from the furigana alignment first. Audio always uses the original reading.
+  const readingTokenCount = reading ? reading.split(/\s+/).filter(Boolean).length : 0;
+  let karaokeReading = reading;
+  let karaokeReadingAligned =
+    reading.length > 0 &&
+    (readingTokenCount > 1 ||
+      activeHighlightUnits(allUnits).length <= 1 ||
+      reading.replace(/\s+/g, "") === text.replace(/\s+/g, ""));
+
+  if (isJa && reading && !karaokeReadingAligned) {
+    const derived = deriveSpacedReadingForUnits(text, reading, allUnits);
+    if (derived) {
+      karaokeReading = derived;
+      karaokeReadingAligned = true;
+    }
+  }
+
+  // Japanese + alignable reading: schedule fallback from spoken kana tokens,
+  // not kanji weight. English with speak transforms (skipped (notes), ~
+  // pauses): time from spoken form.
   const fallbackUnits: HighlightUnit[] =
-    isJa && reading
-      ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({
+    isJa && karaokeReading && karaokeReadingAligned
+      ? buildJapaneseSpokenKaraokeSteps(text, karaokeReading, allUnits).map((s) => ({
           start: s.start,
           end: s.end,
           text: s.text,
@@ -382,7 +438,6 @@ function runUtterance(
 
   const units = fallbackUnits;
 
-  let mode: HighlightMode = "detecting";
   let lastBoundaryStart = -1;
   let lastBoundaryEnd = -1;
   let utteranceStarted = false;
@@ -396,122 +451,150 @@ function runUtterance(
     if (h.start < lastBoundaryStart) return;
     lastBoundaryStart = h.start;
     lastBoundaryEnd = h.end;
-    debug("highlight", playbackId, mode, h);
+    debug("highlight", playbackId, h);
     callbacks?.onBoundary?.(h);
   };
 
-  /**
-   * Browser TTS often jumps over a unit (〜から|みる|と → から then と).
-   * Walk any skipped active units before landing on `target`.
-   */
-  const advanceHighlightTo = (target: SpeechHighlight) => {
-    clearGapFillTimer();
-    const from = Math.max(0, lastBoundaryEnd);
-    const skipped = activeHighlightUnits(allUnits).filter(
-      (u) => u.start >= from && u.start < target.start
-    );
-    if (skipped.length === 0) {
-      emitHighlight(target);
-      return;
+  // ── Karaoke timeline ────────────────────────────────────────────────
+  // plannedStart[i] is the estimated offset (ms) of unit i from the timeline
+  // origin. Deadlines are absolute: deadline(i) = timelineOrigin +
+  // plannedStart[i]. Nothing is derived from the previous timer's fire time,
+  // so late timers cannot accumulate drift.
+  const timingScale =
+    unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
+  // Andrew/Nanami neural rates are nonlinear below ~0.9 — don't stretch
+  // karaoke as if SPEECH_RATE_NORMAL (0.80) were a true 20% slowdown.
+  // JA floor is slightly lower than EN: Nanami slows a bit more than Andrew.
+  const rateDivisor =
+    unitLang === "en" ? Math.max(rate, 0.9) : Math.max(rate, 0.85);
+
+  const plannedStart: number[] = [];
+  {
+    let acc = FALLBACK_START_OFFSET_MS;
+    for (let i = 0; i < units.length; i += 1) {
+      plannedStart.push(acc);
+      acc +=
+        (estimateUnitDurationMs(units[i]!, unitLang, units[i + 1] ?? null) /
+          rateDivisor) *
+        timingScale;
     }
+  }
 
-    const queue: SpeechHighlight[] = [
-      ...skipped.map((u) => ({ start: u.start, end: u.end })),
-      target,
-    ];
-    let i = 0;
-    const step = () => {
-      gapFillTimer = null;
-      if (!alive()) return;
-      if (mode !== "boundary" && mode !== "detecting") return;
-      const h = queue[i++];
-      if (!h) return;
-      emitHighlight(h);
-      if (i >= queue.length) return;
-      const justShown = activeHighlightUnits(allUnits).find(
-        (u) => u.start === h.start && u.end === h.end
-      );
-      const dwell = justShown
-        ? Math.max(
-            70,
-            Math.min(
-              160,
-              (estimateUnitDurationMs(justShown, unitLang) /
-                Math.max(rate, 0.2)) *
-                0.45
-            )
-          )
-        : 90;
-      gapFillTimer = window.setTimeout(step, dwell);
-    };
-    step();
+  /** Origin such that unit i is due at `timelineOrigin + plannedStart[i]`. */
+  let timelineOrigin = 0;
+  let timelineRunning = false;
+  let pausedAt: number | null = null;
+  /** Index into `units` of the last unit actually highlighted. */
+  let emittedIndex = -1;
+  /** Index of the next unit awaiting its deadline. */
+  let nextIndex = 0;
+
+  const emitUnitAt = (index: number) => {
+    const unit = units[index];
+    if (!unit) return;
+    emitHighlight({ start: unit.start, end: unit.end });
+    if (index > emittedIndex) emittedIndex = index;
   };
 
-  const startFallback = () => {
-    if (!alive() || !withHighlight || units.length === 0) return;
-    mode = "fallback";
-    clearBoundaryDetectionTimer();
-    clearGapFillTimer();
-    debug("mode", playbackId, "fallback");
-
-    const scheduleNext = (index: number, delayMs: number) => {
-      clearFallbackTimer();
-      fallbackTimer = window.setTimeout(() => {
-        fallbackTimer = null;
-        if (!alive() || mode !== "fallback") return;
-        const unit = units[index];
-        if (!unit) return;
-        emitHighlight({ start: unit.start, end: unit.end });
-        const next = index + 1;
-        if (next >= units.length) return;
-        const timingScale =
-          unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
-        const dur =
-          (estimateUnitDurationMs(unit, unitLang, units[next] ?? null) /
-            Math.max(rate, 0.2)) *
-          timingScale;
-        scheduleNext(next, dur);
-      }, delayMs);
-    };
-
-    scheduleNext(0, FALLBACK_START_OFFSET_MS);
-  };
-
-  const enterBoundaryMode = (h: SpeechHighlight) => {
-    if (!alive()) return;
-    mode = "boundary";
-    clearBoundaryDetectionTimer();
+  const armTimer = () => {
     clearFallbackTimer();
-    debug("mode", playbackId, "boundary");
-    advanceHighlightTo(h);
+    if (!alive() || !timelineRunning || pausedAt !== null) return;
+    if (nextIndex >= units.length) return;
+    const delay = Math.max(
+      0,
+      timelineOrigin + plannedStart[nextIndex]! - nowMs()
+    );
+    fallbackTimer = window.setTimeout(onTimelineTick, delay);
   };
+
+  function onTimelineTick() {
+    fallbackTimer = null;
+    if (!alive() || !timelineRunning || pausedAt !== null) return;
+    // Catch-up without replay: if several deadlines already elapsed (a late
+    // timer, a backgrounded tab), jump straight to the latest due unit.
+    const t = nowMs();
+    let index = nextIndex;
+    while (index + 1 < units.length && timelineOrigin + plannedStart[index + 1]! <= t) {
+      index += 1;
+    }
+    emitUnitAt(index);
+    nextIndex = index + 1;
+    armTimer();
+  }
+
+  const startTimeline = () => {
+    if (!alive() || !withHighlight || units.length === 0) return;
+    timelineRunning = true;
+    pausedAt = null;
+    timelineOrigin = nowMs();
+    nextIndex = 0;
+    debug("timeline-start", playbackId, units.length);
+    if (FALLBACK_START_OFFSET_MS <= 0) {
+      // Karaoke begins immediately — no detection window.
+      emitUnitAt(0);
+      nextIndex = 1;
+    }
+    armTimer();
+  };
+
+  /** Map a boundary range onto an index in the karaoke timeline. */
+  const timelineIndexFor = (range: SpeechHighlight): number => {
+    const containing = units.findIndex(
+      (u) => range.start >= u.start && range.start < u.end
+    );
+    if (containing >= 0) return containing;
+    return units.findIndex((u) => u.start >= range.start);
+  };
+
+  /**
+   * A useful forward boundary is the ground truth: snap to it (no replay of
+   * skipped units) and rebase the origin so all later deadlines are corrected.
+   */
+  const applyBoundary = (range: SpeechHighlight) => {
+    if (!timelineRunning || pausedAt !== null) return;
+    const index = timelineIndexFor(range);
+    if (index < 0) return;
+    if (index < emittedIndex) return; // stale boundary — never move backwards
+    timelineOrigin = nowMs() - plannedStart[index]!;
+    if (index > emittedIndex) {
+      emitUnitAt(index);
+      nextIndex = index + 1;
+    } else if (nextIndex <= index) {
+      nextIndex = index + 1;
+    }
+    debug("boundary-rebase", playbackId, index);
+    armTimer();
+  };
+
+  const timeline: KaraokeTimeline = {
+    pause: () => {
+      if (!timelineRunning || pausedAt !== null) return;
+      pausedAt = nowMs();
+      clearFallbackTimer();
+      debug("timeline-pause", playbackId);
+    },
+    resume: () => {
+      if (!timelineRunning || pausedAt === null) return;
+      // Shift every remaining deadline by the frozen span.
+      timelineOrigin += nowMs() - pausedAt;
+      pausedAt = null;
+      debug("timeline-resume", playbackId);
+      armTimer();
+    },
+  };
+  activeTimeline = timeline;
 
   utter.onstart = () => {
     if (!alive()) return;
     utteranceStarted = true;
     debug("onstart", playbackId);
     callbacks?.onStart?.();
-
-    if (!withHighlight || units.length === 0) return;
-
-    if (forceFallback) {
-      startFallback();
-      return;
-    }
-
-    mode = "detecting";
-    clearBoundaryDetectionTimer();
-    boundaryDetectionTimer = window.setTimeout(() => {
-      boundaryDetectionTimer = null;
-      if (!alive()) return;
-      if (mode === "detecting") startFallback();
-    }, BOUNDARY_DETECT_MS);
+    startTimeline();
   };
 
   utter.onboundary = (event: SpeechSynthesisEvent) => {
     if (!alive()) return;
     if (!withHighlight) return;
-    if (forceFallback) return;
     if (!isUsefulBoundaryName(event.name)) return;
     if (!utteranceStarted) return;
 
@@ -520,6 +603,26 @@ function runUtterance(
       typeof event.charLength === "number" && event.charLength > 0
         ? event.charLength
         : undefined;
+
+    // Boundary indices refer to `audioText`. When it differs from the visible
+    // text (JA readings / EN speak transforms), map via the karaoke units'
+    // spoken form instead of ignoring the boundary entirely — quiz English
+    // glosses with "(formal)" notes need this rebasing.
+    if (forceFallback) {
+      if (!isJa) {
+        const mapped = findEnglishSpokenBoundaryUnit(
+          units,
+          audioText,
+          charIndex
+        );
+        if (mapped) {
+          debug("spoken-boundary", playbackId, { charIndex, mapped });
+          applyBoundary(mapped);
+        }
+      }
+      return;
+    }
+
     const mapped = findUnitForBoundary(allUnits, charIndex, charLength);
     if (!mapped) return;
 
@@ -528,28 +631,20 @@ function runUtterance(
       charIndex,
       charLength,
       mapped,
-      mode,
     });
-
-    if (mode === "detecting") {
-      enterBoundaryMode(mapped);
-      return;
-    }
-    if (mode === "boundary") {
-      advanceHighlightTo(mapped);
-      return;
-    }
-    // fallback: ignore late browser boundaries
+    applyBoundary(mapped);
   };
 
   const finish = (kind: "end" | "error", error?: unknown) => {
     if (!alive() || playback.settled) return;
     playback.settled = true;
+    timelineRunning = false;
+    clearFallbackTimer();
     // Browser TTS sometimes skips the final unit's boundary. Light that one
     // remaining span once — never rush a multi-unit 80ms sweep (fake sync).
-    if (withHighlight && mode === "boundary") {
-      const remaining = activeHighlightUnits(allUnits).filter(
-        (u) => u.start >= Math.max(0, lastBoundaryEnd)
+    if (withHighlight) {
+      const remaining = units.filter(
+        (u) => u.kind !== "space" && u.start >= Math.max(0, lastBoundaryEnd)
       );
       if (remaining.length === 1) {
         emitHighlight({
@@ -565,9 +660,8 @@ function runUtterance(
         clearPlaybackHandles();
       } else {
         clearFallbackTimer();
-        clearGapFillTimer();
-        clearBoundaryDetectionTimer();
       }
+      if (activeTimeline === timeline) activeTimeline = null;
       debug(kind, playbackId, error);
       if (kind === "error") {
         callbacks?.onError?.(error);
@@ -626,6 +720,8 @@ export const speechService = {
   },
 
   pause() {
+    // Freeze karaoke first so no unit fires between the two calls.
+    activeTimeline?.pause();
     if (!window.speechSynthesis) return;
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
       window.speechSynthesis.pause();
@@ -633,10 +729,11 @@ export const speechService = {
   },
 
   resume() {
-    if (!window.speechSynthesis) return;
-    if (window.speechSynthesis.paused) {
+    if (window.speechSynthesis?.paused) {
       window.speechSynthesis.resume();
     }
+    // Shift remaining karaoke deadlines by the paused span.
+    activeTimeline?.resume();
   },
 
   speakJapanese(
@@ -680,7 +777,6 @@ export const speechService = {
 /** @internal test helpers */
 export const __speechTestHooks = {
   getGeneration: () => playbackGeneration,
-  BOUNDARY_DETECT_MS,
   FALLBACK_START_OFFSET_MS,
   FALLBACK_TIMING_SCALE,
   FALLBACK_TIMING_SCALE_JA,

@@ -1,0 +1,10 @@
+TRULY_MISSING	〜に等しい
+TRULY_MISSING	〜っこない
+TRULY_MISSING	〜に応えて
+TRULY_MISSING	〜がたい
+EXISTS_IN_FAMILY	〜ものがある	<< 5159 〜ものがある (mono-family)
+EXISTS_IN_FAMILY	〜ないとも限らない	<< 5107 〜ないとも限らない (n1-5107)
+TRULY_MISSING	〜なくはない
+TRULY_MISSING	〜甲斐がある
+TRULY_MISSING	〜甲斐がない
+EXISTS_IN_FAMILY	〜に越したことはない	<< 5078 〜に越したことはない (core-に越したことはない)

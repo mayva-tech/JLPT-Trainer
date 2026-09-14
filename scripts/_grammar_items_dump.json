@@ -1,0 +1,4002 @@
+[
+  {
+    "id": 5001,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜にもかかわらず",
+    "patternReading": "〜にもかかわらず",
+    "meaning": "despite; in spite of"
+  },
+  {
+    "id": 5002,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜ものの",
+    "patternReading": "〜ものの",
+    "meaning": "although; even though (but the result was unexpected)"
+  },
+  {
+    "id": 5003,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜くせに",
+    "patternReading": "〜くせに",
+    "meaning": "even though; and yet (with reproach or surprise)"
+  },
+  {
+    "id": 5004,
+    "jlpt": "N1",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜とはいえ",
+    "patternReading": "〜とはいえ",
+    "meaning": "even so; that said; although"
+  },
+  {
+    "id": 5005,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜に反して",
+    "patternReading": "〜にはんして",
+    "meaning": "contrary to; against"
+  },
+  {
+    "id": 5006,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜一方で",
+    "patternReading": "〜いっぽうで",
+    "meaning": "on the other hand; while; at the same time"
+  },
+  {
+    "id": 5007,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜はともかく",
+    "patternReading": "〜はともかく",
+    "meaning": "setting aside; regardless of; never mind"
+  },
+  {
+    "id": 5008,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜ながらも",
+    "patternReading": "〜ながらも",
+    "meaning": "even while; although (simultaneous contrast)"
+  },
+  {
+    "id": 5009,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜といっても",
+    "patternReading": "〜といっても",
+    "meaning": "even though I say; although it may sound like"
+  },
+  {
+    "id": 5010,
+    "jlpt": "N2",
+    "subcategory": "Concession & Contrast",
+    "pattern": "〜だけあって",
+    "patternReading": "〜だけあって",
+    "meaning": "as expected of; as is typical of (positive evaluation)"
+  },
+  {
+    "id": 5011,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜さえ〜ば",
+    "patternReading": "〜さえ〜ば",
+    "meaning": "if only; as long as"
+  },
+  {
+    "id": 5012,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜てからでないと",
+    "patternReading": "〜てからでないと",
+    "meaning": "unless you do ~ first; not until after"
+  },
+  {
+    "id": 5013,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜をきっかけに",
+    "patternReading": "〜をきっかけに",
+    "meaning": "using ~ as a trigger; sparked by; prompted by"
+  },
+  {
+    "id": 5014,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜に伴って",
+    "patternReading": "〜にともなって",
+    "meaning": "as ~ happens; along with; in proportion to"
+  },
+  {
+    "id": 5015,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜を契機に",
+    "patternReading": "〜をけいきに",
+    "meaning": "taking ~ as an opportunity; on the occasion of"
+  },
+  {
+    "id": 5016,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜によって",
+    "patternReading": "〜によって",
+    "meaning": "depending on; by means of; due to (varies by context)"
+  },
+  {
+    "id": 5017,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜ためには",
+    "patternReading": "〜ためには",
+    "meaning": "in order to; for the purpose of"
+  },
+  {
+    "id": 5018,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜からこそ",
+    "patternReading": "〜からこそ",
+    "meaning": "precisely because; it is exactly because"
+  },
+  {
+    "id": 5019,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜上で",
+    "patternReading": "〜うえで",
+    "meaning": "after doing; when it comes to; in the process of"
+  },
+  {
+    "id": 5020,
+    "jlpt": "N2",
+    "subcategory": "Condition & Cause",
+    "pattern": "〜に応じて",
+    "patternReading": "〜におうじて",
+    "meaning": "in response to; depending on; according to"
+  },
+  {
+    "id": 5021,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜ほど〜ない",
+    "patternReading": "〜ほど〜ない",
+    "meaning": "not as ~ as; not to the extent that"
+  },
+  {
+    "id": 5022,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜限り",
+    "patternReading": "〜かぎり",
+    "meaning": "as long as; to the extent that; unless"
+  },
+  {
+    "id": 5023,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜に過ぎない",
+    "patternReading": "〜にすぎない",
+    "meaning": "no more than; merely; only"
+  },
+  {
+    "id": 5024,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜ばかりか〜も",
+    "patternReading": "〜ばかりか〜も",
+    "meaning": "not only ~ but also"
+  },
+  {
+    "id": 5025,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜さえ",
+    "patternReading": "〜さえ",
+    "meaning": "even; so much as (emphasis on an extreme case)"
+  },
+  {
+    "id": 5026,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜きり",
+    "patternReading": "〜きり",
+    "meaning": "only; just; since ~ and no more"
+  },
+  {
+    "id": 5027,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜というより",
+    "patternReading": "〜というより",
+    "meaning": "rather than saying ~; more ~ than"
+  },
+  {
+    "id": 5028,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜てたまらない",
+    "patternReading": "〜てたまらない",
+    "meaning": "can't help but feel ~; unbearably ~"
+  },
+  {
+    "id": 5029,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜てならない",
+    "patternReading": "〜てならない",
+    "meaning": "can't help feeling ~; naturally feel ~ (inner emotion)"
+  },
+  {
+    "id": 5030,
+    "jlpt": "N2",
+    "subcategory": "Degree & Limit",
+    "pattern": "〜に違いない",
+    "patternReading": "〜にちがいない",
+    "meaning": "must be; no doubt; certainly"
+  },
+  {
+    "id": 5031,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜らしい",
+    "patternReading": "〜らしい",
+    "meaning": "it seems; apparently; I heard (hearsay / inference from evidence)"
+  },
+  {
+    "id": 5032,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜ようだ",
+    "patternReading": "〜ようだ",
+    "meaning": "it seems; it looks like (speaker's direct observation)"
+  },
+  {
+    "id": 5033,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜とのことだ",
+    "patternReading": "〜とのことだ",
+    "meaning": "I was told that; according to ~ (formal hearsay report)"
+  },
+  {
+    "id": 5034,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜にしては",
+    "patternReading": "〜にしては",
+    "meaning": "for ~; considering that ~ (result differs from expectation)"
+  },
+  {
+    "id": 5035,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜かのようだ",
+    "patternReading": "〜かのようだ",
+    "meaning": "as if; just like (hypothetical resemblance)"
+  },
+  {
+    "id": 5036,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜っぽい",
+    "patternReading": "〜っぽい",
+    "meaning": "looks like; tends to; -ish (somewhat informal)"
+  },
+  {
+    "id": 5037,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜と言われている",
+    "patternReading": "〜といわれている",
+    "meaning": "it is said that; people say that"
+  },
+  {
+    "id": 5038,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜気味",
+    "patternReading": "〜ぎみ",
+    "meaning": "slightly ~; somewhat ~; a touch of (often negative nuance)"
+  },
+  {
+    "id": 5039,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜に見える",
+    "patternReading": "〜にみえる",
+    "meaning": "to look like; to appear to be (visual impression)"
+  },
+  {
+    "id": 5040,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Hearsay",
+    "pattern": "〜かねない",
+    "patternReading": "〜かねない",
+    "meaning": "might; could (negative outcome is possible / warning)"
+  },
+  {
+    "id": 5041,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜に向けて",
+    "patternReading": "〜にむけて",
+    "meaning": "aiming at; working toward; directed at"
+  },
+  {
+    "id": 5042,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜がちだ",
+    "patternReading": "〜がちだ",
+    "meaning": "tends to; prone to; often ends up doing (undesirable habit)"
+  },
+  {
+    "id": 5043,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜つつある",
+    "patternReading": "〜つつある",
+    "meaning": "is in the process of; is gradually ~ing (ongoing change)"
+  },
+  {
+    "id": 5044,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜を通じて",
+    "patternReading": "〜をつうじて",
+    "meaning": "through; via; throughout"
+  },
+  {
+    "id": 5045,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜において",
+    "patternReading": "〜において",
+    "meaning": "in; at; regarding (formal location or domain)"
+  },
+  {
+    "id": 5046,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜に関して",
+    "patternReading": "〜にかんして",
+    "meaning": "regarding; concerning; about (formal)"
+  },
+  {
+    "id": 5047,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜に基づいて",
+    "patternReading": "〜にもとづいて",
+    "meaning": "based on; grounded in"
+  },
+  {
+    "id": 5048,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜べきだ",
+    "patternReading": "〜べきだ",
+    "meaning": "should; ought to (obligation / strong recommendation)"
+  },
+  {
+    "id": 5049,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜ざるを得ない",
+    "patternReading": "〜ざるをえない",
+    "meaning": "cannot help but; have no choice but to"
+  },
+  {
+    "id": 5050,
+    "jlpt": "N2",
+    "subcategory": "Purpose, Tendency & Formal Expression",
+    "pattern": "〜に当たって",
+    "patternReading": "〜にあたって",
+    "meaning": "on the occasion of; when doing (formal, significant moment)"
+  },
+  {
+    "id": 5051,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜に関わらず",
+    "patternReading": "〜にかかわらず",
+    "meaning": "regardless of; irrespective of"
+  },
+  {
+    "id": 5052,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜に対して",
+    "patternReading": "〜にたいして",
+    "meaning": "toward; in contrast to; with respect to"
+  },
+  {
+    "id": 5053,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜に沿って",
+    "patternReading": "〜にそって",
+    "meaning": "along; in line with; following"
+  },
+  {
+    "id": 5054,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜をめぐって",
+    "patternReading": "〜をめぐって",
+    "meaning": "regarding; over; surrounding (a contested issue)"
+  },
+  {
+    "id": 5055,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜に際して",
+    "patternReading": "〜にさいして",
+    "meaning": "on the occasion of; at the time of (formal)"
+  },
+  {
+    "id": 5056,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜にとって",
+    "patternReading": "〜にとって",
+    "meaning": "for; from the perspective of"
+  },
+  {
+    "id": 5057,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜について",
+    "patternReading": "〜について",
+    "meaning": "about; concerning; on the topic of"
+  },
+  {
+    "id": 5058,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜に反する",
+    "patternReading": "〜にはんする",
+    "meaning": "to go against; to be contrary to"
+  },
+  {
+    "id": 5059,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜のもとで",
+    "patternReading": "〜のもとで",
+    "meaning": "under; under the guidance / conditions of"
+  },
+  {
+    "id": 5060,
+    "jlpt": "N2",
+    "subcategory": "Scope & Reference",
+    "pattern": "〜をはじめ",
+    "patternReading": "〜をはじめ",
+    "meaning": "starting with; including (listing prominent examples)"
+  },
+  {
+    "id": 5061,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜上に",
+    "patternReading": "〜うえに",
+    "meaning": "in addition to; on top of; moreover"
+  },
+  {
+    "id": 5062,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜はもちろん",
+    "patternReading": "〜はもちろん",
+    "meaning": "not only ~ but also; ~ goes without saying"
+  },
+  {
+    "id": 5063,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜に加えて",
+    "patternReading": "〜にくわえて",
+    "meaning": "in addition to; added to"
+  },
+  {
+    "id": 5064,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜どころか",
+    "patternReading": "〜どころか",
+    "meaning": "far from; let alone; on the contrary"
+  },
+  {
+    "id": 5065,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜こそ",
+    "patternReading": "〜こそ",
+    "meaning": "it is ~ that; precisely; (emphatic focus)"
+  },
+  {
+    "id": 5066,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜まで",
+    "patternReading": "〜まで",
+    "meaning": "even; to the extent of (surprising or extreme scope)"
+  },
+  {
+    "id": 5067,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜をはじめとして",
+    "patternReading": "〜をはじめとして",
+    "meaning": "beginning with; exemplified by (formal listing)"
+  },
+  {
+    "id": 5068,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜のみならず",
+    "patternReading": "〜のみならず",
+    "meaning": "not only; not just (formal written style)"
+  },
+  {
+    "id": 5069,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜ばかりでなく",
+    "patternReading": "〜ばかりでなく",
+    "meaning": "not only ~ but also (adding further information)"
+  },
+  {
+    "id": 5070,
+    "jlpt": "N2",
+    "subcategory": "Addition & Emphasis",
+    "pattern": "〜反面",
+    "patternReading": "〜はんめん",
+    "meaning": "on the other hand; while; has the flip side of"
+  },
+  {
+    "id": 5071,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜にしたがって",
+    "patternReading": "〜にしたがって",
+    "meaning": "as ~ progresses; in accordance with"
+  },
+  {
+    "id": 5072,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜につれて",
+    "patternReading": "〜につれて",
+    "meaning": "as ~ changes, ~ also changes (parallel change)"
+  },
+  {
+    "id": 5073,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜ていく",
+    "patternReading": "〜ていく",
+    "meaning": "to continue doing; to go on (change moving away from now)"
+  },
+  {
+    "id": 5074,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜てくる",
+    "patternReading": "〜てくる",
+    "meaning": "to have been doing; to come to (change moving toward now)"
+  },
+  {
+    "id": 5075,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜ようになる",
+    "patternReading": "〜ようになる",
+    "meaning": "to come to be able to; to reach the point where"
+  },
+  {
+    "id": 5076,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜にともない",
+    "patternReading": "〜にともない",
+    "meaning": "as a result of; along with (formal parallel change)"
+  },
+  {
+    "id": 5077,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜次第で",
+    "patternReading": "〜しだいで",
+    "meaning": "depending on; according to (outcome varies by factor)"
+  },
+  {
+    "id": 5078,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜に越したことはない",
+    "patternReading": "〜にこしたことはない",
+    "meaning": "it is best to; nothing is better than"
+  },
+  {
+    "id": 5079,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜かけ",
+    "patternReading": "〜かけ",
+    "meaning": "half-done; in the middle of; about to"
+  },
+  {
+    "id": 5080,
+    "jlpt": "N2",
+    "subcategory": "Change & Progression",
+    "pattern": "〜向きだ",
+    "patternReading": "〜むきだ",
+    "meaning": "suitable for; suited to; facing toward"
+  },
+  {
+    "id": 5081,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜ようとする",
+    "patternReading": "〜ようとする",
+    "meaning": "to try to; to be about to (deliberate attempt)"
+  },
+  {
+    "id": 5082,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜ようにする",
+    "patternReading": "〜ようにする",
+    "meaning": "to make sure to; to try to (habitual effort)"
+  },
+  {
+    "id": 5083,
+    "jlpt": "N1",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜てみせる",
+    "patternReading": "〜てみせる",
+    "meaning": "I will definitely do ~ (strong determination to show others)"
+  },
+  {
+    "id": 5084,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜かねる",
+    "patternReading": "〜かねる",
+    "meaning": "cannot bring oneself to; find it difficult to (polite refusal)"
+  },
+  {
+    "id": 5085,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜てでも",
+    "patternReading": "〜てでも",
+    "meaning": "even if I have to ~; by any means (strong resolve)"
+  },
+  {
+    "id": 5086,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜ないことには",
+    "patternReading": "〜ないことには",
+    "meaning": "unless ~ (negative condition blocking the result)"
+  },
+  {
+    "id": 5087,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜ずにはいられない",
+    "patternReading": "〜ずにはいられない",
+    "meaning": "cannot help but; cannot stop oneself from"
+  },
+  {
+    "id": 5088,
+    "jlpt": "N1",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜を余儀なくされる",
+    "patternReading": "〜をよぎなくされる",
+    "meaning": "to be forced to; to have no choice but to"
+  },
+  {
+    "id": 5089,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜ようにと",
+    "patternReading": "〜ようにと",
+    "meaning": "with the request / instruction that ~"
+  },
+  {
+    "id": 5090,
+    "jlpt": "N2",
+    "subcategory": "Volition & Effort",
+    "pattern": "〜に努める",
+    "patternReading": "〜につとめる",
+    "meaning": "to strive to; to make efforts to"
+  },
+  {
+    "id": 5091,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜からすると",
+    "patternReading": "〜からすると",
+    "meaning": "judging from; from the perspective of"
+  },
+  {
+    "id": 5092,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜にしても",
+    "patternReading": "〜にしても",
+    "meaning": "even if; even so; even when it comes to"
+  },
+  {
+    "id": 5093,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜からみると",
+    "patternReading": "〜からみると",
+    "meaning": "from the viewpoint of; looking at it from"
+  },
+  {
+    "id": 5094,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜ということだ",
+    "patternReading": "〜ということだ",
+    "meaning": "it means that; in other words; reportedly"
+  },
+  {
+    "id": 5095,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜わけではない",
+    "patternReading": "〜わけではない",
+    "meaning": "it doesn't mean that; not necessarily"
+  },
+  {
+    "id": 5096,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜わけにはいかない",
+    "patternReading": "〜わけにはいかない",
+    "meaning": "cannot; must not (socially or morally)"
+  },
+  {
+    "id": 5097,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜ものだ",
+    "patternReading": "〜ものだ",
+    "meaning": "that's how things are; naturally; should (expressing norms)"
+  },
+  {
+    "id": 5098,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜はずがない",
+    "patternReading": "〜はずがない",
+    "meaning": "there is no way that; cannot possibly be"
+  },
+  {
+    "id": 5099,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜ことになっている",
+    "patternReading": "〜ことになっている",
+    "meaning": "it has been decided that; it is the rule that"
+  },
+  {
+    "id": 5100,
+    "jlpt": "N2",
+    "subcategory": "Judgement & Evaluation",
+    "pattern": "〜にほかならない",
+    "patternReading": "〜にほかならない",
+    "meaning": "is nothing other than; is precisely; is exactly"
+  },
+  {
+    "id": 5101,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜はずだ",
+    "patternReading": "〜はずだ",
+    "meaning": "should be; expected to be (logical expectation)"
+  },
+  {
+    "id": 5102,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜べきではない",
+    "patternReading": "〜べきではない",
+    "meaning": "should not; ought not to (moral or logical obligation negated)"
+  },
+  {
+    "id": 5103,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜ことはない",
+    "patternReading": "〜ことはない",
+    "meaning": "there is no need to; you don't have to"
+  },
+  {
+    "id": 5104,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜に決まっている",
+    "patternReading": "〜にきまっている",
+    "meaning": "must certainly be; it is obvious that (strong confident assertion)"
+  },
+  {
+    "id": 5105,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜とは限らない",
+    "patternReading": "〜とはかぎらない",
+    "meaning": "not necessarily; it is not always the case that"
+  },
+  {
+    "id": 5106,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜に相違ない",
+    "patternReading": "〜にそういない",
+    "meaning": "there is no doubt that; must certainly be (formal, written)"
+  },
+  {
+    "id": 5107,
+    "jlpt": "N1",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜ないとも限らない",
+    "patternReading": "〜ないともかぎらない",
+    "meaning": "there is a chance that ~ might happen; cannot rule out"
+  },
+  {
+    "id": 5108,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜ものではない",
+    "patternReading": "〜ものではない",
+    "meaning": "one should not; it is not something that should be done (social norm)"
+  },
+  {
+    "id": 5109,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜はずはない",
+    "patternReading": "〜はずはない",
+    "meaning": "there is no way that; it cannot possibly be (strong denial of expectation)"
+  },
+  {
+    "id": 5110,
+    "jlpt": "N2",
+    "subcategory": "Expectation & Result",
+    "pattern": "〜結果",
+    "patternReading": "〜けっか",
+    "meaning": "as a result of; following ~ (the outcome of a process)"
+  },
+  {
+    "id": 5111,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜てはいけない",
+    "patternReading": "〜てはいけない",
+    "meaning": "must not; it is not permitted to (prohibition)"
+  },
+  {
+    "id": 5112,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜てもかまわない",
+    "patternReading": "〜てもかまわない",
+    "meaning": "it doesn't matter if; it is fine to; you may"
+  },
+  {
+    "id": 5113,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜ないわけにはいかない",
+    "patternReading": "〜ないわけにはいかない",
+    "meaning": "cannot avoid doing; must do (obligation from social/moral pressure)"
+  },
+  {
+    "id": 5114,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜ずにはすまない",
+    "patternReading": "〜ずにはすまない",
+    "meaning": "cannot get away without doing; the situation won't be resolved unless"
+  },
+  {
+    "id": 5115,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜てはならない",
+    "patternReading": "〜てはならない",
+    "meaning": "must not; shall not (firm prohibition, more formal than てはいけない)"
+  },
+  {
+    "id": 5116,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜ないではいられない",
+    "patternReading": "〜ないではいられない",
+    "meaning": "cannot help but; cannot stop oneself from (colloquial variant)"
+  },
+  {
+    "id": 5117,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜てはいられない",
+    "patternReading": "〜てはいられない",
+    "meaning": "cannot afford to keep doing; cannot just stay doing (urgency)"
+  },
+  {
+    "id": 5118,
+    "jlpt": "N1",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜ないではおかない",
+    "patternReading": "〜ないではおかない",
+    "meaning": "will definitely cause; bound to make (something inevitably happens)"
+  },
+  {
+    "id": 5119,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜得る / 〜得ない",
+    "patternReading": "〜うる / 〜えない",
+    "meaning": "can possibly; is possible / cannot possibly; is impossible"
+  },
+  {
+    "id": 5120,
+    "jlpt": "N2",
+    "subcategory": "Permission & Prohibition",
+    "pattern": "〜ものか",
+    "patternReading": "〜ものか",
+    "meaning": "as if I would; definitely not (strong refusal)"
+  },
+  {
+    "id": 5121,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜をもとに",
+    "patternReading": "〜をもとに",
+    "meaning": "based on; using ~ as a foundation or source"
+  },
+  {
+    "id": 5122,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜として",
+    "patternReading": "〜として",
+    "meaning": "as; in the capacity of; treating ~ as"
+  },
+  {
+    "id": 5123,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜にかけては",
+    "patternReading": "〜にかけては",
+    "meaning": "when it comes to; in terms of (expressing expertise or superiority)"
+  },
+  {
+    "id": 5124,
+    "jlpt": "N1",
+    "subcategory": "Manner & Method",
+    "pattern": "〜をもって",
+    "patternReading": "〜をもって",
+    "meaning": "by means of; with (formal instrument or means)"
+  },
+  {
+    "id": 5125,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜によると",
+    "patternReading": "〜によると",
+    "meaning": "according to (citing a source of information)"
+  },
+  {
+    "id": 5126,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜を中心に",
+    "patternReading": "〜をちゅうしんに",
+    "meaning": "centered on; focusing on; with ~ at the core"
+  },
+  {
+    "id": 5127,
+    "jlpt": "N1",
+    "subcategory": "Manner & Method",
+    "pattern": "〜に即して",
+    "patternReading": "〜にそくして",
+    "meaning": "in line with; based strictly on; in conformity with"
+  },
+  {
+    "id": 5128,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜次第だ",
+    "patternReading": "〜しだいだ",
+    "meaning": "it all depends on; it is determined by"
+  },
+  {
+    "id": 5129,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜にわたって",
+    "patternReading": "〜にわたって",
+    "meaning": "over; spanning; throughout (a range of time or space)"
+  },
+  {
+    "id": 5130,
+    "jlpt": "N2",
+    "subcategory": "Manner & Method",
+    "pattern": "〜に先立って",
+    "patternReading": "〜にさきだって",
+    "meaning": "prior to; before; in advance of (formal)"
+  },
+  {
+    "id": 5131,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜たとたんに",
+    "patternReading": "〜たとたんに",
+    "meaning": "the instant ~ happened; just as; no sooner than"
+  },
+  {
+    "id": 5132,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜か〜ないかのうちに",
+    "patternReading": "〜か〜ないかのうちに",
+    "meaning": "just as; barely ~ when; at the very moment of"
+  },
+  {
+    "id": 5133,
+    "jlpt": "N1",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜てからというもの",
+    "patternReading": "〜てからというもの",
+    "meaning": "ever since ~ happened (lasting change)"
+  },
+  {
+    "id": 5134,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜ばかりに",
+    "patternReading": "〜ばかりに",
+    "meaning": "just because; simply because (negative consequence from a single cause)"
+  },
+  {
+    "id": 5135,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜ところに",
+    "patternReading": "〜ところに",
+    "meaning": "just when; at the moment when (someone arrives at that point)"
+  },
+  {
+    "id": 5136,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜ところで",
+    "patternReading": "〜ところで",
+    "meaning": "even if ~ (futile action; the result won't change)"
+  },
+  {
+    "id": 5137,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜うちに",
+    "patternReading": "〜うちに",
+    "meaning": "while; before ~ changes (do it before the opportunity passes)"
+  },
+  {
+    "id": 5138,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜を前に",
+    "patternReading": "〜をまえに",
+    "meaning": "with ~ imminent; facing the prospect of; before (an impending event)"
+  },
+  {
+    "id": 5139,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜次第",
+    "patternReading": "〜しだい",
+    "meaning": "as soon as; immediately upon (completing an action)"
+  },
+  {
+    "id": 5140,
+    "jlpt": "N2",
+    "subcategory": "Time & Sequence",
+    "pattern": "〜最中に",
+    "patternReading": "〜さいちゅうに",
+    "meaning": "in the middle of; right in the middle of (at the peak of an action)"
+  },
+  {
+    "id": 5141,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜ほど",
+    "patternReading": "〜ほど",
+    "meaning": "to the extent that; so ~ that; about (degree or approximation)"
+  },
+  {
+    "id": 5142,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜ばかり",
+    "patternReading": "〜ばかり",
+    "meaning": "only; nothing but; approximately; just finished (multiple N2 uses)"
+  },
+  {
+    "id": 5143,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜しか〜ない",
+    "patternReading": "〜しか〜ない",
+    "meaning": "only; nothing but ~ (with negative predicate, emphasising scarcity)"
+  },
+  {
+    "id": 5144,
+    "jlpt": "N1",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜までもない",
+    "patternReading": "〜までもない",
+    "meaning": "there is no need to go so far as to; needn't even bother"
+  },
+  {
+    "id": 5145,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜くらい / ぐらい",
+    "patternReading": "〜くらい / ぐらい",
+    "meaning": "about; approximately; to the extent of (degree or quantity estimate)"
+  },
+  {
+    "id": 5146,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜など / なんか",
+    "patternReading": "〜など / なんか",
+    "meaning": "things like; such as; (dismissive) the likes of"
+  },
+  {
+    "id": 5147,
+    "jlpt": "N2",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜に至って",
+    "patternReading": "〜にいたって",
+    "meaning": "only when it comes to ~; not until ~ (belated realisation or action)"
+  },
+  {
+    "id": 5148,
+    "jlpt": "N1",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜極まりない",
+    "patternReading": "〜きわまりない",
+    "meaning": "extremely; in the extreme (strong negative evaluation, formal/written)"
+  },
+  {
+    "id": 5149,
+    "jlpt": "N1",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜にとどまらず",
+    "patternReading": "〜にとどまらず",
+    "meaning": "not limited to; going beyond (expanding scope)"
+  },
+  {
+    "id": 5150,
+    "jlpt": "N1",
+    "subcategory": "Quantity & Extent",
+    "pattern": "〜に足る",
+    "patternReading": "〜にたる",
+    "meaning": "worthy of; sufficient to; deserving of (formal written)"
+  },
+  {
+    "id": 5151,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜としても",
+    "patternReading": "〜としても",
+    "meaning": "even if; even assuming that (hypothetical concession)"
+  },
+  {
+    "id": 5152,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜にしろ〜にしろ",
+    "patternReading": "〜にしろ〜にしろ",
+    "meaning": "whether ~ or ~; regardless of which (covering all cases)"
+  },
+  {
+    "id": 5153,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜であれ〜であれ",
+    "patternReading": "〜であれ〜であれ",
+    "meaning": "whether ~ or ~; no matter which (formal, written)"
+  },
+  {
+    "id": 5154,
+    "jlpt": "N1",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜はさておき",
+    "patternReading": "〜はさておき",
+    "meaning": "setting ~ aside; leaving ~ for now"
+  },
+  {
+    "id": 5155,
+    "jlpt": "N1",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜もさることながら",
+    "patternReading": "〜もさることながら",
+    "meaning": "not only ~ but also; ~ goes without saying, but also"
+  },
+  {
+    "id": 5156,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜ならともかく",
+    "patternReading": "〜ならともかく",
+    "meaning": "~ would be one thing, but; if it were ~ that would be acceptable, but"
+  },
+  {
+    "id": 5157,
+    "jlpt": "N1",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜ないまでも",
+    "patternReading": "〜ないまでも",
+    "meaning": "even if not ~, at least; falling short of ~ but still"
+  },
+  {
+    "id": 5158,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜とはいうものの",
+    "patternReading": "〜とはいうものの",
+    "meaning": "having said that; that said; even though it is said that"
+  },
+  {
+    "id": 5159,
+    "jlpt": "N2",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜ものがある",
+    "patternReading": "〜ものがある",
+    "meaning": "there is something ~ about; has a certain quality of (emotive observation)"
+  },
+  {
+    "id": 5160,
+    "jlpt": "N1",
+    "subcategory": "Concession & Resignation",
+    "pattern": "〜たところで",
+    "patternReading": "〜たところで",
+    "meaning": "even if ~ (outcome remains the same; futility of effort)"
+  },
+  {
+    "id": 5161,
+    "jlpt": "N1",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜ゆえに",
+    "patternReading": "〜ゆえに",
+    "meaning": "because of; for the reason that; therefore (formal, written)"
+  },
+  {
+    "id": 5162,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜以上は",
+    "patternReading": "〜いじょうは",
+    "meaning": "now that; since; given that ~ (strong obligation follows)"
+  },
+  {
+    "id": 5163,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜からには",
+    "patternReading": "〜からには",
+    "meaning": "since; now that; given that ~ (strong determination or obligation)"
+  },
+  {
+    "id": 5164,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜ものだから",
+    "patternReading": "〜ものだから",
+    "meaning": "because; the thing is ~ (explaining or excusing one's actions)"
+  },
+  {
+    "id": 5165,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜せいで",
+    "patternReading": "〜せいで",
+    "meaning": "because of; due to (blaming a cause for a negative result)"
+  },
+  {
+    "id": 5166,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜おかげで",
+    "patternReading": "〜おかげで",
+    "meaning": "thanks to; owing to (crediting a cause for a positive result)"
+  },
+  {
+    "id": 5167,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜だけに",
+    "patternReading": "〜だけに",
+    "meaning": "precisely because; all the more because (expectation intensified by reason)"
+  },
+  {
+    "id": 5168,
+    "jlpt": "N1",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜とあって",
+    "patternReading": "〜とあって",
+    "meaning": "given that; because of the special circumstance that"
+  },
+  {
+    "id": 5169,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜ことから",
+    "patternReading": "〜ことから",
+    "meaning": "from the fact that; because (citing observable evidence as reason)"
+  },
+  {
+    "id": 5170,
+    "jlpt": "N2",
+    "subcategory": "Reason & Grounds",
+    "pattern": "〜ことだから",
+    "patternReading": "〜ことだから",
+    "meaning": "knowing ~ as I do; given what ~ is like (reasoning from character)"
+  },
+  {
+    "id": 5171,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜といった",
+    "patternReading": "〜といった",
+    "meaning": "such as; like (giving representative examples from a category)"
+  },
+  {
+    "id": 5172,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜なり〜なり",
+    "patternReading": "〜なり〜なり",
+    "meaning": "either ~ or ~; do one thing or another (offering choices)"
+  },
+  {
+    "id": 5173,
+    "jlpt": "N1",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜であれ",
+    "patternReading": "〜であれ",
+    "meaning": "even if it is; whether it is (single concessive listing, formal)"
+  },
+  {
+    "id": 5174,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜とか〜とか",
+    "patternReading": "〜とか〜とか",
+    "meaning": "things like ~ and ~ (listing non-exhaustive examples casually)"
+  },
+  {
+    "id": 5175,
+    "jlpt": "N1",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜ときたら",
+    "patternReading": "〜ときたら",
+    "meaning": "when it comes to; as for ~ (expressing complaint or strong emotion)"
+  },
+  {
+    "id": 5176,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜にせよ〜にせよ",
+    "patternReading": "〜にせよ〜にせよ",
+    "meaning": "whether ~ or ~; in either case (formal variant of にしろ〜にしろ)"
+  },
+  {
+    "id": 5177,
+    "jlpt": "N1",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜はおろか",
+    "patternReading": "〜はおろか",
+    "meaning": "let alone; not to mention; far from (something lesser is also impossible)"
+  },
+  {
+    "id": 5178,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜を問わず",
+    "patternReading": "〜をとわず",
+    "meaning": "regardless of; irrespective of (without distinction)"
+  },
+  {
+    "id": 5179,
+    "jlpt": "N2",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜といえば",
+    "patternReading": "〜といえば",
+    "meaning": "speaking of; when you mention ~ (topic-raising association)"
+  },
+  {
+    "id": 5180,
+    "jlpt": "N1",
+    "subcategory": "Listing & Exemplification",
+    "pattern": "〜なんて",
+    "patternReading": "〜なんて",
+    "meaning": "the fact that; something like; to think that ~ (surprise or contempt)"
+  },
+  {
+    "id": 5181,
+    "jlpt": "N1",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜も同然だ",
+    "patternReading": "〜もどうぜんだ",
+    "meaning": "is as good as; is practically; is virtually (equivalent to)"
+  },
+  {
+    "id": 5182,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜とされている",
+    "patternReading": "〜とされている",
+    "meaning": "is considered to be; is regarded as (socially accepted view)"
+  },
+  {
+    "id": 5183,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜と見られる",
+    "patternReading": "〜とみられる",
+    "meaning": "is believed to be; is thought to be (inference from evidence, formal)"
+  },
+  {
+    "id": 5184,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜ふりをする",
+    "patternReading": "〜ふりをする",
+    "meaning": "to pretend to; to act as if (intentional deception)"
+  },
+  {
+    "id": 5185,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜気がする",
+    "patternReading": "〜きがする",
+    "meaning": "have a feeling that; feel as though (vague personal impression)"
+  },
+  {
+    "id": 5186,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜に違いなかった",
+    "patternReading": "〜にちがいなかった",
+    "meaning": "must have been; there is no doubt it was (past inference)"
+  },
+  {
+    "id": 5187,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜らしくない",
+    "patternReading": "〜らしくない",
+    "meaning": "uncharacteristic of; not typical of; unlike (expected behaviour)"
+  },
+  {
+    "id": 5188,
+    "jlpt": "N1",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜めく",
+    "patternReading": "〜めく",
+    "meaning": "to seem like; to take on the appearance of (acquiring a quality)"
+  },
+  {
+    "id": 5189,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜と思われる",
+    "patternReading": "〜とおもわれる",
+    "meaning": "is thought to; appears to (objective third-party inference, formal)"
+  },
+  {
+    "id": 5190,
+    "jlpt": "N2",
+    "subcategory": "Appearance & Impression",
+    "pattern": "〜感がある",
+    "patternReading": "〜かんがある",
+    "meaning": "there is a sense of; one gets the feeling of (subjective impression)"
+  },
+  {
+    "id": 5191,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜を踏まえて",
+    "patternReading": "〜をふまえて",
+    "meaning": "taking ~ into account; based on; building on (using as a foundation)"
+  },
+  {
+    "id": 5192,
+    "jlpt": "N2",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜に鑑みて",
+    "patternReading": "〜にかんがみて",
+    "meaning": "in light of; considering; given (formal written, policy/judgment context)"
+  },
+  {
+    "id": 5193,
+    "jlpt": "N2",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜に相まって",
+    "patternReading": "〜にあいまって",
+    "meaning": "combined with; together with (two factors producing an amplified effect)"
+  },
+  {
+    "id": 5194,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜のいかんによらず",
+    "patternReading": "〜のいかんによらず",
+    "meaning": "regardless of; no matter what ~ is (very formal written)"
+  },
+  {
+    "id": 5195,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜かたがた",
+    "patternReading": "〜かたがた",
+    "meaning": "partly to ~; taking the opportunity to (combining two purposes, formal)"
+  },
+  {
+    "id": 5196,
+    "jlpt": "N2",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜ついでに",
+    "patternReading": "〜ついでに",
+    "meaning": "while you are at it; taking the opportunity of ~ to also do"
+  },
+  {
+    "id": 5197,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜かたわら",
+    "patternReading": "〜かたわら",
+    "meaning": "while; alongside; in addition to one's main activity"
+  },
+  {
+    "id": 5198,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜を経て",
+    "patternReading": "〜をへて",
+    "meaning": "through; after going through; via (a process or experience)"
+  },
+  {
+    "id": 5199,
+    "jlpt": "N1",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜に至るまで",
+    "patternReading": "〜にいたるまで",
+    "meaning": "down to; ranging to; going as far as (exhaustive range)"
+  },
+  {
+    "id": 5200,
+    "jlpt": "N2",
+    "subcategory": "Formal & Written Expressions",
+    "pattern": "〜をもとにして",
+    "patternReading": "〜をもとにして",
+    "meaning": "based on; taking ~ as the starting material (making something new from source)"
+  },
+  {
+    "id": 5201,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜せる / させる",
+    "patternReading": "〜せる / させる",
+    "meaning": "to make/let someone do (causative)"
+  },
+  {
+    "id": 5202,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜（ら）れる",
+    "patternReading": "〜（ら）れる",
+    "meaning": "to be done to; to have something happen to one (passive)"
+  },
+  {
+    "id": 5203,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜させられる",
+    "patternReading": "〜させられる",
+    "meaning": "to be made to do (causative-passive, often reluctant)"
+  },
+  {
+    "id": 5204,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜てもらう",
+    "patternReading": "〜てもらう",
+    "meaning": "to receive the favor of someone doing something"
+  },
+  {
+    "id": 5205,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜ていただく",
+    "patternReading": "〜ていただく",
+    "meaning": "to receive the favor of someone doing something (humble)"
+  },
+  {
+    "id": 5206,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜てくれる",
+    "patternReading": "〜てくれる",
+    "meaning": "someone does something for me/us"
+  },
+  {
+    "id": 5207,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜てあげる",
+    "patternReading": "〜てあげる",
+    "meaning": "to do something for someone (as a favor)"
+  },
+  {
+    "id": 5208,
+    "jlpt": "N2",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜まいとする",
+    "patternReading": "〜まいとする",
+    "meaning": "to try not to do; to resist doing"
+  },
+  {
+    "id": 5209,
+    "jlpt": "N1",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜んばかりに",
+    "patternReading": "〜んばかりに",
+    "meaning": "as if about to; looking as though (dramatic, visual)"
+  },
+  {
+    "id": 5210,
+    "jlpt": "N1",
+    "subcategory": "Passive & Causative",
+    "pattern": "〜んがために",
+    "patternReading": "〜んがために",
+    "meaning": "in order to; for the sake of (formal, written)"
+  },
+  {
+    "id": 5211,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "お〜になる",
+    "patternReading": "お〜になる",
+    "meaning": "respectful form: to do (raising the subject)"
+  },
+  {
+    "id": 5212,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "お〜する",
+    "patternReading": "お〜する",
+    "meaning": "humble form: to do (lowering oneself)"
+  },
+  {
+    "id": 5213,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "〜れる / られる",
+    "patternReading": "〜れる / られる",
+    "meaning": "respectful passive-form: to do (mild honorific)"
+  },
+  {
+    "id": 5214,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "〜でございます",
+    "patternReading": "〜でございます",
+    "meaning": "formal polite copula: to be (very polite)"
+  },
+  {
+    "id": 5215,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "〜させていただく",
+    "patternReading": "〜させていただく",
+    "meaning": "to humbly be allowed to do (permission-seeking humble form)"
+  },
+  {
+    "id": 5216,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "〜いたす",
+    "patternReading": "〜いたす",
+    "meaning": "humble form of する: to do"
+  },
+  {
+    "id": 5217,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "〜くださる",
+    "patternReading": "〜くださる",
+    "meaning": "respectful form of くれる: to kindly give/do"
+  },
+  {
+    "id": 5218,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "参る",
+    "patternReading": "まいる",
+    "meaning": "humble form of 行く／来る: to go/come"
+  },
+  {
+    "id": 5219,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "申す",
+    "patternReading": "もうす",
+    "meaning": "humble form of 言う: to say (one's own name/words)"
+  },
+  {
+    "id": 5220,
+    "jlpt": "N2",
+    "subcategory": "Honorific & Humble Expressions",
+    "pattern": "存じる",
+    "patternReading": "ぞんじる",
+    "meaning": "humble form of 思う／知る: to think/know"
+  },
+  {
+    "id": 5221,
+    "jlpt": "N2",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜つつ",
+    "patternReading": "〜つつ",
+    "meaning": "while doing (formal, simultaneous action)"
+  },
+  {
+    "id": 5222,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜がてら",
+    "patternReading": "〜がてら",
+    "meaning": "while doing; on the occasion of (combining two purposes)"
+  },
+  {
+    "id": 5223,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜や否や",
+    "patternReading": "〜やいなや",
+    "meaning": "the moment; as soon as (immediate sequence)"
+  },
+  {
+    "id": 5224,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜そばから",
+    "patternReading": "〜そばから",
+    "meaning": "no sooner...than (repeated undoing pattern)"
+  },
+  {
+    "id": 5225,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜なり",
+    "patternReading": "〜なり",
+    "meaning": "the instant; immediately upon doing"
+  },
+  {
+    "id": 5226,
+    "jlpt": "N2",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜と同時に",
+    "patternReading": "〜とどうじに",
+    "meaning": "at the same time as; simultaneously with"
+  },
+  {
+    "id": 5227,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜折に",
+    "patternReading": "〜おりに",
+    "meaning": "on the occasion of; when (formal)"
+  },
+  {
+    "id": 5228,
+    "jlpt": "N2",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜矢先に",
+    "patternReading": "〜やさきに",
+    "meaning": "just as; right at the moment when (something was about to happen)"
+  },
+  {
+    "id": 5229,
+    "jlpt": "N2",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜て間もなく",
+    "patternReading": "〜てまもなく",
+    "meaning": "soon after doing"
+  },
+  {
+    "id": 5230,
+    "jlpt": "N1",
+    "subcategory": "Simultaneity & Sequence",
+    "pattern": "〜が早いか",
+    "patternReading": "〜がはやいか",
+    "meaning": "no sooner...than; the moment"
+  },
+  {
+    "id": 5231,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜としたら",
+    "patternReading": "〜としたら",
+    "meaning": "if we suppose that; assuming that"
+  },
+  {
+    "id": 5232,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜にしたら",
+    "patternReading": "〜にしたら",
+    "meaning": "from the standpoint of; if it were up to"
+  },
+  {
+    "id": 5233,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜と仮定すると",
+    "patternReading": "〜とかていすると",
+    "meaning": "assuming that; supposing that"
+  },
+  {
+    "id": 5234,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜ものなら",
+    "patternReading": "〜ものなら",
+    "meaning": "if only; if one could possibly (wishful hypothetical)"
+  },
+  {
+    "id": 5235,
+    "jlpt": "N1",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜なくしては",
+    "patternReading": "〜なくしては",
+    "meaning": "without; if it were not for"
+  },
+  {
+    "id": 5236,
+    "jlpt": "N1",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜あっての",
+    "patternReading": "〜あっての",
+    "meaning": "only possible thanks to; existing because of"
+  },
+  {
+    "id": 5237,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜と言っても過言ではない",
+    "patternReading": "〜といってもかごんではない",
+    "meaning": "it is not an exaggeration to say"
+  },
+  {
+    "id": 5238,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜と思いきや",
+    "patternReading": "〜とおもいきや",
+    "meaning": "contrary to expectation; thought that...but"
+  },
+  {
+    "id": 5239,
+    "jlpt": "N1",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜たら最後",
+    "patternReading": "〜たらさいご",
+    "meaning": "once...then there's no going back; once...inevitably"
+  },
+  {
+    "id": 5240,
+    "jlpt": "N2",
+    "subcategory": "Assumption & Hypothetical",
+    "pattern": "〜うと〜まいと",
+    "patternReading": "〜うと〜まいと",
+    "meaning": "whether or not; regardless of whether"
+  },
+  {
+    "id": 5241,
+    "jlpt": "N2",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜ばよかった",
+    "patternReading": "〜ばよかった",
+    "meaning": "I wish I had (regret over a past choice)"
+  },
+  {
+    "id": 5242,
+    "jlpt": "N2",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜べきだった",
+    "patternReading": "〜べきだった",
+    "meaning": "should have (past obligation not met)"
+  },
+  {
+    "id": 5243,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜とは",
+    "patternReading": "〜とは",
+    "meaning": "the surprising/regrettable fact that"
+  },
+  {
+    "id": 5244,
+    "jlpt": "N2",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜ことに",
+    "patternReading": "〜ことに",
+    "meaning": "regrettably/surprisingly, (something happened)"
+  },
+  {
+    "id": 5245,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜きらいがある",
+    "patternReading": "〜きらいがある",
+    "meaning": "has a tendency to (negative nuance)"
+  },
+  {
+    "id": 5246,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜てしかるべきだ",
+    "patternReading": "〜てしかるべきだ",
+    "meaning": "should rightfully; ought to as a matter of course"
+  },
+  {
+    "id": 5247,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜まじき",
+    "patternReading": "〜まじき",
+    "meaning": "should not; unforgivable (strong moral criticism)"
+  },
+  {
+    "id": 5248,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜たりとも〜ない",
+    "patternReading": "〜たりとも〜ない",
+    "meaning": "not even a single (strong emphatic negative)"
+  },
+  {
+    "id": 5249,
+    "jlpt": "N1",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜には当たらない",
+    "patternReading": "〜にはあたらない",
+    "meaning": "does not warrant; is not worth doing"
+  },
+  {
+    "id": 5250,
+    "jlpt": "N2",
+    "subcategory": "Criticism, Regret & Reproach",
+    "pattern": "〜もいいところだ",
+    "patternReading": "〜もいいところだ",
+    "meaning": "is downright; is nothing short of (critical emphasis)"
+  },
+  {
+    "id": 5251,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜に比べ",
+    "patternReading": "〜にくらべ",
+    "meaning": "compared to; in comparison with"
+  },
+  {
+    "id": 5252,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜に反し",
+    "patternReading": "〜にはんし",
+    "meaning": "contrary to; in contrast to"
+  },
+  {
+    "id": 5253,
+    "jlpt": "N1",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜にひきかえ",
+    "patternReading": "〜にひきかえ",
+    "meaning": "in stark contrast to"
+  },
+  {
+    "id": 5254,
+    "jlpt": "N1",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜にもまして",
+    "patternReading": "〜にもまして",
+    "meaning": "even more than; more so than"
+  },
+  {
+    "id": 5255,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜に匹敵する",
+    "patternReading": "〜にひってきする",
+    "meaning": "to be comparable to; to rival"
+  },
+  {
+    "id": 5256,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜と対照的に",
+    "patternReading": "〜とたいしょうてきに",
+    "meaning": "in contrast to"
+  },
+  {
+    "id": 5257,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜であればあるほど",
+    "patternReading": "〜であればあるほど",
+    "meaning": "the more...the more (with な-adjective / noun)"
+  },
+  {
+    "id": 5258,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜であろうと〜であろうと",
+    "patternReading": "〜であろうと〜であろうと",
+    "meaning": "whether it be...or...; regardless of which"
+  },
+  {
+    "id": 5259,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜にひけをとらない",
+    "patternReading": "〜にひけをとらない",
+    "meaning": "to be a match for; not inferior to"
+  },
+  {
+    "id": 5260,
+    "jlpt": "N2",
+    "subcategory": "Comparison & Contrast",
+    "pattern": "〜どころではない",
+    "patternReading": "〜どころではない",
+    "meaning": "not the time/situation for; far from being able to"
+  },
+  {
+    "id": 5261,
+    "jlpt": "N1",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜ばこそ",
+    "patternReading": "〜ばこそ",
+    "meaning": "precisely because (strong causal emphasis)"
+  },
+  {
+    "id": 5262,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜に起因する",
+    "patternReading": "〜にきいんする",
+    "meaning": "to originate from; to be caused by"
+  },
+  {
+    "id": 5263,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜に起因して",
+    "patternReading": "〜にきいんして",
+    "meaning": "arising from; stemming from"
+  },
+  {
+    "id": 5264,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜に端を発する",
+    "patternReading": "〜にたんをはっする",
+    "meaning": "to originate from; to be triggered by"
+  },
+  {
+    "id": 5265,
+    "jlpt": "N1",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜がゆえに",
+    "patternReading": "〜がゆえに",
+    "meaning": "precisely because; due to the fact that (formal)"
+  },
+  {
+    "id": 5266,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜ことによって",
+    "patternReading": "〜ことによって",
+    "meaning": "by (doing); as a result of doing"
+  },
+  {
+    "id": 5267,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜ゆえの",
+    "patternReading": "〜ゆえの",
+    "meaning": "resulting from; born of (formal, attributive)"
+  },
+  {
+    "id": 5268,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜に基づき",
+    "patternReading": "〜にもとづき",
+    "meaning": "based on (formal variant of に基づいて)"
+  },
+  {
+    "id": 5269,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜に伴う",
+    "patternReading": "〜にともなう",
+    "meaning": "accompanying; associated with"
+  },
+  {
+    "id": 5270,
+    "jlpt": "N2",
+    "subcategory": "Cause & Effect Chains",
+    "pattern": "〜結果として",
+    "patternReading": "〜けっかとして",
+    "meaning": "as a result"
+  },
+  {
+    "id": 5271,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜に限り",
+    "patternReading": "〜にかぎり",
+    "meaning": "limited to; only in the case of"
+  },
+  {
+    "id": 5272,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜を除いて",
+    "patternReading": "〜をのぞいて",
+    "meaning": "except for; excluding"
+  },
+  {
+    "id": 5273,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜に限らず",
+    "patternReading": "〜にかぎらず",
+    "meaning": "not limited to; not only"
+  },
+  {
+    "id": 5274,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜のみ",
+    "patternReading": "〜のみ",
+    "meaning": "only; solely (formal)"
+  },
+  {
+    "id": 5275,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜に限って",
+    "patternReading": "〜にかぎって",
+    "meaning": "of all times; especially in this case (often ironic)"
+  },
+  {
+    "id": 5276,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜を除けば",
+    "patternReading": "〜をのぞけば",
+    "meaning": "if we exclude; apart from"
+  },
+  {
+    "id": 5277,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜でしかない",
+    "patternReading": "〜でしかない",
+    "meaning": "is nothing but; is merely"
+  },
+  {
+    "id": 5278,
+    "jlpt": "N2",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜に限った話ではない",
+    "patternReading": "〜にかぎったはなしではない",
+    "meaning": "is not limited to this particular case"
+  },
+  {
+    "id": 5279,
+    "jlpt": "N1",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜ならいざしらず",
+    "patternReading": "〜ならいざしらず",
+    "meaning": "that might be one thing, but; if it were...that would be different"
+  },
+  {
+    "id": 5280,
+    "jlpt": "N1",
+    "subcategory": "Restriction & Exception",
+    "pattern": "〜でなくてなんだろう",
+    "patternReading": "〜でなくてなんだろう",
+    "meaning": "if this isn't...then what is (rhetorical emphasis)"
+  },
+  {
+    "id": 5281,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜と大変なことになる",
+    "patternReading": "〜とたいへんなことになる",
+    "meaning": "if...it will become a serious problem"
+  },
+  {
+    "id": 5282,
+    "jlpt": "N1",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜には及ばない",
+    "patternReading": "〜にはおよばない",
+    "meaning": "there is no need to go so far as to"
+  },
+  {
+    "id": 5283,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜恐れがある",
+    "patternReading": "〜おそれがある",
+    "meaning": "there is a risk/fear that"
+  },
+  {
+    "id": 5284,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜にご注意ください",
+    "patternReading": "〜にごちゅういください",
+    "meaning": "please be careful of (formal warning)"
+  },
+  {
+    "id": 5285,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜と取り返しがつかない",
+    "patternReading": "〜ととりかえしがつかない",
+    "meaning": "if...it will be irreversible"
+  },
+  {
+    "id": 5286,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜てはすまされない",
+    "patternReading": "〜てはすまされない",
+    "meaning": "cannot be let off with just doing; won't be excused by"
+  },
+  {
+    "id": 5287,
+    "jlpt": "N1",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜にも程がある",
+    "patternReading": "〜にもほどがある",
+    "meaning": "there's a limit to; goes too far (critical)"
+  },
+  {
+    "id": 5288,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜と言わざるを得ない",
+    "patternReading": "〜といわざるをえない",
+    "meaning": "one has no choice but to say; must admit that"
+  },
+  {
+    "id": 5289,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜由々しき",
+    "patternReading": "〜ゆゆしき",
+    "meaning": "grave; serious (formal warning about a matter)"
+  },
+  {
+    "id": 5290,
+    "jlpt": "N2",
+    "subcategory": "Warning & Caution",
+    "pattern": "〜を肝に銘じる",
+    "patternReading": "〜をきもにめいじる",
+    "meaning": "to keep firmly in mind; to take to heart"
+  },
+  {
+    "id": 5291,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜なくてはならない",
+    "patternReading": "〜なくてはならない",
+    "meaning": "must; have to (obligation)"
+  },
+  {
+    "id": 5292,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜ねばならない",
+    "patternReading": "〜ねばならない",
+    "meaning": "must; have to (formal, written)"
+  },
+  {
+    "id": 5293,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜を要する",
+    "patternReading": "〜をようする",
+    "meaning": "to require; to need"
+  },
+  {
+    "id": 5294,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜義務がある",
+    "patternReading": "〜ぎむがある",
+    "meaning": "to have a duty/obligation to"
+  },
+  {
+    "id": 5295,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜より他ない",
+    "patternReading": "〜よりほかない",
+    "meaning": "there is no other way but to; have no choice but to"
+  },
+  {
+    "id": 5296,
+    "jlpt": "N1",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜べからず",
+    "patternReading": "〜べからず",
+    "meaning": "must not; shall not (formal prohibition, notices)"
+  },
+  {
+    "id": 5297,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜必至だ",
+    "patternReading": "〜ひっしだ",
+    "meaning": "is inevitable; is certain to happen"
+  },
+  {
+    "id": 5298,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜てはじめて",
+    "patternReading": "〜てはじめて",
+    "meaning": "only after doing; not until"
+  },
+  {
+    "id": 5299,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜なければ話にならない",
+    "patternReading": "〜なければはなしにならない",
+    "meaning": "without...it's out of the question; it won't even get started"
+  },
+  {
+    "id": 5300,
+    "jlpt": "N2",
+    "subcategory": "Necessity & Obligation",
+    "pattern": "〜てこそ",
+    "patternReading": "〜てこそ",
+    "meaning": "only by doing; precisely because one does"
+  },
+  {
+    "id": 5301,
+    "jlpt": "N1",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜てやまない",
+    "patternReading": "〜てやまない",
+    "meaning": "never cease to; deeply and continuously (feel)"
+  },
+  {
+    "id": 5302,
+    "jlpt": "N1",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜んばかりだ",
+    "patternReading": "〜んばかりだ",
+    "meaning": "looks as if about to (dramatic, predicate-final)"
+  },
+  {
+    "id": 5303,
+    "jlpt": "N1",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜すら",
+    "patternReading": "〜すら",
+    "meaning": "even; not to mention (formal, emphatic)"
+  },
+  {
+    "id": 5304,
+    "jlpt": "N1",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜だに",
+    "patternReading": "〜だに",
+    "meaning": "even; the mere (thought/act) of (formal, emphatic)"
+  },
+  {
+    "id": 5305,
+    "jlpt": "N2",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜てしようがない",
+    "patternReading": "〜てしようがない",
+    "meaning": "cannot help but feel; extremely (emotion/sensation)"
+  },
+  {
+    "id": 5306,
+    "jlpt": "N2",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜てはたまらない",
+    "patternReading": "〜てはたまらない",
+    "meaning": "cannot stand it if; unbearable if"
+  },
+  {
+    "id": 5307,
+    "jlpt": "N1",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜べく",
+    "patternReading": "〜べく",
+    "meaning": "in order to; with the goal of (formal, written)"
+  },
+  {
+    "id": 5308,
+    "jlpt": "N2",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜というものだ",
+    "patternReading": "〜というものだ",
+    "meaning": "that's just what X means; that's the nature of"
+  },
+  {
+    "id": 5309,
+    "jlpt": "N2",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜と言わんばかりに",
+    "patternReading": "〜といわんばかりに",
+    "meaning": "as if to say; practically saying (without words)"
+  },
+  {
+    "id": 5310,
+    "jlpt": "N2",
+    "subcategory": "Emphasis & Insistence",
+    "pattern": "〜極みだ",
+    "patternReading": "〜きわみだ",
+    "meaning": "the height of; utterly (formal, extreme evaluation)"
+  },
+  {
+    "id": 5311,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜ずくめ",
+    "patternReading": "〜ずくめ",
+    "meaning": "nothing but; all (of one kind)"
+  },
+  {
+    "id": 5312,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜っぱなし",
+    "patternReading": "〜っぱなし",
+    "meaning": "leaving something in a state; left as is (often negligent)"
+  },
+  {
+    "id": 5313,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜たきり",
+    "patternReading": "〜たきり",
+    "meaning": "ever since; and that was the last time"
+  },
+  {
+    "id": 5314,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜まみれ",
+    "patternReading": "〜まみれ",
+    "meaning": "covered in; smeared with"
+  },
+  {
+    "id": 5315,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜づくし",
+    "patternReading": "〜づくし",
+    "meaning": "full of; entirely made up of"
+  },
+  {
+    "id": 5316,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜三昧",
+    "patternReading": "〜ざんまい",
+    "meaning": "immersed in; indulging in (an activity)"
+  },
+  {
+    "id": 5317,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜一辺倒",
+    "patternReading": "〜いっぺんとう",
+    "meaning": "exclusively focused on; single-minded devotion to"
+  },
+  {
+    "id": 5318,
+    "jlpt": "N2",
+    "subcategory": "State & Condition",
+    "pattern": "〜そのものだ",
+    "patternReading": "〜そのものだ",
+    "meaning": "is the very embodiment of"
+  },
+  {
+    "id": 5319,
+    "jlpt": "N2",
+    "subcategory": "State & Condition",
+    "pattern": "〜然とした",
+    "patternReading": "〜ぜんとした",
+    "meaning": "looking every bit like; -esque"
+  },
+  {
+    "id": 5320,
+    "jlpt": "N1",
+    "subcategory": "State & Condition",
+    "pattern": "〜がましい",
+    "patternReading": "〜がましい",
+    "meaning": "having the air/quality of (often negative)"
+  },
+  {
+    "id": 5321,
+    "jlpt": "N2",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜と目される",
+    "patternReading": "〜ともくされる",
+    "meaning": "to be regarded as; to be seen as"
+  },
+  {
+    "id": 5322,
+    "jlpt": "N2",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜と評される",
+    "patternReading": "〜とひょうされる",
+    "meaning": "to be described/evaluated as"
+  },
+  {
+    "id": 5323,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜めいた",
+    "patternReading": "〜めいた",
+    "meaning": "having the air of; -like"
+  },
+  {
+    "id": 5324,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜さながら",
+    "patternReading": "〜さながら",
+    "meaning": "just like; as if (formal simile)"
+  },
+  {
+    "id": 5325,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜たるもの",
+    "patternReading": "〜たるもの",
+    "meaning": "as one who holds the status of; being a true"
+  },
+  {
+    "id": 5326,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜と相まって",
+    "patternReading": "〜とあいまって",
+    "meaning": "combined with; together with"
+  },
+  {
+    "id": 5327,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜にして",
+    "patternReading": "〜にして",
+    "meaning": "even a person as accomplished as; at the stage of"
+  },
+  {
+    "id": 5328,
+    "jlpt": "N1",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜ながらに",
+    "patternReading": "〜ながらに",
+    "meaning": "while still in the state of; as-is"
+  },
+  {
+    "id": 5329,
+    "jlpt": "N2",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜と化す",
+    "patternReading": "〜とかす",
+    "meaning": "to transform into; to become (often dramatic change)"
+  },
+  {
+    "id": 5330,
+    "jlpt": "N2",
+    "subcategory": "Perception & Reputation",
+    "pattern": "〜と成り果てる",
+    "patternReading": "〜となりはてる",
+    "meaning": "to degenerate into; to end up as (negative)"
+  },
+  {
+    "id": 5331,
+    "jlpt": "N1",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜のではあるまいか",
+    "patternReading": "〜のではあるまいか",
+    "meaning": "isn't it perhaps the case that (rhetorical speculation)"
+  },
+  {
+    "id": 5332,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜と推測される",
+    "patternReading": "〜とすいそくされる",
+    "meaning": "is presumed/inferred to be"
+  },
+  {
+    "id": 5333,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜と考えられる",
+    "patternReading": "〜とかんがえられる",
+    "meaning": "is thought to be; is considered"
+  },
+  {
+    "id": 5334,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜とみなされる",
+    "patternReading": "〜とみなされる",
+    "meaning": "is regarded as; is deemed"
+  },
+  {
+    "id": 5335,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜という見方もある",
+    "patternReading": "〜というみかたもある",
+    "meaning": "there is also the view that"
+  },
+  {
+    "id": 5336,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜という声がある",
+    "patternReading": "〜というこえがある",
+    "meaning": "there are voices/opinions saying that"
+  },
+  {
+    "id": 5337,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜との見解を示す",
+    "patternReading": "〜とのけんかいをしめす",
+    "meaning": "to express the view/opinion that (formal)"
+  },
+  {
+    "id": 5338,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜が濃厚だ",
+    "patternReading": "〜がのうこうだ",
+    "meaning": "is highly likely; strong possibility of"
+  },
+  {
+    "id": 5339,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜の兆しがある",
+    "patternReading": "〜のきざしがある",
+    "meaning": "there are signs of"
+  },
+  {
+    "id": 5340,
+    "jlpt": "N2",
+    "subcategory": "Inference & Speculation",
+    "pattern": "〜の様相を呈する",
+    "patternReading": "〜のようそうをていする",
+    "meaning": "to take on the appearance of; to show signs of becoming"
+  },
+  {
+    "id": 5341,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜ては〜ては",
+    "patternReading": "〜ては〜ては",
+    "meaning": "repeatedly doing X and Y alternately"
+  },
+  {
+    "id": 5342,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜たびに",
+    "patternReading": "〜たびに",
+    "meaning": "every time; on each occasion"
+  },
+  {
+    "id": 5343,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜につけ",
+    "patternReading": "〜につけ",
+    "meaning": "whenever; every time (associative)"
+  },
+  {
+    "id": 5344,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜おきに",
+    "patternReading": "〜おきに",
+    "meaning": "at intervals of"
+  },
+  {
+    "id": 5345,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜一方だ",
+    "patternReading": "〜いっぽうだ",
+    "meaning": "continuously becoming more so; only getting more X"
+  },
+  {
+    "id": 5346,
+    "jlpt": "N1",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜といい〜といい",
+    "patternReading": "〜といい〜といい",
+    "meaning": "whether you say X or Y; both examples show"
+  },
+  {
+    "id": 5347,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜明けても暮れても",
+    "patternReading": "〜あけてもくれても",
+    "meaning": "from dawn to dusk; all the time (idiomatic continuity)"
+  },
+  {
+    "id": 5348,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜ねんがらねんじゅう",
+    "patternReading": "〜ねんがらねんじゅう",
+    "meaning": "all year round; constantly"
+  },
+  {
+    "id": 5349,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜四六時中",
+    "patternReading": "〜しろくじちゅう",
+    "meaning": "around the clock; constantly"
+  },
+  {
+    "id": 5350,
+    "jlpt": "N2",
+    "subcategory": "Habitual Actions & Recurring Patterns",
+    "pattern": "〜つ〜つ",
+    "patternReading": "〜つ〜つ",
+    "meaning": "alternating between (two opposite actions, literary)"
+  },
+  {
+    "id": 5351,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜たらどうか",
+    "patternReading": "〜たらどうか",
+    "meaning": "why don't you; how about doing (suggestion)"
+  },
+  {
+    "id": 5352,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜ずにはすまされない",
+    "patternReading": "〜ずにはすまされない",
+    "meaning": "cannot get away without doing (formal variant)"
+  },
+  {
+    "id": 5353,
+    "jlpt": "N1",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜ものを",
+    "patternReading": "〜ものを",
+    "meaning": "even though; if only (with regretful nuance about a missed choice)"
+  },
+  {
+    "id": 5354,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜手はない",
+    "patternReading": "〜てはない",
+    "meaning": "there's no reason not to; it would be a shame not to"
+  },
+  {
+    "id": 5355,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜が賢明だ",
+    "patternReading": "〜がけんめいだ",
+    "meaning": "it is wise to; the prudent choice is"
+  },
+  {
+    "id": 5356,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜に如くはない",
+    "patternReading": "〜にしくはない",
+    "meaning": "nothing is better than (formal)"
+  },
+  {
+    "id": 5357,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜が得策だ",
+    "patternReading": "〜がとくさくだ",
+    "meaning": "is the wisest strategy; is the best policy"
+  },
+  {
+    "id": 5358,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜をお勧めする",
+    "patternReading": "〜をおすすめする",
+    "meaning": "to recommend"
+  },
+  {
+    "id": 5359,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜と忠告する",
+    "patternReading": "〜とちゅうこくする",
+    "meaning": "to advise that; to warn that"
+  },
+  {
+    "id": 5360,
+    "jlpt": "N2",
+    "subcategory": "Advice & Recommendation",
+    "pattern": "〜が望ましい",
+    "patternReading": "〜がのぞましい",
+    "meaning": "is desirable; is preferable"
+  },
+  {
+    "id": 5361,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜んがための",
+    "patternReading": "〜んがための",
+    "meaning": "for the purpose of; aimed at (formal, attributive)"
+  },
+  {
+    "id": 5362,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜べく努める",
+    "patternReading": "〜べくつとめる",
+    "meaning": "to make efforts in order to"
+  },
+  {
+    "id": 5363,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜ことを目指す",
+    "patternReading": "〜ことをめざす",
+    "meaning": "to aim to; to have as one's goal"
+  },
+  {
+    "id": 5364,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜を目的として",
+    "patternReading": "〜をもくてきとして",
+    "meaning": "with the purpose of; for the purpose of"
+  },
+  {
+    "id": 5365,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜を狙って",
+    "patternReading": "〜をねらって",
+    "meaning": "aiming at; targeting"
+  },
+  {
+    "id": 5366,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜という意図で",
+    "patternReading": "〜といういとで",
+    "meaning": "with the intention of"
+  },
+  {
+    "id": 5367,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜つもりで",
+    "patternReading": "〜つもりで",
+    "meaning": "with the intention of; meaning to"
+  },
+  {
+    "id": 5368,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜心づもりで",
+    "patternReading": "〜こころづもりで",
+    "meaning": "with the mental readiness to; prepared to"
+  },
+  {
+    "id": 5369,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜と画策する",
+    "patternReading": "〜とかくさくする",
+    "meaning": "to scheme to; to plot to (often negative)"
+  },
+  {
+    "id": 5370,
+    "jlpt": "N2",
+    "subcategory": "Purpose & Intention",
+    "pattern": "〜を計画する",
+    "patternReading": "〜をけいかくする",
+    "meaning": "to plan; to plot (often ambitious or negative)"
+  },
+  {
+    "id": 5371,
+    "jlpt": "N1",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜極まる",
+    "patternReading": "〜きわまる",
+    "meaning": "extremely; to the utmost degree (formal)"
+  },
+  {
+    "id": 5372,
+    "jlpt": "N1",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜この上ない",
+    "patternReading": "〜このうえない",
+    "meaning": "nothing could be more; the utmost"
+  },
+  {
+    "id": 5373,
+    "jlpt": "N1",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜と言ったらない",
+    "patternReading": "〜といったらない",
+    "meaning": "is beyond words; is indescribably (emotional emphasis)"
+  },
+  {
+    "id": 5374,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜たらありゃしない",
+    "patternReading": "〜たらありゃしない",
+    "meaning": "is nothing short of; is unbearably (colloquial, emphatic)"
+  },
+  {
+    "id": 5375,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜のなんの",
+    "patternReading": "〜のなんの",
+    "meaning": "so much so; extremely (colloquial exaggeration)"
+  },
+  {
+    "id": 5376,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜山々だ",
+    "patternReading": "〜やまやまだ",
+    "meaning": "would love to; strongly want to (but circumstances prevent it)"
+  },
+  {
+    "id": 5377,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜甚だしい",
+    "patternReading": "〜はなはだしい",
+    "meaning": "extreme; excessive (formal, often critical)"
+  },
+  {
+    "id": 5378,
+    "jlpt": "N1",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜至極",
+    "patternReading": "〜しごく",
+    "meaning": "extremely; utterly (formal)"
+  },
+  {
+    "id": 5379,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜あまりに",
+    "patternReading": "〜あまりに",
+    "meaning": "so much that; excessively (leads to a result)"
+  },
+  {
+    "id": 5380,
+    "jlpt": "N2",
+    "subcategory": "Degree & Extremity",
+    "pattern": "〜きわまりない",
+    "patternReading": "〜きわまりない",
+    "meaning": "extremely; in the extreme (formal, negative evaluation)"
+  },
+  {
+    "id": 5381,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜と裏腹に",
+    "patternReading": "〜とうらはらに",
+    "meaning": "contrary to; in contradiction with"
+  },
+  {
+    "id": 5382,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜つつも",
+    "patternReading": "〜つつも",
+    "meaning": "while also; even while doing (concessive)"
+  },
+  {
+    "id": 5383,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜ものの実際は",
+    "patternReading": "〜もののじっさいは",
+    "meaning": "although..., in reality"
+  },
+  {
+    "id": 5384,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜どころか逆に",
+    "patternReading": "〜どころかぎゃくに",
+    "meaning": "far from that, on the contrary"
+  },
+  {
+    "id": 5385,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜と見せかけて",
+    "patternReading": "〜とみせかけて",
+    "meaning": "while pretending to be; disguised as"
+  },
+  {
+    "id": 5386,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜を装って",
+    "patternReading": "〜をよそおって",
+    "meaning": "pretending to be; feigning"
+  },
+  {
+    "id": 5387,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜のふりをして",
+    "patternReading": "〜のふりをして",
+    "meaning": "pretending to; acting as if"
+  },
+  {
+    "id": 5388,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜と見せて",
+    "patternReading": "〜とみせて",
+    "meaning": "making it look like; giving the appearance of"
+  },
+  {
+    "id": 5389,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜表向きは",
+    "patternReading": "〜おもてむきは",
+    "meaning": "on the surface; ostensibly"
+  },
+  {
+    "id": 5390,
+    "jlpt": "N2",
+    "subcategory": "Contradiction & Paradox",
+    "pattern": "〜内実は",
+    "patternReading": "〜ないじつは",
+    "meaning": "in actuality; behind the scenes"
+  },
+  {
+    "id": 5391,
+    "jlpt": "N1",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜べからざる",
+    "patternReading": "〜べからざる",
+    "meaning": "must-not (formal attributive prohibition)"
+  },
+  {
+    "id": 5392,
+    "jlpt": "N1",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜いかんによっては",
+    "patternReading": "〜いかんによっては",
+    "meaning": "depending on; contingent upon (formal)"
+  },
+  {
+    "id": 5393,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜に鑑み",
+    "patternReading": "〜にかんがみ",
+    "meaning": "in light of; considering (formal)"
+  },
+  {
+    "id": 5394,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜を以て",
+    "patternReading": "〜をもって",
+    "meaning": "by means of; as of (formal)"
+  },
+  {
+    "id": 5395,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜を経ずして",
+    "patternReading": "〜をへずして",
+    "meaning": "without going through; bypassing (formal)"
+  },
+  {
+    "id": 5396,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜に堪えない",
+    "patternReading": "〜にたえない",
+    "meaning": "cannot bear to; is beyond (emotional formal expression)"
+  },
+  {
+    "id": 5397,
+    "jlpt": "N1",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜に足りない",
+    "patternReading": "〜にたりない",
+    "meaning": "not worth doing; insufficient reason to (formal)"
+  },
+  {
+    "id": 5398,
+    "jlpt": "N1",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜に忍びない",
+    "patternReading": "〜にしのびない",
+    "meaning": "cannot bring oneself to; too painful to (formal)"
+  },
+  {
+    "id": 5399,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜の限りを尽くす",
+    "patternReading": "〜のかぎりをつくす",
+    "meaning": "to do to the utmost; to exhaust all (formal)"
+  },
+  {
+    "id": 5400,
+    "jlpt": "N2",
+    "subcategory": "Formal Written Register",
+    "pattern": "〜の運びとなる",
+    "patternReading": "〜のはこびとなる",
+    "meaning": "it has been arranged that; things have progressed to (formal)"
+  },
+  {
+    "id": 5401,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜も同様に",
+    "patternReading": "〜もどうように",
+    "meaning": "likewise; similarly"
+  },
+  {
+    "id": 5402,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜に等しく",
+    "patternReading": "〜にひとしく",
+    "meaning": "equally; equal to"
+  },
+  {
+    "id": 5403,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜と大差ない",
+    "patternReading": "〜とたいさない",
+    "meaning": "not much different from"
+  },
+  {
+    "id": 5404,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜と変わらない",
+    "patternReading": "〜とかわらない",
+    "meaning": "no different from; remains the same as"
+  },
+  {
+    "id": 5405,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜と似たり寄ったり",
+    "patternReading": "〜とにたりよったり",
+    "meaning": "much the same as; more or less alike"
+  },
+  {
+    "id": 5406,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜も同じく",
+    "patternReading": "〜もおなじく",
+    "meaning": "likewise; equally the same"
+  },
+  {
+    "id": 5407,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜に準ずる",
+    "patternReading": "〜にじゅんずる",
+    "meaning": "to be treated in accordance with; equivalent to"
+  },
+  {
+    "id": 5408,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜に相当する",
+    "patternReading": "〜にそうとうする",
+    "meaning": "to correspond to; to be equivalent to"
+  },
+  {
+    "id": 5409,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜と同一視する",
+    "patternReading": "〜とどういつしする",
+    "meaning": "to equate with; to regard as identical to"
+  },
+  {
+    "id": 5410,
+    "jlpt": "N2",
+    "subcategory": "Similarity & Equivalence",
+    "pattern": "〜に近い",
+    "patternReading": "〜にちかい",
+    "meaning": "close to; nearly equivalent to"
+  },
+  {
+    "id": 5411,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜てみるものだ",
+    "patternReading": "〜てみるものだ",
+    "meaning": "it's worth trying; one should try doing"
+  },
+  {
+    "id": 5412,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜を試みる",
+    "patternReading": "〜をこころみる",
+    "meaning": "to attempt; to try"
+  },
+  {
+    "id": 5413,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜に挑む",
+    "patternReading": "〜にいどむ",
+    "meaning": "to challenge; to take on"
+  },
+  {
+    "id": 5414,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜を試す",
+    "patternReading": "〜をためす",
+    "meaning": "to test; to try out"
+  },
+  {
+    "id": 5415,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜てはどうか",
+    "patternReading": "〜てはどうか",
+    "meaning": "why not try; how about (suggestion)"
+  },
+  {
+    "id": 5416,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜べく試行する",
+    "patternReading": "〜べくしこうする",
+    "meaning": "to experiment in order to (formal)"
+  },
+  {
+    "id": 5417,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜に着手する",
+    "patternReading": "〜にちゃくしゅする",
+    "meaning": "to start work on; to embark on"
+  },
+  {
+    "id": 5418,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜に踏み切る",
+    "patternReading": "〜にふみきる",
+    "meaning": "to go ahead with; to take the plunge on (a decision)"
+  },
+  {
+    "id": 5419,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜を実験する",
+    "patternReading": "〜をじっけんする",
+    "meaning": "to experiment with"
+  },
+  {
+    "id": 5420,
+    "jlpt": "N2",
+    "subcategory": "Attempt & Trial",
+    "pattern": "〜手探りで",
+    "patternReading": "〜てさぐりで",
+    "meaning": "by trial and error; groping one's way through"
+  },
+  {
+    "id": 5421,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜通す",
+    "patternReading": "〜とおす",
+    "meaning": "to do all the way through; to persist in doing"
+  },
+  {
+    "id": 5422,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜抜く",
+    "patternReading": "〜ぬく",
+    "meaning": "to do to the end; to see through (despite difficulty)"
+  },
+  {
+    "id": 5423,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜切る",
+    "patternReading": "〜きる",
+    "meaning": "to do completely; to finish entirely"
+  },
+  {
+    "id": 5424,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜続けざるを得ない",
+    "patternReading": "〜つづけざるをえない",
+    "meaning": "have no choice but to continue doing"
+  },
+  {
+    "id": 5425,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜一途をたどる",
+    "patternReading": "〜いっとをたどる",
+    "meaning": "to continue steadily on one path (usually decline/increase)"
+  },
+  {
+    "id": 5426,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜限り続ける",
+    "patternReading": "〜かぎりつづける",
+    "meaning": "to continue as long as"
+  },
+  {
+    "id": 5427,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜まで続く",
+    "patternReading": "〜までつづく",
+    "meaning": "to continue until"
+  },
+  {
+    "id": 5428,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜まで粘る",
+    "patternReading": "〜までねばる",
+    "meaning": "to persist until; to hold out until"
+  },
+  {
+    "id": 5429,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜途切れることなく",
+    "patternReading": "〜とぎれることなく",
+    "meaning": "without interruption; continuously"
+  },
+  {
+    "id": 5430,
+    "jlpt": "N2",
+    "subcategory": "Continuity & Persistence",
+    "pattern": "〜相次いで",
+    "patternReading": "〜あいついで",
+    "meaning": "one after another; in succession"
+  },
+  {
+    "id": 5431,
+    "jlpt": "N1",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜を機に",
+    "patternReading": "〜をきに",
+    "meaning": "taking the opportunity of; on the occasion of"
+  },
+  {
+    "id": 5432,
+    "jlpt": "N1",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜を境に",
+    "patternReading": "〜をさかいに",
+    "meaning": "as a turning point; from that point on"
+  },
+  {
+    "id": 5433,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜潮時だ",
+    "patternReading": "〜しおどきだ",
+    "meaning": "it is the right time to; the moment has come to"
+  },
+  {
+    "id": 5434,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜頃合いだ",
+    "patternReading": "〜ころあいだ",
+    "meaning": "is about the right time for"
+  },
+  {
+    "id": 5435,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜タイミングで",
+    "patternReading": "〜たいみんぐで",
+    "meaning": "at the moment/timing of"
+  },
+  {
+    "id": 5436,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜時を見計らって",
+    "patternReading": "〜ときをみはからって",
+    "meaning": "timing it carefully; choosing the right moment"
+  },
+  {
+    "id": 5437,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜機会を捉えて",
+    "patternReading": "〜きかいをとらえて",
+    "meaning": "seizing the opportunity"
+  },
+  {
+    "id": 5438,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜好機を逃さず",
+    "patternReading": "〜こうきをのがさず",
+    "meaning": "without missing the good opportunity"
+  },
+  {
+    "id": 5439,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜ちゃんすにめぐまれる",
+    "patternReading": "〜ちゃんすにめぐまれる",
+    "meaning": "to be blessed with an opportunity"
+  },
+  {
+    "id": 5440,
+    "jlpt": "N2",
+    "subcategory": "Timing & Opportunity",
+    "pattern": "〜間際に",
+    "patternReading": "〜まぎわに",
+    "meaning": "just before; on the verge of"
+  },
+  {
+    "id": 5441,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜末に",
+    "patternReading": "〜すえに",
+    "meaning": "after (a long process); in the end"
+  },
+  {
+    "id": 5442,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜挙句に",
+    "patternReading": "〜あげくに",
+    "meaning": "after all that; in the end (often negative result)"
+  },
+  {
+    "id": 5443,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜に終わる",
+    "patternReading": "〜におわる",
+    "meaning": "to end in; to result in (often failure)"
+  },
+  {
+    "id": 5444,
+    "jlpt": "N1",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜に至る",
+    "patternReading": "〜にいたる",
+    "meaning": "to reach the point of; to result in"
+  },
+  {
+    "id": 5445,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜に帰する",
+    "patternReading": "〜にきする",
+    "meaning": "to be attributed to; to end up as (formal)"
+  },
+  {
+    "id": 5446,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜に落ち着く",
+    "patternReading": "〜におちつく",
+    "meaning": "to settle on; to end up settling at"
+  },
+  {
+    "id": 5447,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜という結末を迎える",
+    "patternReading": "〜というけつまつをむかえる",
+    "meaning": "to reach the conclusion of; to meet an ending of"
+  },
+  {
+    "id": 5448,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜に収束する",
+    "patternReading": "〜にしゅうそくする",
+    "meaning": "to converge on; to settle down into"
+  },
+  {
+    "id": 5449,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜として結実する",
+    "patternReading": "〜としてけつじつする",
+    "meaning": "to bear fruit as; to culminate in"
+  },
+  {
+    "id": 5450,
+    "jlpt": "N2",
+    "subcategory": "Result & Consequence",
+    "pattern": "〜という運命をたどる",
+    "patternReading": "〜といううんめいをたどる",
+    "meaning": "to follow the fate of; to meet the fate of"
+  },
+  {
+    "id": 5451,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜に軍配が上がる",
+    "patternReading": "〜にぐんばいがあがる",
+    "meaning": "to be judged the winner; to come out on top"
+  },
+  {
+    "id": 5452,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜より〜をせんこうする",
+    "patternReading": "〜より〜をせんこうする",
+    "meaning": "to prefer X over Y (formal)"
+  },
+  {
+    "id": 5453,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜を優先する",
+    "patternReading": "〜をゆうせんする",
+    "meaning": "to prioritize"
+  },
+  {
+    "id": 5454,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜に軍配を上げる",
+    "patternReading": "〜にぐんばいをあげる",
+    "meaning": "to declare X the winner (active form)"
+  },
+  {
+    "id": 5455,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜が好ましい",
+    "patternReading": "〜がこのましい",
+    "meaning": "is preferable; is desirable"
+  },
+  {
+    "id": 5456,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜に肩入れする",
+    "patternReading": "〜にかたいれする",
+    "meaning": "to favor; to support one side over another"
+  },
+  {
+    "id": 5457,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜を第一に",
+    "patternReading": "〜をだいいちに",
+    "meaning": "putting X first; prioritizing X above all"
+  },
+  {
+    "id": 5458,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜を重んじる",
+    "patternReading": "〜をおもんじる",
+    "meaning": "to value; to attach importance to"
+  },
+  {
+    "id": 5459,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜を重視する",
+    "patternReading": "〜をじゅうしする",
+    "meaning": "to emphasize; to place importance on"
+  },
+  {
+    "id": 5460,
+    "jlpt": "N2",
+    "subcategory": "Selection & Preference",
+    "pattern": "〜に軍配が上がった",
+    "patternReading": "〜にぐんばいがあがった",
+    "meaning": "X was declared the winner (past, confirmed result)"
+  },
+  {
+    "id": 5461,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜間違いない",
+    "patternReading": "〜まちがいない",
+    "meaning": "is certain; there is no mistake"
+  },
+  {
+    "id": 5462,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜確実だ",
+    "patternReading": "〜かくじつだ",
+    "meaning": "is certain; is definite"
+  },
+  {
+    "id": 5463,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜疑いない",
+    "patternReading": "〜うたがいない",
+    "meaning": "there is no doubt"
+  },
+  {
+    "id": 5464,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜と断言する",
+    "patternReading": "〜とだんげんする",
+    "meaning": "to declare confidently; to assert definitively"
+  },
+  {
+    "id": 5465,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜と確信する",
+    "patternReading": "〜とかくしんする",
+    "meaning": "to be convinced that"
+  },
+  {
+    "id": 5466,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜と見て間違いない",
+    "patternReading": "〜とみてまちがいない",
+    "meaning": "it is safe to conclude that"
+  },
+  {
+    "id": 5467,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜は明白だ",
+    "patternReading": "〜はめいはくだ",
+    "meaning": "is clear; is obvious"
+  },
+  {
+    "id": 5468,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜は歴然としている",
+    "patternReading": "〜はれきぜんとしている",
+    "meaning": "is clearly evident; is unmistakable"
+  },
+  {
+    "id": 5469,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜は否定できない",
+    "patternReading": "〜はひていできない",
+    "meaning": "cannot be denied"
+  },
+  {
+    "id": 5470,
+    "jlpt": "N2",
+    "subcategory": "Confirmation & Certainty",
+    "pattern": "〜は事実だ",
+    "patternReading": "〜はじじつだ",
+    "meaning": "is a fact"
+  },
+  {
+    "id": 5471,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜といってもいいすぎではない",
+    "patternReading": "〜といってもいいすぎではない",
+    "meaning": "it would not be an overstatement to say"
+  },
+  {
+    "id": 5472,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜控えめに言っても",
+    "patternReading": "〜ひかえめにいっても",
+    "meaning": "to put it mildly; even understated"
+  },
+  {
+    "id": 5473,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜は言うまでもない",
+    "patternReading": "〜はいうまでもない",
+    "meaning": "goes without saying"
+  },
+  {
+    "id": 5474,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜は大げさとしても",
+    "patternReading": "〜はおおげさとしても",
+    "meaning": "even if that's an exaggeration"
+  },
+  {
+    "id": 5475,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜は誇張ではない",
+    "patternReading": "〜はこちょうではない",
+    "meaning": "is not an exaggeration"
+  },
+  {
+    "id": 5476,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜控えめに言って",
+    "patternReading": "〜ひかえめにいって",
+    "meaning": "to put it mildly"
+  },
+  {
+    "id": 5477,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜はいいすぎかもしれないが",
+    "patternReading": "〜はいいすぎかもしれないが",
+    "meaning": "it might be an overstatement, but"
+  },
+  {
+    "id": 5478,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜は否めない",
+    "patternReading": "〜はいなめない",
+    "meaning": "cannot deny that; it must be admitted that"
+  },
+  {
+    "id": 5479,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜といってもさしつかえない",
+    "patternReading": "〜といってもさしつかえない",
+    "meaning": "it would be fine to say; it's acceptable to call it"
+  },
+  {
+    "id": 5480,
+    "jlpt": "N2",
+    "subcategory": "Exaggeration & Understatement",
+    "pattern": "〜は過言ではないにしても",
+    "patternReading": "〜はかごんではないにしても",
+    "meaning": "even though it's not an exaggeration to say"
+  },
+  {
+    "id": 5481,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜のが慣例だ",
+    "patternReading": "〜のがかんれいだ",
+    "meaning": "it is customary to"
+  },
+  {
+    "id": 5482,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜のがならわしだ",
+    "patternReading": "〜のがならわしだ",
+    "meaning": "it is the custom to"
+  },
+  {
+    "id": 5483,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が通例だ",
+    "patternReading": "〜がつうれいだ",
+    "meaning": "it is the usual practice"
+  },
+  {
+    "id": 5484,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が常識だ",
+    "patternReading": "〜がじょうしきだ",
+    "meaning": "is common sense"
+  },
+  {
+    "id": 5485,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が暗黙の了解だ",
+    "patternReading": "〜があんもくのりょうかいだ",
+    "meaning": "is an unspoken agreement; is tacitly understood"
+  },
+  {
+    "id": 5486,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が礼儀だ",
+    "patternReading": "〜がれいぎだ",
+    "meaning": "is proper etiquette"
+  },
+  {
+    "id": 5487,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜がマナーだ",
+    "patternReading": "〜がまなーだ",
+    "meaning": "is proper manners"
+  },
+  {
+    "id": 5488,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が不文律だ",
+    "patternReading": "〜がふぶんりつだ",
+    "meaning": "is an unwritten rule"
+  },
+  {
+    "id": 5489,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が古くからの伝統だ",
+    "patternReading": "〜がふるくからのでんとうだ",
+    "meaning": "is a tradition from long ago"
+  },
+  {
+    "id": 5490,
+    "jlpt": "N2",
+    "subcategory": "Social Convention & Custom",
+    "pattern": "〜が定着している",
+    "patternReading": "〜がていちゃくしている",
+    "meaning": "has become established; has taken root"
+  },
+  {
+    "id": 5491,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜と言えよう",
+    "patternReading": "〜といえよう",
+    "meaning": "it could be said that (formal, tentative conclusion)"
+  },
+  {
+    "id": 5492,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜とまとめられる",
+    "patternReading": "〜とまとめられる",
+    "meaning": "can be summarized as"
+  },
+  {
+    "id": 5493,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜と総括できる",
+    "patternReading": "〜とそうかつできる",
+    "meaning": "can be concluded overall as"
+  },
+  {
+    "id": 5494,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜と結論づける",
+    "patternReading": "〜とけつろんづける",
+    "meaning": "to conclude that"
+  },
+  {
+    "id": 5495,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜要するに",
+    "patternReading": "〜ようするに",
+    "meaning": "in short; to sum up"
+  },
+  {
+    "id": 5496,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜つまるところ",
+    "patternReading": "〜つまるところ",
+    "meaning": "in the end; when all is said and done"
+  },
+  {
+    "id": 5497,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜結局のところ",
+    "patternReading": "〜けっきょくのところ",
+    "meaning": "in the final analysis; when it comes down to it"
+  },
+  {
+    "id": 5498,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜といってさしつかえない",
+    "patternReading": "〜といってさしつかえない",
+    "meaning": "it is fine to say; it is acceptable to conclude"
+  },
+  {
+    "id": 5499,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜をもって締めくくる",
+    "patternReading": "〜をもってしめくくる",
+    "meaning": "to conclude with; to bring to a close with"
+  },
+  {
+    "id": 5500,
+    "jlpt": "N2",
+    "subcategory": "Summary & Conclusion",
+    "pattern": "〜という次第だ",
+    "patternReading": "〜というしだいだ",
+    "meaning": "that is the situation/circumstance (explaining how things came to be)"
+  }
+]

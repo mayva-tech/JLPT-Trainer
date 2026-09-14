@@ -158,6 +158,9 @@ const TRAILING_PEEL = [
  */
 function wouldBreakLexicalStem(particle: string, nextRest: string): boolean {
   if (!nextRest) return true;
+  // Past / te endings (なった / しまって / わかって) — never peel conjugation
+  // って/った back off the stem (な|って, しま|って).
+  if (particle === "って" || particle === "った") return true;
   // きっと / ずっと / もっと — do not peel と after っ
   if (particle === "と" && /[っッ]$/u.test(nextRest)) return true;
   // もと / こと / あと — do not peel the final と
@@ -184,6 +187,214 @@ function wouldBreakLexicalStem(particle: string, nextRest: string): boolean {
 
 /** Case particles that must not glue onto a following content word (を+もと). */
 const CASE_PARTICLES = new Set(["を", "に", "が", "は", "で", "へ", "の", "や"]);
+
+/**
+ * Auxiliaries / fixed forms the JA Segmenter often splits mid-word
+ * (べ|きだ, くだ|さい, で|しょう, ご|ざ|い|ます, …).
+ * Must stay one wrap/karaoke unit so line breaks never cut inside them.
+ * Longest-first for greedy merge.
+ */
+const ATOMIC_WRAP_WORDS = [
+  // 〜てください / くださる
+  "くださいませんでした",
+  "くださいませんか",
+  "くださいません",
+  "くださいました",
+  "くださいませ",
+  "くださいます",
+  "ください",
+  "くださる",
+  "下さいませんでした",
+  "下さいませんか",
+  "下さいません",
+  "下さいました",
+  "下さいませ",
+  "下さい",
+  // 〜なさい
+  "なさいません",
+  "なさいます",
+  "なさい",
+  "なさる",
+  // ございます / でございます
+  "でございませんでした",
+  "でございません",
+  "でございました",
+  "でございます",
+  "ございませんでした",
+  "ございません",
+  "ございました",
+  "ございます",
+  // いただく / いたす
+  "いただけないでしょうか",
+  "いただけませんか",
+  "いただけません",
+  "いただけますか",
+  "いただけます",
+  "いただけない",
+  "いただきました",
+  "いただきます",
+  "いただく",
+  "いたしました",
+  "いたします",
+  // べき / べし
+  "べきではない",
+  "べきではありません",
+  "べきです",
+  "べきだ",
+  "べき",
+  "べからず",
+  "べく",
+  "べし",
+  // でしょう / だろう
+  "でしょうか",
+  "でしょうね",
+  "でしょう",
+  "だろう",
+  // かもしれない
+  "かもしれません",
+  "かもしれないです",
+  "かもしれない",
+  "かも知れません",
+  "かも知れない",
+  // なければならない / いけない
+  "なければなりません",
+  "なければならない",
+  "なければいけません",
+  "なければいけない",
+  "なくてはいけません",
+  "なくてはいけない",
+  "なくてはならない",
+  "なくちゃいけない",
+  "なくちゃ",
+  "なきゃいけない",
+  "なきゃ",
+  // なる past / te (すくなく|な|っ|た, な|って)
+  "いなくなった",
+  "いなくなって",
+  "なくなった",
+  "なくなって",
+  "すくなくなった",
+  "すくなくなって",
+  "少なくなった",
+  "少なくなって",
+  "多くなった",
+  "多くなって",
+  "大きくなった",
+  "大きくなって",
+  "良くなった",
+  "良くなって",
+  "よくなった",
+  "よくなって",
+  "好きになった",
+  "好きになって",
+  "ことになった",
+  "ことになって",
+  "になった",
+  "になって",
+  "なった",
+  "なって",
+  // Common past/te that Segmenter splits then peels (あっ|て, しま|って)
+  "わかった",
+  "わかって",
+  "しまった",
+  "しまって",
+  "もらった",
+  "もらって",
+  "あった",
+  "あって",
+  "いった",
+  "いって",
+  "によって",
+  "にとって",
+  "について",
+  // polite endings often split ま|せん / ま|した / ま|しょう
+  "ませんでしたか",
+  "ませんでした",
+  "ませんか",
+  "ましょうか",
+  "ましょう",
+  "ました",
+  "ません",
+  "でした",
+  // おいでになる (おい|で cut)
+  "おいでになります",
+  "おいでになる",
+  "おいでください",
+] as const;
+
+function isAtomicWrapWord(core: string): boolean {
+  return (ATOMIC_WRAP_WORDS as readonly string[]).includes(core);
+}
+
+/** True when `core` is a proper prefix of an atomic wrap word (べ → べき). */
+function isAtomicWrapPrefix(core: string): boolean {
+  return (ATOMIC_WRAP_WORDS as readonly string[]).some(
+    (w) => w.startsWith(core) && w.length > core.length
+  );
+}
+
+/**
+ * Rejoin Segmenter fragments that form an atomic wrap word.
+ * Example: くだ + さい。 → ください。 / べ + きだ → べきだ
+ */
+function mergeAtomicWrapWords(units: HighlightUnit[]): HighlightUnit[] {
+  const out: HighlightUnit[] = [];
+  let i = 0;
+  while (i < units.length) {
+    const start = units[i]!;
+    if (start.kind === "space") {
+      out.push(start);
+      i++;
+      continue;
+    }
+
+    let bestCount = 0;
+    let bestJoined: HighlightUnit | null = null;
+    let concat = "";
+    let joined = start;
+
+    for (let j = i; j < units.length && j < i + 8; j++) {
+      const u = units[j]!;
+      if (u.kind === "space") break;
+      const { core } = stripTrailingPunct(u.text);
+      // Atomic forms are kana (plus 下さい). Do not cross kanji stems.
+      if (j > i && !isPureKanaCore(u.text)) break;
+      if (
+        j === i &&
+        !isPureKanaCore(u.text) &&
+        !isAtomicWrapPrefix(core) &&
+        !isAtomicWrapWord(core)
+      ) {
+        break;
+      }
+
+      concat += core;
+      joined = j === i ? u : joinUnits(joined, u);
+      const joinedCore = stripTrailingPunct(joined.text).core;
+      if (isAtomicWrapWord(joinedCore)) {
+        bestCount = j - i + 1;
+        bestJoined = joined;
+      }
+      if (
+        !isAtomicWrapWord(concat) &&
+        !isAtomicWrapPrefix(concat) &&
+        !isAtomicWrapWord(joinedCore) &&
+        !isAtomicWrapPrefix(joinedCore)
+      ) {
+        break;
+      }
+    }
+
+    if (bestJoined && bestCount > 1) {
+      out.push(bestJoined);
+      i += bestCount;
+    } else {
+      out.push(start);
+      i++;
+    }
+  }
+  return out;
+}
 
 function classifyUnit(text: string): HighlightUnit["kind"] {
   if (/^\s+$/.test(text)) return "space";
@@ -224,6 +435,8 @@ function isAttachableOkurigana(text: string): boolean {
   const { core } = stripTrailingPunct(text);
   if (!core || !isPureKanaCore(text)) return false;
   if (ATTACHABLE_KANA.has(core)) return true;
+  // Past / te-form endings after pairing っ+た (行|った, 言|って)
+  if (/^(った|って|んだ|んで)$/u.test(core)) return true;
   return [...core].length === 1;
 }
 
@@ -234,6 +447,8 @@ function isKanaFragment(text: string): boolean {
   const len = [...core].length;
   if (len <= 1) return true;
   if (/[っッ]$/u.test(core)) return true;
+  // な|った → glue った onto な (なった); same for って
+  if (/^(っ|ッ)[たて]$/u.test(core)) return true;
   if (ATTACHABLE_KANA.has(core)) return true;
   return false;
 }
@@ -242,6 +457,8 @@ function isKanaFragment(text: string): boolean {
 function isFinalStemAttachable(text: string): boolean {
   const { core } = stripTrailingPunct(text);
   if (!core || !isPureKanaCore(text)) return false;
+  // Never fold wrap-atomic auxiliaries into the prior stem (聞く+べきです).
+  if (isAtomicWrapWord(core) || isAtomicWrapPrefix(core)) return false;
   if (
     /^(ます|です|でした|ました|ません|ましょう|した|いた|れた|します|しません|しました|しましょう)$/u.test(
       core
@@ -268,10 +485,24 @@ function isPoliteAuxContinuation(prevCore: string, uCore: string): boolean {
   }
   // でし + ょう/た → でしょう/でした
   if (prevCore === "でし" && /^(ょう|た)$/u.test(uCore)) return true;
+  // で + しょう → でしょう (Segmenter often keeps しょう whole)
+  if (prevCore === "で" && /^しょう/.test(uCore)) return true;
   // まし + ょう → ましょう
   if (prevCore === "まし" && uCore === "ょう") return true;
   // …ま + しょう when the stem already absorbed し (確認しま|しょう)
   if (/ま$/u.test(prevCore) && uCore === "しょう") return true;
+  // ござ + います/いません/いました
+  if (prevCore === "ござ" && /^(います|いません|いました)$/u.test(uCore)) {
+    return true;
+  }
+  // かも + しれない/しれません
+  if (prevCore === "かも" && /^しれ(ない|ません|ないです)$/u.test(uCore)) {
+    return true;
+  }
+  // おかしく + なって / よく + なった (adjective 〜く + なる)
+  if (/[く]$/u.test(prevCore) && /^(なった|なって)$/u.test(uCore)) {
+    return true;
+  }
   return false;
 }
 
@@ -301,6 +532,8 @@ function canPeelCopulaOrTa(restCore: string): boolean {
 function splitMergedKanaRun(unit: HighlightUnit): HighlightUnit[] {
   const { core, punct } = stripTrailingPunct(unit.text);
   if (kanaCoreLen(unit.text) <= 2) return [unit];
+  // Do not peel か/は/… off atomic forms (でしょうか → でしょう|か).
+  if (isAtomicWrapWord(core)) return [unit];
 
   const parts: string[] = [];
   let rest = core;
@@ -436,12 +669,15 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
     }
   }
 
+  // 2b) Rejoin べき / ください (etc.) before okurigana attach can steal べ.
+  const atomicMerged = mergeAtomicWrapWords(compounds);
+
   // 3) Attach okurigana/particles onto kanji stems — but do not steal the
-  //    first mora of a following kana word (も+と, し+まっ, だ+ろう).
+  //    first mora of a following kana word (も+と, し+まっ, だ+ろう, べ+き).
   const withOkuri: HighlightUnit[] = [];
-  for (let i = 0; i < compounds.length; i++) {
-    const u = compounds[i]!;
-    const next = compounds[i + 1];
+  for (let i = 0; i < atomicMerged.length; i++) {
+    const u = atomicMerged[i]!;
+    const next = atomicMerged[i + 1];
     const prev = withOkuri[withOkuri.length - 1];
     const uCore = stripTrailingPunct(u.text).core;
     const nextCore = next ? stripTrailingPunct(next.text).core : "";
@@ -453,6 +689,13 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
     // だろう: keep だ with ろう, not glued onto the verb stem (守るだ|ろう).
     const isDarouSplit =
       uCore === "だ" && !!next && /^ろう/.test(nextCore);
+    // べき / ください: never glue the first mora onto the prior stem.
+    const isAtomicAuxHead =
+      isAtomicWrapWord(uCore) ||
+      (isAtomicWrapPrefix(uCore) &&
+        !!next &&
+        next.kind !== "space" &&
+        isPureKanaCore(next.text));
 
     const canAttach =
       prev &&
@@ -461,6 +704,7 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       hasKanji(prev.text) &&
       isAttachableOkurigana(u.text) &&
       !isDarouSplit &&
+      !isAtomicAuxHead &&
       !(kanaCoreLen(u.text) === 1 && nextIsKanaFragment);
 
     if (canAttach) {
@@ -831,8 +1075,19 @@ const JA_MIN_UNIT_MS = 120;
 const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
-/** English ms weight multiplier at speech rate 1 — leave stable. */
-const EN_WEIGHT_MS = 400;
+/** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
+const EN_WEIGHT_MS = 300;
+/**
+ * Andrew clause pause after a comma (example sentences). Measured against
+ * neural Andrew: post-comma gaps are often ~500–700ms. Weight is applied
+ * before FALLBACK_TIMING_SCALE_EN (~0.88) and the EN rate divisor, so keep
+ * this high enough that the scheduled dwell still lands near half a second.
+ */
+const EN_COMMA_PAUSE = 2.25;
+/** Andrew pause after ";" / ":" in English glosses and examples. */
+const EN_CLAUSE_PAUSE = 1.5;
+/** Andrew pause after sentence-final . ! ? */
+const EN_SENTENCE_PAUSE = 1.2;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -865,9 +1120,9 @@ const PARTICLE_BREAK_CORES = new Set([
 /**
  * Extra mora-weight after phrase particles は / が / を / に so karaoke dwells
  * longer before the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
- * Applies to standalone particles and units that end in these particles.
+ * Keep modest — long example sentences stack many of these and overshoot Nanami.
  */
-const PHRASE_PARTICLE_PAUSE = 1.25;
+const PHRASE_PARTICLE_PAUSE = 0.95;
 
 function isParticleBreakUnit(text: string): boolean {
   const { core } = stripTrailingPunct(text);
@@ -925,15 +1180,22 @@ export function estimateUnitDurationMs(
   let punctPause = 0;
   const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
   // Commas / Japanese phrase commas (、) — include TTS-inserted pauses in spokenText
-  if (/[,，、]/.test(spokenForPunct)) punctPause += 0.3 + KARAOKE_BREAK_POINT;
+  if (/[,，、]/.test(spokenForPunct)) {
+    punctPause +=
+      lang === "en" ? EN_COMMA_PAUSE : 0.3 + KARAOKE_BREAK_POINT;
+  }
   // "/" alternates → spoken as " ... " — longer gap between the two words
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
     punctPause += SLASH_PAUSE;
   }
   // Other phrase separators
-  if (/[;；:]/.test(spokenForPunct)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
+  if (/[;；:]/.test(spokenForPunct)) {
+    punctPause +=
+      lang === "en" ? EN_CLAUSE_PAUSE : 0.35 + KARAOKE_BREAK_POINT;
+  }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
-    punctPause += 0.5 + KARAOKE_BREAK_POINT;
+    punctPause +=
+      lang === "en" ? EN_SENTENCE_PAUSE : 0.5 + KARAOKE_BREAK_POINT;
   }
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {
@@ -970,8 +1232,10 @@ export function estimateUnitDurationMs(
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
     const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
-    const weight = 0.65 + Math.min(letters, 12) * 0.09 + punctPause;
-    return Math.max(140, weight * EN_WEIGHT_MS);
+    // Slightly steeper letter curve than before so short quiz glosses
+    // ("out of stock") don't linger on the first word.
+    const weight = 0.55 + Math.min(letters, 12) * 0.08 + punctPause;
+    return Math.max(120, weight * EN_WEIGHT_MS);
   }
 
   // Prefer aligned spoken kana whenever available.
@@ -1321,6 +1585,82 @@ function ensureWordUnitsCovered(
  * Each step highlights a surface display unit; duration uses spoken kana.
  * One reading token may fan out across multiple visible display units.
  */
+/**
+ * Derive a reading that is space-separated by karaoke unit from an unspaced
+ * one (e.g. "わたしもいきます。" for 私も行きます。).
+ *
+ * Corpus readings are supposed to be spaced by word unit; some corpora (speech
+ * styles, phone lines) store a single kana blob instead. Pairing such a blob
+ * against the units positionally shifts every highlight, so recover the token
+ * boundaries from the furigana alignment instead. Returns null when the text
+ * cannot be aligned confidently — callers should then fall back to visible-unit
+ * timing rather than guess.
+ */
+export function deriveSpacedReadingForUnits(
+  text: string,
+  reading: string,
+  units: HighlightUnit[]
+): string | null {
+  const active = activeHighlightUnits(units);
+  if (active.length === 0) return null;
+  const bare = reading.replace(/\s+/g, "");
+  if (!bare) return null;
+
+  let segments;
+  try {
+    segments = alignFurigana(text, reading);
+  } catch {
+    return null;
+  }
+  if (segments.length === 0) return null;
+
+  // Character offset -> kana, following the aligned segments.
+  const spans: {
+    start: number;
+    end: number;
+    kana: string;
+    hasReading: boolean;
+  }[] = [];
+  let offset = 0;
+  for (const seg of segments) {
+    const end = offset + seg.text.length;
+    spans.push({
+      start: offset,
+      end,
+      kana: seg.reading ?? seg.text,
+      hasReading: seg.reading !== undefined,
+    });
+    offset = end;
+  }
+  if (offset !== text.length) return null;
+
+  const tokens: string[] = [];
+  for (const unit of active) {
+    let kana = "";
+    for (const span of spans) {
+      if (span.end <= unit.start || span.start >= unit.end) continue;
+      const inside = span.start >= unit.start && span.end <= unit.end;
+      if (!inside) {
+        // A kanji segment straddling a unit boundary cannot be split safely.
+        if (span.hasReading) return null;
+        kana += text.slice(
+          Math.max(span.start, unit.start),
+          Math.min(span.end, unit.end)
+        );
+        continue;
+      }
+      kana += span.kana;
+    }
+    if (!kana) return null;
+    tokens.push(kana);
+  }
+
+  const derived = tokens.join(" ");
+  // Only trust it when it reproduces the original reading exactly.
+  if (derived.replace(/\s+/g, "") !== bare) return null;
+  return derived;
+}
+
 export function buildJapaneseSpokenKaraokeSteps(
   surface: string,
   spacedReading: string,

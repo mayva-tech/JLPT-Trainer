@@ -170,9 +170,22 @@ function appendSlashSpeakPause(text: string): string {
     .trim();
 }
 
+/**
+ * "Mt Fuji" / "Mt." — Andrew spells "M-T" unless expanded to "Mount".
+ * Display text stays "Mt"; only the spoken string changes.
+ */
+function expandMountAbbreviation(text: string): string {
+  // `\b` between "Mt" and "." so match "Mt" then consume the abbrev period.
+  return text.replace(/\bMt\b\.?/gi, (match) =>
+    applyCase(match.replace(/\.$/, ""), "mount")
+  );
+}
+
 export function buildEnglishSpeakText(text: string): string {
-  let out = appendSlashSpeakPause(
-    appendWaveDashSpeakPause(expandSpokenMoney(stripParentheticalNotes(text)))
+  let out = expandMountAbbreviation(
+    appendSlashSpeakPause(
+      appendWaveDashSpeakPause(expandSpokenMoney(stripParentheticalNotes(text)))
+    )
   );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");

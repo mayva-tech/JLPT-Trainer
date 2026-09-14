@@ -549,7 +549,14 @@ export function PlayerPage() {
     };
   }
 
-  function startQuizAuto() {
+  function startQuizAuto(options?: {
+    /** First question index to run (default 0). */
+    startAt?: number;
+    /** Skip the pre-quiz JA/EN comment (when resuming mid-deck). */
+    skipPre?: boolean;
+    /** Keep the current deck order instead of reshuffling. */
+    keepDeck?: boolean;
+  }) {
     const source = quizItemsRef.current;
     if (source.length === 0) return;
     if (quizAutoOnRef.current || quizAutoRunner.isActive()) return;
@@ -558,26 +565,42 @@ export function PlayerPage() {
     bilingualPlayback.abort();
     speechService.stop();
     clearSpeechUi();
-    setQuizScore(0);
-    quizScoreRef.current = 0;
 
-    const deck = reshuffleQuizDeck(source, activeTocId);
+    const keepDeck = options?.keepDeck === true;
+    const skipPre = options?.skipPre === true;
+    const startAt = Math.max(0, options?.startAt ?? 0);
+
+    const deck =
+      keepDeck && quizDeckRef.current.length > 0
+        ? quizDeckRef.current
+        : reshuffleQuizDeck(source, activeTocId);
+
+    const begin = Math.min(startAt, Math.max(deck.length - 1, 0));
+
+    // Full runs from the top reset the score; mid-deck Play keeps it.
+    if (!keepDeck || begin === 0) {
+      setQuizScore(0);
+      quizScoreRef.current = 0;
+    }
 
     void (async () => {
       setQuizAutoOn(true);
       setScreen("quiz");
 
-      // Pre quiz comment (JA → EN)
-      setQuizPhase("pre");
-      await playQuizPreComment();
-      if (!quizAutoOnRef.current) return;
+      if (!skipPre) {
+        // Pre quiz comment (JA → EN)
+        setQuizPhase("pre");
+        await playQuizPreComment();
+        if (!quizAutoOnRef.current) return;
+      }
 
       const completed = await quizAutoRunner.start(
         deck,
         buildQuizAutoUi(),
         (state) => {
           if (state === "on") setQuizAutoOn(true);
-        }
+        },
+        begin
       );
 
       if (!completed || !quizAutoOnRef.current) {
@@ -598,6 +621,34 @@ export function PlayerPage() {
         advanceFlow();
       }
     })();
+  }
+
+  /** Start Quiz Auto from the question currently on screen (no reshuffle / no pre). */
+  function playQuizFromCurrent() {
+    if (quizAutoOnRef.current || quizAutoRunner.isActive()) {
+      const phase = quizPhaseRef.current;
+      stopQuizAuto();
+      if (phase === "pre") {
+        enterManualQuiz(0);
+      } else if (phase === "after") {
+        setQuizPhase("finished");
+      } else if (phase === "example") {
+        setQuizPhase("revealed");
+      }
+      return;
+    }
+
+    const phase = quizPhaseRef.current;
+    if (phase === "after" || phase === "finished") return;
+
+    // Ensure a deck exists for manual browse → Play.
+    if (quizDeckRef.current.length === 0) {
+      reshuffleQuizDeck(quizItemsRef.current, activeTocId);
+    }
+    if (quizDeckRef.current.length === 0) return;
+
+    const startAt = phase === "pre" ? 0 : quizIndexRef.current;
+    startQuizAuto({ startAt, skipPre: true, keepDeck: true });
   }
 
   function stopQuizAuto() {
@@ -2471,13 +2522,13 @@ export function PlayerPage() {
     flowActive
       ? `Video flow ${flowPos + 1}/${flowQueue.length} · controls stay live`
       : quizAutoOn
-        ? "QUIZ AUTO ON · Q to stop"
+        ? "QUIZ AUTO ON · Q or ■ Stop"
         : screen === "quiz"
           ? quizPhase === "pre"
-            ? "QUIZ AUTO OFF · Next or ←→ to start · Q for auto"
+            ? "QUIZ AUTO OFF · ▶ Play or Next to start here · Q for full auto"
             : quizPhase === "after" || quizPhase === "finished"
               ? "Quiz done · Prev to review · Q to restart auto"
-              : "←→ navigate · ↑ JP · ↓ EN · E Example · Shift rate · Q auto"
+              : "←→ navigate · ▶ Play from here · ↑ JP · ↓ EN · E Example · Shift rate · Q full auto"
       : hintAutoState === "on"
         ? "Auto ON · A to stop after current audio"
         : hintAutoState === "stopping"
@@ -3059,9 +3110,29 @@ export function PlayerPage() {
                   : "quiz-auto-btn"
               }
               onClick={toggleQuizAuto}
-              title="Toggle Quiz Auto (Q)"
+              title="Full Quiz Auto from the start (reshuffle + pre comment) — Q"
             >
               {quizAutoOn ? "QUIZ AUTO ON" : "QUIZ AUTO OFF"}
+            </button>
+            <button
+              type="button"
+              className={
+                quizAutoOn
+                  ? "register-btn register-btn--active"
+                  : "register-btn"
+              }
+              onClick={playQuizFromCurrent}
+              disabled={
+                !quizAutoOn &&
+                (quizPhase === "after" || quizPhase === "finished")
+              }
+              title={
+                quizAutoOn
+                  ? "Stop Quiz Auto"
+                  : "Start Quiz Auto from this question (keep order, skip pre)"
+              }
+            >
+              {quizAutoOn ? "■ Stop" : "▶ Play"}
             </button>
             <button
               type="button"

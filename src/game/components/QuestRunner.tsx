@@ -1,0 +1,760 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { HighlightedEnglish } from "../../components/HighlightedEnglish";
+import { HighlightedJapanese } from "../../components/HighlightedJapanese";
+import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
+import { getLocationById } from "../data/locations";
+import { getNpcById } from "../data/npcs";
+import { getQuestById } from "../data/quests";
+import type { QuestDefinition, QuestRunMistake, QuestStep } from "../types";
+import { filterStepsForProfile } from "../utils/chapterProgress";
+import {
+  accuracyFromCounts,
+  evaluateChoiceAnswer,
+  noteQuestVocabMiss,
+} from "../utils/questEngine";
+import {
+  resolveQuestSpeech,
+  type ResolvedQuestSpeech,
+} from "../utils/questSpeech";
+import { ConfidenceHearts } from "./ConfidenceHearts";
+import { NpcPortrait } from "./NpcPortrait";
+
+export type QuestRunOutcome = {
+  success: boolean;
+  accuracy: number;
+  confidenceLeft: number;
+  correct: number;
+  answered: number;
+  mistakes: QuestRunMistake[];
+  monsters: string[];
+  vocabDiscovered: string[];
+  helpUses: number;
+};
+
+type Props = {
+  questId: string;
+  metNpcIds: string[];
+  onQuit: () => void;
+  onFinished: (outcome: QuestRunOutcome) => void;
+};
+
+const STEP_SETTLE_MS = 280;
+
+export function QuestRunner({
+  questId,
+  metNpcIds,
+  onQuit,
+  onFinished,
+}: Props) {
+  const baseQuest = getQuestById(questId);
+  const steps = useMemo(() => {
+    if (!baseQuest) return [];
+    return filterStepsForProfile(baseQuest, metNpcIds);
+  }, [baseQuest, metNpcIds]);
+
+  const quest: QuestDefinition | undefined = baseQuest
+    ? { ...baseQuest, steps }
+    : undefined;
+
+  const speech = useTrainerSpeech({ stopOnUnmount: true });
+
+  const [stepIndex, setStepIndex] = useState(0);
+  const [confidence, setConfidence] = useState(
+    baseQuest?.startingConfidence ?? 5
+  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedbackGood, setFeedbackGood] = useState(true);
+  const [monsterFlash, setMonsterFlash] = useState<string | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const [mistakes, setMistakes] = useState<QuestRunMistake[]>([]);
+  const [monsters, setMonsters] = useState<string[]>([]);
+  const [vocabDiscovered, setVocabDiscovered] = useState<string[]>([]);
+  const [showHelp, setShowHelp] = useState(false);
+  const [helpUses, setHelpUses] = useState(0);
+  const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(
+    null
+  );
+  const autoPlayTokenRef = useRef(0);
+
+  const step = quest
+    ? quest.steps[Math.min(stepIndex, quest.steps.length - 1)]!
+    : null;
+  const resolved = step ? resolveQuestSpeech(step) : null;
+
+  // Auto-play once per step transition. Local `cancelled` avoids Strict Mode double-speak.
+  useEffect(() => {
+    if (!step || !resolved) return;
+    let cancelled = false;
+    speech.stop();
+    setChoiceHighlightId(null);
+    autoPlayTokenRef.current += 1;
+    const token = autoPlayTokenRef.current;
+
+    if (!speech.autoVoice || !resolved.enabled || !resolved.autoPlay) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const hideKaraoke =
+      resolved.karaokeMode === "off" ||
+      (resolved.hideTranscriptUntilAnswer && !revealed);
+
+    const timer = window.setTimeout(() => {
+      if (cancelled || token !== autoPlayTokenRef.current) return;
+      if (resolved.language === "en") {
+        speech.speakEnglish(resolved.speakText, {
+          karaoke: resolved.karaokeMode === "always",
+        });
+      } else {
+        speech.speakJapanese(resolved.speakText, {
+          reading: resolved.reading,
+          karaoke: !hideKaraoke && resolved.karaokeMode !== "off",
+        });
+      }
+    }, STEP_SETTLE_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      speech.stop();
+    };
+    // Only re-run on step / autoVoice toggles — not on reveal/help.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questId, stepIndex, step?.id, speech.autoVoice, speech.rateMode]);
+
+  // Stop when leaving the runner via quit path handled by unmount; also on reveal
+  // we do NOT auto-replay.
+
+  if (!quest || steps.length === 0 || !step || !resolved) {
+    return (
+      <div className="ppq-quest">
+        <p>Quest not found.</p>
+        <button type="button" className="ppq-btn ppq-btn--ghost" onClick={onQuit}>
+          Back
+        </button>
+      </div>
+    );
+  }
+
+  const currentStep = step;
+  const currentResolved = resolved;
+  const npc = currentStep.npcId ? getNpcById(currentStep.npcId) : undefined;
+  const location = getLocationById(quest.locationId);
+  const isInteractive = Boolean(currentStep.choices && currentStep.choices.length > 0);
+  const progressLabel = `Step ${stepIndex + 1} / ${steps.length}`;
+
+  function finish(
+    success: boolean,
+    conf: number,
+    correct: number,
+    answered: number,
+    miss: QuestRunMistake[],
+    mons: string[],
+    vocab: string[],
+    helps: number
+  ) {
+    speech.stop();
+    const raw = accuracyFromCounts(correct, answered);
+    const penalized = Math.max(0, raw - Math.min(5, helps));
+    onFinished({
+      success,
+      accuracy: penalized,
+      confidenceLeft: conf,
+      correct,
+      answered,
+      mistakes: miss,
+      monsters: mons,
+      vocabDiscovered: vocab,
+      helpUses: helps,
+    });
+  }
+
+  function goNext(
+    conf: number,
+    correct: number,
+    answered: number,
+    miss: QuestRunMistake[],
+    mons: string[],
+    vocab: string[],
+    helps: number
+  ) {
+    speech.stop();
+    if (conf <= 0) {
+      finish(false, 0, correct, answered, miss, mons, vocab, helps);
+      return;
+    }
+    const nextIndex = stepIndex + 1;
+    if (nextIndex >= steps.length) {
+      finish(true, conf, correct, answered, miss, mons, vocab, helps);
+      return;
+    }
+    setStepIndex(nextIndex);
+    setSelectedId(null);
+    setRevealed(false);
+    setFeedback(null);
+    setMonsterFlash(null);
+    setShowHelp(false);
+    setChoiceHighlightId(null);
+  }
+
+  function onContinueIntro() {
+    goNext(
+      confidence,
+      correctCount,
+      answeredCount,
+      mistakes,
+      monsters,
+      vocabDiscovered,
+      helpUses
+    );
+  }
+
+  function onSelectChoice(choiceId: string) {
+    if (!isInteractive || revealed) return;
+    speech.stop();
+    const result = evaluateChoiceAnswer(currentStep, choiceId);
+    setSelectedId(choiceId);
+    setRevealed(true);
+    setFeedback(result.feedback);
+    setFeedbackGood(result.correct);
+
+    let nextCorrect = correctCount;
+    let nextAnswered = answeredCount + 1;
+    let nextConf = confidence;
+    let nextMistakes = mistakes;
+    let nextMonsters = monsters;
+    let nextVocab = vocabDiscovered;
+
+    if (result.correct) {
+      nextCorrect += 1;
+      if (currentStep.vocabHint && !nextVocab.includes(currentStep.vocabHint)) {
+        nextVocab = [...nextVocab, currentStep.vocabHint];
+      }
+    } else {
+      if (result.costsConfidence) nextConf = Math.max(0, confidence - 1);
+      if (result.mistake) nextMistakes = [...mistakes, result.mistake];
+      const hook = noteQuestVocabMiss({
+        vocabHint: currentStep.vocabHint,
+        correct: false,
+      });
+      if (hook.monsterLabel && !nextMonsters.includes(hook.monsterLabel)) {
+        nextMonsters = [...nextMonsters, hook.monsterLabel];
+        setMonsterFlash(hook.monsterLabel);
+      }
+    }
+
+    setCorrectCount(nextCorrect);
+    setAnsweredCount(nextAnswered);
+    setConfidence(nextConf);
+    setMistakes(nextMistakes);
+    setMonsters(nextMonsters);
+    setVocabDiscovered(nextVocab);
+  }
+
+  function onContinueAfterAnswer() {
+    goNext(
+      confidence,
+      correctCount,
+      answeredCount,
+      mistakes,
+      monsters,
+      vocabDiscovered,
+      helpUses
+    );
+  }
+
+  function onToggleHelp() {
+    if (!showHelp) setHelpUses((n) => n + 1);
+    setShowHelp((v) => !v);
+  }
+
+  function replayNpcLine() {
+    if (!currentResolved.enabled || !currentResolved.speakText) return;
+    const allowKaraoke =
+      currentResolved.karaokeMode === "always" ||
+      (currentResolved.karaokeMode === "after-answer" && revealed);
+    if (currentResolved.language === "en") {
+      speech.speakEnglish(currentResolved.speakText, { karaoke: allowKaraoke });
+    } else {
+      speech.speakJapanese(currentResolved.speakText, {
+        reading: currentResolved.reading,
+        karaoke: allowKaraoke && currentResolved.karaokeMode !== "off",
+      });
+    }
+  }
+
+  function replayEnglish(text: string) {
+    speech.speakEnglish(text, { karaoke: true });
+  }
+
+  function replayChoice(choiceId: string, labelJa: string) {
+    setChoiceHighlightId(choiceId);
+    speech.speakJapanese(labelJa, {
+      karaoke: true,
+      onEnded: () => setChoiceHighlightId(null),
+    });
+  }
+
+  function handleQuit() {
+    speech.stop();
+    onQuit();
+  }
+
+  const continueLabel =
+    currentStep.kind === "outro"
+      ? "Finish"
+      : currentStep.kind === "intro"
+        ? "Begin"
+        : "Continue";
+
+  const showJaTranscript =
+    !currentResolved.hideTranscriptUntilAnswer ||
+    revealed ||
+    currentResolved.karaokeMode === "always";
+
+  return (
+    <div className="ppq-quest ppq-quest-enter">
+      <div className="ppq-quest-banner">
+        <p style={{ margin: 0, fontSize: 12, color: "var(--ppq-muted)" }}>
+          {location?.icon ?? "📍"} {location?.name ?? quest.locationId} ·{" "}
+          {progressLabel}
+          {quest.difficulty === "boss" ? " · Boss" : ""}
+          {currentResolved.announcement ? " · Announcement" : ""}
+        </p>
+        <h1 lang="ja">{quest.japaneseTitle}</h1>
+        <p>{quest.title}</p>
+      </div>
+
+      <div className="ppq-quest-toolbar">
+        <ConfidenceHearts
+          confidence={confidence}
+          max={quest.startingConfidence}
+        />
+        <div className="ppq-speech-controls">
+          <button
+            type="button"
+            className={
+              speech.autoVoice
+                ? "ppq-btn ppq-btn--ghost ppq-btn--speech-on"
+                : "ppq-btn ppq-btn--ghost"
+            }
+            aria-pressed={speech.autoVoice}
+            onClick={() => speech.setAutoVoice(!speech.autoVoice)}
+          >
+            {speech.autoVoice ? "🔊 Auto Voice" : "🔇 Auto Voice"}
+          </button>
+          <button
+            type="button"
+            className="ppq-btn ppq-btn--ghost"
+            aria-pressed={speech.rateMode === "normal"}
+            onClick={() => {
+              speech.setRateMode("normal");
+            }}
+          >
+            1.0×
+          </button>
+          <button
+            type="button"
+            className="ppq-btn ppq-btn--ghost"
+            aria-pressed={speech.rateMode === "slow"}
+            onClick={() => {
+              speech.setRateMode("slow");
+            }}
+          >
+            0.75×
+          </button>
+          {(currentStep.helpHint ||
+            currentStep.promptReading ||
+            currentStep.promptEn) &&
+          isInteractive ? (
+            <button
+              type="button"
+              className="ppq-btn ppq-btn--ghost"
+              onClick={onToggleHelp}
+            >
+              {showHelp ? "Hide Help" : "Show Help"}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="ppq-btn ppq-btn--ghost"
+            onClick={handleQuit}
+          >
+            Leave quest
+          </button>
+        </div>
+      </div>
+
+      <DialogueStep
+        step={currentStep}
+        resolved={currentResolved}
+        npc={npc}
+        selectedId={selectedId}
+        revealed={revealed}
+        feedback={feedback}
+        feedbackGood={feedbackGood}
+        monsterFlash={monsterFlash}
+        showHelp={showHelp}
+        showJaTranscript={showJaTranscript}
+        highlight={
+          speech.activeLang === "ja" && choiceHighlightId === null
+            ? speech.highlight
+            : null
+        }
+        enHighlight={speech.activeLang === "en" ? speech.highlight : null}
+        speaking={speech.speaking}
+        choiceHighlightId={choiceHighlightId}
+        choiceHighlight={
+          choiceHighlightId && speech.activeLang === "ja"
+            ? speech.highlight
+            : null
+        }
+        onSelect={onSelectChoice}
+        onReplayLine={currentResolved.enabled ? replayNpcLine : undefined}
+        onReplayEnglish={
+          currentResolved.englishText
+            ? () => replayEnglish(currentResolved.englishText!)
+            : undefined
+        }
+        onReplayChoice={replayChoice}
+        onReplayFeedbackEn={
+          feedback
+            ? () => {
+                const english = extractEnglishFeedback(feedback);
+                if (english) replayEnglish(english);
+              }
+            : undefined
+        }
+        onContinue={
+          currentStep.kind === "intro" || currentStep.kind === "outro"
+            ? onContinueIntro
+            : revealed
+              ? onContinueAfterAnswer
+              : !isInteractive
+                ? onContinueIntro
+                : undefined
+        }
+        continueLabel={continueLabel}
+      />
+    </div>
+  );
+}
+
+function DialogueStep({
+  step,
+  resolved,
+  npc,
+  selectedId,
+  revealed,
+  feedback,
+  feedbackGood,
+  monsterFlash,
+  showHelp,
+  showJaTranscript,
+  highlight,
+  enHighlight,
+  speaking,
+  choiceHighlightId,
+  choiceHighlight,
+  onSelect,
+  onReplayLine,
+  onReplayEnglish,
+  onReplayChoice,
+  onReplayFeedbackEn,
+  onContinue,
+  continueLabel,
+}: {
+  step: QuestStep;
+  resolved: ResolvedQuestSpeech;
+  npc: ReturnType<typeof getNpcById>;
+  selectedId: string | null;
+  revealed: boolean;
+  feedback: string | null;
+  feedbackGood: boolean;
+  monsterFlash: string | null;
+  showHelp: boolean;
+  showJaTranscript: boolean;
+  highlight: import("../../services/speechService").SpeechHighlight | null;
+  enHighlight: import("../../services/speechService").SpeechHighlight | null;
+  speaking: boolean;
+  choiceHighlightId: string | null;
+  choiceHighlight: import("../../services/speechService").SpeechHighlight | null;
+  onSelect: (id: string) => void;
+  onReplayLine?: () => void;
+  onReplayEnglish?: () => void;
+  onReplayChoice: (id: string, labelJa: string) => void;
+  onReplayFeedbackEn?: () => void;
+  onContinue?: () => void;
+  continueLabel: string;
+}) {
+  const showInstructionEn = shouldShowPromptEn(step, showHelp);
+  const jaForHighlight =
+    resolved.hideTranscriptUntilAnswer && revealed
+      ? resolved.displayJa
+      : step.promptJa;
+
+  return (
+    <section className="ppq-dialogue">
+      {npc ? <NpcPortrait npc={npc} /> : null}
+
+      {resolved.announcement ? (
+        <p className="ppq-announce-label">📢 Station announcement</p>
+      ) : null}
+
+      <div className="ppq-line-row">
+        {showJaTranscript && resolved.language === "ja" && resolved.displayJa ? (
+          <HighlightedJapanese
+            text={
+              resolved.hideTranscriptUntilAnswer
+                ? resolved.displayJa
+                : jaForHighlight
+            }
+            className="ppq-prompt-ja"
+            highlight={highlight}
+          />
+        ) : resolved.hideTranscriptUntilAnswer && !revealed ? (
+          <div className="ppq-listen-hidden">
+            <p className="ppq-prompt-en" style={{ margin: 0 }}>
+              {step.promptEn ?? "Listen carefully, then choose."}
+            </p>
+            <p className="ppq-listen-hint">Transcript hidden until you answer.</p>
+          </div>
+        ) : resolved.language === "en" && resolved.speakText ? (
+          <HighlightedEnglish
+            text={resolved.speakText}
+            className="ppq-prompt-en"
+            highlight={enHighlight}
+          />
+        ) : (
+          <div className="ppq-prompt-ja" lang="ja">
+            {step.promptJa}
+          </div>
+        )}
+
+        {onReplayLine ? (
+          <button
+            type="button"
+            className={
+              speaking && !choiceHighlightId
+                ? "ppq-speak-btn ppq-speak-btn--active"
+                : "ppq-speak-btn"
+            }
+            aria-label={
+              speaking ? "Replay Japanese dialogue" : "Play Japanese dialogue"
+            }
+            title="Play / replay"
+            onClick={onReplayLine}
+          >
+            🔊
+          </button>
+        ) : null}
+      </div>
+
+      {showHelp && step.promptReading && showJaTranscript ? (
+        <div className="ppq-reading-hint">{step.promptReading}</div>
+      ) : null}
+
+      {showInstructionEn &&
+      step.promptEn &&
+      !(resolved.hideTranscriptUntilAnswer && !revealed) ? (
+        <div className="ppq-prompt-en-row">
+          <div className="ppq-prompt-en">{step.promptEn}</div>
+          {onReplayEnglish && step.kind === "intro" ? (
+            <button
+              type="button"
+              className="ppq-speak-btn"
+              aria-label="Play English narration"
+              onClick={onReplayEnglish}
+            >
+              🔊
+            </button>
+          ) : null}
+        </div>
+      ) : step.kind === "intro" && step.promptEn && onReplayEnglish ? (
+        <div className="ppq-prompt-en-row">
+          <div className="ppq-prompt-en">{step.promptEn}</div>
+          <button
+            type="button"
+            className="ppq-speak-btn"
+            aria-label="Play English narration"
+            onClick={onReplayEnglish}
+          >
+            🔊
+          </button>
+        </div>
+      ) : null}
+
+      {showHelp && step.helpHint ? (
+        <p className="ppq-help-hint">💡 {step.helpHint}</p>
+      ) : null}
+
+      {step.bodyJa ? (
+        <div className="ppq-reading-body" lang="ja">
+          {step.bodyJa}
+        </div>
+      ) : null}
+
+      {step.mapText ? (
+        <pre className="ppq-map-diagram" aria-label="Route map">
+          {step.mapText}
+        </pre>
+      ) : null}
+
+      {step.menuItems && step.menuItems.length > 0 ? (
+        <div className="ppq-menu-card" aria-label="Menu">
+          {step.menuItems.map((item) => (
+            <div className="ppq-menu-row" key={item.nameJa}>
+              <span lang="ja">{item.nameJa}</span>
+              <span>¥{item.priceYen}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {step.formFields ? (
+        <div className="ppq-form-preview" aria-label="Form">
+          {step.formAskEn ? (
+            <p className="ppq-prompt-en" style={{ marginBottom: 8 }}>
+              {step.formAskEn}
+            </p>
+          ) : null}
+          {step.formFields.map((field) => (
+            <div className="ppq-form-row" key={field.id}>
+              <strong lang="ja">{field.labelJa}</strong>
+              <span>{field.meaningEn}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {step.choices && step.choices.length > 0 ? (
+        <div className="ppq-choices" role="list">
+          {step.choices.map((choice, index) => {
+            let className = "ppq-choice";
+            if (revealed) {
+              if (choice.correct) className += " ppq-choice--correct";
+              else if (choice.id === selectedId) className += " ppq-choice--wrong";
+              else className += " ppq-choice--dim";
+            }
+            return (
+              <div key={choice.id} className="ppq-choice-row">
+                <button
+                  type="button"
+                  className={className}
+                  disabled={revealed}
+                  onClick={() => onSelect(choice.id)}
+                >
+                  <span className="ppq-choice-index">{index + 1}.</span>{" "}
+                  {choiceHighlightId === choice.id ? (
+                    <HighlightedJapanese
+                      text={choice.labelJa}
+                      className="ppq-choice-ja"
+                      highlight={choiceHighlight}
+                    />
+                  ) : (
+                    <span lang="ja">{choice.labelJa}</span>
+                  )}
+                  {showHelp && choice.labelEn ? (
+                    <span className="ppq-choice-en">{choice.labelEn}</span>
+                  ) : null}
+                </button>
+                <button
+                  type="button"
+                  className="ppq-speak-btn ppq-speak-btn--choice"
+                  aria-label={`Play answer choice: ${choice.labelJa}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReplayChoice(choice.id, choice.labelJa);
+                  }}
+                >
+                  🔊
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {feedback ? (
+        <div
+          className={
+            feedbackGood
+              ? "ppq-feedback ppq-feedback--good"
+              : "ppq-feedback ppq-feedback--bad"
+          }
+          role="status"
+        >
+          <div className="ppq-feedback-row">
+            <pre className="ppq-feedback-text">{feedback}</pre>
+            {onReplayFeedbackEn ? (
+              <button
+                type="button"
+                className="ppq-speak-btn"
+                aria-label="Play English explanation"
+                onClick={onReplayFeedbackEn}
+              >
+                🔊
+              </button>
+            ) : null}
+          </div>
+          {monsterFlash ? (
+            <div className="ppq-monster">
+              👾 Weak Word detected: {monsterFlash}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {onContinue ? (
+        <div className="ppq-actions">
+          <button
+            type="button"
+            className="ppq-btn ppq-btn--primary"
+            onClick={onContinue}
+          >
+            {continueLabel}
+          </button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+/** @deprecated Use QuestRunner — kept for import compatibility. */
+export { QuestRunner as CityHallQuestRunner };
+
+function shouldShowPromptEn(step: QuestStep, showHelp: boolean): boolean {
+  if (!step.promptEn) return false;
+  if (step.kind === "intro" || step.kind === "outro") return true;
+  if (showHelp) return true;
+  const type = step.objectiveType;
+  return (
+    type === "listening" ||
+    type === "reading" ||
+    type === "vocabulary" ||
+    type === "map" ||
+    type === "menu" ||
+    type === "form-label" ||
+    type === "multiple-choice" ||
+    step.kind === "map" ||
+    step.kind === "menu" ||
+    step.kind === "form-label" ||
+    step.kind === "reading" ||
+    step.kind === "listening"
+  );
+}
+
+/** Pull a speakable English sentence from feedback without reading Japanese. */
+function extractEnglishFeedback(feedback: string): string | null {
+  const lines = feedback
+    .split("\n")
+    .map((line) => line.replace(/^[✅❌]\s*/, "").trim())
+    .filter((line) => /[A-Za-z]{3,}/.test(line) && !/^「/.test(line));
+  const joined = lines.join(" ").trim();
+  if (joined.length < 8) return null;
+  return joined.slice(0, 280);
+}

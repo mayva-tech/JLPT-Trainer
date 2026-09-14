@@ -49,6 +49,7 @@ body {
 .app-nav {
   flex: 0 0 auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   padding: 6px 10px;

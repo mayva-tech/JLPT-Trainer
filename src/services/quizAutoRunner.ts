@@ -161,7 +161,8 @@ export class QuizAutoRunner {
   async start(
     items: VocabularyQuizQuestion[],
     ui: QuizAutoUi,
-    onState: (state: "on" | "off") => void
+    onState: (state: "on" | "off") => void,
+    startAt = 0
   ): Promise<boolean> {
     this.abort();
     this.softStop = false;
@@ -170,9 +171,10 @@ export class QuizAutoRunner {
 
     ui.setPhase("asking");
     let completedAll = true;
+    const begin = Math.max(0, Math.min(startAt, Math.max(items.length - 1, 0)));
 
     try {
-      for (let i = 0; i < items.length; i++) {
+      for (let i = begin; i < items.length; i++) {
         if (!this.shouldContinue(sid)) {
           completedAll = false;
           break;
