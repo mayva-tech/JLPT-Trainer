@@ -1,4 +1,5 @@
 import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
 import {
@@ -90,13 +91,31 @@ export function StyleCard({
         </button>
       </div>
       {item.romaji ? <p className="ss-romaji-line">{item.romaji}</p> : null}
-      <p className="ss-english">{item.english}</p>
+      <HighlightedEnglish
+        text={item.english}
+        className="ss-english"
+        highlight={fieldHighlight(
+          speechTarget,
+          highlight,
+          item.id,
+          "english"
+        )}
+      />
 
       {item.warning ? (
-        <p className="ss-warning">
+        <div className="ss-warning">
           <span className="ss-warning-label">Warning</span>
-          <span className="ss-warning-body">{item.warning}</span>
-        </p>
+          <HighlightedEnglish
+            text={item.warning}
+            className="ss-warning-body"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              item.id,
+              "warning"
+            )}
+          />
+        </div>
       ) : null}
 
       <div className="ss-detail">
@@ -127,7 +146,16 @@ export function StyleCard({
             🔊
           </button>
         </div>
-        <p className="ss-example-en">{item.example.english}</p>
+        <HighlightedEnglish
+          text={item.example.english}
+          className="ss-example-en"
+          highlight={fieldHighlight(
+            speechTarget,
+            highlight,
+            item.id,
+            "example-en"
+          )}
+        />
 
         <dl className="ss-usage">
           <div>

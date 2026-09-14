@@ -1,6 +1,17 @@
 import type { SpeechHighlight } from "../../services/speechService";
 
-export type StyleSpeechField = "headword" | "example" | "focus" | "shift-jp";
+export type StyleSpeechField =
+  | "headword"
+  | "example"
+  | "focus"
+  | "shift-jp"
+  | "english"
+  | "example-en"
+  | "warning"
+  | "summary"
+  | "note"
+  | "speaker"
+  | "context";
 
 export type StyleSpeechTarget = {
   id: string;

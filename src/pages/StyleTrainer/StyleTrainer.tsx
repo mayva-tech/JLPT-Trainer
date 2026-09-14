@@ -82,40 +82,99 @@ function speakJpAsync(
   });
 }
 
-function speakEnAsync(text: string): Promise<void> {
+function speakEnAsync(
+  text: string,
+  target: StyleSpeechTarget,
+  ui: StyleSpeechUi,
+  cancelled?: () => boolean,
+  highlightOffset = 0
+): Promise<void> {
   const trimmed = text.trim();
-  if (!trimmed) return Promise.resolve();
+  if (!trimmed || cancelled?.()) return Promise.resolve();
   return new Promise((resolve) => {
+    ui.onTarget(target);
+    ui.onHighlight(null);
     speechService.speakEnglish(
       trimmed,
-      { onEnd: () => resolve(), onError: () => resolve() },
+      {
+        onBoundary: (h) =>
+          ui.onHighlight({
+            start: h.start + highlightOffset,
+            end: h.end + highlightOffset,
+          }),
+        onEnd: () => {
+          ui.onTarget(null);
+          ui.onHighlight(null);
+          resolve();
+        },
+        onError: () => {
+          ui.onTarget(null);
+          ui.onHighlight(null);
+          resolve();
+        },
+      },
       SPEECH_RATE_NORMAL
     );
+  });
+}
+
+/** Map nuance segments back onto the original display string for karaoke. */
+function segmentsWithOffsets(text: string) {
+  const segments = splitNuanceForSpeech(text);
+  let cursor = 0;
+  return segments.map((segment) => {
+    const start = text.indexOf(segment.text, cursor);
+    const resolved = start >= 0 ? start : cursor;
+    cursor = resolved + segment.text.length;
+    return { ...segment, start: resolved };
   });
 }
 
 /** Speak mixed JP/EN explanation text with the matching voice per run. */
 async function speakMixedAsync(
   text: string,
+  target: StyleSpeechTarget,
   ui: StyleSpeechUi,
   cancelled?: () => boolean
 ): Promise<void> {
-  const segments = splitNuanceForSpeech(text);
+  const segments = segmentsWithOffsets(text);
   if (segments.length === 0) return;
   for (const segment of segments) {
     if (cancelled?.()) return;
     const chunk = segment.text.trim();
     if (!chunk) continue;
+    // Karaoke indices are relative to `chunk`; shift back onto the full string.
+    const trimStart = segment.text.indexOf(chunk);
+    const offset = segment.start + (trimStart >= 0 ? trimStart : 0);
     if (segment.lang === "ja") {
-      await speakJpAsync(
-        chunk,
-        undefined,
-        { id: "mixed", field: "headword" },
-        ui,
-        cancelled
-      );
+      if (cancelled?.()) return;
+      await new Promise<void>((resolve) => {
+        ui.onTarget(target);
+        ui.onHighlight(null);
+        speechService.speakJapanese(
+          chunk,
+          {
+            onBoundary: (h) =>
+              ui.onHighlight({
+                start: h.start + offset,
+                end: h.end + offset,
+              }),
+            onEnd: () => {
+              ui.onTarget(null);
+              ui.onHighlight(null);
+              resolve();
+            },
+            onError: () => {
+              ui.onTarget(null);
+              ui.onHighlight(null);
+              resolve();
+            },
+          },
+          SPEECH_RATE_NORMAL
+        );
+      });
     } else {
-      await speakEnAsync(chunk);
+      await speakEnAsync(chunk, target, ui, cancelled, offset);
     }
   }
 }
@@ -127,13 +186,24 @@ function pause(ms: number): Promise<void> {
 async function speakClassificationIntro(
   text: string,
   ui: StyleSpeechUi,
-  cancelled?: () => boolean
+  cancelled?: () => boolean,
+  target?: StyleSpeechTarget | null
 ): Promise<void> {
   const trimmed = text.trim();
   if (!trimmed || cancelled?.()) return;
-  ui.onTarget(null);
-  ui.onHighlight(null);
-  await speakEnAsync(trimmed);
+  if (target) {
+    await speakEnAsync(trimmed, target, ui, cancelled);
+  } else {
+    ui.onTarget(null);
+    ui.onHighlight(null);
+    await new Promise<void>((resolve) => {
+      speechService.speakEnglish(
+        trimmed,
+        { onEnd: () => resolve(), onError: () => resolve() },
+        SPEECH_RATE_NORMAL
+      );
+    });
+  }
   if (cancelled?.()) return;
   await pause(320);
 }
@@ -162,7 +232,12 @@ async function playExpression(
   if (cancelled()) return;
   await pause(280);
   if (cancelled()) return;
-  await speakEnAsync(item.english);
+  await speakEnAsync(
+    item.english,
+    { id: item.id, field: "english" },
+    ui,
+    cancelled
+  );
   if (cancelled()) return;
   await pause(280);
   if (item.example.japanese) {
@@ -179,13 +254,23 @@ async function playExpression(
   }
   if (item.example.english) {
     if (cancelled()) return;
-    await speakEnAsync(item.example.english);
+    await speakEnAsync(
+      item.example.english,
+      { id: item.id, field: "example-en" },
+      ui,
+      cancelled
+    );
     if (cancelled()) return;
     await pause(280);
   }
   if (item.warning?.trim()) {
     if (cancelled()) return;
-    await speakMixedAsync(item.warning, ui, cancelled);
+    await speakMixedAsync(
+      item.warning,
+      { id: item.id, field: "warning" },
+      ui,
+      cancelled
+    );
     if (cancelled()) return;
   }
   await pause(450);
@@ -334,13 +419,28 @@ export default function StyleTrainer() {
           if (cancelled()) break;
           markPlayingCard(entry.id);
           if (entry.kind === "summary") {
-            await speakClassificationIntro(entry.shift.speaker, speechUi, cancelled);
+            await speakClassificationIntro(
+              entry.shift.speaker,
+              speechUi,
+              cancelled,
+              { id: entry.id, field: "speaker" }
+            );
             if (cancelled()) break;
-            await speakMixedAsync(entry.shift.summary, speechUi, cancelled);
+            await speakMixedAsync(
+              entry.shift.summary,
+              { id: entry.id, field: "summary" },
+              speechUi,
+              cancelled
+            );
             if (cancelled()) break;
             await pause(300);
           } else {
-            await speakClassificationIntro(entry.ctx.context, speechUi, cancelled);
+            await speakClassificationIntro(
+              entry.ctx.context,
+              speechUi,
+              cancelled,
+              { id: entry.id, field: "context" }
+            );
             if (cancelled()) break;
             await speakJpAsync(
               entry.ctx.japanese,
@@ -352,7 +452,12 @@ export default function StyleTrainer() {
             if (cancelled()) break;
             await pause(250);
             if (cancelled()) break;
-            await speakMixedAsync(entry.ctx.note, speechUi, cancelled);
+            await speakMixedAsync(
+              entry.ctx.note,
+              { id: entry.id, field: "note" },
+              speechUi,
+              cancelled
+            );
             if (cancelled()) break;
             await pause(400);
           }

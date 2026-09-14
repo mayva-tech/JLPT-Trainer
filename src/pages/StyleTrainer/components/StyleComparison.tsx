@@ -1,4 +1,5 @@
 import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import type { SpeechHighlight } from "../../../services/speechService";
 import {
   groupComparisonsByCategory,
@@ -119,7 +120,16 @@ function ComparisonBlock({
                 {NATURALNESS_LABELS[item.naturalness]}
               </span>
             </span>
-            <p className="ss-mini-en">{item.english}</p>
+            <HighlightedEnglish
+              text={item.english}
+              className="ss-mini-en"
+              highlight={fieldHighlight(
+                speechTarget,
+                highlight,
+                item.id,
+                "english"
+              )}
+            />
             {item.example.japanese ? (
               <div className="ss-mini-example">
                 <div className="ss-mini-example-jp" lang="ja">
@@ -150,12 +160,30 @@ function ComparisonBlock({
                   </button>
                 </div>
                 {item.example.english ? (
-                  <p className="ss-mini-example-en">{item.example.english}</p>
+                  <HighlightedEnglish
+                    text={item.example.english}
+                    className="ss-mini-example-en"
+                    highlight={fieldHighlight(
+                      speechTarget,
+                      highlight,
+                      item.id,
+                      "example-en"
+                    )}
+                  />
                 ) : null}
               </div>
             ) : null}
             {item.warning ? (
-              <p className="ss-mini-warning">{item.warning}</p>
+              <HighlightedEnglish
+                text={item.warning}
+                className="ss-mini-warning"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  item.id,
+                  "warning"
+                )}
+              />
             ) : null}
           </div>
         ))}

@@ -649,7 +649,7 @@
 }
 
 .ss-warning-body {
-  display: inline;
+  display: block;
 }
 
 .ss-warning .ss-speak {
@@ -886,6 +886,7 @@
 .ss-shift-speaker {
   margin: 0;
   font-size: 15px;
+  font-weight: 700;
 }
 
 .ss-shift-summary {

@@ -1,3 +1,4 @@
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import { HighlightedJapanese } from "../../../components/HighlightedJapanese";
 import type { SpeechHighlight } from "../../../services/speechService";
 import { registerShifts } from "../../../data/registerShifts";
@@ -50,8 +51,26 @@ export function StyleRegisterShifts({
               .join(" ")}
             onClick={() => onSelect?.(shift.id)}
           >
-            <h3 className="ss-shift-speaker">{shift.speaker}</h3>
-            <p className="ss-shift-summary">{shift.summary}</p>
+            <HighlightedEnglish
+              text={shift.speaker}
+              className="ss-shift-speaker"
+              highlight={fieldHighlight(
+                speechTarget,
+                highlight,
+                shift.id,
+                "speaker"
+              )}
+            />
+            <HighlightedEnglish
+              text={shift.summary}
+              className="ss-shift-summary"
+              highlight={fieldHighlight(
+                speechTarget,
+                highlight,
+                shift.id,
+                "summary"
+              )}
+            />
             <ul className="ss-shift-list">
               {shift.contexts.map((ctx) => {
                 const ctxId = `${shift.id}:${ctx.context}`;
@@ -69,7 +88,16 @@ export function StyleRegisterShifts({
                       onSelect?.(ctxId);
                     }}
                   >
-                    <span className="ss-shift-context">{ctx.context}</span>
+                    <HighlightedEnglish
+                      text={ctx.context}
+                      className="ss-shift-context"
+                      highlight={fieldHighlight(
+                        speechTarget,
+                        highlight,
+                        ctxId,
+                        "context"
+                      )}
+                    />
                     <div className="ss-shift-jp" lang="ja">
                       <HighlightedJapanese
                         text={ctx.japanese}
@@ -96,7 +124,16 @@ export function StyleRegisterShifts({
                         🔊
                       </button>
                     </div>
-                    <p className="ss-shift-note">{ctx.note}</p>
+                    <HighlightedEnglish
+                      text={ctx.note}
+                      className="ss-shift-note"
+                      highlight={fieldHighlight(
+                        speechTarget,
+                        highlight,
+                        ctxId,
+                        "note"
+                      )}
+                    />
                   </li>
                 );
               })}
