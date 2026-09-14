@@ -96,6 +96,7 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       objectiveType: "reading",
       promptJa: "この案内板は何を示していますか。",
       promptEn: "What does this sign tell you?",
+      speech: { karaokeMode: "off", autoPlay: false },
       bodyJa: "【案内】中央方面　→　3番線",
       bodyEn: "Notice: Toward Central → Track 3",
       skillHint: "reading",

@@ -184,6 +184,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       promptReading: "あたためます か？",
       promptEn: "You bought a bento. What is the clerk asking?",
       listenText: "温めますか？",
+      speech: { karaokeMode: "after-answer", autoPlay: true },
       skillHint: "listening",
       vocabHint: "温める",
       choices: [
@@ -300,6 +301,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       promptReading: "じゃあ いっしょ に いこう か？カフェ よっても いい し。",
       promptEn: "What is Haruka suggesting?",
       listenText: "じゃあ一緒に行こうか？カフェ寄ってもいいし。",
+      speech: { karaokeMode: "after-answer", autoPlay: true },
       skillHint: "listening",
       choices: [
         {
@@ -581,6 +583,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       objectiveType: "reading",
       promptJa: "駅の掲示を読んでください。",
       promptEn: "Read the station notice carefully.",
+      speech: { karaokeMode: "off", autoPlay: false },
       bodyJa:
         "【お知らせ】中央線は信号点検のため、本日22時以降、一部列車の運転を見合わせる場合があります。お乗り換えの際は、改札内の案内表示をご確認ください。",
       bodyEn:

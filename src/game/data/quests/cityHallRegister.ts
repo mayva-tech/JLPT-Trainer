@@ -391,6 +391,7 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       npcId: "tanaka-city-hall",
       promptJa: "掲示をご確認ください。",
       promptEn: "Please check the notice.",
+      speech: { karaokeMode: "off", autoPlay: false },
       bodyJa:
         "【お知らせ】転入届の受付時間は平日の午前9時から午後5時までです。土日祝日はお休みです。",
       bodyEn:

@@ -272,6 +272,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       promptReading: "ポイントカード は おもち です か？",
       promptEn: "Listen / read carefully — choose a natural reply if you have one.",
       listenText: "ポイントカードはお持ちですか？",
+      speech: { karaokeMode: "after-answer", autoPlay: true },
       skillHint: "listening",
       vocabHint: "ポイントカード",
       choices: [

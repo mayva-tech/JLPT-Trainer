@@ -43,6 +43,41 @@ describe("resolveQuestSpeech", () => {
     expect(resolved.displayJa).toContain("運転を見合わせて");
   });
 
+  it("hides listening transcript even when listenText equals promptJa", () => {
+    const resolved = resolveQuestSpeech(
+      step({
+        id: "points",
+        kind: "listening",
+        npcId: "sato-clerk",
+        promptJa: "ポイントカードはお持ちですか？",
+        listenText: "ポイントカードはお持ちですか？",
+        promptEn: "Listen carefully.",
+      })
+    );
+    expect(resolved.karaokeMode).toBe("after-answer");
+    expect(resolved.hideTranscriptUntilAnswer).toBe(true);
+    expect(resolved.autoPlay).toBe(true);
+    expect(resolved.speakText).toBe("ポイントカードはお持ちですか？");
+  });
+
+  it("defaults reading challenges to karaoke off without autoplay", () => {
+    const resolved = resolveQuestSpeech(
+      step({
+        id: "notice-reading",
+        kind: "reading",
+        npcId: "tanaka-city-hall",
+        promptJa: "掲示をご確認ください。",
+        promptEn: "Please check the notice.",
+        bodyJa: "【お知らせ】転入届の受付時間は平日の午前9時から午後5時までです。",
+      })
+    );
+    expect(resolved.karaokeMode).toBe("off");
+    expect(resolved.autoPlay).toBe(false);
+    expect(resolved.hideTranscriptUntilAnswer).toBe(false);
+    expect(resolved.enabled).toBe(true);
+    expect(resolved.speakText).toBe("掲示をご確認ください。");
+  });
+
   it("keeps English intro manual by default", () => {
     const resolved = resolveQuestSpeech(
       step({

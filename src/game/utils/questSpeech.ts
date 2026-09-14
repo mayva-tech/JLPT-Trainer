@@ -32,7 +32,8 @@ export type ResolvedQuestSpeech = {
 
 /**
  * Resolve per-step speech behavior from quest data + defaults.
- * Listening challenges with listenText ≠ promptJa hide the transcript.
+ * Listening challenges hide the transcript until the learner answers.
+ * Reading challenges default to karaoke off (no auto speech of the notice body).
  */
 export function resolveQuestSpeech(step: QuestStep): ResolvedQuestSpeech {
   const speech = step.speech;
@@ -41,14 +42,6 @@ export function resolveQuestSpeech(step: QuestStep): ResolvedQuestSpeech {
   const englishText = step.promptEn?.trim() || null;
   const reading =
     step.listenReading?.trim() || step.promptReading?.trim() || null;
-
-  const listeningChallenge =
-    speech?.karaokeMode === "after-answer" ||
-    (step.kind === "listening" && Boolean(listen) && listen !== promptJa);
-
-  const karaokeMode: KaraokeMode =
-    speech?.karaokeMode ??
-    (listeningChallenge ? "after-answer" : "always");
 
   // Prefer dedicated listen audio when present; otherwise NPC/prompt Japanese.
   const speakJa = listen || promptJa;
@@ -70,6 +63,34 @@ export function resolveQuestSpeech(step: QuestStep): ResolvedQuestSpeech {
     };
   }
 
+  // Reading: transcript stays visible; karaoke off; no autoplay unless opted in.
+  if (step.kind === "reading") {
+    const karaokeMode: KaraokeMode = speech?.karaokeMode ?? "off";
+    return {
+      enabled: speech?.enabled !== false && Boolean(promptJa),
+      language: "ja",
+      autoPlay: speech?.autoPlay ?? false,
+      karaokeMode,
+      announcement: false,
+      displayJa: promptJa,
+      speakText: promptJa,
+      reading: step.promptReading?.trim() || null,
+      hideTranscriptUntilAnswer: false,
+      englishText,
+    };
+  }
+
+  // Listening: always after-answer (even when listenText === promptJa).
+  // Also treat listen≠prompt as a listening challenge when content declares audio.
+  const listeningChallenge =
+    speech?.karaokeMode === "after-answer" ||
+    step.kind === "listening" ||
+    (Boolean(listen) && listen !== promptJa);
+
+  const karaokeMode: KaraokeMode =
+    speech?.karaokeMode ??
+    (listeningChallenge ? "after-answer" : "always");
+
   const language: "ja" | "en" = speech?.language ?? "ja";
   const isJaLine = language === "ja" && Boolean(speakJa);
 
@@ -78,7 +99,10 @@ export function resolveQuestSpeech(step: QuestStep): ResolvedQuestSpeech {
   const autoPlay =
     speech?.autoPlay ??
     (isJaLine &&
-      (Boolean(step.npcId) || Boolean(listen) || step.kind === "outro"));
+      (Boolean(step.npcId) ||
+        Boolean(listen) ||
+        step.kind === "listening" ||
+        step.kind === "outro"));
 
   return {
     enabled,
