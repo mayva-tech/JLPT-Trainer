@@ -560,6 +560,8 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
 /**
  * Peel a trailing subject が off the noun and glue it to the next predicate
  * when Nanami keeps が tight (問題がある → 問題 | がある).
+ * Do not glue onto kanji-led verbs (が承ります) — that hides 承ります as its
+ * own karaoke span under an unspaced reading.
  */
 function rebindTightGaOntoFollowingPredicate(
   units: HighlightUnit[]
@@ -574,6 +576,12 @@ function rebindTightGaOntoFollowingPredicate(
     }
 
     const { core, punct } = stripTrailingPunct(u.text);
+    const nextCore = stripTrailingPunct(next.text).core;
+    // がある / いれば stay tight; が承ります / が降る keep が separate.
+    if (/^[\u4e00-\u9faf\u3400-\u4dbf]/u.test(nextCore)) {
+      out.push(u);
+      continue;
+    }
     if (!shouldKeepGaTight(next.text)) {
       out.push(u);
       continue;
@@ -1257,7 +1265,11 @@ function mergeTightGaPredicateKaraokeSteps(
     if (
       next &&
       curCore === "が" &&
-      shouldKeepGaTight(next.spokenText || next.text)
+      shouldKeepGaTight(next.spokenText || next.text) &&
+      // Keep が | 承ります separate so kanji verbs get their own highlight.
+      !/^[\u4e00-\u9faf\u3400-\u4dbf]/u.test(
+        stripTrailingPunct(next.text).core
+      )
     ) {
       const text = cur.text + next.text;
       const joiner =

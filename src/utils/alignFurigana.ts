@@ -1391,6 +1391,73 @@ export type ReadingTokenSpan = {
 };
 
 /**
+ * True when token spans are usable for karaoke timing. The primary matcher
+ * often collapses an unspaced reading onto the first kana (`わ` ← whole
+ * phrase), which makes karaoke dwell forever and never reach later words.
+ */
+export function karaokeTokenSpansAreUsable(
+  spans: ReadingTokenSpan[],
+  surface: string
+): boolean {
+  if (spans.length === 0) return false;
+  for (const span of spans) {
+    const tokenCore = span.token.replace(/\s+/gu, "").replace(
+      /[、。！？．，!?,]+$/gu,
+      ""
+    );
+    const tokenLen = [...tokenCore].length;
+    const surfaceLen = Math.max(0, span.end - span.start);
+    // Huge reading glued onto 1–2 surface glyphs = failed match leftover.
+    if (tokenLen >= 6 && surfaceLen <= 2 && tokenLen > surfaceLen * 3) {
+      return false;
+    }
+  }
+  const covered = spans.reduce((n, s) => n + Math.max(0, s.end - s.start), 0);
+  const surfaceLen = [...surface.replace(/\s+/gu, "")].length;
+  // Barely covered the surface while the reading is long.
+  if (surfaceLen >= 6 && covered <= 2) return false;
+  return true;
+}
+
+/**
+ * Build karaoke token spans from furigana segments (kana-anchor fallback).
+ * Kanji + following okurigana merge so 承 + ります → one spoken うけたまわります.
+ */
+export function tokenSpansFromFuriganaSegments(
+  segments: FuriganaSegment[]
+): ReadingTokenSpan[] {
+  const spans: ReadingTokenSpan[] = [];
+  let pos = 0;
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i]!;
+    let text = seg.text;
+    let token = seg.reading ?? seg.text;
+    let start = pos;
+    let end = pos + seg.text.length;
+
+    // Attach okurigana (and its trailing punct) to the kanji reading token.
+    if (seg.reading) {
+      while (i + 1 < segments.length) {
+        const next = segments[i + 1]!;
+        if (next.reading) break;
+        if (/^\s+$/u.test(next.text)) break;
+        const nextCore = next.text.replace(/[、。！？．，!?,]+$/gu, "");
+        if (!nextCore || !/^[ぁ-んーァ-ンー]+$/u.test(nextCore)) break;
+        text += next.text;
+        token += next.text;
+        end += next.text.length;
+        i++;
+      }
+    }
+
+    pos = end;
+    if (/^\s+$/u.test(text)) continue;
+    spans.push({ token, start, end });
+  }
+  return spans;
+}
+
+/**
  * Same alignment as `alignFurigana`, plus each reading token's surface range.
  * Used by karaoke timing so duration follows spoken kana, not kanji glyphs.
  */
@@ -1399,6 +1466,24 @@ export function alignFuriganaWithTokenSpans(
   spacedReading: string
 ): { segments: FuriganaSegment[]; tokenSpans: ReadingTokenSpan[] } {
   ensureKanjiReadingsSeeded();
+  const primary = alignFuriganaWithTokenSpansPrimary(surface, spacedReading);
+  if (karaokeTokenSpansAreUsable(primary.tokenSpans, surface)) {
+    return primary;
+  }
+
+  // Unspaced / irregular readings: reuse the kana-anchor furigana path so
+  // karaoke can light 承ります with spoken うけたまわります.
+  const anchor = alignByKanaAnchors(surface, spacedReading);
+  if (!anchor) return primary;
+  const tokenSpans = tokenSpansFromFuriganaSegments(anchor);
+  if (!karaokeTokenSpansAreUsable(tokenSpans, surface)) return primary;
+  return { segments: anchor, tokenSpans };
+}
+
+function alignFuriganaWithTokenSpansPrimary(
+  surface: string,
+  spacedReading: string
+): { segments: FuriganaSegment[]; tokenSpans: ReadingTokenSpan[] } {
   const tokens = tokenizeReading(spacedReading);
   const segments: FuriganaSegment[] = [];
   const tokenSpans: ReadingTokenSpan[] = [];

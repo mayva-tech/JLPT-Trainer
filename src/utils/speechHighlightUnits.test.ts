@@ -861,6 +861,25 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
     expect(gaAru.spokenText.replace(/\s+/g, "")).toContain("がある");
   });
 
+  it("lights 承ります under an unspaced Style Trainer reading", () => {
+    const surface = "わたくしが承ります。";
+    const reading = "わたくしがうけたまわります。";
+    expect(buildJapaneseHighlightUnits(surface).map((u) => u.text)).toEqual([
+      "わたくし",
+      "が",
+      "承ります。",
+    ]);
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    const verb = steps.find((s) => s.text.includes("承"));
+    expect(verb?.text).toBe("承ります。");
+    expect(verb?.spokenText.replace(/\s+/g, "")).toBe("うけたまわります。");
+    // Must not park the whole reading on the first kana.
+    expect(steps[0]?.spokenText.replace(/\s+/g, "").length).toBeLessThan(
+      reading.replace(/\s+/g, "").length
+    );
+    expectAllVisibleWordUnitsCovered(surface, reading);
+  });
+
   it.each(["~", "〜", "～"])(
     "omits %s from the spoken-reading highlight timeline",
     (marker) => {
