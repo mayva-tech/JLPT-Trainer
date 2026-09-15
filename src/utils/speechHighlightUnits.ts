@@ -717,6 +717,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
     }
 
     // Keep semicolon clause breaks on the karaoke timeline (spoken as "...").
+    // Ellipsis already carries the pause — do not also set speakGapAfter.
     if (/;/.test(raw) && !/\.\.\./.test(spoken)) {
       spoken = `${spoken.replace(/[,.]+$/u, "")} ...`;
     }
@@ -724,7 +725,6 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
     steps.push({
       ...unit,
       spokenText: spoken,
-      ...( /;/.test(raw) ? { speakGapAfter: true } : {}),
     });
   }
 
@@ -954,12 +954,15 @@ export function estimateUnitDurationMs(
   const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
   // Commas / Japanese phrase commas (、) — include TTS-inserted pauses in spokenText
   if (/[,，、]/.test(spokenForPunct)) punctPause += 0.3 + KARAOKE_BREAK_POINT;
-  // "/" alternates → spoken as " ... " — longer gap between the two words
+  // "/" alternates → spoken as " ... " — longer gap between the two words.
+  // Semicolon clauses also become " ... " — do not also add the raw `;` pause.
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
     punctPause += SLASH_PAUSE;
   }
-  // Other phrase separators
-  if (/[;；:]/.test(spokenForPunct)) punctPause += 0.35 + KARAOKE_BREAK_POINT;
+  // Other phrase separators (only when not already an ellipsis pause)
+  if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
+    punctPause += 0.35 + KARAOKE_BREAK_POINT;
+  }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
     punctPause += 0.5 + KARAOKE_BREAK_POINT;
   }
@@ -993,7 +996,9 @@ export function estimateUnitDurationMs(
   ) {
     punctPause += WAVE_DASH_PAUSE;
   }
-  if (unit.speakGapAfter) punctPause += SPEAK_TOKEN_GAP;
+  if (unit.speakGapAfter && !/\.\.\./.test(spokenForPunct)) {
+    punctPause += SPEAK_TOKEN_GAP;
+  }
 
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;

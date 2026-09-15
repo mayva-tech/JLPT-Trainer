@@ -86,6 +86,79 @@ export function splitEnglishDescriptiveAside(
   };
 }
 
+/**
+ * One clause from an English `;` split — display range is UTF-16 into the
+ * full string (for karaoke); `speak` is what Andrew should say for the clause.
+ */
+export type EnglishSemicolonClause = {
+  /** Inclusive start on the display string. */
+  start: number;
+  /** Exclusive end on the display string (includes trailing `;` when present). */
+  end: number;
+  /** Spoken clause without relying on in-utterance `;` → `...`. */
+  speak: string;
+};
+
+/**
+ * Split long EN on `;` so each clause is its own utterance with a real pause.
+ * A single fallback karaoke timeline over-dwells on `soft ...` and never
+ * reaches later words (e.g. Style Trainer warnings with 私).
+ */
+export function splitEnglishBySemicolon(
+  text: string
+): EnglishSemicolonClause[] | null {
+  if (!/;/.test(text)) return null;
+
+  const clauses: EnglishSemicolonClause[] = [];
+  let start = 0;
+  const re = /;/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const end = m.index + 1;
+    const raw = text.slice(start, end);
+    const speakSource = raw.replace(/;+\s*$/u, "").trim();
+    if (speakSource) {
+      clauses.push({
+        start,
+        end,
+        // Build without the semicolon so we do not insert `...` — the pause
+        // between utterances is the clause break.
+        speak: buildEnglishSpeakText(speakSource),
+      });
+    }
+    start = end;
+  }
+  const rest = text.slice(start);
+  if (rest.trim()) {
+    clauses.push({
+      start,
+      end: text.length,
+      speak: buildEnglishSpeakText(rest.trim()),
+    });
+  }
+  return clauses.length >= 2 ? clauses : null;
+}
+
+/**
+ * Japanese pronouns embedded in English gloss/warning lines — Andrew will not
+ * read kanji reliably; speak a romaji form so audio + karaoke stay aligned.
+ */
+const JA_IN_EN: Readonly<Record<string, string>> = {
+  私: "watashi",
+  僕: "boku",
+  俺: "ore",
+  あたし: "atashi",
+  わたし: "watashi",
+};
+
+function expandJapaneseInEnglish(text: string): string {
+  let out = text;
+  for (const [ja, en] of Object.entries(JA_IN_EN)) {
+    if (out.includes(ja)) out = out.split(ja).join(en);
+  }
+  return out;
+}
+
 /** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
 function rewriteParentheticalNotes(text: string): string {
   return text
@@ -244,7 +317,11 @@ function appendSlashSpeakPause(text: string): string {
 
 export function buildEnglishSpeakText(text: string): string {
   let out = appendSlashSpeakPause(
-    appendWaveDashSpeakPause(expandSpokenMoney(rewriteParentheticalNotes(text)))
+    appendWaveDashSpeakPause(
+      expandSpokenMoney(
+        expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+      )
+    )
   );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");

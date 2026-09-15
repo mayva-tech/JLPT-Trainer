@@ -18,6 +18,7 @@ import {
 import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
 import {
   buildEnglishSpeakText,
+  splitEnglishBySemicolon,
   splitEnglishDescriptiveAside,
 } from "../utils/englishSpeakText";
 
@@ -87,10 +88,10 @@ const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 type HighlightMode = "detecting" | "boundary" | "fallback";
 
 /**
- * Real silence between gloss head and `(aside)` — neural EN voices ignore
- * in-utterance periods like `I. soft`.
+ * Real silence between gloss head/aside or `;` clauses — neural EN voices
+ * ignore in-utterance periods/ellipsis pauses.
  */
-const ENGLISH_ASIDE_PAUSE_MS = 680;
+const ENGLISH_CHAIN_PAUSE_MS = 680;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -706,8 +707,8 @@ export const speechService = {
     callbacks?: SpeakCallbacks,
     rate = SPEECH_RATE_NORMAL
   ) {
-    const split = splitEnglishDescriptiveAside(text);
-    if (!split) {
+    const segments = buildEnglishSpeakSegments(text);
+    if (segments.length <= 1) {
       const speakText = buildEnglishSpeakText(text);
       runUtterance(
         text,
@@ -721,26 +722,91 @@ export const speechService = {
       return;
     }
 
-    // Two utterances + real silence: Andrew ignores `I. soft` in one utterance,
-    // and a single fallback timeline never reaches `casual)` before onend.
+    speakEnglishSegments(text, segments, callbacks, rate);
+  },
+};
+
+type EnglishSpeakSegment = {
+  speak: string;
+  steps: HighlightUnit[] | null;
+};
+
+/**
+ * Prefer trailing gloss aside splits, else `;` clause splits — both need a
+ * real inter-utterance pause so karaoke does not drift off Andrew.
+ */
+function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
+  const aside = splitEnglishDescriptiveAside(text);
+  if (aside) {
     const steps = buildEnglishSpokenKaraokeSteps(text);
     const headSteps = steps
-      .filter((s) => s.start < split.asideOpen)
+      .filter((s) => s.start < aside.asideOpen)
       .map((s) => ({
         ...s,
-        // Real pause is between utterances — do not dwell as if `I.` were spoken.
-        spokenText: buildEnglishSpeakText(s.text.replace(/[()]/g, "")).trim() || s.text,
+        spokenText:
+          buildEnglishSpeakText(s.text.replace(/[()]/g, "")).trim() || s.text,
         speakGapAfter: false,
       }));
-    const asideSteps = steps.filter((s) => s.start >= split.asideOpen);
-    const headSpeak = buildEnglishSpeakText(split.head);
-    const asideSpeak = buildEnglishSpeakText(split.aside);
-    const voice = pickEnglishVoice();
+    const asideSteps = steps.filter((s) => s.start >= aside.asideOpen);
+    return [
+      {
+        speak: buildEnglishSpeakText(aside.head),
+        steps: headSteps.length > 0 ? headSteps : null,
+      },
+      {
+        speak: buildEnglishSpeakText(aside.aside),
+        steps: asideSteps.length > 0 ? asideSteps : null,
+      },
+    ];
+  }
 
-    let started = false;
+  const clauses = splitEnglishBySemicolon(text);
+  if (!clauses) return [];
+
+  const steps = buildEnglishSpokenKaraokeSteps(text);
+  return clauses.map((clause) => {
+    const clauseSteps = steps
+      .filter((s) => s.start >= clause.start && s.start < clause.end)
+      .map((s) => {
+        // Real pause is between utterances — do not dwell on soft ...
+        if (/;/.test(s.text)) {
+          const stripped = s.text.replace(/;+/g, "").trim();
+          return {
+            ...s,
+            spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
+            speakGapAfter: false,
+          };
+        }
+        return s;
+      });
+    return {
+      speak: clause.speak,
+      steps: clauseSteps.length > 0 ? clauseSteps : null,
+    };
+  });
+}
+
+function speakEnglishSegments(
+  displayText: string,
+  segments: EnglishSpeakSegment[],
+  callbacks: SpeakCallbacks | undefined,
+  rate: number
+) {
+  const voice = pickEnglishVoice();
+  let started = false;
+  let index = 0;
+
+  const playNext = () => {
+    const seg = segments[index];
+    if (!seg) {
+      callbacks?.onEnd?.();
+      return;
+    }
+    const isLast = index >= segments.length - 1;
+    index += 1;
 
     runUtterance(
-      text,
+      displayText,
       "en-US",
       voice,
       {
@@ -756,44 +822,31 @@ export const speechService = {
           callbacks?.onError?.(error);
         },
         onEnd: () => {
-          // Pause between head and aside; cancel-safe via playbackGeneration.
+          if (isLast) {
+            callbacks?.onEnd?.();
+            return;
+          }
           const pauseGen = playbackGeneration;
           clearAsidePauseTimer();
           pendingAsideCallbacks = callbacks ?? null;
           asidePauseTimer = window.setTimeout(() => {
             asidePauseTimer = null;
-            // Drop before phase-2 runUtterance so settleActiveAsCancelled
-            // does not treat this chain as cancelled.
             pendingAsideCallbacks = null;
-            if (playbackGeneration !== pauseGen) {
-              return;
-            }
-            runUtterance(
-              text,
-              "en-US",
-              voice,
-              {
-                onBoundary: callbacks?.onBoundary,
-                onEnd: callbacks?.onEnd,
-                onError: callbacks?.onError,
-              },
-              true,
-              rate,
-              asideSpeak,
-              null,
-              asideSteps.length > 0 ? asideSteps : null
-            );
-          }, ENGLISH_ASIDE_PAUSE_MS);
+            if (playbackGeneration !== pauseGen) return;
+            playNext();
+          }, ENGLISH_CHAIN_PAUSE_MS);
         },
       },
       true,
       rate,
-      headSpeak,
+      seg.speak,
       null,
-      headSteps.length > 0 ? headSteps : null
+      seg.steps
     );
-  },
-};
+  };
+
+  playNext();
+}
 
 /** @internal test helpers */
 export const __speechTestHooks = {
@@ -808,6 +861,7 @@ export const __speechTestHooks = {
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
 export {
   buildEnglishSpeakText,
+  splitEnglishBySemicolon,
   splitEnglishDescriptiveAside,
 } from "../utils/englishSpeakText";
 

@@ -541,4 +541,43 @@ describe("speechService highlight mode", () => {
     expect(ended).toBe(0);
     expect(cancelled).toBe(true);
   });
+
+  it("splits soft; warning into two utterances and highlights through 私", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text =
+      "Not a default for women. In a workplace or with strangers it sounds too soft; many women use 私 in every situation of their lives.";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken.length).toBe(1);
+    expect(spoken[0]!.text).toMatch(/sounds too soft$/);
+    expect(spoken[0]!.text).not.toMatch(/\.\.\./);
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights[0]).toBe("Not");
+    // Finish first clause karaoke quickly then end utterance.
+    vi.advanceTimersByTime(20000);
+    expect(highlights).toContain("soft;");
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+
+    vi.advanceTimersByTime(700);
+    expect(spoken.length).toBe(2);
+    expect(spoken[1]!.text).toContain("watashi");
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    vi.advanceTimersByTime(20000);
+    expect(highlights).toContain("私");
+    expect(highlights).toContain("lives.");
+    spoken[1]!.onend?.();
+    expect(ended).toBe(1);
+  });
 });

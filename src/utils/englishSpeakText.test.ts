@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildEnglishSpeakText,
+  splitEnglishBySemicolon,
   splitEnglishDescriptiveAside,
 } from "./englishSpeakText";
 
@@ -75,7 +76,13 @@ describe("buildEnglishSpeakText", () => {
       buildEnglishSpeakText(
         "it sounds too soft; many women use 私 in every situation"
       )
-    ).toBe("it sounds too soft ... many women use 私 in every situation");
+    ).toBe("it sounds too soft ... many women use watashi in every situation");
+  });
+
+  it("speaks embedded 私 as watashi so EN TTS/karaoke stay aligned", () => {
+    expect(
+      buildEnglishSpeakText("many women use 私 in every situation")
+    ).toBe("many women use watashi in every situation");
   });
 
   it("pauses after grammar-slot ～ / 〜 / ~", () => {
@@ -162,5 +169,20 @@ describe("splitEnglishDescriptiveAside", () => {
     expect(
       splitEnglishDescriptiveAside("I (soft) and then more")
     ).toBeNull();
+  });
+});
+
+describe("splitEnglishBySemicolon", () => {
+  it("splits Style Trainer warning clauses for real pause + fresh karaoke", () => {
+    const text =
+      "Not a default for women. In a workplace or with strangers it sounds too soft; many women use 私 in every situation of their lives.";
+    const clauses = splitEnglishBySemicolon(text);
+    expect(clauses).not.toBeNull();
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toMatch(/sounds too soft$/);
+    expect(clauses![0]!.speak).not.toMatch(/\.\.\./);
+    expect(clauses![1]!.speak).toContain("watashi");
+    expect(clauses![1]!.speak).not.toContain("私");
+    expect(text.slice(clauses![0]!.start, clauses![0]!.end)).toMatch(/soft;$/);
   });
 });

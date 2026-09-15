@@ -114,6 +114,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     );
     const soft = steps.find((s) => s.text === "soft;");
     expect(soft?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(soft?.speakGapAfter).toBeFalsy();
     const withSemi = estimateUnitDurationMs(
       soft!,
       "en",
@@ -124,6 +125,14 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "en"
     );
     expect(withSemi).toBeGreaterThan(plainSoft);
+  });
+
+  it("keeps embedded 私 on the karaoke timeline as watashi", () => {
+    const text = "many women use 私 in every situation";
+    const steps = buildEnglishSpokenKaraokeSteps(text);
+    expect(steps.map((s) => s.text)).toContain("私");
+    const watashi = steps.find((s) => s.text === "私");
+    expect(watashi?.spokenText).toBe("watashi");
   });
 
   it("turns slot ~ into a pause on the previous word", () => {
