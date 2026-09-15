@@ -38,10 +38,60 @@ export function isSkippedParentheticalNote(inner: string): boolean {
   return SKIP_PAREN_NOTE.test(inner);
 }
 
+/**
+ * Trailing descriptive gloss like `I (soft, casual)` — Andrew ignores an
+ * in-utterance period, so `speakEnglish` splits into two utterances with a
+ * real pause. Indices are UTF-16 offsets into the display string.
+ */
+export type EnglishAsideSplit = {
+  /** Text before the aside, e.g. `"I"`. */
+  head: string;
+  /** Inner aside without parentheses, e.g. `"soft, casual"`. */
+  aside: string;
+  /** Index of `(` on the display string. */
+  asideOpen: number;
+  /** Index just past `)` on the display string. */
+  asideClose: number;
+};
+
+/**
+ * When `text` ends with a spoken descriptive `(aside)`, return head/aside so
+ * TTS can pause between two utterances. Meta tags like `(formal)` are ignored.
+ */
+export function splitEnglishDescriptiveAside(
+  text: string
+): EnglishAsideSplit | null {
+  const re = /\(([^)]*)\)/g;
+  let m: RegExpExecArray | null;
+  let lastSpoken: RegExpExecArray | null = null;
+  while ((m = re.exec(text)) !== null) {
+    const inner = (m[1] ?? "").trim();
+    if (!inner || isSkippedParentheticalNote(inner)) continue;
+    lastSpoken = m;
+  }
+  if (!lastSpoken) return null;
+
+  const after = text.slice(lastSpoken.index + lastSpoken[0].length).trim();
+  // Only split when the aside closes the phrase (Style Trainer gloss form).
+  if (after.length > 0) return null;
+
+  const head = text.slice(0, lastSpoken.index).trimEnd();
+  if (!head) return null;
+
+  return {
+    head,
+    aside: (lastSpoken[1] ?? "").trim(),
+    asideOpen: lastSpoken.index,
+    asideClose: lastSpoken.index + lastSpoken[0].length,
+  };
+}
+
 /** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
 function rewriteParentheticalNotes(text: string): string {
   return text
     // Consume the space before "(" so "I (soft" → "I. soft" (sentence break).
+    // Prefer `splitEnglishDescriptiveAside` + two utterances when the aside
+    // ends the string — Andrew often ignores this period in one utterance.
     .replace(/\s*\(([^)]*)\)/g, (_full, inner: string) => {
       if (isSkippedParentheticalNote(inner)) return "";
       const trimmed = inner.trim();

@@ -97,6 +97,9 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     const steps = buildEnglishSpokenKaraokeSteps("I (soft, casual)");
     expect(steps[0]?.text).toBe("I");
     expect(steps[0]?.spokenText).toBe("I.");
+    expect(steps.map((s) => s.text)).toEqual(["I", "(soft,", "casual)"]);
+    expect(steps[2]?.start).toBe(9);
+    expect(steps[2]?.end).toBe(16);
     const withPause = estimateUnitDurationMs(steps[0]!, "en", steps[1]);
     const plainI = estimateUnitDurationMs(
       { start: 0, end: 1, text: "I", kind: "word", spokenText: "I" },

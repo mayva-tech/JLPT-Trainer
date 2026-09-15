@@ -482,4 +482,63 @@ describe("speechService highlight mode", () => {
     expect(highlights).toContain("みる");
     expect(highlights.at(-1)).toBe("と");
   });
+
+  it("splits I (soft, casual) into two utterances with a real pause and highlights casual", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "I (soft, casual)";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken.length).toBe(1);
+    expect(spoken[0]!.text).toBe("I");
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights).toContain("I");
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken.length).toBe(1);
+
+    vi.advanceTimersByTime(700);
+    expect(spoken.length).toBe(2);
+    expect(spoken[1]!.text).toBe("soft, casual");
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights).toContain("(soft,");
+    // Advance through aside karaoke so casual) lights up.
+    vi.advanceTimersByTime(5000);
+    expect(highlights).toContain("casual)");
+    spoken[1]!.onend?.();
+    expect(ended).toBe(1);
+  });
+
+  it("cancels the gloss aside pause when stop is called mid-gap", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, isSpeechCancelled } = await import("./speechService");
+
+    let ended = 0;
+    let cancelled = false;
+    speechService.speakEnglish("I (soft, casual)", {
+      onEnd: () => {
+        ended += 1;
+      },
+      onError: (error) => {
+        cancelled = isSpeechCancelled(error);
+      },
+    });
+    spoken[0]!.onstart?.();
+    spoken[0]!.onend?.();
+    speechService.stop();
+    vi.advanceTimersByTime(1000);
+    expect(spoken.length).toBe(1);
+    expect(ended).toBe(0);
+    expect(cancelled).toBe(true);
+  });
 });

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildEnglishSpeakText } from "./englishSpeakText";
+import {
+  buildEnglishSpeakText,
+  splitEnglishDescriptiveAside,
+} from "./englishSpeakText";
 
 describe("buildEnglishSpeakText", () => {
   it('speaks "fare" as "fair" (not "far")', () => {
@@ -130,5 +133,34 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("There is a five-yen charge")).toBe(
       "There is a five-yen charge"
     );
+  });
+});
+
+describe("splitEnglishDescriptiveAside", () => {
+  it("splits trailing Style Trainer gloss asides for a real TTS pause", () => {
+    expect(splitEnglishDescriptiveAside("I (soft, casual)")).toEqual({
+      head: "I",
+      aside: "soft, casual",
+      asideOpen: 2,
+      asideClose: 16,
+    });
+    expect(splitEnglishDescriptiveAside("I (refined, feminine)")).toEqual({
+      head: "I",
+      aside: "refined, feminine",
+      asideOpen: 2,
+      asideClose: 21,
+    });
+  });
+
+  it("does not split skipped meta tags or mid-phrase asides", () => {
+    expect(
+      splitEnglishDescriptiveAside("at the time of (formal)")
+    ).toBeNull();
+    expect(
+      splitEnglishDescriptiveAside("to make/let someone do (causative)")
+    ).toBeNull();
+    expect(
+      splitEnglishDescriptiveAside("I (soft) and then more")
+    ).toBeNull();
   });
 });

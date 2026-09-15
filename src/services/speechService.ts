@@ -16,7 +16,10 @@ import {
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
 import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
-import { buildEnglishSpeakText } from "../utils/englishSpeakText";
+import {
+  buildEnglishSpeakText,
+  splitEnglishDescriptiveAside,
+} from "../utils/englishSpeakText";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -83,17 +86,38 @@ const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
 type HighlightMode = "detecting" | "boundary" | "fallback";
 
+/**
+ * Real silence between gloss head and `(aside)` — neural EN voices ignore
+ * in-utterance periods like `I. soft`.
+ */
+const ENGLISH_ASIDE_PAUSE_MS = 680;
+
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
 let boundaryDetectionTimer: number | null = null;
 let gapFillTimer: number | null = null;
 let pendingStartTimer: number | null = null;
+let asidePauseTimer: number | null = null;
+/** User callbacks waiting on the gloss pause between head and aside utterances. */
+let pendingAsideCallbacks: SpeakCallbacks | null = null;
 let pendingVoicesChangedHandler: (() => void) | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
 let activePlayback: {
   callbacks?: SpeakCallbacks;
   settled: boolean;
 } | null = null;
+
+function clearAsidePauseTimer() {
+  if (asidePauseTimer !== null) {
+    window.clearTimeout(asidePauseTimer);
+    asidePauseTimer = null;
+  }
+}
+
+function clearPendingAsideChain() {
+  clearAsidePauseTimer();
+  pendingAsideCallbacks = null;
+}
 
 function debug(...args: unknown[]) {
   if (DEBUG_SPEECH) console.log("[speech]", ...args);
@@ -290,11 +314,18 @@ function clearPlaybackHandles() {
   clearGapFillTimer();
   clearBoundaryDetectionTimer();
   clearPendingStartOnly();
+  clearAsidePauseTimer();
   activeUtterance = null;
 }
 
 /** Settle the in-flight waiter as cancelled. Does not call `onEnd`. */
 function settleActiveAsCancelled(): void {
+  if (pendingAsideCallbacks) {
+    const cb = pendingAsideCallbacks;
+    pendingAsideCallbacks = null;
+    clearAsidePauseTimer();
+    cb.onError?.(SpeechCancelled);
+  }
   const current = activePlayback;
   if (!current || current.settled) return;
   current.settled = true;
@@ -316,7 +347,12 @@ function runUtterance(
   /** When set, audio uses this string; highlights still use `text`. */
   speakText?: string,
   /** Spaced kana reading used to time Japanese fallback karaoke. */
-  spacedReading?: string | null
+  spacedReading?: string | null,
+  /**
+   * When set, fallback karaoke uses these steps (display indices into `text`)
+   * instead of rebuilding from the full string — used for split EN asides.
+   */
+  karaokeUnits?: HighlightUnit[] | null
 ) {
   if (!window.speechSynthesis || !text.trim()) {
     callbacks?.onEnd?.();
@@ -332,7 +368,10 @@ function runUtterance(
   // auxiliary chunks in grammar patterns and example sentences.
   // English uses the same detecting → boundary/fallback path as play / quiz mode.
   const forceFallback =
-    withHighlight && (audioText !== text || (isJa && reading.length > 0));
+    withHighlight &&
+    (audioText !== text ||
+      (isJa && reading.length > 0) ||
+      (karaokeUnits != null && karaokeUnits.length > 0));
 
   // New generation invalidates any in-flight karaoke / start callbacks.
   playbackGeneration += 1;
@@ -368,18 +407,20 @@ function runUtterance(
   // Japanese + reading: schedule fallback from spoken kana tokens, not kanji weight.
   // English with speak transforms (skipped (notes), ~ pauses): time from spoken form.
   const fallbackUnits: HighlightUnit[] =
-    isJa && reading
-      ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({
-          start: s.start,
-          end: s.end,
-          text: s.text,
-          kind: s.kind,
-          spokenText: s.spokenText,
-          speakGapAfter: s.speakGapAfter,
-        }))
-      : !isJa
-        ? buildEnglishSpokenKaraokeSteps(text)
-        : activeHighlightUnits(allUnits);
+    karaokeUnits && karaokeUnits.length > 0
+      ? karaokeUnits
+      : isJa && reading
+        ? buildJapaneseSpokenKaraokeSteps(text, reading, allUnits).map((s) => ({
+            start: s.start,
+            end: s.end,
+            text: s.text,
+            kind: s.kind,
+            spokenText: s.spokenText,
+            speakGapAfter: s.speakGapAfter,
+          }))
+        : !isJa
+          ? buildEnglishSpokenKaraokeSteps(text)
+          : activeHighlightUnits(allUnits);
 
   const units = fallbackUnits;
 
@@ -665,15 +706,91 @@ export const speechService = {
     callbacks?: SpeakCallbacks,
     rate = SPEECH_RATE_NORMAL
   ) {
-    const speakText = buildEnglishSpeakText(text);
+    const split = splitEnglishDescriptiveAside(text);
+    if (!split) {
+      const speakText = buildEnglishSpeakText(text);
+      runUtterance(
+        text,
+        "en-US",
+        pickEnglishVoice(),
+        callbacks,
+        true,
+        rate,
+        speakText
+      );
+      return;
+    }
+
+    // Two utterances + real silence: Andrew ignores `I. soft` in one utterance,
+    // and a single fallback timeline never reaches `casual)` before onend.
+    const steps = buildEnglishSpokenKaraokeSteps(text);
+    const headSteps = steps
+      .filter((s) => s.start < split.asideOpen)
+      .map((s) => ({
+        ...s,
+        // Real pause is between utterances — do not dwell as if `I.` were spoken.
+        spokenText: buildEnglishSpeakText(s.text.replace(/[()]/g, "")).trim() || s.text,
+        speakGapAfter: false,
+      }));
+    const asideSteps = steps.filter((s) => s.start >= split.asideOpen);
+    const headSpeak = buildEnglishSpeakText(split.head);
+    const asideSpeak = buildEnglishSpeakText(split.aside);
+    const voice = pickEnglishVoice();
+
+    let started = false;
+
     runUtterance(
       text,
       "en-US",
-      pickEnglishVoice(),
-      callbacks,
+      voice,
+      {
+        onStart: () => {
+          if (!started) {
+            started = true;
+            callbacks?.onStart?.();
+          }
+        },
+        onBoundary: callbacks?.onBoundary,
+        onError: (error) => {
+          clearPendingAsideChain();
+          callbacks?.onError?.(error);
+        },
+        onEnd: () => {
+          // Pause between head and aside; cancel-safe via playbackGeneration.
+          const pauseGen = playbackGeneration;
+          clearAsidePauseTimer();
+          pendingAsideCallbacks = callbacks ?? null;
+          asidePauseTimer = window.setTimeout(() => {
+            asidePauseTimer = null;
+            // Drop before phase-2 runUtterance so settleActiveAsCancelled
+            // does not treat this chain as cancelled.
+            pendingAsideCallbacks = null;
+            if (playbackGeneration !== pauseGen) {
+              return;
+            }
+            runUtterance(
+              text,
+              "en-US",
+              voice,
+              {
+                onBoundary: callbacks?.onBoundary,
+                onEnd: callbacks?.onEnd,
+                onError: callbacks?.onError,
+              },
+              true,
+              rate,
+              asideSpeak,
+              null,
+              asideSteps.length > 0 ? asideSteps : null
+            );
+          }, ENGLISH_ASIDE_PAUSE_MS);
+        },
+      },
       true,
       rate,
-      speakText
+      headSpeak,
+      null,
+      headSteps.length > 0 ? headSteps : null
     );
   },
 };
@@ -689,5 +806,8 @@ export const __speechTestHooks = {
 };
 
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
-export { buildEnglishSpeakText } from "../utils/englishSpeakText";
+export {
+  buildEnglishSpeakText,
+  splitEnglishDescriptiveAside,
+} from "../utils/englishSpeakText";
 
