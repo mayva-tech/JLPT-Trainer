@@ -449,6 +449,35 @@
   color: var(--ss-warn);
 }
 
+/* Inline karaoke label inside strength / meta chips (HighlightedEnglish is a div). */
+.ss-classification-label {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.ss-classification-label .speech-line {
+  display: inline;
+}
+
+.ss-strength .ss-classification-label .speech-active {
+  color: #111 !important;
+  background: rgba(245, 196, 70, 0.85);
+}
+
+.ss-meta-chip .ss-classification-label .speech-active {
+  color: #111 !important;
+  background: rgba(245, 196, 70, 0.55);
+}
+
+.ss-meta-chip--speaking .ss-classification-label .speech-spoken {
+  color: inherit;
+  opacity: 0.72;
+}
+
 /* ---- category sections ---- */
 
 .ss-browse-sections,

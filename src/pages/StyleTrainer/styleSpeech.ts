@@ -56,3 +56,20 @@ export function fieldSpeaking(
     !!speechTarget && speechTarget.id === id && speechTarget.field === field
   );
 }
+
+/**
+ * Karaoke highlight for a classification chip label. Uses live word bounds
+ * when available; otherwise lights the whole label while that chip is active.
+ */
+export function fieldLabelHighlight(
+  speechTarget: StyleSpeechTarget | null | undefined,
+  highlight: SpeechHighlight | null | undefined,
+  id: string,
+  field: StyleSpeechField,
+  text: string
+): SpeechHighlight | null {
+  if (!fieldSpeaking(speechTarget, id, field)) return null;
+  if (highlight) return highlight;
+  const end = text.length;
+  return end > 0 ? { start: 0, end } : null;
+}
