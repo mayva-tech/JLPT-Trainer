@@ -87,42 +87,57 @@ export function splitEnglishDescriptiveAside(
 }
 
 /**
- * One clause from an English `;` split — display range is UTF-16 into the
- * full string (for karaoke); `speak` is what Andrew should say for the clause.
+ * One clause from an English `;` / sentence split — display range is UTF-16 into
+ * the full string (for karaoke); `speak` is what Andrew should say for the clause.
  */
-export type EnglishSemicolonClause = {
+export type EnglishClauseSplit = {
   /** Inclusive start on the display string. */
   start: number;
-  /** Exclusive end on the display string (includes trailing `;` when present). */
+  /** Exclusive end on the display string (includes trailing `;` / `.` when present). */
   end: number;
-  /** Spoken clause without relying on in-utterance `;` → `...`. */
+  /** Spoken clause without in-utterance `;` → `...` (pause is between utterances). */
   speak: string;
 };
 
-/**
- * Split long EN on `;` so each clause is its own utterance with a real pause.
- * A single fallback karaoke timeline over-dwells on `soft ...` and never
- * reaches later words (e.g. Style Trainer warnings with 私).
- */
-export function splitEnglishBySemicolon(
-  text: string
-): EnglishSemicolonClause[] | null {
-  if (!/;/.test(text)) return null;
+/** @deprecated alias — Prefer {@link EnglishClauseSplit}. */
+export type EnglishSemicolonClause = EnglishClauseSplit;
 
-  const clauses: EnglishSemicolonClause[] = [];
+/**
+ * Collect clause ends: every `;`, and `.` / `!` / `?` before a new sentence
+ * (space + capital / quote). Skips decimals like `1.5`.
+ */
+function findEnglishClauseBreakEnds(text: string): number[] {
+  const ends = new Set<number>();
+  for (const m of text.matchAll(/;/g)) {
+    ends.add(m.index + 1);
+  }
+  for (const m of text.matchAll(/(?<!\d)[.!?](?=\s+["'“‘(]*[A-Z0-9])/g)) {
+    ends.add(m.index + 1);
+  }
+  return [...ends].sort((a, b) => a - b);
+}
+
+/**
+ * Split long EN on `;` and sentence endings so each clause is its own utterance.
+ * A single fallback karaoke timeline over-dwells on periods/ellipsis and lags
+ * Style Trainer warnings / explanations behind Andrew.
+ */
+export function splitEnglishByClauses(
+  text: string
+): EnglishClauseSplit[] | null {
+  const breakEnds = findEnglishClauseBreakEnds(text);
+  if (breakEnds.length === 0) return null;
+
+  const clauses: EnglishClauseSplit[] = [];
   let start = 0;
-  const re = /;/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(text)) !== null) {
-    const end = m.index + 1;
+  for (const end of breakEnds) {
+    if (end <= start) continue;
     const raw = text.slice(start, end);
-    const speakSource = raw.replace(/;+\s*$/u, "").trim();
+    const speakSource = raw.replace(/[;,.!?]+$/u, "").trim();
     if (speakSource) {
       clauses.push({
         start,
         end,
-        // Build without the semicolon so we do not insert `...` — the pause
-        // between utterances is the clause break.
         speak: buildEnglishSpeakText(speakSource),
       });
     }
@@ -130,13 +145,21 @@ export function splitEnglishBySemicolon(
   }
   const rest = text.slice(start);
   if (rest.trim()) {
+    const speakSource = rest.replace(/[;,.!?]+$/u, "").trim();
     clauses.push({
       start,
       end: text.length,
-      speak: buildEnglishSpeakText(rest.trim()),
+      speak: buildEnglishSpeakText(speakSource || rest.trim()),
     });
   }
   return clauses.length >= 2 ? clauses : null;
+}
+
+/** @deprecated Use {@link splitEnglishByClauses}. */
+export function splitEnglishBySemicolon(
+  text: string
+): EnglishClauseSplit[] | null {
+  return splitEnglishByClauses(text);
 }
 
 /**

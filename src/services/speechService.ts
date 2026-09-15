@@ -18,7 +18,7 @@ import {
 import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
 import {
   buildEnglishSpeakText,
-  splitEnglishBySemicolon,
+  splitEnglishByClauses,
   splitEnglishDescriptiveAside,
 } from "../utils/englishSpeakText";
 
@@ -77,6 +77,12 @@ const FALLBACK_START_OFFSET_MS = 10;
  * English fallback scale (Andrew) — same timing as play mode / quiz mode.
  */
 const FALLBACK_TIMING_SCALE_EN = 1.35;
+/**
+ * Faster EN scale for chained clause/aside segments only. Those always use
+ * force-fallback karaoke; 1.35 accumulates lag on long Style Trainer warnings
+ * without changing JA or short single-utterance EN.
+ */
+const FALLBACK_TIMING_SCALE_EN_CHAINED = 1.02;
 /**
  * Japanese fallback scale (Nanami). Slightly under 1 offsets timer/React lag
  * so the highlight does not trail the voice.
@@ -508,7 +514,11 @@ function runUtterance(
         const next = index + 1;
         if (next >= units.length) return;
         const timingScale =
-          unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
+          unitLang === "en"
+            ? karaokeUnits && karaokeUnits.length > 0
+              ? FALLBACK_TIMING_SCALE_EN_CHAINED
+              : FALLBACK_TIMING_SCALE_EN
+            : FALLBACK_TIMING_SCALE_JA;
         const dur =
           (estimateUnitDurationMs(unit, unitLang, units[next] ?? null) /
             Math.max(rate, 0.2)) *
@@ -732,8 +742,8 @@ type EnglishSpeakSegment = {
 };
 
 /**
- * Prefer trailing gloss aside splits, else `;` clause splits — both need a
- * real inter-utterance pause so karaoke does not drift off Andrew.
+ * Prefer trailing gloss aside splits, else `;` / sentence clause splits —
+ * both need a real inter-utterance pause so karaoke does not drift off Andrew.
  */
 function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
   const aside = splitEnglishDescriptiveAside(text);
@@ -760,7 +770,7 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
     ];
   }
 
-  const clauses = splitEnglishBySemicolon(text);
+  const clauses = splitEnglishByClauses(text);
   if (!clauses) return [];
 
   const steps = buildEnglishSpokenKaraokeSteps(text);
@@ -768,16 +778,16 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
       .map((s) => {
-        // Real pause is between utterances — do not dwell on soft ...
-        if (/;/.test(s.text)) {
-          const stripped = s.text.replace(/;+/g, "").trim();
+        // Real pause is between utterances — strip clause-final punct dwell.
+        if (/[;,.!?]$/u.test(s.text)) {
+          const stripped = s.text.replace(/[;,.!?]+$/u, "").trim();
           return {
             ...s,
             spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
             speakGapAfter: false,
           };
         }
-        return s;
+        return { ...s, speakGapAfter: false };
       });
     return {
       speak: clause.speak,
@@ -856,11 +866,13 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE,
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
+  FALLBACK_TIMING_SCALE_EN_CHAINED,
 };
 
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
 export {
   buildEnglishSpeakText,
+  splitEnglishByClauses,
   splitEnglishBySemicolon,
   splitEnglishDescriptiveAside,
 } from "../utils/englishSpeakText";

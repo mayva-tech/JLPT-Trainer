@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildEnglishSpeakText,
+  splitEnglishByClauses,
   splitEnglishBySemicolon,
   splitEnglishDescriptiveAside,
 } from "./englishSpeakText";
@@ -178,11 +179,27 @@ describe("splitEnglishBySemicolon", () => {
       "Not a default for women. In a workplace or with strangers it sounds too soft; many women use 私 in every situation of their lives.";
     const clauses = splitEnglishBySemicolon(text);
     expect(clauses).not.toBeNull();
-    expect(clauses).toHaveLength(2);
-    expect(clauses![0]!.speak).toMatch(/sounds too soft$/);
-    expect(clauses![0]!.speak).not.toMatch(/\.\.\./);
-    expect(clauses![1]!.speak).toContain("watashi");
-    expect(clauses![1]!.speak).not.toContain("私");
-    expect(text.slice(clauses![0]!.start, clauses![0]!.end)).toMatch(/soft;$/);
+    expect(clauses!.length).toBeGreaterThanOrEqual(2);
+    expect(clauses!.some((c) => /sounds too soft$/i.test(c.speak))).toBe(true);
+    expect(clauses!.at(-1)!.speak).toContain("watashi");
+    expect(clauses!.at(-1)!.speak).not.toContain("私");
+  });
+});
+
+describe("splitEnglishByClauses", () => {
+  it("splits explanation sentences so karaoke does not lag behind Andrew", () => {
+    const text =
+      "From a senior to a junior it can sound condescending. In song lyrics it is romantic; in an office it can grate.";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(3);
+    expect(clauses![0]!.speak).toMatch(/condescending$/);
+    expect(clauses![1]!.speak).toMatch(/romantic$/);
+    expect(clauses![2]!.speak).toMatch(/grate$/);
+    expect(clauses!.every((c) => !/\.\.\./.test(c.speak))).toBe(true);
+  });
+
+  it("does not split short single-sentence EN", () => {
+    expect(splitEnglishByClauses("What do you reckon?")).toBeNull();
+    expect(splitEnglishByClauses("Hello world.")).toBeNull();
   });
 });
