@@ -93,16 +93,26 @@ function speakEnAsync(
   const trimmed = text.trim();
   if (!trimmed || cancelled?.()) return Promise.resolve();
   return new Promise((resolve) => {
+    // Same EN karaoke path as play mode / quiz mode (autoModeRunner / quizAutoRunner).
     ui.onTarget(target);
     ui.onHighlight(null);
     speechService.speakEnglish(
       trimmed,
       {
-        onBoundary: (h) =>
-          ui.onHighlight({
-            start: h.start + highlightOffset,
-            end: h.end + highlightOffset,
-          }),
+        onStart: () => {
+          if (cancelled?.()) return;
+        },
+        onBoundary: (h) => {
+          if (cancelled?.()) return;
+          ui.onHighlight(
+            highlightOffset === 0
+              ? h
+              : {
+                  start: h.start + highlightOffset,
+                  end: h.end + highlightOffset,
+                }
+          );
+        },
         onEnd: () => {
           ui.onTarget(null);
           ui.onHighlight(null);
@@ -354,6 +364,7 @@ export default function StyleTrainer() {
       if (playingAll) stopPlayAll();
       const trimmed = text.trim();
       if (!trimmed) return;
+      // Match PlayerPage / quiz EN: clear highlight, speakEnglish, onBoundary → highlight.
       speechUi.onTarget(target);
       speechUi.onHighlight(null);
       speechService.speakEnglish(
