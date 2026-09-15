@@ -27,10 +27,38 @@ export const CHAPTERS: readonly ChapterDefinition[] = [
       "cafe-order",
       "first-week-challenge",
     ],
-    chapterClearPreviewLocationIds: ["clinic", "phone-center", "office"],
     nextChapterTeaser: {
-      japaneseTitle: "社会生活",
-      title: "Coming next",
+      japaneseTitle: "第2章・社会生活",
+      title: "Life Gets Real",
+    },
+  },
+  {
+    id: "chapter-2",
+    number: 2,
+    title: "Life Gets Real",
+    japaneseTitle: "第2章・社会生活",
+    description: "Japanese becomes part of everyday responsibilities.",
+    openingLines: [
+      "Your first week in Kotoba Town is over.",
+      "Buying snacks and finding the train was only the beginning — now you have to function independently in Japanese society.",
+      "Clinic visits, phone calls, and workplace talk will push your Confidence harder than Chapter 1.",
+    ],
+    objectives: [
+      "Visit a clinic",
+      "Handle a phone inquiry",
+      "Communicate at work",
+      "Ask for clarification instead of pretending to understand",
+      "Survive the Social Life Challenge",
+    ],
+    questIds: [
+      "clinic-visit",
+      "phone-call",
+      "first-day-office",
+      "social-life-challenge",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第3章・人間関係",
+      title: "Work, Friends & Relationships",
     },
   },
 ] as const;

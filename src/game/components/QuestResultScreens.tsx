@@ -19,8 +19,12 @@ type SuccessProps = {
 };
 
 export type ChapterCompleteSummary = {
+  chapterNumber: number;
+  chapterJapaneseTitle: string;
+  chapterEnglishClearLabel: string;
   accuracy: number;
   questsCompleted: number;
+  questsTotal: number;
   confidenceLeft: number;
   xp: number;
   japanesePower: number;
@@ -31,7 +35,7 @@ export type ChapterCompleteSummary = {
   npcsMet: string[];
   locationsUnlocked: string[];
   rankLabel?: string;
-  chapter2Teaser?: { japaneseTitle: string; title: string };
+  nextChapterTeaser?: { japaneseTitle: string; title: string; comingSoon?: boolean };
 };
 
 export function QuestSuccessScreen({
@@ -52,12 +56,17 @@ export function QuestSuccessScreen({
   const teaser = quest.rewards.nextQuestTeaser;
 
   if (chapterComplete && chapterSummary) {
+    const next = chapterSummary.nextChapterTeaser;
     return (
       <div className="ppq-result ppq-chapter-complete">
-        <p className="ppq-celebrate-kicker">CHAPTER COMPLETE</p>
-        <h1 lang="ja">新生活 Complete</h1>
+        <p className="ppq-celebrate-kicker">
+          CHAPTER {chapterSummary.chapterNumber} CLEAR
+        </p>
+        <h1 lang="ja">{chapterSummary.chapterEnglishClearLabel}</h1>
         <p style={{ color: "var(--ppq-muted)" }}>
-          You survived your first week in Kotoba Town.
+          {chapterSummary.chapterNumber === 1
+            ? "You survived your first week in Kotoba Town."
+            : "You handled clinic, phone, and workplace Japanese in one connected day."}
         </p>
 
         <dl className="ppq-result-grid">
@@ -67,7 +76,9 @@ export function QuestSuccessScreen({
           </div>
           <div>
             <dt>Quests</dt>
-            <dd>{chapterSummary.questsCompleted}/6</dd>
+            <dd>
+              {chapterSummary.questsCompleted}/{chapterSummary.questsTotal}
+            </dd>
           </div>
           <div>
             <dt>Confidence left</dt>
@@ -114,18 +125,23 @@ export function QuestSuccessScreen({
           </p>
         ) : null}
 
-        <div className="ppq-panel">
-          <h2>Chapter 2</h2>
-          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
-            {chapterSummary.chapter2Teaser?.japaneseTitle ?? "社会生活"}
-          </p>
-          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
-            {chapterSummary.chapter2Teaser?.title ?? "Coming next"}
-          </p>
-          <p style={{ fontSize: 13, marginTop: 8 }}>
-            Preview unlocked: 🏥 Clinic · 📞 Phone Center · 🏢 Office District
-          </p>
-        </div>
+        {next ? (
+          <div className="ppq-panel">
+            <h2>NEXT</h2>
+            <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+              {next.japaneseTitle}
+            </p>
+            <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
+              {next.title}
+              {next.comingSoon ? " · Coming soon" : ""}
+            </p>
+            {chapterSummary.chapterNumber === 1 ? (
+              <p style={{ fontSize: 13, marginTop: 8 }}>
+                Unlocked next: 🏥 Clinic — then Phone Center and Office as you progress.
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="ppq-actions">
           <button

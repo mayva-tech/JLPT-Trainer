@@ -93,6 +93,14 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "Order at Café";
     case "first-week-challenge":
       return "First Week Challenge";
+    case "clinic-visit":
+      return "Visit the Clinic";
+    case "phone-call":
+      return "Handle a Phone Call";
+    case "first-day-office":
+      return "First Day at Work";
+    case "social-life-challenge":
+      return "Social Life Challenge";
     default:
       return quest.title;
   }

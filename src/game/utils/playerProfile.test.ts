@@ -34,6 +34,48 @@ describe("parsePlayerProfile", () => {
       updatedAt: 1,
     });
     expect(profile.flags.chapter1Complete).toBe(true);
+    // Migrates Chapter 1 clearers into Chapter 2 availability.
+    expect(profile.currentChapter).toBe(2);
+  });
+
+  it("migrates first-week-challenge clears into Chapter 2 without breaking old saves", () => {
+    const profile = parsePlayerProfile({
+      version: 1,
+      playerName: "Traveler",
+      xp: 900,
+      currentChapter: 1,
+      completedQuestIds: [
+        "city-hall-register",
+        "convenience-first-shop",
+        "meet-neighbor",
+        "station-master",
+        "cafe-order",
+        "first-week-challenge",
+      ],
+      unlockedLocationIds: [
+        "home",
+        "city-hall",
+        "convenience-store",
+        "train-station",
+        "cafe",
+        "clinic",
+        "phone-center",
+        "office",
+        "training-dojo",
+        "weak-word-dungeon",
+      ],
+      activeQuestId: null,
+      languageStats: emptyLanguageStats(),
+      completedQuests: [],
+      metNpcIds: ["tanaka-city-hall"],
+      rewardedQuestIds: ["first-week-challenge"],
+      flags: {},
+      createdAt: 1,
+      updatedAt: 1,
+    });
+    expect(profile.flags.chapter1Complete).toBe(true);
+    expect(profile.currentChapter).toBe(2);
+    expect(profile.completedQuestIds).toContain("first-week-challenge");
   });
 });
 
