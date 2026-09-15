@@ -60,10 +60,10 @@ describe("buildEnglishSpeakText", () => {
 
   it("speaks descriptive gloss parentheticals used by Style Trainer", () => {
     expect(buildEnglishSpeakText("I (refined, feminine)")).toBe(
-      "I, refined, feminine"
+      "I ... refined, feminine"
     );
-    expect(buildEnglishSpeakText("I (humble)")).toBe("I, humble");
-    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I, soft, casual");
+    expect(buildEnglishSpeakText("I (humble)")).toBe("I ... humble");
+    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I ... soft, casual");
   });
 
   it("pauses after grammar-slot ～ / 〜 / ~", () => {

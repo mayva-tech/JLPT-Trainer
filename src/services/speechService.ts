@@ -72,7 +72,8 @@ const FALLBACK_START_OFFSET_MS = 10;
 /**
  * English fallback scale (Andrew) — leave alone while tuning Japanese.
  */
-const FALLBACK_TIMING_SCALE_EN = 1.35;
+/** English fallback karaoke scale — keep near Andrew's pace (was 1.35; lagged). */
+const FALLBACK_TIMING_SCALE_EN = 1.0;
 /**
  * Japanese fallback scale (Nanami). Slightly under 1 offsets timer/React lag
  * so the highlight does not trail the voice.

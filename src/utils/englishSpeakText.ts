@@ -38,13 +38,14 @@ export function isSkippedParentheticalNote(inner: string): boolean {
   return SKIP_PAREN_NOTE.test(inner);
 }
 
-/** Drop meta notes like "(formal)"; speak descriptive `(nuance)` as a comma aside. */
+/** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
 function rewriteParentheticalNotes(text: string): string {
   return text
     .replace(/\(([^)]*)\)/g, (_full, inner: string) => {
       if (isSkippedParentheticalNote(inner)) return "";
       const trimmed = inner.trim();
-      return trimmed ? `, ${trimmed}` : "";
+      // Ellipsis = a clear beat after the headword ("I ... soft, casual").
+      return trimmed ? ` ... ${trimmed}` : "";
     })
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,;:.!?])/g, "$1")
