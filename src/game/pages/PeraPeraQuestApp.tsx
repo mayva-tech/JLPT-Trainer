@@ -582,6 +582,12 @@ function Landing({
             Chapter {profile.currentChapter}
           </button>
         </div>
+        {profile.currentChapter < 2 && !profile.flags.chapter1Complete ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
+            Next unlock: Chapter 2 · 社会生活 (after First Week Challenge). Open Quests →
+            Chapter 2 for a locked preview.
+          </p>
+        ) : null}
       </section>
 
       <div className="ppq-secondary-grid">
@@ -612,9 +618,8 @@ function ChapterPanel({
   const chapter1Done = Boolean(
     profile.flags.chapter1Complete || isChapterComplete(profile, 1)
   );
-  const maxSelectable = chapter1Done ? 2 : 1;
-  const initial =
-    Math.min(Math.max(1, profile.currentChapter), maxSelectable) || 1;
+  // Always allow browsing Chapter 2 as a locked preview; only play when unlocked.
+  const initial = Math.min(Math.max(1, profile.currentChapter), 2) || 1;
   const [viewChapter, setViewChapter] = useState(initial);
 
   const chapter = getChapterByNumber(viewChapter);
@@ -627,6 +632,7 @@ function ChapterPanel({
     );
   }
 
+  const chapterLocked = viewChapter === 2 && !chapter1Done;
   const rows = getChapterQuestRows(profile, chapter);
   const { done, total, percent } = chapterCompletionCounts(profile, viewChapter);
   const shortJa =
@@ -658,11 +664,12 @@ function ChapterPanel({
           className={
             viewChapter === 2 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
           }
-          disabled={!chapter1Done}
-          title={chapter1Done ? "Chapter 2" : "Clear Chapter 1 first"}
-          onClick={() => {
-            if (chapter1Done) setViewChapter(2);
-          }}
+          title={
+            chapter1Done
+              ? "Chapter 2 · 社会生活"
+              : "Preview Chapter 2 — clear Chapter 1 to play"
+          }
+          onClick={() => setViewChapter(2)}
         >
           Chapter 2{chapter1Done ? "" : " 🔒"}
         </button>
@@ -674,6 +681,16 @@ function ChapterPanel({
       <p style={{ color: "var(--ppq-muted)", fontSize: 14 }}>
         {chapter.description}
       </p>
+
+      {chapterLocked ? (
+        <div className="ppq-panel" style={{ marginTop: 12, marginBottom: 4 }}>
+          <h2 style={{ marginTop: 0 }}>Locked</h2>
+          <p style={{ margin: 0, fontSize: 13 }}>
+            Finish <strong>Chapter 1 · 新生活</strong> (clear the First Week Challenge)
+            to unlock Clinic, Phone Center, and Office quests.
+          </p>
+        </div>
+      ) : null}
 
       <div className="ppq-chapter-progress" aria-label="Chapter progress">
         <div className="ppq-chapter-progress-label">
@@ -689,9 +706,16 @@ function ChapterPanel({
 
       <ul className="ppq-chapter-list" style={{ marginTop: 14 }}>
         {rows.map(({ quest, status }) => {
-          const icon =
-            status === "completed" ? "✅" : status === "active" ? "▶" : "🔒";
-          const canPlay = status === "completed" || status === "active";
+          const locked = chapterLocked || status === "locked";
+          const icon = chapterLocked
+            ? "🔒"
+            : status === "completed"
+              ? "✅"
+              : status === "active"
+                ? "▶"
+                : "🔒";
+          const canPlay =
+            !chapterLocked && (status === "completed" || status === "active");
           return (
             <li key={quest.id}>
               <strong>
@@ -700,6 +724,11 @@ function ChapterPanel({
               <div style={{ color: "var(--ppq-muted)", fontSize: 12 }}>
                 {quest.icon ?? ""} {quest.japaneseTitle} · {quest.title}
               </div>
+              {locked && viewChapter === 2 && !chapter1Done ? (
+                <div style={{ color: "var(--ppq-muted)", fontSize: 12, marginTop: 4 }}>
+                  Unlocks after Chapter 1
+                </div>
+              ) : null}
               {canPlay ? (
                 <button
                   type="button"
@@ -718,6 +747,19 @@ function ChapterPanel({
           );
         })}
       </ul>
+
+      {viewChapter === 1 && !chapter1Done ? (
+        <div className="ppq-panel" style={{ marginTop: 16 }}>
+          <h2>Coming next</h2>
+          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+            第2章・社会生活
+          </p>
+          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)", fontSize: 13 }}>
+            Life Gets Real — clinic, phone, and workplace Japanese. Tap{" "}
+            <strong>Chapter 2</strong> above for a locked preview.
+          </p>
+        </div>
+      ) : null}
 
       {viewChapter === 2 && profile.flags.chapter2Complete ? (
         <div className="ppq-panel" style={{ marginTop: 16 }}>
