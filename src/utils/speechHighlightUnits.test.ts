@@ -64,7 +64,7 @@ describe("buildEnglishHighlightUnits", () => {
 });
 
 describe("buildEnglishSpokenKaraokeSteps", () => {
-  it("skips parenthetical notes that TTS does not speak", () => {
+  it("skips meta parenthetical notes that TTS does not speak", () => {
     const steps = buildEnglishSpokenKaraokeSteps(
       "on the occasion of; at the time of (formal)"
     );
@@ -79,6 +79,61 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "of",
     ]);
     expect(steps.some((s) => s.text.includes("formal"))).toBe(false);
+  });
+
+  it("keeps descriptive Style Trainer gloss parentheticals on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps("I (refined, feminine)");
+    expect(steps.map((s) => s.text)).toEqual([
+      "I",
+      "(refined,",
+      "feminine)",
+    ]);
+    expect(steps[0]?.spokenText).toBe("I.");
+    expect(steps[0]?.speakGapAfter).toBe(true);
+    expect(steps[1]?.spokenText).toBe("refined");
+    expect(steps[2]?.spokenText).toBe("feminine");
+  });
+
+  it("pauses after I before soft, casual gloss", () => {
+    const steps = buildEnglishSpokenKaraokeSteps("I (soft, casual)");
+    expect(steps[0]?.text).toBe("I");
+    expect(steps[0]?.spokenText).toBe("I.");
+    expect(steps.map((s) => s.text)).toEqual(["I", "(soft,", "casual)"]);
+    expect(steps[2]?.start).toBe(9);
+    expect(steps[2]?.end).toBe(16);
+    const withPause = estimateUnitDurationMs(steps[0]!, "en", steps[1]);
+    const plainI = estimateUnitDurationMs(
+      { start: 0, end: 1, text: "I", kind: "word", spokenText: "I" },
+      "en"
+    );
+    expect(withPause).toBeGreaterThan(plainI * 1.4);
+  });
+
+  it("pauses after semicolon on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "it sounds too soft; many women use it"
+    );
+    const soft = steps.find((s) => s.text === "soft;");
+    expect(soft?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(soft?.speakGapAfter).toBeFalsy();
+    const withSemi = estimateUnitDurationMs(
+      soft!,
+      "en",
+      steps[steps.indexOf(soft!) + 1]
+    );
+    const plainSoft = estimateUnitDurationMs(
+      { start: 0, end: 4, text: "soft", kind: "word", spokenText: "soft" },
+      "en"
+    );
+    expect(withSemi).toBeGreaterThan(plainSoft);
+  });
+
+  it("keeps embedded 私 on the karaoke timeline as watashi", () => {
+    const text = "many women use 私 in every situation";
+    const steps = buildEnglishSpokenKaraokeSteps(text);
+    expect(steps.map((s) => s.text)).toContain("私");
+    const watashi = steps.find((s) => s.text === "私");
+    expect(watashi?.spokenText).toBe("watashi");
   });
 
   it("turns slot ~ into a pause on the previous word", () => {
@@ -249,7 +304,7 @@ describe("buildJapaneseHighlightUnits", () => {
       activeHighlightUnits(buildJapaneseHighlightUnits("人が少なくなった")).map(
         (u) => u.text
       )
-    ).toEqual(["人", "が少なくなった"]);
+    ).toEqual(["人が", "少なくなった"]);
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("多くなった")).map(
         (u) => u.text
@@ -983,6 +1038,25 @@ describe("buildJapaneseSpokenKaraokeSteps", () => {
 
     const gaAru = steps.find((s) => s.text.startsWith("がある"))!;
     expect(gaAru.spokenText.replace(/\s+/g, "")).toContain("がある");
+  });
+
+  it("lights 承ります under an unspaced Style Trainer reading", () => {
+    const surface = "わたくしが承ります。";
+    const reading = "わたくしがうけたまわります。";
+    expect(buildJapaneseHighlightUnits(surface).map((u) => u.text)).toEqual([
+      "わたくし",
+      "が",
+      "承ります。",
+    ]);
+    const steps = buildJapaneseSpokenKaraokeSteps(surface, reading);
+    const verb = steps.find((s) => s.text.includes("承"));
+    expect(verb?.text).toBe("承ります。");
+    expect(verb?.spokenText.replace(/\s+/g, "")).toBe("うけたまわります。");
+    // Must not park the whole reading on the first kana.
+    expect(steps[0]?.spokenText.replace(/\s+/g, "").length).toBeLessThan(
+      reading.replace(/\s+/g, "").length
+    );
+    expectAllVisibleWordUnitsCovered(surface, reading);
   });
 
   it.each(["~", "〜", "～"])(

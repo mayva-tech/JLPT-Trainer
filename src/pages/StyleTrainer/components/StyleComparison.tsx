@@ -1,4 +1,5 @@
 import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import type { SpeechHighlight } from "../../../services/speechService";
 import {
   groupComparisonsByCategory,
@@ -6,9 +7,11 @@ import {
 } from "../../../utils/speechStyles";
 import {
   fieldHighlight,
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
+import { StyleClassificationLabel } from "./StyleClassificationLabel";
 import {
   NATURALNESS_LABELS,
   POLITENESS_LABELS,
@@ -18,6 +21,7 @@ import {
 interface StyleComparisonListProps {
   comparisons: StyleComparison[];
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
@@ -40,6 +44,7 @@ function miniClassName(
 function ComparisonBlock({
   comparison,
   onSpeakJp,
+  onSpeakEn,
   speechTarget,
   highlight,
   activePlayId,
@@ -48,6 +53,7 @@ function ComparisonBlock({
 }: {
   comparison: StyleComparison;
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget: StyleSpeechTarget | null;
   highlight: SpeechHighlight | null;
   activePlayId: string | null;
@@ -108,18 +114,61 @@ function ComparisonBlock({
                 🔊
               </button>
             </div>
-            <span className="ss-strength" data-strength={item.strength}>
-              {STRENGTH_LABELS[item.strength]}
-            </span>
+            <StyleClassificationLabel
+              id={item.id}
+              field="classification-strength"
+              text={STRENGTH_LABELS[item.strength]}
+              variant="strength"
+              dataStrength={item.strength}
+              speechTarget={speechTarget}
+              highlight={highlight}
+            />
             <span className="ss-meta">
-              <span className="ss-meta-chip" data-value={item.politeness}>
-                {POLITENESS_LABELS[item.politeness]}
-              </span>
-              <span className="ss-meta-chip" data-value={item.naturalness}>
-                {NATURALNESS_LABELS[item.naturalness]}
-              </span>
+              <StyleClassificationLabel
+                id={item.id}
+                field="classification-politeness"
+                text={POLITENESS_LABELS[item.politeness]}
+                variant="chip"
+                dataValue={item.politeness}
+                speechTarget={speechTarget}
+                highlight={highlight}
+              />
+              <StyleClassificationLabel
+                id={item.id}
+                field="classification-naturalness"
+                text={NATURALNESS_LABELS[item.naturalness]}
+                variant="chip"
+                dataValue={item.naturalness}
+                speechTarget={speechTarget}
+                highlight={highlight}
+              />
             </span>
-            <p className="ss-mini-en">{item.english}</p>
+            <div className="ss-mini-en-row">
+              <HighlightedEnglish
+                text={item.english}
+                className="ss-mini-en"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  item.id,
+                  "english"
+                )}
+              />
+              <button
+                type="button"
+                className="ss-speak"
+                aria-label={`Speak English: ${item.english}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onSpeakEn(item.english, {
+                    id: item.id,
+                    field: "english",
+                  });
+                }}
+              >
+                🔊
+              </button>
+            </div>
             {item.example.japanese ? (
               <div className="ss-mini-example">
                 <div className="ss-mini-example-jp" lang="ja">
@@ -150,12 +199,46 @@ function ComparisonBlock({
                   </button>
                 </div>
                 {item.example.english ? (
-                  <p className="ss-mini-example-en">{item.example.english}</p>
+                  <div className="ss-mini-example-en-row">
+                    <HighlightedEnglish
+                      text={item.example.english}
+                      className="ss-mini-example-en"
+                      highlight={fieldHighlight(
+                        speechTarget,
+                        highlight,
+                        item.id,
+                        "example-en"
+                      )}
+                    />
+                    <button
+                      type="button"
+                      className="ss-speak"
+                      aria-label="Speak English example"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onSpeakEn(item.example.english, {
+                          id: item.id,
+                          field: "example-en",
+                        });
+                      }}
+                    >
+                      🔊
+                    </button>
+                  </div>
                 ) : null}
               </div>
             ) : null}
             {item.warning ? (
-              <p className="ss-mini-warning">{item.warning}</p>
+              <HighlightedEnglish
+                text={item.warning}
+                className="ss-mini-warning"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  item.id,
+                  "warning"
+                )}
+              />
             ) : null}
           </div>
         ))}
@@ -167,6 +250,7 @@ function ComparisonBlock({
 export function StyleComparisonList({
   comparisons,
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   activePlayId = null,
@@ -209,6 +293,7 @@ export function StyleComparisonList({
                 key={comparison.group}
                 comparison={comparison}
                 onSpeakJp={onSpeakJp}
+                onSpeakEn={onSpeakEn}
                 speechTarget={speechTarget}
                 highlight={highlight}
                 activePlayId={activePlayId}

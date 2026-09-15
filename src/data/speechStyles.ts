@@ -172,7 +172,7 @@ export const styleExpressions: readonly StyleExpression[] = [
     warning: "Ceremony-level formality. In an ordinary office meeting it sounds overdone.",
     example: {
       japanese: "わたくしが承ります。",
-      reading: "わたくしがうけたまわります。",
+      reading: "わたくし が うけたまわります。",
       english: "I will take care of it.",
     },
     alternative: "私",

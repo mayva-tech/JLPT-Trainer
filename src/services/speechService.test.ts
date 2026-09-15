@@ -664,4 +664,141 @@ describe("speechService karaoke timeline", () => {
     utter.onboundary?.({ name: "word", charIndex: 3, charLength: 6 });
     expect(highlights.at(-1)).toEqual({ start: 3, end: 9 });
   });
+
+  it("splits I (soft, casual) into two utterances with a real pause and highlights casual", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "I (soft, casual)";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken.length).toBe(1);
+    expect(spoken[0]!.text).toBe("I");
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights).toContain("I");
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken.length).toBe(1);
+
+    vi.advanceTimersByTime(700);
+    expect(spoken.length).toBe(2);
+    expect(spoken[1]!.text).toBe("soft, casual");
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights).toContain("(soft,");
+    // Advance through aside karaoke so casual) lights up.
+    vi.advanceTimersByTime(5000);
+    expect(highlights).toContain("casual)");
+    spoken[1]!.onend?.();
+    expect(ended).toBe(1);
+  });
+
+  it("cancels the gloss aside pause when stop is called mid-gap", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, isSpeechCancelled } = await import("./speechService");
+
+    let ended = 0;
+    let cancelled = false;
+    speechService.speakEnglish("I (soft, casual)", {
+      onEnd: () => {
+        ended += 1;
+      },
+      onError: (error) => {
+        cancelled = isSpeechCancelled(error);
+      },
+    });
+    spoken[0]!.onstart?.();
+    spoken[0]!.onend?.();
+    speechService.stop();
+    vi.advanceTimersByTime(1000);
+    expect(spoken.length).toBe(1);
+    expect(ended).toBe(0);
+    expect(cancelled).toBe(true);
+  });
+
+  it("splits soft; warning into two utterances and highlights through 私", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text =
+      "Not a default for women. In a workplace or with strangers it sounds too soft; many women use 私 in every situation of their lives.";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken.length).toBe(1);
+    expect(spoken[0]!.text).toMatch(/for women$/i);
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights[0]).toBe("Not");
+    // Finish first clause karaoke quickly then end utterance.
+    vi.advanceTimersByTime(20000);
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+
+    // Advance through remaining clause pauses + utterances.
+    for (let i = 0; i < 8 && ended === 0; i++) {
+      vi.advanceTimersByTime(700);
+      const utter = spoken[spoken.length - 1]!;
+      if (utter.onstart) {
+        utter.onstart?.();
+        vi.advanceTimersByTime(
+          __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
+        );
+        utter.onend?.();
+      }
+    }
+    expect(spoken.length).toBeGreaterThanOrEqual(3);
+    expect(spoken.some((u) => u.text.includes("watashi"))).toBe(true);
+    expect(highlights).toContain("私");
+    expect(highlights).toContain("lives.");
+    expect(ended).toBe(1);
+  });
+
+  it("splits explanation sentences and keeps karaoke from lagging on the last clause", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text =
+      "From a senior to a junior it can sound condescending. In song lyrics it is romantic; in an office it can grate.";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken[0]!.text).toMatch(/condescending$/);
+    for (let i = 0; i < 5 && ended === 0; i++) {
+      const utter = spoken[spoken.length - 1]!;
+      utter.onstart?.();
+      vi.advanceTimersByTime(
+        __speechTestHooks.FALLBACK_START_OFFSET_MS + 15000
+      );
+      utter.onend?.();
+      if (ended === 0) vi.advanceTimersByTime(700);
+    }
+    expect(spoken.map((u) => u.text)).toEqual([
+      "From a senior to a junior it can sound condescending",
+      "In song lyrics it is romantic",
+      "in an office it can grate",
+    ]);
+    expect(highlights).toContain("grate.");
+    expect(ended).toBe(1);
+  });
 });

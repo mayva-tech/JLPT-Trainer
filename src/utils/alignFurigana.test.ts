@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   alignFurigana,
+  alignFuriganaWithTokenSpans,
   ensureKanjiReadingsSeeded,
+  karaokeTokenSpansAreUsable,
 } from "./alignFurigana";
 
 describe("ensureKanjiReadingsSeeded", () => {
@@ -33,5 +35,20 @@ describe("ensureKanjiReadingsSeeded", () => {
       { text: "在", reading: "ざい" },
       { text: "庫", reading: "こ" },
     ]);
+  });
+});
+
+describe("alignFuriganaWithTokenSpans karaoke fallback", () => {
+  it("recovers unspaced わたくしが承ります so karaoke can time うけたまわります", () => {
+    const surface = "わたくしが承ります。";
+    const reading = "わたくしがうけたまわります。";
+    const { tokenSpans } = alignFuriganaWithTokenSpans(surface, reading);
+    expect(karaokeTokenSpansAreUsable(tokenSpans, surface)).toBe(true);
+    expect(tokenSpans.map((s) => s.token.replace(/\s+/g, ""))).toEqual([
+      "わたくしが",
+      "うけたまわります。",
+    ]);
+    expect(tokenSpans[1]?.start).toBe(5);
+    expect(tokenSpans[1]?.end).toBe(10);
   });
 });

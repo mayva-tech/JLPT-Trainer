@@ -1,11 +1,14 @@
 import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
 import {
   fieldHighlight,
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
+import { StyleClassificationLabel } from "./StyleClassificationLabel";
 import {
   NATURALNESS_LABELS,
   POLITENESS_LABELS,
@@ -17,6 +20,7 @@ import {
 interface StyleCardProps {
   item: StyleExpression;
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   active?: boolean;
@@ -34,6 +38,7 @@ function cardClassName(active: boolean, selected: boolean): string {
 export function StyleCard({
   item,
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   active = false,
@@ -48,17 +53,35 @@ export function StyleCard({
       onClick={() => onSelect?.(item.id)}
     >
       <div className="ss-card-head">
-        <span className="ss-strength" data-strength={item.strength}>
-          {STRENGTH_LABELS[item.strength]}
-        </span>
+        <StyleClassificationLabel
+          id={item.id}
+          field="classification-strength"
+          text={STRENGTH_LABELS[item.strength]}
+          variant="strength"
+          dataStrength={item.strength}
+          speechTarget={speechTarget}
+          highlight={highlight}
+        />
         <span className="ss-meta">
           <span className="ss-meta-chip">{item.jlptLevel}</span>
-          <span className="ss-meta-chip" data-value={item.politeness}>
-            {POLITENESS_LABELS[item.politeness]}
-          </span>
-          <span className="ss-meta-chip" data-value={item.naturalness}>
-            {NATURALNESS_LABELS[item.naturalness]}
-          </span>
+          <StyleClassificationLabel
+            id={item.id}
+            field="classification-politeness"
+            text={POLITENESS_LABELS[item.politeness]}
+            variant="chip"
+            dataValue={item.politeness}
+            speechTarget={speechTarget}
+            highlight={highlight}
+          />
+          <StyleClassificationLabel
+            id={item.id}
+            field="classification-naturalness"
+            text={NATURALNESS_LABELS[item.naturalness]}
+            variant="chip"
+            dataValue={item.naturalness}
+            speechTarget={speechTarget}
+            highlight={highlight}
+          />
         </span>
       </div>
 
@@ -90,13 +113,44 @@ export function StyleCard({
         </button>
       </div>
       {item.romaji ? <p className="ss-romaji-line">{item.romaji}</p> : null}
-      <p className="ss-english">{item.english}</p>
+      <div className="ss-english-row">
+        <HighlightedEnglish
+          text={item.english}
+          className="ss-english"
+          highlight={fieldHighlight(
+            speechTarget,
+            highlight,
+            item.id,
+            "english"
+          )}
+        />
+        <button
+          type="button"
+          className="ss-speak"
+          aria-label={`Speak English: ${item.english}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            onSpeakEn(item.english, { id: item.id, field: "english" });
+          }}
+        >
+          🔊
+        </button>
+      </div>
 
       {item.warning ? (
-        <p className="ss-warning">
+        <div className="ss-warning">
           <span className="ss-warning-label">Warning</span>
-          <span className="ss-warning-body">{item.warning}</span>
-        </p>
+          <HighlightedEnglish
+            text={item.warning}
+            className="ss-warning-body"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              item.id,
+              "warning"
+            )}
+          />
+        </div>
       ) : null}
 
       <div className="ss-detail">
@@ -127,7 +181,34 @@ export function StyleCard({
             🔊
           </button>
         </div>
-        <p className="ss-example-en">{item.example.english}</p>
+        <div className="ss-example-en-row">
+          <HighlightedEnglish
+            text={item.example.english}
+            className="ss-example-en"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              item.id,
+              "example-en"
+            )}
+          />
+          {item.example.english ? (
+            <button
+              type="button"
+              className="ss-speak"
+              aria-label="Speak English example"
+              onClick={(event) => {
+                event.stopPropagation();
+                onSpeakEn(item.example.english, {
+                  id: item.id,
+                  field: "example-en",
+                });
+              }}
+            >
+              🔊
+            </button>
+          ) : null}
+        </div>
 
         <dl className="ss-usage">
           <div>

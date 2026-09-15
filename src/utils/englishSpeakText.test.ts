@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildEnglishSpeakText } from "./englishSpeakText";
+import {
+  buildEnglishSpeakText,
+  splitEnglishByClauses,
+  splitEnglishBySemicolon,
+  splitEnglishDescriptiveAside,
+} from "./englishSpeakText";
 
 describe("buildEnglishSpeakText", () => {
   it("expands Mt / Mt. to Mount so TTS does not spell M-T", () => {
@@ -44,25 +49,48 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("Die")).toBe("Dai");
   });
 
-  it('speaks "strange; odd" under 変 as two clear words', () => {
-    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, awd");
-    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge, funny");
+  it('speaks "strange; odd" under 変 as two clear words with a pause', () => {
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... awd");
+    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge ... funny");
     expect(buildEnglishSpeakText("Strange")).toBe("Straynge");
     expect(buildEnglishSpeakText("odd")).toBe("awd");
   });
 
-  it("does not speak parenthetical notes like (formal)", () => {
+  it("does not speak meta parenthetical notes like (formal)", () => {
     expect(
       buildEnglishSpeakText(
         "on the occasion of; at the time of (formal)"
       )
-    ).toBe("on the occasion of, at the time of");
+    ).toBe("on the occasion of ... at the time of");
     expect(
       buildEnglishSpeakText("must be; certainly (strong inference)")
-    ).toBe("must be, certainly");
+    ).toBe("must be ... certainly");
     expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
       "word and more"
     );
+  });
+
+  it("speaks descriptive gloss parentheticals used by Style Trainer", () => {
+    expect(buildEnglishSpeakText("I (refined, feminine)")).toBe(
+      "I. refined, feminine"
+    );
+    expect(buildEnglishSpeakText("I (humble)")).toBe("I. humble");
+    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I. soft, casual");
+  });
+
+  it("pauses after semicolons instead of rushing the next clause", () => {
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... awd");
+    expect(
+      buildEnglishSpeakText(
+        "it sounds too soft; many women use 私 in every situation"
+      )
+    ).toBe("it sounds too soft ... many women use watashi in every situation");
+  });
+
+  it("speaks embedded 私 as watashi so EN TTS/karaoke stay aligned", () => {
+    expect(
+      buildEnglishSpeakText("many women use 私 in every situation")
+    ).toBe("many women use watashi in every situation");
   });
 
   it("pauses after grammar-slot ～ / 〜 / ~", () => {
@@ -120,5 +148,65 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("There is a five-yen charge")).toBe(
       "There is a five-yen charge"
     );
+  });
+});
+
+describe("splitEnglishDescriptiveAside", () => {
+  it("splits trailing Style Trainer gloss asides for a real TTS pause", () => {
+    expect(splitEnglishDescriptiveAside("I (soft, casual)")).toEqual({
+      head: "I",
+      aside: "soft, casual",
+      asideOpen: 2,
+      asideClose: 16,
+    });
+    expect(splitEnglishDescriptiveAside("I (refined, feminine)")).toEqual({
+      head: "I",
+      aside: "refined, feminine",
+      asideOpen: 2,
+      asideClose: 21,
+    });
+  });
+
+  it("does not split skipped meta tags or mid-phrase asides", () => {
+    expect(
+      splitEnglishDescriptiveAside("at the time of (formal)")
+    ).toBeNull();
+    expect(
+      splitEnglishDescriptiveAside("to make/let someone do (causative)")
+    ).toBeNull();
+    expect(
+      splitEnglishDescriptiveAside("I (soft) and then more")
+    ).toBeNull();
+  });
+});
+
+describe("splitEnglishBySemicolon", () => {
+  it("splits Style Trainer warning clauses for real pause + fresh karaoke", () => {
+    const text =
+      "Not a default for women. In a workplace or with strangers it sounds too soft; many women use 私 in every situation of their lives.";
+    const clauses = splitEnglishBySemicolon(text);
+    expect(clauses).not.toBeNull();
+    expect(clauses!.length).toBeGreaterThanOrEqual(2);
+    expect(clauses!.some((c) => /sounds too soft$/i.test(c.speak))).toBe(true);
+    expect(clauses!.at(-1)!.speak).toContain("watashi");
+    expect(clauses!.at(-1)!.speak).not.toContain("私");
+  });
+});
+
+describe("splitEnglishByClauses", () => {
+  it("splits explanation sentences so karaoke does not lag behind Andrew", () => {
+    const text =
+      "From a senior to a junior it can sound condescending. In song lyrics it is romantic; in an office it can grate.";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(3);
+    expect(clauses![0]!.speak).toMatch(/condescending$/);
+    expect(clauses![1]!.speak).toMatch(/romantic$/);
+    expect(clauses![2]!.speak).toMatch(/grate$/);
+    expect(clauses!.every((c) => !/\.\.\./.test(c.speak))).toBe(true);
+  });
+
+  it("does not split short single-sentence EN", () => {
+    expect(splitEnglishByClauses("What do you reckon?")).toBeNull();
+    expect(splitEnglishByClauses("Hello world.")).toBeNull();
   });
 });

@@ -387,6 +387,7 @@
   color: #fff;
   border-radius: 4px;
   background: var(--ss-n);
+  border: 2px solid transparent;
 }
 
 .ss-strength[data-strength="strongly-feminine"] {
@@ -405,6 +406,10 @@
   background: var(--ss-mm);
 }
 
+.ss-strength--speaking {
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
 .ss-meta {
   display: inline-flex;
   flex-wrap: wrap;
@@ -419,6 +424,7 @@
   background: var(--ss-bg);
   border: 1px solid var(--ss-line);
   border-radius: 4px;
+  transition: border-color 120ms ease, border-width 120ms ease, color 120ms ease;
 }
 
 .ss-meta-chip[data-value="rough"],
@@ -426,6 +432,50 @@
 .ss-meta-chip[data-value="old-fashioned"] {
   color: var(--ss-warn);
   border-color: var(--ss-warn);
+}
+
+/* Play All: emphasize the chip whose label is currently spoken. */
+.ss-meta-chip--speaking {
+  border-width: 2px;
+  border-color: var(--ss-accent);
+  color: var(--ss-accent);
+  padding: 1px 6px; /* keep size stable when border grows */
+}
+
+.ss-meta-chip--speaking[data-value="rough"],
+.ss-meta-chip--speaking[data-value="anime-drama"],
+.ss-meta-chip--speaking[data-value="old-fashioned"] {
+  border-color: var(--ss-warn);
+  color: var(--ss-warn);
+}
+
+/* Inline karaoke label inside strength / meta chips (HighlightedEnglish is a div). */
+.ss-classification-label {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.ss-classification-label .speech-line {
+  display: inline;
+}
+
+.ss-strength .ss-classification-label .speech-active {
+  color: #111 !important;
+  background: rgba(245, 196, 70, 0.85);
+}
+
+.ss-meta-chip .ss-classification-label .speech-active {
+  color: #111 !important;
+  background: rgba(245, 196, 70, 0.55);
+}
+
+.ss-meta-chip--speaking .ss-classification-label .speech-spoken {
+  color: inherit;
+  opacity: 0.72;
 }
 
 /* ---- category sections ---- */
@@ -640,16 +690,44 @@
 }
 
 .ss-english {
+  display: block;
+  margin: 0;
+  font-size: var(--ss-en-body);
+  line-height: 1.45;
+  flex: 1;
+  min-width: 0;
+}
+
+.ss-english-row,
+.ss-example-en-row,
+.ss-mini-en-row,
+.ss-mini-example-en-row,
+.ss-shift-summary-row,
+.ss-shift-note-row {
   display: flex;
   align-items: baseline;
   gap: 6px;
   margin: 4px 0 0;
-  font-size: var(--ss-en-body);
-  line-height: 1.45;
+}
+
+.ss-mini-en-row {
+  margin-top: 6px;
+}
+
+.ss-mini-example-en-row {
+  margin-top: 2px;
+}
+
+.ss-shift-summary-row {
+  margin: 3px 0 10px;
+}
+
+.ss-shift-note-row {
+  margin-top: 3px;
 }
 
 .ss-warning-body {
-  display: inline;
+  display: block;
 }
 
 .ss-warning .ss-speak {
@@ -720,11 +798,11 @@
 }
 
 .ss-example-en {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 3px 0 0;
+  display: block;
+  margin: 0;
   font-size: var(--ss-en-body);
+  flex: 1;
+  min-width: 0;
 }
 
 .ss-usage {
@@ -815,12 +893,12 @@
 }
 
 .ss-mini-en {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  margin: 6px 0 0;
+  display: block;
+  margin: 0;
   font-size: var(--ss-mini-en);
   line-height: 1.45;
+  flex: 1;
+  min-width: 0;
 }
 
 .ss-mini-example {
@@ -846,13 +924,13 @@
 }
 
 .ss-mini-example-en {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  margin: 2px 0 0;
+  display: block;
+  margin: 0;
   font-size: var(--ss-en-small);
   line-height: 1.4;
   color: var(--ss-ink-soft);
+  flex: 1;
+  min-width: 0;
 }
 
 .ss-mini-warning {
@@ -886,16 +964,17 @@
 .ss-shift-speaker {
   margin: 0;
   font-size: 15px;
+  font-weight: 700;
 }
 
 .ss-shift-summary {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 3px 0 10px;
+  display: block;
+  margin: 0;
   font-size: 13px;
   line-height: 1.55;
   color: var(--ss-ink-soft);
+  flex: 1;
+  min-width: 0;
 }
 
 .ss-shift-list {
@@ -930,13 +1009,13 @@
 }
 
 .ss-shift-note {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 3px 0 0;
+  display: block;
+  margin: 0;
   font-size: 12.5px;
   line-height: 1.55;
   color: var(--ss-ink-soft);
+  flex: 1;
+  min-width: 0;
 }
 
 /* ---- quiz ---- */

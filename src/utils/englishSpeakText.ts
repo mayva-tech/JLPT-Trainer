@@ -25,10 +25,175 @@ function applyCase(match: string, spoken: string): string {
   return spoken;
 }
 
-/** Drop register notes like "(formal)" — display keeps them; TTS should not. */
-function stripParentheticalNotes(text: string): string {
+/**
+ * Meta tags TTS should skip (display keeps them). Descriptive gloss asides
+ * like "(refined, feminine)" or "(humble)" are spoken so Style Trainer /
+ * dictionary nuance stays audible and karaoke-visible.
+ */
+const SKIP_PAREN_NOTE =
+  /^\s*(formal|casual|polite|written|spoken|strong inference|causative|also|note)\s*$/i;
+
+/** True when a `(...)` span is a skipped meta tag, not spoken gloss. */
+export function isSkippedParentheticalNote(inner: string): boolean {
+  return SKIP_PAREN_NOTE.test(inner);
+}
+
+/**
+ * Trailing descriptive gloss like `I (soft, casual)` — Andrew ignores an
+ * in-utterance period, so `speakEnglish` splits into two utterances with a
+ * real pause. Indices are UTF-16 offsets into the display string.
+ */
+export type EnglishAsideSplit = {
+  /** Text before the aside, e.g. `"I"`. */
+  head: string;
+  /** Inner aside without parentheses, e.g. `"soft, casual"`. */
+  aside: string;
+  /** Index of `(` on the display string. */
+  asideOpen: number;
+  /** Index just past `)` on the display string. */
+  asideClose: number;
+};
+
+/**
+ * When `text` ends with a spoken descriptive `(aside)`, return head/aside so
+ * TTS can pause between two utterances. Meta tags like `(formal)` are ignored.
+ */
+export function splitEnglishDescriptiveAside(
+  text: string
+): EnglishAsideSplit | null {
+  const re = /\(([^)]*)\)/g;
+  let m: RegExpExecArray | null;
+  let lastSpoken: RegExpExecArray | null = null;
+  while ((m = re.exec(text)) !== null) {
+    const inner = (m[1] ?? "").trim();
+    if (!inner || isSkippedParentheticalNote(inner)) continue;
+    lastSpoken = m;
+  }
+  if (!lastSpoken) return null;
+
+  const after = text.slice(lastSpoken.index + lastSpoken[0].length).trim();
+  // Only split when the aside closes the phrase (Style Trainer gloss form).
+  if (after.length > 0) return null;
+
+  const head = text.slice(0, lastSpoken.index).trimEnd();
+  if (!head) return null;
+
+  return {
+    head,
+    aside: (lastSpoken[1] ?? "").trim(),
+    asideOpen: lastSpoken.index,
+    asideClose: lastSpoken.index + lastSpoken[0].length,
+  };
+}
+
+/**
+ * One clause from an English `;` / sentence split — display range is UTF-16 into
+ * the full string (for karaoke); `speak` is what Andrew should say for the clause.
+ */
+export type EnglishClauseSplit = {
+  /** Inclusive start on the display string. */
+  start: number;
+  /** Exclusive end on the display string (includes trailing `;` / `.` when present). */
+  end: number;
+  /** Spoken clause without in-utterance `;` → `...` (pause is between utterances). */
+  speak: string;
+};
+
+/** @deprecated alias — Prefer {@link EnglishClauseSplit}. */
+export type EnglishSemicolonClause = EnglishClauseSplit;
+
+/**
+ * Collect clause ends: every `;`, and `.` / `!` / `?` before a new sentence
+ * (space + capital / quote). Skips decimals like `1.5`.
+ */
+function findEnglishClauseBreakEnds(text: string): number[] {
+  const ends = new Set<number>();
+  for (const m of text.matchAll(/;/g)) {
+    ends.add(m.index + 1);
+  }
+  for (const m of text.matchAll(/(?<!\d)[.!?](?=\s+["'“‘(]*[A-Z0-9])/g)) {
+    ends.add(m.index + 1);
+  }
+  return [...ends].sort((a, b) => a - b);
+}
+
+/**
+ * Split long EN on `;` and sentence endings so each clause is its own utterance.
+ * A single fallback karaoke timeline over-dwells on periods/ellipsis and lags
+ * Style Trainer warnings / explanations behind Andrew.
+ */
+export function splitEnglishByClauses(
+  text: string
+): EnglishClauseSplit[] | null {
+  const breakEnds = findEnglishClauseBreakEnds(text);
+  if (breakEnds.length === 0) return null;
+
+  const clauses: EnglishClauseSplit[] = [];
+  let start = 0;
+  for (const end of breakEnds) {
+    if (end <= start) continue;
+    const raw = text.slice(start, end);
+    const speakSource = raw.replace(/[;,.!?]+$/u, "").trim();
+    if (speakSource) {
+      clauses.push({
+        start,
+        end,
+        speak: buildEnglishSpeakText(speakSource),
+      });
+    }
+    start = end;
+  }
+  const rest = text.slice(start);
+  if (rest.trim()) {
+    const speakSource = rest.replace(/[;,.!?]+$/u, "").trim();
+    clauses.push({
+      start,
+      end: text.length,
+      speak: buildEnglishSpeakText(speakSource || rest.trim()),
+    });
+  }
+  return clauses.length >= 2 ? clauses : null;
+}
+
+/** @deprecated Use {@link splitEnglishByClauses}. */
+export function splitEnglishBySemicolon(
+  text: string
+): EnglishClauseSplit[] | null {
+  return splitEnglishByClauses(text);
+}
+
+/**
+ * Japanese pronouns embedded in English gloss/warning lines — Andrew will not
+ * read kanji reliably; speak a romaji form so audio + karaoke stay aligned.
+ */
+const JA_IN_EN: Readonly<Record<string, string>> = {
+  私: "watashi",
+  僕: "boku",
+  俺: "ore",
+  あたし: "atashi",
+  わたし: "watashi",
+};
+
+function expandJapaneseInEnglish(text: string): string {
+  let out = text;
+  for (const [ja, en] of Object.entries(JA_IN_EN)) {
+    if (out.includes(ja)) out = out.split(ja).join(en);
+  }
+  return out;
+}
+
+/** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
+function rewriteParentheticalNotes(text: string): string {
   return text
-    .replace(/\([^)]*\)/g, "")
+    // Consume the space before "(" so "I (soft" → "I. soft" (sentence break).
+    // Prefer `splitEnglishDescriptiveAside` + two utterances when the aside
+    // ends the string — Andrew often ignores this period in one utterance.
+    .replace(/\s*\(([^)]*)\)/g, (_full, inner: string) => {
+      if (isSkippedParentheticalNote(inner)) return "";
+      const trimmed = inner.trim();
+      // Period = Andrew breathes before the aside; do not rush into "(...)".
+      return trimmed ? `. ${trimmed}` : "";
+    })
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,;:.!?])/g, "$1")
     .replace(/([,;:])\s*([,;:.!?])/g, "$2")
@@ -38,13 +203,16 @@ function stripParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
-    // Dictionary glosses ("strange; odd") — pause like a comma, do not swallow ";".
-    .replace(/\s*;\s*/g, ", ")
+    // Semicolon = clause break. Ellipsis makes Andrew pause (comma is too short).
+    .replace(/\s*;\s*/g, " ... ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").
     .replace(/(?<!\d),(?=\S)/g, ", ")
     .replace(/,\s*,+/g, ",")
+    .replace(/\s*\.{3,}\s*/g, " ... ")
     .replace(/^,\s*/, "")
     .replace(/,\s*$/, "")
+    .replace(/^\s*\.{3}\s*/, "")
+    .replace(/\s*\.{3}\s*$/, "")
     .trim();
 }
 
@@ -184,7 +352,11 @@ function expandMountAbbreviation(text: string): string {
 export function buildEnglishSpeakText(text: string): string {
   let out = expandMountAbbreviation(
     appendSlashSpeakPause(
-      appendWaveDashSpeakPause(expandSpokenMoney(stripParentheticalNotes(text)))
+      appendWaveDashSpeakPause(
+        expandSpokenMoney(
+          expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+        )
+      )
     )
   );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {

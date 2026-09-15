@@ -1,6 +1,7 @@
 import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleCategoryGroup } from "../../../utils/speechStyles";
 import {
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
@@ -9,6 +10,7 @@ import { StyleCard } from "./StyleCard";
 interface StyleBrowseListProps {
   groups: StyleCategoryGroup[];
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
@@ -20,6 +22,7 @@ interface StyleBrowseListProps {
 export function StyleBrowseList({
   groups,
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   activePlayId = null,
@@ -49,6 +52,7 @@ export function StyleBrowseList({
                 key={item.id}
                 item={item}
                 onSpeakJp={onSpeakJp}
+                onSpeakEn={onSpeakEn}
                 speechTarget={speechTarget}
                 highlight={highlight}
                 active={activePlayId === item.id}

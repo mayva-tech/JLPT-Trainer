@@ -21,7 +21,11 @@ import {
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
 import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
-import { buildEnglishSpeakText } from "../utils/englishSpeakText";
+import {
+  buildEnglishSpeakText,
+  splitEnglishByClauses,
+  splitEnglishDescriptiveAside,
+} from "../utils/englishSpeakText";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -101,16 +105,37 @@ type KaraokeTimeline = {
   resume: () => void;
 };
 
+/**
+ * Real silence between gloss head/aside or EN clause segments — neural voices
+ * ignore in-utterance periods/ellipsis pauses.
+ */
+const ENGLISH_CHAIN_PAUSE_MS = 680;
+
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
 let activeTimeline: KaraokeTimeline | null = null;
 let pendingStartTimer: number | null = null;
+let asidePauseTimer: number | null = null;
+/** User callbacks waiting on the gloss/clause pause between EN utterances. */
+let pendingAsideCallbacks: SpeakCallbacks | null = null;
 let pendingVoicesChangedHandler: (() => void) | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
 let activePlayback: {
   callbacks?: SpeakCallbacks;
   settled: boolean;
 } | null = null;
+
+function clearAsidePauseTimer() {
+  if (asidePauseTimer !== null) {
+    window.clearTimeout(asidePauseTimer);
+    asidePauseTimer = null;
+  }
+}
+
+function clearPendingAsideChain() {
+  clearAsidePauseTimer();
+  pendingAsideCallbacks = null;
+}
 
 function debug(...args: unknown[]) {
   if (DEBUG_SPEECH) console.log("[speech]", ...args);
@@ -291,12 +316,19 @@ function clearPendingStartOnly() {
 function clearPlaybackHandles() {
   clearFallbackTimer();
   clearPendingStartOnly();
+  clearAsidePauseTimer();
   activeTimeline = null;
   activeUtterance = null;
 }
 
 /** Settle the in-flight waiter as cancelled. Does not call `onEnd`. */
 function settleActiveAsCancelled(): void {
+  if (pendingAsideCallbacks) {
+    const cb = pendingAsideCallbacks;
+    pendingAsideCallbacks = null;
+    clearAsidePauseTimer();
+    cb.onError?.(SpeechCancelled);
+  }
   const current = activePlayback;
   if (!current || current.settled) return;
   current.settled = true;
@@ -349,7 +381,12 @@ function runUtterance(
   /** When set, audio uses this string; highlights still use `text`. */
   speakText?: string,
   /** Spaced kana reading used to time Japanese fallback karaoke. */
-  spacedReading?: string | null
+  spacedReading?: string | null,
+  /**
+   * When set, fallback karaoke uses these steps (display indices into `text`)
+   * instead of rebuilding from the full string — used for split EN asides/clauses.
+   */
+  karaokeUnits?: HighlightUnit[] | null
 ) {
   if (!window.speechSynthesis || !text.trim()) {
     callbacks?.onEnd?.();
@@ -364,7 +401,10 @@ function runUtterance(
   // spoken-kana fallback timeline — Nanami word boundaries routinely skip いる /
   // auxiliary chunks in grammar patterns and example sentences.
   const forceFallback =
-    withHighlight && (audioText !== text || (isJa && reading.length > 0));
+    withHighlight &&
+    (audioText !== text ||
+      (isJa && reading.length > 0) ||
+      (karaokeUnits != null && karaokeUnits.length > 0));
 
   // New generation invalidates any in-flight karaoke / start callbacks.
   playbackGeneration += 1;
@@ -423,18 +463,22 @@ function runUtterance(
   // not kanji weight. English with speak transforms (skipped (notes), ~
   // pauses): time from spoken form.
   const fallbackUnits: HighlightUnit[] =
-    isJa && karaokeReading && karaokeReadingAligned
-      ? buildJapaneseSpokenKaraokeSteps(text, karaokeReading, allUnits).map((s) => ({
-          start: s.start,
-          end: s.end,
-          text: s.text,
-          kind: s.kind,
-          spokenText: s.spokenText,
-          speakGapAfter: s.speakGapAfter,
-        }))
-      : !isJa
-        ? buildEnglishSpokenKaraokeSteps(text)
-        : activeHighlightUnits(allUnits);
+    karaokeUnits && karaokeUnits.length > 0
+      ? karaokeUnits
+      : isJa && karaokeReading && karaokeReadingAligned
+        ? buildJapaneseSpokenKaraokeSteps(text, karaokeReading, allUnits).map(
+            (s) => ({
+              start: s.start,
+              end: s.end,
+              text: s.text,
+              kind: s.kind,
+              spokenText: s.spokenText,
+              speakGapAfter: s.speakGapAfter,
+            })
+          )
+        : !isJa
+          ? buildEnglishSpokenKaraokeSteps(text)
+          : activeHighlightUnits(allUnits);
 
   const units = fallbackUnits;
 
@@ -761,18 +805,146 @@ export const speechService = {
     callbacks?: SpeakCallbacks,
     rate = SPEECH_RATE_NORMAL
   ) {
-    const speakText = buildEnglishSpeakText(text);
-    runUtterance(
-      text,
-      "en-US",
-      pickEnglishVoice(),
-      callbacks,
-      true,
-      rate,
-      speakText
-    );
+    const segments = buildEnglishSpeakSegments(text);
+    if (segments.length <= 1) {
+      const speakText = buildEnglishSpeakText(text);
+      runUtterance(
+        text,
+        "en-US",
+        pickEnglishVoice(),
+        callbacks,
+        true,
+        rate,
+        speakText
+      );
+      return;
+    }
+
+    speakEnglishSegments(text, segments, callbacks, rate);
   },
 };
+
+type EnglishSpeakSegment = {
+  speak: string;
+  steps: HighlightUnit[] | null;
+};
+
+/**
+ * Prefer trailing gloss aside splits, else `;` / sentence clause splits —
+ * both need a real inter-utterance pause so karaoke does not drift off Andrew.
+ */
+function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
+  const aside = splitEnglishDescriptiveAside(text);
+  if (aside) {
+    const steps = buildEnglishSpokenKaraokeSteps(text);
+    const headSteps = steps
+      .filter((s) => s.start < aside.asideOpen)
+      .map((s) => ({
+        ...s,
+        spokenText:
+          buildEnglishSpeakText(s.text.replace(/[()]/g, "")).trim() || s.text,
+        speakGapAfter: false,
+      }));
+    const asideSteps = steps.filter((s) => s.start >= aside.asideOpen);
+    return [
+      {
+        speak: buildEnglishSpeakText(aside.head),
+        steps: headSteps.length > 0 ? headSteps : null,
+      },
+      {
+        speak: buildEnglishSpeakText(aside.aside),
+        steps: asideSteps.length > 0 ? asideSteps : null,
+      },
+    ];
+  }
+
+  const clauses = splitEnglishByClauses(text);
+  if (!clauses) return [];
+
+  const steps = buildEnglishSpokenKaraokeSteps(text);
+  return clauses.map((clause) => {
+    const clauseSteps = steps
+      .filter((s) => s.start >= clause.start && s.start < clause.end)
+      .map((s) => {
+        // Real pause is between utterances — strip clause-final punct dwell.
+        if (/[;,.!?]$/u.test(s.text)) {
+          const stripped = s.text.replace(/[;,.!?]+$/u, "").trim();
+          return {
+            ...s,
+            spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
+            speakGapAfter: false,
+          };
+        }
+        return { ...s, speakGapAfter: false };
+      });
+    return {
+      speak: clause.speak,
+      steps: clauseSteps.length > 0 ? clauseSteps : null,
+    };
+  });
+}
+
+function speakEnglishSegments(
+  displayText: string,
+  segments: EnglishSpeakSegment[],
+  callbacks: SpeakCallbacks | undefined,
+  rate: number
+) {
+  const voice = pickEnglishVoice();
+  let started = false;
+  let index = 0;
+
+  const playNext = () => {
+    const seg = segments[index];
+    if (!seg) {
+      callbacks?.onEnd?.();
+      return;
+    }
+    const isLast = index >= segments.length - 1;
+    index += 1;
+
+    runUtterance(
+      displayText,
+      "en-US",
+      voice,
+      {
+        onStart: () => {
+          if (!started) {
+            started = true;
+            callbacks?.onStart?.();
+          }
+        },
+        onBoundary: callbacks?.onBoundary,
+        onError: (error) => {
+          clearPendingAsideChain();
+          callbacks?.onError?.(error);
+        },
+        onEnd: () => {
+          if (isLast) {
+            callbacks?.onEnd?.();
+            return;
+          }
+          const pauseGen = playbackGeneration;
+          clearAsidePauseTimer();
+          pendingAsideCallbacks = callbacks ?? null;
+          asidePauseTimer = window.setTimeout(() => {
+            asidePauseTimer = null;
+            pendingAsideCallbacks = null;
+            if (playbackGeneration !== pauseGen) return;
+            playNext();
+          }, ENGLISH_CHAIN_PAUSE_MS);
+        },
+      },
+      true,
+      rate,
+      seg.speak,
+      null,
+      seg.steps
+    );
+  };
+
+  playNext();
+}
 
 /** @internal test helpers */
 export const __speechTestHooks = {
@@ -784,5 +956,10 @@ export const __speechTestHooks = {
 };
 
 export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
-export { buildEnglishSpeakText } from "../utils/englishSpeakText";
+export {
+  buildEnglishSpeakText,
+  splitEnglishByClauses,
+  splitEnglishBySemicolon,
+  splitEnglishDescriptiveAside,
+} from "../utils/englishSpeakText";
 

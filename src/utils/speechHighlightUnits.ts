@@ -10,7 +10,7 @@ import {
   shouldKeepNiTight,
   shouldKeepWoTight,
 } from "./japaneseSpeakText";
-import { buildEnglishSpeakText } from "./englishSpeakText";
+import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -804,6 +804,8 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
 /**
  * Peel a trailing subject が off the noun and glue it to the next predicate
  * when Nanami keeps が tight (問題がある → 問題 | がある).
+ * Do not glue onto kanji-led verbs (が承ります) — that hides 承ります as its
+ * own karaoke span under an unspaced reading.
  */
 function rebindTightGaOntoFollowingPredicate(
   units: HighlightUnit[]
@@ -818,6 +820,12 @@ function rebindTightGaOntoFollowingPredicate(
     }
 
     const { core, punct } = stripTrailingPunct(u.text);
+    const nextCore = stripTrailingPunct(next.text).core;
+    // がある / いれば stay tight; が承ります / が降る keep が separate.
+    if (/^[\u4e00-\u9faf\u3400-\u4dbf]/u.test(nextCore)) {
+      out.push(u);
+      continue;
+    }
     if (!shouldKeepGaTight(next.text)) {
       out.push(u);
       continue;
@@ -890,15 +898,16 @@ export function buildEnglishHighlightUnits(text: string): HighlightUnit[] {
   return splitEmbeddedWaveDashes(units);
 }
 
-/** True when a display span sits inside a `(...)` note that TTS skips. */
+/** True when a display span sits inside a skipped meta `(formal)`-style note. */
 function spanOverlapsParenthetical(
   text: string,
   start: number,
   end: number
 ): boolean {
-  const re = /\([^)]*\)/g;
+  const re = /\(([^)]*)\)/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
+    if (!isSkippedParentheticalNote(m[1] ?? "")) continue;
     const a = m.index;
     const b = m.index + m[0].length;
     if (start < b && end > a) return true;
@@ -908,8 +917,10 @@ function spanOverlapsParenthetical(
 
 /**
  * English fallback karaoke: time from what TTS actually speaks.
- * Skips `(formal)` notes and slot markers `~` / `～` (pause attaches to the
- * previous word), matching `buildEnglishSpeakText`.
+ * Skips meta `(formal)` notes and slot markers `~` / `～` (pause attaches to the
+ * previous word), matching `buildEnglishSpeakText`. Descriptive `(nuance)` asides
+ * stay on the timeline; the headword before the aside gets a period dwell
+ * ("I. soft, casual"). Trailing `;` becomes an ellipsis dwell.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
   // Keep slot-marker units long enough to transfer their pause to the previous
@@ -934,10 +945,35 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    const spoken = buildEnglishSpeakText(unit.text).trim();
+    // Descriptive "(soft, casual)" aside — period pause after the headword.
+    const opensDescriptiveParen =
+      raw.startsWith("(") &&
+      !isSkippedParentheticalNote(raw.replace(/^\(/, "").replace(/\)[^)]*$/, ""));
+
+    if (opensDescriptiveParen) {
+      const prev = steps.at(-1);
+      if (prev) {
+        const base = (prev.spokenText ?? prev.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .replace(/[,.]+$/u, "");
+        prev.spokenText = `${base}.`;
+        prev.speakGapAfter = true;
+      }
+    }
+
+    // Strip display parentheses so duration tracks the spoken aside words.
+    const spokenSource = raw.replace(/[()]/g, "");
+    let spoken = buildEnglishSpeakText(spokenSource).trim();
     if (!spoken || !/[A-Za-z0-9']/.test(spoken)) {
       continue;
     }
+
+    // Keep semicolon clause breaks on the karaoke timeline (spoken as "...").
+    // Ellipsis already carries the pause — do not also set speakGapAfter.
+    if (/;/.test(raw) && !/\.\.\./.test(spoken)) {
+      spoken = `${spoken.replace(/[,.]+$/u, "")} ...`;
+    }
+
     steps.push({
       ...unit,
       spokenText: spoken,
@@ -1184,12 +1220,12 @@ export function estimateUnitDurationMs(
     punctPause +=
       lang === "en" ? EN_COMMA_PAUSE : 0.3 + KARAOKE_BREAK_POINT;
   }
-  // "/" alternates → spoken as " ... " — longer gap between the two words
+  // "/" / semicolon ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
     punctPause += SLASH_PAUSE;
   }
-  // Other phrase separators
-  if (/[;；:]/.test(spokenForPunct)) {
+  // Other phrase separators (only when not already an ellipsis pause)
+  if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
     punctPause +=
       lang === "en" ? EN_CLAUSE_PAUSE : 0.35 + KARAOKE_BREAK_POINT;
   }
@@ -1227,7 +1263,9 @@ export function estimateUnitDurationMs(
   ) {
     punctPause += WAVE_DASH_PAUSE;
   }
-  if (unit.speakGapAfter) punctPause += SPEAK_TOKEN_GAP;
+  if (unit.speakGapAfter && !/\.\.\./.test(spokenForPunct)) {
+    punctPause += SPEAK_TOKEN_GAP;
+  }
 
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
@@ -1488,7 +1526,11 @@ function mergeTightGaPredicateKaraokeSteps(
     if (
       next &&
       curCore === "が" &&
-      shouldKeepGaTight(next.spokenText || next.text)
+      shouldKeepGaTight(next.spokenText || next.text) &&
+      // Keep が | 承ります separate so kanji verbs get their own highlight.
+      !/^[\u4e00-\u9faf\u3400-\u4dbf]/u.test(
+        stripTrailingPunct(next.text).core
+      )
     ) {
       const text = cur.text + next.text;
       const joiner =
