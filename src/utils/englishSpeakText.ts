@@ -41,11 +41,12 @@ export function isSkippedParentheticalNote(inner: string): boolean {
 /** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
 function rewriteParentheticalNotes(text: string): string {
   return text
-    .replace(/\(([^)]*)\)/g, (_full, inner: string) => {
+    // Consume the space before "(" so "I (soft" → "I. soft" (sentence break).
+    .replace(/\s*\(([^)]*)\)/g, (_full, inner: string) => {
       if (isSkippedParentheticalNote(inner)) return "";
       const trimmed = inner.trim();
-      // Ellipsis = a clear beat after the headword ("I ... soft, casual").
-      return trimmed ? ` ... ${trimmed}` : "";
+      // Period = Andrew breathes before the aside; do not rush into "(...)".
+      return trimmed ? `. ${trimmed}` : "";
     })
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,;:.!?])/g, "$1")
@@ -56,13 +57,16 @@ function rewriteParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
-    // Dictionary glosses ("strange; odd") — pause like a comma, do not swallow ";".
-    .replace(/\s*;\s*/g, ", ")
+    // Semicolon = clause break. Ellipsis makes Andrew pause (comma is too short).
+    .replace(/\s*;\s*/g, " ... ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").
     .replace(/(?<!\d),(?=\S)/g, ", ")
     .replace(/,\s*,+/g, ",")
+    .replace(/\s*\.{3,}\s*/g, " ... ")
     .replace(/^,\s*/, "")
     .replace(/,\s*$/, "")
+    .replace(/^\s*\.{3}\s*/, "")
+    .replace(/\s*\.{3}\s*$/, "")
     .trim();
 }
 

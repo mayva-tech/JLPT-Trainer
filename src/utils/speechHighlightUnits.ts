@@ -667,8 +667,8 @@ function spanOverlapsParenthetical(
  * English fallback karaoke: time from what TTS actually speaks.
  * Skips meta `(formal)` notes and slot markers `~` / `～` (pause attaches to the
  * previous word), matching `buildEnglishSpeakText`. Descriptive `(nuance)` asides
- * stay on the timeline so Style Trainer glosses karaoke clearly; the word before
- * the aside gets an ellipsis pause ("I ... soft, casual").
+ * stay on the timeline; the headword before the aside gets a period dwell
+ * ("I. soft, casual"). Trailing `;` becomes an ellipsis dwell.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
   // Keep slot-marker units long enough to transfer their pause to the previous
@@ -693,7 +693,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Descriptive "(soft, casual)" aside — pause after the preceding headword.
+    // Descriptive "(soft, casual)" aside — period pause after the headword.
     const opensDescriptiveParen =
       raw.startsWith("(") &&
       !isSkippedParentheticalNote(raw.replace(/^\(/, "").replace(/\)[^)]*$/, ""));
@@ -701,21 +701,30 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
     if (opensDescriptiveParen) {
       const prev = steps.at(-1);
       if (prev) {
-        const base = (prev.spokenText ?? prev.text).replace(/[,.]+$/u, "");
-        prev.spokenText = /\.\.\.\s*$/u.test(base) ? base : `${base} ...`;
+        const base = (prev.spokenText ?? prev.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .replace(/[,.]+$/u, "");
+        prev.spokenText = `${base}.`;
         prev.speakGapAfter = true;
       }
     }
 
     // Strip display parentheses so duration tracks the spoken aside words.
     const spokenSource = raw.replace(/[()]/g, "");
-    const spoken = buildEnglishSpeakText(spokenSource).trim();
+    let spoken = buildEnglishSpeakText(spokenSource).trim();
     if (!spoken || !/[A-Za-z0-9']/.test(spoken)) {
       continue;
     }
+
+    // Keep semicolon clause breaks on the karaoke timeline (spoken as "...").
+    if (/;/.test(raw) && !/\.\.\./.test(spoken)) {
+      spoken = `${spoken.replace(/[,.]+$/u, "")} ...`;
+    }
+
     steps.push({
       ...unit,
       spokenText: spoken,
+      ...( /;/.test(raw) ? { speakGapAfter: true } : {}),
     });
   }
 

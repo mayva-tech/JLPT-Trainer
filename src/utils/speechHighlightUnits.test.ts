@@ -87,7 +87,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "(refined,",
       "feminine)",
     ]);
-    expect(steps[0]?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(steps[0]?.spokenText).toBe("I.");
     expect(steps[0]?.speakGapAfter).toBe(true);
     expect(steps[1]?.spokenText).toBe("refined");
     expect(steps[2]?.spokenText).toBe("feminine");
@@ -96,13 +96,31 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
   it("pauses after I before soft, casual gloss", () => {
     const steps = buildEnglishSpokenKaraokeSteps("I (soft, casual)");
     expect(steps[0]?.text).toBe("I");
-    expect(steps[0]?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(steps[0]?.spokenText).toBe("I.");
     const withPause = estimateUnitDurationMs(steps[0]!, "en", steps[1]);
     const plainI = estimateUnitDurationMs(
       { start: 0, end: 1, text: "I", kind: "word", spokenText: "I" },
       "en"
     );
-    expect(withPause).toBeGreaterThan(plainI);
+    expect(withPause).toBeGreaterThan(plainI * 1.4);
+  });
+
+  it("pauses after semicolon on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "it sounds too soft; many women use it"
+    );
+    const soft = steps.find((s) => s.text === "soft;");
+    expect(soft?.spokenText).toMatch(/\.\.\.\s*$/);
+    const withSemi = estimateUnitDurationMs(
+      soft!,
+      "en",
+      steps[steps.indexOf(soft!) + 1]
+    );
+    const plainSoft = estimateUnitDurationMs(
+      { start: 0, end: 4, text: "soft", kind: "word", spokenText: "soft" },
+      "en"
+    );
+    expect(withSemi).toBeGreaterThan(plainSoft);
   });
 
   it("turns slot ~ into a pause on the previous word", () => {
