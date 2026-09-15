@@ -3,6 +3,8 @@ import type { QuestDefinition } from "../../types";
 /**
  * Chapter 2 · Clinic
  * クリニックを受診 — Visit the Clinic
+ *
+ * Correct answer positions (0-based): 1, 0, 2, 1, 0
  */
 export const CLINIC_VISIT_QUEST: QuestDefinition = {
   id: "clinic-visit",
@@ -48,6 +50,13 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "住民票の写しをいただきたいんですが。",
+          labelEn: "I’d like a copy of my residence record.",
+          correct: false,
+          feedbackWrong: "❌ City Hall language — this is a clinic.",
+        },
+        {
+          id: "b",
           labelJa: "今日、受診したいんですが。",
           labelEn: "I’d like to be seen today.",
           correct: true,
@@ -55,25 +64,11 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
             "✅ Natural check-in.\n\n「受診したいんですが」softly states why you’re here.",
         },
         {
-          id: "b",
-          labelJa: "住民票の写しをいただきたいんですが。",
-          labelEn: "I’d like a copy of my residence record.",
-          correct: false,
-          feedbackWrong: "❌ City Hall language — this is a clinic.",
-        },
-        {
           id: "c",
           labelJa: "アイスコーヒーを一つお願いします。",
           labelEn: "One iced coffee, please.",
           correct: false,
           feedbackWrong: "❌ Café order — wrong place.",
-        },
-        {
-          id: "d",
-          labelJa: "袋はご利用ですか。",
-          labelEn: "Would you like a bag?",
-          correct: false,
-          feedbackWrong: "❌ That’s a clerk’s line, not yours.",
         },
       ],
     },
@@ -114,13 +109,6 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Wrong document for a clinic.",
         },
-        {
-          id: "d",
-          labelJa: "処方箋はもう受け取ったか聞いている。",
-          labelEn: "They’re asking if you already picked up a prescription.",
-          correct: false,
-          feedbackWrong: "❌ You haven’t seen the doctor yet.",
-        },
       ],
     },
     {
@@ -137,14 +125,6 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "熱があって、のどが痛いです。",
-          labelEn: "I have a fever and a sore throat.",
-          correct: true,
-          feedbackCorrect:
-            "✅ Clear symptom report.\n\n「熱があって、のどが痛い」covers both issues.",
-        },
-        {
-          id: "b",
           labelJa: "今日、受診したいんですが。",
           labelEn: "I’d like to be examined today.",
           correct: false,
@@ -152,18 +132,19 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
             "❌ You already checked in. Now describe 症状.",
         },
         {
-          id: "c",
-          labelJa: "中央駅に行きたいんですが。",
-          labelEn: "I’d like to go to Central Station.",
-          correct: false,
-          feedbackWrong: "❌ Station Japanese — wrong room.",
-        },
-        {
-          id: "d",
+          id: "b",
           labelJa: "おすすめは何ですか。",
           labelEn: "What do you recommend?",
           correct: false,
           feedbackWrong: "❌ Café language. List your symptoms.",
+        },
+        {
+          id: "c",
+          labelJa: "熱があって、のどが痛いです。",
+          labelEn: "I have a fever and a sore throat.",
+          correct: true,
+          feedbackCorrect:
+            "✅ Clear symptom report.\n\n「熱があって、のどが痛い」covers both issues.",
         },
       ],
     },
@@ -181,6 +162,13 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "来週の月曜日からです。",
+          labelEn: "Starting next Monday.",
+          correct: false,
+          feedbackWrong: "❌ Future time — symptoms already started.",
+        },
+        {
+          id: "b",
           labelJa: "昨日の夕方からです。",
           labelEn: "Since yesterday evening.",
           correct: true,
@@ -188,21 +176,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
             "✅ Exact timeline.\n\nDoctors need 「いつから」to judge urgency.",
         },
         {
-          id: "b",
-          labelJa: "来週の月曜日からです。",
-          labelEn: "Starting next Monday.",
-          correct: false,
-          feedbackWrong: "❌ Future time — symptoms already started.",
-        },
-        {
           id: "c",
-          labelJa: "午後3時ということでよろしいでしょうか。",
-          labelEn: "So Thursday at 3 p.m. is correct?",
-          correct: false,
-          feedbackWrong: "❌ Appointment confirmation language — not timeline.",
-        },
-        {
-          id: "d",
           labelJa: "少々お待ちください。",
           labelEn: "Please wait a moment.",
           correct: false,
@@ -251,13 +225,6 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong:
             "❌ It was 三日分, and you should take fluids — not avoid them.",
-        },
-        {
-          id: "d",
-          labelJa: "保険証を再発行しに市役所へ行く。",
-          labelEn: "Go to City Hall to reissue your insurance card.",
-          correct: false,
-          feedbackWrong: "❌ No City Hall errand was mentioned.",
         },
       ],
     },

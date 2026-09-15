@@ -4,8 +4,7 @@ import type { QuestDefinition } from "../../types";
  * Chapter 2 · Boss
  * 社会生活チャレンジ — Social Life Challenge
  *
- * “Can you get through one day in Japanese alone?”
- * Clinic callback → commute notice → work instruction → phone → honest report → N2-ish message.
+ * Correct answer positions (0-based): 0, 2, 1, 0, 2, 1, 2, 0
  */
 export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
   id: "social-life-challenge",
@@ -39,8 +38,6 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         "Boss challenge: Can you get through one day in Japanese alone?\n\nMorning clinic call, commute surprise, office pressure, phone interrupt, honest status, and a denser message — Confidence starts at 5.",
       costsConfidence: false,
     },
-
-    // ── Morning · Clinic callback ────────────────────────────────────
     {
       id: "morning-clinic-call",
       kind: "listening",
@@ -76,16 +73,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Not about insurance reissue.",
         },
-        {
-          id: "d",
-          labelJa: "会議資料を共有してほしいと言われた。",
-          correct: false,
-          feedbackWrong: "❌ That’s office talk — this is the clinic.",
-        },
       ],
     },
-
-    // ── Commute ──────────────────────────────────────────────────────
     {
       id: "commute-notice",
       kind: "listening",
@@ -106,33 +95,25 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "約15分遅れそうなので、余裕を見て向かう。",
-          correct: true,
-          feedbackCorrect:
-            "✅ Delay ~15 minutes — leave earlier margin, don’t rush blindly.",
-        },
-        {
-          id: "b",
           labelJa: "全線運休なので在宅する。",
           correct: false,
           feedbackWrong: "❌ Delay, not a full suspension.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "快速が増便されたので早く着く。",
           correct: false,
           feedbackWrong: "❌ Extra time needed — not faster service.",
         },
         {
-          id: "d",
-          labelJa: "クリニックの予約がキャンセルされた。",
-          correct: false,
-          feedbackWrong: "❌ Commute notice, not a clinic booking change.",
+          id: "c",
+          labelJa: "約15分遅れそうなので、余裕を見て向かう。",
+          correct: true,
+          feedbackCorrect:
+            "✅ Delay ~15 minutes — leave earlier margin, don’t rush blindly.",
         },
       ],
     },
-
-    // ── Work · multi-part + priority ─────────────────────────────────
     {
       id: "work-priority",
       kind: "listening",
@@ -150,16 +131,16 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "先に会議メモを全部書く。",
+          correct: false,
+          feedbackWrong: "❌ Notes come after confirm + share.",
+        },
+        {
+          id: "b",
           labelJa: "まず昨日の数字を確認する。",
           correct: true,
           feedbackCorrect:
             "✅ 「確認が先」— confirm numbers before sharing or writing notes.",
-        },
-        {
-          id: "b",
-          labelJa: "先に会議メモを全部書く。",
-          correct: false,
-          feedbackWrong: "❌ Notes come after confirm + share.",
         },
         {
           id: "c",
@@ -167,16 +148,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Never share before confirming.",
         },
-        {
-          id: "d",
-          labelJa: "電話を切って帰宅する。",
-          correct: false,
-          feedbackWrong: "❌ Work just started.",
-        },
       ],
     },
-
-    // ── Afternoon phone interrupt ────────────────────────────────────
     {
       id: "afternoon-phone",
       kind: "listening",
@@ -210,12 +183,6 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Not about file sharing.",
         },
-        {
-          id: "d",
-          labelJa: "クレームを伝えたい。",
-          correct: false,
-          feedbackWrong: "❌ Tone is confirmation, not a complaint.",
-        },
       ],
     },
     {
@@ -234,6 +201,20 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "はい、わかりました。",
+          labelEn: "Yes, understood.",
+          correct: false,
+          feedbackWrong: "❌ You nearly missed it — confirm the slot.",
+        },
+        {
+          id: "b",
+          labelJa: "全部終わりました。問題ありません。",
+          labelEn: "Everything’s finished. No problems.",
+          correct: false,
+          feedbackWrong: "❌ Wrong script for a booking confirmation.",
+        },
+        {
+          id: "c",
           labelJa:
             "恐れ入りますが、もう一度お願いできますか。木曜日の午後3時で変更なし、ということでよろしいでしょうか。",
           labelEn:
@@ -242,31 +223,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           feedbackCorrect:
             "✅ Repeat request + confirmation phrase — real phone fluency.",
         },
-        {
-          id: "b",
-          labelJa: "はい、わかりました。",
-          labelEn: "Yes, understood.",
-          correct: false,
-          feedbackWrong: "❌ You nearly missed it — confirm the slot.",
-        },
-        {
-          id: "c",
-          labelJa: "全部終わりました。問題ありません。",
-          labelEn: "Everything’s finished. No problems.",
-          correct: false,
-          feedbackWrong: "❌ Wrong script for a booking confirmation.",
-        },
-        {
-          id: "d",
-          labelJa: "じゃあ切るね。",
-          labelEn: "Gonna hang up.",
-          correct: false,
-          feedbackWrong: "❌ Rude and incomplete.",
-        },
       ],
     },
-
-    // ── Office problem · honest deadline ─────────────────────────────
     {
       id: "deadline-honesty",
       kind: "dialogue",
@@ -282,6 +240,13 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "はい、全部確認済みです。",
+          labelEn: "Yes, everything’s already confirmed.",
+          correct: false,
+          feedbackWrong: "❌ Rewarding a lie would wreck the meeting.",
+        },
+        {
+          id: "b",
           labelJa:
             "申し訳ありません。まだ確認が終わっていませんが、4時までには終わる予定です。",
           labelEn:
@@ -291,30 +256,14 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
             "✅ Apology + honest status + ETA. Do not pretend you’re done.",
         },
         {
-          id: "b",
-          labelJa: "はい、全部確認済みです。",
-          labelEn: "Yes, everything’s already confirmed.",
-          correct: false,
-          feedbackWrong: "❌ Rewarding a lie would wreck the meeting.",
-        },
-        {
           id: "c",
           labelJa: "知りません。誰かやってください。",
           labelEn: "No idea. Someone else should do it.",
           correct: false,
           feedbackWrong: "❌ Own the task and give a plan.",
         },
-        {
-          id: "d",
-          labelJa: "薬を飲んで安静にします。",
-          labelEn: "I’ll take medicine and rest.",
-          correct: false,
-          feedbackWrong: "❌ Clinic advice — wrong moment.",
-        },
       ],
     },
-
-    // ── Final N2-ish internal message ────────────────────────────────
     {
       id: "n2-internal-message",
       kind: "reading",
@@ -332,34 +281,26 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "古いファイルのまま会議で説明する。",
+          correct: false,
+          feedbackWrong: "❌ Explicitly asked not to use the old file.",
+        },
+        {
+          id: "b",
+          labelJa: "メッセージを無視して帰宅する。",
+          correct: false,
+          feedbackWrong: "❌ You need the corrected materials for the meeting.",
+        },
+        {
+          id: "c",
           labelJa:
             "古いファイルは使わず、会議前に差し替えられる修正版を待つ／使う。",
           correct: true,
           feedbackCorrect:
             "✅ Don’t use the old file; a corrected version will replace it before the meeting.",
         },
-        {
-          id: "b",
-          labelJa: "古いファイルのまま会議で説明する。",
-          correct: false,
-          feedbackWrong: "❌ Explicitly asked not to use the old file.",
-        },
-        {
-          id: "c",
-          labelJa: "メッセージを無視して帰宅する。",
-          correct: false,
-          feedbackWrong: "❌ You need the corrected materials for the meeting.",
-        },
-        {
-          id: "d",
-          labelJa: "クリニックに再診予約を取り直す。",
-          correct: false,
-          feedbackWrong: "❌ Internal document notice — not medical.",
-        },
       ],
     },
-
-    // ── Wrap with manager ────────────────────────────────────────────
     {
       id: "day-wrap",
       kind: "dialogue",
@@ -398,16 +339,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Konbini leftover.",
         },
-        {
-          id: "d",
-          labelJa: "運転見合わせですので諦めます。",
-          labelEn: "Service is suspended, so I’ll give up.",
-          correct: false,
-          feedbackWrong: "❌ Station phrasing — wrong register and mood.",
-        },
       ],
     },
-
     {
       id: "outro",
       kind: "outro",

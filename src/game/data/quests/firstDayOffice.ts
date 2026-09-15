@@ -4,8 +4,7 @@ import type { QuestDefinition } from "../../types";
  * Chapter 2 · Office
  * 職場での一日 — First Day at Work
  *
- * Workplace Japanese without ultra-formal keigo overload.
- * Manager = more formal; coworker = polite but lighter.
+ * Correct answer positions (0-based): 1, 2, 0, 1, 2, 0, 1
  */
 export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
   id: "first-day-office",
@@ -55,6 +54,13 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "やあ、よろしく。今日から来たよ。",
+          labelEn: "Hey — I started today.",
+          correct: false,
+          feedbackWrong: "❌ Too casual for a first greeting with your manager.",
+        },
+        {
+          id: "b",
           labelJa:
             "おはようございます。本日からお世話になります。よろしくお願いいたします。",
           labelEn:
@@ -64,21 +70,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
             "✅ Morning greeting + 本日からお世話になります + よろしく — solid first day.",
         },
         {
-          id: "b",
-          labelJa: "やあ、よろしく。今日から来たよ。",
-          labelEn: "Hey — I started today.",
-          correct: false,
-          feedbackWrong: "❌ Too casual for a first greeting with your manager.",
-        },
-        {
           id: "c",
-          labelJa: "今日、受診したいんですが。",
-          labelEn: "I’d like to be seen today.",
-          correct: false,
-          feedbackWrong: "❌ Clinic language — wrong building.",
-        },
-        {
-          id: "d",
           labelJa: "お電話ありがとうございます。",
           labelEn: "Thank you for calling.",
           correct: false,
@@ -104,29 +96,23 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa:
-            "数字を確認し、修正して、午後の会議までに共有する。",
-          correct: true,
-          feedbackCorrect:
-            "✅ All three: confirm numbers, correct the file, share before the meeting.",
-        },
-        {
-          id: "b",
           labelJa: "印刷だけして机に置く。",
           correct: false,
           feedbackWrong: "❌ Sharing a corrected file is required — not just printing.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "会議をキャンセルする。",
           correct: false,
           feedbackWrong: "❌ The meeting stays; the document must be ready.",
         },
         {
-          id: "d",
-          labelJa: "薬を三日分もらう。",
-          correct: false,
-          feedbackWrong: "❌ Clinic leftover — wrong context.",
+          id: "c",
+          labelJa:
+            "数字を確認し、修正して、午後の会議までに共有する。",
+          correct: true,
+          feedbackCorrect:
+            "✅ All three: confirm numbers, correct the file, share before the meeting.",
         },
       ],
     },
@@ -169,14 +155,6 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong: "❌ Too blunt. Ask to confirm the steps first.",
         },
-        {
-          id: "d",
-          labelJa: "恐れ入りますが、もう一度お願いできますか。…いや、今は確認で十分。",
-          labelEn: "Ask for full repetition instead of confirming the key point.",
-          correct: false,
-          feedbackWrong:
-            "❌ Asking again can help, but here restating the task with 確認させてください is clearer.",
-        },
       ],
     },
     {
@@ -193,6 +171,13 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "ちょっと行ってくる。",
+          labelEn: "Gonna step out.",
+          correct: false,
+          feedbackWrong: "❌ Too casual for your manager on day one.",
+        },
+        {
+          id: "b",
           labelJa: "印刷室に少し行ってもよろしいでしょうか。",
           labelEn: "May I step over to the print room briefly?",
           correct: true,
@@ -200,21 +185,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
             "✅ Soft permission request with 「〜てもよろしいでしょうか」.",
         },
         {
-          id: "b",
-          labelJa: "ちょっと行ってくる。",
-          labelEn: "Gonna step out.",
-          correct: false,
-          feedbackWrong: "❌ Too casual for your manager on day one.",
-        },
-        {
           id: "c",
-          labelJa: "本日はどのようなご用件でしょうか。",
-          labelEn: "How may I help you today?",
-          correct: false,
-          feedbackWrong: "❌ That’s staff greeting a visitor — roles reversed.",
-        },
-        {
-          id: "d",
           labelJa: "少々お待ちください。確認いたします。",
           labelEn: "Please wait. I’ll check.",
           correct: false,
@@ -238,14 +209,6 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "ありがとう。念のため確認するね。",
-          labelEn: "Thanks — I’ll double-check just in case.",
-          correct: true,
-          feedbackCorrect:
-            "✅ Natural coworker tone + 念のため確認.",
-        },
-        {
-          id: "b",
           labelJa: "恐れ入りますが、ご指摘いただき誠にありがとうございます。",
           labelEn: "I humbly thank you for your most gracious correction.",
           correct: false,
@@ -253,18 +216,19 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
             "❌ Over-formal for Mika. Keep it professional but lighter.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "別にずれてないよ。",
           labelEn: "It’s not off.",
           correct: false,
           feedbackWrong: "❌ Defensive — she asked you to check again.",
         },
         {
-          id: "d",
-          labelJa: "はい、わかりました。（何も確認しない）",
-          labelEn: "Yes — and skip checking.",
-          correct: false,
-          feedbackWrong: "❌ Acknowledge and actually re-check.",
+          id: "c",
+          labelJa: "ありがとう。念のため確認するね。",
+          labelEn: "Thanks — I’ll double-check just in case.",
+          correct: true,
+          feedbackCorrect:
+            "✅ Natural coworker tone + 念のため確認.",
         },
       ],
     },
@@ -301,13 +265,6 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "分かりません。知りません。",
-          labelEn: "I don’t know. No idea.",
-          correct: false,
-          feedbackWrong: "❌ Too vague — give status and a plan.",
-        },
-        {
-          id: "d",
           labelJa: "うん、なんかやってる。",
           labelEn: "Yeah, working on stuff.",
           correct: false,
@@ -324,7 +281,6 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       promptReading: "みか から チャット が きました。いみ は？",
       bodyJa:
         "先ほど共有したファイル、会議前にもう一度確認お願い！間に合いそう？",
-      bodyEn: undefined,
       promptEn: "What is Mika asking?",
       skillHint: "reading",
       vocabHint: "先ほど",
@@ -333,6 +289,12 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "会議を延期すると言っている。",
+          correct: false,
+          feedbackWrong: "❌ She’s asking you to re-check, not postpone.",
+        },
+        {
+          id: "b",
           labelJa:
             "少し前に共有したファイルを会議前にもう一度確認してほしい。間に合うか聞いている。",
           correct: true,
@@ -340,22 +302,10 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
             "✅ 先ほど共有 + 会議前に確認 + 間に合いそう？",
         },
         {
-          id: "b",
-          labelJa: "会議を延期すると言っている。",
-          correct: false,
-          feedbackWrong: "❌ She’s asking you to re-check, not postpone.",
-        },
-        {
           id: "c",
           labelJa: "ランチに行こうと誘っている。",
           correct: false,
           feedbackWrong: "❌ Work message about the shared file.",
-        },
-        {
-          id: "d",
-          labelJa: "保険証を持ってきてほしいと言っている。",
-          correct: false,
-          feedbackWrong: "❌ Clinic vocabulary — wrong thread.",
         },
       ],
     },

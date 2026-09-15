@@ -4,8 +4,7 @@ import type { QuestDefinition } from "../../types";
  * Chapter 2 · Phone
  * 電話で問い合わせ — Handle a Phone Inquiry
  *
- * Harder than the clinic: no visual context. Listening-first steps hide
- * English meaning until after the answer.
+ * Correct answer positions (0-based): 2, 1, 0, 2, 1, 0
  */
 export const PHONE_CALL_QUEST: QuestDefinition = {
   id: "phone-call",
@@ -44,7 +43,6 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "電話の最初の一言を聞いてください。相手は誰ですか。",
-      // Listening-first: no English giveaway of the spoken line.
       listenText: "お電話ありがとうございます。ことばクリニック予約係の新井です。",
       listenReading:
         "おでんわ ありがとう ございます。ことば クリニック よやくがかり の あらい です。",
@@ -55,28 +53,22 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "ことばクリニックの予約係・新井さんだ。",
-          correct: true,
-          feedbackCorrect:
-            "✅ Formal phone opening: thanks → clinic → role → name.",
-        },
-        {
-          id: "b",
           labelJa: "カフェ琴の葉のケンだ。",
           correct: false,
           feedbackWrong: "❌ Wrong workplace — listen for クリニック.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "市役所の田中さんだ。",
           correct: false,
           feedbackWrong: "❌ Not City Hall.",
         },
         {
-          id: "d",
-          labelJa: "駅の山本さんだ。",
-          correct: false,
-          feedbackWrong: "❌ Not the station.",
+          id: "c",
+          labelJa: "ことばクリニックの予約係・新井さんだ。",
+          correct: true,
+          feedbackCorrect:
+            "✅ Formal phone opening: thanks → clinic → role → name.",
         },
       ],
     },
@@ -95,14 +87,6 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "再診の予約についてお伺いしたいんですが。",
-          labelEn: "I’d like to ask about my follow-up appointment.",
-          correct: true,
-          feedbackCorrect:
-            "✅ Soft purpose with 「お伺いしたいんですが」.",
-        },
-        {
-          id: "b",
           labelJa: "熱があって、のどが痛いです。",
           labelEn: "I have a fever and a sore throat.",
           correct: false,
@@ -110,14 +94,15 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
             "❌ Symptom talk for the doctor — here you’re calling about a booking.",
         },
         {
-          id: "c",
-          labelJa: "袋ください。",
-          labelEn: "A bag, please.",
-          correct: false,
-          feedbackWrong: "❌ Konbini Japanese.",
+          id: "b",
+          labelJa: "再診の予約についてお伺いしたいんですが。",
+          labelEn: "I’d like to ask about my follow-up appointment.",
+          correct: true,
+          feedbackCorrect:
+            "✅ Soft purpose with 「お伺いしたいんですが」.",
         },
         {
-          id: "d",
+          id: "c",
           labelJa: "はい、わかりました。",
           labelEn: "Yes, understood.",
           correct: false,
@@ -158,12 +143,6 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "運転見合わせですので諦めます。",
-          correct: false,
-          feedbackWrong: "❌ Station announcement language — hang up politely instead… by asking again.",
-        },
-        {
-          id: "d",
           labelJa: "じゃあ切るね。",
           correct: false,
           feedbackWrong: "❌ Too abrupt and rude for a formal call.",
@@ -184,31 +163,24 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "はい、お願いします。",
-          labelEn: "Yes, please.",
-          correct: true,
-          feedbackCorrect: "✅ Short and polite while they confirm.",
-        },
-        {
-          id: "b",
           labelJa: "急いでください。今すぐです。",
           labelEn: "Hurry — right now.",
           correct: false,
           feedbackWrong: "❌ Too pushy for a support call.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "今日、受診したいんですが。",
           labelEn: "I’d like to be seen today.",
           correct: false,
           feedbackWrong: "❌ You’re already mid-call about a booking.",
         },
         {
-          id: "d",
-          labelJa: "ポイントカードはありますか。",
-          labelEn: "Do you have a point card?",
-          correct: false,
-          feedbackWrong: "❌ Wrong script entirely.",
+          id: "c",
+          labelJa: "はい、お願いします。",
+          labelEn: "Yes, please.",
+          correct: true,
+          feedbackCorrect: "✅ Short and polite while they confirm.",
         },
       ],
     },
@@ -229,28 +201,22 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "月曜日の朝9時に変更したいと言っている。",
+          correct: false,
+          feedbackWrong: "❌ They’re confirming Thursday 3 p.m., not Monday morning.",
+        },
+        {
+          id: "b",
           labelJa: "木曜日の午後3時で合っているか確認している。",
           correct: true,
           feedbackCorrect:
             "✅ Day + time locked: 木曜日の午後3時.",
         },
         {
-          id: "b",
-          labelJa: "月曜日の朝9時に変更したいと言っている。",
-          correct: false,
-          feedbackWrong: "❌ They’re confirming Thursday 3 p.m., not Monday morning.",
-        },
-        {
           id: "c",
           labelJa: "予約をキャンセルすると言っている。",
           correct: false,
           feedbackWrong: "❌ This is confirmation, not cancellation.",
-        },
-        {
-          id: "d",
-          labelJa: "薬を三日分出すと言っている。",
-          correct: false,
-          feedbackWrong: "❌ Doctor’s instruction — not this phone line.",
         },
       ],
     },
@@ -289,13 +255,6 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong:
             "❌ Better to restate 木曜日の午後3時 so both sides match.",
-        },
-        {
-          id: "d",
-          labelJa: "まだ終わっていませんが、4時までには終わる予定です。",
-          labelEn: "It’s not finished yet, but I plan to finish by 4.",
-          correct: false,
-          feedbackWrong: "❌ Workplace progress report — wrong context.",
         },
       ],
     },
