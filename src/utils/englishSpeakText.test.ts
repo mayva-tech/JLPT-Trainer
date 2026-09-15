@@ -44,7 +44,7 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("odd")).toBe("awd");
   });
 
-  it("does not speak parenthetical notes like (formal)", () => {
+  it("does not speak meta parenthetical notes like (formal)", () => {
     expect(
       buildEnglishSpeakText(
         "on the occasion of; at the time of (formal)"
@@ -56,6 +56,14 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
       "word and more"
     );
+  });
+
+  it("speaks descriptive gloss parentheticals used by Style Trainer", () => {
+    expect(buildEnglishSpeakText("I (refined, feminine)")).toBe(
+      "I, refined, feminine"
+    );
+    expect(buildEnglishSpeakText("I (humble)")).toBe("I, humble");
+    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I, soft, casual");
   });
 
   it("pauses after grammar-slot ～ / 〜 / ~", () => {

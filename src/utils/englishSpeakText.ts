@@ -25,10 +25,27 @@ function applyCase(match: string, spoken: string): string {
   return spoken;
 }
 
-/** Drop register notes like "(formal)" — display keeps them; TTS should not. */
-function stripParentheticalNotes(text: string): string {
+/**
+ * Meta tags TTS should skip (display keeps them). Descriptive gloss asides
+ * like "(refined, feminine)" or "(humble)" are spoken so Style Trainer /
+ * dictionary nuance stays audible and karaoke-visible.
+ */
+const SKIP_PAREN_NOTE =
+  /^\s*(formal|casual|polite|written|spoken|strong inference|causative|also|note)\s*$/i;
+
+/** True when a `(...)` span is a skipped meta tag, not spoken gloss. */
+export function isSkippedParentheticalNote(inner: string): boolean {
+  return SKIP_PAREN_NOTE.test(inner);
+}
+
+/** Drop meta notes like "(formal)"; speak descriptive `(nuance)` as a comma aside. */
+function rewriteParentheticalNotes(text: string): string {
   return text
-    .replace(/\([^)]*\)/g, "")
+    .replace(/\(([^)]*)\)/g, (_full, inner: string) => {
+      if (isSkippedParentheticalNote(inner)) return "";
+      const trimmed = inner.trim();
+      return trimmed ? `, ${trimmed}` : "";
+    })
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,;:.!?])/g, "$1")
     .replace(/([,;:])\s*([,;:.!?])/g, "$2")
@@ -172,7 +189,7 @@ function appendSlashSpeakPause(text: string): string {
 
 export function buildEnglishSpeakText(text: string): string {
   let out = appendSlashSpeakPause(
-    appendWaveDashSpeakPause(expandSpokenMoney(stripParentheticalNotes(text)))
+    appendWaveDashSpeakPause(expandSpokenMoney(rewriteParentheticalNotes(text)))
   );
   for (const [word, spoken] of Object.entries(WORD_OVERRIDES)) {
     const re = new RegExp(`\\b${word}\\b`, "gi");

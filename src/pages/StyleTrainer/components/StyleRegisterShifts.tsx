@@ -4,12 +4,14 @@ import type { SpeechHighlight } from "../../../services/speechService";
 import { registerShifts } from "../../../data/registerShifts";
 import {
   fieldHighlight,
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
 
 interface StyleRegisterShiftsProps {
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn?: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
@@ -19,6 +21,7 @@ interface StyleRegisterShiftsProps {
 
 export function StyleRegisterShifts({
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   activePlayId = null,
@@ -61,17 +64,34 @@ export function StyleRegisterShifts({
                 "speaker"
               )}
             />
-            <HighlightedEnglish
-              text={shift.summary}
-              className="ss-shift-summary"
-              highlight={fieldHighlight(
-                speechTarget,
-                highlight,
-                shift.id,
-                "summary"
-              )}
-            />
-            <ul className="ss-shift-list">
+            <div className="ss-shift-summary-row">
+              <HighlightedEnglish
+                text={shift.summary}
+                className="ss-shift-summary"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  shift.id,
+                  "summary"
+                )}
+              />
+              {onSpeakEn ? (
+                <button
+                  type="button"
+                  className="ss-speak"
+                  aria-label="Speak English summary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onSpeakEn(shift.summary, {
+                      id: shift.id,
+                      field: "summary",
+                    });
+                  }}
+                >
+                  🔊
+                </button>
+              ) : null}
+            </div>            <ul className="ss-shift-list">
               {shift.contexts.map((ctx) => {
                 const ctxId = `${shift.id}:${ctx.context}`;
                 return (
@@ -124,17 +144,34 @@ export function StyleRegisterShifts({
                         🔊
                       </button>
                     </div>
-                    <HighlightedEnglish
-                      text={ctx.note}
-                      className="ss-shift-note"
-                      highlight={fieldHighlight(
-                        speechTarget,
-                        highlight,
-                        ctxId,
-                        "note"
-                      )}
-                    />
-                  </li>
+                    <div className="ss-shift-note-row">
+                      <HighlightedEnglish
+                        text={ctx.note}
+                        className="ss-shift-note"
+                        highlight={fieldHighlight(
+                          speechTarget,
+                          highlight,
+                          ctxId,
+                          "note"
+                        )}
+                      />
+                      {onSpeakEn ? (
+                        <button
+                          type="button"
+                          className="ss-speak"
+                          aria-label="Speak English note"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onSpeakEn(ctx.note, {
+                              id: ctxId,
+                              field: "note",
+                            });
+                          }}
+                        >
+                          🔊
+                        </button>
+                      ) : null}
+                    </div>                  </li>
                 );
               })}
             </ul>

@@ -10,7 +10,7 @@ import {
   shouldKeepNiTight,
   shouldKeepWoTight,
 } from "./japaneseSpeakText";
-import { buildEnglishSpeakText } from "./englishSpeakText";
+import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -646,15 +646,16 @@ export function buildEnglishHighlightUnits(text: string): HighlightUnit[] {
   return splitEmbeddedWaveDashes(units);
 }
 
-/** True when a display span sits inside a `(...)` note that TTS skips. */
+/** True when a display span sits inside a skipped meta `(formal)`-style note. */
 function spanOverlapsParenthetical(
   text: string,
   start: number,
   end: number
 ): boolean {
-  const re = /\([^)]*\)/g;
+  const re = /\(([^)]*)\)/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text)) !== null) {
+    if (!isSkippedParentheticalNote(m[1] ?? "")) continue;
     const a = m.index;
     const b = m.index + m[0].length;
     if (start < b && end > a) return true;
@@ -664,8 +665,9 @@ function spanOverlapsParenthetical(
 
 /**
  * English fallback karaoke: time from what TTS actually speaks.
- * Skips `(formal)` notes and slot markers `~` / `～` (pause attaches to the
- * previous word), matching `buildEnglishSpeakText`.
+ * Skips meta `(formal)` notes and slot markers `~` / `～` (pause attaches to the
+ * previous word), matching `buildEnglishSpeakText`. Descriptive `(nuance)` asides
+ * stay on the timeline so Style Trainer glosses karaoke clearly.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
   // Keep slot-marker units long enough to transfer their pause to the previous

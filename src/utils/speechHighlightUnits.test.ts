@@ -63,7 +63,7 @@ describe("buildEnglishHighlightUnits", () => {
 });
 
 describe("buildEnglishSpokenKaraokeSteps", () => {
-  it("skips parenthetical notes that TTS does not speak", () => {
+  it("skips meta parenthetical notes that TTS does not speak", () => {
     const steps = buildEnglishSpokenKaraokeSteps(
       "on the occasion of; at the time of (formal)"
     );
@@ -78,6 +78,15 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "of",
     ]);
     expect(steps.some((s) => s.text.includes("formal"))).toBe(false);
+  });
+
+  it("keeps descriptive Style Trainer gloss parentheticals on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps("I (refined, feminine)");
+    expect(steps.map((s) => s.text)).toEqual([
+      "I",
+      "(refined,",
+      "feminine)",
+    ]);
   });
 
   it("turns slot ~ into a pause on the previous word", () => {

@@ -7,6 +7,7 @@ import {
 } from "../../../utils/speechStyles";
 import {
   fieldHighlight,
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
@@ -19,6 +20,7 @@ import {
 interface StyleComparisonListProps {
   comparisons: StyleComparison[];
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   activePlayId?: string | null;
@@ -41,6 +43,7 @@ function miniClassName(
 function ComparisonBlock({
   comparison,
   onSpeakJp,
+  onSpeakEn,
   speechTarget,
   highlight,
   activePlayId,
@@ -49,6 +52,7 @@ function ComparisonBlock({
 }: {
   comparison: StyleComparison;
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget: StyleSpeechTarget | null;
   highlight: SpeechHighlight | null;
   activePlayId: string | null;
@@ -120,16 +124,32 @@ function ComparisonBlock({
                 {NATURALNESS_LABELS[item.naturalness]}
               </span>
             </span>
-            <HighlightedEnglish
-              text={item.english}
-              className="ss-mini-en"
-              highlight={fieldHighlight(
-                speechTarget,
-                highlight,
-                item.id,
-                "english"
-              )}
-            />
+            <div className="ss-mini-en-row">
+              <HighlightedEnglish
+                text={item.english}
+                className="ss-mini-en"
+                highlight={fieldHighlight(
+                  speechTarget,
+                  highlight,
+                  item.id,
+                  "english"
+                )}
+              />
+              <button
+                type="button"
+                className="ss-speak"
+                aria-label={`Speak English: ${item.english}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onSpeakEn(item.english, {
+                    id: item.id,
+                    field: "english",
+                  });
+                }}
+              >
+                🔊
+              </button>
+            </div>
             {item.example.japanese ? (
               <div className="ss-mini-example">
                 <div className="ss-mini-example-jp" lang="ja">
@@ -160,16 +180,32 @@ function ComparisonBlock({
                   </button>
                 </div>
                 {item.example.english ? (
-                  <HighlightedEnglish
-                    text={item.example.english}
-                    className="ss-mini-example-en"
-                    highlight={fieldHighlight(
-                      speechTarget,
-                      highlight,
-                      item.id,
-                      "example-en"
-                    )}
-                  />
+                  <div className="ss-mini-example-en-row">
+                    <HighlightedEnglish
+                      text={item.example.english}
+                      className="ss-mini-example-en"
+                      highlight={fieldHighlight(
+                        speechTarget,
+                        highlight,
+                        item.id,
+                        "example-en"
+                      )}
+                    />
+                    <button
+                      type="button"
+                      className="ss-speak"
+                      aria-label="Speak English example"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onSpeakEn(item.example.english, {
+                          id: item.id,
+                          field: "example-en",
+                        });
+                      }}
+                    >
+                      🔊
+                    </button>
+                  </div>
                 ) : null}
               </div>
             ) : null}
@@ -195,6 +231,7 @@ function ComparisonBlock({
 export function StyleComparisonList({
   comparisons,
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   activePlayId = null,
@@ -237,6 +274,7 @@ export function StyleComparisonList({
                 key={comparison.group}
                 comparison={comparison}
                 onSpeakJp={onSpeakJp}
+                onSpeakEn={onSpeakEn}
                 speechTarget={speechTarget}
                 highlight={highlight}
                 activePlayId={activePlayId}

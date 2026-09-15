@@ -29,6 +29,7 @@ import { StyleFilters, StyleStatsBar } from "./components/StyleControls";
 import { StyleQuiz } from "./components/StyleQuiz";
 import { StyleRegisterShifts } from "./components/StyleRegisterShifts";
 import {
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
   type StyleSpeechUi,
@@ -348,6 +349,26 @@ export default function StyleTrainer() {
     [playingAll, stopPlayAll, speechUi, clearSpeechUi]
   );
 
+  const speakEn = useCallback<StyleSpeakEn>(
+    (text, target) => {
+      if (playingAll) stopPlayAll();
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      speechUi.onTarget(target);
+      speechUi.onHighlight(null);
+      speechService.speakEnglish(
+        trimmed,
+        {
+          onBoundary: (h) => speechUi.onHighlight(h),
+          onEnd: clearSpeechUi,
+          onError: clearSpeechUi,
+        },
+        SPEECH_RATE_NORMAL
+      );
+    },
+    [playingAll, stopPlayAll, speechUi, clearSpeechUi]
+  );
+
   const filtered = useMemo(
     () =>
       filterStyles(styleExpressions, {
@@ -621,6 +642,7 @@ export default function StyleTrainer() {
         <StyleComparisonList
           comparisons={comparisons}
           onSpeakJp={speakJp}
+          onSpeakEn={speakEn}
           speechTarget={speechTarget}
           highlight={highlight}
           activePlayId={activePlayId}
@@ -647,6 +669,7 @@ export default function StyleTrainer() {
               <StyleCard
                 item={spotlightItem}
                 onSpeakJp={speakJp}
+                onSpeakEn={speakEn}
                 speechTarget={speechTarget}
                 highlight={highlight}
                 active={activePlayId === spotlightItem.id}
@@ -666,6 +689,7 @@ export default function StyleTrainer() {
               <StyleBrowseList
                 groups={visibleBrowseGroups}
                 onSpeakJp={speakJp}
+                onSpeakEn={speakEn}
                 speechTarget={speechTarget}
                 highlight={highlight}
                 activePlayId={activePlayId}
@@ -690,6 +714,7 @@ export default function StyleTrainer() {
       {mode === "shifts" ? (
         <StyleRegisterShifts
           onSpeakJp={speakJp}
+          onSpeakEn={speakEn}
           speechTarget={speechTarget}
           highlight={highlight}
           activePlayId={activePlayId}

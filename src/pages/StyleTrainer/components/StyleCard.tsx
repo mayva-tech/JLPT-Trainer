@@ -4,6 +4,7 @@ import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
 import {
   fieldHighlight,
+  type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
 } from "../styleSpeech";
@@ -18,6 +19,7 @@ import {
 interface StyleCardProps {
   item: StyleExpression;
   onSpeakJp: StyleSpeakJp;
+  onSpeakEn: StyleSpeakEn;
   speechTarget?: StyleSpeechTarget | null;
   highlight?: SpeechHighlight | null;
   active?: boolean;
@@ -35,6 +37,7 @@ function cardClassName(active: boolean, selected: boolean): string {
 export function StyleCard({
   item,
   onSpeakJp,
+  onSpeakEn,
   speechTarget = null,
   highlight = null,
   active = false,
@@ -91,16 +94,29 @@ export function StyleCard({
         </button>
       </div>
       {item.romaji ? <p className="ss-romaji-line">{item.romaji}</p> : null}
-      <HighlightedEnglish
-        text={item.english}
-        className="ss-english"
-        highlight={fieldHighlight(
-          speechTarget,
-          highlight,
-          item.id,
-          "english"
-        )}
-      />
+      <div className="ss-english-row">
+        <HighlightedEnglish
+          text={item.english}
+          className="ss-english"
+          highlight={fieldHighlight(
+            speechTarget,
+            highlight,
+            item.id,
+            "english"
+          )}
+        />
+        <button
+          type="button"
+          className="ss-speak"
+          aria-label={`Speak English: ${item.english}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            onSpeakEn(item.english, { id: item.id, field: "english" });
+          }}
+        >
+          🔊
+        </button>
+      </div>
 
       {item.warning ? (
         <div className="ss-warning">
@@ -146,16 +162,34 @@ export function StyleCard({
             🔊
           </button>
         </div>
-        <HighlightedEnglish
-          text={item.example.english}
-          className="ss-example-en"
-          highlight={fieldHighlight(
-            speechTarget,
-            highlight,
-            item.id,
-            "example-en"
-          )}
-        />
+        <div className="ss-example-en-row">
+          <HighlightedEnglish
+            text={item.example.english}
+            className="ss-example-en"
+            highlight={fieldHighlight(
+              speechTarget,
+              highlight,
+              item.id,
+              "example-en"
+            )}
+          />
+          {item.example.english ? (
+            <button
+              type="button"
+              className="ss-speak"
+              aria-label="Speak English example"
+              onClick={(event) => {
+                event.stopPropagation();
+                onSpeakEn(item.example.english, {
+                  id: item.id,
+                  field: "example-en",
+                });
+              }}
+            >
+              🔊
+            </button>
+          ) : null}
+        </div>
 
         <dl className="ss-usage">
           <div>

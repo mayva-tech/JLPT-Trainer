@@ -24,6 +24,8 @@ export type StyleSpeakJp = (
   target: StyleSpeechTarget
 ) => void;
 
+export type StyleSpeakEn = (text: string, target: StyleSpeechTarget) => void;
+
 export type StyleSpeechUi = {
   onTarget: (target: StyleSpeechTarget | null) => void;
   onHighlight: (highlight: SpeechHighlight | null) => void;
