@@ -70,10 +70,11 @@ const BOUNDARY_DETECT_MS = 320;
  */
 const FALLBACK_START_OFFSET_MS = 10;
 /**
- * English fallback scale (Andrew) — leave alone while tuning Japanese.
+ * English fallback scale (Andrew). Well under 1.0: neural EN at rate 0.8 is
+ * faster than weight/rate estimates, and waiting on boundaries left karaoke
+ * permanently behind. Tuned so long Style Trainer warnings stay with the voice.
  */
-/** English fallback karaoke scale — keep near Andrew's pace (was 1.35; lagged). */
-const FALLBACK_TIMING_SCALE_EN = 1.0;
+const FALLBACK_TIMING_SCALE_EN = 0.62;
 /**
  * Japanese fallback scale (Nanami). Slightly under 1 offsets timer/React lag
  * so the highlight does not trail the voice.
@@ -331,8 +332,11 @@ function runUtterance(
   // reading (even when it equals the surface, e.g. 〜ことになっている), use the
   // spoken-kana fallback timeline — Nanami word boundaries routinely skip いる /
   // auxiliary chunks in grammar patterns and example sentences.
+  // English (Andrew Online) rarely emits usable word boundaries, and waiting
+  // BOUNDARY_DETECT_MS before fallback leaves karaoke permanently behind.
   const forceFallback =
-    withHighlight && (audioText !== text || (isJa && reading.length > 0));
+    withHighlight &&
+    (audioText !== text || (isJa && reading.length > 0) || !isJa);
 
   // New generation invalidates any in-flight karaoke / start callbacks.
   playbackGeneration += 1;

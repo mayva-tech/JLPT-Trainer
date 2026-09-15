@@ -138,7 +138,8 @@ describe("speechService playback generation", () => {
     expect(a.length).toBe(0);
 
     second.onstart?.();
-    second.onboundary?.({ name: "word", charIndex: 0, charLength: 4 });
+    // English uses timed fallback immediately (no boundary wait).
+    vi.advanceTimersByTime(20);
     expect(b.length).toBe(1);
   });
 
@@ -263,7 +264,11 @@ describe("speechService playback generation", () => {
 
     const second = spoken[1]!;
     second.onstart?.();
-    second.onboundary?.({ name: "word", charIndex: 0, charLength: 4 });
+    // English always uses timed fallback (Andrew boundaries are unreliable).
+    vi.advanceTimersByTime(
+      (await import("./speechService")).__speechTestHooks.FALLBACK_START_OFFSET_MS +
+        10
+    );
     expect(highlights).toEqual([0]);
   });
 
@@ -300,7 +305,7 @@ describe("speechService highlight mode", () => {
     vi.resetModules();
   });
 
-  it("selects boundary mode when a boundary arrives during detection", async () => {
+  it("starts English fallback karaoke immediately on start (no boundary wait)", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");
 
@@ -310,13 +315,12 @@ describe("speechService highlight mode", () => {
     });
     const utter = spoken[0]!;
     utter.onstart?.();
+    // Browser word boundaries are ignored for EN — do not wait BOUNDARY_DETECT_MS.
     utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
-    expect(highlights[0]).toEqual({ start: 0, end: 5 });
+    expect(highlights.length).toBe(0);
 
-    vi.advanceTimersByTime(__speechTestHooks.BOUNDARY_DETECT_MS + 50);
-    const before = highlights.length;
-    vi.advanceTimersByTime(2000);
-    expect(highlights.length).toBe(before);
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
+    expect(highlights[0]).toEqual({ start: 0, end: 5 });
   });
 
   it("selects fallback when no boundary arrives", async () => {
@@ -331,16 +335,12 @@ describe("speechService highlight mode", () => {
     utter.onstart?.();
     expect(highlights.length).toBe(0);
 
-    vi.advanceTimersByTime(
-      __speechTestHooks.BOUNDARY_DETECT_MS +
-        __speechTestHooks.FALLBACK_START_OFFSET_MS +
-        10
-    );
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights.length).toBeGreaterThanOrEqual(1);
     expect(highlights[0]).toEqual({ start: 0, end: 5 });
   });
 
-  it("ignores late boundaries after fallback mode starts", async () => {
+  it("ignores late boundaries after English fallback mode starts", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");
 
@@ -350,11 +350,7 @@ describe("speechService highlight mode", () => {
     });
     const utter = spoken[0]!;
     utter.onstart?.();
-    vi.advanceTimersByTime(
-      __speechTestHooks.BOUNDARY_DETECT_MS +
-        __speechTestHooks.FALLBACK_START_OFFSET_MS +
-        10
-    );
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
     expect(highlights.length).toBeGreaterThanOrEqual(1);
 
     utter.onboundary?.({ name: "word", charIndex: 12, charLength: 5 });
@@ -375,9 +371,9 @@ describe("speechService highlight mode", () => {
     expect(highlights.length).toBe(0);
   });
 
-  it("highlights the last unit on end when browser skipped its boundary", async () => {
+  it("English fallback advances through words without browser boundaries", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService } = await import("./speechService");
+    const { speechService, __speechTestHooks } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
     speechService.speakEnglish("Hello world", {
@@ -385,16 +381,16 @@ describe("speechService highlight mode", () => {
     });
     const utter = spoken[0]!;
     utter.onstart?.();
-    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
-    expect(highlights.at(-1)).toEqual({ start: 0, end: 5 });
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
+    expect(highlights[0]).toEqual({ start: 0, end: 5 });
 
-    utter.onend?.();
-    expect(highlights.at(-1)).toEqual({ start: 6, end: 11 });
+    vi.advanceTimersByTime(5000);
+    expect(highlights.some((h) => h.start === 6 && h.end === 11)).toBe(true);
   });
 
-  it("does not rush multiple remaining units at end of speech", async () => {
+  it("does not rush multiple remaining units at end of English fallback speech", async () => {
     const { spoken } = installSpeechMock();
-    const { speechService } = await import("./speechService");
+    const { speechService, __speechTestHooks } = await import("./speechService");
 
     const highlights: Array<{ start: number; end: number }> = [];
     speechService.speakEnglish("Hello world today", {
@@ -402,14 +398,15 @@ describe("speechService highlight mode", () => {
     });
     const utter = spoken[0]!;
     utter.onstart?.();
-    utter.onboundary?.({ name: "word", charIndex: 0, charLength: 5 });
-    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 10);
+    expect(highlights[0]).toEqual({ start: 0, end: 5 });
 
+    // End while later units are still pending on the fallback timer.
     utter.onend?.();
-    // Two+ unlit units must not flash — clear instead of fake sync.
-    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+    const afterEnd = highlights.length;
     vi.advanceTimersByTime(500);
-    expect(highlights).toEqual([{ start: 0, end: 5 }]);
+    // Fallback mode does not flash remaining units on end.
+    expect(highlights.length).toBe(afterEnd);
   });
 
   it("uses spoken-kana fallback timing when a reading is provided", async () => {
