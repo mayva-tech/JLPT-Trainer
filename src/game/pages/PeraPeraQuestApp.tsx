@@ -29,6 +29,7 @@ import {
   chapterCompletionCounts,
   getChapterQuestRows,
   isChapterComplete,
+  isDeveloperMode,
   isQuestPlayable,
   shortChapterObjectiveLabel,
 } from "../utils/chapterProgress";
@@ -383,6 +384,41 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
               <h2>Language stats</h2>
               <LanguageStatsBars stats={profile.languageStats} />
             </div>
+            <div className="ppq-panel" style={{ marginTop: 12 }}>
+              <h2>Developer mode</h2>
+              <p style={{ margin: "0 0 10px", fontSize: 13, color: "var(--ppq-muted)" }}>
+                Unlock every chapter, quest, and town location with no progression
+                locks. Progress and rewards still save normally.
+              </p>
+              <button
+                type="button"
+                className={
+                  isDeveloperMode(profile)
+                    ? "ppq-btn ppq-btn--primary"
+                    : "ppq-btn ppq-btn--ghost"
+                }
+                onClick={() => {
+                  const next = {
+                    ...profile,
+                    flags: {
+                      ...profile.flags,
+                      developerMode: !isDeveloperMode(profile),
+                    },
+                    updatedAt: Date.now(),
+                  };
+                  persist(next);
+                  flashToast(
+                    next.flags.developerMode
+                      ? "Developer mode ON — all chapters unlocked"
+                      : "Developer mode OFF — normal locks restored"
+                  );
+                }}
+              >
+                {isDeveloperMode(profile)
+                  ? "Developer mode: ON"
+                  : "Enable developer mode"}
+              </button>
+            </div>
           </div>
         ) : null}
 
@@ -582,10 +618,18 @@ function Landing({
             Chapter {profile.currentChapter}
           </button>
         </div>
-        {profile.currentChapter < 2 && !profile.flags.chapter1Complete ? (
+        {profile.currentChapter < 2 &&
+        !profile.flags.chapter1Complete &&
+        !isDeveloperMode(profile) ? (
           <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
             Next unlock: Chapter 2 · 社会生活 (after First Week Challenge). Open Quests →
             Chapter 2 for a locked preview.
+          </p>
+        ) : null}
+        {isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-accent, #e8a317)", margin: "10px 0 0" }}>
+            Developer mode ON — all chapters and locations unlocked. Toggle in Adventure
+            Stats.
           </p>
         ) : null}
       </section>
@@ -616,7 +660,9 @@ function ChapterPanel({
   onStartQuest: (questId: string) => void;
 }) {
   const chapter1Done = Boolean(
-    profile.flags.chapter1Complete || isChapterComplete(profile, 1)
+    isDeveloperMode(profile) ||
+      profile.flags.chapter1Complete ||
+      isChapterComplete(profile, 1)
   );
   // Always allow browsing Chapter 2 as a locked preview; only play when unlocked.
   const initial = Math.min(Math.max(1, profile.currentChapter), 2) || 1;
@@ -671,7 +717,8 @@ function ChapterPanel({
           }
           onClick={() => setViewChapter(2)}
         >
-          Chapter 2{chapter1Done ? "" : " 🔒"}
+          Chapter 2
+          {chapter1Done || isDeveloperMode(profile) ? "" : " 🔒"}
         </button>
       </div>
 

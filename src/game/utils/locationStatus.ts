@@ -12,6 +12,7 @@ export function isLocationUnlocked(
   location: LocationDefinition,
   profile: PlayerRpgProfile
 ): boolean {
+  if (profile.flags.developerMode) return true;
   if (profile.unlockedLocationIds.includes(location.id)) return true;
   if (getProfileLevel(profile) < location.requiredLevel) return false;
   return location.requiredQuestIds.every((questId) =>

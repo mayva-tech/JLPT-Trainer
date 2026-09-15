@@ -13,11 +13,13 @@ import {
   filterStepsForProfile,
   getChapterQuestRows,
   isChapterComplete,
+  isDeveloperMode,
   isQuestPlayable,
   shortChapterObjectiveLabel,
 } from "./chapterProgress";
 import { getChapterByNumber } from "../data/chapters";
 import { getLocationById } from "../data/locations";
+import { isLocationUnlocked } from "./locationStatus";
 
 describe("Chapter 1 quest chain", () => {
   it("registers six Chapter 1 playable quests at the start of QUESTS", () => {
@@ -200,5 +202,32 @@ describe("Chapter 2 quest chain", () => {
     expect(SOCIAL_LIFE_CHALLENGE_QUEST.difficulty).toBe("boss");
     expect(SOCIAL_LIFE_CHALLENGE_QUEST.startingConfidence).toBe(5);
     expect(SOCIAL_LIFE_CHALLENGE_QUEST.rewards.xp).toBe(350);
+  });
+
+  it("unlocks every quest when developerMode is on", () => {
+    const fresh = createDefaultProfile(null);
+    expect(isQuestPlayable(CLINIC_VISIT_QUEST, fresh)).toBe(false);
+    expect(isQuestPlayable(SOCIAL_LIFE_CHALLENGE_QUEST, fresh)).toBe(false);
+
+    const dev = {
+      ...fresh,
+      flags: { ...fresh.flags, developerMode: true },
+    };
+    expect(isDeveloperMode(dev)).toBe(true);
+    expect(isQuestPlayable(CLINIC_VISIT_QUEST, dev)).toBe(true);
+    expect(isQuestPlayable(PHONE_CALL_QUEST, dev)).toBe(true);
+    expect(isQuestPlayable(FIRST_DAY_OFFICE_QUEST, dev)).toBe(true);
+    expect(isQuestPlayable(SOCIAL_LIFE_CHALLENGE_QUEST, dev)).toBe(true);
+
+    const rows = getChapterQuestRows(dev, getChapterByNumber(2)!);
+    expect(rows.every((row) => row.playable || row.status === "completed")).toBe(
+      true
+    );
+
+    const phone = getLocationById("phone-center")!;
+    const office = getLocationById("office")!;
+    expect(isLocationUnlocked(phone, fresh)).toBe(false);
+    expect(isLocationUnlocked(phone, dev)).toBe(true);
+    expect(isLocationUnlocked(office, dev)).toBe(true);
   });
 });

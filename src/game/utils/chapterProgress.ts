@@ -12,6 +12,7 @@ export function isQuestRequirementMet(
   quest: QuestDefinition,
   profile: PlayerRpgProfile
 ): boolean {
+  if (isDeveloperMode(profile)) return true;
   const reqs = quest.requiresQuestIds ?? [];
   return reqs.every((id) => profile.completedQuestIds.includes(id));
 }
@@ -21,7 +22,12 @@ export function isQuestPlayable(
   profile: PlayerRpgProfile
 ): boolean {
   if (quest.steps.length === 0) return false;
+  if (isDeveloperMode(profile)) return true;
   return isQuestRequirementMet(quest, profile);
+}
+
+export function isDeveloperMode(profile: PlayerRpgProfile): boolean {
+  return Boolean(profile.flags.developerMode);
 }
 
 export function getChapterQuestRows(
