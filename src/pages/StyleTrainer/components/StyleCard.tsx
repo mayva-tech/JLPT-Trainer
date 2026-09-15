@@ -4,6 +4,7 @@ import type { SpeechHighlight } from "../../../services/speechService";
 import type { StyleExpression } from "../../../types/speechStyle";
 import {
   fieldHighlight,
+  fieldSpeaking,
   type StyleSpeakEn,
   type StyleSpeakJp,
   type StyleSpeechTarget,
@@ -52,15 +53,57 @@ export function StyleCard({
       onClick={() => onSelect?.(item.id)}
     >
       <div className="ss-card-head">
-        <span className="ss-strength" data-strength={item.strength}>
+        <span
+          className={[
+            "ss-strength",
+            fieldSpeaking(
+              speechTarget,
+              item.id,
+              "classification-strength"
+            )
+              ? "ss-strength--speaking"
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          data-strength={item.strength}
+        >
           {STRENGTH_LABELS[item.strength]}
         </span>
         <span className="ss-meta">
           <span className="ss-meta-chip">{item.jlptLevel}</span>
-          <span className="ss-meta-chip" data-value={item.politeness}>
+          <span
+            className={[
+              "ss-meta-chip",
+              fieldSpeaking(
+                speechTarget,
+                item.id,
+                "classification-politeness"
+              )
+                ? "ss-meta-chip--speaking"
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            data-value={item.politeness}
+          >
             {POLITENESS_LABELS[item.politeness]}
           </span>
-          <span className="ss-meta-chip" data-value={item.naturalness}>
+          <span
+            className={[
+              "ss-meta-chip",
+              fieldSpeaking(
+                speechTarget,
+                item.id,
+                "classification-naturalness"
+              )
+                ? "ss-meta-chip--speaking"
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            data-value={item.naturalness}
+          >
             {NATURALNESS_LABELS[item.naturalness]}
           </span>
         </span>

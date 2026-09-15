@@ -11,7 +11,10 @@ export type StyleSpeechField =
   | "summary"
   | "note"
   | "speaker"
-  | "context";
+  | "context"
+  | "classification-strength"
+  | "classification-politeness"
+  | "classification-naturalness";
 
 export type StyleSpeechTarget = {
   id: string;
@@ -41,4 +44,15 @@ export function fieldHighlight(
     return null;
   }
   return highlight ?? null;
+}
+
+/** True when Play All / speak is currently on this classification chip. */
+export function fieldSpeaking(
+  speechTarget: StyleSpeechTarget | null | undefined,
+  id: string,
+  field: StyleSpeechField
+): boolean {
+  return (
+    !!speechTarget && speechTarget.id === id && speechTarget.field === field
+  );
 }

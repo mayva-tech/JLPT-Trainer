@@ -36,7 +36,7 @@ import {
 } from "./styleSpeech";
 import {
   buildCategorySpeech,
-  buildItemClassificationSpeech,
+  buildItemClassificationParts,
 } from "./styleSpeechIntro";
 
 type Mode = "compare" | "browse" | "shifts" | "quiz";
@@ -194,6 +194,24 @@ function pause(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function speakItemClassification(
+  item: StyleExpression,
+  ui: StyleSpeechUi,
+  cancelled?: () => boolean
+): Promise<void> {
+  for (const part of buildItemClassificationParts(item)) {
+    if (cancelled?.()) return;
+    await speakEnAsync(
+      part.text,
+      { id: item.id, field: part.field },
+      ui,
+      cancelled
+    );
+    if (cancelled?.()) return;
+    await pause(220);
+  }
+}
+
 async function speakClassificationIntro(
   text: string,
   ui: StyleSpeechUi,
@@ -227,11 +245,7 @@ async function playExpression(
 ): Promise<void> {
   onActive(item.id);
   if (cancelled()) return;
-  await speakClassificationIntro(
-    buildItemClassificationSpeech(item),
-    ui,
-    cancelled
-  );
+  await speakItemClassification(item, ui, cancelled);
   if (cancelled()) return;
   await speakJpAsync(
     item.japanese,

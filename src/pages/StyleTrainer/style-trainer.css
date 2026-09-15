@@ -387,6 +387,7 @@
   color: #fff;
   border-radius: 4px;
   background: var(--ss-n);
+  border: 2px solid transparent;
 }
 
 .ss-strength[data-strength="strongly-feminine"] {
@@ -405,6 +406,10 @@
   background: var(--ss-mm);
 }
 
+.ss-strength--speaking {
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
 .ss-meta {
   display: inline-flex;
   flex-wrap: wrap;
@@ -419,6 +424,7 @@
   background: var(--ss-bg);
   border: 1px solid var(--ss-line);
   border-radius: 4px;
+  transition: border-color 120ms ease, border-width 120ms ease, color 120ms ease;
 }
 
 .ss-meta-chip[data-value="rough"],
@@ -426,6 +432,21 @@
 .ss-meta-chip[data-value="old-fashioned"] {
   color: var(--ss-warn);
   border-color: var(--ss-warn);
+}
+
+/* Play All: emphasize the chip whose label is currently spoken. */
+.ss-meta-chip--speaking {
+  border-width: 2px;
+  border-color: var(--ss-accent);
+  color: var(--ss-accent);
+  padding: 1px 6px; /* keep size stable when border grows */
+}
+
+.ss-meta-chip--speaking[data-value="rough"],
+.ss-meta-chip--speaking[data-value="anime-drama"],
+.ss-meta-chip--speaking[data-value="old-fashioned"] {
+  border-color: var(--ss-warn);
+  color: var(--ss-warn);
 }
 
 /* ---- category sections ---- */
