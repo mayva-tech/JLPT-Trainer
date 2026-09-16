@@ -96,6 +96,17 @@
   border-color: var(--ppq-accent-soft);
 }
 
+.ppq-btn--secondary {
+  background: var(--ppq-bg-soft);
+  color: var(--ppq-ink);
+  border-color: var(--ppq-accent);
+}
+
+.ppq-btn--secondary:hover {
+  border-color: var(--ppq-accent-soft);
+  filter: brightness(1.06);
+}
+
 .ppq-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;

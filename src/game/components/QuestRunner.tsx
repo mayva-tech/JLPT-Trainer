@@ -296,25 +296,27 @@ export function QuestRunner({
   }
 
   function onRetryStep() {
-    if (!revealed || !isInteractive || !lastAnswerDelta) return;
+    if (!revealed || !isInteractive) return;
     speech.stop();
-    const restored = undoStepAnswer(
-      {
-        confidence,
-        correctCount,
-        answeredCount,
-        mistakes,
-        monsters,
-        vocabDiscovered,
-      },
-      lastAnswerDelta
-    );
-    setConfidence(restored.confidence);
-    setCorrectCount(restored.correctCount);
-    setAnsweredCount(restored.answeredCount);
-    setMistakes(restored.mistakes);
-    setMonsters(restored.monsters);
-    setVocabDiscovered(restored.vocabDiscovered);
+    if (lastAnswerDelta) {
+      const restored = undoStepAnswer(
+        {
+          confidence,
+          correctCount,
+          answeredCount,
+          mistakes,
+          monsters,
+          vocabDiscovered,
+        },
+        lastAnswerDelta
+      );
+      setConfidence(restored.confidence);
+      setCorrectCount(restored.correctCount);
+      setAnsweredCount(restored.answeredCount);
+      setMistakes(restored.mistakes);
+      setMonsters(restored.monsters);
+      setVocabDiscovered(restored.vocabDiscovered);
+    }
     setSelectedId(null);
     setRevealed(false);
     setFeedback(null);
@@ -496,9 +498,7 @@ export function QuestRunner({
                 ? onContinueIntro
                 : undefined
         }
-        onRetry={
-          revealed && isInteractive && lastAnswerDelta ? onRetryStep : undefined
-        }
+        onRetry={revealed && isInteractive ? onRetryStep : undefined}
         continueLabel={continueLabel}
       />
     </div>
@@ -773,14 +773,14 @@ function DialogueStep({
       ) : null}
 
       {onContinue || onRetry ? (
-        <div className="ppq-actions">
+        <div className="ppq-actions" role="group" aria-label="Quest step actions">
           {onRetry ? (
             <button
               type="button"
-              className="ppq-btn ppq-btn--ghost"
+              className="ppq-btn ppq-btn--secondary"
               onClick={onRetry}
             >
-              Try again
+              ↺ Try again
             </button>
           ) : null}
           {onContinue ? (
