@@ -46,6 +46,14 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "転出届を出したいんですが。",
+          labelEn: "I'd like to submit a moving-out notification.",
+          correct: false,
+          feedbackWrong:
+            "❌ Close, but 「転出届」is for leaving an address.\n\nYou just moved in — use 「転入届を出したいんですが。」",
+        },
+        {
+          id: "b",
           labelJa: "転入届を出したいんですが。",
           labelEn: "I'd like to submit a moving-in notification.",
           correct: true,
@@ -53,28 +61,12 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
             "✅ Natural response\n\n「〜たいんですが」is a soft, polite way to state what you want at a service counter.",
         },
         {
-          id: "b",
-          labelJa: "転入届を食べたいです。",
-          labelEn: "I want to eat a moving-in form.",
-          correct: false,
-          feedbackWrong:
-            "❌ That would sound unnatural here.\n\nBetter: 「転入届を出したいんですが。」\n\n「届を出す」means to submit/file a notification or form.",
-        },
-        {
           id: "c",
-          labelJa: "転入届が走っています。",
-          labelEn: "The moving-in form is running.",
+          labelJa: "印鑑証明をお願いします。",
+          labelEn: "I'd like a seal registration certificate.",
           correct: false,
           feedbackWrong:
-            "❌ Unnatural.\n\nBetter: 「転入届を出したいんですが。」\n\nYou need a request, not a weird description.",
-        },
-        {
-          id: "d",
-          labelJa: "すみません、トイレはどこですか。",
-          labelEn: "Excuse me, where is the restroom?",
-          correct: false,
-          feedbackWrong:
-            "❌ Polite, but off-topic.\n\nBetter: 「転入届を出したいんですが。」",
+            "❌ That is another City Hall service, not today’s quest.\n\nBetter: 「転入届を出したいんですが。」",
         },
       ],
     },
@@ -98,27 +90,19 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "来週引っ越します。",
-          labelEn: "I will move next week.",
+          labelJa: "来週の月曜日です。",
+          labelEn: "Next Monday.",
           correct: false,
           feedbackWrong:
-            "❌ That is future tense.\n\nThey asked when you already moved. Try 「先週の月曜日です。」",
+            "❌ 「来週」is next week (future).\n\nThey asked when you already moved: 「先週の月曜日です。」",
         },
         {
           id: "c",
-          labelJa: "引っ越しが好きです。",
-          labelEn: "I like moving.",
+          labelJa: "来月引っ越します。",
+          labelEn: "I will move next month.",
           correct: false,
           feedbackWrong:
-            "❌ Off-topic.\n\nAnswer with a time: 「先週の月曜日です。」",
-        },
-        {
-          id: "d",
-          labelJa: "いつでもいいです。",
-          labelEn: "Anytime is fine.",
-          correct: false,
-          feedbackWrong:
-            "❌ That answers a scheduling question, not “when did you move?”",
+            "❌ Future plans don’t answer “when did you move?”\n\nTry 「先週の月曜日です。」",
         },
       ],
     },
@@ -135,35 +119,27 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "はい、ポイントカードを持っています。",
+          labelEn: "Yes, I have a point card.",
+          correct: false,
+          feedbackWrong:
+            "❌ A point card is for shops, not ID.\n\nOffer a passport or residence card instead.",
+        },
+        {
+          id: "b",
+          labelJa: "はい、クレジットカードを持っています。",
+          labelEn: "Yes, I have a credit card.",
+          correct: false,
+          feedbackWrong:
+            "❌ Cards for payment usually aren’t enough as 「本人確認書類」.\n\nBetter: passport or residence card.",
+        },
+        {
+          id: "c",
           labelJa: "はい、パスポートを持っています。",
           labelEn: "Yes, I have my passport.",
           correct: true,
           feedbackCorrect:
             "✅ Good.\n\n「本人確認書類」= documents that prove who you are (passport, residence card, etc.).",
-        },
-        {
-          id: "b",
-          labelJa: "はい、お弁当を持っています。",
-          labelEn: "Yes, I have a bento.",
-          correct: false,
-          feedbackWrong:
-            "❌ 「本人確認書類」are ID documents, not lunch.\n\nBetter: 「はい、パスポートを持っています。」",
-        },
-        {
-          id: "c",
-          labelJa: "本人確認書類は飲み物です。",
-          labelEn: "ID documents are drinks.",
-          correct: false,
-          feedbackWrong:
-            "❌ Nonsense.\n\n「本人確認書類」= identification papers.",
-        },
-        {
-          id: "d",
-          labelJa: "いいえ、名前は忘れました。",
-          labelEn: "No, I forgot my name.",
-          correct: false,
-          feedbackWrong:
-            "❌ Funny, but not useful here. Offer an ID if you have one.",
         },
       ],
     },
@@ -182,7 +158,6 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
         { id: "name", labelJa: "氏名", meaningEn: "Full name" },
         { id: "address", labelJa: "住所", meaningEn: "Address" },
         { id: "dob", labelJa: "生年月日", meaningEn: "Date of birth" },
-        { id: "phone", labelJa: "電話番号", meaningEn: "Phone number" },
       ],
       choices: [
         {
@@ -192,12 +167,6 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
           feedbackWrong: "❌ 氏名 = full name.\n\nDate of birth is 「生年月日」.",
         },
         {
-          id: "address",
-          labelJa: "住所",
-          correct: false,
-          feedbackWrong: "❌ 住所 = address.\n\nDate of birth is 「生年月日」.",
-        },
-        {
           id: "dob",
           labelJa: "生年月日",
           correct: true,
@@ -205,11 +174,10 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
             "✅ 「生年月日」= date of birth (year / month / day of birth).",
         },
         {
-          id: "phone",
-          labelJa: "電話番号",
+          id: "address",
+          labelJa: "住所",
           correct: false,
-          feedbackWrong:
-            "❌ 電話番号 = phone number.\n\nDate of birth is 「生年月日」.",
+          feedbackWrong: "❌ 住所 = address.\n\nDate of birth is 「生年月日」.",
         },
       ],
     },
@@ -225,14 +193,6 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "この欄に書くように言っています。",
-          labelEn: "They're asking me to write in this field.",
-          correct: true,
-          feedbackCorrect:
-            "✅ 「ご記入ください」is a polite request to fill something in.",
-        },
-        {
-          id: "b",
           labelJa: "ここに座るように言っています。",
           labelEn: "They're telling me to sit here.",
           correct: false,
@@ -240,18 +200,20 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
             "❌ 「ご記入」is about writing/filling in, not sitting.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "お金を払うように言っています。",
           labelEn: "They're telling me to pay.",
           correct: false,
-          feedbackWrong: "❌ Payment would use 「お支払いください」etc.",
+          feedbackWrong:
+            "❌ Payment would use 「お支払いください」.\n\n「ご記入ください」= please fill this in.",
         },
         {
-          id: "d",
-          labelJa: "帰るように言っています。",
-          labelEn: "They're telling me to go home.",
-          correct: false,
-          feedbackWrong: "❌ Not yet — they want the form filled in.",
+          id: "c",
+          labelJa: "この欄に書くように言っています。",
+          labelEn: "They're asking me to write in this field.",
+          correct: true,
+          feedbackCorrect:
+            "✅ 「ご記入ください」is a polite request to fill something in.",
         },
       ],
     },
@@ -275,24 +237,19 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "すぐに帰れと言っている。",
-          labelEn: "They're telling me to leave right away.",
+          labelJa: "印鑑を押してほしい。",
+          labelEn: "They want me to stamp a seal.",
           correct: false,
-          feedbackWrong: "❌ They're asking you to double-check the form.",
+          feedbackWrong:
+            "❌ Nearby City Hall action, but this line is about checking blank fields.",
         },
         {
           id: "c",
-          labelJa: "印鑑は不要だと言っている。",
-          labelEn: "They're saying a seal is unnecessary.",
-          correct: false,
-          feedbackWrong: "❌ The line is about checking for missing entries.",
-        },
-        {
-          id: "d",
           labelJa: "料金を払ってほしい。",
           labelEn: "They want me to pay a fee.",
           correct: false,
-          feedbackWrong: "❌ No fee mentioned — check for blank fields.",
+          feedbackWrong:
+            "❌ No fee mentioned — check for blank fields on the form.",
         },
       ],
     },
@@ -309,6 +266,14 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いいえ、在留カードだけです。",
+          labelEn: "No, I only have my residence card.",
+          correct: false,
+          feedbackWrong:
+            "❌ Plausible at City Hall, but this quest assumes you have the card.\n\nTry: 「はい、持っています。こちらです。」",
+        },
+        {
+          id: "b",
           labelJa: "はい、持っています。こちらです。",
           labelEn: "Yes, I have it. Here it is.",
           correct: true,
@@ -316,26 +281,12 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
             "✅ Natural and cooperative.\n\n「こちらです」works when handing something over.",
         },
         {
-          id: "b",
-          labelJa: "マイナンバーカードを食べました。",
-          labelEn: "I ate my My Number card.",
+          id: "c",
+          labelJa: "はい、パスポートを忘れました。",
+          labelEn: "Yes, I forgot my passport.",
           correct: false,
           feedbackWrong:
-            "❌ Please don’t.\n\nBetter: 「はい、持っています。こちらです。」",
-        },
-        {
-          id: "c",
-          labelJa: "カードは走ります。",
-          labelEn: "Cards run.",
-          correct: false,
-          feedbackWrong: "❌ Unnatural. Offer the card or say you don’t have it.",
-        },
-        {
-          id: "d",
-          labelJa: "いいえ、犬です。",
-          labelEn: "No, I’m a dog.",
-          correct: false,
-          feedbackWrong: "❌ Wrong register and wrong answer.",
+            "❌ Mixed answer — they asked about the My Number card, not your passport.",
         },
       ],
     },
@@ -354,33 +305,27 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "住所をもう一度書いてほしいと言っている。",
+          labelEn: "They're asking me to write my address again.",
+          correct: false,
+          feedbackWrong:
+            "❌ Close, but the key word is 「ご署名」— a signature, not the address field.",
+        },
+        {
+          id: "b",
+          labelJa: "印鑑をもう一度押してほしいと言っている。",
+          labelEn: "They're asking me to stamp my seal again.",
+          correct: false,
+          feedbackWrong:
+            "❌ Seal stamping is common at City Hall, but here they want 「ご署名」(signature).",
+        },
+        {
+          id: "c",
           labelJa: "丁寧に、もう一度サインしてほしいと言っている。",
           labelEn: "Politely asking me to sign again.",
           correct: true,
           feedbackCorrect:
             "✅ 「恐れ入りますが」softens a request — common N2-level service Japanese.\n\n「ご署名」= signature.",
-        },
-        {
-          id: "b",
-          labelJa: "怒っているので帰れと言っている。",
-          labelEn: "They're angry and telling me to leave.",
-          correct: false,
-          feedbackWrong:
-            "❌ 「恐れ入りますが」is apologetic/polite, not angry.",
-        },
-        {
-          id: "c",
-          labelJa: "料金が上がったと知らせている。",
-          labelEn: "They're saying the fee went up.",
-          correct: false,
-          feedbackWrong: "❌ They're asking for another signature.",
-        },
-        {
-          id: "d",
-          labelJa: "住所を変更できないと言っている。",
-          labelEn: "They're saying the address can't be changed.",
-          correct: false,
-          feedbackWrong: "❌ The key ask is 「ご署名」— a signature.",
         },
       ],
     },
@@ -408,25 +353,19 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "土日も24時間受付している。",
-          labelEn: "Open 24 hours on weekends too.",
+          labelJa: "土日も同じ時間に受付している。",
+          labelEn: "Open the same hours on weekends too.",
           correct: false,
           feedbackWrong:
-            "❌ The notice says weekends/holidays are closed.",
+            "❌ The notice says weekends and holidays are closed.",
         },
         {
           id: "c",
-          labelJa: "夜間のみ受付している。",
-          labelEn: "Only open at night.",
+          labelJa: "平日の午後のみ受付している。",
+          labelEn: "Accepted weekday afternoons only.",
           correct: false,
-          feedbackWrong: "❌ Hours are daytime weekdays, not nights.",
-        },
-        {
-          id: "d",
-          labelJa: "受付は完全に終了した。",
-          labelEn: "Reception has completely ended.",
-          correct: false,
-          feedbackWrong: "❌ It lists regular weekday hours — still open then.",
+          feedbackWrong:
+            "❌ Partial — hours start at 9:00 a.m., not only afternoon.",
         },
       ],
     },

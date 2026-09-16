@@ -44,28 +44,24 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いえ、ずっと前からここに住んでいます。",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong detail — she guessed you just moved, and that’s true.",
+        },
+        {
+          id: "b",
           labelJa: "はい、昨日引っ越してきたばかりなんです。",
           correct: true,
           feedbackCorrect:
             "✅ Natural.\n\n「〜ばかり」= just (recently). 「んです」softens the explanation.",
         },
         {
-          id: "b",
-          labelJa: "転入届を出したいんですが。",
-          correct: false,
-          feedbackWrong: "❌ City Hall register talk — wrong scene.",
-        },
-        {
           id: "c",
-          labelJa: "袋はご利用ですか？",
+          labelJa: "恐れ入りますが、初めてお目にかかります。",
           correct: false,
-          feedbackWrong: "❌ Convenience store clerk line.",
-        },
-        {
-          id: "d",
-          labelJa: "運転見合わせです。",
-          correct: false,
-          feedbackWrong: "❌ Station announcement language.",
+          feedbackWrong:
+            "❌ Over-formal for a hallway chat with a neighbor.",
         },
       ],
     },
@@ -88,21 +84,17 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "初めてお会いします。",
+          labelJa: "初めてお会いします。よろしくお願いいたします。",
           correct: false,
-          feedbackWrong: "❌ That’s a first-meeting phrase — you already met.",
+          feedbackWrong:
+            "❌ First-meeting phrase — you already know each other.",
         },
         {
           id: "c",
-          labelJa: "改札はどこですか？",
+          labelJa: "大変ご無沙汰しております。お変わりありませんか。",
           correct: false,
-          feedbackWrong: "❌ Wrong context.",
-        },
-        {
-          id: "d",
-          labelJa: "お支払い方法は？",
-          correct: false,
-          feedbackWrong: "❌ Register talk.",
+          feedbackWrong:
+            "❌ Too stiff for a casual hallway “how’s it going?”",
         },
       ],
     },
@@ -117,28 +109,24 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "ああ、そう。じゃあね。",
+          correct: false,
+          feedbackWrong:
+            "❌ Too cold — she just introduced herself and said よろしく.",
+        },
+        {
+          id: "b",
+          labelJa: "はるかさんのお仕事は何ですか。",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong question answered — reply to her greeting first.",
+        },
+        {
+          id: "c",
           labelJa: "こちらこそ、よろしくお願いします。",
           correct: true,
           feedbackCorrect:
             "✅ Polite-but-warm reply. Fine even if Haruka is casual.",
-        },
-        {
-          id: "b",
-          labelJa: "本人確認書類はありますか。",
-          correct: false,
-          feedbackWrong: "❌ Official City Hall language.",
-        },
-        {
-          id: "c",
-          labelJa: "何番線ですか？",
-          correct: false,
-          feedbackWrong: "❌ Station question.",
-        },
-        {
-          id: "d",
-          labelJa: "温めますか？",
-          correct: false,
-          feedbackWrong: "❌ Convenience store line.",
         },
       ],
     },
@@ -162,21 +150,17 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "来週引っ越します。",
+          labelJa: "来週引っ越す予定なんです。",
           correct: false,
-          feedbackWrong: "❌ Future — she asked about a completed move.",
+          feedbackWrong:
+            "❌ Timing — she asked about a completed move, not a future one.",
         },
         {
           id: "c",
-          labelJa: "引っ越しが好きです。",
+          labelJa: "大阪から来ました。",
           correct: false,
-          feedbackWrong: "❌ Off-topic.",
-        },
-        {
-          id: "d",
-          labelJa: "各駅停車です。",
-          correct: false,
-          feedbackWrong: "❌ Train vocabulary.",
+          feedbackWrong:
+            "❌ That answers “where from,” not “when did you move.”",
         },
       ],
     },
@@ -191,27 +175,23 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "大阪から来ました。",
-          correct: true,
-          feedbackCorrect: "✅ Simple, natural answer. Polite form is fine.",
+          labelJa: "昨日引っ越してきたばかりなんです。",
+          correct: false,
+          feedbackWrong:
+            "❌ That’s when you moved — she asked where you came from.",
         },
         {
           id: "b",
-          labelJa: "中央方面です。",
+          labelJa: "こちら方面から参りました。",
           correct: false,
-          feedbackWrong: "❌ Train direction, not hometown.",
+          feedbackWrong:
+            "❌ Vague and stiff — she wants a hometown/place, not “this direction.”",
         },
         {
           id: "c",
-          labelJa: "お箸はお付けしますか？",
-          correct: false,
-          feedbackWrong: "❌ Clerk line.",
-        },
-        {
-          id: "d",
-          labelJa: "恐れ入りますが、ご署名を。",
-          correct: false,
-          feedbackWrong: "❌ Over-formal service Japanese.",
+          labelJa: "大阪から来ました。",
+          correct: true,
+          feedbackCorrect: "✅ Simple, natural answer. Polite form is fine.",
         },
       ],
     },
@@ -227,28 +207,24 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いえ、もうこの辺は全部知っています。",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong detail — you just moved; agreeing you’re still new fits better.",
+        },
+        {
+          id: "b",
           labelJa: "うん、まだ全然で…。",
           correct: true,
           feedbackCorrect:
             "✅ Matching her casual tone a bit is natural between neighbors.",
         },
         {
-          id: "b",
-          labelJa: "はい、本人確認書類を提出いたします。",
-          correct: false,
-          feedbackWrong: "❌ Far too formal / wrong topic.",
-        },
-        {
           id: "c",
-          labelJa: "運転見合わせです。",
+          labelJa: "はい、全く存じ上げません。ご案内お願い申し上げます。",
           correct: false,
-          feedbackWrong: "❌ Station language.",
-        },
-        {
-          id: "d",
-          labelJa: "合計は四百二十円です。",
-          correct: false,
-          feedbackWrong: "❌ Receipt talk.",
+          feedbackWrong:
+            "❌ Far too formal for her casual 「分かんないでしょ？」",
         },
       ],
     },
@@ -271,19 +247,14 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
           id: "b",
           labelJa: "ありがとうございません。",
           correct: false,
-          feedbackWrong: "❌ Wrong polarity.",
+          feedbackWrong: "❌ Wrong polarity — that flips thanks into the opposite.",
         },
         {
           id: "c",
-          labelJa: "快速に乗ります。",
+          labelJa: "承知いたしました。何かあればご連絡いたします。",
           correct: false,
-          feedbackWrong: "❌ Wrong context.",
-        },
-        {
-          id: "d",
-          labelJa: "レシートはご利用ですか？",
-          correct: false,
-          feedbackWrong: "❌ Clerk line.",
+          feedbackWrong:
+            "❌ Business-register reply — too stiff for a neighbor’s kindness.",
         },
       ],
     },
@@ -299,27 +270,23 @@ export const MEET_NEIGHBOR_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "駅近くのカフェに行ってみたらどうかと勧めている。",
-          correct: true,
-          feedbackCorrect: "✅ Foreshadowing Café Kotonoha.",
+          labelJa: "今すぐ荷物を一緒に運べと言っている。",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong offer — she’s recommending a place to visit later, not helping unpack.",
         },
         {
           id: "b",
-          labelJa: "市役所で転入届を出せと言っている。",
+          labelJa: "駅の近くにいいスーパーがあると言っている。",
           correct: false,
-          feedbackWrong: "❌ Not City Hall.",
+          feedbackWrong:
+            "❌ Close, but she said カフェ, not スーパー.",
         },
         {
           id: "c",
-          labelJa: "電車が止まったと知らせている。",
-          correct: false,
-          feedbackWrong: "❌ No delay mentioned.",
-        },
-        {
-          id: "d",
-          labelJa: "弁当を温めろと言っている。",
-          correct: false,
-          feedbackWrong: "❌ Wrong scene.",
+          labelJa: "駅近くのカフェに行ってみたらどうかと勧めている。",
+          correct: true,
+          feedbackCorrect: "✅ Foreshadowing Café Kotonoha.",
         },
       ],
     },

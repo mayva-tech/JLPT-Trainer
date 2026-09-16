@@ -58,19 +58,19 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "ことば",
+          labelEn: "Kotoba",
+          correct: false,
+          feedbackWrong:
+            "❌ ことば is before Midori, not after.\n\nOrder: ことば → みどり → ひがし → 中央.",
+        },
+        {
+          id: "b",
           labelJa: "ひがし（東）",
           labelEn: "Higashi",
           correct: true,
           feedbackCorrect:
             "✅ Kotoba → Midori → Higashi → Central.\n\nひがし is the stop between Midori and Central.",
-        },
-        {
-          id: "b",
-          labelJa: "ことば",
-          labelEn: "Kotoba",
-          correct: false,
-          feedbackWrong:
-            "❌ ことば is the starting station, not after Midori.\n\nOrder: ことば → みどり → ひがし → 中央.",
         },
         {
           id: "c",
@@ -79,14 +79,6 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong:
             "❌ 中央 is the last stop. After Midori comes ひがし, then 中央.",
-        },
-        {
-          id: "d",
-          labelJa: "市役所前",
-          labelEn: "City Hall-mae",
-          correct: false,
-          feedbackWrong:
-            "❌ That stop isn’t on this Sakura Line diagram.",
         },
       ],
     },
@@ -113,11 +105,11 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "中央駅はすでに終電が終わった。",
-          labelEn: "The last train to Central has already left.",
+          labelJa: "中央方面の電車は2番線から発車する。",
+          labelEn: "Trains toward Central leave from track 2.",
           correct: false,
           feedbackWrong:
-            "❌ No last-train wording. The sign only shows direction and track.",
+            "❌ Close track number — the sign says 3番線, not 2.",
         },
         {
           id: "c",
@@ -126,14 +118,6 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong:
             "❌ 番線 = platform/track number, not an exit number.",
-        },
-        {
-          id: "d",
-          labelJa: "中央病院行きのバス乗り場だ。",
-          labelEn: "It’s the bus stop for Central Hospital.",
-          correct: false,
-          feedbackWrong:
-            "❌ This is a train platform sign, not a bus stop.",
         },
       ],
     },
@@ -159,35 +143,27 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "人身事故のため、電車が少し遅れている。",
+          labelEn: "Trains are running a little late because of an accident.",
+          correct: false,
+          feedbackWrong:
+            "❌ Delay (遅延) vs suspension — 「運転見合わせ」means service is paused, not just late.",
+        },
+        {
+          id: "b",
+          labelJa: "人身事故のため、さくら線は本日運休になった。",
+          labelEn: "The Sakura Line is canceled for the whole day.",
+          correct: false,
+          feedbackWrong:
+            "❌ Too final — 「再開までしばらく」means wait for restart, not all-day 運休.",
+        },
+        {
+          id: "c",
           labelJa: "人身事故のため、電車の運転が一時止まっている。",
           labelEn: "Service is paused because of an accident involving a person.",
           correct: true,
           feedbackCorrect:
             "✅ 「運転見合わせ」= trains are not running for now.\n\n「人身事故」is a common cause in station announcements.",
-        },
-        {
-          id: "b",
-          labelJa: "天候不良のため、全線で増便している。",
-          labelEn: "Extra trains are running due to bad weather.",
-          correct: false,
-          feedbackWrong:
-            "❌ The broadcast is about suspending service, not adding trains.",
-        },
-        {
-          id: "c",
-          labelJa: "快速のみ通常どおり運行している。",
-          labelEn: "Only limited express trains are running as usual.",
-          correct: false,
-          feedbackWrong:
-            "❌ No exception for 快速 was mentioned — the Sakura Line is paused.",
-        },
-        {
-          id: "d",
-          labelJa: "中央駅の改札が閉鎖された。",
-          labelEn: "The ticket gates at Central are closed.",
-          correct: false,
-          feedbackWrong:
-            "❌ The announcement is about train operation, not ticket gates.",
         },
       ],
     },
@@ -205,19 +181,19 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "すみません、中央駅に行きたいんですが、何番線ですか？",
-          labelEn: "Excuse me — I’d like to go to Central Station. Which track is it?",
-          correct: true,
-          feedbackCorrect:
-            "✅ Soft request + clear question.\n\n「何番線ですか？」is the natural way to ask for a platform number.",
-        },
-        {
-          id: "b",
           labelJa: "すみません、中央駅の切符はいくらですか？",
           labelEn: "Excuse me — how much is a ticket to Central?",
           correct: false,
           feedbackWrong:
             "❌ Polite, but you need the track number (何番線), not the fare.",
+        },
+        {
+          id: "b",
+          labelJa: "すみません、中央駅に行きたいんですが、何番線ですか？",
+          labelEn: "Excuse me — I’d like to go to Central Station. Which track is it?",
+          correct: true,
+          feedbackCorrect:
+            "✅ Soft request + clear question.\n\n「何番線ですか？」is the natural way to ask for a platform number.",
         },
         {
           id: "c",
@@ -226,14 +202,6 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
           correct: false,
           feedbackWrong:
             "❌ Transfer time isn’t the question yet. Ask 「何番線ですか？」",
-        },
-        {
-          id: "d",
-          labelJa: "すみません、遅延証明書をください。",
-          labelEn: "Excuse me — please give me a delay certificate.",
-          correct: false,
-          feedbackWrong:
-            "❌ Useful after a delay for work/school, but first find your platform.",
         },
       ],
     },
@@ -257,24 +225,19 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "1番線で各駅停車を待つ。",
-          labelEn: "Waiting on track 1 for a local train.",
+          labelJa: "2番線のホームで待つ。",
+          labelEn: "Waiting on platform 2.",
           correct: false,
-          feedbackWrong: "❌ Staff said 3番線 for Central, not track 1.",
+          feedbackWrong:
+            "❌ Close track number — staff said 3番線, not 2.",
         },
         {
           id: "c",
-          labelJa: "改札の外でバスを探す。",
-          labelEn: "Looking for a bus outside the gates.",
-          correct: false,
-          feedbackWrong: "❌ They directed you to a train platform.",
-        },
-        {
-          id: "d",
           labelJa: "終電までベンチで待つ。",
           labelEn: "Waiting on a bench until the last train.",
           correct: false,
-          feedbackWrong: "❌ The train is leaving soon — don’t wait for 終電.",
+          feedbackWrong:
+            "❌ Timing — 「まもなく発車」means leave soon, not wait for 終電.",
         },
       ],
     },
@@ -294,35 +257,27 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "ひがし駅でグリーン線に乗り換えるが、別ホームへ移動する。",
+          labelEn: "Transfer to the Green Line at Higashi, but change platforms.",
+          correct: false,
+          feedbackWrong:
+            "❌ Station is right, but 「同じホーム」means stay put — no platform change.",
+        },
+        {
+          id: "b",
+          labelJa: "ことば駅でグリーン線に乗り換える。ホームはそのままでよい。",
+          labelEn: "Transfer to the Green Line at Kotoba; stay on the same platform.",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong station — transfer is at ひがし駅, not ことば駅.",
+        },
+        {
+          id: "c",
           labelJa: "東駅でグリーン線に乗り換える。ホームはそのままでよい。",
           labelEn: "Transfer to the Green Line at Higashi; stay on the same platform.",
           correct: true,
           feedbackCorrect:
             "✅ 「乗り換え」= transfer. 「同じホーム」means you don’t change platforms.",
-        },
-        {
-          id: "b",
-          labelJa: "ことば駅で改札を出てバスに乗る。",
-          labelEn: "Exit the gates at Kotoba and take a bus.",
-          correct: false,
-          feedbackWrong:
-            "❌ Transfer is at ひがし駅, and it stays on the train platform.",
-        },
-        {
-          id: "c",
-          labelJa: "中央駅まで各駅停車のみに乗る。",
-          labelEn: "Take only local trains all the way to Central.",
-          correct: false,
-          feedbackWrong:
-            "❌ The key point is transferring to the Green Line at Higashi.",
-        },
-        {
-          id: "d",
-          labelJa: "反対方面の快速に乗り直す。",
-          labelEn: "Get back on a rapid train going the opposite way.",
-          correct: false,
-          feedbackWrong:
-            "❌ Direction and line change are specified — not “opposite rapid.”",
         },
       ],
     },
@@ -337,6 +292,13 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "電車が止まるホーム",
+          labelEn: "The platform where trains stop",
+          correct: false,
+          feedbackWrong: "❌ That’s ホーム. 改札 is the ticket gate area.",
+        },
+        {
+          id: "b",
           labelJa: "切符を確認して通るゲート",
           labelEn: "The gate where tickets are checked",
           correct: true,
@@ -344,25 +306,11 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
             "✅ 改札 / 改札口 = ticket gate. You 改札を通る before reaching the platforms.",
         },
         {
-          id: "b",
-          labelJa: "電車が止まるホーム",
-          labelEn: "The platform where trains stop",
-          correct: false,
-          feedbackWrong: "❌ That’s ホーム. 改札 is the ticket gate area.",
-        },
-        {
           id: "c",
           labelJa: "別の線に乗り換えること",
           labelEn: "Changing to another line",
           correct: false,
           feedbackWrong: "❌ That’s 乗り換え. 改札 = ticket gate.",
-        },
-        {
-          id: "d",
-          labelJa: "電車が遅れていること",
-          labelEn: "The train being delayed",
-          correct: false,
-          feedbackWrong: "❌ That’s 遅延. 改札 = ticket gate.",
         },
       ],
     },
@@ -394,18 +342,11 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "快速はホームがなく、各駅停車だけが使える。",
-          labelEn: "Rapids have no platforms; only locals use them.",
-          correct: false,
-          feedbackWrong: "❌ Both use ホーム. The difference is which stations they stop at.",
-        },
-        {
-          id: "d",
-          labelJa: "どちらも運転見合わせのときにだけ走る。",
-          labelEn: "Both only run during service suspensions.",
+          labelJa: "快速は各駅に止まり、各駅停車は一部の駅を通過する。",
+          labelEn: "Rapids stop everywhere; locals skip some stations.",
           correct: false,
           feedbackWrong:
-            "❌ 運転見合わせ means service is stopped — trains aren’t running then.",
+            "❌ Reversed — 各駅停車 stops at every station; 快速 skips some.",
         },
       ],
     },
@@ -420,21 +361,13 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "電車が遅延しているので、ホームでしばらく待つ。",
-          labelEn: "The train is delayed, so I wait on the platform for a while.",
-          correct: true,
-          feedbackCorrect:
-            "✅ ホーム = platform. 遅延 = delay.\n\nNatural combo when announcements mention late arrivals.",
-        },
-        {
-          id: "b",
           labelJa: "遅延は改札の出口の名前だ。",
           labelEn: "遅延 is the name of a ticket-gate exit.",
           correct: false,
           feedbackWrong: "❌ 遅延 means delay, not an exit name.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "ホームは切符売り場のことだ。",
           labelEn: "ホーム means the ticket counter.",
           correct: false,
@@ -442,12 +375,12 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
             "❌ Ticket windows are みどりの窓口 / 切符売り場. ホーム = platform.",
         },
         {
-          id: "d",
-          labelJa: "遅延したら乗り換えできなくなる。",
-          labelEn: "If there’s a delay, transfers become impossible.",
-          correct: false,
-          feedbackWrong:
-            "❌ Delays can make connections tight, but transfers don’t automatically become impossible.",
+          id: "c",
+          labelJa: "電車が遅延しているので、ホームでしばらく待つ。",
+          labelEn: "The train is delayed, so I wait on the platform for a while.",
+          correct: true,
+          feedbackCorrect:
+            "✅ ホーム = platform. 遅延 = delay.\n\nNatural combo when announcements mention late arrivals.",
         },
       ],
     },
@@ -464,6 +397,13 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いいえ。これは反対方面の快速だ。",
+          labelEn: "No — this is a rapid going the other way.",
+          correct: false,
+          feedbackWrong: "❌ The display clearly says 中央行き and 各駅停車.",
+        },
+        {
+          id: "b",
           labelJa: "はい。中央行きの各駅停車に乗っている。",
           labelEn: "Yes — I’m on a local bound for Central.",
           correct: true,
@@ -471,25 +411,11 @@ export const STATION_MASTER_QUEST: QuestDefinition = {
             "✅ 「中央行き」+「各駅停車」matches your plan (stop at Higashi to transfer if needed).",
         },
         {
-          id: "b",
-          labelJa: "いいえ。これは反対方面の快速だ。",
-          labelEn: "No — this is a rapid going the other way.",
-          correct: false,
-          feedbackWrong: "❌ The display clearly says 中央行き and 各駅停車.",
-        },
-        {
           id: "c",
           labelJa: "特急券が必要な列車だ。",
           labelEn: "This train requires a limited-express ticket.",
           correct: false,
           feedbackWrong: "❌ 各駅停車 is a regular local — no 特急券.",
-        },
-        {
-          id: "d",
-          labelJa: "運転見合わせ中なので動けない。",
-          labelEn: "Service is suspended, so it can’t move.",
-          correct: false,
-          feedbackWrong: "❌ You’re already onboard with a next-stop display.",
         },
       ],
     },
