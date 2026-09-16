@@ -15,6 +15,7 @@ import {
   undoStepAnswer,
   type QuestStepAnswerDelta,
 } from "../utils/questEngine";
+import { buildQuestAutoPlayQueue } from "../utils/questAutoPlay";
 import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
@@ -99,37 +100,97 @@ export function QuestRunner({
     : null;
   const resolved = step ? resolveQuestSpeech(step) : null;
 
-  // Auto-play once per step transition. Local `cancelled` avoids Strict Mode double-speak.
+  // Auto-play full step: prompt → (EN if Help) → each MCQ → (EN if Help) → help hint.
   useEffect(() => {
     if (!step || !resolved) return;
     let cancelled = false;
     speech.stop();
     setChoiceHighlightId(null);
+    setFeedbackJaFocus(null);
     autoPlayTokenRef.current += 1;
     const token = autoPlayTokenRef.current;
 
-    if (!speech.autoVoice || !resolved.enabled || !resolved.autoPlay) {
+    if (!speech.autoVoice) {
       return () => {
         cancelled = true;
       };
     }
 
-    const hideKaraoke =
-      resolved.karaokeMode === "off" ||
-      (resolved.hideTranscriptUntilAnswer && !revealed);
+    const queue = buildQuestAutoPlayQueue({
+      step,
+      resolved,
+      showHelp,
+      revealed,
+    });
+    if (queue.length === 0) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const playBilingual = (raw: string, onDone: () => void) => {
+      const segments = parseBilingualSpeakSegments(raw);
+      if (segments.length === 0) {
+        onDone();
+        return;
+      }
+      const playSeg = (index: number) => {
+        if (cancelled || token !== autoPlayTokenRef.current) return;
+        const seg = segments[index];
+        if (!seg) {
+          setFeedbackJaFocus(null);
+          onDone();
+          return;
+        }
+        const next = () => playSeg(index + 1);
+        if (seg.language === "ja") {
+          setFeedbackJaFocus(seg.text);
+          speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
+        } else {
+          setFeedbackJaFocus(null);
+          speech.speakEnglish(seg.text, { karaoke: true, onEnded: next });
+        }
+      };
+      playSeg(0);
+    };
+
+    const playItem = (index: number) => {
+      if (cancelled || token !== autoPlayTokenRef.current) return;
+      const item = queue[index];
+      if (!item) {
+        setChoiceHighlightId(null);
+        setFeedbackJaFocus(null);
+        return;
+      }
+      const next = () => playItem(index + 1);
+      if (item.kind === "ja") {
+        setFeedbackJaFocus(null);
+        if (item.choiceId) setChoiceHighlightId(item.choiceId);
+        else setChoiceHighlightId(null);
+        speech.speakJapanese(item.text, {
+          reading: item.reading,
+          karaoke: item.karaoke,
+          onEnded: () => {
+            if (item.choiceId) setChoiceHighlightId(null);
+            next();
+          },
+        });
+      } else if (item.kind === "en") {
+        setChoiceHighlightId(null);
+        setFeedbackJaFocus(null);
+        speech.speakEnglish(item.text, {
+          karaoke: item.karaoke,
+          onEnded: next,
+        });
+      } else {
+        setChoiceHighlightId(null);
+        playBilingual(item.text, next);
+      }
+    };
 
     const timer = window.setTimeout(() => {
       if (cancelled || token !== autoPlayTokenRef.current) return;
-      if (resolved.language === "en") {
-        speech.speakEnglish(resolved.speakText, {
-          karaoke: resolved.karaokeMode === "always",
-        });
-      } else {
-        speech.speakJapanese(resolved.speakText, {
-          reading: resolved.reading,
-          karaoke: !hideKaraoke && resolved.karaokeMode !== "off",
-        });
-      }
+      playItem(0);
     }, STEP_SETTLE_MS);
 
     return () => {
@@ -137,7 +198,7 @@ export function QuestRunner({
       window.clearTimeout(timer);
       speech.stop();
     };
-    // Only re-run on step / retry / autoVoice toggles — not on reveal/help.
+    // Re-run on step / retry / Auto Voice / Help — not on reveal (answer stops speech).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     questId,
@@ -146,6 +207,7 @@ export function QuestRunner({
     stepPlayKey,
     speech.autoVoice,
     speech.rateMode,
+    showHelp,
   ]);
 
   // Stop when leaving the runner via quit path handled by unmount; also on reveal
