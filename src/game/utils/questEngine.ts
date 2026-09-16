@@ -80,3 +80,85 @@ export function accuracyFromCounts(correct: number, answered: number): number {
   if (answered <= 0) return 0;
   return Math.round((correct / answered) * 100);
 }
+
+/** Effects of one MCQ answer — used to undo scoring when the learner retries. */
+export type QuestStepAnswerDelta = {
+  correct: boolean;
+  confidenceCost: number;
+  mistakeAdded: boolean;
+  vocabAdded: string | null;
+  monsterAdded: string | null;
+};
+
+export type QuestStepRunStats = {
+  confidence: number;
+  correctCount: number;
+  answeredCount: number;
+  mistakes: QuestRunMistake[];
+  monsters: string[];
+  vocabDiscovered: string[];
+};
+
+/** Build the delta recorded when an answer is committed. */
+export function buildStepAnswerDelta(
+  result: StepAnswerResult,
+  options: {
+    confidenceBefore: number;
+    confidenceAfter: number;
+    vocabAdded: string | null;
+    monsterAdded: string | null;
+  }
+): QuestStepAnswerDelta {
+  return {
+    correct: result.correct,
+    confidenceCost: Math.max(
+      0,
+      options.confidenceBefore - options.confidenceAfter
+    ),
+    mistakeAdded: Boolean(result.mistake),
+    vocabAdded: options.vocabAdded,
+    monsterAdded: options.monsterAdded,
+  };
+}
+
+/** Reverse one answer so the same step can be attempted again without double-counting. */
+export function undoStepAnswer(
+  stats: QuestStepRunStats,
+  delta: QuestStepAnswerDelta
+): QuestStepRunStats {
+  let mistakes = stats.mistakes;
+  if (delta.mistakeAdded && mistakes.length > 0) {
+    mistakes = mistakes.slice(0, -1);
+  }
+
+  let monsters = stats.monsters;
+  if (delta.monsterAdded) {
+    const idx = monsters.lastIndexOf(delta.monsterAdded);
+    if (idx >= 0) {
+      monsters = [...monsters.slice(0, idx), ...monsters.slice(idx + 1)];
+    }
+  }
+
+  let vocabDiscovered = stats.vocabDiscovered;
+  if (delta.vocabAdded) {
+    const idx = vocabDiscovered.lastIndexOf(delta.vocabAdded);
+    if (idx >= 0) {
+      vocabDiscovered = [
+        ...vocabDiscovered.slice(0, idx),
+        ...vocabDiscovered.slice(idx + 1),
+      ];
+    }
+  }
+
+  return {
+    confidence: stats.confidence + delta.confidenceCost,
+    correctCount: Math.max(
+      0,
+      stats.correctCount - (delta.correct ? 1 : 0)
+    ),
+    answeredCount: Math.max(0, stats.answeredCount - 1),
+    mistakes,
+    monsters,
+    vocabDiscovered,
+  };
+}

@@ -9,8 +9,11 @@ import type { QuestDefinition, QuestRunMistake, QuestStep } from "../types";
 import { filterStepsForProfile } from "../utils/chapterProgress";
 import {
   accuracyFromCounts,
+  buildStepAnswerDelta,
   evaluateChoiceAnswer,
   noteQuestVocabMiss,
+  undoStepAnswer,
+  type QuestStepAnswerDelta,
 } from "../utils/questEngine";
 import {
   resolveQuestSpeech,
@@ -77,6 +80,11 @@ export function QuestRunner({
   const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(
     null
   );
+  /** Last MCQ scoring delta — cleared when advancing or retrying the step. */
+  const [lastAnswerDelta, setLastAnswerDelta] =
+    useState<QuestStepAnswerDelta | null>(null);
+  /** Bumped on Try again so autoplay re-speaks the same step. */
+  const [stepPlayKey, setStepPlayKey] = useState(0);
   const autoPlayTokenRef = useRef(0);
 
   const step = quest
@@ -122,9 +130,16 @@ export function QuestRunner({
       window.clearTimeout(timer);
       speech.stop();
     };
-    // Only re-run on step / autoVoice toggles — not on reveal/help.
+    // Only re-run on step / retry / autoVoice toggles — not on reveal/help.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questId, stepIndex, step?.id, speech.autoVoice, speech.rateMode]);
+  }, [
+    questId,
+    stepIndex,
+    step?.id,
+    stepPlayKey,
+    speech.autoVoice,
+    speech.rateMode,
+  ]);
 
   // Stop when leaving the runner via quit path handled by unmount; also on reveal
   // we do NOT auto-replay.
@@ -199,6 +214,7 @@ export function QuestRunner({
     setMonsterFlash(null);
     setShowHelp(false);
     setChoiceHighlightId(null);
+    setLastAnswerDelta(null);
   }
 
   function onContinueIntro() {
@@ -228,10 +244,13 @@ export function QuestRunner({
     let nextMistakes = mistakes;
     let nextMonsters = monsters;
     let nextVocab = vocabDiscovered;
+    let vocabAdded: string | null = null;
+    let monsterAdded: string | null = null;
 
     if (result.correct) {
       nextCorrect += 1;
       if (currentStep.vocabHint && !nextVocab.includes(currentStep.vocabHint)) {
+        vocabAdded = currentStep.vocabHint;
         nextVocab = [...nextVocab, currentStep.vocabHint];
       }
     } else {
@@ -242,6 +261,7 @@ export function QuestRunner({
         correct: false,
       });
       if (hook.monsterLabel && !nextMonsters.includes(hook.monsterLabel)) {
+        monsterAdded = hook.monsterLabel;
         nextMonsters = [...nextMonsters, hook.monsterLabel];
         setMonsterFlash(hook.monsterLabel);
       }
@@ -253,6 +273,14 @@ export function QuestRunner({
     setMistakes(nextMistakes);
     setMonsters(nextMonsters);
     setVocabDiscovered(nextVocab);
+    setLastAnswerDelta(
+      buildStepAnswerDelta(result, {
+        confidenceBefore: confidence,
+        confidenceAfter: nextConf,
+        vocabAdded,
+        monsterAdded,
+      })
+    );
   }
 
   function onContinueAfterAnswer() {
@@ -265,6 +293,36 @@ export function QuestRunner({
       vocabDiscovered,
       helpUses
     );
+  }
+
+  function onRetryStep() {
+    if (!revealed || !isInteractive || !lastAnswerDelta) return;
+    speech.stop();
+    const restored = undoStepAnswer(
+      {
+        confidence,
+        correctCount,
+        answeredCount,
+        mistakes,
+        monsters,
+        vocabDiscovered,
+      },
+      lastAnswerDelta
+    );
+    setConfidence(restored.confidence);
+    setCorrectCount(restored.correctCount);
+    setAnsweredCount(restored.answeredCount);
+    setMistakes(restored.mistakes);
+    setMonsters(restored.monsters);
+    setVocabDiscovered(restored.vocabDiscovered);
+    setSelectedId(null);
+    setRevealed(false);
+    setFeedback(null);
+    setFeedbackGood(true);
+    setMonsterFlash(null);
+    setChoiceHighlightId(null);
+    setLastAnswerDelta(null);
+    setStepPlayKey((k) => k + 1);
   }
 
   function onToggleHelp() {
@@ -438,6 +496,9 @@ export function QuestRunner({
                 ? onContinueIntro
                 : undefined
         }
+        onRetry={
+          revealed && isInteractive && lastAnswerDelta ? onRetryStep : undefined
+        }
         continueLabel={continueLabel}
       />
     </div>
@@ -466,6 +527,7 @@ function DialogueStep({
   onReplayChoice,
   onReplayFeedbackEn,
   onContinue,
+  onRetry,
   continueLabel,
 }: {
   step: QuestStep;
@@ -489,6 +551,7 @@ function DialogueStep({
   onReplayChoice: (id: string, labelJa: string) => void;
   onReplayFeedbackEn?: () => void;
   onContinue?: () => void;
+  onRetry?: () => void;
   continueLabel: string;
 }) {
   const showInstructionEn = shouldShowPromptEn(step, showHelp);
@@ -709,15 +772,26 @@ function DialogueStep({
         </div>
       ) : null}
 
-      {onContinue ? (
+      {onContinue || onRetry ? (
         <div className="ppq-actions">
-          <button
-            type="button"
-            className="ppq-btn ppq-btn--primary"
-            onClick={onContinue}
-          >
-            {continueLabel}
-          </button>
+          {onRetry ? (
+            <button
+              type="button"
+              className="ppq-btn ppq-btn--ghost"
+              onClick={onRetry}
+            >
+              Try again
+            </button>
+          ) : null}
+          {onContinue ? (
+            <button
+              type="button"
+              className="ppq-btn ppq-btn--primary"
+              onClick={onContinue}
+            >
+              {continueLabel}
+            </button>
+          ) : null}
         </div>
       ) : null}
     </section>
