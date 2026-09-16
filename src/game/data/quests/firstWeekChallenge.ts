@@ -55,14 +55,6 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "住民票の写しをいただきたいんですが。",
-          labelEn: "I’d like a copy of my residence record.",
-          correct: true,
-          feedbackCorrect:
-            "✅ Clear purpose.\n\n「〜たいんですが」softens a counter request.",
-        },
-        {
-          id: "b",
           labelJa: "転入届を出したいんですが。",
           labelEn: "I’d like to submit a moving-in notification.",
           correct: false,
@@ -70,18 +62,20 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
             "❌ You already registered. Today you need a 住民票の写し.",
         },
         {
-          id: "c",
-          labelJa: "袋はご利用ですか？",
-          labelEn: "Would you like a bag?",
-          correct: false,
-          feedbackWrong: "❌ That’s a clerk’s line, not yours.",
+          id: "b",
+          labelJa: "住民票の写しをいただきたいんですが。",
+          labelEn: "I’d like a copy of my residence record.",
+          correct: true,
+          feedbackCorrect:
+            "✅ Clear purpose.\n\n「〜たいんですが」softens a counter request.",
         },
         {
-          id: "d",
-          labelJa: "おすすめは何ですか？",
-          labelEn: "What do you recommend?",
+          id: "c",
+          labelJa: "印鑑登録をしたいんですが。",
+          labelEn: "I’d like to register my personal seal.",
           correct: false,
-          feedbackWrong: "❌ Café language — wrong place.",
+          feedbackWrong:
+            "❌ Also City Hall, but today’s errand is a 住民票の写し.",
         },
       ],
     },
@@ -115,17 +109,11 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "レシートで大丈夫ですか。",
-          labelEn: "Is a receipt okay?",
+          labelJa: "はい、申請書の控えを持っています。",
+          labelEn: "Yes, I have a copy of my application form.",
           correct: false,
-          feedbackWrong: "❌ Receipts don’t prove identity.",
-        },
-        {
-          id: "d",
-          labelJa: "乗車券を見せます。",
-          labelEn: "I’ll show my train ticket.",
-          correct: false,
-          feedbackWrong: "❌ A ticket isn’t 本人確認書類.",
+          feedbackWrong:
+            "❌ A form copy isn’t ID. Use a residence card or passport.",
         },
       ],
     },
@@ -142,9 +130,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       skillHint: "reading",
       formFields: [
         { id: "name", labelJa: "氏名", meaningEn: "Full name" },
-        { id: "address", labelJa: "現住所", meaningEn: "Current address" },
         { id: "purpose", labelJa: "使用目的", meaningEn: "Purpose of use" },
-        { id: "copies", labelJa: "交付部数", meaningEn: "Number of copies" },
+        { id: "address", labelJa: "現住所", meaningEn: "Current address" },
       ],
       choices: [
         {
@@ -154,22 +141,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           feedbackWrong: "❌ 氏名 = full name. Current address is 「現住所」.",
         },
         {
-          id: "address",
-          labelJa: "現住所",
-          correct: true,
-          feedbackCorrect: "✅ 「現住所」= current address.",
-        },
-        {
           id: "purpose",
           labelJa: "使用目的",
           correct: false,
           feedbackWrong: "❌ 使用目的 = why you need the document.",
         },
         {
-          id: "copies",
-          labelJa: "交付部数",
-          correct: false,
-          feedbackWrong: "❌ 交付部数 = how many copies to issue.",
+          id: "address",
+          labelJa: "現住所",
+          correct: true,
+          feedbackCorrect: "✅ 「現住所」= current address.",
         },
       ],
     },
@@ -190,27 +171,21 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "お弁当を温めるかどうか聞いている。",
-          correct: true,
-          feedbackCorrect: "✅ 「温めますか？」= Shall I heat this up?",
-        },
-        {
-          id: "b",
           labelJa: "袋が必要かどうか聞いている。",
           correct: false,
           feedbackWrong: "❌ That would be 「袋はご利用ですか？」",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "ポイントを付けるか聞いている。",
           correct: false,
           feedbackWrong: "❌ That would mention ポイントカード.",
         },
         {
-          id: "d",
-          labelJa: "レシートが要るか聞いている。",
-          correct: false,
-          feedbackWrong: "❌ Receipt offers use 「レシート」.",
+          id: "c",
+          labelJa: "お弁当を温めるかどうか聞いている。",
+          correct: true,
+          feedbackCorrect: "✅ 「温めますか？」= Shall I heat this up?",
         },
       ],
     },
@@ -240,15 +215,10 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "各駅停車でお願いします。",
+          labelJa: "後払いでお願いします。",
           correct: false,
-          feedbackWrong: "❌ Train type, not payment.",
-        },
-        {
-          id: "d",
-          labelJa: "住民票でお願いします。",
-          correct: false,
-          feedbackWrong: "❌ City Hall document — wrong counter.",
+          feedbackWrong:
+            "❌ Konbini checkout needs payment now. Choose カード.",
         },
       ],
     },
@@ -267,28 +237,24 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "ううん、今日は特に予定ないよ。",
+          correct: false,
+          feedbackWrong:
+            "❌ She asked about plans — you’ve got the station this afternoon.",
+        },
+        {
+          id: "b",
           labelJa: "うん、午後ちょっと駅まで行く予定。",
           correct: true,
           feedbackCorrect:
             "✅ Casual and clear. 「予定」fits her question naturally.",
         },
         {
-          id: "b",
-          labelJa: "恐れ入りますが、ご用件をお伺いできますでしょうか。",
-          correct: false,
-          feedbackWrong: "❌ Way too formal for a neighbor chat.",
-        },
-        {
           id: "c",
-          labelJa: "転入届を提出いたします。",
+          labelJa: "うん、この辺もう慣れたよ。",
           correct: false,
-          feedbackWrong: "❌ City Hall register language.",
-        },
-        {
-          id: "d",
-          labelJa: "温めますか？",
-          correct: false,
-          feedbackWrong: "❌ Clerk line — wrong speaker role.",
+          feedbackWrong:
+            "❌ That answers a different question. Tell her your afternoon plan.",
         },
       ],
     },
@@ -312,21 +278,17 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "電車が止まったので家にいろと言っている。",
+          labelJa: "一人で行って、あとで合流しようと言っている。",
           correct: false,
-          feedbackWrong: "❌ No delay is mentioned.",
+          feedbackWrong:
+            "❌ She said 「一緒に行こう」— she’s offering to go with you.",
         },
         {
           id: "c",
-          labelJa: "市役所で書類を出せと言っている。",
+          labelJa: "今日の予定は全部キャンセルしようと言っている。",
           correct: false,
-          feedbackWrong: "❌ Not City Hall.",
-        },
-        {
-          id: "d",
-          labelJa: "弁当を温めてほしいと言っている。",
-          correct: false,
-          feedbackWrong: "❌ Wrong scene.",
+          feedbackWrong:
+            "❌ She’s adding a café stop, not canceling plans.",
         },
       ],
     },
@@ -346,28 +308,26 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "左手のトイレの先が改札です。",
+          labelEn: "The gates are past the restrooms on your left.",
+          correct: false,
+          feedbackWrong:
+            "❌ Wrong landmark. Listen for the yellow line on the right.",
+        },
+        {
+          id: "b",
+          labelJa: "地下の出口の先が改札です。",
+          labelEn: "The gates are past the underground exit.",
+          correct: false,
+          feedbackWrong:
+            "❌ Exits and 改札 are different. Follow the yellow line right.",
+        },
+        {
+          id: "c",
           labelJa: "右手の黄色い線の先が改札です。",
           labelEn: "The gates are past the yellow line on your right.",
           correct: true,
           feedbackCorrect: "✅ 「改札」= ticket gates.",
-        },
-        {
-          id: "b",
-          labelJa: "改札はお弁当売り場です。",
-          correct: false,
-          feedbackWrong: "❌ Gates aren’t the bento shop.",
-        },
-        {
-          id: "c",
-          labelJa: "改札はご記入ください。",
-          correct: false,
-          feedbackWrong: "❌ Form language — wrong noun.",
-        },
-        {
-          id: "d",
-          labelJa: "改札は温めますか？",
-          correct: false,
-          feedbackWrong: "❌ Nonsense mix of store and station talk.",
         },
       ],
     },
@@ -388,28 +348,22 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "1番線に乗れば中央線になる。",
+          correct: false,
+          feedbackWrong: "❌ 1番線 is Yamanote, not Chūō.",
+        },
+        {
+          id: "b",
           labelJa: "改札を通って2番線へ行く。",
           correct: true,
           feedbackCorrect:
             "✅ 中央線 is platform 2. 「乗り換え」happens inside after the gates.",
         },
         {
-          id: "b",
+          id: "c",
           labelJa: "改札を通らずに3番線へ行く。",
           correct: false,
           feedbackWrong: "❌ You need the gates first, and 3 is the wrong line.",
-        },
-        {
-          id: "c",
-          labelJa: "1番線に乗れば中央線になる。",
-          correct: false,
-          feedbackWrong: "❌ 1番線 is Yamanote, not Chūō.",
-        },
-        {
-          id: "d",
-          labelJa: "改札の前で待っていれば自動で乗る。",
-          correct: false,
-          feedbackWrong: "❌ You still choose the correct platform.",
         },
       ],
     },
@@ -433,28 +387,23 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "事故の影響で、しばらく電車が動いていない。",
-          correct: true,
-          feedbackCorrect:
-            "✅ 「運転を見合わせる」= pause / suspend service for now.",
-        },
-        {
-          id: "b",
           labelJa: "いつもどおり全線平常運転している。",
           correct: false,
           feedbackWrong: "❌ 「見合わせております」means service is stopped.",
         },
         {
-          id: "c",
-          labelJa: "カフェの営業時間を知らせている。",
+          id: "b",
+          labelJa: "人身事故があったが、もう運転を再開した。",
           correct: false,
-          feedbackWrong: "❌ This is a train announcement.",
+          feedbackWrong:
+            "❌ It says service is suspended now — not that it already resumed.",
         },
         {
-          id: "d",
-          labelJa: "改札の場所を案内している。",
-          correct: false,
-          feedbackWrong: "❌ No gate directions — it’s about suspended service.",
+          id: "c",
+          labelJa: "事故の影響で、しばらく電車が動いていない。",
+          correct: true,
+          feedbackCorrect:
+            "✅ 「運転を見合わせる」= pause / suspend service for now.",
         },
       ],
     },
@@ -470,27 +419,23 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "遅延証明書はいつまでもらえますか。",
+          correct: false,
+          feedbackWrong:
+            "❌ Related, but you’re asking when service might resume.",
+        },
+        {
+          id: "b",
           labelJa: "再開はいつ頃になりますか。",
           correct: true,
           feedbackCorrect: "✅ Polite and on-topic.",
         },
         {
-          id: "b",
-          labelJa: "温めますか？",
-          correct: false,
-          feedbackWrong: "❌ Convenience store line.",
-        },
-        {
           id: "c",
-          labelJa: "おすすめは何ですか？",
+          labelJa: "何番線から出発しますか。",
           correct: false,
-          feedbackWrong: "❌ Café question.",
-        },
-        {
-          id: "d",
-          labelJa: "生年月日を書いてください。",
-          correct: false,
-          feedbackWrong: "❌ Form instruction — wrong place.",
+          feedbackWrong:
+            "❌ Platform talk. Ask about 再開 (when trains start again).",
         },
       ],
     },
@@ -507,34 +452,28 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       menuItems: [
         { nameJa: "ホットコーヒー", priceYen: 380 },
         { nameJa: "アイスコーヒー", priceYen: 420 },
-        { nameJa: "今日のカレー", priceYen: 850 },
+        { nameJa: "ブレンドコーヒー", priceYen: 400 },
         { nameJa: "トーストセット", priceYen: 650 },
       ],
       skillHint: "conversation",
       choices: [
         {
           id: "a",
-          labelJa: "アイスコーヒーを一つお願いします。",
-          correct: true,
-          feedbackCorrect: "✅ Clear order with 「〜を一つお願いします」.",
-        },
-        {
-          id: "b",
           labelJa: "ホットコーヒーを一つお願いします。",
           correct: false,
           feedbackWrong: "❌ That’s the hot one — you wanted iced.",
         },
         {
-          id: "c",
-          labelJa: "住民票の写しをお願いします。",
+          id: "b",
+          labelJa: "ブレンドコーヒーを一つお願いします。",
           correct: false,
-          feedbackWrong: "❌ City Hall request.",
+          feedbackWrong: "❌ Close, but you wanted アイスコーヒー.",
         },
         {
-          id: "d",
-          labelJa: "2番線に乗り換えます。",
-          correct: false,
-          feedbackWrong: "❌ Station language.",
+          id: "c",
+          labelJa: "アイスコーヒーを一つお願いします。",
+          correct: true,
+          feedbackCorrect: "✅ Clear order with 「〜を一つお願いします」.",
         },
       ],
     },
@@ -559,19 +498,14 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "b",
           labelJa: "お持ち帰りでお願いします。",
           correct: false,
-          feedbackWrong: "❌ That’s takeout.",
+          feedbackWrong: "❌ That’s takeout. You want to stay.",
         },
         {
           id: "c",
-          labelJa: "運転見合わせです。",
+          labelJa: "どちらでも大丈夫です。",
           correct: false,
-          feedbackWrong: "❌ Station delay vocabulary.",
-        },
-        {
-          id: "d",
-          labelJa: "本人確認書類です。",
-          correct: false,
-          feedbackWrong: "❌ ID documents — wrong context.",
+          feedbackWrong:
+            "❌ Staff need a clear choice. Say 「店内でお願いします。」",
         },
       ],
     },
@@ -593,29 +527,23 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "夜遅く、中央線の一部が止まる可能性がある。",
-          correct: true,
-          feedbackCorrect:
-            "✅ 「22時以降」「一部列車」「運転を見合わせる場合」→ possible late suspensions.",
-        },
-        {
-          id: "b",
           labelJa: "終日、全線が完全に止まっている。",
           correct: false,
           feedbackWrong:
             "❌ Only after 22:00, and only some trains — not all day / all lines.",
         },
         {
-          id: "c",
-          labelJa: "カフェが22時に閉店すると書いてある。",
-          correct: false,
-          feedbackWrong: "❌ This is a train notice.",
-        },
-        {
-          id: "d",
+          id: "b",
           labelJa: "改札の外で乗り換えるように書いてある。",
           correct: false,
           feedbackWrong: "❌ It says to check boards 改札内 (inside the gates).",
+        },
+        {
+          id: "c",
+          labelJa: "夜遅く、中央線の一部が止まる可能性がある。",
+          correct: true,
+          feedbackCorrect:
+            "✅ 「22時以降」「一部列車」「運転を見合わせる場合」→ possible late suspensions.",
         },
       ],
     },
@@ -634,28 +562,24 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "別の申請書も書いてほしいと言っている。",
+          correct: false,
+          feedbackWrong:
+            "❌ No extra form — they’re asking you to wait for 交付.",
+        },
+        {
+          id: "b",
           labelJa: "発行まで少し待ってほしいと丁寧に頼んでいる。",
           correct: true,
           feedbackCorrect:
             "✅ 「恐れ入りますが」softens the request; 「お待ちいただけますでしょうか」= could you wait?",
         },
         {
-          id: "b",
-          labelJa: "今すぐ帰れと命じている。",
-          correct: false,
-          feedbackWrong: "❌ Soft request, not an order to leave.",
-        },
-        {
           id: "c",
-          labelJa: "料金を払わずに帰れと言っている。",
+          labelJa: "別の窓口へ移動してほしいと言っている。",
           correct: false,
-          feedbackWrong: "❌ They’re asking you to wait for issuance.",
-        },
-        {
-          id: "d",
-          labelJa: "乗り換え案内をしている。",
-          correct: false,
-          feedbackWrong: "❌ No transfer talk here.",
+          feedbackWrong:
+            "❌ No window change — they’re asking you to wait for 交付.",
         },
       ],
     },
@@ -681,21 +605,17 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "はい、本人確認書類を提出いたしました。",
+          labelJa: "うん、まだ全然だめだったよ。",
           correct: false,
-          feedbackWrong: "❌ Too formal / bureaucratic for this chat.",
+          feedbackWrong:
+            "❌ Contradicts her 「なんとかなった」check-in.",
         },
         {
           id: "c",
-          labelJa: "運転見合わせですので諦めます。",
+          labelJa: "うん、明日もう一回最初からやるよ。",
           correct: false,
-          feedbackWrong: "❌ Wrong register and wrong mood for a wrap-up.",
-        },
-        {
-          id: "d",
-          labelJa: "アイスコーヒーを一つお願いします。",
-          correct: false,
-          feedbackWrong: "❌ Ordering — wrong moment.",
+          feedbackWrong:
+            "❌ Sounds like a restart, not agreeing you got through it.",
         },
       ],
     },

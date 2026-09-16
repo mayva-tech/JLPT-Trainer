@@ -51,6 +51,14 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "すみません、まだ決まっていません。",
+          labelEn: "Sorry — I haven’t decided yet.",
+          correct: false,
+          feedbackWrong:
+            "❌ Polite, but you’re not ready. Signal that your order is decided.",
+        },
+        {
+          id: "b",
           labelJa: "はい、お願いします。",
           labelEn: "Yes, please (I’m ready).",
           correct: true,
@@ -58,26 +66,12 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
             "✅ Clear and polite.\n\n「お決まりですか」expects a ready-to-order signal.",
         },
         {
-          id: "b",
-          labelJa: "すみません、中央駅に行きたいんですが。",
-          labelEn: "Excuse me — I’d like to go to Central Station.",
+          id: "c",
+          labelJa: "お会計をお願いします。",
+          labelEn: "The check, please.",
           correct: false,
           feedbackWrong:
-            "❌ Station language. Here you’re ordering at a café.",
-        },
-        {
-          id: "c",
-          labelJa: "改札はどこですか。",
-          labelEn: "Where is the ticket gate?",
-          correct: false,
-          feedbackWrong: "❌ Wrong place. Answer whether your order is decided.",
-        },
-        {
-          id: "d",
-          labelJa: "運転見合わせです。",
-          labelEn: "Service is suspended.",
-          correct: false,
-          feedbackWrong: "❌ Announcement phrasing — not a café reply.",
+            "❌ That’s asking to pay. First say you’re ready to order.",
         },
       ],
     },
@@ -105,25 +99,19 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "各駅停車でお願いします。",
-          labelEn: "Local train, please.",
+          labelJa: "お持ち帰りでお願いします。",
+          labelEn: "To go, please.",
           correct: false,
-          feedbackWrong: "❌ Train type — not dine-in vs takeout.",
+          feedbackWrong:
+            "❌ That’s takeout. For staying, use 「店内でお願いします。」",
         },
         {
           id: "c",
-          labelJa: "ホームでお願いします。",
-          labelEn: "On the platform, please.",
+          labelJa: "どちらでも大丈夫です。",
+          labelEn: "Either is fine.",
           correct: false,
           feedbackWrong:
-            "❌ ホーム is a train platform. Choose 店内 or お持ち帰り.",
-        },
-        {
-          id: "d",
-          labelJa: "乗り換えでお願いします。",
-          labelEn: "Transfer, please.",
-          correct: false,
-          feedbackWrong: "❌ Station vocab. Here: 店内 / お持ち帰り.",
+            "❌ Staff need a clear choice: 店内 or お持ち帰り.",
         },
       ],
     },
@@ -145,9 +133,9 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "520円",
-          correct: true,
-          feedbackCorrect: "✅ 抹茶ラテ is ¥520 on the board.",
+          labelJa: "480円",
+          correct: false,
+          feedbackWrong: "❌ That’s カフェラテ. 抹茶ラテ is ¥520.",
         },
         {
           id: "b",
@@ -157,15 +145,9 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         },
         {
           id: "c",
-          labelJa: "480円",
-          correct: false,
-          feedbackWrong: "❌ That’s カフェラテ. 抹茶ラテ is ¥520.",
-        },
-        {
-          id: "d",
-          labelJa: "680円",
-          correct: false,
-          feedbackWrong: "❌ That’s トーストセット. 抹茶ラテ is ¥520.",
+          labelJa: "520円",
+          correct: true,
+          feedbackCorrect: "✅ 抹茶ラテ is ¥520 on the board.",
         },
       ],
     },
@@ -182,6 +164,14 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "カフェラテを一つお願いします。",
+          labelEn: "One café latte, please.",
+          correct: false,
+          feedbackWrong:
+            "❌ Close — but the goal is 抹茶ラテ, not カフェラテ.",
+        },
+        {
+          id: "b",
           labelJa: "抹茶ラテを一つお願いします。",
           labelEn: "One matcha latte, please.",
           correct: true,
@@ -189,25 +179,12 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
             "✅ Clear order.\n\n「〜を一つ」+「お願いします」is café-ready Japanese.",
         },
         {
-          id: "b",
-          labelJa: "抹茶ラテに行きたいんですが、何番線ですか。",
-          labelEn: "I’d like to go to the matcha latte — which track?",
-          correct: false,
-          feedbackWrong: "❌ Station ask pattern. Just order the drink.",
-        },
-        {
           id: "c",
-          labelJa: "遅延証明書をください。",
-          labelEn: "Please give me a delay certificate.",
+          labelJa: "チーズケーキを一つお願いします。",
+          labelEn: "One cheesecake, please.",
           correct: false,
-          feedbackWrong: "❌ Station document — wrong counter.",
-        },
-        {
-          id: "d",
-          labelJa: "転入届を出したいんですが。",
-          labelEn: "I’d like to submit a moving-in notification.",
-          correct: false,
-          feedbackWrong: "❌ City Hall line. Order a drink here.",
+          feedbackWrong:
+            "❌ That’s dessert. Order the matcha latte first.",
         },
       ],
     },
@@ -233,25 +210,19 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         },
         {
           id: "b",
-          labelJa: "砂糖快速でお願いします。",
-          labelEn: "Sugar rapid, please.",
+          labelJa: "シロップ多めでお願いします。",
+          labelEn: "Extra syrup, please.",
           correct: false,
-          feedbackWrong: "❌ 快速 is a train type. Use 「砂糖なしで」.",
+          feedbackWrong:
+            "❌ That’s adding sweetener. You want 「砂糖なしで」.",
         },
         {
           id: "c",
-          labelJa: "お持ち帰りなしでお願いします。",
-          labelEn: "No takeout, please.",
+          labelJa: "氷なしでお願いします。",
+          labelEn: "No ice, please.",
           correct: false,
           feedbackWrong:
-            "❌ They’re asking about sugar/syrup, not dine-in vs takeout.",
-        },
-        {
-          id: "d",
-          labelJa: "改札なしでお願いします。",
-          labelEn: "No ticket gate, please.",
-          correct: false,
-          feedbackWrong: "❌ Station vocab. Reply about 砂糖.",
+            "❌ They’re asking about sugar/syrup, not ice.",
         },
       ],
     },
@@ -268,32 +239,27 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "もう結構です。",
+          labelEn: "That’s all, thanks.",
+          correct: false,
+          feedbackWrong:
+            "❌ Declines more food. Ask for a recommendation: 「おすすめは何ですか。」",
+        },
+        {
+          id: "b",
+          labelJa: "水を一杯ください。",
+          labelEn: "A glass of water, please.",
+          correct: false,
+          feedbackWrong:
+            "❌ Order-related, but ask 「おすすめは何ですか。」 first.",
+        },
+        {
+          id: "c",
           labelJa: "おすすめは何ですか。",
           labelEn: "What do you recommend?",
           correct: true,
           feedbackCorrect:
             "✅ Everyday café Japanese.\n\nStaff often answer with today’s popular item.",
-        },
-        {
-          id: "b",
-          labelJa: "何番線がおすすめですか。",
-          labelEn: "Which track do you recommend?",
-          correct: false,
-          feedbackWrong: "❌ Platform talk. Ask about food/drinks: 「おすすめは何ですか。」",
-        },
-        {
-          id: "c",
-          labelJa: "人身事故はありますか。",
-          labelEn: "Is there an accident involving a person?",
-          correct: false,
-          feedbackWrong: "❌ Station announcement topic — inappropriate here.",
-        },
-        {
-          id: "d",
-          labelJa: "本人確認書類はありますか。",
-          labelEn: "Do you have ID documents?",
-          correct: false,
-          feedbackWrong: "❌ City Hall vocabulary.",
         },
       ],
     },
@@ -328,14 +294,8 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
           labelJa: "ブレンドコーヒーが値上がりしたと言っている。",
           labelEn: "He’s saying blend coffee got more expensive.",
           correct: false,
-          feedbackWrong: "❌ No price-increase talk — he’s pushing today’s popular cake.",
-        },
-        {
-          id: "d",
-          labelJa: "抹茶ラテは注文できないと言っている。",
-          labelEn: "He’s saying you can’t order matcha latte.",
-          correct: false,
-          feedbackWrong: "❌ You already ordered one; he’s suggesting cake as an add-on.",
+          feedbackWrong:
+            "❌ No price-increase talk — he’s pushing today’s popular cake.",
         },
       ],
     },
@@ -354,14 +314,6 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "はい、千円で足ります。お釣りがもらえます。",
-          labelEn: "Yes — ¥1000 is enough; you’ll get change.",
-          correct: true,
-          feedbackCorrect:
-            "✅ 520 < 1000, so the bill covers it and you receive お釣り.",
-        },
-        {
-          id: "b",
           labelJa: "いいえ、千円では足りないので払えない。",
           labelEn: "No — ¥1000 isn’t enough, so you can’t pay.",
           correct: false,
@@ -369,7 +321,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
             "❌ The latte is ¥520. A ¥1000 bill is more than enough.",
         },
         {
-          id: "c",
+          id: "b",
           labelJa: "トーストセットと同じ金額になる。",
           labelEn: "It costs the same as the toast set.",
           correct: false,
@@ -377,11 +329,12 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
             "❌ Toast set is ¥680; your drink is ¥520.",
         },
         {
-          id: "d",
-          labelJa: "遅延証明書が必要になる。",
-          labelEn: "You’ll need a delay certificate.",
-          correct: false,
-          feedbackWrong: "❌ Payment question, not trains.",
+          id: "c",
+          labelJa: "はい、千円で足ります。お釣りがもらえます。",
+          labelEn: "Yes — ¥1000 is enough; you’ll get change.",
+          correct: true,
+          feedbackCorrect:
+            "✅ 520 < 1000, so the bill covers it and you receive お釣り.",
         },
       ],
     },
@@ -398,6 +351,14 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "はい、もう全部覚えました。",
+          labelEn: "Yes — I’ve memorized everything already.",
+          correct: false,
+          feedbackWrong:
+            "❌ Too absolute. A softer 「少しずつ」reply fits better.",
+        },
+        {
+          id: "b",
           labelJa: "ええ、少しずつです。駅もだいぶ分かってきました。",
           labelEn: "Yeah, little by little. I’m starting to understand the station too.",
           correct: true,
@@ -405,25 +366,12 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
             "✅ Friendly and natural.\n\nTies your station quest into light café chat.",
         },
         {
-          id: "b",
-          labelJa: "はい、転入届を出したいんですが。",
-          labelEn: "Yes — I’d like to submit a moving-in notification.",
-          correct: false,
-          feedbackWrong: "❌ City Hall purpose statement — wrong tone for small talk.",
-        },
-        {
           id: "c",
-          labelJa: "人身事故の影響で運転見合わせです。",
-          labelEn: "Service is suspended due to an accident.",
+          labelJa: "すみません、注文を変えたいです。",
+          labelEn: "Excuse me — I’d like to change my order.",
           correct: false,
-          feedbackWrong: "❌ Announcement reply — not a personal answer.",
-        },
-        {
-          id: "d",
-          labelJa: "お持ち帰りですか。",
-          labelEn: "Is it takeout?",
-          correct: false,
-          feedbackWrong: "❌ That’s Ken’s earlier question, not your reply.",
+          feedbackWrong:
+            "❌ That’s order talk. Answer whether you’re used to the area.",
         },
       ],
     },

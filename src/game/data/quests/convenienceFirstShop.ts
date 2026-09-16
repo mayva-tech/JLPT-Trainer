@@ -44,20 +44,14 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "はい、お願いします。",
-          labelEn: "Yes, please.",
-          correct: true,
-          feedbackCorrect:
-            "✅ Natural.\n\n「はい、お願いします。」is the default polite yes at a register.",
+          labelJa: "いいえ、いりません。",
+          labelEn: "No, I don’t need one.",
+          correct: false,
+          feedbackWrong:
+            "❌ Natural decline, but this step is to accept a bag.\n\nUse 「はい、お願いします。」",
         },
         {
           id: "b",
-          labelJa: "袋を食べたいです。",
-          correct: false,
-          feedbackWrong: "❌ Unnatural. If you want a bag: 「はい、お願いします。」",
-        },
-        {
-          id: "c",
           labelJa: "結構です。",
           labelEn: "No thank you.",
           correct: false,
@@ -65,10 +59,12 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
             "❌ 「結構です」politely declines. The task was to accept a bag.",
         },
         {
-          id: "d",
-          labelJa: "袋は駅にあります。",
-          correct: false,
-          feedbackWrong: "❌ Off-topic. Answer the clerk’s offer directly.",
+          id: "c",
+          labelJa: "はい、お願いします。",
+          labelEn: "Yes, please.",
+          correct: true,
+          feedbackCorrect:
+            "✅ Natural.\n\n「はい、お願いします。」is the default polite yes at a register.",
         },
       ],
     },
@@ -88,26 +84,25 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "お弁当などを温めるかどうか聞いている。",
+          labelEn: "Asking whether to heat your food.",
           correct: true,
           feedbackCorrect: "✅ 「温めますか？」= Shall I heat this up for you?",
         },
         {
           id: "b",
-          labelJa: "店を温かくするかどうか聞いている。",
+          labelJa: "袋がいるかどうか聞いている。",
+          labelEn: "Asking whether you need a bag.",
           correct: false,
-          feedbackWrong: "❌ Not about the room — about heating your food.",
+          feedbackWrong:
+            "❌ That’s 「袋はご利用ですか？」— this line is about heating food.",
         },
         {
           id: "c",
-          labelJa: "値段を上げるかどうか聞いている。",
+          labelJa: "ポイントカードがあるか聞いている。",
+          labelEn: "Asking if you have a point card.",
           correct: false,
-          feedbackWrong: "❌ Unrelated to price.",
-        },
-        {
-          id: "d",
-          labelJa: "ポイントを付けるかどうか聞いている。",
-          correct: false,
-          feedbackWrong: "❌ That would be about a point card.",
+          feedbackWrong:
+            "❌ Nearby register question, but 「温めますか？」is about heating.",
         },
       ],
     },
@@ -122,27 +117,25 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いいえ、冷たいままがいいです。",
+          labelEn: "No, cold is fine.",
+          correct: false,
+          feedbackWrong: "❌ That declines heating. You want it warmed.",
+        },
+        {
+          id: "b",
           labelJa: "はい、お願いします。",
+          labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Clear and polite.",
         },
         {
-          id: "b",
-          labelJa: "いいえ、冷たいままがいいです。",
-          correct: false,
-          feedbackWrong: "❌ That declines heating.",
-        },
-        {
           id: "c",
-          labelJa: "温めるのは違法です。",
+          labelJa: "あとで自分で温めます。",
+          labelEn: "I’ll heat it myself later.",
           correct: false,
-          feedbackWrong: "❌ Weird and wrong.",
-        },
-        {
-          id: "d",
-          labelJa: "駅まで温めます。",
-          correct: false,
-          feedbackWrong: "❌ Nonsense reply.",
+          feedbackWrong:
+            "❌ Plausible at a konbini, but this step is to accept heating now.",
         },
       ],
     },
@@ -161,26 +154,25 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "はい、お願いします。",
+          labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Accepting chopsticks politely.",
         },
         {
           id: "b",
-          labelJa: "箸は走ります。",
+          labelJa: "いいえ、いりません。",
+          labelEn: "No, I don’t need them.",
           correct: false,
-          feedbackWrong: "❌ Unnatural.",
+          feedbackWrong:
+            "❌ Natural decline, but the task is to accept chopsticks.",
         },
         {
           id: "c",
-          labelJa: "カードでお願いします。",
+          labelJa: "スプーンをお願いします。",
+          labelEn: "Spoon, please.",
           correct: false,
-          feedbackWrong: "❌ That’s about payment, not chopsticks.",
-        },
-        {
-          id: "d",
-          labelJa: "温めなくて大丈夫です。",
-          correct: false,
-          feedbackWrong: "❌ Wrong topic.",
+          feedbackWrong:
+            "❌ Nearby utensil request — they asked about chopsticks (箸).",
         },
       ],
     },
@@ -192,21 +184,15 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       promptJa: "レシートをお渡しします。",
       promptEn: "Here’s your receipt. Which line is the total?",
       formAskEn: "Which field means “total amount”?",
+      formCorrectFieldId: "total",
       skillHint: "reading",
       vocabHint: "合計",
       formFields: [
         { id: "total", labelJa: "合計", meaningEn: "Total" },
         { id: "received", labelJa: "お預り", meaningEn: "Amount received" },
         { id: "change", labelJa: "お釣り", meaningEn: "Change" },
-        { id: "tax", labelJa: "内消費税", meaningEn: "Tax included" },
       ],
       choices: [
-        {
-          id: "total",
-          labelJa: "合計",
-          correct: true,
-          feedbackCorrect: "✅ 「合計」= total.",
-        },
         {
           id: "received",
           labelJa: "お預り",
@@ -220,10 +206,10 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
           feedbackWrong: "❌ 「お釣り」= change returned.",
         },
         {
-          id: "tax",
-          labelJa: "内消費税",
-          correct: false,
-          feedbackWrong: "❌ Tax line, not the grand total.",
+          id: "total",
+          labelJa: "合計",
+          correct: true,
+          feedbackCorrect: "✅ 「合計」= total.",
         },
       ],
     },
@@ -239,27 +225,26 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "お預りした金額",
+          labelEn: "The amount the clerk received",
+          correct: false,
+          feedbackWrong:
+            "❌ That’s 「お預り」. 「お釣り」is the change returned to you.",
+        },
+        {
+          id: "b",
           labelJa: "返ってきたお金",
+          labelEn: "Money returned to you",
           correct: true,
           feedbackCorrect: "✅ Change given back to you.",
         },
         {
-          id: "b",
-          labelJa: "割引クーポン",
-          correct: false,
-          feedbackWrong: "❌ Not a coupon.",
-        },
-        {
           id: "c",
-          labelJa: "ポイント残高",
+          labelJa: "合計金額",
+          labelEn: "The total amount",
           correct: false,
-          feedbackWrong: "❌ Points would be listed separately.",
-        },
-        {
-          id: "d",
-          labelJa: "店員の名前",
-          correct: false,
-          feedbackWrong: "❌ Unrelated.",
+          feedbackWrong:
+            "❌ That’s 「合計」. 「お釣り」is the change returned.",
         },
       ],
     },
@@ -279,26 +264,25 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "はい、こちらです。",
+          labelEn: "Yes, here it is.",
           correct: true,
           feedbackCorrect: "✅ Handing it over: 「こちらです。」",
         },
         {
           id: "b",
-          labelJa: "ポイントカードを温めます。",
+          labelJa: "クレジットカードでお願いします。",
+          labelEn: "Credit card, please.",
           correct: false,
-          feedbackWrong: "❌ Wrong verb.",
+          feedbackWrong:
+            "❌ That’s a payment answer. They asked about a point card.",
         },
         {
           id: "c",
-          labelJa: "改札を通ってください。",
+          labelJa: "いいえ、作っていません。",
+          labelEn: "No, I haven’t made one.",
           correct: false,
-          feedbackWrong: "❌ Station language — wrong place.",
-        },
-        {
-          id: "d",
-          labelJa: "運転見合わせです。",
-          correct: false,
-          feedbackWrong: "❌ Train delay language.",
+          feedbackWrong:
+            "❌ Natural if you don’t have one, but this step assumes you do.",
         },
       ],
     },
@@ -315,27 +299,26 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
-          labelJa: "カードでお願いします。",
-          correct: true,
-          feedbackCorrect: "✅ Clear payment choice.",
+          labelJa: "ポイントカードでお願いします。",
+          labelEn: "Point card, please.",
+          correct: false,
+          feedbackWrong:
+            "❌ Point cards earn points; they usually aren’t the payment method.",
         },
         {
           id: "b",
-          labelJa: "各駅停車でお願いします。",
+          labelJa: "電子マネーでお願いします。",
+          labelEn: "E-money, please.",
           correct: false,
-          feedbackWrong: "❌ Train type — not payment.",
+          feedbackWrong:
+            "❌ Valid at many konbini, but this step’s answer is card payment.",
         },
         {
           id: "c",
-          labelJa: "転入届でお願いします。",
-          correct: false,
-          feedbackWrong: "❌ City Hall vocabulary.",
-        },
-        {
-          id: "d",
-          labelJa: "温めないでください。",
-          correct: false,
-          feedbackWrong: "❌ Wrong topic.",
+          labelJa: "カードでお願いします。",
+          labelEn: "Card, please.",
+          correct: true,
+          feedbackCorrect: "✅ Clear payment choice.",
         },
       ],
     },
@@ -350,27 +333,26 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       choices: [
         {
           id: "a",
+          labelJa: "いいえ、結構です。",
+          labelEn: "No thank you.",
+          correct: false,
+          feedbackWrong:
+            "❌ Polite decline — this step is to take the receipt.",
+        },
+        {
+          id: "b",
           labelJa: "はい、お願いします。",
+          labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Accepting the receipt.",
         },
         {
-          id: "b",
-          labelJa: "レシートは快速です。",
-          correct: false,
-          feedbackWrong: "❌ Nonsense.",
-        },
-        {
           id: "c",
-          labelJa: "ホームは何番ですか？",
+          labelJa: "袋はいりません。",
+          labelEn: "I don’t need a bag.",
           correct: false,
-          feedbackWrong: "❌ Station question.",
-        },
-        {
-          id: "d",
-          labelJa: "おすすめは何ですか？",
-          correct: false,
-          feedbackWrong: "❌ Café language.",
+          feedbackWrong:
+            "❌ Nearby register reply, but they asked about the receipt.",
         },
       ],
     },
