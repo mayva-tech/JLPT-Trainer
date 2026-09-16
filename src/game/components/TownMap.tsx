@@ -1,4 +1,5 @@
 import { listLocationsWithStatus } from "../utils/locationStatus";
+import { isDeveloperMode } from "../utils/chapterProgress";
 import type { LocationId, PlayerRpgProfile } from "../types";
 
 type Props = {
@@ -28,11 +29,13 @@ export function TownMap({ profile, onSelect }: Props) {
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
   });
 
-  const unlockedStory = CHAPTER1_ORDER.filter(
-    (id) =>
-      !["training-dojo", "weak-word-dungeon", "jlpt-castle"].includes(id) &&
-      profile.unlockedLocationIds.includes(id)
-  );
+  const unlockedStory = CHAPTER1_ORDER.filter((id) => {
+    if (["training-dojo", "weak-word-dungeon", "jlpt-castle"].includes(id)) {
+      return false;
+    }
+    if (isDeveloperMode(profile)) return true;
+    return profile.unlockedLocationIds.includes(id);
+  });
 
   return (
     <div className="ppq-map">

@@ -12,6 +12,7 @@ export function isQuestRequirementMet(
   quest: QuestDefinition,
   profile: PlayerRpgProfile
 ): boolean {
+  if (isDeveloperMode(profile)) return true;
   const reqs = quest.requiresQuestIds ?? [];
   return reqs.every((id) => profile.completedQuestIds.includes(id));
 }
@@ -21,7 +22,12 @@ export function isQuestPlayable(
   profile: PlayerRpgProfile
 ): boolean {
   if (quest.steps.length === 0) return false;
+  if (isDeveloperMode(profile)) return true;
   return isQuestRequirementMet(quest, profile);
+}
+
+export function isDeveloperMode(profile: PlayerRpgProfile): boolean {
+  return Boolean(profile.flags.developerMode);
 }
 
 export function getChapterQuestRows(
@@ -93,6 +99,14 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "Order at Café";
     case "first-week-challenge":
       return "First Week Challenge";
+    case "clinic-visit":
+      return "Visit the Clinic";
+    case "phone-call":
+      return "Handle a Phone Call";
+    case "first-day-office":
+      return "First Day at Work";
+    case "social-life-challenge":
+      return "Social Life Challenge";
     default:
       return quest.title;
   }

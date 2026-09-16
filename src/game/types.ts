@@ -167,6 +167,9 @@ export type LocationDefinition = {
     | "convenience-store"
     | "train-station"
     | "cafe"
+    | "clinic"
+    | "phone-center"
+    | "office"
     | "training-dojo"
     | "weak-word-dungeon"
     | "coming-soon";

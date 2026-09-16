@@ -149,6 +149,35 @@ export function parsePlayerProfile(
   const languageStats =
     parseLanguageStats(row.languageStats) ?? fallback.languageStats;
   const unlocked = parseLocationIds(row.unlockedLocationIds);
+  const completedQuestIds = parseStringArray(row.completedQuestIds);
+  const flags = parseFlags(row.flags);
+  let currentChapter = Math.max(1, nonNegativeInt(row.currentChapter, 1));
+
+  // Backward compatible: Chapter 1 clearers immediately see Chapter 2.
+  if (
+    flags.chapter1Complete ||
+    completedQuestIds.includes("first-week-challenge")
+  ) {
+    flags.chapter1Complete = true;
+    currentChapter = Math.max(currentChapter, 2);
+  }
+  if (
+    flags.chapter2Complete ||
+    completedQuestIds.includes("social-life-challenge")
+  ) {
+    const ch2Done = [
+      "clinic-visit",
+      "phone-call",
+      "first-day-office",
+      "social-life-challenge",
+    ].every((id) => completedQuestIds.includes(id));
+    if (flags.chapter2Complete || ch2Done) {
+      flags.chapter2Complete = true;
+      // Do not advance into a nonexistent playable Chapter 3.
+      currentChapter = Math.max(currentChapter, 2);
+    }
+  }
+
   return {
     version: 1,
     playerName:
@@ -156,8 +185,8 @@ export function parsePlayerProfile(
         ? row.playerName.trim().slice(0, 32)
         : fallback.playerName,
     xp: nonNegativeInt(row.xp),
-    currentChapter: Math.max(1, nonNegativeInt(row.currentChapter, 1)),
-    completedQuestIds: parseStringArray(row.completedQuestIds),
+    currentChapter,
+    completedQuestIds,
     unlockedLocationIds:
       unlocked.length > 0 ? unlocked : fallback.unlockedLocationIds,
     activeQuestId:
@@ -168,7 +197,7 @@ export function parsePlayerProfile(
     completedQuests: parseCompleted(row.completedQuests),
     metNpcIds: parseStringArray(row.metNpcIds),
     rewardedQuestIds: parseStringArray(row.rewardedQuestIds),
-    flags: parseFlags(row.flags),
+    flags,
     createdAt: nonNegativeInt(row.createdAt, fallback.createdAt),
     updatedAt: nonNegativeInt(row.updatedAt, fallback.updatedAt),
   };

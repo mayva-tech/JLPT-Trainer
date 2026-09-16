@@ -29,6 +29,7 @@ import {
   chapterCompletionCounts,
   getChapterQuestRows,
   isChapterComplete,
+  isDeveloperMode,
   isQuestPlayable,
   shortChapterObjectiveLabel,
 } from "../utils/chapterProgress";
@@ -138,11 +139,14 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       return;
     }
 
-    const powerBefore = calcJapanesePower(profile.languageStats);
-
     const prevUnlocked = new Set(profile.unlockedLocationIds);
-    const setFlags =
-      quest.id === "first-week-challenge" ? ["chapter1Complete"] : undefined;
+    const chapterFlag =
+      quest.id === "first-week-challenge"
+        ? "chapter1Complete"
+        : quest.id === "social-life-challenge"
+          ? "chapter2Complete"
+          : undefined;
+    const setFlags = chapterFlag ? [chapterFlag] : undefined;
 
     const applied = applyQuestCompletion(profile, {
       questId: quest.id,
@@ -176,6 +180,8 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
     }
 
     let nextProfile = applied.profile;
+
+    // Chapter 1 boss → advance into playable Chapter 2
     if (
       quest.id === "first-week-challenge" &&
       isChapterComplete(nextProfile, 1)
@@ -185,35 +191,39 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
         currentChapter: Math.max(nextProfile.currentChapter, 2),
         flags: { ...nextProfile.flags, chapter1Complete: true },
       };
-      const ch = getChapterByNumber(1);
-      const powerAfter = calcJapanesePower(nextProfile.languageStats);
-      const strong = strongestLanguageStat(nextProfile.languageStats);
-      const weak = weakestLanguageStat(nextProfile.languageStats);
-      const newRank = getProfileRank(nextProfile);
-      const oldRank = getProfileRank(profile);
-      setChapterSummary({
-        accuracy: result.accuracy,
-        questsCompleted: chapterCompletionCounts(nextProfile, 1).done,
-        confidenceLeft: result.confidenceLeft,
-        xp: applied.xpGranted,
-        japanesePower: powerAfter,
-        japanesePowerDelta: powerAfter - powerBefore,
-        strongest: LANGUAGE_STAT_LABELS[strong].english,
-        weakest: LANGUAGE_STAT_LABELS[weak].english,
-        weakWords: result.monsters,
-        npcsMet: nextProfile.metNpcIds.map(
-          (id) => getNpcById(id)?.japaneseName ?? id
-        ),
-        locationsUnlocked: nextProfile.unlockedLocationIds.map((id) => {
-          const loc = getLocationById(id);
-          return loc ? `${loc.icon} ${loc.name}` : id;
-        }),
-        rankLabel:
-          newRank.id !== oldRank.id
-            ? `${oldRank.japaneseName} → ${newRank.japaneseName}`
-            : undefined,
-        chapter2Teaser: ch?.nextChapterTeaser,
-      });
+      setChapterSummary(
+        buildChapterSummary({
+          chapterNumber: 1,
+          result,
+          profileBefore: profile,
+          profileAfter: nextProfile,
+          xpGranted: applied.xpGranted,
+          nextComingSoon: false,
+        })
+      );
+    }
+
+    // Chapter 2 boss → clear Ch2, teaser only for Ch3 (do not advance playably)
+    if (
+      quest.id === "social-life-challenge" &&
+      isChapterComplete(nextProfile, 2)
+    ) {
+      nextProfile = {
+        ...nextProfile,
+        // Stay on chapter 2 as the active playable chapter (Ch3 not implemented).
+        currentChapter: Math.max(nextProfile.currentChapter, 2),
+        flags: { ...nextProfile.flags, chapter2Complete: true },
+      };
+      setChapterSummary(
+        buildChapterSummary({
+          chapterNumber: 2,
+          result,
+          profileBefore: profile,
+          profileAfter: nextProfile,
+          xpGranted: applied.xpGranted,
+          nextComingSoon: true,
+        })
+      );
     }
 
     persist(nextProfile);
@@ -282,6 +292,21 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
     }
     if (/注文|店内|お持ち帰り|ラテ/.test(prompts)) {
       hints.push("Café ordering still feels shaky.");
+    }
+    if (/受診|症状|保険証|安静|熱|のど/.test(prompts) || quest.id.includes("clinic")) {
+      hints.push("Clinic / medical Japanese needs practice.");
+    }
+    if (
+      /お電話|恐れ入り|承知|もう一度|よろしいでしょうか/.test(prompts) ||
+      quest.id.includes("phone")
+    ) {
+      hints.push("Phone confirmation Japanese still needs work.");
+    }
+    if (
+      /共有|修正|確認|報告|申し訳ありません|資料/.test(prompts) ||
+      quest.locationId === "office"
+    ) {
+      hints.push("Workplace communication needs more practice.");
     }
     if (hints.length === 0 && result.mistakes.length > 0) {
       hints.push("A few everyday situations still need practice.");
@@ -358,6 +383,41 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             <div className="ppq-panel" style={{ marginTop: 12 }}>
               <h2>Language stats</h2>
               <LanguageStatsBars stats={profile.languageStats} />
+            </div>
+            <div className="ppq-panel" style={{ marginTop: 12 }}>
+              <h2>Developer mode</h2>
+              <p style={{ margin: "0 0 10px", fontSize: 13, color: "var(--ppq-muted)" }}>
+                Unlock every chapter, quest, and town location with no progression
+                locks. Progress and rewards still save normally.
+              </p>
+              <button
+                type="button"
+                className={
+                  isDeveloperMode(profile)
+                    ? "ppq-btn ppq-btn--primary"
+                    : "ppq-btn ppq-btn--ghost"
+                }
+                onClick={() => {
+                  const next = {
+                    ...profile,
+                    flags: {
+                      ...profile.flags,
+                      developerMode: !isDeveloperMode(profile),
+                    },
+                    updatedAt: Date.now(),
+                  };
+                  persist(next);
+                  flashToast(
+                    next.flags.developerMode
+                      ? "Developer mode ON — all chapters unlocked"
+                      : "Developer mode OFF — normal locks restored"
+                  );
+                }}
+              >
+                {isDeveloperMode(profile)
+                  ? "Developer mode: ON"
+                  : "Enable developer mode"}
+              </button>
             </div>
           </div>
         ) : null}
@@ -555,9 +615,23 @@ function Landing({
             Continue Quest
           </button>
           <button type="button" className="ppq-btn ppq-btn--ghost" onClick={onChapter}>
-            Chapter 1
+            Chapter {profile.currentChapter}
           </button>
         </div>
+        {profile.currentChapter < 2 &&
+        !profile.flags.chapter1Complete &&
+        !isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
+            Next unlock: Chapter 2 · 社会生活 (after First Week Challenge). Open Quests →
+            Chapter 2 for a locked preview.
+          </p>
+        ) : null}
+        {isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-accent, #e8a317)", margin: "10px 0 0" }}>
+            Developer mode ON — all chapters and locations unlocked. Toggle in Adventure
+            Stats.
+          </p>
+        ) : null}
       </section>
 
       <div className="ppq-secondary-grid">
@@ -585,17 +659,85 @@ function ChapterPanel({
   profile: PlayerRpgProfile;
   onStartQuest: (questId: string) => void;
 }) {
-  // Always show Chapter 1 panel until Chapter 2 exists as playable content.
-  const ch1 = getChapterByNumber(1)!;
-  const rows = getChapterQuestRows(profile, ch1);
-  const { done, total, percent } = chapterCompletionCounts(profile, 1);
+  const chapter1Done = Boolean(
+    isDeveloperMode(profile) ||
+      profile.flags.chapter1Complete ||
+      isChapterComplete(profile, 1)
+  );
+  // Always allow browsing Chapter 2 as a locked preview; only play when unlocked.
+  const initial = Math.min(Math.max(1, profile.currentChapter), 2) || 1;
+  const [viewChapter, setViewChapter] = useState(initial);
+
+  const chapter = getChapterByNumber(viewChapter);
+  if (!chapter) {
+    return (
+      <div className="ppq-chapter-panel">
+        <h2>Chapter</h2>
+        <p style={{ color: "var(--ppq-muted)" }}>No chapter data.</p>
+      </div>
+    );
+  }
+
+  const chapterLocked = viewChapter === 2 && !chapter1Done;
+  const rows = getChapterQuestRows(profile, chapter);
+  const { done, total, percent } = chapterCompletionCounts(profile, viewChapter);
+  const shortJa =
+    viewChapter === 1 ? "新生活" : viewChapter === 2 ? "社会生活" : chapter.japaneseTitle;
 
   return (
     <div className="ppq-chapter-panel">
-      <h2 lang="ja">CHAPTER 1: 新生活</h2>
+      <div
+        className="ppq-hero-actions"
+        style={{ marginBottom: 12, flexWrap: "wrap" }}
+        role="tablist"
+        aria-label="Chapter selector"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={viewChapter === 1}
+          className={
+            viewChapter === 1 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
+          }
+          onClick={() => setViewChapter(1)}
+        >
+          Chapter 1
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={viewChapter === 2}
+          className={
+            viewChapter === 2 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
+          }
+          title={
+            chapter1Done
+              ? "Chapter 2 · 社会生活"
+              : "Preview Chapter 2 — clear Chapter 1 to play"
+          }
+          onClick={() => setViewChapter(2)}
+        >
+          Chapter 2
+          {chapter1Done || isDeveloperMode(profile) ? "" : " 🔒"}
+        </button>
+      </div>
+
+      <h2 lang="ja">
+        CHAPTER {viewChapter}: {shortJa}
+      </h2>
       <p style={{ color: "var(--ppq-muted)", fontSize: 14 }}>
-        {ch1.description}
+        {chapter.description}
       </p>
+
+      {chapterLocked ? (
+        <div className="ppq-panel" style={{ marginTop: 12, marginBottom: 4 }}>
+          <h2 style={{ marginTop: 0 }}>Locked</h2>
+          <p style={{ margin: 0, fontSize: 13 }}>
+            Finish <strong>Chapter 1 · 新生活</strong> (clear the First Week Challenge)
+            to unlock Clinic, Phone Center, and Office quests.
+          </p>
+        </div>
+      ) : null}
 
       <div className="ppq-chapter-progress" aria-label="Chapter progress">
         <div className="ppq-chapter-progress-label">
@@ -611,10 +753,16 @@ function ChapterPanel({
 
       <ul className="ppq-chapter-list" style={{ marginTop: 14 }}>
         {rows.map(({ quest, status }) => {
-          const icon =
-            status === "completed" ? "✅" : status === "active" ? "▶" : "🔒";
+          const locked = chapterLocked || status === "locked";
+          const icon = chapterLocked
+            ? "🔒"
+            : status === "completed"
+              ? "✅"
+              : status === "active"
+                ? "▶"
+                : "🔒";
           const canPlay =
-            status === "completed" || status === "active";
+            !chapterLocked && (status === "completed" || status === "active");
           return (
             <li key={quest.id}>
               <strong>
@@ -623,6 +771,11 @@ function ChapterPanel({
               <div style={{ color: "var(--ppq-muted)", fontSize: 12 }}>
                 {quest.icon ?? ""} {quest.japaneseTitle} · {quest.title}
               </div>
+              {locked && viewChapter === 2 && !chapter1Done ? (
+                <div style={{ color: "var(--ppq-muted)", fontSize: 12, marginTop: 4 }}>
+                  Unlocks after Chapter 1
+                </div>
+              ) : null}
               {canPlay ? (
                 <button
                   type="button"
@@ -642,14 +795,27 @@ function ChapterPanel({
         })}
       </ul>
 
-      {profile.flags.chapter1Complete ? (
+      {viewChapter === 1 && !chapter1Done ? (
         <div className="ppq-panel" style={{ marginTop: 16 }}>
-          <h2>Chapter 2</h2>
+          <h2>Coming next</h2>
           <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
-            社会生活
+            第2章・社会生活
+          </p>
+          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)", fontSize: 13 }}>
+            Life Gets Real — clinic, phone, and workplace Japanese. Tap{" "}
+            <strong>Chapter 2</strong> above for a locked preview.
+          </p>
+        </div>
+      ) : null}
+
+      {viewChapter === 2 && profile.flags.chapter2Complete ? (
+        <div className="ppq-panel" style={{ marginTop: 16 }}>
+          <h2>Chapter 3</h2>
+          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+            第3章・人間関係
           </p>
           <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
-            Coming next — Clinic, Phone Center, Office District preview unlocked on the map.
+            Work, Friends & Relationships — Coming soon
           </p>
         </div>
       ) : null}
@@ -728,10 +894,17 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
         <p style={{ margin: 0 }}>{profile.unlockedLocationIds.join(" · ")}</p>
       </div>
 
-      {profile.flags.chapter1Complete ? (
+      {(profile.flags.chapter1Complete || profile.flags.chapter2Complete) ? (
         <div className="ppq-panel" style={{ marginTop: 12 }}>
           <h2>Chapter clears</h2>
-          <p style={{ margin: 0 }}>✅ Chapter 1 · 新生活</p>
+          {profile.flags.chapter1Complete ? (
+            <p style={{ margin: 0 }}>✅ Chapter 1 · 新生活</p>
+          ) : null}
+          {profile.flags.chapter2Complete ? (
+            <p style={{ margin: profile.flags.chapter1Complete ? "6px 0 0" : 0 }}>
+              ✅ Chapter 2 · 社会生活
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -762,6 +935,63 @@ function formatDate(at: number): string {
   } catch {
     return "—";
   }
+}
+
+function buildChapterSummary({
+  chapterNumber,
+  result,
+  profileBefore,
+  profileAfter,
+  xpGranted,
+  nextComingSoon,
+}: {
+  chapterNumber: number;
+  result: QuestRunOutcome;
+  profileBefore: PlayerRpgProfile;
+  profileAfter: PlayerRpgProfile;
+  xpGranted: number;
+  nextComingSoon: boolean;
+}): ChapterCompleteSummary {
+  const ch = getChapterByNumber(chapterNumber);
+  const counts = chapterCompletionCounts(profileAfter, chapterNumber);
+  const powerAfter = calcJapanesePower(profileAfter.languageStats);
+  const powerBefore = calcJapanesePower(profileBefore.languageStats);
+  const strong = strongestLanguageStat(profileAfter.languageStats);
+  const weak = weakestLanguageStat(profileAfter.languageStats);
+  const newRank = getProfileRank(profileAfter);
+  const oldRank = getProfileRank(profileBefore);
+  const clearLabel =
+    chapterNumber === 1 ? "新生活 COMPLETE" : "社会生活 COMPLETE";
+
+  return {
+    chapterNumber,
+    chapterJapaneseTitle: ch?.japaneseTitle ?? `第${chapterNumber}章`,
+    chapterEnglishClearLabel: clearLabel,
+    accuracy: result.accuracy,
+    questsCompleted: counts.done,
+    questsTotal: counts.total,
+    confidenceLeft: result.confidenceLeft,
+    xp: xpGranted,
+    japanesePower: powerAfter,
+    japanesePowerDelta: powerAfter - powerBefore,
+    strongest: LANGUAGE_STAT_LABELS[strong].english,
+    weakest: LANGUAGE_STAT_LABELS[weak].english,
+    weakWords: result.monsters,
+    npcsMet: profileAfter.metNpcIds.map(
+      (id) => getNpcById(id)?.japaneseName ?? id
+    ),
+    locationsUnlocked: profileAfter.unlockedLocationIds.map((id) => {
+      const loc = getLocationById(id);
+      return loc ? `${loc.icon} ${loc.name}` : id;
+    }),
+    rankLabel:
+      newRank.id !== oldRank.id
+        ? `${oldRank.japaneseName} → ${newRank.japaneseName}`
+        : undefined,
+    nextChapterTeaser: ch?.nextChapterTeaser
+      ? { ...ch.nextChapterTeaser, comingSoon: nextComingSoon }
+      : undefined,
+  };
 }
 
 export default PeraPeraQuestApp;

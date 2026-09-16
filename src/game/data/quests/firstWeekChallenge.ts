@@ -641,16 +641,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       politeness: 2,
       grammar: 1,
     },
-    unlockLocationIds: ["clinic", "phone-center", "office"],
-    unlockQuestIds: [],
+    unlockLocationIds: ["clinic"],
+    unlockQuestIds: ["clinic-visit"],
     nextQuestTeaser: {
-      id: "chapter-2-preview",
-      title: "Coming next",
-      japaneseTitle: "社会生活",
+      id: "clinic-visit",
+      title: "Visit the Clinic",
+      japaneseTitle: "クリニックを受診",
     },
   },
   unlocks: {
-    locationIds: ["clinic", "phone-center", "office"],
-    questIds: [],
+    locationIds: ["clinic"],
+    questIds: ["clinic-visit"],
   },
 };
