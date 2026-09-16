@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { HighlightedEnglish } from "../../components/HighlightedEnglish";
 import { HighlightedJapanese } from "../../components/HighlightedJapanese";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
@@ -15,6 +15,11 @@ import {
   undoStepAnswer,
   type QuestStepAnswerDelta,
 } from "../utils/questEngine";
+import {
+  hasSpeakableFeedback,
+  parseBilingualSpeakSegments,
+  type FeedbackSpeakSegment,
+} from "../utils/questFeedbackSpeech";
 import {
   resolveQuestSpeech,
   type ResolvedQuestSpeech,
@@ -85,6 +90,8 @@ export function QuestRunner({
     useState<QuestStepAnswerDelta | null>(null);
   /** Bumped on Try again so autoplay re-speaks the same step. */
   const [stepPlayKey, setStepPlayKey] = useState(0);
+  /** Japanese phrase currently spoken from feedback/help (for karaoke). */
+  const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
   const autoPlayTokenRef = useRef(0);
 
   const step = quest
@@ -215,6 +222,7 @@ export function QuestRunner({
     setShowHelp(false);
     setChoiceHighlightId(null);
     setLastAnswerDelta(null);
+    setFeedbackJaFocus(null);
   }
 
   function onContinueIntro() {
@@ -324,6 +332,7 @@ export function QuestRunner({
     setMonsterFlash(null);
     setChoiceHighlightId(null);
     setLastAnswerDelta(null);
+    setFeedbackJaFocus(null);
     setStepPlayKey((k) => k + 1);
   }
 
@@ -348,15 +357,54 @@ export function QuestRunner({
   }
 
   function replayEnglish(text: string) {
+    setFeedbackJaFocus(null);
     speech.speakEnglish(text, { karaoke: true });
   }
 
   function replayChoice(choiceId: string, labelJa: string) {
+    setFeedbackJaFocus(null);
     setChoiceHighlightId(choiceId);
     speech.speakJapanese(labelJa, {
       karaoke: true,
       onEnded: () => setChoiceHighlightId(null),
     });
+  }
+
+  function speakBilingualSegments(segments: FeedbackSpeakSegment[]) {
+    if (segments.length === 0) return;
+    setChoiceHighlightId(null);
+
+    const play = (index: number) => {
+      const seg = segments[index];
+      if (!seg) {
+        setFeedbackJaFocus(null);
+        return;
+      }
+      const next = () => play(index + 1);
+      if (seg.language === "ja") {
+        setFeedbackJaFocus(seg.text);
+        speech.speakJapanese(seg.text, {
+          karaoke: true,
+          onEnded: next,
+        });
+      } else {
+        setFeedbackJaFocus(null);
+        speech.speakEnglish(seg.text, {
+          karaoke: true,
+          onEnded: next,
+        });
+      }
+    };
+
+    play(0);
+  }
+
+  function replayFeedback(text: string) {
+    speakBilingualSegments(parseBilingualSpeakSegments(text));
+  }
+
+  function replayHelpHint(text: string) {
+    speakBilingualSegments(parseBilingualSpeakSegments(text));
   }
 
   function handleQuit() {
@@ -461,7 +509,9 @@ export function QuestRunner({
         showHelp={showHelp}
         showJaTranscript={showJaTranscript}
         highlight={
-          speech.activeLang === "ja" && choiceHighlightId === null
+          speech.activeLang === "ja" &&
+          choiceHighlightId === null &&
+          feedbackJaFocus === null
             ? speech.highlight
             : null
         }
@@ -473,6 +523,12 @@ export function QuestRunner({
             ? speech.highlight
             : null
         }
+        feedbackJaFocus={feedbackJaFocus}
+        feedbackJaHighlight={
+          feedbackJaFocus && speech.activeLang === "ja"
+            ? speech.highlight
+            : null
+        }
         onSelect={onSelectChoice}
         onReplayLine={currentResolved.enabled ? replayNpcLine : undefined}
         onReplayEnglish={
@@ -481,12 +537,14 @@ export function QuestRunner({
             : undefined
         }
         onReplayChoice={replayChoice}
-        onReplayFeedbackEn={
-          feedback
-            ? () => {
-                const english = extractEnglishFeedback(feedback);
-                if (english) replayEnglish(english);
-              }
+        onReplayFeedback={
+          feedback && hasSpeakableFeedback(feedback)
+            ? () => replayFeedback(feedback)
+            : undefined
+        }
+        onReplayHelpHint={
+          currentStep.helpHint && hasSpeakableFeedback(currentStep.helpHint)
+            ? () => replayHelpHint(currentStep.helpHint!)
             : undefined
         }
         onContinue={
@@ -521,11 +579,14 @@ function DialogueStep({
   speaking,
   choiceHighlightId,
   choiceHighlight,
+  feedbackJaFocus,
+  feedbackJaHighlight,
   onSelect,
   onReplayLine,
   onReplayEnglish,
   onReplayChoice,
-  onReplayFeedbackEn,
+  onReplayFeedback,
+  onReplayHelpHint,
   onContinue,
   onRetry,
   continueLabel,
@@ -545,11 +606,14 @@ function DialogueStep({
   speaking: boolean;
   choiceHighlightId: string | null;
   choiceHighlight: import("../../services/speechService").SpeechHighlight | null;
+  feedbackJaFocus: string | null;
+  feedbackJaHighlight: import("../../services/speechService").SpeechHighlight | null;
   onSelect: (id: string) => void;
   onReplayLine?: () => void;
   onReplayEnglish?: () => void;
   onReplayChoice: (id: string, labelJa: string) => void;
-  onReplayFeedbackEn?: () => void;
+  onReplayFeedback?: () => void;
+  onReplayHelpHint?: () => void;
   onContinue?: () => void;
   onRetry?: () => void;
   continueLabel: string;
@@ -652,7 +716,26 @@ function DialogueStep({
       ) : null}
 
       {showHelp && step.helpHint ? (
-        <p className="ppq-help-hint">💡 {step.helpHint}</p>
+        <div className="ppq-help-hint-row">
+          <p className="ppq-help-hint">
+            💡{" "}
+            <BilingualHintText
+              text={step.helpHint}
+              jaFocus={feedbackJaFocus}
+              jaHighlight={feedbackJaHighlight}
+            />
+          </p>
+          {onReplayHelpHint ? (
+            <button
+              type="button"
+              className="ppq-speak-btn"
+              aria-label="Play help hint"
+              onClick={onReplayHelpHint}
+            >
+              🔊
+            </button>
+          ) : null}
+        </div>
       ) : null}
 
       {step.bodyJa ? (
@@ -752,13 +835,20 @@ function DialogueStep({
           role="status"
         >
           <div className="ppq-feedback-row">
-            <pre className="ppq-feedback-text">{feedback}</pre>
-            {onReplayFeedbackEn ? (
+            <div className="ppq-feedback-text">
+              <BilingualHintText
+                text={feedback}
+                jaFocus={feedbackJaFocus}
+                jaHighlight={feedbackJaHighlight}
+                preserveNewlines
+              />
+            </div>
+            {onReplayFeedback ? (
               <button
                 type="button"
                 className="ppq-speak-btn"
-                aria-label="Play English explanation"
-                onClick={onReplayFeedbackEn}
+                aria-label="Play explanation"
+                onClick={onReplayFeedback}
               >
                 🔊
               </button>
@@ -822,13 +912,71 @@ function shouldShowPromptEn(step: QuestStep, showHelp: boolean): boolean {
   );
 }
 
-/** Pull a speakable English sentence from feedback without reading Japanese. */
-function extractEnglishFeedback(feedback: string): string | null {
-  const lines = feedback
-    .split("\n")
-    .map((line) => line.replace(/^[✅❌]\s*/, "").trim())
-    .filter((line) => /[A-Za-z]{3,}/.test(line) && !/^「/.test(line));
-  const joined = lines.join(" ").trim();
-  if (joined.length < 8) return null;
-  return joined.slice(0, 280);
+/**
+ * Render feedback/help with 「日本語」 spans karaoke-highlighted while spoken.
+ */
+function BilingualHintText({
+  text,
+  jaFocus,
+  jaHighlight,
+  preserveNewlines = false,
+}: {
+  text: string;
+  jaFocus: string | null;
+  jaHighlight: import("../../services/speechService").SpeechHighlight | null;
+  preserveNewlines?: boolean;
+}) {
+  const nodes: ReactNode[] = [];
+  const quoteRe = /「([^」]+)」/g;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  while ((match = quoteRe.exec(text)) !== null) {
+    if (match.index > cursor) {
+      nodes.push(
+        <HintPlain key={`t-${key++}`} text={text.slice(cursor, match.index)} />
+      );
+    }
+    const ja = match[1] ?? "";
+    const focused = jaFocus !== null && ja.replace(/\s+/g, "") === jaFocus;
+    nodes.push(
+      <span key={`q-${key++}`} className="ppq-feedback-ja" lang="ja">
+        「
+        {focused ? (
+          <HighlightedJapanese
+            text={ja}
+            className="ppq-feedback-ja-inner"
+            highlight={jaHighlight}
+          />
+        ) : (
+          ja
+        )}
+        」
+      </span>
+    );
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < text.length) {
+    nodes.push(<HintPlain key={`t-${key++}`} text={text.slice(cursor)} />);
+  }
+
+  if (preserveNewlines) {
+    return <div className="ppq-feedback-rich">{nodes}</div>;
+  }
+  return <>{nodes}</>;
+}
+
+function HintPlain({ text }: { text: string }) {
+  if (!text.includes("\n")) return <>{text}</>;
+  const parts = text.split("\n");
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span key={i}>
+          {part}
+          {i < parts.length - 1 ? <br /> : null}
+        </span>
+      ))}
+    </>
+  );
 }

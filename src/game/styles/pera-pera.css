@@ -637,7 +637,8 @@
 
 .ppq-line-row,
 .ppq-prompt-en-row,
-.ppq-feedback-row {
+.ppq-feedback-row,
+.ppq-help-hint-row {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -741,6 +742,19 @@
   margin: 0;
   white-space: pre-wrap;
   font: inherit;
+  min-width: 0;
+}
+
+.ppq-feedback-rich {
+  margin: 0;
+}
+
+.ppq-feedback-ja {
+  font-family: var(--ppq-jp);
+}
+
+.ppq-feedback-ja-inner {
+  display: inline;
 }
 
 /* Karaoke on dark RPG surfaces — same timing classes as Play/Quiz */
@@ -767,6 +781,17 @@
   margin: 8px 0 0;
   font-size: 13px;
   color: var(--ppq-accent-soft);
+  flex: 1;
+  min-width: 0;
+}
+
+.ppq-help-hint-row {
+  margin-top: 8px;
+  align-items: center;
+}
+
+.ppq-help-hint-row .ppq-help-hint {
+  margin: 0;
 }
 
 .ppq-map-diagram {
