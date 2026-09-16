@@ -26,6 +26,13 @@ import {
   splitEnglishByClauses,
   splitEnglishDescriptiveAside,
 } from "../utils/englishSpeakText";
+import {
+  ENGLISH_TTS_LANG,
+  JAPANESE_TTS_LANG,
+  getTtsVoiceName,
+  resolveEnglishVoice,
+  resolveJapaneseVoice,
+} from "./ttsVoices";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -146,41 +153,11 @@ function allVoices(): SpeechSynthesisVoice[] {
 }
 
 function pickNanamiVoice(): SpeechSynthesisVoice | null {
-  const voices = allVoices();
-  const ja = voices.filter((v) => v.lang.toLowerCase().startsWith("ja"));
-  if (ja.length === 0) return null;
-
-  const score = (v: SpeechSynthesisVoice): number => {
-    const n = v.name;
-    let s = 0;
-    if (/七海/.test(n)) s += 100;
-    if (/nanami/i.test(n)) s += 80;
-    if (/online/i.test(n)) s += 40;
-    if (/natural/i.test(n)) s += 40;
-    if (/microsoft/i.test(n)) s += 20;
-    return s;
-  };
-
-  return [...ja].sort((a, b) => score(b) - score(a))[0] ?? null;
+  return resolveJapaneseVoice(allVoices());
 }
 
 function pickEnglishVoice(): SpeechSynthesisVoice | null {
-  const voices = allVoices();
-  const en = voices.filter((v) => v.lang.toLowerCase().startsWith("en"));
-  if (en.length === 0) return null;
-
-  const score = (v: SpeechSynthesisVoice): number => {
-    const n = v.name;
-    let s = 0;
-    if (/andrew/i.test(n)) s += 100;
-    if (/online/i.test(n)) s += 40;
-    if (/natural/i.test(n)) s += 40;
-    if (/microsoft/i.test(n)) s += 20;
-    if (/en-US/i.test(v.lang) || /United States/i.test(n)) s += 10;
-    return s;
-  };
-
-  return [...en].sort((a, b) => score(b) - score(a))[0] ?? null;
+  return resolveEnglishVoice(allVoices());
 }
 
 export function getSpeakableJapanese(
@@ -750,8 +727,7 @@ export const speechService = {
   },
 
   getPreferredVoiceName(lang: "ja" | "en"): string | null {
-    const v = lang === "ja" ? pickNanamiVoice() : pickEnglishVoice();
-    return v?.name ?? null;
+    return getTtsVoiceName(lang, allVoices());
   },
 
   stop() {
@@ -790,7 +766,7 @@ export const speechService = {
     const speakText = buildJapaneseSpeakText(text, reading);
     runUtterance(
       text,
-      "ja-JP",
+      JAPANESE_TTS_LANG,
       pickNanamiVoice(),
       callbacks,
       true,
@@ -810,7 +786,7 @@ export const speechService = {
       const speakText = buildEnglishSpeakText(text);
       runUtterance(
         text,
-        "en-US",
+        ENGLISH_TTS_LANG,
         pickEnglishVoice(),
         callbacks,
         true,
@@ -905,7 +881,7 @@ function speakEnglishSegments(
 
     runUtterance(
       displayText,
-      "en-US",
+      ENGLISH_TTS_LANG,
       voice,
       {
         onStart: () => {

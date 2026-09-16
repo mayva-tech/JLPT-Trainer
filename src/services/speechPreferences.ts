@@ -1,6 +1,6 @@
 /**
  * Shared speech UI preferences for JLPT Trainer + ペラペラクエスト.
- * Voice selection stays inside speechService (Nanami / Andrew).
+ * Japanese voice is always resolved via `ttsVoices` → Microsoft Nanami.
  */
 
 export const SPEECH_PREFS_KEY = "jlpt-trainer:speech-prefs:v1";

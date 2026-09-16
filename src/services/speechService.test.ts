@@ -802,3 +802,61 @@ describe("speechService karaoke timeline", () => {
     expect(ended).toBe(1);
   });
 });
+
+describe("speechService Nanami Japanese voice", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.resetModules();
+  });
+
+  it("assigns Microsoft Nanami for speakJapanese and ja-JP lang", async () => {
+    const { spoken, setVoices } = installSpeechMock();
+    setVoices([
+      {
+        name: "Microsoft Haruka Online",
+        lang: "ja-JP",
+        localService: false,
+        default: false,
+        voiceURI: "haruka",
+      } as SpeechSynthesisVoice,
+      {
+        name: "Microsoft Nanami Online",
+        lang: "ja-JP",
+        localService: false,
+        default: true,
+        voiceURI: "nanami",
+      } as SpeechSynthesisVoice,
+      {
+        name: "Microsoft Andrew Online",
+        lang: "en-US",
+        localService: false,
+        default: true,
+        voiceURI: "andrew",
+      } as SpeechSynthesisVoice,
+    ]);
+    const { speechService } = await import("./speechService");
+
+    speechService.speakJapanese("確認してください");
+    expect(spoken).toHaveLength(1);
+    expect((spoken[0]!.voice as SpeechSynthesisVoice).name).toMatch(/Nanami/i);
+    expect(spoken[0]!.lang).toBe("ja-JP");
+    expect(speechService.getPreferredVoiceName("ja")).toMatch(/Nanami/i);
+  });
+
+  it("does not assign Nanami for English speech", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    speechService.speakEnglish("Please confirm");
+    expect(spoken).toHaveLength(1);
+    expect((spoken[0]!.voice as SpeechSynthesisVoice).name).toMatch(/Andrew/i);
+    expect((spoken[0]!.voice as SpeechSynthesisVoice).name).not.toMatch(
+      /Nanami/i
+    );
+    expect(spoken[0]!.lang).toBe("en-US");
+  });
+});
