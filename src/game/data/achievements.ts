@@ -9,7 +9,11 @@ export type PassportAchievementId =
   | "clinic-checkin"
   | "read-the-room"
   | "graceful-refusal"
-  | "senpai-survivor";
+  | "senpai-survivor"
+  | "hourensou-master"
+  | "business-phone-survivor"
+  | "owned-the-mistake"
+  | "spoke-up-meeting";
 
 export type PassportAchievement = {
   id: PassportAchievementId;
@@ -99,5 +103,33 @@ export const PASSPORT_ACHIEVEMENTS: readonly PassportAchievement[] = [
     englishName: "Senpai Survivor",
     description: "Asked Sato-senpai for help without sounding bossy.",
     requireQuestId: "senpai-favor",
+  },
+  {
+    id: "hourensou-master",
+    japaneseName: "報連相マスター",
+    englishName: "Clear Reporting",
+    description: "Reported status to your boss with a clear conclusion.",
+    requireQuestId: "reporting-to-boss",
+  },
+  {
+    id: "business-phone-survivor",
+    japaneseName: "電話対応クリア",
+    englishName: "Business Phone Survivor",
+    description: "Handled an external business phone call.",
+    requireQuestId: "business-phone",
+  },
+  {
+    id: "owned-the-mistake",
+    japaneseName: "ミス報告できた",
+    englishName: "Owned the Mistake",
+    description: "Reported a workplace mistake with recovery steps.",
+    requireQuestId: "report-mistake",
+  },
+  {
+    id: "spoke-up-meeting",
+    japaneseName: "会議で発言",
+    englishName: "Spoke Up in the Meeting",
+    description: "Disagreed politely and suggested an alternative in a meeting.",
+    requireQuestId: "meeting-speak",
   },
 ] as const;

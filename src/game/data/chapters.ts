@@ -94,6 +94,41 @@ export const CHAPTERS: readonly ChapterDefinition[] = [
       title: "Business & Keigo",
     },
   },
+  {
+    id: "chapter-4",
+    number: 4,
+    title: "Business & Keigo",
+    japaneseTitle: "第4章・仕事と敬語",
+    description:
+      "You understand the words. Now you need to sound appropriate at work.",
+    openingLines: [
+      "You understand the words. Now you need to sound appropriate at work.",
+      "The same message can sound natural, too casual, too stiff, or even rude — depending on who you are speaking to.",
+      "報連相, business phone Japanese, customer keigo, and professional disagreement are next.",
+    ],
+    objectives: [
+      "Greet and leave the office with the right register",
+      "Report status with 報連相",
+      "Handle an external business call",
+      "Serve a customer with appropriate keigo",
+      "Report a mistake with recovery steps",
+      "Speak up in a meeting",
+      "Survive a full workday",
+    ],
+    questIds: [
+      "morning-office",
+      "reporting-to-boss",
+      "business-phone",
+      "customer-service",
+      "report-mistake",
+      "meeting-speak",
+      "workday-survival",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第5章・速い日本語",
+      title: "Fast & Natural Japanese",
+    },
+  },
 ] as const;
 
 export function getChapterByNumber(

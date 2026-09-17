@@ -145,17 +145,26 @@ export type ConversationObjectiveType =
 
 export type ConversationEndState = "success" | "failure" | "continue";
 
-/** Who the player is talking to (for feedback / Social Fit). */
+/** Who the player is talking to (for feedback / Social Fit / Professional Fit). */
 export type SocialContext =
   | "friend"
   | "acquaintance"
   | "senpai"
   | "coworker"
   | "boss"
-  | "stranger";
+  | "manager"
+  | "stranger"
+  | "customer"
+  | "client"
+  | "external-caller";
 
 /** Expected speech register for this beat. */
-export type SpeechRegister = "casual" | "neutral" | "polite" | "formal";
+export type SpeechRegister =
+  | "casual"
+  | "neutral"
+  | "polite"
+  | "business"
+  | "formal";
 
 export type RelationshipBranch = {
   npcId: string;
@@ -206,6 +215,17 @@ export type ConversationChoice = {
   checksFact?: string;
   /** Expected value when checksFact is set (for report / tests). */
   expectedFactValue?: string;
+  /**
+   * Lightweight reporting tags for boss/報連相 result metadata
+   * (mission result only — not a global permanent stat).
+   */
+  reportingTags?: (
+    | "conclusion-first"
+    | "clear"
+    | "action-stated"
+    | "too-much-detail"
+    | "excuse-heavy"
+  )[];
 };
 
 export type ConversationNode = {
@@ -242,6 +262,11 @@ export type ConversationNode = {
    * Set false to exclude utility/repair beats.
    */
   countsTowardSocialFit?: boolean;
+  /**
+   * When true, answers count toward Professional Fit % (Chapter 4 business).
+   * Defaults true for business social contexts / business|formal register.
+   */
+  countsTowardProfessionalFit?: boolean;
   /** Merge into conversation fact memory when this node is entered. */
   setsFacts?: Record<string, string>;
   /** Human labels for Call Report / result summary. */
@@ -311,6 +336,7 @@ export type CommunicationSealId =
   | "communication"
   | "workplace"
   | "social"
+  | "professional"
   | "fluency";
 
 export type NpcRelationship = {

@@ -440,7 +440,7 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
       english: "Thank you for your help. May I look at the catalog?",
       objectiveType: "social-choice",
       socialContext: "client",
-      register: "business",
+      register: "formal",
       helpHint: "ご覧になりますか / ご案内いたします — not plain 見ますか.",
       speech: { autoPlay: true },
       choices: [
@@ -490,7 +490,7 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
       audioFirst: true,
       listenOnly: true,
       socialContext: "client",
-      register: "business",
+      register: "formal",
       setsFacts: {
         clientDeadline: "来週金曜",
       },

@@ -31,6 +31,11 @@ import {
   nodeCountsTowardSocialFit,
   socialFitFromQualities,
 } from "../utils/socialFit";
+import {
+  nodeCountsTowardProfessionalFit,
+  professionalFitFromQualities,
+  summarizeReportingTags,
+} from "../utils/professionalFit";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
 import { NpcPortrait } from "./NpcPortrait";
@@ -45,6 +50,10 @@ type Props = {
   relationships?: NpcRelationship[];
   /** Skill: show a subtle context hint after an awkward response. */
   showContextHint?: boolean;
+  /** Skill: after weak reporting, remind to lead with the conclusion. */
+  showReportingHint?: boolean;
+  /** Skill: after awkward keigo, remind internal vs external. */
+  showKeigoSenseHint?: boolean;
 };
 
 const SETTLE_MS = 280;
@@ -81,6 +90,8 @@ export function ConversationQuestRunner({
   immersionEnabled = false,
   relationships = [],
   showContextHint = false,
+  showReportingHint = false,
+  showKeigoSenseHint = false,
 }: Props) {
   const quest = getQuestById(questId);
   const conversation = quest?.conversation;
@@ -115,6 +126,10 @@ export function ConversationQuestRunner({
   const [socialFitQualities, setSocialFitQualities] = useState<ResponseQuality[]>(
     []
   );
+  const [professionalFitQualities, setProfessionalFitQualities] = useState<
+    ResponseQuality[]
+  >([]);
+  const [reportingTags, setReportingTags] = useState<string[]>([]);
   const [pendingNextId, setPendingNextId] = useState<string | null>(null);
   const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(null);
   const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
@@ -367,6 +382,14 @@ export function ConversationQuestRunner({
       repairUsed: repairedConversation,
       qualityCounts,
       socialFitPercent: socialFitFromQualities(socialFitQualities),
+      professionalFitPercent:
+        professionalFitQualities.length > 0
+          ? professionalFitFromQualities(professionalFitQualities)
+          : undefined,
+      reportingQuality:
+        reportingTags.length > 0
+          ? summarizeReportingTags(reportingTags)
+          : undefined,
       repairCounts,
       summaryFacts,
       firstListenCorrect,
@@ -456,6 +479,12 @@ export function ConversationQuestRunner({
     if (nodeCountsTowardSocialFit(activeNode)) {
       setSocialFitQualities((prev) => [...prev, applied.quality]);
     }
+    if (nodeCountsTowardProfessionalFit(activeNode)) {
+      setProfessionalFitQualities((prev) => [...prev, applied.quality]);
+    }
+    if (choice.reportingTags?.length) {
+      setReportingTags((prev) => [...prev, ...choice.reportingTags!]);
+    }
     setQualityLabel(applied.qualityLabel);
     setFeedback(choice.feedback ?? applied.qualityLabel);
     setFeedbackGood(
@@ -469,6 +498,23 @@ export function ConversationQuestRunner({
       (applied.quality === "awkward" || applied.quality === "incorrect")
     ) {
       setContextHint("Think about your relationship with this person.");
+    } else if (
+      showReportingHint &&
+      (applied.quality === "awkward" || applied.quality === "incorrect") &&
+      (activeNode.socialContext === "boss" ||
+        activeNode.socialContext === "manager" ||
+        choice.reportingTags?.includes("too-much-detail") ||
+        choice.reportingTags?.includes("excuse-heavy"))
+    ) {
+      setContextHint("Lead with the conclusion.");
+    } else if (
+      showKeigoSenseHint &&
+      (applied.quality === "awkward" || applied.quality === "incorrect") &&
+      nodeCountsTowardProfessionalFit(activeNode)
+    ) {
+      setContextHint(
+        "Think about whether this person is internal or external."
+      );
     } else {
       setContextHint(null);
     }

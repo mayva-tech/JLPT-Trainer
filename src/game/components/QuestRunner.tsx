@@ -62,6 +62,15 @@ export type QuestRunOutcome = {
   >;
   /** Chapter 3 social appropriateness (result screen only). */
   socialFitPercent?: number;
+  /** Chapter 4 business-register appropriateness (result screen only). */
+  professionalFitPercent?: number;
+  /** Reporting / 報連相 quality tags for mission result. */
+  reportingQuality?: {
+    conclusionFirst: boolean;
+    clear: boolean;
+    actionStated: boolean;
+    notes: string[];
+  };
   /** Functional repair tallies (phone / V2 reusable). */
   repairCounts?: {
     repeat: number;
@@ -89,6 +98,8 @@ type Props = {
   extraRepair?: boolean;
   relationships?: import("../types").NpcRelationship[];
   showContextHint?: boolean;
+  showReportingHint?: boolean;
+  showKeigoSenseHint?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
@@ -102,6 +113,8 @@ export function QuestRunner({
   extraRepair = false,
   relationships = [],
   showContextHint = false,
+  showReportingHint = false,
+  showKeigoSenseHint = false,
 }: Props) {
   const baseQuest = getQuestById(questId);
 
@@ -114,6 +127,8 @@ export function QuestRunner({
         immersionEnabled={immersionEnabled}
         relationships={relationships}
         showContextHint={showContextHint}
+        showReportingHint={showReportingHint}
+        showKeigoSenseHint={showKeigoSenseHint}
       />
     );
   }

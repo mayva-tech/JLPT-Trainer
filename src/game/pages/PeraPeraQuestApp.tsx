@@ -163,7 +163,9 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
           ? "chapter2Complete"
           : quest.id === "relationships-challenge"
             ? "chapter3Complete"
-            : undefined;
+            : quest.id === "workday-survival"
+              ? "chapter4Complete"
+              : undefined;
     const setFlags = chapterFlag ? [chapterFlag] : undefined;
 
     const applied = applyQuestCompletion(profile, {
@@ -293,19 +295,41 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       );
     }
 
-    // Chapter 3 boss → clear Ch3, teaser only for Ch4
+    // Chapter 3 boss → unlock playable Chapter 4
     if (
       quest.id === "relationships-challenge" &&
       isChapterComplete(nextProfile, 3)
     ) {
       nextProfile = {
         ...nextProfile,
-        currentChapter: Math.max(nextProfile.currentChapter, 3),
+        currentChapter: Math.max(nextProfile.currentChapter, 4),
         flags: { ...nextProfile.flags, chapter3Complete: true },
       };
       setChapterSummary(
         buildChapterSummary({
           chapterNumber: 3,
+          result,
+          profileBefore: profile,
+          profileAfter: nextProfile,
+          xpGranted: applied.xpGranted,
+          nextComingSoon: false,
+        })
+      );
+    }
+
+    // Chapter 4 boss → clear Ch4, teaser only for Ch5
+    if (
+      quest.id === "workday-survival" &&
+      isChapterComplete(nextProfile, 4)
+    ) {
+      nextProfile = {
+        ...nextProfile,
+        currentChapter: Math.max(nextProfile.currentChapter, 4),
+        flags: { ...nextProfile.flags, chapter4Complete: true },
+      };
+      setChapterSummary(
+        buildChapterSummary({
+          chapterNumber: 4,
           result,
           profileBefore: profile,
           profileAfter: nextProfile,
@@ -574,6 +598,8 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             extraRepair={hasSkillEffect(profile, "extra-repair")}
             relationships={profile.relationships}
             showContextHint={hasSkillEffect(profile, "context-hint")}
+            showReportingHint={hasSkillEffect(profile, "reporting-hint")}
+            showKeigoSenseHint={hasSkillEffect(profile, "keigo-sense")}
             onQuit={() => setScreen("town")}
             onFinished={onQuestFinished}
           />
@@ -806,6 +832,20 @@ function Landing({
             Next unlock: Chapter 3 · 人間関係 (after Social Life Challenge).
           </p>
         ) : null}
+        {profile.flags.chapter2Complete &&
+        !profile.flags.chapter3Complete &&
+        !isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
+            Next unlock: Chapter 4 · 仕事と敬語 (after Social Intelligence Challenge).
+          </p>
+        ) : null}
+        {profile.flags.chapter3Complete &&
+        !profile.flags.chapter4Complete &&
+        !isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
+            Chapter 4 · 仕事と敬語 is open — open Quests → Chapter 4.
+          </p>
+        ) : null}
         {isDeveloperMode(profile) ? (
           <p style={{ fontSize: 12, color: "var(--ppq-accent, #e8a317)", margin: "10px 0 0" }}>
             Developer mode ON — all chapters and locations unlocked. Toggle in Adventure
@@ -861,7 +901,12 @@ function ChapterPanel({
       profile.flags.chapter2Complete ||
       isChapterComplete(profile, 2)
   );
-  const initial = Math.min(Math.max(1, profile.currentChapter), 3) || 1;
+  const chapter3Done = Boolean(
+    isDeveloperMode(profile) ||
+      profile.flags.chapter3Complete ||
+      isChapterComplete(profile, 3)
+  );
+  const initial = Math.min(Math.max(1, profile.currentChapter), 4) || 1;
   const [viewChapter, setViewChapter] = useState(initial);
 
   const chapter = getChapterByNumber(viewChapter);
@@ -875,7 +920,9 @@ function ChapterPanel({
   }
 
   const chapterLocked =
-    (viewChapter === 2 && !chapter1Done) || (viewChapter === 3 && !chapter2Done);
+    (viewChapter === 2 && !chapter1Done) ||
+    (viewChapter === 3 && !chapter2Done) ||
+    (viewChapter === 4 && !chapter3Done);
   const rows = getChapterQuestRows(profile, chapter);
   const { done, total, percent } = chapterCompletionCounts(profile, viewChapter);
   const shortJa =
@@ -885,7 +932,9 @@ function ChapterPanel({
         ? "社会生活"
         : viewChapter === 3
           ? "人間関係"
-          : chapter.japaneseTitle;
+          : viewChapter === 4
+            ? "仕事と敬語"
+            : chapter.japaneseTitle;
 
   return (
     <div className="ppq-chapter-panel">
@@ -940,6 +989,23 @@ function ChapterPanel({
           Chapter 3
           {chapter2Done || isDeveloperMode(profile) ? "" : " 🔒"}
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={viewChapter === 4}
+          className={
+            viewChapter === 4 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
+          }
+          title={
+            chapter3Done
+              ? "Chapter 4 · 仕事と敬語"
+              : "Preview Chapter 4 — clear Chapter 3 to play"
+          }
+          onClick={() => setViewChapter(4)}
+        >
+          Chapter 4
+          {chapter3Done || isDeveloperMode(profile) ? "" : " 🔒"}
+        </button>
       </div>
 
       <h2 lang="ja">
@@ -955,7 +1021,9 @@ function ChapterPanel({
           <p style={{ margin: 0, fontSize: 13 }}>
             {viewChapter === 2
               ? "Finish Chapter 1 · 新生活 (First Week Challenge) to unlock Chapter 2."
-              : "Finish Chapter 2 · 社会生活 (Social Life Challenge) to unlock Chapter 3."}
+              : viewChapter === 3
+                ? "Finish Chapter 2 · 社会生活 (Social Life Challenge) to unlock Chapter 3."
+                : "Finish Chapter 3 · 人間関係 (Social Intelligence Challenge) to unlock Chapter 4."}
           </p>
         </div>
       ) : null}
@@ -1043,12 +1111,24 @@ function ChapterPanel({
 
       {viewChapter === 3 && profile.flags.chapter3Complete ? (
         <div className="ppq-panel" style={{ marginTop: 16 }}>
-          <h2>Chapter 4</h2>
+          <h2>Next</h2>
           <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
             第4章・仕事と敬語
           </p>
           <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
-            Business & Keigo — Coming soon
+            Business & Keigo — open the Chapter 4 tab to play.
+          </p>
+        </div>
+      ) : null}
+
+      {viewChapter === 4 && profile.flags.chapter4Complete ? (
+        <div className="ppq-panel" style={{ marginTop: 16 }}>
+          <h2>Chapter 5</h2>
+          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+            第5章・速い日本語
+          </p>
+          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
+            Fast & Natural Japanese — Coming soon
           </p>
         </div>
       ) : null}
@@ -1129,7 +1209,8 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
 
       {(profile.flags.chapter1Complete ||
         profile.flags.chapter2Complete ||
-        profile.flags.chapter3Complete) ? (
+        profile.flags.chapter3Complete ||
+        profile.flags.chapter4Complete) ? (
         <div className="ppq-panel" style={{ marginTop: 12 }}>
           <h2>Chapter clears</h2>
           {profile.flags.chapter1Complete ? (
@@ -1142,6 +1223,9 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
           ) : null}
           {profile.flags.chapter3Complete ? (
             <p style={{ margin: "6px 0 0" }}>✅ Chapter 3 · 人間関係</p>
+          ) : null}
+          {profile.flags.chapter4Complete ? (
+            <p style={{ margin: "6px 0 0" }}>✅ Chapter 4 · 仕事と敬語</p>
           ) : null}
         </div>
       ) : null}

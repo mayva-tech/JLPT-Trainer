@@ -120,6 +120,20 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "Workplace Discussion";
     case "relationships-challenge":
       return "Social Intelligence Challenge";
+    case "morning-office":
+      return "Morning at the Office";
+    case "reporting-to-boss":
+      return "Reporting to Your Boss";
+    case "business-phone":
+      return "Business Phone Call";
+    case "customer-service":
+      return "Customer Interaction";
+    case "report-mistake":
+      return "Reporting a Mistake";
+    case "meeting-speak":
+      return "Speaking in a Meeting";
+    case "workday-survival":
+      return "Workday Survival";
     default:
       return quest.title;
   }

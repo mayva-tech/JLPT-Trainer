@@ -69,7 +69,9 @@ export function QuestSuccessScreen({
             ? "You survived your first week in Kotoba Town."
             : chapterSummary.chapterNumber === 2
               ? "You handled clinic, phone, and workplace Japanese in one connected day."
-              : "You learned that grammatically correct is not always socially natural."}
+              : chapterSummary.chapterNumber === 3
+                ? "You learned that grammatically correct is not always socially natural."
+                : "Professional Japanese is not just more polite Japanese — register, reporting, and recovery matter."}
         </p>
 
         <dl className="ppq-result-grid">
@@ -193,6 +195,12 @@ export function QuestSuccessScreen({
             <dd>{outcome.socialFitPercent}%</dd>
           </div>
         ) : null}
+        {typeof outcome.professionalFitPercent === "number" ? (
+          <div>
+            <dt>Professional Fit</dt>
+            <dd>{outcome.professionalFitPercent}%</dd>
+          </div>
+        ) : null}
         <div>
           <dt>XP</dt>
           <dd>
@@ -257,6 +265,18 @@ export function QuestSuccessScreen({
               First-listen accuracy: {outcome.firstListenCorrect ?? 0}/
               {outcome.firstListenTotal}
             </p>
+          ) : null}
+          {outcome.reportingQuality?.notes?.length ? (
+            <div style={{ marginTop: 8 }}>
+              <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "0 0 4px" }}>
+                Reporting
+              </p>
+              <ul className="ppq-report-list">
+                {outcome.reportingQuality.notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </div>
           ) : null}
         </div>
       ) : null}

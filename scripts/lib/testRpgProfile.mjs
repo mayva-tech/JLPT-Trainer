@@ -28,6 +28,16 @@ const CH3_QUESTS = [
   "relationships-challenge",
 ];
 
+const CH4_QUESTS = [
+  "morning-office",
+  "reporting-to-boss",
+  "business-phone",
+  "customer-service",
+  "report-mistake",
+  "meeting-speak",
+  "workday-survival",
+];
+
 function languageStats(partial = {}) {
   return {
     vocabulary: 20,
@@ -133,7 +143,13 @@ export function createTestRpgProfile(overrides = {}) {
     completedQuestIds = [...new Set([...completedQuestIds, ...CH3_QUESTS])];
     rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH3_QUESTS])];
     flags = { ...flags, chapter3Complete: true };
-    currentChapter = Math.max(currentChapter, 3);
+    currentChapter = Math.max(currentChapter, 4);
+  }
+  if (completedThroughChapter && completedThroughChapter >= 4) {
+    completedQuestIds = [...new Set([...completedQuestIds, ...CH4_QUESTS])];
+    rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH4_QUESTS])];
+    flags = { ...flags, chapter4Complete: true };
+    currentChapter = Math.max(currentChapter, 4);
   }
 
   const immersion = {

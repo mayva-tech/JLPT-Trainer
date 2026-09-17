@@ -61,11 +61,19 @@ export const COMMUNICATION_SEALS: readonly CommunicationSeal[] = [
     awardQuestId: "relationships-challenge",
   },
   {
+    id: "professional",
+    japaneseName: "仕事の証",
+    englishName: "Professional Seal",
+    icon: "💼",
+    awardQuestId: "workday-survival",
+    locationId: "office",
+  },
+  {
     id: "fluency",
     japaneseName: "流暢の証",
     englishName: "Fluency Seal",
     icon: "✨",
-    // Future Chapter 4+ license path.
+    // Future Chapter 5+ license path.
   },
 ] as const;
 

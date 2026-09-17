@@ -102,6 +102,16 @@ export const NPCS: readonly NpcDefinition[] = [
     dialogueStyle: "polite",
     speakingStyle: "senpai",
   },
+  {
+    id: "yoshida-client",
+    name: "Yoshida",
+    japaneseName: "吉田様",
+    role: "Client",
+    locationId: "office",
+    portrait: "吉",
+    dialogueStyle: "formal",
+    speakingStyle: "customer",
+  },
 ] as const;
 
 export function getNpcById(id: string): NpcDefinition | undefined {
