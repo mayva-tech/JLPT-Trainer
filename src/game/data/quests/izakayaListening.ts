@@ -501,7 +501,7 @@ export const IZAKAYA_LISTENING_CONVERSATION: ConversationDefinition = {
     },
     {
       id: "toast",
-      npcId: "haruka",
+      npcId: "ken",
       japanese: "よし、じゃあ乾杯！ えっと…なんのだっけ。まあ、とりあえず！",
       reading: "よし じゃあ かんぱい えっと なん の だっけ まあ とりあえず",
       english: "Okay — cheers! Um… for what again? Eh, whatever — cheers!",
@@ -510,7 +510,7 @@ export const IZAKAYA_LISTENING_CONVERSATION: ConversationDefinition = {
       register: "casual",
       speechRate: "fast",
       spokenFeature: ["filler", "casual-ending"],
-      helpHint: "えっと / まあ / incomplete toast — just ride it.",
+      helpHint: "えっと / まあ / incomplete toast — just ride it. Ken joins late.",
       speech: { autoPlay: true },
       choices: [
         {
@@ -569,7 +569,7 @@ export const IZAKAYA_LISTENING_QUEST: QuestDefinition = {
   startingConfidence: 5,
   requiresQuestIds: ["contraction-city"],
   icon: "🍻",
-  meetNpcIds: ["haruka", "mika-coworker"],
+  meetNpcIds: ["haruka", "ken", "mika-coworker"],
   objectives: [
     { id: "filler", label: "Follow ていうか / なんか / まあ / えっと" },
     { id: "aizuchi", label: "Use short aizuchi (マジで？ / そっか / へえ)" },
@@ -597,7 +597,7 @@ export const IZAKAYA_LISTENING_QUEST: QuestDefinition = {
       title: "Read Between the Lines",
       japaneseTitle: "察してみよう",
     },
-    relationshipNpcIds: ["haruka", "mika-coworker"],
+    relationshipNpcIds: ["haruka", "ken", "mika-coworker"],
   },
   unlocks: {
     questIds: ["read-between-lines"],

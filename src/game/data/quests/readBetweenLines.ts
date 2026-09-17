@@ -647,7 +647,7 @@ export const READ_BETWEEN_LINES_QUEST: QuestDefinition = {
   startingConfidence: 5,
   requiresQuestIds: ["izakaya-listening"],
   icon: "🔍",
-  meetNpcIds: ["mika-coworker", "suzuki-manager"],
+  meetNpcIds: ["haruka", "mika-coworker", "suzuki-manager"],
   objectives: [
     { id: "chotto", label: "Read 今日はちょっと… as soft refusal" },
     { id: "kangaete", label: "Read 考えておきます as non-committal" },
@@ -673,8 +673,8 @@ export const READ_BETWEEN_LINES_QUEST: QuestDefinition = {
     unlockQuestIds: ["native-speed-survival"],
     nextQuestTeaser: {
       id: "native-speed-survival",
-      title: "Native Speed Survival",
-      japaneseTitle: "ネイティブ速度サバイバル",
+      title: "Native-Speed Survival",
+      japaneseTitle: "ネイティブスピードチャレンジ",
     },
     relationshipNpcIds: ["mika-coworker", "suzuki-manager", "haruka"],
   },
