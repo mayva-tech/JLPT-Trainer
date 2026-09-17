@@ -7,9 +7,11 @@ import { getNpcById } from "../data/npcs";
 import {
   getPrimaryQuestForLocation,
   getQuestById,
+  pickRandomEncounter,
   QUESTS,
 } from "../data/quests";
 import { nextAdventureRank } from "../data/ranks";
+import { CURRENCY, IMMERSION_BONUS } from "../data/rpgConfig";
 import {
   QuestRunner,
   type QuestRunOutcome,
@@ -23,6 +25,9 @@ import {
 } from "../components/QuestResultScreens";
 import { RpgNav, type RpgScreen } from "../components/RpgNav";
 import { TownMap } from "../components/TownMap";
+import { JapanesePassport } from "../components/JapanesePassport";
+import { SkillTreePanel } from "../components/SkillTreePanel";
+import { DailyQuestPanel } from "../components/DailyQuestPanel";
 import { TrainingDojo } from "../pages/TrainingDojo";
 import { WeakWordDungeon } from "../pages/WeakWordDungeon";
 import {
@@ -47,6 +52,12 @@ import {
   savePlayerProfile,
   townCompletionPercent,
 } from "../utils/playerProfile";
+import {
+  recordQuestConceptHit,
+  recordQuestConceptMiss,
+} from "../utils/livingJapanese";
+import { bumpDailyProgress, ensureDailyQuests } from "../utils/dailyQuests";
+import { hasSkillEffect, syncSkillUnlocks } from "../utils/skillTree";
 import { getLevelProgress } from "../../utils/gameMode/xp";
 import type { LocationId, PlayerRpgProfile, QuestDefinition } from "../types";
 
@@ -57,7 +68,7 @@ type Props = {
 export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
   const [screen, setScreen] = useState<RpgScreen>("landing");
   const [profile, setProfile] = useState<PlayerRpgProfile>(() =>
-    loadPlayerProfile()
+    syncSkillUnlocks(ensureDailyQuests(loadPlayerProfile()))
   );
   const [runningQuestId, setRunningQuestId] = useState<string | null>(null);
   const [questRunId, setQuestRunId] = useState(0);
@@ -152,14 +163,37 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       questId: quest.id,
       accuracy: result.accuracy,
       confidenceLeft: result.confidenceLeft,
-      xpGained: quest.rewards.xp,
-      skillRewards: quest.rewards.skillRewards,
+      xpGained: (() => {
+        let xp = quest.rewards.xp;
+        if (result.immersionNoEnglish) {
+          xp = Math.round(xp * IMMERSION_BONUS.noSubtitleXpMultiplier) + IMMERSION_BONUS.noEnglishXp;
+        }
+        return xp;
+      })(),
+      skillRewards: (() => {
+        const skills = { ...quest.rewards.skillRewards };
+        if (result.firstListenSuccess) {
+          skills.listening = (skills.listening ?? 0) + Math.ceil(IMMERSION_BONUS.firstListenXp / 10);
+        }
+        if (result.immersionNoEnglish) {
+          skills.listening = (skills.listening ?? 0) + 1;
+          skills.conversation = (skills.conversation ?? 0) + 1;
+        }
+        return skills;
+      })(),
       replayXp: quest.rewards.replayXp,
       replaySkillRewards: quest.rewards.replaySkillRewards,
       unlockLocationIds: quest.rewards.unlockLocationIds,
       unlockQuestIds: quest.rewards.unlockQuestIds,
       metNpcIds: quest.meetNpcIds,
       setFlags,
+      sealId: quest.rewards.sealId,
+      coins: quest.rewards.coins,
+      relationshipNpcIds:
+        quest.rewards.relationshipNpcIds ?? quest.meetNpcIds,
+      communicationPercent: result.communicationPercent,
+      immersionNoEnglish: result.immersionNoEnglish,
+      repairedConversation: result.repairedConversation,
     });
 
     setNewlyRewarded(applied.newlyRewarded);
@@ -180,6 +214,28 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
     }
 
     let nextProfile = applied.profile;
+
+    // Living Japanese: reinforce missed concepts; ease learned ones.
+    for (const m of result.mistakes) {
+      if (m.vocabHint) {
+        nextProfile = recordQuestConceptMiss(nextProfile, m.vocabHint);
+      }
+    }
+    for (const v of result.conceptsLearned) {
+      nextProfile = recordQuestConceptHit(nextProfile, v);
+    }
+
+    // Daily quest progress
+    nextProfile = bumpDailyProgress(nextProfile, "clear-encounters", 1);
+    if (result.immersionNoEnglish) {
+      nextProfile = bumpDailyProgress(nextProfile, "no-english", 1);
+    }
+    if (result.repairedConversation) {
+      nextProfile = bumpDailyProgress(nextProfile, "repair-once", 1);
+    }
+    if (result.firstListenSuccess) {
+      nextProfile = bumpDailyProgress(nextProfile, "first-listen", 1);
+    }
 
     // Chapter 1 boss → advance into playable Chapter 2
     if (
@@ -236,6 +292,7 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       return;
     }
     if (locationId === "weak-word-dungeon") {
+      persist(bumpDailyProgress(profile, "review-weak", 1));
       setScreen("dungeon");
       return;
     }
@@ -360,6 +417,39 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             onDojo={() => setScreen("dojo")}
             onDungeon={() => setScreen("dungeon")}
             onStats={() => setScreen("stats")}
+            onPassport={() => setScreen("passport")}
+            onDaily={() => setScreen("daily")}
+            onSkills={() => setScreen("skills")}
+            onRandom={() => {
+              const enc = pickRandomEncounter(
+                profile.completedQuestIds,
+                Date.now()
+              );
+              if (!enc) {
+                flashToast("Clear more story quests to unlock street encounters.");
+                return;
+              }
+              startQuest(enc.id);
+            }}
+            immersionEnabled={profile.immersion.enabled}
+            onToggleImmersion={() => {
+              const enabled = !profile.immersion.enabled;
+              persist({
+                ...profile,
+                immersion: {
+                  enabled,
+                  hideEnglish: enabled,
+                  hideSubtitles: enabled,
+                },
+                updatedAt: Date.now(),
+              });
+              flashToast(
+                enabled
+                  ? "Immersion Mode ON — English hidden until Help"
+                  : "Immersion Mode OFF"
+              );
+            }}
+            coins={profile.coins}
           />
         ) : null}
 
@@ -373,6 +463,10 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             onStartQuest={startQuest}
           />
         ) : null}
+
+        {screen === "passport" ? <JapanesePassport profile={profile} /> : null}
+        {screen === "skills" ? <SkillTreePanel profile={profile} /> : null}
+        {screen === "daily" ? <DailyQuestPanel profile={profile} /> : null}
 
         {screen === "stats" ? (
           <div>
@@ -443,6 +537,8 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             key={`${runningQuestId}-${questRunId}`}
             questId={runningQuestId}
             metNpcIds={profile.metNpcIds}
+            immersionEnabled={profile.immersion.enabled}
+            extraRepair={hasSkillEffect(profile, "extra-repair")}
             onQuit={() => setScreen("town")}
             onFinished={onQuestFinished}
           />
@@ -509,6 +605,13 @@ function Landing({
   onDojo,
   onDungeon,
   onStats,
+  onPassport,
+  onDaily,
+  onSkills,
+  onRandom,
+  immersionEnabled,
+  onToggleImmersion,
+  coins,
 }: {
   profile: PlayerRpgProfile;
   level: number;
@@ -527,6 +630,13 @@ function Landing({
   onDojo: () => void;
   onDungeon: () => void;
   onStats: () => void;
+  onPassport: () => void;
+  onDaily: () => void;
+  onSkills: () => void;
+  onRandom: () => void;
+  immersionEnabled: boolean;
+  onToggleImmersion: () => void;
+  coins: number;
 }) {
   return (
     <div className="ppq-landing">
@@ -566,7 +676,19 @@ function Landing({
             <span>Town completion</span>
             <strong>{townPct}%</strong>
           </div>
+          <div className="ppq-stat-tile">
+            <span>{CURRENCY.name}</span>
+            <strong>
+              {CURRENCY.symbol} {coins}
+            </strong>
+          </div>
         </div>
+
+        <p className="ppq-hero-goal">
+          Goal: earn the <strong lang="ja">ペラペラ免許</strong> — become a{" "}
+          <strong lang="ja">ペラペラマスター</strong> by using Japanese to live in
+          Kotoba Town.
+        </p>
 
         {chapterSubtitle ? (
           <p style={{ fontSize: 14, margin: "0 0 8px", color: "var(--ppq-muted)" }}>
@@ -617,6 +739,21 @@ function Landing({
           <button type="button" className="ppq-btn ppq-btn--ghost" onClick={onChapter}>
             Chapter {profile.currentChapter}
           </button>
+          <button
+            type="button"
+            className={
+              immersionEnabled
+                ? "ppq-btn ppq-btn--primary"
+                : "ppq-btn ppq-btn--ghost"
+            }
+            aria-pressed={immersionEnabled}
+            onClick={onToggleImmersion}
+          >
+            {immersionEnabled ? "🎧 Immersion ON" : "🎧 Immersion"}
+          </button>
+          <button type="button" className="ppq-btn ppq-btn--ghost" onClick={onRandom}>
+            Random Encounter
+          </button>
         </div>
         {profile.currentChapter < 2 &&
         !profile.flags.chapter1Complete &&
@@ -635,6 +772,18 @@ function Landing({
       </section>
 
       <div className="ppq-secondary-grid">
+        <button type="button" className="ppq-secondary-card" onClick={onPassport}>
+          <h3>🛂 Japanese Passport</h3>
+          <p>Seals, relationships, achievements</p>
+        </button>
+        <button type="button" className="ppq-secondary-card" onClick={onDaily}>
+          <h3>📅 Daily Quests</h3>
+          <p>Short goals · coins · XP</p>
+        </button>
+        <button type="button" className="ppq-secondary-card" onClick={onSkills}>
+          <h3>🌳 Skill Tree</h3>
+          <p>Listening, conversation, grammar, vocab</p>
+        </button>
         <button type="button" className="ppq-secondary-card" onClick={onDojo}>
           <h3>⚔ Training Dojo</h3>
           <p>Survival, Speed Run, Boss Battle drills</p>

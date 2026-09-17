@@ -26,7 +26,9 @@ import {
   type ResolvedQuestSpeech,
 } from "../utils/questSpeech";
 import { ConfidenceHearts } from "./ConfidenceHearts";
+import { CommunicationMeter } from "./CommunicationMeter";
 import { NpcPortrait } from "./NpcPortrait";
+import { communicationFromConfidence } from "../utils/communicationMeter";
 
 export type QuestRunOutcome = {
   success: boolean;
@@ -38,6 +40,12 @@ export type QuestRunOutcome = {
   monsters: string[];
   vocabDiscovered: string[];
   helpUses: number;
+  /** 0–100 conversation smoothness. */
+  communicationPercent: number;
+  immersionNoEnglish: boolean;
+  firstListenSuccess: boolean;
+  repairedConversation: boolean;
+  conceptsLearned: string[];
 };
 
 type Props = {
@@ -45,6 +53,10 @@ type Props = {
   metNpcIds: string[];
   onQuit: () => void;
   onFinished: (outcome: QuestRunOutcome) => void;
+  /** Immersion Mode: hide EN until Help / answer. */
+  immersionEnabled?: boolean;
+  /** Skill: Conversation Repair — first miss of a step is free. */
+  extraRepair?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
@@ -54,6 +66,8 @@ export function QuestRunner({
   metNpcIds,
   onQuit,
   onFinished,
+  immersionEnabled = false,
+  extraRepair = false,
 }: Props) {
   const baseQuest = getQuestById(questId);
   const steps = useMemo(() => {
@@ -93,6 +107,12 @@ export function QuestRunner({
   const [stepPlayKey, setStepPlayKey] = useState(0);
   /** Japanese phrase currently spoken from feedback/help (for karaoke). */
   const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
+  /** Free repair charges remaining this step (skill-gated). */
+  const [freeRepairLeft, setFreeRepairLeft] = useState(extraRepair ? 1 : 0);
+  const [repairedConversation, setRepairedConversation] = useState(false);
+  const [usedEnglishAssist, setUsedEnglishAssist] = useState(false);
+  const [firstListenOk, setFirstListenOk] = useState(true);
+  const [listeningStepsSeen, setListeningStepsSeen] = useState(0);
   const autoPlayTokenRef = useRef(0);
 
   const step = quest
@@ -244,6 +264,8 @@ export function QuestRunner({
     speech.stop();
     const raw = accuracyFromCounts(correct, answered);
     const penalized = Math.max(0, raw - Math.min(5, helps));
+    const maxConf = baseQuest?.startingConfidence ?? 5;
+    const communicationPercent = communicationFromConfidence(conf, maxConf);
     onFinished({
       success,
       accuracy: penalized,
@@ -254,6 +276,11 @@ export function QuestRunner({
       monsters: mons,
       vocabDiscovered: vocab,
       helpUses: helps,
+      communicationPercent,
+      immersionNoEnglish: immersionEnabled && !usedEnglishAssist && helps === 0,
+      firstListenSuccess: listeningStepsSeen > 0 && firstListenOk,
+      repairedConversation,
+      conceptsLearned: vocab,
     });
   }
 
@@ -285,6 +312,7 @@ export function QuestRunner({
     setChoiceHighlightId(null);
     setLastAnswerDelta(null);
     setFeedbackJaFocus(null);
+    setFreeRepairLeft(extraRepair ? 1 : 0);
   }
 
   function onContinueIntro() {
@@ -308,6 +336,15 @@ export function QuestRunner({
     setFeedback(result.feedback);
     setFeedbackGood(result.correct);
 
+    const isListening =
+      currentStep.kind === "listening" ||
+      currentStep.objectiveType === "listening" ||
+      Boolean(currentStep.listenText);
+    if (isListening) {
+      setListeningStepsSeen((n) => n + 1);
+      if (!result.correct) setFirstListenOk(false);
+    }
+
     let nextCorrect = correctCount;
     let nextAnswered = answeredCount + 1;
     let nextConf = confidence;
@@ -316,6 +353,7 @@ export function QuestRunner({
     let nextVocab = vocabDiscovered;
     let vocabAdded: string | null = null;
     let monsterAdded: string | null = null;
+    let spentFreeRepair = false;
 
     if (result.correct) {
       nextCorrect += 1;
@@ -324,7 +362,18 @@ export function QuestRunner({
         nextVocab = [...nextVocab, currentStep.vocabHint];
       }
     } else {
-      if (result.costsConfidence) nextConf = Math.max(0, confidence - 1);
+      if (result.costsConfidence) {
+        if (freeRepairLeft > 0) {
+          spentFreeRepair = true;
+          setFreeRepairLeft((n) => Math.max(0, n - 1));
+          setRepairedConversation(true);
+          setFeedback(
+            `${result.feedback}\n\n🛠️ Conversation repair: 「すみません、もう一度お願いします。」— try again without losing Confidence.`
+          );
+        } else {
+          nextConf = Math.max(0, confidence - 1);
+        }
+      }
       if (result.mistake) nextMistakes = [...mistakes, result.mistake];
       const hook = noteQuestVocabMiss({
         vocabHint: currentStep.vocabHint,
@@ -349,6 +398,8 @@ export function QuestRunner({
         confidenceAfter: nextConf,
         vocabAdded,
         monsterAdded,
+        // Free repair: no confidence cost recorded for undo.
+        ...(spentFreeRepair ? {} : {}),
       })
     );
   }
@@ -399,7 +450,10 @@ export function QuestRunner({
   }
 
   function onToggleHelp() {
-    if (!showHelp) setHelpUses((n) => n + 1);
+    if (!showHelp) {
+      setHelpUses((n) => n + 1);
+      setUsedEnglishAssist(true);
+    }
     setShowHelp((v) => !v);
   }
 
@@ -484,7 +538,12 @@ export function QuestRunner({
   const showJaTranscript =
     !currentResolved.hideTranscriptUntilAnswer ||
     revealed ||
-    currentResolved.karaokeMode === "always";
+    currentResolved.karaokeMode === "always" ||
+    !(immersionEnabled && currentResolved.hideTranscriptUntilAnswer);
+
+  /** Immersion hides EN until Help or after the answer is revealed. */
+  const immersionBlocksEn =
+    immersionEnabled && !showHelp && !revealed;
 
   return (
     <div className="ppq-quest ppq-quest-enter">
@@ -500,11 +559,24 @@ export function QuestRunner({
       </div>
 
       <div className="ppq-quest-toolbar">
-        <ConfidenceHearts
-          confidence={confidence}
-          max={quest.startingConfidence}
-        />
+        <div className="ppq-quest-meters">
+          <ConfidenceHearts
+            confidence={confidence}
+            max={quest.startingConfidence}
+          />
+          <CommunicationMeter
+            percent={communicationFromConfidence(
+              confidence,
+              quest.startingConfidence
+            )}
+          />
+        </div>
         <div className="ppq-speech-controls">
+          {immersionEnabled ? (
+            <span className="ppq-immersion-badge" title="Immersion Mode on">
+              🎧 Immersion
+            </span>
+          ) : null}
           <button
             type="button"
             className={
@@ -569,6 +641,7 @@ export function QuestRunner({
         feedbackGood={feedbackGood}
         monsterFlash={monsterFlash}
         showHelp={showHelp}
+        forceHideEn={immersionBlocksEn}
         showJaTranscript={showJaTranscript}
         highlight={
           speech.activeLang === "ja" &&
@@ -635,6 +708,7 @@ function DialogueStep({
   feedbackGood,
   monsterFlash,
   showHelp,
+  forceHideEn = false,
   showJaTranscript,
   highlight,
   enHighlight,
@@ -662,6 +736,7 @@ function DialogueStep({
   feedbackGood: boolean;
   monsterFlash: string | null;
   showHelp: boolean;
+  forceHideEn?: boolean;
   showJaTranscript: boolean;
   highlight: import("../../services/speechService").SpeechHighlight | null;
   enHighlight: import("../../services/speechService").SpeechHighlight | null;
@@ -680,7 +755,8 @@ function DialogueStep({
   onRetry?: () => void;
   continueLabel: string;
 }) {
-  const showInstructionEn = shouldShowPromptEn(step, showHelp);
+  const showInstructionEn =
+    !forceHideEn && shouldShowPromptEn(step, showHelp);
   const jaForHighlight =
     resolved.hideTranscriptUntilAnswer && revealed
       ? resolved.displayJa
@@ -866,7 +942,7 @@ function DialogueStep({
                   ) : (
                     <span lang="ja">{choice.labelJa}</span>
                   )}
-                  {showHelp && choice.labelEn ? (
+                  {showHelp && !forceHideEn && choice.labelEn ? (
                     <span className="ppq-choice-en">{choice.labelEn}</span>
                   ) : null}
                 </button>

@@ -13,6 +13,7 @@ type McqRow = {
 function allMcqRows(): McqRow[] {
   const rows: McqRow[] = [];
   for (const quest of QUESTS) {
+    if (quest.rewards.randomEncounter) continue;
     for (const step of quest.steps) {
       if (!step.choices?.length) continue;
       rows.push({

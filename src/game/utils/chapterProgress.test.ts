@@ -23,7 +23,9 @@ import { isLocationUnlocked } from "./locationStatus";
 
 describe("Chapter 1 quest chain", () => {
   it("registers six Chapter 1 playable quests at the start of QUESTS", () => {
-    const ch1 = QUESTS.filter((q) => q.chapter === 1);
+    const ch1 = QUESTS.filter(
+      (q) => q.chapter === 1 && !q.rewards.randomEncounter
+    );
     expect(ch1).toHaveLength(6);
     expect(ch1.every((q) => q.steps.length > 0)).toBe(true);
   });
@@ -72,8 +74,9 @@ describe("Chapter 1 quest chain", () => {
 
 describe("Chapter 2 quest chain", () => {
   it("registers exactly four Chapter 2 quests after Chapter 1", () => {
-    expect(QUESTS).toHaveLength(10);
-    const ch2 = QUESTS.filter((q) => q.chapter === 2);
+    const story = QUESTS.filter((q) => !q.rewards.randomEncounter);
+    expect(story).toHaveLength(10);
+    const ch2 = story.filter((q) => q.chapter === 2);
     expect(ch2).toHaveLength(4);
     expect(ch2.map((q) => q.id)).toEqual([
       "clinic-visit",

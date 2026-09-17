@@ -117,6 +117,14 @@ export type QuestRewards = {
   unlockLocationIds?: LocationId[];
   unlockQuestIds?: string[];
   nextQuestTeaser?: { id: string; title: string; japaneseTitle: string };
+  /** Communication Seal awarded on first clear. */
+  sealId?: CommunicationSealId;
+  /** Kotoba Coins on first clear (defaults from config if omitted). */
+  coins?: number;
+  /** Relationship XP granted to these NPCs on clear. */
+  relationshipNpcIds?: string[];
+  /** True for short random street encounters. */
+  randomEncounter?: boolean;
 };
 
 export type QuestDefinition = {
@@ -151,6 +159,39 @@ export type NpcDefinition = {
   locationId: LocationId;
   portrait: string;
   dialogueStyle: "polite" | "casual" | "formal";
+  /** Soft speaking-style tag for Immersion / future branches. */
+  speakingStyle?: string;
+};
+
+export type CommunicationSealId =
+  | "city-hall"
+  | "transportation"
+  | "daily-life"
+  | "communication"
+  | "workplace"
+  | "social"
+  | "fluency";
+
+export type NpcRelationship = {
+  npcId: string;
+  xp: number;
+  level: number;
+};
+
+export type DailyQuestProgress = {
+  /** Local calendar day key YYYY-MM-DD. */
+  dayKey: string;
+  questIds: string[];
+  completedIds: string[];
+  progress: Record<string, number>;
+};
+
+export type LivingJapaneseWeights = Record<string, number>;
+
+export type ImmersionPrefs = {
+  enabled: boolean;
+  hideEnglish: boolean;
+  hideSubtitles: boolean;
 };
 
 export type LocationDefinition = {
@@ -211,7 +252,22 @@ export type PlayerRpgProfile = {
   rewardedQuestIds: string[];
   /** Soft story flags (chapter clears, etc.). */
   flags: Record<string, boolean>;
-  /** Optional help usage during the active run — not persisted heavily. */
+  /** Communication Seals collected. */
+  seals: CommunicationSealId[];
+  /** NPC familiarity / relationship XP. */
+  relationships: NpcRelationship[];
+  /** Soft currency for future cosmetics (not purchases). */
+  coins: number;
+  /** Unlocked skill-tree node ids. */
+  unlockedSkillNodes: string[];
+  /** Immersion Mode preferences. */
+  immersion: ImmersionPrefs;
+  /** Daily quest board state. */
+  daily: DailyQuestProgress | null;
+  /** Living Japanese reinforcement weights keyed by vocab/grammar hint. */
+  livingJapanese: LivingJapaneseWeights;
+  /** Concepts recently failed in Game Mode (for adaptive selection). */
+  recentFailConcepts: string[];
   createdAt: number;
   updatedAt: number;
 };

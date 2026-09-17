@@ -946,3 +946,176 @@
     min-height: 120px;
   }
 }
+
+/* RPG upgrade: meters, passport, skills, daily, seals */
+.ppq-quest-meters {
+  display: grid;
+  gap: 8px;
+  min-width: min(100%, 220px);
+}
+
+.ppq-comm-meter {
+  font-size: 12px;
+}
+
+.ppq-comm-meter-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: var(--ppq-muted);
+}
+
+.ppq-comm-meter-pct {
+  font-variant-numeric: tabular-nums;
+  color: var(--ppq-ink);
+  font-weight: 700;
+}
+
+.ppq-comm-meter-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #121820;
+  border: 1px solid var(--ppq-line);
+  overflow: hidden;
+}
+
+.ppq-comm-meter-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5a8fbf, #5cb88a);
+}
+
+.ppq-immersion-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ppq-accent-soft);
+  border: 1px solid var(--ppq-accent);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+.ppq-hero-goal {
+  font-size: 14px;
+  color: var(--ppq-muted);
+  margin: 0 0 12px;
+}
+
+.ppq-loc-progress,
+.ppq-loc-seal {
+  display: block;
+  font-size: 11px;
+  color: var(--ppq-muted);
+  margin-top: 4px;
+}
+
+.ppq-loc--done {
+  border-color: var(--ppq-good);
+}
+
+.ppq-seal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.ppq-seal {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--ppq-line);
+  background: rgba(0, 0, 0, 0.18);
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+.ppq-seal--on {
+  opacity: 1;
+  border-color: var(--ppq-accent-soft);
+}
+
+.ppq-rel-list,
+.ppq-achieve-list,
+.ppq-skill-list,
+.ppq-daily-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.ppq-rel-list li,
+.ppq-achieve,
+.ppq-skill-node,
+.ppq-daily-item {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--ppq-line);
+  background: rgba(0, 0, 0, 0.16);
+  font-size: 13px;
+}
+
+.ppq-achieve--on,
+.ppq-skill-node--on,
+.ppq-daily-item--done {
+  border-color: var(--ppq-good);
+}
+
+.ppq-achieve-desc,
+.ppq-skill-desc,
+.ppq-skill-req {
+  color: var(--ppq-muted);
+  font-size: 12px;
+}
+
+.ppq-passport-hero {
+  margin-bottom: 14px;
+}
+
+.ppq-passport-kicker {
+  margin: 0;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  color: var(--ppq-accent);
+  font-weight: 800;
+}
+
+.ppq-passport-coins {
+  margin: 8px 0 0;
+  font-weight: 700;
+}
+
+.ppq-result-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.ppq-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ppq-accent);
+  color: var(--ppq-accent-soft);
+}
+
+.ppq-daily-item-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .ppq-quest-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ppq-quest-meters {
+    min-width: 0;
+  }
+}

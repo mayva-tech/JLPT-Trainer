@@ -3,6 +3,9 @@ export type RpgScreen =
   | "town"
   | "quests"
   | "stats"
+  | "passport"
+  | "skills"
+  | "daily"
   | "log"
   | "dojo"
   | "dungeon"
@@ -15,6 +18,9 @@ const NAV: { id: RpgScreen; label: string }[] = [
   { id: "landing", label: "Home" },
   { id: "town", label: "Town" },
   { id: "quests", label: "Quests" },
+  { id: "daily", label: "Daily" },
+  { id: "passport", label: "Passport" },
+  { id: "skills", label: "Skills" },
   { id: "stats", label: "Stats" },
   { id: "log", label: "Log" },
   { id: "dojo", label: "Dojo" },

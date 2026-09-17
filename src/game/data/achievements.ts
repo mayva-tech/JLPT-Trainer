@@ -1,0 +1,79 @@
+export type PassportAchievementId =
+  | "konbini-master"
+  | "transfer-success"
+  | "city-hall-survivor"
+  | "phone-fear-cleared"
+  | "no-subtitle-clear"
+  | "first-week-hero"
+  | "repair-ace"
+  | "clinic-checkin";
+
+export type PassportAchievement = {
+  id: PassportAchievementId;
+  japaneseName: string;
+  englishName: string;
+  description: string;
+  /** Quest id that unlocks this when completed (optional). */
+  requireQuestId?: string;
+  /** Flag name that unlocks this. */
+  requireFlag?: string;
+};
+
+export const PASSPORT_ACHIEVEMENTS: readonly PassportAchievement[] = [
+  {
+    id: "konbini-master",
+    japaneseName: "コンビニマスター",
+    englishName: "Konbini Master",
+    description: "Cleared your first convenience-store mission.",
+    requireQuestId: "convenience-first-shop",
+  },
+  {
+    id: "transfer-success",
+    japaneseName: "乗り換え成功",
+    englishName: "Transfer Success",
+    description: "Navigated the station without getting lost.",
+    requireQuestId: "station-master",
+  },
+  {
+    id: "city-hall-survivor",
+    japaneseName: "市役所サバイバー",
+    englishName: "City Hall Survivor",
+    description: "Filed your 転入届 and lived to tell the tale.",
+    requireQuestId: "city-hall-register",
+  },
+  {
+    id: "phone-fear-cleared",
+    japaneseName: "電話恐怖症克服",
+    englishName: "Phone Fear Cleared",
+    description: "Survived a Japanese phone call.",
+    requireQuestId: "phone-call",
+  },
+  {
+    id: "no-subtitle-clear",
+    japaneseName: "字幕なしクリア",
+    englishName: "No-Subtitle Clear",
+    description: "Finished a mission with Immersion Mode (no English).",
+    requireFlag: "achievement:no-subtitle-clear",
+  },
+  {
+    id: "first-week-hero",
+    japaneseName: "初週ヒーロー",
+    englishName: "First Week Hero",
+    description: "Cleared the Chapter 1 communication boss.",
+    requireQuestId: "first-week-challenge",
+  },
+  {
+    id: "repair-ace",
+    japaneseName: "修復マスター",
+    englishName: "Repair Ace",
+    description: "Successfully repaired a conversation mid-mission.",
+    requireFlag: "achievement:repair-ace",
+  },
+  {
+    id: "clinic-checkin",
+    japaneseName: "クリニック初診",
+    englishName: "Clinic Check-in",
+    description: "Completed your first clinic visit.",
+    requireQuestId: "clinic-visit",
+  },
+] as const;

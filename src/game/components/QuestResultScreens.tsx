@@ -181,6 +181,10 @@ export function QuestSuccessScreen({
           </dd>
         </div>
         <div>
+          <dt>Communication</dt>
+          <dd>{outcome.communicationPercent ?? 0}%</dd>
+        </div>
+        <div>
           <dt>XP</dt>
           <dd>
             {newlyRewarded || replayRewarded ? `+${xpGained}` : "+0"}
@@ -188,6 +192,22 @@ export function QuestSuccessScreen({
           </dd>
         </div>
       </dl>
+
+      {(outcome.immersionNoEnglish ||
+        outcome.firstListenSuccess ||
+        outcome.repairedConversation) && (
+        <div className="ppq-result-badges">
+          {outcome.immersionNoEnglish ? (
+            <span className="ppq-badge">No English</span>
+          ) : null}
+          {outcome.firstListenSuccess ? (
+            <span className="ppq-badge">First Listen</span>
+          ) : null}
+          {outcome.repairedConversation ? (
+            <span className="ppq-badge">Repair</span>
+          ) : null}
+        </div>
+      )}
 
       {!newlyRewarded && !replayRewarded ? (
         <p style={{ color: "var(--ppq-muted)", fontSize: 13 }}>

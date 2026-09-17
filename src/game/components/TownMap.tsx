@@ -1,4 +1,5 @@
 import { listLocationsWithStatus } from "../utils/locationStatus";
+import { getLocationHubCard } from "../utils/locationHub";
 import { isDeveloperMode } from "../utils/chapterProgress";
 import type { LocationId, PlayerRpgProfile } from "../types";
 
@@ -42,7 +43,7 @@ export function TownMap({ profile, onSelect }: Props) {
       <header>
         <h2 className="ppq-map-title">🗺️ Kotoba Town</h2>
         <p style={{ color: "var(--ppq-muted)", margin: "4px 0 0", fontSize: 13 }}>
-          ことば町 — tap an unlocked place to visit.
+          ことば町 — Japanese is how you move through the city.
         </p>
         <p className="ppq-map-trail" aria-label="Chapter progression">
           {unlockedStory
@@ -55,13 +56,21 @@ export function TownMap({ profile, onSelect }: Props) {
         </p>
       </header>
       <div className="ppq-map-grid">
-        {ordered.map(({ location, status, unlockText }) => {
-          const locked = status === "locked";
+        {ordered.map(({ location, unlockText }) => {
+          const hub = getLocationHubCard(location.id, profile);
+          const locked = hub.status === "locked";
+          const done = hub.status === "completed-area";
           return (
             <button
               key={location.id}
               type="button"
-              className={locked ? "ppq-loc ppq-loc--locked" : "ppq-loc"}
+              className={
+                locked
+                  ? "ppq-loc ppq-loc--locked"
+                  : done
+                    ? "ppq-loc ppq-loc--done"
+                    : "ppq-loc"
+              }
               disabled={locked}
               onClick={() => {
                 if (!locked) onSelect(location.id);
@@ -75,9 +84,24 @@ export function TownMap({ profile, onSelect }: Props) {
               <span className="ppq-loc-ja" lang="ja">
                 {location.japaneseName}
               </span>
-              <span className="ppq-loc-desc">
-                {locked ? unlockText : location.description}
-              </span>
+              {locked ? (
+                <span className="ppq-loc-desc">{unlockText}</span>
+              ) : (
+                <>
+                  <span className="ppq-loc-progress">
+                    {hub.completedMissions}/{hub.totalMissions} missions ·{" "}
+                    {hub.progressPercent}%
+                    {hub.availableMissions > 0
+                      ? ` · ${hub.availableMissions} open`
+                      : ""}
+                  </span>
+                  {hub.sealIcon ? (
+                    <span className="ppq-loc-seal">
+                      {hub.sealEarned ? hub.sealIcon : "○"} Seal
+                    </span>
+                  ) : null}
+                </>
+              )}
             </button>
           );
         })}

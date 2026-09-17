@@ -7,6 +7,9 @@ import { FIRST_DAY_OFFICE_QUEST } from "./firstDayOffice";
 import { FIRST_WEEK_CHALLENGE_QUEST } from "./firstWeekChallenge";
 import { MEET_NEIGHBOR_QUEST } from "./meetNeighbor";
 import { PHONE_CALL_QUEST } from "./phoneCall";
+import {
+  RANDOM_ENCOUNTER_QUESTS,
+} from "./randomEncounters";
 import { SOCIAL_LIFE_CHALLENGE_QUEST } from "./socialLifeChallenge";
 import { STATION_MASTER_QUEST } from "./stationMaster";
 
@@ -23,7 +26,11 @@ export const QUESTS: readonly QuestDefinition[] = [
   PHONE_CALL_QUEST,
   FIRST_DAY_OFFICE_QUEST,
   SOCIAL_LIFE_CHALLENGE_QUEST,
+  // Short random street encounters
+  ...RANDOM_ENCOUNTER_QUESTS,
 ];
+
+export { RANDOM_ENCOUNTER_QUESTS };
 
 export function getQuestById(id: string): QuestDefinition | undefined {
   return QUESTS.find((quest) => quest.id === id);
@@ -34,7 +41,13 @@ export function getPlayableQuests(): QuestDefinition[] {
 }
 
 export function getQuestsForLocation(locationId: string): QuestDefinition[] {
-  return QUESTS.filter((quest) => quest.locationId === locationId);
+  return QUESTS.filter(
+    (quest) => quest.locationId === locationId && !quest.rewards.randomEncounter
+  );
+}
+
+export function getRandomEncounters(): QuestDefinition[] {
+  return QUESTS.filter((quest) => quest.rewards.randomEncounter);
 }
 
 /**
@@ -51,4 +64,17 @@ export function getPrimaryQuestForLocation(
   if (atLoc.length === 0) return undefined;
   const incomplete = atLoc.find((q) => !completedQuestIds.includes(q.id));
   return incomplete ?? atLoc[0];
+}
+
+/** Deterministic pick among unlocked random encounters. */
+export function pickRandomEncounter(
+  completedQuestIds: readonly string[],
+  seed = Date.now()
+): QuestDefinition | undefined {
+  const eligible = getRandomEncounters().filter((q) =>
+    (q.requiresQuestIds ?? []).every((id) => completedQuestIds.includes(id))
+  );
+  if (eligible.length === 0) return undefined;
+  const idx = Math.abs(seed) % eligible.length;
+  return eligible[idx];
 }

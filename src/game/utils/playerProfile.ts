@@ -5,10 +5,17 @@
 
 import { getLevelProgress } from "../../utils/gameMode/xp";
 import { STARTER_LOCATION_IDS } from "../data/locations";
+import { sealAwardedByQuest } from "../data/seals";
+import { CURRENCY } from "../data/rpgConfig";
 import type {
+  CommunicationSealId,
   CompletedQuestRecord,
+  DailyQuestProgress,
+  ImmersionPrefs,
   LanguageStats,
+  LivingJapaneseWeights,
   LocationId,
+  NpcRelationship,
   PlayerRpgProfile,
 } from "../types";
 import {
@@ -17,6 +24,9 @@ import {
   seedLanguageStatsFromTrainer,
 } from "./languageStats";
 import { resolveAdventureRank } from "../data/ranks";
+import { grantQuestRelationshipXp } from "./relationships";
+import { syncSkillUnlocks } from "./skillTree";
+import { ensureDailyQuests } from "./dailyQuests";
 
 export const RPG_PROFILE_KEY = "jlpt-trainer:pera-pera-quest:v1";
 
@@ -125,6 +135,18 @@ export function createDefaultProfile(
     metNpcIds: [],
     rewardedQuestIds: [],
     flags: {},
+    seals: [],
+    relationships: [],
+    coins: 0,
+    unlockedSkillNodes: [],
+    immersion: {
+      enabled: false,
+      hideEnglish: false,
+      hideSubtitles: false,
+    },
+    daily: null,
+    livingJapanese: {},
+    recentFailConcepts: [],
     createdAt: now,
     updatedAt: now,
   };
@@ -135,6 +157,78 @@ function parseFlags(raw: unknown): Record<string, boolean> {
   const out: Record<string, boolean> = {};
   for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
     if (typeof value === "boolean") out[key] = value;
+  }
+  return out;
+}
+
+function parseSeals(raw: unknown): CommunicationSealId[] {
+  const allowed = new Set<string>([
+    "city-hall",
+    "transportation",
+    "daily-life",
+    "communication",
+    "workplace",
+    "social",
+    "fluency",
+  ]);
+  return parseStringArray(raw).filter((id): id is CommunicationSealId =>
+    allowed.has(id)
+  );
+}
+
+function parseRelationships(raw: unknown): NpcRelationship[] {
+  if (!Array.isArray(raw)) return [];
+  const out: NpcRelationship[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as Record<string, unknown>;
+    if (typeof row.npcId !== "string") continue;
+    out.push({
+      npcId: row.npcId,
+      xp: nonNegativeInt(row.xp),
+      level: nonNegativeInt(row.level),
+    });
+  }
+  return out;
+}
+
+function parseImmersion(raw: unknown): ImmersionPrefs {
+  if (!raw || typeof raw !== "object") {
+    return { enabled: false, hideEnglish: false, hideSubtitles: false };
+  }
+  const row = raw as Record<string, unknown>;
+  return {
+    enabled: row.enabled === true,
+    hideEnglish: row.hideEnglish === true,
+    hideSubtitles: row.hideSubtitles === true,
+  };
+}
+
+function parseDaily(raw: unknown): DailyQuestProgress | null {
+  if (!raw || typeof raw !== "object") return null;
+  const row = raw as Record<string, unknown>;
+  if (typeof row.dayKey !== "string") return null;
+  const progress: Record<string, number> = {};
+  if (row.progress && typeof row.progress === "object") {
+    for (const [k, v] of Object.entries(row.progress as Record<string, unknown>)) {
+      progress[k] = nonNegativeInt(v);
+    }
+  }
+  return {
+    dayKey: row.dayKey,
+    questIds: parseStringArray(row.questIds),
+    completedIds: parseStringArray(row.completedIds),
+    progress,
+  };
+}
+
+function parseLiving(raw: unknown): LivingJapaneseWeights {
+  if (!raw || typeof raw !== "object") return {};
+  const out: LivingJapaneseWeights = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof v === "number" && Number.isFinite(v) && v > 0) {
+      out[k] = Math.min(10, Math.round(v));
+    }
   }
   return out;
 }
@@ -173,12 +267,11 @@ export function parsePlayerProfile(
     ].every((id) => completedQuestIds.includes(id));
     if (flags.chapter2Complete || ch2Done) {
       flags.chapter2Complete = true;
-      // Do not advance into a nonexistent playable Chapter 3.
       currentChapter = Math.max(currentChapter, 2);
     }
   }
 
-  return {
+  let profile: PlayerRpgProfile = {
     version: 1,
     playerName:
       typeof row.playerName === "string" && row.playerName.trim()
@@ -198,9 +291,29 @@ export function parsePlayerProfile(
     metNpcIds: parseStringArray(row.metNpcIds),
     rewardedQuestIds: parseStringArray(row.rewardedQuestIds),
     flags,
+    seals: parseSeals(row.seals),
+    relationships: parseRelationships(row.relationships),
+    coins: nonNegativeInt(row.coins),
+    unlockedSkillNodes: parseStringArray(row.unlockedSkillNodes),
+    immersion: parseImmersion(row.immersion),
+    daily: parseDaily(row.daily),
+    livingJapanese: parseLiving(row.livingJapanese),
+    recentFailConcepts: parseStringArray(row.recentFailConcepts).slice(0, 24),
     createdAt: nonNegativeInt(row.createdAt, fallback.createdAt),
     updatedAt: nonNegativeInt(row.updatedAt, fallback.updatedAt),
   };
+
+  // Migrate: grant seals already earned from completed quests.
+  for (const questId of profile.completedQuestIds) {
+    const seal = sealAwardedByQuest(questId);
+    if (seal && !profile.seals.includes(seal.id)) {
+      profile = { ...profile, seals: [...profile.seals, seal.id] };
+    }
+  }
+
+  profile = syncSkillUnlocks(profile);
+  profile = ensureDailyQuests(profile);
+  return profile;
 }
 
 export function loadPlayerProfile(
@@ -264,6 +377,13 @@ export type QuestCompletionInput = {
   /** Soft story flags to set true (e.g. chapter1Complete). */
   setFlags?: string[];
   at?: number;
+  sealId?: CommunicationSealId;
+  coins?: number;
+  relationshipNpcIds?: string[];
+  communicationPercent?: number;
+  /** Immersion extras already folded into xpGained / skillRewards by caller. */
+  immersionNoEnglish?: boolean;
+  repairedConversation?: boolean;
 };
 
 export type QuestCompletionResult = {
@@ -368,6 +488,43 @@ export function applyQuestCompletion(
     languageStats: mergeLanguageStats(next.languageStats, input.skillRewards),
     rewardedQuestIds: [...next.rewardedQuestIds, input.questId],
   };
+
+  const seal =
+    input.sealId ?? sealAwardedByQuest(input.questId)?.id ?? undefined;
+  if (seal && !next.seals.includes(seal)) {
+    next = { ...next, seals: [...next.seals, seal] };
+  }
+
+  const coinGain =
+    input.coins ??
+    (input.questId.includes("challenge")
+      ? CURRENCY.perBossClear
+      : CURRENCY.perQuestClear);
+  next = { ...next, coins: next.coins + Math.max(0, coinGain) };
+
+  const relNpcs = input.relationshipNpcIds ?? input.metNpcIds ?? [];
+  if (relNpcs.length > 0) {
+    next = grantQuestRelationshipXp(
+      next,
+      relNpcs,
+      input.communicationPercent ?? input.accuracy
+    );
+  }
+
+  if (input.immersionNoEnglish) {
+    next = {
+      ...next,
+      flags: { ...next.flags, "achievement:no-subtitle-clear": true },
+    };
+  }
+  if (input.repairedConversation) {
+    next = {
+      ...next,
+      flags: { ...next.flags, "achievement:repair-ace": true },
+    };
+  }
+
+  next = syncSkillUnlocks(next);
 
   return {
     profile: next,
