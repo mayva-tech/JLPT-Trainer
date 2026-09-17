@@ -15,7 +15,7 @@ import {
   undoStepAnswer,
   type QuestStepAnswerDelta,
 } from "../utils/questEngine";
-import { buildQuestAutoPlayQueue } from "../utils/questAutoPlay";
+import { buildQuestAutoPlayQueue, type KaraokeSurface } from "../utils/questAutoPlay";
 import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
@@ -209,6 +209,10 @@ function LinearQuestRunner({
   const autoPlayTokenRef = useRef(0);
   /** Speak quest title JP→EN once per Auto Voice session. */
   const titleSpokenRef = useRef(false);
+  /** Play/Quiz-style: only the active surface receives karaoke. */
+  const [karaokeSurface, setKaraokeSurface] = useState<KaraokeSurface | null>(
+    null
+  );
 
   const step = quest
     ? quest.steps[Math.min(stepIndex, quest.steps.length - 1)]!
@@ -233,6 +237,7 @@ function LinearQuestRunner({
     speech.stop();
     setChoiceHighlightId(null);
     setFeedbackJaFocus(null);
+    setKaraokeSurface(null);
     autoPlayTokenRef.current += 1;
     const token = autoPlayTokenRef.current;
 
@@ -278,9 +283,11 @@ function LinearQuestRunner({
         }
         const next = () => playSeg(index + 1);
         if (seg.language === "ja") {
+          setKaraokeSurface("feedback");
           setFeedbackJaFocus(seg.text);
           speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
         } else {
+          setKaraokeSurface("feedback");
           setFeedbackJaFocus(null);
           speech.speakEnglish(seg.text, { karaoke: true, onEnded: next });
         }
@@ -294,9 +301,11 @@ function LinearQuestRunner({
       if (!item) {
         setChoiceHighlightId(null);
         setFeedbackJaFocus(null);
+        setKaraokeSurface(null);
         return;
       }
       const next = () => playItem(index + 1);
+      setKaraokeSurface(item.surface);
       if (item.kind === "ja") {
         setFeedbackJaFocus(null);
         if (item.choiceId) setChoiceHighlightId(item.choiceId);
@@ -310,11 +319,15 @@ function LinearQuestRunner({
           },
         });
       } else if (item.kind === "en") {
-        setChoiceHighlightId(null);
+        if (item.choiceId) setChoiceHighlightId(item.choiceId);
+        else setChoiceHighlightId(null);
         setFeedbackJaFocus(null);
         speech.speakEnglish(item.text, {
           karaoke: item.karaoke,
-          onEnded: next,
+          onEnded: () => {
+            if (item.choiceId) setChoiceHighlightId(null);
+            next();
+          },
         });
       } else {
         setChoiceHighlightId(null);
@@ -575,6 +588,8 @@ function LinearQuestRunner({
 
   function replayNpcLine() {
     if (!currentResolved.enabled || !currentResolved.speakText) return;
+    setKaraokeSurface("prompt");
+    setChoiceHighlightId(null);
     const allowKaraoke =
       currentResolved.karaokeMode === "always" ||
       (currentResolved.karaokeMode === "after-answer" && revealed);
@@ -590,11 +605,14 @@ function LinearQuestRunner({
 
   function replayEnglish(text: string) {
     setFeedbackJaFocus(null);
+    setKaraokeSurface("prompt");
+    setChoiceHighlightId(null);
     speech.speakEnglish(text, { karaoke: true });
   }
 
   function replayChoice(choiceId: string, labelJa: string) {
     setFeedbackJaFocus(null);
+    setKaraokeSurface("choice");
     setChoiceHighlightId(choiceId);
     speech.speakJapanese(labelJa, {
       karaoke: true,
@@ -605,11 +623,13 @@ function LinearQuestRunner({
   function speakBilingualSegments(segments: FeedbackSpeakSegment[]) {
     if (segments.length === 0) return;
     setChoiceHighlightId(null);
+    setKaraokeSurface("feedback");
 
     const play = (index: number) => {
       const seg = segments[index];
       if (!seg) {
         setFeedbackJaFocus(null);
+        setKaraokeSurface(null);
         return;
       }
       const next = () => play(index + 1);
@@ -670,8 +690,26 @@ function LinearQuestRunner({
           {quest.difficulty === "boss" ? " · Boss" : ""}
           {currentResolved.announcement ? " · Announcement" : ""}
         </p>
-        <h1 lang="ja">{quest.japaneseTitle}</h1>
-        <p>{quest.title}</p>
+        <h1 lang="ja">
+          <HighlightedJapanese
+            text={quest.japaneseTitle}
+            className="ppq-quest-title-ja"
+            highlight={
+              karaokeSurface === "title" && speech.activeLang === "ja"
+                ? speech.highlight
+                : null
+            }
+          />
+        </h1>
+        <HighlightedEnglish
+          text={quest.title}
+          className="ppq-quest-title-en"
+          highlight={
+            karaokeSurface === "title" && speech.activeLang === "en"
+              ? speech.highlight
+              : null
+          }
+        />
       </div>
 
       <div className="ppq-quest-toolbar">
@@ -761,22 +799,31 @@ function LinearQuestRunner({
         showJaTranscript={showJaTranscript}
         highlight={
           speech.activeLang === "ja" &&
+          karaokeSurface === "prompt" &&
           choiceHighlightId === null &&
           feedbackJaFocus === null
             ? speech.highlight
             : null
         }
-        enHighlight={speech.activeLang === "en" ? speech.highlight : null}
+        enHighlight={
+          speech.activeLang === "en" && karaokeSurface === "prompt"
+            ? speech.highlight
+            : null
+        }
         speaking={speech.speaking}
         choiceHighlightId={choiceHighlightId}
         choiceHighlight={
-          choiceHighlightId && speech.activeLang === "ja"
+          choiceHighlightId &&
+          speech.activeLang === "ja" &&
+          karaokeSurface === "choice"
             ? speech.highlight
             : null
         }
         feedbackJaFocus={feedbackJaFocus}
         feedbackJaHighlight={
-          feedbackJaFocus && speech.activeLang === "ja"
+          feedbackJaFocus &&
+          speech.activeLang === "ja" &&
+          karaokeSurface === "feedback"
             ? speech.highlight
             : null
         }
@@ -943,7 +990,11 @@ function DialogueStep({
       step.promptEn &&
       !(resolved.hideTranscriptUntilAnswer && !revealed) ? (
         <div className="ppq-prompt-en-row">
-          <div className="ppq-prompt-en">{step.promptEn}</div>
+          <HighlightedEnglish
+            text={step.promptEn}
+            className="ppq-prompt-en"
+            highlight={enHighlight}
+          />
           {onReplayEnglish &&
           (step.kind === "intro" || step.kind === "outro") ? (
             <button

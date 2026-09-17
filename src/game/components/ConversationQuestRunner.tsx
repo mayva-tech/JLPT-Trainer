@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HighlightedEnglish } from "../../components/HighlightedEnglish";
 import { HighlightedJapanese } from "../../components/HighlightedJapanese";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
 import { getLocationById } from "../data/locations";
@@ -19,6 +20,7 @@ import {
   getConversationNode,
   resolveRelationshipBranch,
 } from "../utils/conversationEngine";
+import type { KaraokeSurface } from "../utils/questAutoPlay";
 import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
@@ -171,16 +173,24 @@ export function ConversationQuestRunner({
   const nodeReplayUsedRef = useRef(false);
   /** Speak quest title JP→EN once per Auto Voice session. */
   const titleSpokenRef = useRef(false);
+  /** Play/Quiz-style: only the active surface receives karaoke. */
+  const [karaokeSurface, setKaraokeSurface] = useState<KaraokeSurface | null>(
+    null
+  );
 
   // Each quest page opens with Auto Voice OFF (user can turn it on).
   useEffect(() => {
     titleSpokenRef.current = false;
+    setKaraokeSurface(null);
     if (speech.autoVoice) speech.setAutoVoice(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questId]);
 
   useEffect(() => {
-    if (!speech.autoVoice) titleSpokenRef.current = false;
+    if (!speech.autoVoice) {
+      titleSpokenRef.current = false;
+      setKaraokeSurface(null);
+    }
   }, [speech.autoVoice]);
 
   const node = useMemo(() => {
@@ -258,6 +268,7 @@ export function ConversationQuestRunner({
     speech.stop();
     setChoiceHighlightId(null);
     setFeedbackJaFocus(null);
+    setKaraokeSurface(null);
     autoPlayTokenRef.current += 1;
     const token = autoPlayTokenRef.current;
 
@@ -275,9 +286,20 @@ export function ConversationQuestRunner({
     });
 
     type QueueItem =
-      | { kind: "ja"; text: string; reading?: string; choiceId?: string }
-      | { kind: "en"; text: string }
-      | { kind: "bilingual"; text: string };
+      | {
+          kind: "ja";
+          text: string;
+          reading?: string;
+          choiceId?: string;
+          surface: KaraokeSurface;
+        }
+      | {
+          kind: "en";
+          text: string;
+          choiceId?: string;
+          surface: KaraokeSurface;
+        }
+      | { kind: "bilingual"; text: string; surface: KaraokeSurface };
 
     const speakEnBody = !immersionBlocksEn && !(hideTranscript && !revealed);
     const includeTitle = !titleSpokenRef.current;
@@ -287,9 +309,11 @@ export function ConversationQuestRunner({
     if (includeTitle) {
       const titleJa = quest.japaneseTitle?.trim() ?? "";
       const titleEn = quest.title?.trim() ?? "";
-      if (titleJa) queue.push({ kind: "ja", text: titleJa });
+      if (titleJa) {
+        queue.push({ kind: "ja", text: titleJa, surface: "title" });
+      }
       if (!immersionBlocksEn && titleEn) {
-        queue.push({ kind: "en", text: titleEn });
+        queue.push({ kind: "en", text: titleEn, surface: "title" });
       }
     }
     if (node.japanese.trim()) {
@@ -297,14 +321,14 @@ export function ConversationQuestRunner({
         kind: "ja",
         text: node.japanese,
         reading: node.reading,
+        surface: "prompt",
       });
     }
     if (speakEnBody && node.english?.trim()) {
-      queue.push({ kind: "en", text: node.english });
+      queue.push({ kind: "en", text: node.english, surface: "prompt" });
     } else if (showHelp && node.english?.trim() && !immersionBlocksEn) {
-      queue.push({ kind: "en", text: node.english });
+      queue.push({ kind: "en", text: node.english, surface: "prompt" });
     }
-    // Audio-first with hidden transcript: play NPC only (no choice spoiler audio).
     if (!revealed && node.choices && !hideTranscript) {
       for (const c of node.choices) {
         queue.push({
@@ -312,16 +336,31 @@ export function ConversationQuestRunner({
           text: c.japanese,
           reading: c.reading,
           choiceId: c.id,
+          surface: "choice",
         });
         if (speakEnBody && c.english?.trim()) {
-          queue.push({ kind: "en", text: c.english });
+          queue.push({
+            kind: "en",
+            text: c.english,
+            choiceId: c.id,
+            surface: "choice",
+          });
         } else if (showHelp && c.english?.trim() && !immersionBlocksEn) {
-          queue.push({ kind: "en", text: c.english });
+          queue.push({
+            kind: "en",
+            text: c.english,
+            choiceId: c.id,
+            surface: "choice",
+          });
         }
       }
     }
     if (showHelp && node.helpHint?.trim()) {
-      queue.push({ kind: "bilingual", text: node.helpHint });
+      queue.push({
+        kind: "bilingual",
+        text: node.helpHint,
+        surface: "feedback",
+      });
     }
 
     const playBilingual = (raw: string, onDone: () => void) => {
@@ -335,10 +374,12 @@ export function ConversationQuestRunner({
         const seg = segments[index];
         if (!seg) {
           setFeedbackJaFocus(null);
+          setKaraokeSurface(null);
           onDone();
           return;
         }
         const next = () => playSeg(index + 1);
+        setKaraokeSurface("feedback");
         if (seg.language === "ja") {
           setFeedbackJaFocus(seg.text);
           speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
@@ -355,24 +396,33 @@ export function ConversationQuestRunner({
       const item = queue[index];
       if (!item) {
         setChoiceHighlightId(null);
+        setKaraokeSurface(null);
         return;
       }
       const next = () => playItem(index + 1);
+      setKaraokeSurface(item.surface);
       if (item.kind === "ja") {
         if (item.choiceId) setChoiceHighlightId(item.choiceId);
         else setChoiceHighlightId(null);
         speech.speakJapanese(item.text, {
           reading: item.reading,
           rate: nodeRate,
-          karaoke: karaokeEnabled && !item.choiceId ? true : karaokeEnabled,
+          karaoke: karaokeEnabled,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
             next();
           },
         });
       } else if (item.kind === "en") {
-        setChoiceHighlightId(null);
-        speech.speakEnglish(item.text, { karaoke: true, onEnded: next });
+        if (item.choiceId) setChoiceHighlightId(item.choiceId);
+        else setChoiceHighlightId(null);
+        speech.speakEnglish(item.text, {
+          karaoke: true,
+          onEnded: () => {
+            if (item.choiceId) setChoiceHighlightId(null);
+            next();
+          },
+        });
       } else {
         playBilingual(item.text, next);
       }
@@ -420,6 +470,8 @@ export function ConversationQuestRunner({
     setListenCompromised(true);
     nodeReplayUsedRef.current = true;
     setHighestAssistLevel((lvl) => bumpAssistLevel(lvl, slow ? 2 : 1));
+    setKaraokeSurface("prompt");
+    setChoiceHighlightId(null);
     const rate = resolveNodeSpeechRate({
       nodeSpeechRate: activeNode.speechRate,
       forceSlowSpeech: activeNode.forceSlowSpeech,
@@ -872,8 +924,26 @@ export function ConversationQuestRunner({
           {location?.name ?? quest.locationId} · Conversation
           {quest.difficulty === "boss" ? " · Boss" : ""}
         </p>
-        <h1 lang="ja">{quest.japaneseTitle}</h1>
-        <p>{quest.title}</p>
+        <h1 lang="ja">
+          <HighlightedJapanese
+            text={quest.japaneseTitle}
+            className="ppq-quest-title-ja"
+            highlight={
+              karaokeSurface === "title" && speech.activeLang === "ja"
+                ? speech.highlight
+                : null
+            }
+          />
+        </h1>
+        <HighlightedEnglish
+          text={quest.title}
+          className="ppq-quest-title-en"
+          highlight={
+            karaokeSurface === "title" && speech.activeLang === "en"
+              ? speech.highlight
+              : null
+          }
+        />
         {isPhone ? (
           <div className="ppq-phone-status" role="status">
             <span className="ppq-phone-status__dot" aria-hidden />
@@ -975,7 +1045,13 @@ export function ConversationQuestRunner({
             <HighlightedJapanese
               text={activeNode.japanese}
               className="ppq-prompt-ja"
-              highlight={choiceHighlightId ? null : speech.highlight}
+              highlight={
+                karaokeSurface === "prompt" &&
+                speech.activeLang === "ja" &&
+                !choiceHighlightId
+                  ? speech.highlight
+                  : null
+              }
             />
           )}
           {activeNode.japanese.trim() ? (
@@ -1016,14 +1092,23 @@ export function ConversationQuestRunner({
 
         {showPromptEn && activeNode.english && !hideTranscript ? (
           <div className="ppq-prompt-en-row">
-            <div className="ppq-prompt-en">{activeNode.english}</div>
+            <HighlightedEnglish
+              text={activeNode.english}
+              className="ppq-prompt-en"
+              highlight={
+                karaokeSurface === "prompt" && speech.activeLang === "en"
+                  ? speech.highlight
+                  : null
+              }
+            />
             <button
               type="button"
               className="ppq-speak-btn"
               aria-label="Play English narration"
-              onClick={() =>
-                speech.speakEnglish(activeNode.english!, { karaoke: true })
-              }
+              onClick={() => {
+                setKaraokeSurface("prompt");
+                speech.speakEnglish(activeNode.english!, { karaoke: true });
+              }}
             >
               🔊
             </button>
@@ -1052,15 +1137,31 @@ export function ConversationQuestRunner({
                 showHelp={showHelp}
                 immersionBlocksEn={immersionBlocksEn}
                 choiceHighlightId={choiceHighlightId}
-                highlight={speech.highlight}
+                highlight={
+                  choiceHighlightId === choice.id &&
+                  karaokeSurface === "choice" &&
+                  speech.activeLang === "ja"
+                    ? speech.highlight
+                    : null
+                }
+                enHighlight={
+                  choiceHighlightId === choice.id &&
+                  karaokeSurface === "choice" &&
+                  speech.activeLang === "en" &&
+                  choice.english
+                    ? speech.highlight
+                    : null
+                }
                 speaking={speech.status === "speaking"}
                 onSelect={() => onSelectChoice(choice.id)}
-                onReplay={() =>
+                onReplay={() => {
+                  setKaraokeSurface("choice");
+                  setChoiceHighlightId(choice.id);
                   speech.speakJapanese(choice.japanese, {
                     reading: choice.reading,
                     karaoke: true,
-                  })
-                }
+                  });
+                }}
               />
             ))}
           </div>
@@ -1091,7 +1192,10 @@ export function ConversationQuestRunner({
               {feedback.split("\n").map((line, i) => (
                 <span key={i}>
                   {i > 0 ? <br /> : null}
-                  {feedbackJaFocus && line.includes(feedbackJaFocus) ? (
+                  {feedbackJaFocus &&
+                  line.includes(feedbackJaFocus) &&
+                  karaokeSurface === "feedback" &&
+                  speech.activeLang === "ja" ? (
                     <HighlightedJapanese
                       text={line}
                       className="ppq-feedback-ja"
@@ -1137,6 +1241,7 @@ function ChoiceRow({
   immersionBlocksEn,
   choiceHighlightId,
   highlight,
+  enHighlight,
   speaking,
   onSelect,
   onReplay,
@@ -1149,6 +1254,7 @@ function ChoiceRow({
   immersionBlocksEn: boolean;
   choiceHighlightId: string | null;
   highlight: ReturnType<typeof useTrainerSpeech>["highlight"];
+  enHighlight: ReturnType<typeof useTrainerSpeech>["highlight"];
   speaking: boolean;
   onSelect: () => void;
   onReplay: () => void;
@@ -1176,7 +1282,7 @@ function ChoiceRow({
         data-repair-kind={choice.repairKind ?? undefined}
       >
         <span className="ppq-choice-index">{index + 1}.</span>{" "}
-        {choiceHighlightId === choice.id ? (
+        {choiceHighlightId === choice.id && highlight ? (
           <HighlightedJapanese
             text={choice.japanese}
             className="ppq-choice-ja"
@@ -1186,7 +1292,15 @@ function ChoiceRow({
           <span lang="ja">{choice.japanese}</span>
         )}
         {showHelp && !immersionBlocksEn && choice.english ? (
-          <span className="ppq-choice-en">{choice.english}</span>
+          choiceHighlightId === choice.id && enHighlight ? (
+            <HighlightedEnglish
+              text={choice.english}
+              className="ppq-choice-en"
+              highlight={enHighlight}
+            />
+          ) : (
+            <span className="ppq-choice-en">{choice.english}</span>
+          )
         ) : null}
       </button>
       <button

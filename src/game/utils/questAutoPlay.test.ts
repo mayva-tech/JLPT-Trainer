@@ -65,15 +65,15 @@ describe("buildQuestAutoPlayQueue", () => {
       titleJa: "市役所の手続き",
       titleEn: "City Hall Registration",
     });
-    expect(queue.map((q) => [q.kind, "text" in q ? q.text : ""])).toEqual([
-      ["ja", "市役所の手続き"],
-      ["en", "City Hall Registration"],
-      ["ja", "本日はどのようなご用件でしょうか。"],
-      ["en", "How can I help you today?"],
-      ["ja", "転入届を出したいんですが。"],
-      ["en", "I'd like to file a move-in notice."],
-      ["ja", "転出届を出したいんですが。"],
-      ["en", "I'd like to file a move-out notice."],
+    expect(queue.map((q) => [q.kind, q.surface, "text" in q ? q.text : ""])).toEqual([
+      ["ja", "title", "市役所の手続き"],
+      ["en", "title", "City Hall Registration"],
+      ["ja", "prompt", "本日はどのようなご用件でしょうか。"],
+      ["en", "prompt", "How can I help you today?"],
+      ["ja", "choice", "転入届を出したいんですが。"],
+      ["en", "choice", "I'd like to file a move-in notice."],
+      ["ja", "choice", "転出届を出したいんですが。"],
+      ["en", "choice", "I'd like to file a move-out notice."],
     ]);
   });
 
