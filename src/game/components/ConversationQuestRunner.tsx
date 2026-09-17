@@ -7,7 +7,9 @@ import { getQuestById } from "../data/quests";
 import type {
   ConversationChoice,
   ConversationNode,
+  NpcRelationship,
   QuestRunMistake,
+  ResponseQuality,
 } from "../types";
 import {
   applyConversationChoice,
@@ -15,11 +17,16 @@ import {
   emptyQualityCounts,
   getConversationChoice,
   getConversationNode,
+  resolveRelationshipBranch,
 } from "../utils/conversationEngine";
 import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
 } from "../utils/questFeedbackSpeech";
+import {
+  nodeCountsTowardSocialFit,
+  socialFitFromQualities,
+} from "../utils/socialFit";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
 import { NpcPortrait } from "./NpcPortrait";
@@ -30,6 +37,10 @@ type Props = {
   onQuit: () => void;
   onFinished: (outcome: QuestRunOutcome) => void;
   immersionEnabled?: boolean;
+  /** Current NPC relationship levels for gated dialogue variants. */
+  relationships?: NpcRelationship[];
+  /** Skill: show a subtle context hint after an awkward response. */
+  showContextHint?: boolean;
 };
 
 const SETTLE_MS = 280;
@@ -43,6 +54,8 @@ export function ConversationQuestRunner({
   onQuit,
   onFinished,
   immersionEnabled = false,
+  relationships = [],
+  showContextHint = false,
 }: Props) {
   const quest = getQuestById(questId);
   const conversation = quest?.conversation;
@@ -56,6 +69,7 @@ export function ConversationQuestRunner({
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackGood, setFeedbackGood] = useState(true);
   const [qualityLabel, setQualityLabel] = useState<string | null>(null);
+  const [contextHint, setContextHint] = useState<string | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [helpUses, setHelpUses] = useState(0);
   const [usedEnglishAssist, setUsedEnglishAssist] = useState(false);
@@ -73,6 +87,9 @@ export function ConversationQuestRunner({
     { npcId: string; delta: number }[]
   >([]);
   const [qualityCounts, setQualityCounts] = useState(emptyQualityCounts());
+  const [socialFitQualities, setSocialFitQualities] = useState<ResponseQuality[]>(
+    []
+  );
   const [pendingNextId, setPendingNextId] = useState<string | null>(null);
   const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(null);
   const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
@@ -273,42 +290,36 @@ export function ConversationQuestRunner({
       relationshipDeltas,
       repairUsed: repairedConversation,
       qualityCounts,
+      socialFitPercent: socialFitFromQualities(socialFitQualities),
     };
     onFinished(outcome);
   }
 
   function goToNode(nextId: string) {
-    const next = getConversationNode(activeConversation, nextId);
+    let targetId = nextId;
+    // Auto-resolve relationship routers (no choices / no speech).
+    for (let guard = 0; guard < 8; guard += 1) {
+      const candidate = getConversationNode(activeConversation, targetId);
+      if (!candidate) break;
+      const hasChoices = Boolean(candidate.choices?.length);
+      const isTerminal =
+        candidate.endState === "success" || candidate.endState === "failure";
+      if (hasChoices || isTerminal || candidate.japanese.trim()) break;
+      const routed = resolveRelationshipBranch(candidate, relationships);
+      if (!routed || routed === targetId) break;
+      targetId = routed;
+    }
+    const next = getConversationNode(activeConversation, targetId);
     if (!next) {
       finish(false);
       return;
     }
-    if (next.endState === "success") {
-      // Speak final line optionally by landing, then finish on Continue.
-      setNodeId(nextId);
-      setSelectedId(null);
-      setRevealed(false);
-      setFeedback(null);
-      setQualityLabel(null);
-      setPendingNextId(null);
-      setShowHelp(false);
-      setNodePlayKey((k) => k + 1);
-      return;
-    }
-    if (next.endState === "failure") {
-      setNodeId(nextId);
-      setSelectedId(null);
-      setRevealed(false);
-      setFeedback(null);
-      setPendingNextId(null);
-      setShowHelp(false);
-      return;
-    }
-    setNodeId(nextId);
+    setNodeId(targetId);
     setSelectedId(null);
     setRevealed(false);
     setFeedback(null);
     setQualityLabel(null);
+    setContextHint(null);
     setPendingNextId(null);
     setShowHelp(false);
     setNodePlayKey((k) => k + 1);
@@ -339,6 +350,9 @@ export function ConversationQuestRunner({
       ...prev,
       [applied.quality]: prev[applied.quality] + 1,
     }));
+    if (nodeCountsTowardSocialFit(activeNode)) {
+      setSocialFitQualities((prev) => [...prev, applied.quality]);
+    }
     setQualityLabel(applied.qualityLabel);
     setFeedback(choice.feedback ?? applied.qualityLabel);
     setFeedbackGood(
@@ -347,6 +361,14 @@ export function ConversationQuestRunner({
         applied.quality === "acceptable"
     );
     setPendingNextId(applied.nextNodeId);
+    if (
+      showContextHint &&
+      (applied.quality === "awkward" || applied.quality === "incorrect")
+    ) {
+      setContextHint("Think about your relationship with this person.");
+    } else {
+      setContextHint(null);
+    }
 
     if (
       applied.quality === "excellent" ||
@@ -456,8 +478,11 @@ export function ConversationQuestRunner({
       goToNode(pendingNextId);
       return;
     }
-    if (activeNode.nextNodeId) {
-      goToNode(activeNode.nextNodeId);
+    if (activeNode.nextNodeId || activeNode.relationshipBranches?.length) {
+      const next =
+        resolveRelationshipBranch(activeNode, relationships) ??
+        activeNode.nextNodeId;
+      if (next) goToNode(next);
       return;
     }
   }
@@ -657,6 +682,12 @@ export function ConversationQuestRunner({
         {qualityLabel && revealed ? (
           <p className="ppq-quality-label" role="status">
             {qualityLabel}
+          </p>
+        ) : null}
+
+        {contextHint ? (
+          <p className="ppq-context-hint" role="note">
+            💭 {contextHint}
           </p>
         ) : null}
 

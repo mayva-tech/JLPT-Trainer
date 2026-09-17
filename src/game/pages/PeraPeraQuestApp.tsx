@@ -161,7 +161,9 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
         ? "chapter1Complete"
         : quest.id === "social-life-challenge"
           ? "chapter2Complete"
-          : undefined;
+          : quest.id === "relationships-challenge"
+            ? "chapter3Complete"
+            : undefined;
     const setFlags = chapterFlag ? [chapterFlag] : undefined;
 
     const applied = applyQuestCompletion(profile, {
@@ -269,20 +271,41 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       );
     }
 
-    // Chapter 2 boss → clear Ch2, teaser only for Ch3 (do not advance playably)
+    // Chapter 2 boss → unlock playable Chapter 3
     if (
       quest.id === "social-life-challenge" &&
       isChapterComplete(nextProfile, 2)
     ) {
       nextProfile = {
         ...nextProfile,
-        // Stay on chapter 2 as the active playable chapter (Ch3 not implemented).
-        currentChapter: Math.max(nextProfile.currentChapter, 2),
+        currentChapter: Math.max(nextProfile.currentChapter, 3),
         flags: { ...nextProfile.flags, chapter2Complete: true },
       };
       setChapterSummary(
         buildChapterSummary({
           chapterNumber: 2,
+          result,
+          profileBefore: profile,
+          profileAfter: nextProfile,
+          xpGranted: applied.xpGranted,
+          nextComingSoon: false,
+        })
+      );
+    }
+
+    // Chapter 3 boss → clear Ch3, teaser only for Ch4
+    if (
+      quest.id === "relationships-challenge" &&
+      isChapterComplete(nextProfile, 3)
+    ) {
+      nextProfile = {
+        ...nextProfile,
+        currentChapter: Math.max(nextProfile.currentChapter, 3),
+        flags: { ...nextProfile.flags, chapter3Complete: true },
+      };
+      setChapterSummary(
+        buildChapterSummary({
+          chapterNumber: 3,
           result,
           profileBefore: profile,
           profileAfter: nextProfile,
@@ -549,6 +572,8 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             metNpcIds={profile.metNpcIds}
             immersionEnabled={profile.immersion.enabled}
             extraRepair={hasSkillEffect(profile, "extra-repair")}
+            relationships={profile.relationships}
+            showContextHint={hasSkillEffect(profile, "context-hint")}
             onQuit={() => setScreen("town")}
             onFinished={onQuestFinished}
           />
@@ -773,6 +798,14 @@ function Landing({
             Chapter 2 for a locked preview.
           </p>
         ) : null}
+        {profile.flags.chapter1Complete &&
+        !profile.flags.chapter2Complete &&
+        profile.currentChapter < 3 &&
+        !isDeveloperMode(profile) ? (
+          <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "10px 0 0" }}>
+            Next unlock: Chapter 3 · 人間関係 (after Social Life Challenge).
+          </p>
+        ) : null}
         {isDeveloperMode(profile) ? (
           <p style={{ fontSize: 12, color: "var(--ppq-accent, #e8a317)", margin: "10px 0 0" }}>
             Developer mode ON — all chapters and locations unlocked. Toggle in Adventure
@@ -823,8 +856,12 @@ function ChapterPanel({
       profile.flags.chapter1Complete ||
       isChapterComplete(profile, 1)
   );
-  // Always allow browsing Chapter 2 as a locked preview; only play when unlocked.
-  const initial = Math.min(Math.max(1, profile.currentChapter), 2) || 1;
+  const chapter2Done = Boolean(
+    isDeveloperMode(profile) ||
+      profile.flags.chapter2Complete ||
+      isChapterComplete(profile, 2)
+  );
+  const initial = Math.min(Math.max(1, profile.currentChapter), 3) || 1;
   const [viewChapter, setViewChapter] = useState(initial);
 
   const chapter = getChapterByNumber(viewChapter);
@@ -837,11 +874,18 @@ function ChapterPanel({
     );
   }
 
-  const chapterLocked = viewChapter === 2 && !chapter1Done;
+  const chapterLocked =
+    (viewChapter === 2 && !chapter1Done) || (viewChapter === 3 && !chapter2Done);
   const rows = getChapterQuestRows(profile, chapter);
   const { done, total, percent } = chapterCompletionCounts(profile, viewChapter);
   const shortJa =
-    viewChapter === 1 ? "新生活" : viewChapter === 2 ? "社会生活" : chapter.japaneseTitle;
+    viewChapter === 1
+      ? "新生活"
+      : viewChapter === 2
+        ? "社会生活"
+        : viewChapter === 3
+          ? "人間関係"
+          : chapter.japaneseTitle;
 
   return (
     <div className="ppq-chapter-panel">
@@ -879,6 +923,23 @@ function ChapterPanel({
           Chapter 2
           {chapter1Done || isDeveloperMode(profile) ? "" : " 🔒"}
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={viewChapter === 3}
+          className={
+            viewChapter === 3 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
+          }
+          title={
+            chapter2Done
+              ? "Chapter 3 · 人間関係"
+              : "Preview Chapter 3 — clear Chapter 2 to play"
+          }
+          onClick={() => setViewChapter(3)}
+        >
+          Chapter 3
+          {chapter2Done || isDeveloperMode(profile) ? "" : " 🔒"}
+        </button>
       </div>
 
       <h2 lang="ja">
@@ -892,8 +953,9 @@ function ChapterPanel({
         <div className="ppq-panel" style={{ marginTop: 12, marginBottom: 4 }}>
           <h2 style={{ marginTop: 0 }}>Locked</h2>
           <p style={{ margin: 0, fontSize: 13 }}>
-            Finish <strong>Chapter 1 · 新生活</strong> (clear the First Week Challenge)
-            to unlock Clinic, Phone Center, and Office quests.
+            {viewChapter === 2
+              ? "Finish Chapter 1 · 新生活 (First Week Challenge) to unlock Chapter 2."
+              : "Finish Chapter 2 · 社会生活 (Social Life Challenge) to unlock Chapter 3."}
           </p>
         </div>
       ) : null}
@@ -969,12 +1031,24 @@ function ChapterPanel({
 
       {viewChapter === 2 && profile.flags.chapter2Complete ? (
         <div className="ppq-panel" style={{ marginTop: 16 }}>
-          <h2>Chapter 3</h2>
+          <h2>Next</h2>
           <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
             第3章・人間関係
           </p>
           <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
-            Work, Friends & Relationships — Coming soon
+            Work, Friends & Relationships — open the Chapter 3 tab to play.
+          </p>
+        </div>
+      ) : null}
+
+      {viewChapter === 3 && profile.flags.chapter3Complete ? (
+        <div className="ppq-panel" style={{ marginTop: 16 }}>
+          <h2>Chapter 4</h2>
+          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+            第4章・仕事と敬語
+          </p>
+          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
+            Business & Keigo — Coming soon
           </p>
         </div>
       ) : null}
@@ -1053,7 +1127,9 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
         <p style={{ margin: 0 }}>{profile.unlockedLocationIds.join(" · ")}</p>
       </div>
 
-      {(profile.flags.chapter1Complete || profile.flags.chapter2Complete) ? (
+      {(profile.flags.chapter1Complete ||
+        profile.flags.chapter2Complete ||
+        profile.flags.chapter3Complete) ? (
         <div className="ppq-panel" style={{ marginTop: 12 }}>
           <h2>Chapter clears</h2>
           {profile.flags.chapter1Complete ? (
@@ -1063,6 +1139,9 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
             <p style={{ margin: profile.flags.chapter1Complete ? "6px 0 0" : 0 }}>
               ✅ Chapter 2 · 社会生活
             </p>
+          ) : null}
+          {profile.flags.chapter3Complete ? (
+            <p style={{ margin: "6px 0 0" }}>✅ Chapter 3 · 人間関係</p>
           ) : null}
         </div>
       ) : null}
@@ -1120,7 +1199,11 @@ function buildChapterSummary({
   const newRank = getProfileRank(profileAfter);
   const oldRank = getProfileRank(profileBefore);
   const clearLabel =
-    chapterNumber === 1 ? "新生活 COMPLETE" : "社会生活 COMPLETE";
+    chapterNumber === 1
+      ? "新生活 COMPLETE"
+      : chapterNumber === 2
+        ? "社会生活 COMPLETE"
+        : "人間関係 COMPLETE";
 
   return {
     chapterNumber,

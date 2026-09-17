@@ -6,7 +6,10 @@ export type PassportAchievementId =
   | "no-subtitle-clear"
   | "first-week-hero"
   | "repair-ace"
-  | "clinic-checkin";
+  | "clinic-checkin"
+  | "read-the-room"
+  | "graceful-refusal"
+  | "senpai-survivor";
 
 export type PassportAchievement = {
   id: PassportAchievementId;
@@ -75,5 +78,26 @@ export const PASSPORT_ACHIEVEMENTS: readonly PassportAchievement[] = [
     englishName: "Clinic Check-in",
     description: "Completed your first clinic visit.",
     requireQuestId: "clinic-visit",
+  },
+  {
+    id: "read-the-room",
+    japaneseName: "空気読めた",
+    englishName: "Read the Room",
+    description: "Cleared the Chapter 3 Social Intelligence Challenge.",
+    requireQuestId: "relationships-challenge",
+  },
+  {
+    id: "graceful-refusal",
+    japaneseName: "いい断り方",
+    englishName: "Graceful Refusal",
+    description: "Practiced soft refusal with Ken.",
+    requireQuestId: "saying-no",
+  },
+  {
+    id: "senpai-survivor",
+    japaneseName: "先輩との会話",
+    englishName: "Senpai Survivor",
+    description: "Asked Sato-senpai for help without sounding bossy.",
+    requireQuestId: "senpai-favor",
   },
 ] as const;

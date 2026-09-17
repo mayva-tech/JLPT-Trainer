@@ -22,6 +22,9 @@ const END_STATES = new Set(["success", "failure", "continue"]);
 function collectOutgoing(node: ConversationNode): string[] {
   const ids: string[] = [];
   if (node.nextNodeId) ids.push(node.nextNodeId);
+  for (const b of node.relationshipBranches ?? []) {
+    ids.push(b.nextNodeId);
+  }
   for (const c of node.choices ?? []) {
     ids.push(c.nextNodeId);
   }
@@ -184,6 +187,16 @@ export function validateConversation(
         message: `Node ${node.id} nextNodeId missing: ${node.nextNodeId}`,
         nodeId: node.id,
       });
+    }
+
+    for (const branch of node.relationshipBranches ?? []) {
+      if (!ids.includes(branch.nextNodeId)) {
+        issues.push({
+          code: "missing-node",
+          message: `Relationship branch on ${node.id} points to missing ${branch.nextNodeId}`,
+          nodeId: node.id,
+        });
+      }
     }
   }
 

@@ -67,7 +67,9 @@ export function QuestSuccessScreen({
         <p style={{ color: "var(--ppq-muted)" }}>
           {chapterSummary.chapterNumber === 1
             ? "You survived your first week in Kotoba Town."
-            : "You handled clinic, phone, and workplace Japanese in one connected day."}
+            : chapterSummary.chapterNumber === 2
+              ? "You handled clinic, phone, and workplace Japanese in one connected day."
+              : "You learned that grammatically correct is not always socially natural."}
         </p>
 
         <dl className="ppq-result-grid">
@@ -185,6 +187,12 @@ export function QuestSuccessScreen({
           <dt>Communication</dt>
           <dd>{outcome.communicationPercent ?? 0}%</dd>
         </div>
+        {typeof outcome.socialFitPercent === "number" ? (
+          <div>
+            <dt>Social Fit</dt>
+            <dd>{outcome.socialFitPercent}%</dd>
+          </div>
+        ) : null}
         <div>
           <dt>XP</dt>
           <dd>

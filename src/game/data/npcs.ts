@@ -27,6 +27,7 @@ export const NPCS: readonly NpcDefinition[] = [
     locationId: "home",
     portrait: "遥",
     dialogueStyle: "casual",
+    speakingStyle: "friend",
   },
   {
     id: "yamamoto-station",
@@ -90,6 +91,16 @@ export const NPCS: readonly NpcDefinition[] = [
     locationId: "office",
     portrait: "み",
     dialogueStyle: "polite",
+  },
+  {
+    id: "sato-senpai",
+    name: "Sato",
+    japaneseName: "佐藤先輩",
+    role: "Office Senpai",
+    locationId: "office",
+    portrait: "先",
+    dialogueStyle: "polite",
+    speakingStyle: "senpai",
   },
 ] as const;
 

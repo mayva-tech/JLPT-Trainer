@@ -1114,6 +1114,13 @@
   color: var(--ppq-text, #f5f0e8);
 }
 
+.ppq-context-hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--ppq-muted);
+  font-style: italic;
+}
+
 .ppq-daily-item-head {
   display: flex;
   justify-content: space-between;

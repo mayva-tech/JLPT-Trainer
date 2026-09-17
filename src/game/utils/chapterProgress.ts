@@ -108,6 +108,18 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "First Day at Work";
     case "social-life-challenge":
       return "Social Life Challenge";
+    case "friend-invitation":
+      return "Friend Invitation";
+    case "senpai-favor":
+      return "Ask a Senpai";
+    case "saying-no":
+      return "How to Say No";
+    case "awkward-apology":
+      return "Awkward Apology";
+    case "workplace-discussion":
+      return "Workplace Discussion";
+    case "relationships-challenge":
+      return "Social Intelligence Challenge";
     default:
       return quest.title;
   }

@@ -14,6 +14,7 @@ export type SkillNodeId =
   | "conv-fillers"
   | "conv-repair"
   | "conv-polite"
+  | "conv-social"
   | "conv-keigo"
   | "grammar-n3"
   | "grammar-n2-everyday"
@@ -36,7 +37,7 @@ export type SkillNode = {
   /** Optional prior skill node. */
   requiresNode?: SkillNodeId;
   /** Gameplay effect flag consumed by QuestRunner / UI. */
-  effect?: "extra-repair" | "hide-en-bonus" | "listening-assist";
+  effect?: "extra-repair" | "hide-en-bonus" | "listening-assist" | "context-hint";
 };
 
 export const SKILL_NODES: readonly SkillNode[] = [
@@ -122,13 +123,24 @@ export const SKILL_NODES: readonly SkillNode[] = [
     requiresNode: "conv-repair",
   },
   {
+    id: "conv-social",
+    group: "conversation",
+    japaneseName: "空気を読む",
+    englishName: "Social Awareness",
+    description:
+      "After an awkward reply, a gentle reminder to consider the relationship.",
+    requiresQuests: 12,
+    requiresNode: "conv-polite",
+    effect: "context-hint",
+  },
+  {
     id: "conv-keigo",
     group: "conversation",
     japaneseName: "敬語",
     englishName: "Keigo",
     description: "City Hall and phone support formality.",
-    requiresQuests: 10,
-    requiresNode: "conv-polite",
+    requiresQuests: 14,
+    requiresNode: "conv-social",
   },
   {
     id: "grammar-n3",

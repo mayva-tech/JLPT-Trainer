@@ -145,6 +145,25 @@ export type ConversationObjectiveType =
 
 export type ConversationEndState = "success" | "failure" | "continue";
 
+/** Who the player is talking to (for feedback / Social Fit). */
+export type SocialContext =
+  | "friend"
+  | "acquaintance"
+  | "senpai"
+  | "coworker"
+  | "boss"
+  | "stranger";
+
+/** Expected speech register for this beat. */
+export type SpeechRegister = "casual" | "neutral" | "polite" | "formal";
+
+export type RelationshipBranch = {
+  npcId: string;
+  /** Inclusive minimum relationship heart level. */
+  minLevel: number;
+  nextNodeId: string;
+};
+
 export type ConversationChoice = {
   id: string;
   japanese: string;
@@ -178,6 +197,11 @@ export type ConversationNode = {
   choices?: ConversationChoice[];
   /** Linear advance when there are no choices. */
   nextNodeId?: string;
+  /**
+   * Optional relationship-aware routing (checked before nextNodeId).
+   * First matching branch wins; otherwise falls back to nextNodeId.
+   */
+  relationshipBranches?: RelationshipBranch[];
   helpHint?: string;
   vocabHint?: string;
   grammarHint?: string;
@@ -185,6 +209,13 @@ export type ConversationNode = {
   endState?: ConversationEndState;
   /** Force slow TTS for this node (e.g. after 「ゆっくり」repair). */
   forceSlowSpeech?: boolean;
+  socialContext?: SocialContext;
+  register?: SpeechRegister;
+  /**
+   * When true (default for social-choice), answers count toward Social Fit %.
+   * Set false to exclude utility/repair beats.
+   */
+  countsTowardSocialFit?: boolean;
   speech?: {
     enabled?: boolean;
     language?: "ja" | "en";

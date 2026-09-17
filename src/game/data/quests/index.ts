@@ -13,6 +13,12 @@ import {
 } from "./randomEncounters";
 import { SOCIAL_LIFE_CHALLENGE_QUEST } from "./socialLifeChallenge";
 import { STATION_MASTER_QUEST } from "./stationMaster";
+import { FRIEND_INVITATION_QUEST } from "./friendInvitation";
+import { SENPAI_FAVOR_QUEST } from "./senpaiFavor";
+import { SAYING_NO_QUEST } from "./sayingNo";
+import { AWKWARD_APOLOGY_QUEST } from "./awkwardApology";
+import { WORKPLACE_DISCUSSION_QUEST } from "./workplaceDiscussion";
+import { RELATIONSHIPS_CHALLENGE_QUEST } from "./relationshipsChallenge";
 
 export const QUESTS: readonly QuestDefinition[] = [
   // Chapter 1
@@ -27,6 +33,13 @@ export const QUESTS: readonly QuestDefinition[] = [
   PHONE_CALL_QUEST,
   FIRST_DAY_OFFICE_QUEST,
   SOCIAL_LIFE_CHALLENGE_QUEST,
+  // Chapter 3
+  FRIEND_INVITATION_QUEST,
+  SENPAI_FAVOR_QUEST,
+  SAYING_NO_QUEST,
+  AWKWARD_APOLOGY_QUEST,
+  WORKPLACE_DISCUSSION_QUEST,
+  RELATIONSHIPS_CHALLENGE_QUEST,
   // Short random street encounters
   ...RANDOM_ENCOUNTER_QUESTS,
 ];

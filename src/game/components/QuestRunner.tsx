@@ -60,6 +60,8 @@ export type QuestRunOutcome = {
       number
     >
   >;
+  /** Chapter 3 social appropriateness (result screen only). */
+  socialFitPercent?: number;
 };
 
 type Props = {
@@ -71,6 +73,8 @@ type Props = {
   immersionEnabled?: boolean;
   /** Skill: Conversation Repair — first miss of a step is free. */
   extraRepair?: boolean;
+  relationships?: import("../types").NpcRelationship[];
+  showContextHint?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
@@ -82,6 +86,8 @@ export function QuestRunner({
   onFinished,
   immersionEnabled = false,
   extraRepair = false,
+  relationships = [],
+  showContextHint = false,
 }: Props) {
   const baseQuest = getQuestById(questId);
 
@@ -92,6 +98,8 @@ export function QuestRunner({
         onQuit={onQuit}
         onFinished={onFinished}
         immersionEnabled={immersionEnabled}
+        relationships={relationships}
+        showContextHint={showContextHint}
       />
     );
   }

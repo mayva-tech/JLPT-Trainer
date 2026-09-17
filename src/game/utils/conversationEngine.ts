@@ -163,3 +163,18 @@ export function conversationNodeIds(
 ): string[] {
   return conversation.nodes.map((n) => n.id);
 }
+
+/** Resolve next node for relationship-aware routers. */
+export function resolveRelationshipBranch(
+  node: ConversationNode,
+  relationships: readonly { npcId: string; level: number }[]
+): string | undefined {
+  if (node.relationshipBranches?.length) {
+    for (const branch of node.relationshipBranches) {
+      const rel = relationships.find((r) => r.npcId === branch.npcId);
+      const level = rel?.level ?? 0;
+      if (level >= branch.minLevel) return branch.nextNodeId;
+    }
+  }
+  return node.nextNodeId;
+}
