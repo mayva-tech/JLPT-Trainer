@@ -487,23 +487,20 @@ describe("speechService karaoke timeline", () => {
     }
   });
 
-  it("EN karaoke at normal rate does not schedule faster than the voice estimate", async () => {
-    const { estimateUnitDurationMs, buildEnglishSpokenKaraokeSteps } =
-      await import("../utils/speechHighlightUnits");
+  it("EN karaoke at normal rate stretches longer than at rate 1 (not racing the voice)", async () => {
     const { __speechTestHooks } = await import("./speechService");
     const { SPEECH_RATE_NORMAL } = await import("./speechService");
 
     const text = "How can I help you today?";
-    const units = buildEnglishSpokenKaraokeSteps(text);
-    let raw = 0;
-    for (let i = 0; i < units.length; i += 1) {
-      raw += estimateUnitDurationMs(units[i]!, "en", units[i + 1] ?? null);
-    }
-    const planned = await plannedEnglishOffsets(text, SPEECH_RATE_NORMAL);
-    const scheduled = planned.at(-1)!;
-    // Scale ≥ 1 and rate floor < 1 → scheduled span should meet or exceed raw.
+    // Scale must stay ≥ 1 — values like 0.88 made Game Mode EN karaoke race ahead.
     expect(__speechTestHooks.FALLBACK_TIMING_SCALE_EN).toBeGreaterThanOrEqual(1);
-    expect(scheduled).toBeGreaterThanOrEqual(raw * 0.98);
+
+    const atFull = await plannedEnglishOffsets(text, 1);
+    const atNormal = await plannedEnglishOffsets(text, SPEECH_RATE_NORMAL);
+    const spanFull = atFull.at(-1)!;
+    const spanNormal = atNormal.at(-1)!;
+    // Neural floor still stretches past rate=1 so highlights do not outrun Andrew.
+    expect(spanNormal).toBeGreaterThan(spanFull);
   });
 
   it("pause freezes karaoke and resume preserves sync", async () => {
