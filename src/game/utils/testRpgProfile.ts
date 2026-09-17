@@ -7,6 +7,7 @@ import { createDefaultProfile } from "./playerProfile";
 import type {
   ImmersionPrefs,
   LanguageStats,
+  LocationId,
   NpcRelationship,
   PlayerRpgProfile,
 } from "../types";
@@ -98,7 +99,7 @@ export function createTestRpgProfile(
         "training-dojo",
         "weak-word-dungeon",
       ]),
-    ];
+    ] as LocationId[];
   }
   if (completedThroughChapter && completedThroughChapter >= 2) {
     completedQuestIds = [...new Set([...completedQuestIds, ...CH2_QUESTS])];

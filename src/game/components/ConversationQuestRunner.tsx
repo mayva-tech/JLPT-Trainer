@@ -119,8 +119,6 @@ export function ConversationQuestRunner({
   const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(null);
   const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
   const [nodePlayKey, setNodePlayKey] = useState(0);
-  const [firstListenOk, setFirstListenOk] = useState(true);
-  const [listeningSeen, setListeningSeen] = useState(0);
   const [firstListenCorrect, setFirstListenCorrect] = useState(0);
   const [firstListenTotal, setFirstListenTotal] = useState(0);
   const [listenCompromised, setListenCompromised] = useState(false);
@@ -162,7 +160,6 @@ export function ConversationQuestRunner({
     // Only count interactive listening beats (player must answer).
     if (!node.choices?.length) return;
     countedListenNodesRef.current.add(node.id);
-    setListeningSeen((n) => n + 1);
     setFirstListenTotal((n) => n + 1);
     setListenCompromised(false);
   }, [node?.id]);
@@ -327,7 +324,6 @@ export function ConversationQuestRunner({
     if (!activeNode.japanese.trim()) return;
     speech.stop();
     setListenCompromised(true);
-    if (isListeningBeat(activeNode)) setFirstListenOk(false);
     const prevMode = speech.rateMode;
     if (slow && prevMode !== "slow") speech.setRateMode("slow");
     speech.speakJapanese(activeNode.japanese, {
@@ -430,7 +426,6 @@ export function ConversationQuestRunner({
       setRepairCounts((c) => bumpRepairCount(c, choice.repairKind));
       setRepairedConversation(true);
       setListenCompromised(true);
-      if (isListeningBeat(activeNode)) setFirstListenOk(false);
       setRepairFlash(choice.feedback ?? applied.qualityLabel);
       if (choice.vocabHint) {
         setConceptsLearned((prev) => [...prev, choice.vocabHint!]);
@@ -496,9 +491,7 @@ export function ConversationQuestRunner({
         applied.quality === "excellent" ||
         applied.quality === "natural" ||
         applied.quality === "acceptable";
-      if (!good || listenCompromised || showHelp) {
-        setFirstListenOk(false);
-      } else if (!listenCompromised && !showHelp) {
+      if (good && !listenCompromised && !showHelp) {
         setFirstListenCorrect((n) => n + 1);
       }
     }
@@ -640,7 +633,6 @@ export function ConversationQuestRunner({
       setUsedEnglishAssist(true);
       if (isListeningBeat(activeNode) && !revealed) {
         setListenCompromised(true);
-        setFirstListenOk(false);
       }
     }
     setShowHelp((v) => !v);
@@ -801,9 +793,6 @@ export function ConversationQuestRunner({
                 data-testid="replay-normal"
                 onClick={() => {
                   setListenCompromised(true);
-                  if (isListeningBeat(activeNode) && !revealed) {
-                    setFirstListenOk(false);
-                  }
                   speech.speakJapanese(activeNode.japanese, {
                     reading: activeNode.reading,
                     karaoke: karaokeEnabled,

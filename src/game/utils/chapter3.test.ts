@@ -105,11 +105,18 @@ describe("Chapter 3 · 人間関係", () => {
     expect(isChapterComplete(profile, 3)).toBe(true);
   });
 
-  it("leaves Chapters 1–2 story quests on linear engine except City Hall", () => {
-    const ch2 = QUESTS.filter((q) => q.chapter === 2 && !q.rewards.randomEncounter);
-    for (const q of ch2) {
+  it("leaves Chapters 1–2 story quests on linear engine except City Hall and Phone Call", () => {
+    const v2Ids = new Set(["city-hall-register", "phone-call"]);
+    const linear = QUESTS.filter(
+      (q) =>
+        (q.chapter === 1 || q.chapter === 2) &&
+        !q.rewards.randomEncounter &&
+        !v2Ids.has(q.id)
+    );
+    for (const q of linear) {
       expect(q.conversation, q.id).toBeUndefined();
     }
+    expect(getQuestById("phone-call")?.conversation).toBeDefined();
   });
 
   it("boss has 15+ nodes and multiple social contexts", () => {

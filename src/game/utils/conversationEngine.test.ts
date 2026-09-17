@@ -241,11 +241,12 @@ describe("City Hall Conversation V2 content", () => {
 });
 
 describe("Old quest compatibility", () => {
-  it("leaves Chapter 1–2 non-City-Hall quests on linear steps without conversation", () => {
+  it("leaves Chapter 1–2 non-V2 quests on linear steps without conversation", () => {
+    const v2Ids = new Set(["city-hall-register", "phone-call"]);
     const others = QUESTS.filter(
       (q) =>
         !q.rewards.randomEncounter &&
-        q.id !== "city-hall-register" &&
+        !v2Ids.has(q.id) &&
         (q.chapter === 1 || q.chapter === 2)
     );
     expect(others.length).toBeGreaterThan(5);
