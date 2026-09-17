@@ -251,8 +251,62 @@ export function QuestSuccessScreen({
               Best natural streak: {outcome.maxNaturalStreak}
             </p>
           ) : null}
+          {typeof outcome.firstListenTotal === "number" &&
+          outcome.firstListenTotal > 0 ? (
+            <p style={{ fontSize: 13, margin: "6px 0 0" }}>
+              First-listen accuracy: {outcome.firstListenCorrect ?? 0}/
+              {outcome.firstListenTotal}
+            </p>
+          ) : null}
         </div>
       ) : null}
+
+      {(outcome.summaryFacts?.length ||
+        outcome.repairCounts ||
+        outcome.resultSummaryTitle) && (
+        <div className="ppq-panel ppq-result-summary" style={{ marginTop: 12 }}>
+          <h2>{outcome.resultSummaryTitle ?? "Mission report"}</h2>
+          {(outcome.summaryFacts?.length ?? 0) > 0 ? (
+            <div style={{ marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "0 0 4px" }}>
+                Understood
+              </p>
+              <ul className="ppq-report-list">
+                {outcome.summaryFacts!.map((fact) => (
+                  <li key={fact.key}>
+                    {fact.understood ? "✓" : "○"} {fact.label}
+                    {fact.value ? (
+                      <span style={{ color: "var(--ppq-muted)" }}>
+                        {" "}
+                        · {fact.value}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {(outcome.needsReview?.length ?? 0) > 0 ? (
+            <p style={{ fontSize: 13, margin: "0 0 8px" }}>
+              Needed clarification: △{" "}
+              {[...new Set(outcome.needsReview)].slice(0, 4).join(" · ")}
+            </p>
+          ) : null}
+          {outcome.repairCounts ? (
+            <p style={{ fontSize: 13, margin: "0 0 8px" }}>
+              Repairs: Repeat ×{outcome.repairCounts.repeat} · Slow ×
+              {outcome.repairCounts.slow} · Meaning ×{outcome.repairCounts.meaning}{" "}
+              · Confirm ×{outcome.repairCounts.confirm}
+            </p>
+          ) : null}
+          <p style={{ fontSize: 13, margin: "0 0 4px" }}>
+            Communication: {outcome.communicationPercent ?? 0}%
+          </p>
+          {outcome.immersionNoEnglish ? (
+            <p style={{ fontSize: 13, margin: 0 }}>No English: ✓</p>
+          ) : null}
+        </div>
+      )}
 
       {!newlyRewarded && !replayRewarded ? (
         <p style={{ color: "var(--ppq-muted)", fontSize: 13 }}>

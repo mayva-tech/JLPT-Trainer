@@ -24,6 +24,10 @@ import {
   parseBilingualSpeakSegments,
 } from "../utils/questFeedbackSpeech";
 import {
+  bumpRepairCount,
+  emptyRepairCounts,
+} from "../utils/repairCounts";
+import {
   nodeCountsTowardSocialFit,
   socialFitFromQualities,
 } from "../utils/socialFit";
@@ -47,6 +51,27 @@ const SETTLE_MS = 280;
 
 function nodeSpeechEnabled(node: ConversationNode): boolean {
   return node.speech?.enabled !== false;
+}
+
+function isListeningBeat(node: ConversationNode): boolean {
+  return Boolean(
+    node.audioFirst ||
+      node.listenOnly ||
+      node.objectiveType === "listening"
+  );
+}
+
+function buildSummaryFacts(
+  facts: Record<string, string>,
+  labels: Record<string, string>,
+  understood: Set<string>
+): QuestRunOutcome["summaryFacts"] {
+  return Object.entries(facts).map(([key, value]) => ({
+    key,
+    label: labels[key] ?? key,
+    value,
+    understood: understood.has(key),
+  }));
 }
 
 export function ConversationQuestRunner({
@@ -96,7 +121,18 @@ export function ConversationQuestRunner({
   const [nodePlayKey, setNodePlayKey] = useState(0);
   const [firstListenOk, setFirstListenOk] = useState(true);
   const [listeningSeen, setListeningSeen] = useState(0);
+  const [firstListenCorrect, setFirstListenCorrect] = useState(0);
+  const [firstListenTotal, setFirstListenTotal] = useState(0);
+  const [listenCompromised, setListenCompromised] = useState(false);
+  const [repairCounts, setRepairCounts] = useState(emptyRepairCounts());
+  const [facts, setFacts] = useState<Record<string, string>>({});
+  const [factLabels, setFactLabels] = useState<Record<string, string>>({});
+  const [understoodFacts, setUnderstoodFacts] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [repairFlash, setRepairFlash] = useState<string | null>(null);
   const autoPlayTokenRef = useRef(0);
+  const countedListenNodesRef = useRef<Set<string>>(new Set());
 
   const node = useMemo(() => {
     if (!conversation || !nodeId) return null;
@@ -107,21 +143,40 @@ export function ConversationQuestRunner({
   const location = quest ? getLocationById(quest.locationId) : undefined;
   const isInteractive = Boolean(node?.choices && node.choices.length > 0);
   const immersionBlocksEn = immersionEnabled && !showHelp && !revealed;
+  const isPhone = conversation?.presentation === "phone";
+  const isAudioFirst = Boolean(node?.audioFirst || node?.listenOnly);
   const hideTranscript =
-    Boolean(node?.listenOnly) &&
-    (node?.speech?.karaokeMode === "after-answer" || node?.listenOnly) &&
+    isAudioFirst &&
+    (node?.speech?.karaokeMode === "after-answer" ||
+      node?.audioFirst ||
+      node?.listenOnly) &&
     !revealed &&
     !showHelp;
+  const karaokeEnabled = !hideTranscript;
 
-  // Track listening nodes for first-listen bonus.
+  // Track listening / audio-first nodes for first-listen metrics.
   useEffect(() => {
     if (!node) return;
-    if (node.objectiveType === "listening" || node.listenOnly) {
-      setListeningSeen((n) => n + 1);
+    if (!isListeningBeat(node)) return;
+    if (countedListenNodesRef.current.has(node.id)) return;
+    // Only count interactive listening beats (player must answer).
+    if (!node.choices?.length) return;
+    countedListenNodesRef.current.add(node.id);
+    setListeningSeen((n) => n + 1);
+    setFirstListenTotal((n) => n + 1);
+    setListenCompromised(false);
+  }, [node?.id]);
+
+  // Merge authored facts when entering a node.
+  useEffect(() => {
+    if (!node?.setsFacts) return;
+    setFacts((prev) => ({ ...prev, ...node.setsFacts }));
+    if (node.factLabels) {
+      setFactLabels((prev) => ({ ...prev, ...node.factLabels }));
     }
   }, [node?.id]);
 
-  // Auto-play NPC line + choices (Immersion-aware).
+  // Auto-play NPC line (+ choices when transcript visible). Immersion-aware.
   useEffect(() => {
     if (!node || !quest) return;
     let cancelled = false;
@@ -159,9 +214,15 @@ export function ConversationQuestRunner({
     if (showHelp && node.english?.trim() && !immersionBlocksEn) {
       queue.push({ kind: "en", text: node.english });
     }
-    if (!revealed && node.choices) {
+    // Audio-first with hidden transcript: play NPC only (no choice spoiler audio).
+    if (!revealed && node.choices && !hideTranscript) {
       for (const c of node.choices) {
-        queue.push({ kind: "ja", text: c.japanese, reading: c.reading, choiceId: c.id });
+        queue.push({
+          kind: "ja",
+          text: c.japanese,
+          reading: c.reading,
+          choiceId: c.id,
+        });
         if (showHelp && c.english?.trim() && !immersionBlocksEn) {
           queue.push({ kind: "en", text: c.english });
         }
@@ -211,7 +272,7 @@ export function ConversationQuestRunner({
         else setChoiceHighlightId(null);
         speech.speakJapanese(item.text, {
           reading: item.reading,
-          karaoke: true,
+          karaoke: karaokeEnabled && !item.choiceId ? true : karaokeEnabled,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
             next();
@@ -245,6 +306,7 @@ export function ConversationQuestRunner({
     speech.rateMode,
     showHelp,
     revealed,
+    hideTranscript,
   ]);
 
   if (!quest || !conversation || !node) {
@@ -261,6 +323,22 @@ export function ConversationQuestRunner({
   const activeConversation = conversation;
   const activeNode = node;
 
+  function replayNodeUtterance(slow: boolean) {
+    if (!activeNode.japanese.trim()) return;
+    speech.stop();
+    setListenCompromised(true);
+    if (isListeningBeat(activeNode)) setFirstListenOk(false);
+    const prevMode = speech.rateMode;
+    if (slow && prevMode !== "slow") speech.setRateMode("slow");
+    speech.speakJapanese(activeNode.japanese, {
+      reading: activeNode.reading,
+      karaoke: karaokeEnabled,
+      onEnded: () => {
+        if (slow && prevMode !== "slow") speech.setRateMode(prevMode);
+      },
+    });
+  }
+
   function finish(success: boolean) {
     speech.stop();
     const answered = Math.max(answeredCount, 1);
@@ -268,6 +346,7 @@ export function ConversationQuestRunner({
     const accuracy = Math.max(0, rawAccuracy - Math.min(5, helpUses));
     const immersionNoEnglish =
       immersionEnabled && !usedEnglishAssist && helpUses === 0;
+    const summaryFacts = buildSummaryFacts(facts, factLabels, understoodFacts);
     const outcome: QuestRunOutcome = {
       success,
       accuracy,
@@ -280,7 +359,8 @@ export function ConversationQuestRunner({
       helpUses,
       communicationPercent: communication,
       immersionNoEnglish,
-      firstListenSuccess: listeningSeen === 0 ? false : firstListenOk,
+      firstListenSuccess:
+        firstListenTotal === 0 ? false : firstListenCorrect === firstListenTotal,
       repairedConversation,
       conceptsLearned: [...new Set(conceptsLearned)],
       engine: "v2",
@@ -291,13 +371,17 @@ export function ConversationQuestRunner({
       repairUsed: repairedConversation,
       qualityCounts,
       socialFitPercent: socialFitFromQualities(socialFitQualities),
+      repairCounts,
+      summaryFacts,
+      firstListenCorrect,
+      firstListenTotal,
+      resultSummaryTitle: activeConversation.resultSummaryTitle,
     };
     onFinished(outcome);
   }
 
   function goToNode(nextId: string) {
     let targetId = nextId;
-    // Auto-resolve relationship routers (no choices / no speech).
     for (let guard = 0; guard < 8; guard += 1) {
       const candidate = getConversationNode(activeConversation, targetId);
       if (!candidate) break;
@@ -322,6 +406,8 @@ export function ConversationQuestRunner({
     setContextHint(null);
     setPendingNextId(null);
     setShowHelp(false);
+    setRepairFlash(null);
+    setListenCompromised(false);
     setNodePlayKey((k) => k + 1);
   }
 
@@ -330,6 +416,28 @@ export function ConversationQuestRunner({
     const choice = getConversationChoice(activeNode, choiceId);
     if (!choice) return;
     speech.stop();
+
+    // In-place replay repairs (repeat / slow) — do not lock the beat.
+    if (choice.replayCurrent) {
+      const applied = applyConversationChoice({
+        choice,
+        communication,
+        confidence,
+        naturalStreak,
+        maxNaturalStreak,
+      });
+      setCommunication(applied.communication);
+      setRepairCounts((c) => bumpRepairCount(c, choice.repairKind));
+      setRepairedConversation(true);
+      setListenCompromised(true);
+      if (isListeningBeat(activeNode)) setFirstListenOk(false);
+      setRepairFlash(choice.feedback ?? applied.qualityLabel);
+      if (choice.vocabHint) {
+        setConceptsLearned((prev) => [...prev, choice.vocabHint!]);
+      }
+      replayNodeUtterance(choice.repairKind === "slow");
+      return;
+    }
 
     const applied = applyConversationChoice({
       choice,
@@ -378,13 +486,52 @@ export function ConversationQuestRunner({
       setCorrectCount((n) => n + 1);
     }
 
-    if (applied.isRepair) setRepairedConversation(true);
+    if (applied.isRepair) {
+      setRepairedConversation(true);
+      setRepairCounts((c) => bumpRepairCount(c, choice.repairKind));
+    }
 
+    if (isListeningBeat(activeNode)) {
+      const good =
+        applied.quality === "excellent" ||
+        applied.quality === "natural" ||
+        applied.quality === "acceptable";
+      if (!good || listenCompromised || showHelp) {
+        setFirstListenOk(false);
+      } else if (!listenCompromised && !showHelp) {
+        setFirstListenCorrect((n) => n + 1);
+      }
+    }
+
+    if (choice.checksFact && choice.expectedFactValue) {
+      const actual = facts[choice.checksFact];
+      if (
+        actual === choice.expectedFactValue ||
+        (applied.quality !== "incorrect" &&
+          actual &&
+          choice.japanese.includes(actual))
+      ) {
+        setUnderstoodFacts((prev) => new Set(prev).add(choice.checksFact!));
+      }
+    }
+    // Successful answers on a fact-setting beat mark those facts understood.
     if (
-      (activeNode.objectiveType === "listening" || activeNode.listenOnly) &&
-      applied.quality === "incorrect"
+      applied.quality === "excellent" ||
+      applied.quality === "natural" ||
+      applied.quality === "acceptable"
     ) {
-      setFirstListenOk(false);
+      if (activeNode.setsFacts) {
+        setUnderstoodFacts((prev) => {
+          const next = new Set(prev);
+          for (const key of Object.keys(activeNode.setsFacts!)) next.add(key);
+          return next;
+        });
+      }
+      for (const [key, value] of Object.entries(facts)) {
+        if (choice.japanese.includes(value)) {
+          setUnderstoodFacts((prev) => new Set(prev).add(key));
+        }
+      }
     }
 
     const npcId = activeNode.npcId;
@@ -491,6 +638,10 @@ export function ConversationQuestRunner({
     if (!showHelp) {
       setHelpUses((n) => n + 1);
       setUsedEnglishAssist(true);
+      if (isListeningBeat(activeNode) && !revealed) {
+        setListenCompromised(true);
+        setFirstListenOk(false);
+      }
     }
     setShowHelp((v) => !v);
   }
@@ -500,7 +651,6 @@ export function ConversationQuestRunner({
     onQuit();
   }
 
-  // Immersion: hide EN until Help / reveal.
   const showPromptEn =
     Boolean(node.english) &&
     !immersionBlocksEn &&
@@ -512,22 +662,43 @@ export function ConversationQuestRunner({
       : node.endState === "failure"
         ? "Leave"
         : !isInteractive
-          ? node.id === "arrive"
+          ? node.id === "incoming" || node.id === "arrive"
             ? "Begin"
             : "Continue"
           : revealed
             ? "Continue"
             : null;
 
+  const callerKnown =
+    isPhone && (Boolean(npc) || Boolean(facts.caller))
+      ? facts.caller ?? npc?.japaneseName ?? "…"
+      : null;
+
   return (
-    <div className="ppq-quest ppq-quest-enter">
+    <div
+      className={
+        isPhone ? "ppq-quest ppq-quest-enter ppq-quest--phone" : "ppq-quest ppq-quest-enter"
+      }
+    >
       <div className="ppq-quest-banner">
         <p style={{ margin: 0, fontSize: 12, color: "var(--ppq-muted)" }}>
-          {location?.icon ?? "📍"} {location?.name ?? quest.locationId} · Conversation
+          {isPhone ? "📞" : location?.icon ?? "📍"}{" "}
+          {location?.name ?? quest.locationId} · Conversation
           {quest.difficulty === "boss" ? " · Boss" : ""}
         </p>
         <h1 lang="ja">{quest.japaneseTitle}</h1>
         <p>{quest.title}</p>
+        {isPhone ? (
+          <div className="ppq-phone-status" role="status">
+            <span className="ppq-phone-status__dot" aria-hidden />
+            {node.id === "incoming" ? "Incoming Call" : "Call in progress"}
+            {callerKnown && node.id !== "incoming" ? (
+              <span className="ppq-phone-status__caller" lang="ja">
+                {callerKnown}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div className="ppq-quest-toolbar">
@@ -593,17 +764,26 @@ export function ConversationQuestRunner({
       </div>
 
       <section className="ppq-dialogue">
-        {npc ? <NpcPortrait npc={npc} /> : null}
+        {npc && !isPhone ? <NpcPortrait npc={npc} /> : null}
+        {npc && isPhone ? (
+          <div className="ppq-phone-avatar" aria-hidden>
+            <span>{npc.portrait ?? "📞"}</span>
+            <span lang="ja">{npc.japaneseName}</span>
+          </div>
+        ) : null}
 
         <div className="ppq-line-row">
           {hideTranscript ? (
-            <div className="ppq-listen-hidden">
-              <p className="ppq-prompt-en" style={{ margin: 0 }}>
+            <div className="ppq-listen-hidden" data-testid="transcript-hidden">
+              <p className="ppq-listening-state" style={{ margin: 0 }}>
+                Listening
+              </p>
+              <p className="ppq-prompt-en" style={{ margin: "4px 0 0" }}>
                 {immersionBlocksEn
                   ? "よく聞いてください。"
-                  : (node.english ?? "Listen carefully, then choose.")}
+                  : "Transcript hidden"}
               </p>
-              <p className="ppq-listen-hint">Transcript hidden until you answer.</p>
+              <p className="ppq-listen-hint">Transcript hidden until you answer or use Help.</p>
             </div>
           ) : (
             <HighlightedJapanese
@@ -613,19 +793,41 @@ export function ConversationQuestRunner({
             />
           )}
           {activeNode.japanese.trim() ? (
-            <button
-              type="button"
-              className="ppq-speak-btn"
-              aria-label="Play Japanese dialogue"
-              onClick={() =>
-                speech.speakJapanese(activeNode.japanese, {
-                  reading: activeNode.reading,
-                  karaoke: true,
-                })
-              }
-            >
-              🔊
-            </button>
+            <div className="ppq-replay-group">
+              <button
+                type="button"
+                className="ppq-speak-btn"
+                aria-label="Replay Japanese dialogue"
+                data-testid="replay-normal"
+                onClick={() => {
+                  setListenCompromised(true);
+                  if (isListeningBeat(activeNode) && !revealed) {
+                    setFirstListenOk(false);
+                  }
+                  speech.speakJapanese(activeNode.japanese, {
+                    reading: activeNode.reading,
+                    karaoke: karaokeEnabled,
+                  });
+                }}
+              >
+                🔊
+              </button>
+              {isAudioFirst && !revealed ? (
+                <button
+                  type="button"
+                  className="ppq-btn ppq-btn--ghost ppq-btn--slow-replay"
+                  data-testid="replay-slow"
+                  aria-label="Slow replay"
+                  onClick={() => {
+                    setRepairCounts((c) => bumpRepairCount(c, "slow"));
+                    setRepairedConversation(true);
+                    replayNodeUtterance(true);
+                  }}
+                >
+                  Slow
+                </button>
+              ) : null}
+            </div>
           ) : null}
         </div>
 
@@ -651,6 +853,12 @@ export function ConversationQuestRunner({
 
         {showHelp && activeNode.helpHint ? (
           <p className="ppq-help-hint">💡 {activeNode.helpHint}</p>
+        ) : null}
+
+        {repairFlash && !revealed ? (
+          <p className="ppq-repair-flash" role="status">
+            {repairFlash}
+          </p>
         ) : null}
 
         {activeNode.choices && activeNode.choices.length > 0 ? (
@@ -785,6 +993,8 @@ function ChoiceRow({
         className={className}
         disabled={revealed}
         onClick={onSelect}
+        data-choice-id={choice.id}
+        data-repair-kind={choice.repairKind ?? undefined}
       >
         <span className="ppq-choice-index">{index + 1}.</span>{" "}
         {choiceHighlightId === choice.id ? (

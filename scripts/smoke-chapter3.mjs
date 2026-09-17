@@ -3,78 +3,10 @@
  * Usage: node scripts/smoke-chapter3.mjs [baseUrl]
  */
 import { chromium } from "playwright";
+import { createTestRpgProfile } from "./lib/testRpgProfile.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:5177";
 const PROFILE_KEY = "jlpt-trainer:pera-pera-quest:v1";
-
-function ch2CompleteProfile() {
-  const now = Date.now();
-  const ch1 = [
-    "city-hall-register",
-    "convenience-first-shop",
-    "meet-neighbor",
-    "station-master",
-    "cafe-order",
-    "first-week-challenge",
-  ];
-  const ch2 = [
-    "clinic-visit",
-    "phone-call",
-    "first-day-office",
-    "social-life-challenge",
-  ];
-  return {
-    version: 1,
-    playerName: "Ch3 Tester",
-    xp: 800,
-    currentChapter: 3,
-    completedQuestIds: [...ch1, ...ch2],
-    unlockedLocationIds: [
-      "home",
-      "city-hall",
-      "convenience-store",
-      "cafe",
-      "train-station",
-      "clinic",
-      "phone-center",
-      "office",
-      "training-dojo",
-      "weak-word-dungeon",
-    ],
-    activeQuestId: "friend-invitation",
-    languageStats: {
-      vocabulary: 40,
-      grammar: 35,
-      listening: 35,
-      reading: 35,
-      conversation: 45,
-      politeness: 40,
-    },
-    completedQuests: [...ch1, ...ch2].map((questId) => ({
-      questId,
-      accuracy: 90,
-      confidenceLeft: 3,
-      completedAt: now,
-      xpGained: 50,
-    })),
-    metNpcIds: ["haruka", "ken", "mika-coworker", "suzuki-manager"],
-    rewardedQuestIds: [...ch1, ...ch2],
-    flags: {
-      chapter1Complete: true,
-      chapter2Complete: true,
-      developerMode: false,
-    },
-    seals: ["city-hall", "daily-life", "communication", "workplace"],
-    relationships: [{ npcId: "haruka", level: 0, xp: 0 }],
-    coins: 100,
-    unlockedSkillNodes: [],
-    immersion: { enabled: false, hideEnglish: false, hideSubtitles: false },
-    daily: null,
-    livingJapanese: {},
-    recentFailConcepts: [],
-    updatedAt: now,
-  };
-}
 
 async function main() {
   const browser = await chromium.launch({
@@ -84,17 +16,36 @@ async function main() {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.setDefaultTimeout(20000);
 
+  const profile = createTestRpgProfile({
+    playerName: "Ch3 Tester",
+    completedThroughChapter: 2,
+    activeQuestId: "friend-invitation",
+    xp: 800,
+    metNpcIds: ["haruka", "ken", "mika-coworker", "suzuki-manager"],
+    seals: ["city-hall", "daily-life", "communication", "workplace"],
+    relationships: [{ npcId: "haruka", level: 0, xp: 0 }],
+    coins: 100,
+    languageStats: {
+      vocabulary: 40,
+      grammar: 35,
+      listening: 35,
+      reading: 35,
+      conversation: 45,
+      politeness: 40,
+    },
+    immersion: { enabled: false, hideEnglish: false, hideSubtitles: false },
+  });
+
   await page.goto(BASE, { waitUntil: "networkidle" });
   await page.evaluate(
     ({ key, p }) => localStorage.setItem(key, JSON.stringify(p)),
-    { key: PROFILE_KEY, p: ch2CompleteProfile() }
+    { key: PROFILE_KEY, p: profile }
   );
   await page.reload({ waitUntil: "networkidle" });
 
   await page.getByRole("button", { name: /Pera Pera Quest|ペラペラ/i }).click();
   await page.getByRole("heading", { name: "ペラペラクエスト" }).waitFor();
 
-  // Continue active friend-invitation quest
   await page.getByRole("button", { name: /Continue Quest/i }).click();
   await page.locator(".ppq-quest").waitFor();
   await page.getByText(/友だちの誘い|Friend Invitation/).first().waitFor();
@@ -102,7 +53,6 @@ async function main() {
   const begin = page.getByRole("button", { name: /^Begin$/i });
   if (await begin.count()) await begin.click();
 
-  // Low relationship → polite invite; pick awkward 承知
   await page.getByText(/ご飯でもどうですか|ご飯行くんだけど/).waitFor();
   await page
     .locator("button.ppq-choice")
@@ -112,7 +62,6 @@ async function main() {
   console.log("PASS awkward formal feedback shown");
   await page.getByRole("button", { name: /^Continue$/i }).click();
 
-  // Repair with natural follow-up
   await page
     .locator("button.ppq-choice")
     .filter({ hasText: /行きたい|つい/ })
@@ -120,7 +69,6 @@ async function main() {
     .click();
   await page.getByRole("button", { name: /^Continue$/i }).click();
 
-  // Drive to completion with preferred natural choices
   for (let i = 0; i < 12; i++) {
     if (await page.getByRole("button", { name: /^Finish$/i }).count()) break;
     const preferred = page
@@ -142,7 +90,6 @@ async function main() {
   await page.getByText(/QUEST COMPLETE|COMPLETE/i).first().waitFor();
   console.log("PASS chapter3 friend-invitation complete");
 
-  // Seed chapter 3 clear + social seal; verify Ch4 teaser
   await page.evaluate(
     ({ key }) => {
       const raw = JSON.parse(localStorage.getItem(key) || "{}");

@@ -62,6 +62,20 @@ export type QuestRunOutcome = {
   >;
   /** Chapter 3 social appropriateness (result screen only). */
   socialFitPercent?: number;
+  /** Functional repair tallies (phone / V2 reusable). */
+  repairCounts?: {
+    repeat: number;
+    slow: number;
+    meaning: number;
+    confirm: number;
+  };
+  /** Facts remembered during the conversation (for Call Report). */
+  summaryFacts?: { key: string; label: string; value: string; understood: boolean }[];
+  /** Listening nodes answered correctly before help/replay. */
+  firstListenCorrect?: number;
+  firstListenTotal?: number;
+  /** Optional result panel title (e.g. CALL REPORT). */
+  resultSummaryTitle?: string;
 };
 
 type Props = {

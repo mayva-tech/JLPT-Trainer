@@ -135,6 +135,14 @@ describe("Conversation validator", () => {
     expect(result.ok, JSON.stringify(result.issues, null, 2)).toBe(true);
   });
 
+  it("accepts the Phone Call conversation graph", async () => {
+    const { PHONE_CALL_CONVERSATION } = await import(
+      "../data/quests/phoneCall"
+    );
+    const result = validateConversation(PHONE_CALL_CONVERSATION);
+    expect(result.ok, JSON.stringify(result.issues, null, 2)).toBe(true);
+  });
+
   it("detects missing nextNodeId targets", () => {
     const bad: ConversationDefinition = {
       startNodeId: "a",

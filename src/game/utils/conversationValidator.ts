@@ -198,6 +198,39 @@ export function validateConversation(
         });
       }
     }
+
+    if (node.setsFacts) {
+      for (const [key, value] of Object.entries(node.setsFacts)) {
+        if (!key.trim() || !String(value).trim()) {
+          issues.push({
+            code: "invalid-fact",
+            message: `Node ${node.id} has empty setsFacts entry`,
+            nodeId: node.id,
+          });
+        }
+      }
+    }
+
+    if (hasChoices) {
+      for (const choice of node.choices!) {
+        if (choice.replayCurrent && !choice.repairKind) {
+          issues.push({
+            code: "replay-without-repair",
+            message: `Choice ${choice.id} on ${node.id} uses replayCurrent without repairKind`,
+            nodeId: node.id,
+            choiceId: choice.id,
+          });
+        }
+        if (choice.checksFact && !choice.expectedFactValue) {
+          issues.push({
+            code: "fact-check-incomplete",
+            message: `Choice ${choice.id} on ${node.id} has checksFact without expectedFactValue`,
+            nodeId: node.id,
+            choiceId: choice.id,
+          });
+        }
+      }
+    }
   }
 
   if (

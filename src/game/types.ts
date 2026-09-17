@@ -164,6 +164,16 @@ export type RelationshipBranch = {
   nextNodeId: string;
 };
 
+/** Functional repair categories for Call Report / analytics. */
+export type RepairKind = "repeat" | "slow" | "meaning" | "confirm";
+
+export type RepairCounts = {
+  repeat: number;
+  slow: number;
+  meaning: number;
+  confirm: number;
+};
+
 export type ConversationChoice = {
   id: string;
   japanese: string;
@@ -181,10 +191,21 @@ export type ConversationChoice = {
   consequenceFlag?: string;
   /** Marks this choice as a conversation-repair move. */
   isRepair?: boolean;
+  /** Functional repair category (repeat / slow / meaning / confirm). */
+  repairKind?: RepairKind;
+  /**
+   * Replay the current NPC line instead of advancing (repeat / slow).
+   * Pair with repairKind "repeat" or "slow".
+   */
+  replayCurrent?: boolean;
   /** Marks clarification / meaning-check (Living Japanese friendly). */
   isClarification?: boolean;
   vocabHint?: string;
   grammarHint?: string;
+  /** Optional fact key this answer claims to recall. */
+  checksFact?: string;
+  /** Expected value when checksFact is set (for report / tests). */
+  expectedFactValue?: string;
 };
 
 export type ConversationNode = {
@@ -206,6 +227,11 @@ export type ConversationNode = {
   vocabHint?: string;
   grammarHint?: string;
   listenOnly?: boolean;
+  /**
+   * Audio-first beat: hide transcript until Help / answer; prioritize TTS.
+   * Implies listening-style presentation.
+   */
+  audioFirst?: boolean;
   endState?: ConversationEndState;
   /** Force slow TTS for this node (e.g. after 「ゆっくり」repair). */
   forceSlowSpeech?: boolean;
@@ -216,6 +242,10 @@ export type ConversationNode = {
    * Set false to exclude utility/repair beats.
    */
   countsTowardSocialFit?: boolean;
+  /** Merge into conversation fact memory when this node is entered. */
+  setsFacts?: Record<string, string>;
+  /** Human labels for Call Report / result summary. */
+  factLabels?: Record<string, string>;
   speech?: {
     enabled?: boolean;
     language?: "ja" | "en";
@@ -227,6 +257,10 @@ export type ConversationNode = {
 export type ConversationDefinition = {
   startNodeId: string;
   nodes: ConversationNode[];
+  /** Optional presentation skin (e.g. phone call chrome). */
+  presentation?: "default" | "phone";
+  /** Title for optional result summary panel. */
+  resultSummaryTitle?: string;
 };
 
 export type QuestDefinition = {
