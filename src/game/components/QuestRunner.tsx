@@ -27,6 +27,7 @@ import {
 } from "../utils/questSpeech";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
+import { ConversationQuestRunner } from "./ConversationQuestRunner";
 import { NpcPortrait } from "./NpcPortrait";
 import { communicationFromConfidence } from "../utils/communicationMeter";
 
@@ -46,6 +47,44 @@ export type QuestRunOutcome = {
   firstListenSuccess: boolean;
   repairedConversation: boolean;
   conceptsLearned: string[];
+  /** Linear V1 vs branching Conversation V2. */
+  engine?: "v1" | "v2";
+  naturalResponseStreak?: number;
+  maxNaturalStreak?: number;
+  needsReview?: string[];
+  relationshipDeltas?: { npcId: string; delta: number }[];
+  repairUsed?: boolean;
+  qualityCounts?: Partial<
+    Record<
+      "excellent" | "natural" | "acceptable" | "awkward" | "incorrect",
+      number
+    >
+  >;
+  /** Chapter 3 social appropriateness (result screen only). */
+  socialFitPercent?: number;
+  /** Chapter 4 business-register appropriateness (result screen only). */
+  professionalFitPercent?: number;
+  /** Reporting / 報連相 quality tags for mission result. */
+  reportingQuality?: {
+    conclusionFirst: boolean;
+    clear: boolean;
+    actionStated: boolean;
+    notes: string[];
+  };
+  /** Functional repair tallies (phone / V2 reusable). */
+  repairCounts?: {
+    repeat: number;
+    slow: number;
+    meaning: number;
+    confirm: number;
+  };
+  /** Facts remembered during the conversation (for Call Report). */
+  summaryFacts?: { key: string; label: string; value: string; understood: boolean }[];
+  /** Listening nodes answered correctly before help/replay. */
+  firstListenCorrect?: number;
+  firstListenTotal?: number;
+  /** Optional result panel title (e.g. CALL REPORT). */
+  resultSummaryTitle?: string;
 };
 
 type Props = {
@@ -57,11 +96,56 @@ type Props = {
   immersionEnabled?: boolean;
   /** Skill: Conversation Repair — first miss of a step is free. */
   extraRepair?: boolean;
+  relationships?: import("../types").NpcRelationship[];
+  showContextHint?: boolean;
+  showReportingHint?: boolean;
+  showKeigoSenseHint?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
 
 export function QuestRunner({
+  questId,
+  metNpcIds,
+  onQuit,
+  onFinished,
+  immersionEnabled = false,
+  extraRepair = false,
+  relationships = [],
+  showContextHint = false,
+  showReportingHint = false,
+  showKeigoSenseHint = false,
+}: Props) {
+  const baseQuest = getQuestById(questId);
+
+  if (baseQuest?.conversation) {
+    return (
+      <ConversationQuestRunner
+        questId={questId}
+        onQuit={onQuit}
+        onFinished={onFinished}
+        immersionEnabled={immersionEnabled}
+        relationships={relationships}
+        showContextHint={showContextHint}
+        showReportingHint={showReportingHint}
+        showKeigoSenseHint={showKeigoSenseHint}
+      />
+    );
+  }
+
+  return (
+    <LinearQuestRunner
+      questId={questId}
+      metNpcIds={metNpcIds}
+      onQuit={onQuit}
+      onFinished={onFinished}
+      immersionEnabled={immersionEnabled}
+      extraRepair={extraRepair}
+    />
+  );
+}
+
+function LinearQuestRunner({
   questId,
   metNpcIds,
   onQuit,
@@ -281,6 +365,7 @@ export function QuestRunner({
       firstListenSuccess: listeningStepsSeen > 0 && firstListenOk,
       repairedConversation,
       conceptsLearned: vocab,
+      engine: "v1",
     });
   }
 

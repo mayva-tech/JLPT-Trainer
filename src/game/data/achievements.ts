@@ -6,7 +6,14 @@ export type PassportAchievementId =
   | "no-subtitle-clear"
   | "first-week-hero"
   | "repair-ace"
-  | "clinic-checkin";
+  | "clinic-checkin"
+  | "read-the-room"
+  | "graceful-refusal"
+  | "senpai-survivor"
+  | "hourensou-master"
+  | "business-phone-survivor"
+  | "owned-the-mistake"
+  | "spoke-up-meeting";
 
 export type PassportAchievement = {
   id: PassportAchievementId;
@@ -75,5 +82,54 @@ export const PASSPORT_ACHIEVEMENTS: readonly PassportAchievement[] = [
     englishName: "Clinic Check-in",
     description: "Completed your first clinic visit.",
     requireQuestId: "clinic-visit",
+  },
+  {
+    id: "read-the-room",
+    japaneseName: "空気読めた",
+    englishName: "Read the Room",
+    description: "Cleared the Chapter 3 Social Intelligence Challenge.",
+    requireQuestId: "relationships-challenge",
+  },
+  {
+    id: "graceful-refusal",
+    japaneseName: "いい断り方",
+    englishName: "Graceful Refusal",
+    description: "Practiced soft refusal with Ken.",
+    requireQuestId: "saying-no",
+  },
+  {
+    id: "senpai-survivor",
+    japaneseName: "先輩との会話",
+    englishName: "Senpai Survivor",
+    description: "Asked Sato-senpai for help without sounding bossy.",
+    requireQuestId: "senpai-favor",
+  },
+  {
+    id: "hourensou-master",
+    japaneseName: "報連相マスター",
+    englishName: "Clear Reporting",
+    description: "Reported status to your boss with a clear conclusion.",
+    requireQuestId: "reporting-to-boss",
+  },
+  {
+    id: "business-phone-survivor",
+    japaneseName: "電話対応クリア",
+    englishName: "Business Phone Survivor",
+    description: "Handled an external business phone call.",
+    requireQuestId: "business-phone",
+  },
+  {
+    id: "owned-the-mistake",
+    japaneseName: "ミス報告できた",
+    englishName: "Owned the Mistake",
+    description: "Reported a workplace mistake with recovery steps.",
+    requireQuestId: "report-mistake",
+  },
+  {
+    id: "spoke-up-meeting",
+    japaneseName: "会議で発言",
+    englishName: "Spoke Up in the Meeting",
+    description: "Disagreed politely and suggested an alternative in a meeting.",
+    requireQuestId: "meeting-speak",
   },
 ] as const;

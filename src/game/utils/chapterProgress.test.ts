@@ -73,18 +73,22 @@ describe("Chapter 1 quest chain", () => {
 });
 
 describe("Chapter 2 quest chain", () => {
-  it("registers exactly four Chapter 2 quests after Chapter 1", () => {
+  it("registers Chapter 1–4 story quests", () => {
     const story = QUESTS.filter((q) => !q.rewards.randomEncounter);
-    expect(story).toHaveLength(10);
+    expect(story).toHaveLength(23);
     const ch2 = story.filter((q) => q.chapter === 2);
     expect(ch2).toHaveLength(4);
+    const ch3 = story.filter((q) => q.chapter === 3);
+    expect(ch3).toHaveLength(6);
+    const ch4 = story.filter((q) => q.chapter === 4);
+    expect(ch4).toHaveLength(7);
     expect(ch2.map((q) => q.id)).toEqual([
       "clinic-visit",
       "phone-call",
       "first-day-office",
       "social-life-challenge",
     ]);
-    expect(ch2.every((q) => q.steps.length > 0)).toBe(true);
+    expect(ch2.every((q) => q.steps.length > 0 || q.conversation)).toBe(true);
   });
 
   it("keeps Chapter 2 locked until Chapter 1 is cleared", () => {
