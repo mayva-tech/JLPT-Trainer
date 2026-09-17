@@ -26,6 +26,9 @@ import { CUSTOMER_SERVICE_QUEST } from "./customerService";
 import { REPORT_MISTAKE_QUEST } from "./reportMistake";
 import { MEETING_SPEAK_QUEST } from "./meetingSpeak";
 import { WORKDAY_SURVIVAL_QUEST } from "./workdaySurvival";
+import { FAST_CONVENIENCE_QUEST } from "./fastConvenience";
+import { TRAIN_ANNOUNCEMENT_QUEST } from "./trainAnnouncement";
+import { FRIEND_REAL_MEANING_QUEST } from "./friendRealMeaning";
 
 export const QUESTS: readonly QuestDefinition[] = [
   // Chapter 1
@@ -55,6 +58,10 @@ export const QUESTS: readonly QuestDefinition[] = [
   REPORT_MISTAKE_QUEST,
   MEETING_SPEAK_QUEST,
   WORKDAY_SURVIVAL_QUEST,
+  // Chapter 5
+  FAST_CONVENIENCE_QUEST,
+  TRAIN_ANNOUNCEMENT_QUEST,
+  FRIEND_REAL_MEANING_QUEST,
   // Short random street encounters
   ...RANDOM_ENCOUNTER_QUESTS,
 ];

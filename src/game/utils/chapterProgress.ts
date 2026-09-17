@@ -134,6 +134,12 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "Speaking in a Meeting";
     case "workday-survival":
       return "Workday Survival";
+    case "fast-convenience":
+      return "Fast Convenience Store";
+    case "train-announcement":
+      return "Train Announcement Challenge";
+    case "friend-real-meaning":
+      return "What Your Friend Really Means";
     default:
       return quest.title;
   }

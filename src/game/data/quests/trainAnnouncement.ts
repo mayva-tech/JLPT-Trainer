@@ -175,11 +175,13 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
       vocabHint: "お乗り換え",
       setsFacts: {
         delay: "10分",
+        time: "10分遅れ",
         transferStation: "新宿",
         transferLine: "山手線",
       },
       factLabels: {
         delay: "Delay",
+        time: "Delay time",
         transferStation: "Transfer at",
         transferLine: "Transfer line",
       },
