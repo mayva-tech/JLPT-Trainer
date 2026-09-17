@@ -58,6 +58,8 @@ import {
 } from "../utils/livingJapanese";
 import { bumpDailyProgress, ensureDailyQuests } from "../utils/dailyQuests";
 import { hasSkillEffect, syncSkillUnlocks } from "../utils/skillTree";
+import { questHasPlayableContent } from "../utils/questContent";
+import { naturalStreakXpBonus } from "../utils/conversationEngine";
 import { getLevelProgress } from "../../utils/gameMode/xp";
 import type { LocationId, PlayerRpgProfile, QuestDefinition } from "../types";
 
@@ -108,7 +110,7 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
 
   function startQuest(questId: string) {
     const quest = getQuestById(questId);
-    if (!quest || quest.steps.length === 0) return;
+    if (!quest || !questHasPlayableContent(quest)) return;
     if (
       !profile.completedQuestIds.includes(questId) &&
       !isQuestPlayable(quest, profile)
@@ -130,9 +132,12 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
   }
 
   function continueActiveQuest() {
+    const active = profile.activeQuestId
+      ? getQuestById(profile.activeQuestId)
+      : undefined;
     const id =
-      profile.activeQuestId && getQuestById(profile.activeQuestId)?.steps.length
-        ? profile.activeQuestId
+      active && questHasPlayableContent(active)
+        ? profile.activeQuestId!
         : "city-hall-register";
     startQuest(id);
   }
@@ -168,6 +173,7 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
         if (result.immersionNoEnglish) {
           xp = Math.round(xp * IMMERSION_BONUS.noSubtitleXpMultiplier) + IMMERSION_BONUS.noEnglishXp;
         }
+        xp += naturalStreakXpBonus(result.maxNaturalStreak ?? 0);
         return xp;
       })(),
       skillRewards: (() => {
@@ -194,6 +200,7 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       communicationPercent: result.communicationPercent,
       immersionNoEnglish: result.immersionNoEnglish,
       repairedConversation: result.repairedConversation,
+      relationshipDeltas: result.relationshipDeltas,
     });
 
     setNewlyRewarded(applied.newlyRewarded);
@@ -220,6 +227,9 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       if (m.vocabHint) {
         nextProfile = recordQuestConceptMiss(nextProfile, m.vocabHint);
       }
+    }
+    for (const concept of result.needsReview ?? []) {
+      nextProfile = recordQuestConceptMiss(nextProfile, concept);
     }
     for (const v of result.conceptsLearned) {
       nextProfile = recordQuestConceptHit(nextProfile, v);

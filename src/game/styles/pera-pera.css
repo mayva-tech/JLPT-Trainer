@@ -1096,12 +1096,22 @@
 }
 
 .ppq-badge {
-  font-size: 12px;
-  font-weight: 700;
+  display: inline-block;
+  margin: 0 6px 6px 0;
   padding: 4px 10px;
   border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--ppq-accent, #e8a317) 18%, transparent);
   border: 1px solid var(--ppq-accent);
   color: var(--ppq-accent-soft);
+}
+
+.ppq-quality-label {
+  margin: 10px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ppq-text, #f5f0e8);
 }
 
 .ppq-daily-item-head {

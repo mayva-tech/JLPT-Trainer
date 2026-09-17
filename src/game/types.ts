@@ -127,6 +127,77 @@ export type QuestRewards = {
   randomEncounter?: boolean;
 };
 
+/** Conversation Engine V2 — branching dialogue (optional per quest). */
+export type ResponseQuality =
+  | "excellent"
+  | "natural"
+  | "acceptable"
+  | "awkward"
+  | "incorrect";
+
+export type ConversationObjectiveType =
+  | "dialogue"
+  | "listening"
+  | "grammar"
+  | "vocabulary"
+  | "social-choice"
+  | "repair";
+
+export type ConversationEndState = "success" | "failure" | "continue";
+
+export type ConversationChoice = {
+  id: string;
+  japanese: string;
+  reading?: string;
+  english?: string;
+  quality: ResponseQuality;
+  nextNodeId: string;
+  feedback?: string;
+  /** Override default quality → Communication delta. */
+  communicationDelta?: number;
+  /** Confidence hearts delta (usually 0 or −1). */
+  confidenceDelta?: number;
+  /** Soft relationship XP delta for the active NPC. */
+  relationshipDelta?: number;
+  consequenceFlag?: string;
+  /** Marks this choice as a conversation-repair move. */
+  isRepair?: boolean;
+  /** Marks clarification / meaning-check (Living Japanese friendly). */
+  isClarification?: boolean;
+  vocabHint?: string;
+  grammarHint?: string;
+};
+
+export type ConversationNode = {
+  id: string;
+  npcId?: string;
+  japanese: string;
+  reading?: string;
+  english?: string;
+  objectiveType?: ConversationObjectiveType;
+  choices?: ConversationChoice[];
+  /** Linear advance when there are no choices. */
+  nextNodeId?: string;
+  helpHint?: string;
+  vocabHint?: string;
+  grammarHint?: string;
+  listenOnly?: boolean;
+  endState?: ConversationEndState;
+  /** Force slow TTS for this node (e.g. after 「ゆっくり」repair). */
+  forceSlowSpeech?: boolean;
+  speech?: {
+    enabled?: boolean;
+    language?: "ja" | "en";
+    autoPlay?: boolean;
+    karaokeMode?: "always" | "after-answer" | "off";
+  };
+};
+
+export type ConversationDefinition = {
+  startNodeId: string;
+  nodes: ConversationNode[];
+};
+
 export type QuestDefinition = {
   id: string;
   title: string;
@@ -141,6 +212,11 @@ export type QuestDefinition = {
   requiresQuestIds?: string[];
   objectives: { id: string; label: string }[];
   steps: QuestStep[];
+  /**
+   * Optional Conversation Engine V2 graph. When present, QuestRunner uses the
+   * branching runner instead of the linear `steps` MCQ flow.
+   */
+  conversation?: ConversationDefinition;
   rewards: QuestRewards;
   unlocks: {
     locationIds?: LocationId[];

@@ -1,6 +1,7 @@
 import { getChapterByNumber } from "../data/chapters";
 import { getQuestById } from "../data/quests";
 import type { ChapterDefinition, PlayerRpgProfile, QuestDefinition } from "../types";
+import { questHasPlayableContent } from "./questContent";
 
 export type ChapterQuestRow = {
   quest: QuestDefinition;
@@ -21,7 +22,7 @@ export function isQuestPlayable(
   quest: QuestDefinition,
   profile: PlayerRpgProfile
 ): boolean {
-  if (quest.steps.length === 0) return false;
+  if (!questHasPlayableContent(quest)) return false;
   if (isDeveloperMode(profile)) return true;
   return isQuestRequirementMet(quest, profile);
 }

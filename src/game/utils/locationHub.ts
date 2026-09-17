@@ -2,6 +2,7 @@ import { COMMUNICATION_SEALS } from "../data/seals";
 import { getQuestsForLocation } from "../data/quests";
 import type { LocationId, PlayerRpgProfile } from "../types";
 import { getLocationStatus } from "./locationStatus";
+import { questHasPlayableContent } from "./questContent";
 
 export type LocationHubCard = {
   locationId: LocationId;
@@ -18,9 +19,7 @@ export function getLocationHubCard(
   locationId: LocationId,
   profile: PlayerRpgProfile
 ): LocationHubCard {
-  const quests = getQuestsForLocation(locationId).filter(
-    (q) => q.steps.length > 0
-  );
+  const quests = getQuestsForLocation(locationId).filter(questHasPlayableContent);
   const total = quests.length;
   const completed = quests.filter((q) =>
     profile.completedQuestIds.includes(q.id)

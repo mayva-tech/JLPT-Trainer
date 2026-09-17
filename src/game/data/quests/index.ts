@@ -1,4 +1,5 @@
 import type { QuestDefinition } from "../../types";
+import { questHasPlayableContent } from "../../utils/questContent";
 import { CAFE_ORDER_QUEST } from "./cafeOrder";
 import { CITY_HALL_REGISTER_QUEST } from "./cityHallRegister";
 import { CLINIC_VISIT_QUEST } from "./clinicVisit";
@@ -37,7 +38,7 @@ export function getQuestById(id: string): QuestDefinition | undefined {
 }
 
 export function getPlayableQuests(): QuestDefinition[] {
-  return QUESTS.filter((quest) => quest.steps.length > 0);
+  return QUESTS.filter(questHasPlayableContent);
 }
 
 export function getQuestsForLocation(locationId: string): QuestDefinition[] {
@@ -58,9 +59,7 @@ export function getPrimaryQuestForLocation(
   locationId: string,
   completedQuestIds: readonly string[] = []
 ): QuestDefinition | undefined {
-  const atLoc = getQuestsForLocation(locationId).filter(
-    (quest) => quest.steps.length > 0
-  );
+  const atLoc = getQuestsForLocation(locationId).filter(questHasPlayableContent);
   if (atLoc.length === 0) return undefined;
   const incomplete = atLoc.find((q) => !completedQuestIds.includes(q.id));
   return incomplete ?? atLoc[0];
