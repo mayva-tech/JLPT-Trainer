@@ -87,29 +87,39 @@ export function splitEnglishDescriptiveAside(
 }
 
 /**
- * One clause from an English `;` / sentence split — display range is UTF-16 into
- * the full string (for karaoke); `speak` is what Andrew should say for the clause.
+ * One clause from an English `;` / em-dash / sentence split — display range is
+ * UTF-16 into the full string (for karaoke); `speak` is what Andrew should say
+ * for the clause.
  */
 export type EnglishClauseSplit = {
   /** Inclusive start on the display string. */
   start: number;
-  /** Exclusive end on the display string (includes trailing `;` / `.` when present). */
+  /** Exclusive end on the display string (includes trailing `;` / `—` / `.` when present). */
   end: number;
-  /** Spoken clause without in-utterance `;` → `...` (pause is between utterances). */
+  /** Spoken clause without in-utterance `;`/`—` → `...` (pause is between utterances). */
   speak: string;
 };
 
 /** @deprecated alias — Prefer {@link EnglishClauseSplit}. */
 export type EnglishSemicolonClause = EnglishClauseSplit;
 
+/** Trailing punct stripped when building a clause's spoken string. */
+const ENGLISH_CLAUSE_TRAILING_PUNCT = /[;,.!?—–]+$/u;
+
 /**
- * Collect clause ends: every `;`, and `.` / `!` / `?` before a new sentence
- * (space + capital / quote). Skips decimals like `1.5`.
+ * Collect clause ends: every `;`, em/en dash (`—` / `–`), and `.` / `!` / `?`
+ * before a new sentence (space + capital / quote). Skips decimals like `1.5`.
+ * Dashes consume trailing spaces so the next clause starts on the next word.
  */
 function findEnglishClauseBreakEnds(text: string): number[] {
   const ends = new Set<number>();
   for (const m of text.matchAll(/;/g)) {
     ends.add(m.index + 1);
+  }
+  // Em/en dash = breath pause (Game Mode EN like "Sorry — I'll…").
+  // Include trailing spaces so karaoke ranges do not leave a dangling gap unit.
+  for (const m of text.matchAll(/[—–]\s*/g)) {
+    ends.add(m.index + m[0].length);
   }
   for (const m of text.matchAll(/(?<!\d)[.!?](?=\s+["'“‘(]*[A-Z0-9])/g)) {
     ends.add(m.index + 1);
@@ -118,9 +128,9 @@ function findEnglishClauseBreakEnds(text: string): number[] {
 }
 
 /**
- * Split long EN on `;` and sentence endings so each clause is its own utterance.
- * A single fallback karaoke timeline over-dwells on periods/ellipsis and lags
- * Style Trainer warnings / explanations behind Andrew.
+ * Split long EN on `;`, em/en dash, and sentence endings so each clause is its
+ * own utterance. A single fallback karaoke timeline over-dwells on
+ * periods/ellipsis and lags Style Trainer warnings / explanations behind Andrew.
  */
 export function splitEnglishByClauses(
   text: string
@@ -133,7 +143,7 @@ export function splitEnglishByClauses(
   for (const end of breakEnds) {
     if (end <= start) continue;
     const raw = text.slice(start, end);
-    const speakSource = raw.replace(/[;,.!?]+$/u, "").trim();
+    const speakSource = raw.replace(ENGLISH_CLAUSE_TRAILING_PUNCT, "").trim();
     if (speakSource) {
       clauses.push({
         start,
@@ -145,7 +155,7 @@ export function splitEnglishByClauses(
   }
   const rest = text.slice(start);
   if (rest.trim()) {
-    const speakSource = rest.replace(/[;,.!?]+$/u, "").trim();
+    const speakSource = rest.replace(ENGLISH_CLAUSE_TRAILING_PUNCT, "").trim();
     clauses.push({
       start,
       end: text.length,
@@ -205,6 +215,8 @@ function normalizeSpeakCommas(text: string): string {
     .replace(/\s+,/g, ",")
     // Semicolon = clause break. Ellipsis makes Andrew pause (comma is too short).
     .replace(/\s*;\s*/g, " ... ")
+    // Em/en dash = same breath pause when kept in a single utterance.
+    .replace(/\s*[—–]\s*/g, " ... ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").
     .replace(/(?<!\d),(?=\S)/g, ", ")
     .replace(/,\s*,+/g, ",")

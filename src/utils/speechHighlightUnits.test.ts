@@ -128,6 +128,25 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     expect(withSemi).toBeGreaterThan(plainSoft);
   });
 
+  it("pauses after em dash on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "Sorry — I'll be a bit late!"
+    );
+    expect(steps.map((s) => s.text)).not.toContain("—");
+    const sorry = steps.find((s) => s.text === "Sorry");
+    expect(sorry?.spokenText).toMatch(/\.\.\.\s*$/);
+    const withDash = estimateUnitDurationMs(
+      sorry!,
+      "en",
+      steps[steps.indexOf(sorry!) + 1]
+    );
+    const plainSorry = estimateUnitDurationMs(
+      { start: 0, end: 5, text: "Sorry", kind: "word", spokenText: "Sorry" },
+      "en"
+    );
+    expect(withDash).toBeGreaterThan(plainSorry);
+  });
+
   it("keeps embedded 私 on the karaoke timeline as watashi", () => {
     const text = "many women use 私 in every situation";
     const steps = buildEnglishSpokenKaraokeSteps(text);

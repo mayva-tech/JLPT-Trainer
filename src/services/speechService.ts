@@ -812,8 +812,9 @@ type EnglishSpeakSegment = {
 };
 
 /**
- * Prefer trailing gloss aside splits, else `;` / sentence clause splits —
- * both need a real inter-utterance pause so karaoke does not drift off Andrew.
+ * Prefer trailing gloss aside splits, else `;` / em-dash / sentence clause
+ * splits — all need a real inter-utterance pause so karaoke does not drift
+ * off Andrew (mdash with no pause makes karaoke race ahead).
  */
 function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
   const aside = splitEnglishDescriptiveAside(text);
@@ -848,16 +849,24 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
       .map((s) => {
-        // Real pause is between utterances — strip clause-final punct dwell.
-        if (/[;,.!?]$/u.test(s.text)) {
-          const stripped = s.text.replace(/[;,.!?]+$/u, "").trim();
+        // Real pause is between utterances — strip clause-final punct / mdash
+        // ellipsis dwell so karaoke does not double-wait on the last word.
+        if (/[;,.!?—–]$/u.test(s.text)) {
+          const stripped = s.text.replace(/[;,.!?—–]+$/u, "").trim();
           return {
             ...s,
             spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
             speakGapAfter: false,
           };
         }
-        return { ...s, speakGapAfter: false };
+        const spoken = (s.spokenText ?? s.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .trim();
+        return {
+          ...s,
+          spokenText: spoken || s.spokenText,
+          speakGapAfter: false,
+        };
       });
     return {
       speak: clause.speak,

@@ -817,6 +817,46 @@ describe("speechService karaoke timeline", () => {
     expect(highlights).toContain("grate.");
     expect(ended).toBe(1);
   });
+
+  it("splits on em dash with a real pause so karaoke does not race ahead", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "Sorry — I'll be a bit late!";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toBe("Sorry");
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights[0]).toBe("Sorry");
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken).toHaveLength(1);
+
+    // Real inter-utterance pause (mdash) — next clip must not start early.
+    vi.advanceTimersByTime(400);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(300);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text).toBe("I'll be a bit late");
+
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(
+      __speechTestHooks.FALLBACK_START_OFFSET_MS + 15000
+    );
+    spoken[1]!.onend?.();
+    expect(highlights).toContain("I'll");
+    expect(highlights).toContain("late!");
+    expect(ended).toBe(1);
+  });
 });
 
 describe("speechService Nanami Japanese voice", () => {

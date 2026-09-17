@@ -920,7 +920,7 @@ function spanOverlapsParenthetical(
  * Skips meta `(formal)` notes and slot markers `~` / `～` (pause attaches to the
  * previous word), matching `buildEnglishSpeakText`. Descriptive `(nuance)` asides
  * stay on the timeline; the headword before the aside gets a period dwell
- * ("I. soft, casual"). Trailing `;` becomes an ellipsis dwell.
+ * ("I. soft, casual"). Trailing `;` / `—` becomes an ellipsis dwell.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
   // Keep slot-marker units long enough to transfer their pause to the previous
@@ -941,6 +941,18 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
         const base = prev.spokenText ?? prev.text;
         prev.spokenText = /[,，、]$/u.test(base) ? base : `${base},`;
         prev.speakGapAfter = true;
+      }
+      continue;
+    }
+
+    // Lone em/en dash — attach ellipsis dwell to the previous word (same as `;`).
+    if (/^[—–]+$/u.test(raw)) {
+      const prev = steps.at(-1);
+      if (prev) {
+        const base = (prev.spokenText ?? prev.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .replace(/[,.]+$/u, "");
+        prev.spokenText = `${base} ...`;
       }
       continue;
     }
@@ -968,10 +980,10 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Keep semicolon clause breaks on the karaoke timeline (spoken as "...").
+    // Keep semicolon / mdash clause breaks on the karaoke timeline (spoken as "...").
     // Ellipsis already carries the pause — do not also set speakGapAfter.
-    if (/;/.test(raw) && !/\.\.\./.test(spoken)) {
-      spoken = `${spoken.replace(/[,.]+$/u, "")} ...`;
+    if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+      spoken = `${spoken.replace(/[,.—–]+$/u, "")} ...`;
     }
 
     steps.push({
