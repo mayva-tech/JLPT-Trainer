@@ -89,12 +89,13 @@ const DEBUG_SPEECH = false;
 const FALLBACK_START_OFFSET_MS = 0;
 /**
  * English (Andrew) estimate scale.
- * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — a 1.0
- * scale with /rate stretches karaoke past the voice (especially quiz meanings
- * that strip notes and therefore get no boundary rebase). Slightly under 1
- * keeps the estimate near the voice; boundaries still correct when present.
+ * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — dividing
+ * by the raw rate stretches karaoke past the voice. Keep a mild stretch above
+ * 1.0 so Game Mode / Quest EN karaoke does not race ahead of the utterance;
+ * browser word boundaries still rebase when present.
+ * (Play/Quiz historically used ~1.35; 0.88 overshot the other way.)
  */
-const FALLBACK_TIMING_SCALE_EN = 0.88;
+const FALLBACK_TIMING_SCALE_EN = 1.08;
 /**
  * Japanese fallback scale (Nanami). Under 1 pulls karaoke slightly ahead of
  * the voice so example sentences do not trail after particle/mora estimates.
@@ -489,9 +490,10 @@ function runUtterance(
     unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
   // Andrew/Nanami neural rates are nonlinear below ~0.9 — don't stretch
   // karaoke as if SPEECH_RATE_NORMAL (0.80) were a true 20% slowdown.
-  // JA floor is slightly lower than EN: Nanami slows a bit more than Andrew.
+  // EN floor 0.88 gives a mild slowdown at normal rate without the lag of /0.80.
+  // JA floor is slightly lower: Nanami slows a bit more than Andrew.
   const rateDivisor =
-    unitLang === "en" ? Math.max(rate, 0.9) : Math.max(rate, 0.85);
+    unitLang === "en" ? Math.max(rate, 0.88) : Math.max(rate, 0.85);
 
   const plannedStart: number[] = [];
   {

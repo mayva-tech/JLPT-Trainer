@@ -1112,12 +1112,12 @@ const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
-const EN_WEIGHT_MS = 300;
+const EN_WEIGHT_MS = 315;
 /**
  * Andrew clause pause after a comma (example sentences). Measured against
  * neural Andrew: post-comma gaps are often ~500–700ms. Weight is applied
- * before FALLBACK_TIMING_SCALE_EN (~0.88) and the EN rate divisor, so keep
- * this high enough that the scheduled dwell still lands near half a second.
+ * before FALLBACK_TIMING_SCALE_EN and the EN rate divisor, so keep this high
+ * enough that the scheduled dwell still lands near half a second.
  */
 const EN_COMMA_PAUSE = 2.25;
 /** Andrew pause after ";" / ":" in English glosses and examples. */
@@ -1270,10 +1270,10 @@ export function estimateUnitDurationMs(
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
     const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
-    // Slightly steeper letter curve than before so short quiz glosses
-    // ("out of stock") don't linger on the first word.
-    const weight = 0.55 + Math.min(letters, 12) * 0.08 + punctPause;
-    return Math.max(120, weight * EN_WEIGHT_MS);
+    // Balanced letter curve: short Game Mode glosses keep pace with Andrew
+    // without racing through the first words of longer prompts.
+    const weight = 0.62 + Math.min(letters, 14) * 0.085 + punctPause;
+    return Math.max(130, weight * EN_WEIGHT_MS);
   }
 
   // Prefer aligned spoken kana whenever available.

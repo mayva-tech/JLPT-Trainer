@@ -309,8 +309,8 @@ describe("speechService karaoke timeline", () => {
     const units = buildEnglishSpokenKaraokeSteps(text);
     const offsets: number[] = [];
     let acc = __speechTestHooks.FALLBACK_START_OFFSET_MS;
-    // Mirror speechService EN rate handling (neural Andrew is nonlinear < 0.9).
-    const rateDivisor = Math.max(rate, 0.9);
+    // Mirror speechService EN rate handling (neural Andrew is nonlinear < ~0.88).
+    const rateDivisor = Math.max(rate, 0.88);
     for (let i = 0; i < units.length; i += 1) {
       offsets.push(acc);
       acc +=
@@ -485,6 +485,25 @@ describe("speechService karaoke timeline", () => {
       const error = Math.abs(firedAt[i]! - (origin + planned[i]!));
       expect(error).toBeLessThanOrEqual(LAG + 5);
     }
+  });
+
+  it("EN karaoke at normal rate does not schedule faster than the voice estimate", async () => {
+    const { estimateUnitDurationMs, buildEnglishSpokenKaraokeSteps } =
+      await import("../utils/speechHighlightUnits");
+    const { __speechTestHooks } = await import("./speechService");
+    const { SPEECH_RATE_NORMAL } = await import("./speechService");
+
+    const text = "How can I help you today?";
+    const units = buildEnglishSpokenKaraokeSteps(text);
+    let raw = 0;
+    for (let i = 0; i < units.length; i += 1) {
+      raw += estimateUnitDurationMs(units[i]!, "en", units[i + 1] ?? null);
+    }
+    const planned = await plannedEnglishOffsets(text, SPEECH_RATE_NORMAL);
+    const scheduled = planned.at(-1)!;
+    // Scale ≥ 1 and rate floor < 1 → scheduled span should meet or exceed raw.
+    expect(__speechTestHooks.FALLBACK_TIMING_SCALE_EN).toBeGreaterThanOrEqual(1);
+    expect(scheduled).toBeGreaterThanOrEqual(raw * 0.98);
   });
 
   it("pause freezes karaoke and resume preserves sync", async () => {
