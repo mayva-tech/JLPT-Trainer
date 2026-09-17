@@ -29,6 +29,10 @@ import { WORKDAY_SURVIVAL_QUEST } from "./workdaySurvival";
 import { FAST_CONVENIENCE_QUEST } from "./fastConvenience";
 import { TRAIN_ANNOUNCEMENT_QUEST } from "./trainAnnouncement";
 import { FRIEND_REAL_MEANING_QUEST } from "./friendRealMeaning";
+import { CONTRACTION_CITY_QUEST } from "./contractionCity";
+import { IZAKAYA_LISTENING_QUEST } from "./izakayaListening";
+import { READ_BETWEEN_LINES_QUEST } from "./readBetweenLines";
+import { NATIVE_SPEED_SURVIVAL_QUEST } from "./nativeSpeedSurvival";
 
 export const QUESTS: readonly QuestDefinition[] = [
   // Chapter 1
@@ -62,6 +66,10 @@ export const QUESTS: readonly QuestDefinition[] = [
   FAST_CONVENIENCE_QUEST,
   TRAIN_ANNOUNCEMENT_QUEST,
   FRIEND_REAL_MEANING_QUEST,
+  CONTRACTION_CITY_QUEST,
+  IZAKAYA_LISTENING_QUEST,
+  READ_BETWEEN_LINES_QUEST,
+  NATIVE_SPEED_SURVIVAL_QUEST,
   // Short random street encounters
   ...RANDOM_ENCOUNTER_QUESTS,
 ];
