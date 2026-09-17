@@ -58,14 +58,14 @@ export const COMMUNICATION_SEALS: readonly CommunicationSeal[] = [
     japaneseName: "社会の証",
     englishName: "Social Seal",
     icon: "🤝",
-    awardQuestId: "social-life-challenge",
+    awardQuestId: "relationships-challenge",
   },
   {
     id: "fluency",
     japaneseName: "流暢の証",
     englishName: "Fluency Seal",
     icon: "✨",
-    // Future chapters / license path.
+    // Future Chapter 4+ license path.
   },
 ] as const;
 

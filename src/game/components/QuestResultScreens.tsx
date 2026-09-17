@@ -1,4 +1,5 @@
 import { LANGUAGE_STAT_LABELS } from "../utils/languageStats";
+import { getNpcById } from "../data/npcs";
 import type { LanguageStatKey, LanguageStats, QuestDefinition, QuestRunMistake } from "../types";
 import type { QuestRunOutcome } from "./QuestRunner";
 
@@ -66,7 +67,9 @@ export function QuestSuccessScreen({
         <p style={{ color: "var(--ppq-muted)" }}>
           {chapterSummary.chapterNumber === 1
             ? "You survived your first week in Kotoba Town."
-            : "You handled clinic, phone, and workplace Japanese in one connected day."}
+            : chapterSummary.chapterNumber === 2
+              ? "You handled clinic, phone, and workplace Japanese in one connected day."
+              : "You learned that grammatically correct is not always socially natural."}
         </p>
 
         <dl className="ppq-result-grid">
@@ -184,6 +187,12 @@ export function QuestSuccessScreen({
           <dt>Communication</dt>
           <dd>{outcome.communicationPercent ?? 0}%</dd>
         </div>
+        {typeof outcome.socialFitPercent === "number" ? (
+          <div>
+            <dt>Social Fit</dt>
+            <dd>{outcome.socialFitPercent}%</dd>
+          </div>
+        ) : null}
         <div>
           <dt>XP</dt>
           <dd>
@@ -195,7 +204,8 @@ export function QuestSuccessScreen({
 
       {(outcome.immersionNoEnglish ||
         outcome.firstListenSuccess ||
-        outcome.repairedConversation) && (
+        outcome.repairedConversation ||
+        (outcome.maxNaturalStreak ?? 0) >= 3) && (
         <div className="ppq-result-badges">
           {outcome.immersionNoEnglish ? (
             <span className="ppq-badge">No English</span>
@@ -203,8 +213,97 @@ export function QuestSuccessScreen({
           {outcome.firstListenSuccess ? (
             <span className="ppq-badge">First Listen</span>
           ) : null}
-          {outcome.repairedConversation ? (
-            <span className="ppq-badge">Repair</span>
+          {outcome.repairedConversation || outcome.repairUsed ? (
+            <span className="ppq-badge">Conversation Repair</span>
+          ) : null}
+          {(outcome.maxNaturalStreak ?? 0) >= 3 ? (
+            <span className="ppq-badge">Natural Response Streak</span>
+          ) : null}
+        </div>
+      )}
+
+      {outcome.engine === "v2" ? (
+        <div className="ppq-panel" style={{ marginTop: 12 }}>
+          <h2>Conversation summary</h2>
+          {(outcome.conceptsLearned?.length ?? 0) > 0 ? (
+            <p style={{ fontSize: 13, margin: "0 0 6px" }}>
+              Learned: {outcome.conceptsLearned.join(" · ")}
+            </p>
+          ) : null}
+          {(outcome.needsReview?.length ?? 0) > 0 ? (
+            <p style={{ fontSize: 13, margin: "0 0 6px" }}>
+              Needs review: {[...new Set(outcome.needsReview)].join(" · ")}
+            </p>
+          ) : null}
+          {(outcome.relationshipDeltas?.length ?? 0) > 0 ? (
+            <p style={{ fontSize: 13, margin: "0 0 6px" }}>
+              Relationship:{" "}
+              {outcome.relationshipDeltas!.map((r) => {
+                const npc = getNpcById(r.npcId);
+                const name = npc?.japaneseName ?? r.npcId;
+                const sign = r.delta > 0 ? "+" : "";
+                return `${name} ${sign}${r.delta}`;
+              }).join(" · ")}
+            </p>
+          ) : null}
+          {outcome.maxNaturalStreak ? (
+            <p style={{ fontSize: 13, margin: 0 }}>
+              Best natural streak: {outcome.maxNaturalStreak}
+            </p>
+          ) : null}
+          {typeof outcome.firstListenTotal === "number" &&
+          outcome.firstListenTotal > 0 ? (
+            <p style={{ fontSize: 13, margin: "6px 0 0" }}>
+              First-listen accuracy: {outcome.firstListenCorrect ?? 0}/
+              {outcome.firstListenTotal}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
+      {(outcome.summaryFacts?.length ||
+        outcome.repairCounts ||
+        outcome.resultSummaryTitle) && (
+        <div className="ppq-panel ppq-result-summary" style={{ marginTop: 12 }}>
+          <h2>{outcome.resultSummaryTitle ?? "Mission report"}</h2>
+          {(outcome.summaryFacts?.length ?? 0) > 0 ? (
+            <div style={{ marginBottom: 8 }}>
+              <p style={{ fontSize: 12, color: "var(--ppq-muted)", margin: "0 0 4px" }}>
+                Understood
+              </p>
+              <ul className="ppq-report-list">
+                {outcome.summaryFacts!.map((fact) => (
+                  <li key={fact.key}>
+                    {fact.understood ? "✓" : "○"} {fact.label}
+                    {fact.value ? (
+                      <span style={{ color: "var(--ppq-muted)" }}>
+                        {" "}
+                        · {fact.value}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {(outcome.needsReview?.length ?? 0) > 0 ? (
+            <p style={{ fontSize: 13, margin: "0 0 8px" }}>
+              Needed clarification: △{" "}
+              {[...new Set(outcome.needsReview)].slice(0, 4).join(" · ")}
+            </p>
+          ) : null}
+          {outcome.repairCounts ? (
+            <p style={{ fontSize: 13, margin: "0 0 8px" }}>
+              Repairs: Repeat ×{outcome.repairCounts.repeat} · Slow ×
+              {outcome.repairCounts.slow} · Meaning ×{outcome.repairCounts.meaning}{" "}
+              · Confirm ×{outcome.repairCounts.confirm}
+            </p>
+          ) : null}
+          <p style={{ fontSize: 13, margin: "0 0 4px" }}>
+            Communication: {outcome.communicationPercent ?? 0}%
+          </p>
+          {outcome.immersionNoEnglish ? (
+            <p style={{ fontSize: 13, margin: 0 }}>No English: ✓</p>
           ) : null}
         </div>
       )}
