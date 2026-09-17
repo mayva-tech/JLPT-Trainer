@@ -90,7 +90,7 @@ async function main() {
   await page.getByRole("button", { name: /Pera Pera Quest|ペラペラ/i }).click();
   await page.getByRole("heading", { name: "ペラペラクエスト" }).waitFor();
   await page.getByRole("button", { name: /Enter Kotoba Town/i }).click();
-  await page.getByRole("button", { name: /Phone Center|電話センター|Phone/i }).click();
+  await page.getByRole("button", { name: /Phone Center/i }).click();
   await page.getByRole("heading", { name: /電話で問い合わせ/ }).waitFor();
 
   // V2 phone chrome
