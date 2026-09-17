@@ -24,7 +24,7 @@ import {
   seedLanguageStatsFromTrainer,
 } from "./languageStats";
 import { resolveAdventureRank } from "../data/ranks";
-import { grantQuestRelationshipXp } from "./relationships";
+import { addRelationshipXp, grantQuestRelationshipXp } from "./relationships";
 import { syncSkillUnlocks } from "./skillTree";
 import { ensureDailyQuests } from "./dailyQuests";
 
@@ -384,6 +384,8 @@ export type QuestCompletionInput = {
   /** Immersion extras already folded into xpGained / skillRewards by caller. */
   immersionNoEnglish?: boolean;
   repairedConversation?: boolean;
+  /** Per-choice relationship XP deltas from Conversation V2. */
+  relationshipDeltas?: { npcId: string; delta: number }[];
 };
 
 export type QuestCompletionResult = {
@@ -509,6 +511,13 @@ export function applyQuestCompletion(
       relNpcs,
       input.communicationPercent ?? input.accuracy
     );
+  }
+
+  if (input.relationshipDeltas?.length) {
+    for (const row of input.relationshipDeltas) {
+      if (!row.npcId || !row.delta) continue;
+      next = addRelationshipXp(next, row.npcId, row.delta);
+    }
   }
 
   if (input.immersionNoEnglish) {

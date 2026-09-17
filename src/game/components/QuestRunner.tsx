@@ -27,6 +27,7 @@ import {
 } from "../utils/questSpeech";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
+import { ConversationQuestRunner } from "./ConversationQuestRunner";
 import { NpcPortrait } from "./NpcPortrait";
 import { communicationFromConfidence } from "../utils/communicationMeter";
 
@@ -46,6 +47,19 @@ export type QuestRunOutcome = {
   firstListenSuccess: boolean;
   repairedConversation: boolean;
   conceptsLearned: string[];
+  /** Linear V1 vs branching Conversation V2. */
+  engine?: "v1" | "v2";
+  naturalResponseStreak?: number;
+  maxNaturalStreak?: number;
+  needsReview?: string[];
+  relationshipDeltas?: { npcId: string; delta: number }[];
+  repairUsed?: boolean;
+  qualityCounts?: Partial<
+    Record<
+      "excellent" | "natural" | "acceptable" | "awkward" | "incorrect",
+      number
+    >
+  >;
 };
 
 type Props = {
@@ -62,6 +76,39 @@ type Props = {
 const STEP_SETTLE_MS = 280;
 
 export function QuestRunner({
+  questId,
+  metNpcIds,
+  onQuit,
+  onFinished,
+  immersionEnabled = false,
+  extraRepair = false,
+}: Props) {
+  const baseQuest = getQuestById(questId);
+
+  if (baseQuest?.conversation) {
+    return (
+      <ConversationQuestRunner
+        questId={questId}
+        onQuit={onQuit}
+        onFinished={onFinished}
+        immersionEnabled={immersionEnabled}
+      />
+    );
+  }
+
+  return (
+    <LinearQuestRunner
+      questId={questId}
+      metNpcIds={metNpcIds}
+      onQuit={onQuit}
+      onFinished={onFinished}
+      immersionEnabled={immersionEnabled}
+      extraRepair={extraRepair}
+    />
+  );
+}
+
+function LinearQuestRunner({
   questId,
   metNpcIds,
   onQuit,
@@ -281,6 +328,7 @@ export function QuestRunner({
       firstListenSuccess: listeningStepsSeen > 0 && firstListenOk,
       repairedConversation,
       conceptsLearned: vocab,
+      engine: "v1",
     });
   }
 
