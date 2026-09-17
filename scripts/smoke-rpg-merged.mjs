@@ -52,9 +52,7 @@ function smokeProfile() {
     rewardedQuestIds: ["convenience-first-shop"],
     flags: { chapter1Complete: false, chapter2Complete: false, developerMode: true },
     seals: ["daily-life"],
-    relationships: {
-      "sato-clerk": { level: 1, xp: 10 },
-    },
+    relationships: [{ npcId: "sato-clerk", level: 1, xp: 10 }],
     coins: 35,
     unlockedSkillNodes: [],
     immersion: { enabled: false, hideEnglish: false, hideSubtitles: false },
