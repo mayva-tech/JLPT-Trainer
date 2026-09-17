@@ -612,7 +612,7 @@ export function QuestRunner({
           {(currentStep.helpHint ||
             currentStep.promptReading ||
             currentStep.promptEn) &&
-          isInteractive ? (
+          (isInteractive || immersionEnabled) ? (
             <button
               type="button"
               className="ppq-btn ppq-btn--ghost"
@@ -828,7 +828,8 @@ function DialogueStep({
       !(resolved.hideTranscriptUntilAnswer && !revealed) ? (
         <div className="ppq-prompt-en-row">
           <div className="ppq-prompt-en">{step.promptEn}</div>
-          {onReplayEnglish && step.kind === "intro" ? (
+          {onReplayEnglish &&
+          (step.kind === "intro" || step.kind === "outro") ? (
             <button
               type="button"
               className="ppq-speak-btn"
@@ -838,18 +839,6 @@ function DialogueStep({
               🔊
             </button>
           ) : null}
-        </div>
-      ) : step.kind === "intro" && step.promptEn && onReplayEnglish ? (
-        <div className="ppq-prompt-en-row">
-          <div className="ppq-prompt-en">{step.promptEn}</div>
-          <button
-            type="button"
-            className="ppq-speak-btn"
-            aria-label="Play English narration"
-            onClick={onReplayEnglish}
-          >
-            🔊
-          </button>
         </div>
       ) : null}
 
