@@ -21,6 +21,11 @@ import { WORKPLACE_DISCUSSION_QUEST } from "./workplaceDiscussion";
 import { RELATIONSHIPS_CHALLENGE_QUEST } from "./relationshipsChallenge";
 import { MORNING_OFFICE_QUEST } from "./morningOffice";
 import { REPORTING_TO_BOSS_QUEST } from "./reportingToBoss";
+import { BUSINESS_PHONE_QUEST } from "./businessPhone";
+import { CUSTOMER_SERVICE_QUEST } from "./customerService";
+import { REPORT_MISTAKE_QUEST } from "./reportMistake";
+import { MEETING_SPEAK_QUEST } from "./meetingSpeak";
+import { WORKDAY_SURVIVAL_QUEST } from "./workdaySurvival";
 
 export const QUESTS: readonly QuestDefinition[] = [
   // Chapter 1
@@ -45,6 +50,11 @@ export const QUESTS: readonly QuestDefinition[] = [
   // Chapter 4
   MORNING_OFFICE_QUEST,
   REPORTING_TO_BOSS_QUEST,
+  BUSINESS_PHONE_QUEST,
+  CUSTOMER_SERVICE_QUEST,
+  REPORT_MISTAKE_QUEST,
+  MEETING_SPEAK_QUEST,
+  WORKDAY_SURVIVAL_QUEST,
   // Short random street encounters
   ...RANDOM_ENCOUNTER_QUESTS,
 ];
