@@ -207,15 +207,28 @@ function LinearQuestRunner({
   const [firstListenOk, setFirstListenOk] = useState(true);
   const [listeningStepsSeen, setListeningStepsSeen] = useState(0);
   const autoPlayTokenRef = useRef(0);
+  /** Speak quest title JP→EN once per Auto Voice session. */
+  const titleSpokenRef = useRef(false);
 
   const step = quest
     ? quest.steps[Math.min(stepIndex, quest.steps.length - 1)]!
     : null;
   const resolved = step ? resolveQuestSpeech(step) : null;
 
-  // Auto-play full step: prompt → (EN if Help) → each MCQ → (EN if Help) → help hint.
+  // Each quest page opens with Auto Voice OFF (user can turn it on).
   useEffect(() => {
-    if (!step || !resolved) return;
+    titleSpokenRef.current = false;
+    if (speech.autoVoice) speech.setAutoVoice(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questId]);
+
+  useEffect(() => {
+    if (!speech.autoVoice) titleSpokenRef.current = false;
+  }, [speech.autoVoice]);
+
+  // Auto-play: title JP→EN (once) → subject JP→EN → each MCQ JP→EN → help.
+  useEffect(() => {
+    if (!step || !resolved || !quest) return;
     let cancelled = false;
     speech.stop();
     setChoiceHighlightId(null);
@@ -229,11 +242,19 @@ function LinearQuestRunner({
       };
     }
 
+    const immersionBlocksEn = immersionEnabled && !showHelp;
+    const includeTitle = !titleSpokenRef.current;
+    if (includeTitle) titleSpokenRef.current = true;
+
     const queue = buildQuestAutoPlayQueue({
       step,
       resolved,
       showHelp,
       revealed,
+      includeEnglish: !immersionBlocksEn,
+      includeTitle,
+      titleJa: quest.japaneseTitle,
+      titleEn: quest.title,
     });
     if (queue.length === 0) {
       return () => {
@@ -321,6 +342,7 @@ function LinearQuestRunner({
     speech.autoVoice,
     speech.rateMode,
     showHelp,
+    immersionEnabled,
   ]);
 
   // Stop when leaving the runner via quit path handled by unmount; also on reveal

@@ -169,6 +169,19 @@ export function ConversationQuestRunner({
   const countedReductionRef = useRef<Set<string>>(new Set());
   const countedInferenceRef = useRef<Set<string>>(new Set());
   const nodeReplayUsedRef = useRef(false);
+  /** Speak quest title JP→EN once per Auto Voice session. */
+  const titleSpokenRef = useRef(false);
+
+  // Each quest page opens with Auto Voice OFF (user can turn it on).
+  useEffect(() => {
+    titleSpokenRef.current = false;
+    if (speech.autoVoice) speech.setAutoVoice(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questId]);
+
+  useEffect(() => {
+    if (!speech.autoVoice) titleSpokenRef.current = false;
+  }, [speech.autoVoice]);
 
   const node = useMemo(() => {
     if (!conversation || !nodeId) return null;
@@ -238,7 +251,7 @@ export function ConversationQuestRunner({
     }
   }, [node?.id]);
 
-  // Auto-play NPC line (+ choices when transcript visible). Immersion-aware.
+  // Auto-play: title JP→EN (once) → subject JP→EN → choices JP→EN → help.
   useEffect(() => {
     if (!node || !quest) return;
     let cancelled = false;
@@ -266,7 +279,19 @@ export function ConversationQuestRunner({
       | { kind: "en"; text: string }
       | { kind: "bilingual"; text: string };
 
+    const speakEnBody = !immersionBlocksEn && !(hideTranscript && !revealed);
+    const includeTitle = !titleSpokenRef.current;
+    if (includeTitle) titleSpokenRef.current = true;
+
     const queue: QueueItem[] = [];
+    if (includeTitle) {
+      const titleJa = quest.japaneseTitle?.trim() ?? "";
+      const titleEn = quest.title?.trim() ?? "";
+      if (titleJa) queue.push({ kind: "ja", text: titleJa });
+      if (!immersionBlocksEn && titleEn) {
+        queue.push({ kind: "en", text: titleEn });
+      }
+    }
     if (node.japanese.trim()) {
       queue.push({
         kind: "ja",
@@ -274,7 +299,9 @@ export function ConversationQuestRunner({
         reading: node.reading,
       });
     }
-    if (showHelp && node.english?.trim() && !immersionBlocksEn) {
+    if (speakEnBody && node.english?.trim()) {
+      queue.push({ kind: "en", text: node.english });
+    } else if (showHelp && node.english?.trim() && !immersionBlocksEn) {
       queue.push({ kind: "en", text: node.english });
     }
     // Audio-first with hidden transcript: play NPC only (no choice spoiler audio).
@@ -286,7 +313,9 @@ export function ConversationQuestRunner({
           reading: c.reading,
           choiceId: c.id,
         });
-        if (showHelp && c.english?.trim() && !immersionBlocksEn) {
+        if (speakEnBody && c.english?.trim()) {
+          queue.push({ kind: "en", text: c.english });
+        } else if (showHelp && c.english?.trim() && !immersionBlocksEn) {
           queue.push({ kind: "en", text: c.english });
         }
       }

@@ -16,19 +16,19 @@ function memoryStore(initial: Record<string, string> = {}) {
 }
 
 describe("speechPreferences", () => {
-  it("defaults auto voice on and normal rate", () => {
+  it("defaults auto voice OFF and normal rate", () => {
     expect(loadSpeechPreferences(memoryStore())).toEqual({
-      autoVoice: true,
+      autoVoice: false,
       rateMode: "normal",
     });
   });
 
   it("persists shared prefs for trainer + RPG", () => {
     const store = memoryStore();
-    updateSpeechPreferences({ autoVoice: false, rateMode: "slow" }, store);
+    updateSpeechPreferences({ autoVoice: true, rateMode: "slow" }, store);
     expect(store.getItem(SPEECH_PREFS_KEY)).toContain("slow");
     expect(loadSpeechPreferences(store)).toEqual({
-      autoVoice: false,
+      autoVoice: true,
       rateMode: "slow",
     });
   });

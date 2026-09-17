@@ -3,18 +3,19 @@
  * Japanese voice is always resolved via `ttsVoices` → Microsoft Nanami.
  */
 
-export const SPEECH_PREFS_KEY = "jlpt-trainer:speech-prefs:v1";
+/** v2: Auto Voice defaults OFF for Pera Pera Quest page opens. */
+export const SPEECH_PREFS_KEY = "jlpt-trainer:speech-prefs:v2";
 
 export type SpeechRateMode = "normal" | "slow";
 
 export type SpeechPreferences = {
-  /** Auto-play Japanese/English lines when a new step appears. */
+  /** Auto-play Japanese→English lines when a new step appears. */
   autoVoice: boolean;
   rateMode: SpeechRateMode;
 };
 
 const DEFAULTS: SpeechPreferences = {
-  autoVoice: true,
+  autoVoice: false,
   rateMode: "normal",
 };
 
