@@ -61,6 +61,39 @@ export const CHAPTERS: readonly ChapterDefinition[] = [
       title: "Work, Friends & Relationships",
     },
   },
+  {
+    id: "chapter-3",
+    number: 3,
+    title: "Work, Friends & Relationships",
+    japaneseTitle: "第3章・人間関係",
+    description:
+      "You can buy things and survive City Hall — now Japanese changes depending on who you talk to.",
+    openingLines: [
+      "You can buy things, make appointments, and survive City Hall.",
+      "But real Japanese changes depending on who you are talking to.",
+      "Friends, senpai, coworkers, managers — grammatically correct is not always socially natural.",
+    ],
+    objectives: [
+      "Respond naturally to a friend invitation",
+      "Ask a senpai for help softly",
+      "Refuse without sounding cold",
+      "Apologize with the right register",
+      "Disagree gently at work",
+      "Clear the Social Intelligence Challenge",
+    ],
+    questIds: [
+      "friend-invitation",
+      "senpai-favor",
+      "saying-no",
+      "awkward-apology",
+      "workplace-discussion",
+      "relationships-challenge",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第4章・仕事と敬語",
+      title: "Business & Keigo",
+    },
+  },
 ] as const;
 
 export function getChapterByNumber(

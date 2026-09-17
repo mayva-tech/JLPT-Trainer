@@ -75,9 +75,11 @@ describe("Chapter 1 quest chain", () => {
 describe("Chapter 2 quest chain", () => {
   it("registers exactly four Chapter 2 quests after Chapter 1", () => {
     const story = QUESTS.filter((q) => !q.rewards.randomEncounter);
-    expect(story).toHaveLength(10);
+    expect(story).toHaveLength(16);
     const ch2 = story.filter((q) => q.chapter === 2);
     expect(ch2).toHaveLength(4);
+    const ch3 = story.filter((q) => q.chapter === 3);
+    expect(ch3).toHaveLength(6);
     expect(ch2.map((q) => q.id)).toEqual([
       "clinic-visit",
       "phone-call",
