@@ -71,7 +71,9 @@ export function QuestSuccessScreen({
               ? "You handled clinic, phone, and workplace Japanese in one connected day."
               : chapterSummary.chapterNumber === 3
                 ? "You learned that grammatically correct is not always socially natural."
-                : "Professional Japanese is not just more polite Japanese — register, reporting, and recovery matter."}
+                : chapterSummary.chapterNumber === 4
+                  ? "Professional Japanese is not just more polite Japanese — register, reporting, and recovery matter."
+                  : "You learned to hear Japanese the way people actually say it — reduced, fast, and implied."}
         </p>
 
         <dl className="ppq-result-grid">
@@ -201,6 +203,12 @@ export function QuestSuccessScreen({
             <dd>{outcome.professionalFitPercent}%</dd>
           </div>
         ) : null}
+        {typeof outcome.nativeListeningPercent === "number" ? (
+          <div>
+            <dt>Native Listening</dt>
+            <dd>{outcome.nativeListeningPercent}%</dd>
+          </div>
+        ) : null}
         <div>
           <dt>XP</dt>
           <dd>
@@ -264,6 +272,18 @@ export function QuestSuccessScreen({
             <p style={{ fontSize: 13, margin: "6px 0 0" }}>
               First-listen accuracy: {outcome.firstListenCorrect ?? 0}/
               {outcome.firstListenTotal}
+              {typeof outcome.firstListenWithReplayCorrect === "number"
+                ? ` · With replay: ${outcome.firstListenWithReplayCorrect}/${outcome.firstListenTotal}`
+                : ""}
+            </p>
+          ) : null}
+          {typeof outcome.highestAssistLevel === "number" &&
+          outcome.highestAssistLevel > 0 ? (
+            <p style={{ fontSize: 13, margin: "6px 0 0" }}>
+              Assist used:{" "}
+              {["Audio only", "Replay", "Slow", "Transcript", "English"][
+                outcome.highestAssistLevel
+              ] ?? `Level ${outcome.highestAssistLevel}`}
             </p>
           ) : null}
           {outcome.reportingQuality?.notes?.length ? (

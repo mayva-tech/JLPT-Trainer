@@ -83,6 +83,12 @@ export type QuestRunOutcome = {
   /** Listening nodes answered correctly before help/replay. */
   firstListenCorrect?: number;
   firstListenTotal?: number;
+  /** First-listen + after-replay tallies (Chapter 5 motivational). */
+  firstListenWithReplayCorrect?: number;
+  /** Highest listening assist used: 0 audio … 4 English. */
+  highestAssistLevel?: number;
+  /** Chapter 5 Native Listening adaptation (result-only). */
+  nativeListeningPercent?: number;
   /** Optional result panel title (e.g. CALL REPORT). */
   resultSummaryTitle?: string;
 };
@@ -100,6 +106,7 @@ type Props = {
   showContextHint?: boolean;
   showReportingHint?: boolean;
   showKeigoSenseHint?: boolean;
+  showListeningAdaptationHint?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
@@ -115,6 +122,7 @@ export function QuestRunner({
   showContextHint = false,
   showReportingHint = false,
   showKeigoSenseHint = false,
+  showListeningAdaptationHint = false,
 }: Props) {
   const baseQuest = getQuestById(questId);
 
@@ -129,6 +137,7 @@ export function QuestRunner({
         showContextHint={showContextHint}
         showReportingHint={showReportingHint}
         showKeigoSenseHint={showKeigoSenseHint}
+        showListeningAdaptationHint={showListeningAdaptationHint}
       />
     );
   }

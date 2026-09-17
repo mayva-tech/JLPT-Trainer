@@ -51,7 +51,7 @@ describe("Chapter 4 · 仕事と敬語", () => {
     expect(ch.japaneseTitle).toBe("第4章・仕事と敬語");
     expect(ch.title).toBe("Business & Keigo");
     expect(ch.questIds).toEqual([...CH4_IDS]);
-    expect(ch.nextChapterTeaser?.japaneseTitle).toBe("第5章・速い日本語");
+    expect(ch.nextChapterTeaser?.japaneseTitle).toBe("第5章・ネイティブスピード");
     expect(ch.nextChapterTeaser?.title).toContain("Fast");
   });
 

@@ -140,6 +140,14 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "Train Announcement Challenge";
     case "friend-real-meaning":
       return "What Your Friend Really Means";
+    case "contraction-city":
+      return "Everything Gets Shortened";
+    case "izakaya-listening":
+      return "Izakaya Listening Challenge";
+    case "read-between-lines":
+      return "Read Between the Lines";
+    case "native-speed-survival":
+      return "Native-Speed Survival";
     default:
       return quest.title;
   }

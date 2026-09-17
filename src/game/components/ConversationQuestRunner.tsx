@@ -36,6 +36,15 @@ import {
   professionalFitFromQualities,
   summarizeReportingTags,
 } from "../utils/professionalFit";
+import {
+  bumpAssistLevel,
+  isListeningQualityOk,
+  nativeListeningFromRun,
+  nodeCountsTowardNativeListening,
+  nodeSpokenFeatures,
+  type ListeningAssistLevel,
+} from "../utils/nativeListening";
+import { resolveNodeSpeechRate } from "../utils/nodeSpeechRate";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
 import { NpcPortrait } from "./NpcPortrait";
@@ -54,6 +63,8 @@ type Props = {
   showReportingHint?: boolean;
   /** Skill: after awkward keigo, remind internal vs external. */
   showKeigoSenseHint?: boolean;
+  /** Skill: after failed fast listen, catch key nouns/time/place. */
+  showListeningAdaptationHint?: boolean;
 };
 
 const SETTLE_MS = 280;
@@ -92,6 +103,7 @@ export function ConversationQuestRunner({
   showContextHint = false,
   showReportingHint = false,
   showKeigoSenseHint = false,
+  showListeningAdaptationHint = false,
 }: Props) {
   const quest = getQuestById(questId);
   const conversation = quest?.conversation;
@@ -136,7 +148,15 @@ export function ConversationQuestRunner({
   const [nodePlayKey, setNodePlayKey] = useState(0);
   const [firstListenCorrect, setFirstListenCorrect] = useState(0);
   const [firstListenTotal, setFirstListenTotal] = useState(0);
+  const [firstListenWithReplayCorrect, setFirstListenWithReplayCorrect] =
+    useState(0);
   const [listenCompromised, setListenCompromised] = useState(false);
+  const [highestAssistLevel, setHighestAssistLevel] =
+    useState<ListeningAssistLevel>(0);
+  const [reductionCorrect, setReductionCorrect] = useState(0);
+  const [reductionTotal, setReductionTotal] = useState(0);
+  const [inferenceCorrect, setInferenceCorrect] = useState(0);
+  const [inferenceTotal, setInferenceTotal] = useState(0);
   const [repairCounts, setRepairCounts] = useState(emptyRepairCounts());
   const [facts, setFacts] = useState<Record<string, string>>({});
   const [factLabels, setFactLabels] = useState<Record<string, string>>({});
@@ -146,6 +166,9 @@ export function ConversationQuestRunner({
   const [repairFlash, setRepairFlash] = useState<string | null>(null);
   const autoPlayTokenRef = useRef(0);
   const countedListenNodesRef = useRef<Set<string>>(new Set());
+  const countedReductionRef = useRef<Set<string>>(new Set());
+  const countedInferenceRef = useRef<Set<string>>(new Set());
+  const nodeReplayUsedRef = useRef(false);
 
   const node = useMemo(() => {
     if (!conversation || !nodeId) return null;
@@ -170,13 +193,40 @@ export function ConversationQuestRunner({
   // Track listening / audio-first nodes for first-listen metrics.
   useEffect(() => {
     if (!node) return;
+    nodeReplayUsedRef.current = false;
     if (!isListeningBeat(node)) return;
     if (countedListenNodesRef.current.has(node.id)) return;
-    // Only count interactive listening beats (player must answer).
     if (!node.choices?.length) return;
     countedListenNodesRef.current.add(node.id);
     setFirstListenTotal((n) => n + 1);
     setListenCompromised(false);
+  }, [node?.id]);
+
+  // Count reduction / inference beats once when entered.
+  useEffect(() => {
+    if (!node?.choices?.length) return;
+    const features = nodeSpokenFeatures(node);
+    const isReduction = features.some(
+      (f) =>
+        f === "contraction" ||
+        f === "reduced-sound" ||
+        f === "omitted-particle" ||
+        f === "casual-ending" ||
+        f === "filler"
+    );
+    if (isReduction && !countedReductionRef.current.has(node.id)) {
+      countedReductionRef.current.add(node.id);
+      setReductionTotal((n) => n + 1);
+    }
+    if (
+      (node.intendedMeaning ||
+        node.contextMeaning ||
+        features.includes("implied-meaning")) &&
+      !countedInferenceRef.current.has(node.id)
+    ) {
+      countedInferenceRef.current.add(node.id);
+      setInferenceTotal((n) => n + 1);
+    }
   }, [node?.id]);
 
   // Merge authored facts when entering a node.
@@ -205,10 +255,11 @@ export function ConversationQuestRunner({
     }
 
     const forceSlow = Boolean(node.forceSlowSpeech);
-    const prevMode = speech.rateMode;
-    if (forceSlow && speech.rateMode !== "slow") {
-      speech.setRateMode("slow");
-    }
+    const nodeRate = resolveNodeSpeechRate({
+      nodeSpeechRate: node.speechRate,
+      forceSlowSpeech: forceSlow,
+      userRateMode: speech.rateMode,
+    });
 
     type QueueItem =
       | { kind: "ja"; text: string; reading?: string; choiceId?: string }
@@ -275,7 +326,6 @@ export function ConversationQuestRunner({
       const item = queue[index];
       if (!item) {
         setChoiceHighlightId(null);
-        if (forceSlow && prevMode !== "slow") speech.setRateMode(prevMode);
         return;
       }
       const next = () => playItem(index + 1);
@@ -284,6 +334,7 @@ export function ConversationQuestRunner({
         else setChoiceHighlightId(null);
         speech.speakJapanese(item.text, {
           reading: item.reading,
+          rate: nodeRate,
           karaoke: karaokeEnabled && !item.choiceId ? true : karaokeEnabled,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
@@ -307,7 +358,6 @@ export function ConversationQuestRunner({
       cancelled = true;
       window.clearTimeout(timer);
       speech.stop();
-      if (forceSlow && prevMode !== "slow") speech.setRateMode(prevMode);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -339,14 +389,18 @@ export function ConversationQuestRunner({
     if (!activeNode.japanese.trim()) return;
     speech.stop();
     setListenCompromised(true);
-    const prevMode = speech.rateMode;
-    if (slow && prevMode !== "slow") speech.setRateMode("slow");
+    nodeReplayUsedRef.current = true;
+    setHighestAssistLevel((lvl) => bumpAssistLevel(lvl, slow ? 2 : 1));
+    const rate = resolveNodeSpeechRate({
+      nodeSpeechRate: activeNode.speechRate,
+      forceSlowSpeech: activeNode.forceSlowSpeech,
+      userRateMode: speech.rateMode,
+      forceSlowReplay: slow,
+    });
     speech.speakJapanese(activeNode.japanese, {
       reading: activeNode.reading,
+      rate,
       karaoke: karaokeEnabled,
-      onEnded: () => {
-        if (slow && prevMode !== "slow") speech.setRateMode(prevMode);
-      },
     });
   }
 
@@ -358,6 +412,21 @@ export function ConversationQuestRunner({
     const immersionNoEnglish =
       immersionEnabled && !usedEnglishAssist && helpUses === 0;
     const summaryFacts = buildSummaryFacts(facts, factLabels, understoodFacts);
+    const nativeListeningPercent =
+      firstListenTotal > 0 ||
+      reductionTotal > 0 ||
+      inferenceTotal > 0 ||
+      repairedConversation
+        ? nativeListeningFromRun({
+            firstListenCorrect,
+            firstListenTotal,
+            reductionCorrect,
+            reductionTotal,
+            inferenceCorrect,
+            inferenceTotal,
+            repairSuccess: repairedConversation,
+          })
+        : undefined;
     const outcome: QuestRunOutcome = {
       success,
       accuracy,
@@ -394,6 +463,9 @@ export function ConversationQuestRunner({
       summaryFacts,
       firstListenCorrect,
       firstListenTotal,
+      firstListenWithReplayCorrect,
+      highestAssistLevel,
+      nativeListeningPercent,
       resultSummaryTitle: activeConversation.resultSummaryTitle,
     };
     onFinished(outcome);
@@ -515,6 +587,14 @@ export function ConversationQuestRunner({
       setContextHint(
         "Think about whether this person is internal or external."
       );
+    } else if (
+      showListeningAdaptationHint &&
+      (applied.quality === "awkward" || applied.quality === "incorrect") &&
+      nodeCountsTowardNativeListening(activeNode)
+    ) {
+      setContextHint(
+        "Listen for the key noun/time/place, not every word."
+      );
     } else {
       setContextHint(null);
     }
@@ -533,12 +613,48 @@ export function ConversationQuestRunner({
     }
 
     if (isListeningBeat(activeNode)) {
-      const good =
-        applied.quality === "excellent" ||
-        applied.quality === "natural" ||
-        applied.quality === "acceptable";
+      const good = isListeningQualityOk(applied.quality);
       if (good && !listenCompromised && !showHelp) {
         setFirstListenCorrect((n) => n + 1);
+        setFirstListenWithReplayCorrect((n) => n + 1);
+      } else if (good && nodeReplayUsedRef.current) {
+        setFirstListenWithReplayCorrect((n) => n + 1);
+      }
+    }
+
+    const features = nodeSpokenFeatures(activeNode);
+    if (
+      features.some(
+        (f) =>
+          f === "contraction" ||
+          f === "reduced-sound" ||
+          f === "omitted-particle" ||
+          f === "casual-ending" ||
+          f === "filler"
+      ) &&
+      isListeningQualityOk(applied.quality)
+    ) {
+      setReductionCorrect((n) => n + 1);
+    }
+    if (
+      (activeNode.intendedMeaning ||
+        activeNode.contextMeaning ||
+        features.includes("implied-meaning")) &&
+      isListeningQualityOk(applied.quality)
+    ) {
+      setInferenceCorrect((n) => n + 1);
+    }
+
+    // Append contextual meaning to feedback when available.
+    if (
+      (activeNode.contextMeaning || activeNode.intendedMeaning) &&
+      choice.feedback
+    ) {
+      const meaning = activeNode.contextMeaning ?? activeNode.intendedMeaning;
+      if (meaning && !choice.feedback.includes(meaning)) {
+        setFeedback(
+          `${choice.feedback}\n\nIn this context, it most likely means: ${meaning}`
+        );
       }
     }
 
@@ -677,6 +793,9 @@ export function ConversationQuestRunner({
     if (!showHelp) {
       setHelpUses((n) => n + 1);
       setUsedEnglishAssist(true);
+      setHighestAssistLevel((lvl) =>
+        bumpAssistLevel(lvl, immersionEnabled ? 4 : 3)
+      );
       if (isListeningBeat(activeNode) && !revealed) {
         setListenCompromised(true);
       }
@@ -838,11 +957,7 @@ export function ConversationQuestRunner({
                 aria-label="Replay Japanese dialogue"
                 data-testid="replay-normal"
                 onClick={() => {
-                  setListenCompromised(true);
-                  speech.speakJapanese(activeNode.japanese, {
-                    reading: activeNode.reading,
-                    karaoke: karaokeEnabled,
-                  });
+                  replayNodeUtterance(false);
                 }}
               >
                 🔊

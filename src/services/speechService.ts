@@ -70,6 +70,10 @@ export type SpeakJapaneseOptions = {
 
 export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
+/** Chapter 5 "natural" — slightly faster than RPG default, still clear. */
+export const SPEECH_RATE_NATURAL = 0.92;
+/** Chapter 5 "fast" — modest bump only (accessibility). */
+export const SPEECH_RATE_FAST = 1.0;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.85;
 /** Faster Andrew English used only for interview practice. */

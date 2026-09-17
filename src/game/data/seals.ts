@@ -73,7 +73,7 @@ export const COMMUNICATION_SEALS: readonly CommunicationSeal[] = [
     japaneseName: "流暢の証",
     englishName: "Fluency Seal",
     icon: "✨",
-    // Future Chapter 5+ license path.
+    awardQuestId: "native-speed-survival",
   },
 ] as const;
 

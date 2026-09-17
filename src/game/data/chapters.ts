@@ -125,8 +125,42 @@ export const CHAPTERS: readonly ChapterDefinition[] = [
       "workday-survival",
     ],
     nextChapterTeaser: {
-      japaneseTitle: "第5章・速い日本語",
+      japaneseTitle: "第5章・ネイティブスピード",
       title: "Fast & Natural Japanese",
+    },
+  },
+  {
+    id: "chapter-5",
+    number: 5,
+    title: "Fast & Natural Japanese",
+    japaneseTitle: "第5章・ネイティブスピード",
+    description:
+      "Japanese hasn’t changed. The way people say it has.",
+    openingLines: [
+      "Japanese hasn’t changed. The way people say it has.",
+      "Native speakers shorten, omit, and imply — now listen for meaning at real speed.",
+    ],
+    objectives: [
+      "Survive a fast convenience-store exchange",
+      "Catch train announcement details",
+      "Read a friend’s implied meaning",
+      "Recognize everyday reductions",
+      "Follow izakaya-style casual chat",
+      "Infer meaning from context",
+      "Clear Native-Speed Survival",
+    ],
+    questIds: [
+      "fast-convenience",
+      "train-announcement",
+      "friend-real-meaning",
+      "contraction-city",
+      "izakaya-listening",
+      "read-between-lines",
+      "native-speed-survival",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第6章・トラブル対応",
+      title: "Handling Problems",
     },
   },
 ] as const;

@@ -13,7 +13,11 @@ export type PassportAchievementId =
   | "hourensou-master"
   | "business-phone-survivor"
   | "owned-the-mistake"
-  | "spoke-up-meeting";
+  | "spoke-up-meeting"
+  | "no-subtitles-ch5"
+  | "got-it-first-try"
+  | "reduction-master"
+  | "read-the-context";
 
 export type PassportAchievement = {
   id: PassportAchievementId;
@@ -131,5 +135,33 @@ export const PASSPORT_ACHIEVEMENTS: readonly PassportAchievement[] = [
     englishName: "Spoke Up in the Meeting",
     description: "Disagreed politely and suggested an alternative in a meeting.",
     requireQuestId: "meeting-speak",
+  },
+  {
+    id: "no-subtitles-ch5",
+    japaneseName: "字幕なし",
+    englishName: "No Subtitles",
+    description: "Cleared a Chapter 5 mission with Immersion / no English assist.",
+    requireFlag: "achievement:no-subtitles-ch5",
+  },
+  {
+    id: "got-it-first-try",
+    japaneseName: "一発で聞けた",
+    englishName: "Got It First Try",
+    description: "Hit perfect first-listen on a Chapter 5 listening mission.",
+    requireFlag: "achievement:got-it-first-try",
+  },
+  {
+    id: "reduction-master",
+    japaneseName: "省略マスター",
+    englishName: "Reduction Master",
+    description: "Cleared Contraction City and recognized everyday reductions.",
+    requireQuestId: "contraction-city",
+  },
+  {
+    id: "read-the-context",
+    japaneseName: "空気でわかった",
+    englishName: "Read the Context",
+    description: "Cleared Read Between the Lines.",
+    requireQuestId: "read-between-lines",
   },
 ] as const;

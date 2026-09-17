@@ -199,6 +199,41 @@ export function validateConversation(
       }
     }
 
+    if (node.speechRate) {
+      const ok = new Set(["slow", "normal", "natural", "fast"]);
+      if (!ok.has(node.speechRate)) {
+        issues.push({
+          code: "invalid-speech-rate",
+          message: `Node ${node.id} has invalid speechRate`,
+          nodeId: node.id,
+        });
+      }
+    }
+
+    if (node.spokenFeature) {
+      const ok = new Set([
+        "contraction",
+        "omitted-particle",
+        "reduced-sound",
+        "casual-ending",
+        "implied-meaning",
+        "fast-formal",
+        "filler",
+      ]);
+      const features = Array.isArray(node.spokenFeature)
+        ? node.spokenFeature
+        : [node.spokenFeature];
+      for (const f of features) {
+        if (!ok.has(f)) {
+          issues.push({
+            code: "invalid-spoken-feature",
+            message: `Node ${node.id} has invalid spokenFeature ${f}`,
+            nodeId: node.id,
+          });
+        }
+      }
+    }
+
     if (node.setsFacts) {
       for (const [key, value] of Object.entries(node.setsFacts)) {
         if (!key.trim() || !String(value).trim()) {

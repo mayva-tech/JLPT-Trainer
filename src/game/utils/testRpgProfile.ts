@@ -47,9 +47,19 @@ const CH4_QUESTS = [
   "workday-survival",
 ] as const;
 
+const CH5_QUESTS = [
+  "fast-convenience",
+  "train-announcement",
+  "friend-real-meaning",
+  "contraction-city",
+  "izakaya-listening",
+  "read-between-lines",
+  "native-speed-survival",
+] as const;
+
 export type TestRpgProfileOverrides = Partial<PlayerRpgProfile> & {
-  /** Complete all story quests through this chapter (1–4). */
-  completedThroughChapter?: 1 | 2 | 3 | 4;
+  /** Complete all story quests through this chapter (1–5). */
+  completedThroughChapter?: 1 | 2 | 3 | 4 | 5;
 };
 
 function languageStats(partial?: Partial<LanguageStats>): LanguageStats {
@@ -127,7 +137,13 @@ export function createTestRpgProfile(
     completedQuestIds = [...new Set([...completedQuestIds, ...CH4_QUESTS])];
     rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH4_QUESTS])];
     flags = { ...flags, chapter4Complete: true };
-    currentChapter = Math.max(currentChapter, 4);
+    currentChapter = Math.max(currentChapter, 5);
+  }
+  if (completedThroughChapter && completedThroughChapter >= 5) {
+    completedQuestIds = [...new Set([...completedQuestIds, ...CH5_QUESTS])];
+    rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH5_QUESTS])];
+    flags = { ...flags, chapter5Complete: true };
+    currentChapter = Math.max(currentChapter, 5);
   }
 
   const immersion: ImmersionPrefs = {
@@ -173,7 +189,7 @@ export function createTestRpgProfile(
 }
 
 export function createProfileCompletedThroughChapter(
-  chapter: 1 | 2 | 3 | 4,
+  chapter: 1 | 2 | 3 | 4 | 5,
   overrides: TestRpgProfileOverrides = {}
 ): PlayerRpgProfile {
   return createTestRpgProfile({

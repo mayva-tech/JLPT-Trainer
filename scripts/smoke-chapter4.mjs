@@ -202,13 +202,13 @@ async function main() {
     .getByRole("button", { name: "Quests" })
     .click();
   await page.getByRole("tab", { name: /Chapter 4/i }).click();
-  await page.getByText(/第5章・速い日本語|Fast & Natural|Coming soon/i).first().waitFor();
+  await page.getByText(/第5章・ネイティブスピード|Fast & Natural|Coming soon/i).first().waitFor();
   console.log("PASS chapter4 complete + chapter5 teaser");
 
   // Soft-check seal / skill via passport or stats if visible
   const body = await page.content();
   assert(
-    body.includes("速い日本語") || body.includes("Fast"),
+    body.includes("ネイティブスピード") || body.includes("Fast"),
     "Chapter 5 teaser missing"
   );
 

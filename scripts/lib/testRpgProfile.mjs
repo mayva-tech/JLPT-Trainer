@@ -38,6 +38,16 @@ const CH4_QUESTS = [
   "workday-survival",
 ];
 
+const CH5_QUESTS = [
+  "fast-convenience",
+  "train-announcement",
+  "friend-real-meaning",
+  "contraction-city",
+  "izakaya-listening",
+  "read-between-lines",
+  "native-speed-survival",
+];
+
 function languageStats(partial = {}) {
   return {
     vocabulary: 20,
@@ -149,7 +159,13 @@ export function createTestRpgProfile(overrides = {}) {
     completedQuestIds = [...new Set([...completedQuestIds, ...CH4_QUESTS])];
     rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH4_QUESTS])];
     flags = { ...flags, chapter4Complete: true };
-    currentChapter = Math.max(currentChapter, 4);
+    currentChapter = Math.max(currentChapter, 5);
+  }
+  if (completedThroughChapter && completedThroughChapter >= 5) {
+    completedQuestIds = [...new Set([...completedQuestIds, ...CH5_QUESTS])];
+    rewardedQuestIds = [...new Set([...rewardedQuestIds, ...CH5_QUESTS])];
+    flags = { ...flags, chapter5Complete: true };
+    currentChapter = Math.max(currentChapter, 5);
   }
 
   const immersion = {

@@ -267,6 +267,22 @@ export type ConversationNode = {
    * Defaults true for business social contexts / business|formal register.
    */
   countsTowardProfessionalFit?: boolean;
+  /**
+   * Chapter 5 spoken-Japanese feature tags (reductions, fillers, inference…).
+   * Used for Native Listening scoring / Living Japanese / results.
+   */
+  spokenFeature?: SpokenFeature | SpokenFeature[];
+  /**
+   * Node-level TTS pacing for Chapter 5 native-speed missions.
+   * User Slow preference / forceSlowSpeech still win when active.
+   */
+  speechRate?: NodeSpeechRate;
+  /**
+   * Contextual / implied meaning (not shown before answer).
+   * Feedback and tests may reference it.
+   */
+  intendedMeaning?: string;
+  contextMeaning?: string;
   /** Merge into conversation fact memory when this node is entered. */
   setsFacts?: Record<string, string>;
   /** Human labels for Call Report / result summary. */
@@ -278,6 +294,19 @@ export type ConversationNode = {
     karaokeMode?: "always" | "after-answer" | "off";
   };
 };
+
+/** Lightweight spoken-Japanese feature tags (Chapter 5+). */
+export type SpokenFeature =
+  | "contraction"
+  | "omitted-particle"
+  | "reduced-sound"
+  | "casual-ending"
+  | "implied-meaning"
+  | "fast-formal"
+  | "filler";
+
+/** Node TTS pacing labels mapped to speechService rates. */
+export type NodeSpeechRate = "slow" | "normal" | "natural" | "fast";
 
 export type ConversationDefinition = {
   startNodeId: string;

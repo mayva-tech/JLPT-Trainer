@@ -17,6 +17,7 @@ export type SkillNodeId =
   | "conv-social"
   | "conv-keigo"
   | "conv-hourensou"
+  | "listening-adapt"
   | "grammar-n3"
   | "grammar-n2-everyday"
   | "grammar-n2-nuance"
@@ -44,7 +45,8 @@ export type SkillNode = {
     | "listening-assist"
     | "context-hint"
     | "reporting-hint"
-    | "keigo-sense";
+    | "keigo-sense"
+    | "listening-adapt";
 };
 
 export const SKILL_NODES: readonly SkillNode[] = [
@@ -92,6 +94,17 @@ export const SKILL_NODES: readonly SkillNode[] = [
     description: "Comfort with full-speed dialogue.",
     requiresQuests: 14,
     requiresNode: "listening-reduced",
+  },
+  {
+    id: "listening-adapt",
+    group: "listening",
+    japaneseName: "耳が慣れる",
+    englishName: "Listening Adaptation",
+    description:
+      "After a missed fast-listening beat, a reminder to catch the key noun/time/place.",
+    requiresQuests: 22,
+    requiresNode: "listening-native",
+    effect: "listening-adapt",
   },
   {
     id: "conv-basic",

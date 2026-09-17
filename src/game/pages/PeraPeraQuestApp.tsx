@@ -165,7 +165,9 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             ? "chapter3Complete"
             : quest.id === "workday-survival"
               ? "chapter4Complete"
-              : undefined;
+              : quest.id === "native-speed-survival"
+                ? "chapter5Complete"
+                : undefined;
     const setFlags = chapterFlag ? [chapterFlag] : undefined;
 
     const applied = applyQuestCompletion(profile, {
@@ -317,14 +319,14 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
       );
     }
 
-    // Chapter 4 boss → clear Ch4, teaser only for Ch5
+    // Chapter 4 boss → unlock playable Chapter 5
     if (
       quest.id === "workday-survival" &&
       isChapterComplete(nextProfile, 4)
     ) {
       nextProfile = {
         ...nextProfile,
-        currentChapter: Math.max(nextProfile.currentChapter, 4),
+        currentChapter: Math.max(nextProfile.currentChapter, 5),
         flags: { ...nextProfile.flags, chapter4Complete: true },
       };
       setChapterSummary(
@@ -334,9 +336,50 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
           profileBefore: profile,
           profileAfter: nextProfile,
           xpGranted: applied.xpGranted,
+          nextComingSoon: false,
+        })
+      );
+    }
+
+    // Chapter 5 boss → clear Ch5, teaser only for Ch6
+    if (
+      quest.id === "native-speed-survival" &&
+      isChapterComplete(nextProfile, 5)
+    ) {
+      nextProfile = {
+        ...nextProfile,
+        currentChapter: Math.max(nextProfile.currentChapter, 5),
+        flags: { ...nextProfile.flags, chapter5Complete: true },
+      };
+      setChapterSummary(
+        buildChapterSummary({
+          chapterNumber: 5,
+          result,
+          profileBefore: profile,
+          profileAfter: nextProfile,
+          xpGranted: applied.xpGranted,
           nextComingSoon: true,
         })
       );
+    }
+
+    // Immersion / first-listen flags for Chapter 5 achievements
+    if (quest.chapter === 5 && result.immersionNoEnglish) {
+      nextProfile = {
+        ...nextProfile,
+        flags: { ...nextProfile.flags, "achievement:no-subtitles-ch5": true },
+      };
+    }
+    if (
+      quest.chapter === 5 &&
+      result.firstListenTotal &&
+      result.firstListenTotal > 0 &&
+      result.firstListenCorrect === result.firstListenTotal
+    ) {
+      nextProfile = {
+        ...nextProfile,
+        flags: { ...nextProfile.flags, "achievement:got-it-first-try": true },
+      };
     }
 
     persist(nextProfile);
@@ -600,6 +643,10 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             showContextHint={hasSkillEffect(profile, "context-hint")}
             showReportingHint={hasSkillEffect(profile, "reporting-hint")}
             showKeigoSenseHint={hasSkillEffect(profile, "keigo-sense")}
+            showListeningAdaptationHint={hasSkillEffect(
+              profile,
+              "listening-adapt"
+            )}
             onQuit={() => setScreen("town")}
             onFinished={onQuestFinished}
           />
@@ -906,7 +953,12 @@ function ChapterPanel({
       profile.flags.chapter3Complete ||
       isChapterComplete(profile, 3)
   );
-  const initial = Math.min(Math.max(1, profile.currentChapter), 4) || 1;
+  const chapter4Done = Boolean(
+    isDeveloperMode(profile) ||
+      profile.flags.chapter4Complete ||
+      isChapterComplete(profile, 4)
+  );
+  const initial = Math.min(Math.max(1, profile.currentChapter), 5) || 1;
   const [viewChapter, setViewChapter] = useState(initial);
 
   const chapter = getChapterByNumber(viewChapter);
@@ -922,7 +974,8 @@ function ChapterPanel({
   const chapterLocked =
     (viewChapter === 2 && !chapter1Done) ||
     (viewChapter === 3 && !chapter2Done) ||
-    (viewChapter === 4 && !chapter3Done);
+    (viewChapter === 4 && !chapter3Done) ||
+    (viewChapter === 5 && !chapter4Done);
   const rows = getChapterQuestRows(profile, chapter);
   const { done, total, percent } = chapterCompletionCounts(profile, viewChapter);
   const shortJa =
@@ -934,7 +987,9 @@ function ChapterPanel({
           ? "人間関係"
           : viewChapter === 4
             ? "仕事と敬語"
-            : chapter.japaneseTitle;
+            : viewChapter === 5
+              ? "ネイティブスピード"
+              : chapter.japaneseTitle;
 
   return (
     <div className="ppq-chapter-panel">
@@ -1006,6 +1061,23 @@ function ChapterPanel({
           Chapter 4
           {chapter3Done || isDeveloperMode(profile) ? "" : " 🔒"}
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={viewChapter === 5}
+          className={
+            viewChapter === 5 ? "ppq-btn ppq-btn--primary" : "ppq-btn ppq-btn--ghost"
+          }
+          title={
+            chapter4Done
+              ? "Chapter 5 · ネイティブスピード"
+              : "Preview Chapter 5 — clear Chapter 4 to play"
+          }
+          onClick={() => setViewChapter(5)}
+        >
+          Chapter 5
+          {chapter4Done || isDeveloperMode(profile) ? "" : " 🔒"}
+        </button>
       </div>
 
       <h2 lang="ja">
@@ -1023,7 +1095,9 @@ function ChapterPanel({
               ? "Finish Chapter 1 · 新生活 (First Week Challenge) to unlock Chapter 2."
               : viewChapter === 3
                 ? "Finish Chapter 2 · 社会生活 (Social Life Challenge) to unlock Chapter 3."
-                : "Finish Chapter 3 · 人間関係 (Social Intelligence Challenge) to unlock Chapter 4."}
+                : viewChapter === 4
+                  ? "Finish Chapter 3 · 人間関係 (Social Intelligence Challenge) to unlock Chapter 4."
+                  : "Finish Chapter 4 · 仕事と敬語 (Workday Survival) to unlock Chapter 5."}
           </p>
         </div>
       ) : null}
@@ -1123,12 +1197,24 @@ function ChapterPanel({
 
       {viewChapter === 4 && profile.flags.chapter4Complete ? (
         <div className="ppq-panel" style={{ marginTop: 16 }}>
-          <h2>Chapter 5</h2>
+          <h2>Next</h2>
           <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
-            第5章・速い日本語
+            第5章・ネイティブスピード
           </p>
           <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
-            Fast & Natural Japanese — Coming soon
+            Fast & Natural Japanese — open the Chapter 5 tab to play.
+          </p>
+        </div>
+      ) : null}
+
+      {viewChapter === 5 && profile.flags.chapter5Complete ? (
+        <div className="ppq-panel" style={{ marginTop: 16 }}>
+          <h2>Chapter 6</h2>
+          <p lang="ja" style={{ margin: 0, fontFamily: "var(--ppq-jp)" }}>
+            第6章・トラブル対応
+          </p>
+          <p style={{ margin: "4px 0 0", color: "var(--ppq-muted)" }}>
+            Handling Problems — Coming soon
           </p>
         </div>
       ) : null}
