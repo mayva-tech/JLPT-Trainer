@@ -945,7 +945,8 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Lone em/en dash — attach ellipsis dwell to the previous word (same as `;`).
+    // Lone em/en dash — attach ellipsis dwell to the previous word (same as `;`)
+    // and extend the highlight through the dash so the pause is visible.
     if (/^[—–]+$/u.test(raw)) {
       const prev = steps.at(-1);
       if (prev) {
@@ -953,6 +954,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
           .replace(/\s*\.{3}\s*$/u, "")
           .replace(/[,.]+$/u, "");
         prev.spokenText = `${base} ...`;
+        prev.end = unit.end;
       }
       continue;
     }
@@ -1123,6 +1125,12 @@ const JA_MIN_UNIT_MS = 120;
 const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
+/**
+ * English ellipsis / em-dash breath — match speechService ENGLISH_CHAIN_PAUSE_MS
+ * (~680ms) so karaoke does not race past "75% — …" while Andrew pauses.
+ * Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN / rate divisor.
+ */
+const EN_ELLIPSIS_PAUSE = 2.2;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
 const EN_WEIGHT_MS = 315;
 /**
@@ -1232,9 +1240,9 @@ export function estimateUnitDurationMs(
     punctPause +=
       lang === "en" ? EN_COMMA_PAUSE : 0.3 + KARAOKE_BREAK_POINT;
   }
-  // "/" / semicolon ellipsis — longer gap; do not also add raw `;` pause
+  // "/" / semicolon / mdash ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
-    punctPause += SLASH_PAUSE;
+    punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
   }
   // Other phrase separators (only when not already an ellipsis pause)
   if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {

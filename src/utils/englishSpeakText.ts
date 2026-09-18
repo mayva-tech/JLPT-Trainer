@@ -329,6 +329,16 @@ function expandSpokenMoney(text: string): string {
 }
 
 /**
+ * "75%" → "seventy five percent" so Andrew and karaoke share the same duration.
+ * Bare digits stay unchanged; only the `%` form is expanded.
+ */
+function expandSpokenPercents(text: string): string {
+  return text.replace(/\b(\d{1,3}(?:,\d{3})*|\d+)(\.\d+)?%/g, (_full, intPart: string, fracPart?: string) => {
+    return `${numeralToWords(`${intPart}${fracPart ?? ""}`)} percent`;
+  });
+}
+
+/**
  * Grammar slot marker ～ / 〜 / ~ — pause after each before the next slot
  * ("not only ～ but also" → "not only, but also").
  */
@@ -365,8 +375,10 @@ export function buildEnglishSpeakText(text: string): string {
   let out = expandMountAbbreviation(
     appendSlashSpeakPause(
       appendWaveDashSpeakPause(
-        expandSpokenMoney(
-          expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+        expandSpokenPercents(
+          expandSpokenMoney(
+            expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+          )
         )
       )
     )

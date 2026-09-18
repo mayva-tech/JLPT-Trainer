@@ -99,6 +99,19 @@ describe("buildEnglishSpeakText", () => {
     );
   });
 
+  it('speaks "75%" as words so TTS/karaoke share the percent dwell', () => {
+    expect(buildEnglishSpeakText("around 75%")).toBe(
+      "around seventy-five percent"
+    );
+    expect(
+      buildEnglishSpeakText(
+        "Communication starts around 75% — natural replies raise it"
+      )
+    ).toBe(
+      "Communication starts around seventy-five percent ... natural replies raise it"
+    );
+  });
+
   it("speaks embedded 私 as watashi so EN TTS/karaoke stay aligned", () => {
     expect(
       buildEnglishSpeakText("many women use 私 in every situation")

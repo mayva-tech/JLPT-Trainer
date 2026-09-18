@@ -849,24 +849,21 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
       .map((s) => {
-        // Real pause is between utterances — strip clause-final punct / mdash
-        // ellipsis dwell so karaoke does not double-wait on the last word.
+        // Strip clause-final punct from the spoken form, but KEEP mdash/semicolon
+        // ellipsis dwell so karaoke holds at the break (same breath as the real
+        // inter-utterance pause) — stripping it made "75% —" race into the next clause.
         if (/[;,.!?—–]$/u.test(s.text)) {
           const stripped = s.text.replace(/[;,.!?—–]+$/u, "").trim();
+          const base = buildEnglishSpeakText(stripped).trim() || stripped;
+          const keepEllipsis = /\.\.\.\s*$/u.test(s.spokenText ?? "");
           return {
             ...s,
-            spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
+            spokenText: keepEllipsis ? `${base.replace(/\s*\.{3}\s*$/u, "")} ...` : base,
             speakGapAfter: false,
           };
         }
-        const spoken = (s.spokenText ?? s.text)
-          .replace(/\s*\.{3}\s*$/u, "")
-          .trim();
-        return {
-          ...s,
-          spokenText: spoken || s.spokenText,
-          speakGapAfter: false,
-        };
+        // Preserve "75% ..." style mdash dwell attached to the prior word.
+        return { ...s, speakGapAfter: false };
       });
     return {
       speak: clause.speak,

@@ -836,7 +836,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken[0]!.text).toBe("Sorry");
     spoken[0]!.onstart?.();
     vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
-    expect(highlights[0]).toBe("Sorry");
+    // Highlight covers "Sorry —" so the mdash pause is visible on the dash.
+    expect(highlights[0]).toMatch(/^Sorry/);
+    expect(highlights[0]).toContain("—");
     spoken[0]!.onend?.();
     expect(ended).toBe(0);
     expect(spoken).toHaveLength(1);
