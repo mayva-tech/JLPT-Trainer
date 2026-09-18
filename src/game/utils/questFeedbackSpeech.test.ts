@@ -36,7 +36,6 @@ describe("parseBilingualSpeakSegments", () => {
   });
 
   it("merges adjacent Japanese quotes after wave-dash normalize", () => {
-    // Adjacent JA segments merge when no EN between them.
     const segs = parseBilingualSpeakSegments(
       "✅ Soft purpose with 「お伺いしたいんですが」."
     );
@@ -67,6 +66,65 @@ describe("parseBilingualSpeakSegments", () => {
     ).toEqual([
       { language: "ja", text: "現住所" },
       { language: "en", text: "current address." },
+    ]);
+  });
+
+  it("routes unquoted JP glosses to Nanami, not Andrew", () => {
+    expect(
+      parseBilingualSpeakSegments(
+        "ご用件 = your business / reason for coming."
+      )
+    ).toEqual([
+      { language: "ja", text: "ご用件" },
+      { language: "en", text: "your business / reason for coming." },
+    ]);
+    expect(
+      parseBilingualSpeakSegments(
+        "転入届 = moving-in notification (registering a new address)."
+      )
+    ).toEqual([
+      { language: "ja", text: "転入届" },
+      {
+        language: "en",
+        text: "moving-in notification (registering a new address).",
+      },
+    ]);
+    expect(parseBilingualSpeakSegments("改札 = ticket gates.")).toEqual([
+      { language: "ja", text: "改札" },
+      { language: "en", text: "ticket gates." },
+    ]);
+  });
+
+  it("splits multiple unquoted JP runs in one help line", () => {
+    expect(
+      parseBilingualSpeakSegments(
+        "いりますか？= do you need…？ 結構です declines politely."
+      )
+    ).toEqual([
+      { language: "ja", text: "いりますか？" },
+      { language: "en", text: "do you need…？" },
+      { language: "ja", text: "結構です" },
+      { language: "en", text: "declines politely." },
+    ]);
+    expect(
+      parseBilingualSpeakSegments(
+        "Particles dropped — 今どこにいるの？ shrinks to 今どこ？"
+      )
+    ).toEqual([
+      { language: "en", text: "Particles dropped" },
+      { language: "ja", text: "今どこにいるの？" },
+      { language: "en", text: "shrinks to" },
+      { language: "ja", text: "今どこ？" },
+    ]);
+    expect(
+      parseBilingualSpeakSegments(
+        "してんの ≈ しているの — てる often shrinks in casual speech."
+      )
+    ).toEqual([
+      { language: "ja", text: "してんの" },
+      { language: "ja", text: "しているの" },
+      { language: "ja", text: "てる" },
+      { language: "en", text: "often shrinks in casual speech." },
     ]);
   });
 
