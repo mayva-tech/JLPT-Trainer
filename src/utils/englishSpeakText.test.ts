@@ -87,6 +87,31 @@ describe("buildEnglishSpeakText", () => {
     ).toBe("it sounds too soft ... many women use watashi in every situation");
   });
 
+  it("pauses after em dash / en dash instead of rushing the next clause", () => {
+    expect(buildEnglishSpeakText("Sorry — I'll be a bit late!")).toBe(
+      "Sorry ... I'll be a bit late!"
+    );
+    expect(buildEnglishSpeakText("Got it – ticket gates.")).toBe(
+      "Got it ... ticket gates."
+    );
+    expect(buildEnglishSpeakText("Ah — um — next customer")).toBe(
+      "Ah ... um ... next customer"
+    );
+  });
+
+  it('speaks "75%" as words so TTS/karaoke share the percent dwell', () => {
+    expect(buildEnglishSpeakText("around 75%")).toBe(
+      "around seventy-five percent"
+    );
+    expect(
+      buildEnglishSpeakText(
+        "Communication starts around 75% — natural replies raise it"
+      )
+    ).toBe(
+      "Communication starts around seventy-five percent ... natural replies raise it"
+    );
+  });
+
   it("speaks embedded 私 as watashi so EN TTS/karaoke stay aligned", () => {
     expect(
       buildEnglishSpeakText("many women use 私 in every situation")
@@ -203,6 +228,27 @@ describe("splitEnglishByClauses", () => {
     expect(clauses![1]!.speak).toMatch(/romantic$/);
     expect(clauses![2]!.speak).toMatch(/grate$/);
     expect(clauses!.every((c) => !/\.\.\./.test(c.speak))).toBe(true);
+  });
+
+  it("splits on em dash so Andrew pauses between clauses", () => {
+    const text = "Sorry — I'll be a bit late!";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toBe("Sorry");
+    expect(clauses![1]!.speak).toBe("I'll be a bit late");
+    expect(clauses!.every((c) => !/[—–]/.test(c.speak))).toBe(true);
+    expect(clauses!.every((c) => !/\.\.\./.test(c.speak))).toBe(true);
+  });
+
+  it("splits stacked em dashes into separate utterances", () => {
+    const text = "Ah — um — next customer, please";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(3);
+    expect(clauses!.map((c) => c.speak)).toEqual([
+      "Ah",
+      "um",
+      "next customer, please",
+    ]);
   });
 
   it("does not split short single-sentence EN", () => {

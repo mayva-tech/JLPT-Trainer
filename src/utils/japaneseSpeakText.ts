@@ -579,3 +579,83 @@ export function buildJapaneseSpeakText(
 export function buildJapaneseSpeakToken(token: string): string {
   return splitDigitsForTTS(normalizePlaceholderCircles(appendWaveDashSpeakPause(speakReadingToken(token))));
 }
+
+/**
+ * One sentence from a Japanese `。` / `！` / `？` split — display range is
+ * UTF-16 into the full string (for karaoke); `speak` is what Nanami says.
+ */
+export type JapaneseSentenceSplit = {
+  start: number;
+  end: number;
+  speak: string;
+  /** Reading slice when it splits cleanly on the same punct; else null. */
+  reading: string | null;
+};
+
+/**
+ * Collect mid-string sentence ends: `。` / `！` / `？` when more content follows.
+ * Trailing-only punct does not create a break (single sentence).
+ */
+function findJapaneseSentenceBreakEnds(text: string): number[] {
+  const ends: number[] = [];
+  for (const m of text.matchAll(/[。！？]+/g)) {
+    const end = m.index + m[0].length;
+    if (text.slice(end).replace(/\s+/g, "").length > 0) {
+      ends.push(end);
+    }
+  }
+  return ends;
+}
+
+/**
+ * Split multi-sentence JA so each sentence is its own Nanami utterance with a
+ * real inter-utterance pause (neural voices often rush past in-string `。`).
+ */
+export function splitJapaneseBySentences(
+  text: string,
+  spacedReading?: string | null
+): JapaneseSentenceSplit[] | null {
+  const breakEnds = findJapaneseSentenceBreakEnds(text);
+  if (breakEnds.length === 0) return null;
+
+  const reading = spacedReading?.trim() || "";
+  const readingBreaks = reading ? findJapaneseSentenceBreakEnds(reading) : [];
+  const readingSplitsCleanly = readingBreaks.length === breakEnds.length;
+
+  const clauses: JapaneseSentenceSplit[] = [];
+  let start = 0;
+  let readingStart = 0;
+  for (let i = 0; i < breakEnds.length; i++) {
+    const end = breakEnds[i]!;
+    const surface = text.slice(start, end).trim();
+    if (surface) {
+      let readingSlice: string | null = null;
+      if (readingSplitsCleanly) {
+        const rEnd = readingBreaks[i]!;
+        readingSlice = reading.slice(readingStart, rEnd).trim() || null;
+        readingStart = rEnd;
+      }
+      clauses.push({
+        start,
+        end,
+        speak: buildJapaneseSpeakText(surface, readingSlice),
+        reading: readingSlice,
+      });
+    }
+    start = end;
+  }
+  const rest = text.slice(start);
+  if (rest.trim()) {
+    let readingSlice: string | null = null;
+    if (readingSplitsCleanly) {
+      readingSlice = reading.slice(readingStart).trim() || null;
+    }
+    clauses.push({
+      start,
+      end: text.length,
+      speak: buildJapaneseSpeakText(rest.trim(), readingSlice),
+      reading: readingSlice,
+    });
+  }
+  return clauses.length >= 2 ? clauses : null;
+}

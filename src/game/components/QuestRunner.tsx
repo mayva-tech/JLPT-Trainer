@@ -15,7 +15,7 @@ import {
   undoStepAnswer,
   type QuestStepAnswerDelta,
 } from "../utils/questEngine";
-import { buildQuestAutoPlayQueue } from "../utils/questAutoPlay";
+import { buildQuestAutoPlayQueue, type KaraokeSurface } from "../utils/questAutoPlay";
 import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
@@ -27,6 +27,7 @@ import {
 } from "../utils/questSpeech";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
+import { ConversationQuestRunner } from "./ConversationQuestRunner";
 import { NpcPortrait } from "./NpcPortrait";
 import { communicationFromConfidence } from "../utils/communicationMeter";
 
@@ -46,6 +47,50 @@ export type QuestRunOutcome = {
   firstListenSuccess: boolean;
   repairedConversation: boolean;
   conceptsLearned: string[];
+  /** Linear V1 vs branching Conversation V2. */
+  engine?: "v1" | "v2";
+  naturalResponseStreak?: number;
+  maxNaturalStreak?: number;
+  needsReview?: string[];
+  relationshipDeltas?: { npcId: string; delta: number }[];
+  repairUsed?: boolean;
+  qualityCounts?: Partial<
+    Record<
+      "excellent" | "natural" | "acceptable" | "awkward" | "incorrect",
+      number
+    >
+  >;
+  /** Chapter 3 social appropriateness (result screen only). */
+  socialFitPercent?: number;
+  /** Chapter 4 business-register appropriateness (result screen only). */
+  professionalFitPercent?: number;
+  /** Reporting / 報連相 quality tags for mission result. */
+  reportingQuality?: {
+    conclusionFirst: boolean;
+    clear: boolean;
+    actionStated: boolean;
+    notes: string[];
+  };
+  /** Functional repair tallies (phone / V2 reusable). */
+  repairCounts?: {
+    repeat: number;
+    slow: number;
+    meaning: number;
+    confirm: number;
+  };
+  /** Facts remembered during the conversation (for Call Report). */
+  summaryFacts?: { key: string; label: string; value: string; understood: boolean }[];
+  /** Listening nodes answered correctly before help/replay. */
+  firstListenCorrect?: number;
+  firstListenTotal?: number;
+  /** First-listen + after-replay tallies (Chapter 5 motivational). */
+  firstListenWithReplayCorrect?: number;
+  /** Highest listening assist used: 0 audio … 4 English. */
+  highestAssistLevel?: number;
+  /** Chapter 5 Native Listening adaptation (result-only). */
+  nativeListeningPercent?: number;
+  /** Optional result panel title (e.g. CALL REPORT). */
+  resultSummaryTitle?: string;
 };
 
 type Props = {
@@ -57,11 +102,59 @@ type Props = {
   immersionEnabled?: boolean;
   /** Skill: Conversation Repair — first miss of a step is free. */
   extraRepair?: boolean;
+  relationships?: import("../types").NpcRelationship[];
+  showContextHint?: boolean;
+  showReportingHint?: boolean;
+  showKeigoSenseHint?: boolean;
+  showListeningAdaptationHint?: boolean;
 };
 
 const STEP_SETTLE_MS = 280;
 
 export function QuestRunner({
+  questId,
+  metNpcIds,
+  onQuit,
+  onFinished,
+  immersionEnabled = false,
+  extraRepair = false,
+  relationships = [],
+  showContextHint = false,
+  showReportingHint = false,
+  showKeigoSenseHint = false,
+  showListeningAdaptationHint = false,
+}: Props) {
+  const baseQuest = getQuestById(questId);
+
+  if (baseQuest?.conversation) {
+    return (
+      <ConversationQuestRunner
+        questId={questId}
+        onQuit={onQuit}
+        onFinished={onFinished}
+        immersionEnabled={immersionEnabled}
+        relationships={relationships}
+        showContextHint={showContextHint}
+        showReportingHint={showReportingHint}
+        showKeigoSenseHint={showKeigoSenseHint}
+        showListeningAdaptationHint={showListeningAdaptationHint}
+      />
+    );
+  }
+
+  return (
+    <LinearQuestRunner
+      questId={questId}
+      metNpcIds={metNpcIds}
+      onQuit={onQuit}
+      onFinished={onFinished}
+      immersionEnabled={immersionEnabled}
+      extraRepair={extraRepair}
+    />
+  );
+}
+
+function LinearQuestRunner({
   questId,
   metNpcIds,
   onQuit,
@@ -114,19 +207,37 @@ export function QuestRunner({
   const [firstListenOk, setFirstListenOk] = useState(true);
   const [listeningStepsSeen, setListeningStepsSeen] = useState(0);
   const autoPlayTokenRef = useRef(0);
+  /** Speak quest title JP→EN once per Auto Voice session. */
+  const titleSpokenRef = useRef(false);
+  /** Play/Quiz-style: only the active surface receives karaoke. */
+  const [karaokeSurface, setKaraokeSurface] = useState<KaraokeSurface | null>(
+    null
+  );
 
   const step = quest
     ? quest.steps[Math.min(stepIndex, quest.steps.length - 1)]!
     : null;
   const resolved = step ? resolveQuestSpeech(step) : null;
 
-  // Auto-play full step: prompt → (EN if Help) → each MCQ → (EN if Help) → help hint.
+  // Each quest page opens with Auto Voice OFF (user can turn it on).
   useEffect(() => {
-    if (!step || !resolved) return;
+    titleSpokenRef.current = false;
+    if (speech.autoVoice) speech.setAutoVoice(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questId]);
+
+  useEffect(() => {
+    if (!speech.autoVoice) titleSpokenRef.current = false;
+  }, [speech.autoVoice]);
+
+  // Auto-play: title JP→EN (once) → subject JP→EN → each MCQ JP→EN → help.
+  useEffect(() => {
+    if (!step || !resolved || !quest) return;
     let cancelled = false;
     speech.stop();
     setChoiceHighlightId(null);
     setFeedbackJaFocus(null);
+    setKaraokeSurface(null);
     autoPlayTokenRef.current += 1;
     const token = autoPlayTokenRef.current;
 
@@ -136,11 +247,19 @@ export function QuestRunner({
       };
     }
 
+    const immersionBlocksEn = immersionEnabled && !showHelp;
+    const includeTitle = !titleSpokenRef.current;
+    if (includeTitle) titleSpokenRef.current = true;
+
     const queue = buildQuestAutoPlayQueue({
       step,
       resolved,
       showHelp,
       revealed,
+      includeEnglish: !immersionBlocksEn,
+      includeTitle,
+      titleJa: quest.japaneseTitle,
+      titleEn: quest.title,
     });
     if (queue.length === 0) {
       return () => {
@@ -164,9 +283,11 @@ export function QuestRunner({
         }
         const next = () => playSeg(index + 1);
         if (seg.language === "ja") {
+          setKaraokeSurface("feedback");
           setFeedbackJaFocus(seg.text);
           speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
         } else {
+          setKaraokeSurface("feedback");
           setFeedbackJaFocus(null);
           speech.speakEnglish(seg.text, { karaoke: true, onEnded: next });
         }
@@ -180,9 +301,11 @@ export function QuestRunner({
       if (!item) {
         setChoiceHighlightId(null);
         setFeedbackJaFocus(null);
+        setKaraokeSurface(null);
         return;
       }
       const next = () => playItem(index + 1);
+      setKaraokeSurface(item.surface);
       if (item.kind === "ja") {
         setFeedbackJaFocus(null);
         if (item.choiceId) setChoiceHighlightId(item.choiceId);
@@ -196,11 +319,15 @@ export function QuestRunner({
           },
         });
       } else if (item.kind === "en") {
-        setChoiceHighlightId(null);
+        if (item.choiceId) setChoiceHighlightId(item.choiceId);
+        else setChoiceHighlightId(null);
         setFeedbackJaFocus(null);
         speech.speakEnglish(item.text, {
           karaoke: item.karaoke,
-          onEnded: next,
+          onEnded: () => {
+            if (item.choiceId) setChoiceHighlightId(null);
+            next();
+          },
         });
       } else {
         setChoiceHighlightId(null);
@@ -228,6 +355,7 @@ export function QuestRunner({
     speech.autoVoice,
     speech.rateMode,
     showHelp,
+    immersionEnabled,
   ]);
 
   // Stop when leaving the runner via quit path handled by unmount; also on reveal
@@ -281,6 +409,7 @@ export function QuestRunner({
       firstListenSuccess: listeningStepsSeen > 0 && firstListenOk,
       repairedConversation,
       conceptsLearned: vocab,
+      engine: "v1",
     });
   }
 
@@ -459,6 +588,8 @@ export function QuestRunner({
 
   function replayNpcLine() {
     if (!currentResolved.enabled || !currentResolved.speakText) return;
+    setKaraokeSurface("prompt");
+    setChoiceHighlightId(null);
     const allowKaraoke =
       currentResolved.karaokeMode === "always" ||
       (currentResolved.karaokeMode === "after-answer" && revealed);
@@ -474,11 +605,14 @@ export function QuestRunner({
 
   function replayEnglish(text: string) {
     setFeedbackJaFocus(null);
+    setKaraokeSurface("prompt");
+    setChoiceHighlightId(null);
     speech.speakEnglish(text, { karaoke: true });
   }
 
   function replayChoice(choiceId: string, labelJa: string) {
     setFeedbackJaFocus(null);
+    setKaraokeSurface("choice");
     setChoiceHighlightId(choiceId);
     speech.speakJapanese(labelJa, {
       karaoke: true,
@@ -489,11 +623,13 @@ export function QuestRunner({
   function speakBilingualSegments(segments: FeedbackSpeakSegment[]) {
     if (segments.length === 0) return;
     setChoiceHighlightId(null);
+    setKaraokeSurface("feedback");
 
     const play = (index: number) => {
       const seg = segments[index];
       if (!seg) {
         setFeedbackJaFocus(null);
+        setKaraokeSurface(null);
         return;
       }
       const next = () => play(index + 1);
@@ -554,8 +690,26 @@ export function QuestRunner({
           {quest.difficulty === "boss" ? " · Boss" : ""}
           {currentResolved.announcement ? " · Announcement" : ""}
         </p>
-        <h1 lang="ja">{quest.japaneseTitle}</h1>
-        <p>{quest.title}</p>
+        <h1 lang="ja">
+          <HighlightedJapanese
+            text={quest.japaneseTitle}
+            className="ppq-quest-title-ja"
+            highlight={
+              karaokeSurface === "title" && speech.activeLang === "ja"
+                ? speech.highlight
+                : null
+            }
+          />
+        </h1>
+        <HighlightedEnglish
+          text={quest.title}
+          className="ppq-quest-title-en"
+          highlight={
+            karaokeSurface === "title" && speech.activeLang === "en"
+              ? speech.highlight
+              : null
+          }
+        />
       </div>
 
       <div className="ppq-quest-toolbar">
@@ -645,22 +799,31 @@ export function QuestRunner({
         showJaTranscript={showJaTranscript}
         highlight={
           speech.activeLang === "ja" &&
+          karaokeSurface === "prompt" &&
           choiceHighlightId === null &&
           feedbackJaFocus === null
             ? speech.highlight
             : null
         }
-        enHighlight={speech.activeLang === "en" ? speech.highlight : null}
+        enHighlight={
+          speech.activeLang === "en" && karaokeSurface === "prompt"
+            ? speech.highlight
+            : null
+        }
         speaking={speech.speaking}
         choiceHighlightId={choiceHighlightId}
         choiceHighlight={
-          choiceHighlightId && speech.activeLang === "ja"
+          choiceHighlightId &&
+          speech.activeLang === "ja" &&
+          karaokeSurface === "choice"
             ? speech.highlight
             : null
         }
         feedbackJaFocus={feedbackJaFocus}
         feedbackJaHighlight={
-          feedbackJaFocus && speech.activeLang === "ja"
+          feedbackJaFocus &&
+          speech.activeLang === "ja" &&
+          karaokeSurface === "feedback"
             ? speech.highlight
             : null
         }
@@ -827,7 +990,11 @@ function DialogueStep({
       step.promptEn &&
       !(resolved.hideTranscriptUntilAnswer && !revealed) ? (
         <div className="ppq-prompt-en-row">
-          <div className="ppq-prompt-en">{step.promptEn}</div>
+          <HighlightedEnglish
+            text={step.promptEn}
+            className="ppq-prompt-en"
+            highlight={enHighlight}
+          />
           {onReplayEnglish &&
           (step.kind === "intro" || step.kind === "outro") ? (
             <button

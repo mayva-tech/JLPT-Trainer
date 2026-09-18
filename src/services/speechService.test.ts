@@ -309,8 +309,8 @@ describe("speechService karaoke timeline", () => {
     const units = buildEnglishSpokenKaraokeSteps(text);
     const offsets: number[] = [];
     let acc = __speechTestHooks.FALLBACK_START_OFFSET_MS;
-    // Mirror speechService EN rate handling (neural Andrew is nonlinear < 0.9).
-    const rateDivisor = Math.max(rate, 0.9);
+    // Mirror speechService EN rate handling (neural Andrew is nonlinear < ~0.88).
+    const rateDivisor = Math.max(rate, 0.88);
     for (let i = 0; i < units.length; i += 1) {
       offsets.push(acc);
       acc +=
@@ -485,6 +485,22 @@ describe("speechService karaoke timeline", () => {
       const error = Math.abs(firedAt[i]! - (origin + planned[i]!));
       expect(error).toBeLessThanOrEqual(LAG + 5);
     }
+  });
+
+  it("EN karaoke at normal rate stretches longer than at rate 1 (not racing the voice)", async () => {
+    const { __speechTestHooks } = await import("./speechService");
+    const { SPEECH_RATE_NORMAL } = await import("./speechService");
+
+    const text = "How can I help you today?";
+    // Scale must stay ≥ 1 — values like 0.88 made Game Mode EN karaoke race ahead.
+    expect(__speechTestHooks.FALLBACK_TIMING_SCALE_EN).toBeGreaterThanOrEqual(1);
+
+    const atFull = await plannedEnglishOffsets(text, 1);
+    const atNormal = await plannedEnglishOffsets(text, SPEECH_RATE_NORMAL);
+    const spanFull = atFull.at(-1)!;
+    const spanNormal = atNormal.at(-1)!;
+    // Neural floor still stretches past rate=1 so highlights do not outrun Andrew.
+    expect(spanNormal).toBeGreaterThan(spanFull);
   });
 
   it("pause freezes karaoke and resume preserves sync", async () => {
@@ -799,6 +815,95 @@ describe("speechService karaoke timeline", () => {
       "in an office it can grate",
     ]);
     expect(highlights).toContain("grate.");
+    expect(ended).toBe(1);
+  });
+
+  it("splits on em dash with a real pause so karaoke does not race ahead", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "Sorry — I'll be a bit late!";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toBe("Sorry");
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    // Highlight covers "Sorry —" so the mdash pause is visible on the dash.
+    expect(highlights[0]).toMatch(/^Sorry/);
+    expect(highlights[0]).toContain("—");
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken).toHaveLength(1);
+
+    // Real inter-utterance pause (mdash) — next clip must not start early.
+    vi.advanceTimersByTime(400);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(300);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text).toBe("I'll be a bit late");
+
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(
+      __speechTestHooks.FALLBACK_START_OFFSET_MS + 15000
+    );
+    spoken[1]!.onend?.();
+    expect(highlights).toContain("I'll");
+    expect(highlights).toContain("late!");
+    expect(ended).toBe(1);
+  });
+
+  it("splits Japanese on 。 with a real pause so karaoke stays aligned", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "ありがとうございます。では、いくつか確認しますね。";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakJapanese(
+      text,
+      {
+        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+        onEnd: () => {
+          ended += 1;
+        },
+      },
+      1,
+      { reading: "ありがとう ございます では いくつ か かくにん します ね" }
+    );
+
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toMatch(/ございます/);
+    expect(spoken[0]!.text).not.toMatch(/確認|かくにん/);
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights.some((h) => h.includes("ありがとう") || h.includes("ございます"))).toBe(
+      true
+    );
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken).toHaveLength(1);
+
+    // Real inter-utterance pause after 。 — next clip must not start early.
+    vi.advanceTimersByTime(400);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(300);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text).toMatch(/では|確認|かくにん/);
+
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(
+      __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
+    );
+    spoken[1]!.onend?.();
+    expect(highlights.some((h) => /では|確認|いくつ/.test(h))).toBe(true);
     expect(ended).toBe(1);
   });
 });

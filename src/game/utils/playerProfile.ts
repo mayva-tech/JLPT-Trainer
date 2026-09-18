@@ -24,7 +24,7 @@ import {
   seedLanguageStatsFromTrainer,
 } from "./languageStats";
 import { resolveAdventureRank } from "../data/ranks";
-import { grantQuestRelationshipXp } from "./relationships";
+import { addRelationshipXp, grantQuestRelationshipXp } from "./relationships";
 import { syncSkillUnlocks } from "./skillTree";
 import { ensureDailyQuests } from "./dailyQuests";
 
@@ -267,7 +267,25 @@ export function parsePlayerProfile(
     ].every((id) => completedQuestIds.includes(id));
     if (flags.chapter2Complete || ch2Done) {
       flags.chapter2Complete = true;
-      currentChapter = Math.max(currentChapter, 2);
+      currentChapter = Math.max(currentChapter, 3);
+    }
+  }
+  if (
+    flags.chapter3Complete ||
+    completedQuestIds.includes("relationships-challenge")
+  ) {
+    const ch3Done = [
+      "friend-invitation",
+      "senpai-favor",
+      "saying-no",
+      "awkward-apology",
+      "workplace-discussion",
+      "relationships-challenge",
+    ].every((id) => completedQuestIds.includes(id));
+    if (flags.chapter3Complete || ch3Done) {
+      flags.chapter3Complete = true;
+      // Stay on chapter 3 as playable max (Ch4 teaser only).
+      currentChapter = Math.max(currentChapter, 3);
     }
   }
 
@@ -384,6 +402,8 @@ export type QuestCompletionInput = {
   /** Immersion extras already folded into xpGained / skillRewards by caller. */
   immersionNoEnglish?: boolean;
   repairedConversation?: boolean;
+  /** Per-choice relationship XP deltas from Conversation V2. */
+  relationshipDeltas?: { npcId: string; delta: number }[];
 };
 
 export type QuestCompletionResult = {
@@ -509,6 +529,13 @@ export function applyQuestCompletion(
       relNpcs,
       input.communicationPercent ?? input.accuracy
     );
+  }
+
+  if (input.relationshipDeltas?.length) {
+    for (const row of input.relationshipDeltas) {
+      if (!row.npcId || !row.delta) continue;
+      next = addRelationshipXp(next, row.npcId, row.delta);
+    }
   }
 
   if (input.immersionNoEnglish) {

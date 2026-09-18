@@ -920,7 +920,7 @@ function spanOverlapsParenthetical(
  * Skips meta `(formal)` notes and slot markers `~` / `～` (pause attaches to the
  * previous word), matching `buildEnglishSpeakText`. Descriptive `(nuance)` asides
  * stay on the timeline; the headword before the aside gets a period dwell
- * ("I. soft, casual"). Trailing `;` becomes an ellipsis dwell.
+ * ("I. soft, casual"). Trailing `;` / `—` becomes an ellipsis dwell.
  */
 export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
   // Keep slot-marker units long enough to transfer their pause to the previous
@@ -941,6 +941,20 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
         const base = prev.spokenText ?? prev.text;
         prev.spokenText = /[,，、]$/u.test(base) ? base : `${base},`;
         prev.speakGapAfter = true;
+      }
+      continue;
+    }
+
+    // Lone em/en dash — attach ellipsis dwell to the previous word (same as `;`)
+    // and extend the highlight through the dash so the pause is visible.
+    if (/^[—–]+$/u.test(raw)) {
+      const prev = steps.at(-1);
+      if (prev) {
+        const base = (prev.spokenText ?? prev.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .replace(/[,.]+$/u, "");
+        prev.spokenText = `${base} ...`;
+        prev.end = unit.end;
       }
       continue;
     }
@@ -968,10 +982,10 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Keep semicolon clause breaks on the karaoke timeline (spoken as "...").
+    // Keep semicolon / mdash clause breaks on the karaoke timeline (spoken as "...").
     // Ellipsis already carries the pause — do not also set speakGapAfter.
-    if (/;/.test(raw) && !/\.\.\./.test(spoken)) {
-      spoken = `${spoken.replace(/[,.]+$/u, "")} ...`;
+    if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+      spoken = `${spoken.replace(/[,.—–]+$/u, "")} ...`;
     }
 
     steps.push({
@@ -1111,19 +1125,30 @@ const JA_MIN_UNIT_MS = 120;
 const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
+/**
+ * English ellipsis / em-dash breath — match speechService ENGLISH_CHAIN_PAUSE_MS
+ * (~680ms) so karaoke does not race past "75% — …" while Andrew pauses.
+ * Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN / rate divisor.
+ */
+const EN_ELLIPSIS_PAUSE = 2.2;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
-const EN_WEIGHT_MS = 300;
+const EN_WEIGHT_MS = 315;
 /**
  * Andrew clause pause after a comma (example sentences). Measured against
  * neural Andrew: post-comma gaps are often ~500–700ms. Weight is applied
- * before FALLBACK_TIMING_SCALE_EN (~0.88) and the EN rate divisor, so keep
- * this high enough that the scheduled dwell still lands near half a second.
+ * before FALLBACK_TIMING_SCALE_EN and the EN rate divisor, so keep this high
+ * enough that the scheduled dwell still lands near half a second.
  */
 const EN_COMMA_PAUSE = 2.25;
 /** Andrew pause after ";" / ":" in English glosses and examples. */
 const EN_CLAUSE_PAUSE = 1.5;
 /** Andrew pause after sentence-final . ! ? */
 const EN_SENTENCE_PAUSE = 1.2;
+/**
+ * Nanami breath after 。！？ — kept modest for single-utterance fallback;
+ * multi-sentence JA uses a real inter-utterance pause in speechService.
+ */
+const JA_SENTENCE_PAUSE = 2.8;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -1220,9 +1245,9 @@ export function estimateUnitDurationMs(
     punctPause +=
       lang === "en" ? EN_COMMA_PAUSE : 0.3 + KARAOKE_BREAK_POINT;
   }
-  // "/" / semicolon ellipsis — longer gap; do not also add raw `;` pause
+  // "/" / semicolon / mdash ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
-    punctPause += SLASH_PAUSE;
+    punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
   }
   // Other phrase separators (only when not already an ellipsis pause)
   if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
@@ -1230,8 +1255,7 @@ export function estimateUnitDurationMs(
       lang === "en" ? EN_CLAUSE_PAUSE : 0.35 + KARAOKE_BREAK_POINT;
   }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
-    punctPause +=
-      lang === "en" ? EN_SENTENCE_PAUSE : 0.5 + KARAOKE_BREAK_POINT;
+    punctPause += lang === "en" ? EN_SENTENCE_PAUSE : JA_SENTENCE_PAUSE;
   }
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {
@@ -1270,10 +1294,10 @@ export function estimateUnitDurationMs(
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
     const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
-    // Slightly steeper letter curve than before so short quiz glosses
-    // ("out of stock") don't linger on the first word.
-    const weight = 0.55 + Math.min(letters, 12) * 0.08 + punctPause;
-    return Math.max(120, weight * EN_WEIGHT_MS);
+    // Balanced letter curve: short Game Mode glosses keep pace with Andrew
+    // without racing through the first words of longer prompts.
+    const weight = 0.62 + Math.min(letters, 14) * 0.085 + punctPause;
+    return Math.max(130, weight * EN_WEIGHT_MS);
   }
 
   // Prefer aligned spoken kana whenever available.

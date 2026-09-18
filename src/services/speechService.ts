@@ -20,7 +20,7 @@ import {
   findUnitForBoundary,
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
-import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+import { buildJapaneseSpeakText, splitJapaneseBySentences } from "../utils/japaneseSpeakText";
 import {
   buildEnglishSpeakText,
   splitEnglishByClauses,
@@ -70,6 +70,10 @@ export type SpeakJapaneseOptions = {
 
 export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
+/** Chapter 5 "natural" — slightly faster than RPG default, still clear. */
+export const SPEECH_RATE_NATURAL = 0.92;
+/** Chapter 5 "fast" — modest bump only (accessibility). */
+export const SPEECH_RATE_FAST = 1.0;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.85;
 /** Faster Andrew English used only for interview practice. */
@@ -85,12 +89,13 @@ const DEBUG_SPEECH = false;
 const FALLBACK_START_OFFSET_MS = 0;
 /**
  * English (Andrew) estimate scale.
- * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — a 1.0
- * scale with /rate stretches karaoke past the voice (especially quiz meanings
- * that strip notes and therefore get no boundary rebase). Slightly under 1
- * keeps the estimate near the voice; boundaries still correct when present.
+ * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — dividing
+ * by the raw rate stretches karaoke past the voice. Keep a mild stretch above
+ * 1.0 so Game Mode / Quest EN karaoke does not race ahead of the utterance;
+ * browser word boundaries still rebase when present.
+ * (Play/Quiz historically used ~1.35; 0.88 overshot the other way.)
  */
-const FALLBACK_TIMING_SCALE_EN = 0.88;
+const FALLBACK_TIMING_SCALE_EN = 1.08;
 /**
  * Japanese fallback scale (Nanami). Under 1 pulls karaoke slightly ahead of
  * the voice so example sentences do not trail after particle/mora estimates.
@@ -113,10 +118,12 @@ type KaraokeTimeline = {
 };
 
 /**
- * Real silence between gloss head/aside or EN clause segments — neural voices
- * ignore in-utterance periods/ellipsis pauses.
+ * Real silence between gloss head/aside, EN clause segments, or JA sentences —
+ * neural voices ignore in-utterance periods/ellipsis pauses.
  */
 const ENGLISH_CHAIN_PAUSE_MS = 680;
+/** Nanami breath between Japanese sentences split on 。！？ */
+const JAPANESE_CHAIN_PAUSE_MS = 650;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -485,9 +492,10 @@ function runUtterance(
     unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
   // Andrew/Nanami neural rates are nonlinear below ~0.9 — don't stretch
   // karaoke as if SPEECH_RATE_NORMAL (0.80) were a true 20% slowdown.
-  // JA floor is slightly lower than EN: Nanami slows a bit more than Andrew.
+  // EN floor 0.88 gives a mild slowdown at normal rate without the lag of /0.80.
+  // JA floor is slightly lower: Nanami slows a bit more than Andrew.
   const rateDivisor =
-    unitLang === "en" ? Math.max(rate, 0.9) : Math.max(rate, 0.85);
+    unitLang === "en" ? Math.max(rate, 0.88) : Math.max(rate, 0.85);
 
   const plannedStart: number[] = [];
   {
@@ -763,17 +771,23 @@ export const speechService = {
     options?: SpeakJapaneseOptions
   ) {
     const reading = options?.reading ?? null;
-    const speakText = buildJapaneseSpeakText(text, reading);
-    runUtterance(
-      text,
-      JAPANESE_TTS_LANG,
-      pickNanamiVoice(),
-      callbacks,
-      true,
-      rate,
-      speakText,
-      reading
-    );
+    const segments = buildJapaneseSpeakSegments(text, reading);
+    if (segments.length <= 1) {
+      const speakText = buildJapaneseSpeakText(text, reading);
+      runUtterance(
+        text,
+        JAPANESE_TTS_LANG,
+        pickNanamiVoice(),
+        callbacks,
+        true,
+        rate,
+        speakText,
+        reading
+      );
+      return;
+    }
+
+    speakJapaneseSegments(text, segments, callbacks, rate);
   },
 
   speakEnglish(
@@ -800,14 +814,123 @@ export const speechService = {
   },
 };
 
+type JapaneseSpeakSegment = {
+  speak: string;
+  reading: string | null;
+  steps: HighlightUnit[] | null;
+};
+
 type EnglishSpeakSegment = {
   speak: string;
   steps: HighlightUnit[] | null;
 };
 
 /**
- * Prefer trailing gloss aside splits, else `;` / sentence clause splits —
- * both need a real inter-utterance pause so karaoke does not drift off Andrew.
+ * Split multi-sentence JA on 。！？ so Nanami takes a real breath between
+ * sentences and karaoke does not race into the next clause.
+ */
+function buildJapaneseSpeakSegments(
+  text: string,
+  reading: string | null
+): JapaneseSpeakSegment[] {
+  const clauses = splitJapaneseBySentences(text, reading);
+  if (!clauses) return [];
+
+  const allUnits = buildJapaneseHighlightUnits(text);
+  const readingTrim = reading?.trim() || "";
+  const allSteps: HighlightUnit[] = readingTrim
+    ? buildJapaneseSpokenKaraokeSteps(
+        text,
+        deriveSpacedReadingForUnits(text, readingTrim, allUnits) ?? readingTrim,
+        allUnits
+      ).map((s) => ({
+        start: s.start,
+        end: s.end,
+        text: s.text,
+        kind: s.kind,
+        spokenText: s.spokenText,
+        speakGapAfter: s.speakGapAfter,
+      }))
+    : activeHighlightUnits(allUnits);
+
+  return clauses.map((clause) => {
+    const clauseSteps = allSteps.filter(
+      (s) => s.start >= clause.start && s.start < clause.end
+    );
+    return {
+      speak: clause.speak,
+      reading: clause.reading,
+      steps: clauseSteps.length > 0 ? clauseSteps : null,
+    };
+  });
+}
+
+function speakJapaneseSegments(
+  displayText: string,
+  segments: JapaneseSpeakSegment[],
+  callbacks: SpeakCallbacks | undefined,
+  rate: number
+) {
+  const voice = pickNanamiVoice();
+  let started = false;
+  let index = 0;
+
+  const playNext = () => {
+    const seg = segments[index];
+    if (!seg) {
+      callbacks?.onEnd?.();
+      return;
+    }
+    const isLast = index >= segments.length - 1;
+    index += 1;
+
+    runUtterance(
+      displayText,
+      JAPANESE_TTS_LANG,
+      voice,
+      {
+        onStart: () => {
+          if (!started) {
+            started = true;
+            callbacks?.onStart?.();
+          }
+        },
+        onBoundary: callbacks?.onBoundary,
+        onError: (error) => {
+          clearPendingAsideChain();
+          callbacks?.onError?.(error);
+        },
+        onEnd: () => {
+          if (isLast) {
+            callbacks?.onEnd?.();
+            return;
+          }
+          const pauseGen = playbackGeneration;
+          clearAsidePauseTimer();
+          pendingAsideCallbacks = callbacks ?? null;
+          asidePauseTimer = window.setTimeout(() => {
+            asidePauseTimer = null;
+            pendingAsideCallbacks = null;
+            if (playbackGeneration !== pauseGen) return;
+            playNext();
+          }, JAPANESE_CHAIN_PAUSE_MS);
+        },
+      },
+      true,
+      rate,
+      seg.speak,
+      seg.reading,
+      seg.steps
+    );
+  };
+
+  playNext();
+}
+
+/**
+ * Prefer trailing gloss aside splits, else `;` / em-dash / sentence clause
+ * splits — all need a real inter-utterance pause so karaoke does not drift
+ * off Andrew (mdash with no pause makes karaoke race ahead).
  */
 function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
   const aside = splitEnglishDescriptiveAside(text);
@@ -842,15 +965,20 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
       .map((s) => {
-        // Real pause is between utterances — strip clause-final punct dwell.
-        if (/[;,.!?]$/u.test(s.text)) {
-          const stripped = s.text.replace(/[;,.!?]+$/u, "").trim();
+        // Strip clause-final punct from the spoken form, but KEEP mdash/semicolon
+        // ellipsis dwell so karaoke holds at the break (same breath as the real
+        // inter-utterance pause) — stripping it made "75% —" race into the next clause.
+        if (/[;,.!?—–]$/u.test(s.text)) {
+          const stripped = s.text.replace(/[;,.!?—–]+$/u, "").trim();
+          const base = buildEnglishSpeakText(stripped).trim() || stripped;
+          const keepEllipsis = /\.\.\.\s*$/u.test(s.spokenText ?? "");
           return {
             ...s,
-            spokenText: buildEnglishSpeakText(stripped).trim() || stripped,
+            spokenText: keepEllipsis ? `${base.replace(/\s*\.{3}\s*$/u, "")} ...` : base,
             speakGapAfter: false,
           };
         }
+        // Preserve "75% ..." style mdash dwell attached to the prior word.
         return { ...s, speakGapAfter: false };
       });
     return {
@@ -931,7 +1059,10 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE_EN,
 };
 
-export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+export {
+  buildJapaneseSpeakText,
+  splitJapaneseBySentences,
+} from "../utils/japaneseSpeakText";
 export {
   buildEnglishSpeakText,
   splitEnglishByClauses,

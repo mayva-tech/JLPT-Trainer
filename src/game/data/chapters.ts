@@ -61,6 +61,108 @@ export const CHAPTERS: readonly ChapterDefinition[] = [
       title: "Work, Friends & Relationships",
     },
   },
+  {
+    id: "chapter-3",
+    number: 3,
+    title: "Work, Friends & Relationships",
+    japaneseTitle: "第3章・人間関係",
+    description:
+      "You can buy things and survive City Hall — now Japanese changes depending on who you talk to.",
+    openingLines: [
+      "You can buy things, make appointments, and survive City Hall.",
+      "But real Japanese changes depending on who you are talking to.",
+      "Friends, senpai, coworkers, managers — grammatically correct is not always socially natural.",
+    ],
+    objectives: [
+      "Respond naturally to a friend invitation",
+      "Ask a senpai for help softly",
+      "Refuse without sounding cold",
+      "Apologize with the right register",
+      "Disagree gently at work",
+      "Clear the Social Intelligence Challenge",
+    ],
+    questIds: [
+      "friend-invitation",
+      "senpai-favor",
+      "saying-no",
+      "awkward-apology",
+      "workplace-discussion",
+      "relationships-challenge",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第4章・仕事と敬語",
+      title: "Business & Keigo",
+    },
+  },
+  {
+    id: "chapter-4",
+    number: 4,
+    title: "Business & Keigo",
+    japaneseTitle: "第4章・仕事と敬語",
+    description:
+      "You understand the words. Now you need to sound appropriate at work.",
+    openingLines: [
+      "You understand the words. Now you need to sound appropriate at work.",
+      "The same message can sound natural, too casual, too stiff, or even rude — depending on who you are speaking to.",
+      "報連相, business phone Japanese, customer keigo, and professional disagreement are next.",
+    ],
+    objectives: [
+      "Greet and leave the office with the right register",
+      "Report status with 報連相",
+      "Handle an external business call",
+      "Serve a customer with appropriate keigo",
+      "Report a mistake with recovery steps",
+      "Speak up in a meeting",
+      "Survive a full workday",
+    ],
+    questIds: [
+      "morning-office",
+      "reporting-to-boss",
+      "business-phone",
+      "customer-service",
+      "report-mistake",
+      "meeting-speak",
+      "workday-survival",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第5章・ネイティブスピード",
+      title: "Fast & Natural Japanese",
+    },
+  },
+  {
+    id: "chapter-5",
+    number: 5,
+    title: "Fast & Natural Japanese",
+    japaneseTitle: "第5章・ネイティブスピード",
+    description:
+      "Japanese hasn’t changed. The way people say it has.",
+    openingLines: [
+      "Japanese hasn’t changed. The way people say it has.",
+      "Native speakers shorten, omit, and imply — now listen for meaning at real speed.",
+    ],
+    objectives: [
+      "Survive a fast convenience-store exchange",
+      "Catch train announcement details",
+      "Read a friend’s implied meaning",
+      "Recognize everyday reductions",
+      "Follow izakaya-style casual chat",
+      "Infer meaning from context",
+      "Clear Native-Speed Survival",
+    ],
+    questIds: [
+      "fast-convenience",
+      "train-announcement",
+      "friend-real-meaning",
+      "contraction-city",
+      "izakaya-listening",
+      "read-between-lines",
+      "native-speed-survival",
+    ],
+    nextChapterTeaser: {
+      japaneseTitle: "第6章・トラブル対応",
+      title: "Handling Problems",
+    },
+  },
 ] as const;
 
 export function getChapterByNumber(

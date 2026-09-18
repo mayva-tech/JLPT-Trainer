@@ -5,6 +5,7 @@ import {
   shouldKeepGaTight,
   shouldKeepNiTight,
   shouldKeepWoTight,
+  splitJapaneseBySentences,
 } from "./japaneseSpeakText";
 import { vocabulary } from "../data/vocabulary";
 import { grammar } from "../data/grammar";
@@ -424,5 +425,30 @@ describe("TTS particle audit (all lesson readings)", () => {
       }
     }
     expect(failures).toEqual([]);
+  });
+});
+
+describe("splitJapaneseBySentences", () => {
+  it("splits after 。 so Nanami can pause between sentences", () => {
+    const text = "ありがとうございます。では、いくつか確認しますね。";
+    const clauses = splitJapaneseBySentences(text);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toContain("ありがとうございます");
+    expect(clauses![1]!.speak).toContain("確認");
+    expect(clauses![0]!.end).toBe(clauses![1]!.start);
+  });
+
+  it("does not split a single trailing period", () => {
+    expect(splitJapaneseBySentences("確認してください。")).toBeNull();
+    expect(splitJapaneseBySentences("はい")).toBeNull();
+  });
+
+  it("splits reading when it also has sentence punct", () => {
+    const text = "行きます。わかりました。";
+    const reading = "いきます。わかりました。";
+    const clauses = splitJapaneseBySentences(text, reading);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.reading).toMatch(/いきます/);
+    expect(clauses![1]!.reading).toMatch(/わかりました/);
   });
 });

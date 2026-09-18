@@ -1,6 +1,6 @@
-import { COMMUNICATION } from "../data/rpgConfig";
+import { COMMUNICATION, COMMUNICATION_V2 } from "../data/rpgConfig";
 
-/** Map confidence hearts → Communication % for the encounter meter. */
+/** Map confidence hearts → Communication % for the V1 linear quest meter. */
 export function communicationFromConfidence(
   confidence: number,
   maxConfidence: number
@@ -20,4 +20,16 @@ export function applyRepairBonus(percent: number): number {
     COMMUNICATION.maxPercent,
     percent + COMMUNICATION.repairBonus
   );
+}
+
+/** V2 independent Communication score helpers. */
+export function clampCommunicationV2(value: number): number {
+  return Math.max(
+    COMMUNICATION_V2.minPercent,
+    Math.min(COMMUNICATION_V2.maxPercent, Math.round(value))
+  );
+}
+
+export function startingCommunicationV2(): number {
+  return COMMUNICATION_V2.startPercent;
 }

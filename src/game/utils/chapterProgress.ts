@@ -1,6 +1,7 @@
 import { getChapterByNumber } from "../data/chapters";
 import { getQuestById } from "../data/quests";
 import type { ChapterDefinition, PlayerRpgProfile, QuestDefinition } from "../types";
+import { questHasPlayableContent } from "./questContent";
 
 export type ChapterQuestRow = {
   quest: QuestDefinition;
@@ -21,7 +22,7 @@ export function isQuestPlayable(
   quest: QuestDefinition,
   profile: PlayerRpgProfile
 ): boolean {
-  if (quest.steps.length === 0) return false;
+  if (!questHasPlayableContent(quest)) return false;
   if (isDeveloperMode(profile)) return true;
   return isQuestRequirementMet(quest, profile);
 }
@@ -107,6 +108,46 @@ export function shortChapterObjectiveLabel(quest: QuestDefinition): string {
       return "First Day at Work";
     case "social-life-challenge":
       return "Social Life Challenge";
+    case "friend-invitation":
+      return "Friend Invitation";
+    case "senpai-favor":
+      return "Ask a Senpai";
+    case "saying-no":
+      return "How to Say No";
+    case "awkward-apology":
+      return "Awkward Apology";
+    case "workplace-discussion":
+      return "Workplace Discussion";
+    case "relationships-challenge":
+      return "Social Intelligence Challenge";
+    case "morning-office":
+      return "Morning at the Office";
+    case "reporting-to-boss":
+      return "Reporting to Your Boss";
+    case "business-phone":
+      return "Business Phone Call";
+    case "customer-service":
+      return "Customer Interaction";
+    case "report-mistake":
+      return "Reporting a Mistake";
+    case "meeting-speak":
+      return "Speaking in a Meeting";
+    case "workday-survival":
+      return "Workday Survival";
+    case "fast-convenience":
+      return "Fast Convenience Store";
+    case "train-announcement":
+      return "Train Announcement Challenge";
+    case "friend-real-meaning":
+      return "What Your Friend Really Means";
+    case "contraction-city":
+      return "Everything Gets Shortened";
+    case "izakaya-listening":
+      return "Izakaya Listening Challenge";
+    case "read-between-lines":
+      return "Read Between the Lines";
+    case "native-speed-survival":
+      return "Native-Speed Survival";
     default:
       return quest.title;
   }
