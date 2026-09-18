@@ -95,6 +95,18 @@ describe("parseBilingualSpeakSegments", () => {
     ]);
   });
 
+  it("speaks repair tips with Nanami for 「ゆっくり」 then Andrew for the gloss", () => {
+    expect(
+      parseBilingualSpeakSegments(
+        "✓ Repair\n\n「ゆっくり」buys listening time."
+      )
+    ).toEqual([
+      { language: "en", text: "Repair" },
+      { language: "ja", text: "ゆっくり" },
+      { language: "en", text: "buys listening time." },
+    ]);
+  });
+
   it("splits multiple unquoted JP runs in one help line", () => {
     expect(
       parseBilingualSpeakSegments(

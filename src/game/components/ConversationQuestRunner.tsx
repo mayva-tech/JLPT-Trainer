@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { HighlightedEnglish } from "../../components/HighlightedEnglish";
 import { HighlightedJapanese } from "../../components/HighlightedJapanese";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
+import type { SpeechHighlight } from "../../services/speechService";
 import { getLocationById } from "../data/locations";
 import { getNpcById } from "../data/npcs";
 import { getQuestById } from "../data/quests";
@@ -147,6 +148,9 @@ export function ConversationQuestRunner({
   const [pendingNextId, setPendingNextId] = useState<string | null>(null);
   const [choiceHighlightId, setChoiceHighlightId] = useState<string | null>(null);
   const [feedbackJaFocus, setFeedbackJaFocus] = useState<string | null>(null);
+  /** English gloss currently spoken from feedback/help (for karaoke). */
+  const [feedbackEnFocus, setFeedbackEnFocus] = useState<string | null>(null);
+  const feedbackSpeakTokenRef = useRef(0);
   const [nodePlayKey, setNodePlayKey] = useState(0);
   const [firstListenCorrect, setFirstListenCorrect] = useState(0);
   const [firstListenTotal, setFirstListenTotal] = useState(0);
@@ -262,15 +266,24 @@ export function ConversationQuestRunner({
   }, [node?.id]);
 
   // Auto-play: title JP→EN (once) → subject JP→EN → choices JP→EN → help.
+  // After an answer is revealed, skip — tip/feedback TTS owns that beat.
   useEffect(() => {
     if (!node || !quest) return;
     let cancelled = false;
-    speech.stop();
     setChoiceHighlightId(null);
     setFeedbackJaFocus(null);
+    setFeedbackEnFocus(null);
     setKaraokeSurface(null);
     autoPlayTokenRef.current += 1;
     const token = autoPlayTokenRef.current;
+
+    if (revealed) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    speech.stop();
 
     if (!speech.autoVoice || !nodeSpeechEnabled(node)) {
       return () => {
@@ -374,6 +387,7 @@ export function ConversationQuestRunner({
         const seg = segments[index];
         if (!seg) {
           setFeedbackJaFocus(null);
+          setFeedbackEnFocus(null);
           setKaraokeSurface(null);
           onDone();
           return;
@@ -382,9 +396,11 @@ export function ConversationQuestRunner({
         setKaraokeSurface("feedback");
         if (seg.language === "ja") {
           setFeedbackJaFocus(seg.text);
+          setFeedbackEnFocus(null);
           speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
         } else {
           setFeedbackJaFocus(null);
+          setFeedbackEnFocus(seg.text);
           speech.speakEnglish(seg.text, { karaoke: true, onEnded: next });
         }
       };
@@ -449,6 +465,55 @@ export function ConversationQuestRunner({
     revealed,
     hideTranscript,
   ]);
+
+  // Speak tip/feedback after an answer (Nanami for JP, Andrew for EN + karaoke).
+  useEffect(() => {
+    if (!revealed || !feedback) return;
+    if (!hasSpeakableFeedback(feedback)) return;
+
+    let cancelled = false;
+    feedbackSpeakTokenRef.current += 1;
+    const token = feedbackSpeakTokenRef.current;
+    const segments = parseBilingualSpeakSegments(feedback);
+
+    const playSeg = (index: number) => {
+      if (cancelled || token !== feedbackSpeakTokenRef.current) return;
+      const seg = segments[index];
+      if (!seg) {
+        setFeedbackJaFocus(null);
+        setFeedbackEnFocus(null);
+        setKaraokeSurface(null);
+        return;
+      }
+      setKaraokeSurface("feedback");
+      if (seg.language === "ja") {
+        setFeedbackJaFocus(seg.text);
+        setFeedbackEnFocus(null);
+        speech.speakJapanese(seg.text, {
+          karaoke: true,
+          onEnded: () => playSeg(index + 1),
+        });
+      } else {
+        setFeedbackJaFocus(null);
+        setFeedbackEnFocus(seg.text);
+        speech.speakEnglish(seg.text, {
+          karaoke: true,
+          onEnded: () => playSeg(index + 1),
+        });
+      }
+    };
+
+    const timer = window.setTimeout(() => {
+      if (cancelled || token !== feedbackSpeakTokenRef.current) return;
+      playSeg(0);
+    }, SETTLE_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealed, feedback, selectedId]);
 
   if (!quest || !conversation || !node) {
     return (
@@ -579,6 +644,8 @@ export function ConversationQuestRunner({
     setPendingNextId(null);
     setShowHelp(false);
     setRepairFlash(null);
+    setFeedbackJaFocus(null);
+    setFeedbackEnFocus(null);
     setListenCompromised(false);
     setNodePlayKey((k) => k + 1);
   }
@@ -589,7 +656,7 @@ export function ConversationQuestRunner({
     if (!choice) return;
     speech.stop();
 
-    // In-place replay repairs (repeat / slow) — do not lock the beat.
+    // In-place replay repairs (repeat / slow) — tip first, then replay the beat.
     if (choice.replayCurrent) {
       const applied = applyConversationChoice({
         choice,
@@ -602,11 +669,17 @@ export function ConversationQuestRunner({
       setRepairCounts((c) => bumpRepairCount(c, choice.repairKind));
       setRepairedConversation(true);
       setListenCompromised(true);
-      setRepairFlash(choice.feedback ?? applied.qualityLabel);
+      const tip = choice.feedback ?? applied.qualityLabel;
+      setRepairFlash(tip);
       if (choice.vocabHint) {
         setConceptsLearned((prev) => [...prev, choice.vocabHint!]);
       }
-      replayNodeUtterance(choice.repairKind === "slow");
+      const slow = choice.repairKind === "slow";
+      if (tip && hasSpeakableFeedback(tip)) {
+        speakFeedbackTip(tip, () => replayNodeUtterance(slow));
+      } else {
+        replayNodeUtterance(slow);
+      }
       return;
     }
 
@@ -822,26 +895,46 @@ export function ConversationQuestRunner({
         },
       ]);
     }
+    // Feedback tip TTS is handled by the revealed+feedback effect (JP/EN mix).
+  }
 
-    if (choice.feedback && hasSpeakableFeedback(choice.feedback)) {
-      const segments = parseBilingualSpeakSegments(choice.feedback);
-      const play = (i: number) => {
-        const seg = segments[i];
-        if (!seg) {
-          setFeedbackJaFocus(null);
-          return;
-        }
-        const next = () => play(i + 1);
-        if (seg.language === "ja") {
-          setFeedbackJaFocus(seg.text);
-          speech.speakJapanese(seg.text, { karaoke: true, onEnded: next });
-        } else {
-          setFeedbackJaFocus(null);
-          speech.speakEnglish(seg.text, { karaoke: true, onEnded: next });
-        }
-      };
-      play(0);
+  /** Speak a tip/feedback string with Nanami→Andrew + karaoke, then optional next. */
+  function speakFeedbackTip(raw: string, onDone?: () => void) {
+    const segments = parseBilingualSpeakSegments(raw);
+    if (segments.length === 0) {
+      onDone?.();
+      return;
     }
+    feedbackSpeakTokenRef.current += 1;
+    const token = feedbackSpeakTokenRef.current;
+    const playSeg = (index: number) => {
+      if (token !== feedbackSpeakTokenRef.current) return;
+      const seg = segments[index];
+      if (!seg) {
+        setFeedbackJaFocus(null);
+        setFeedbackEnFocus(null);
+        setKaraokeSurface(null);
+        onDone?.();
+        return;
+      }
+      setKaraokeSurface("feedback");
+      if (seg.language === "ja") {
+        setFeedbackJaFocus(seg.text);
+        setFeedbackEnFocus(null);
+        speech.speakJapanese(seg.text, {
+          karaoke: true,
+          onEnded: () => playSeg(index + 1),
+        });
+      } else {
+        setFeedbackJaFocus(null);
+        setFeedbackEnFocus(seg.text);
+        speech.speakEnglish(seg.text, {
+          karaoke: true,
+          onEnded: () => playSeg(index + 1),
+        });
+      }
+    };
+    playSeg(0);
   }
 
   function onContinue() {
@@ -1116,13 +1209,52 @@ export function ConversationQuestRunner({
         ) : null}
 
         {showHelp && activeNode.helpHint ? (
-          <p className="ppq-help-hint">💡 {activeNode.helpHint}</p>
+          <p className="ppq-help-hint">
+            💡{" "}
+            <FeedbackTipText
+              text={activeNode.helpHint}
+              jaFocus={
+                karaokeSurface === "feedback" ? feedbackJaFocus : null
+              }
+              enFocus={
+                karaokeSurface === "feedback" ? feedbackEnFocus : null
+              }
+              jaHighlight={
+                karaokeSurface === "feedback" && speech.activeLang === "ja"
+                  ? speech.highlight
+                  : null
+              }
+              enHighlight={
+                karaokeSurface === "feedback" && speech.activeLang === "en"
+                  ? speech.highlight
+                  : null
+              }
+            />
+          </p>
         ) : null}
 
         {repairFlash && !revealed ? (
-          <p className="ppq-repair-flash" role="status">
-            {repairFlash}
-          </p>
+          <div className="ppq-repair-flash" role="status">
+            <FeedbackTipText
+              text={repairFlash}
+              jaFocus={
+                karaokeSurface === "feedback" ? feedbackJaFocus : null
+              }
+              enFocus={
+                karaokeSurface === "feedback" ? feedbackEnFocus : null
+              }
+              jaHighlight={
+                karaokeSurface === "feedback" && speech.activeLang === "ja"
+                  ? speech.highlight
+                  : null
+              }
+              enHighlight={
+                karaokeSurface === "feedback" && speech.activeLang === "en"
+                  ? speech.highlight
+                  : null
+              }
+            />
+          </div>
         ) : null}
 
         {activeNode.choices && activeNode.choices.length > 0 ? (
@@ -1188,24 +1320,41 @@ export function ConversationQuestRunner({
             }
             role="status"
           >
-            <div className="ppq-feedback-text">
-              {feedback.split("\n").map((line, i) => (
-                <span key={i}>
-                  {i > 0 ? <br /> : null}
-                  {feedbackJaFocus &&
-                  line.includes(feedbackJaFocus) &&
-                  karaokeSurface === "feedback" &&
-                  speech.activeLang === "ja" ? (
-                    <HighlightedJapanese
-                      text={line}
-                      className="ppq-feedback-ja"
-                      highlight={speech.highlight}
-                    />
-                  ) : (
-                    line
-                  )}
-                </span>
-              ))}
+            <div className="ppq-feedback-row">
+              <div className="ppq-feedback-text">
+                <FeedbackTipText
+                  text={feedback}
+                  jaFocus={
+                    karaokeSurface === "feedback" ? feedbackJaFocus : null
+                  }
+                  enFocus={
+                    karaokeSurface === "feedback" ? feedbackEnFocus : null
+                  }
+                  jaHighlight={
+                    karaokeSurface === "feedback" && speech.activeLang === "ja"
+                      ? speech.highlight
+                      : null
+                  }
+                  enHighlight={
+                    karaokeSurface === "feedback" && speech.activeLang === "en"
+                      ? speech.highlight
+                      : null
+                  }
+                />
+              </div>
+              {hasSpeakableFeedback(feedback) ? (
+                <button
+                  type="button"
+                  className="ppq-speak-btn"
+                  aria-label="Play feedback tip"
+                  onClick={() => {
+                    speech.stop();
+                    speakFeedbackTip(feedback);
+                  }}
+                >
+                  🔊
+                </button>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -1319,5 +1468,109 @@ function ChoiceRow({
         🔊
       </button>
     </div>
+  );
+}
+
+/**
+ * Tip/feedback with 「日本語」 + English gloss karaoke while Nanami/Andrew speak.
+ */
+function FeedbackTipText({
+  text,
+  jaFocus,
+  enFocus,
+  jaHighlight,
+  enHighlight,
+}: {
+  text: string;
+  jaFocus: string | null;
+  enFocus: string | null;
+  jaHighlight: SpeechHighlight | null;
+  enHighlight: SpeechHighlight | null;
+}) {
+  const nodes: ReactNode[] = [];
+  const quoteRe = /「([^」]+)」/g;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  while ((match = quoteRe.exec(text)) !== null) {
+    if (match.index > cursor) {
+      nodes.push(
+        <FeedbackPlain
+          key={`t-${key++}`}
+          text={text.slice(cursor, match.index)}
+          enFocus={enFocus}
+          enHighlight={enHighlight}
+        />
+      );
+    }
+    const ja = match[1] ?? "";
+    const focused =
+      jaFocus !== null && ja.replace(/\s+/g, "") === jaFocus.replace(/\s+/g, "");
+    nodes.push(
+      <span key={`q-${key++}`} className="ppq-feedback-ja" lang="ja">
+        「
+        {focused && jaHighlight ? (
+          <HighlightedJapanese
+            text={ja}
+            className="ppq-feedback-ja-inner"
+            highlight={jaHighlight}
+          />
+        ) : (
+          ja
+        )}
+        」
+      </span>
+    );
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < text.length) {
+    nodes.push(
+      <FeedbackPlain
+        key={`t-${key++}`}
+        text={text.slice(cursor)}
+        enFocus={enFocus}
+        enHighlight={enHighlight}
+      />
+    );
+  }
+  return <div className="ppq-feedback-rich">{nodes}</div>;
+}
+
+function FeedbackPlain({
+  text,
+  enFocus,
+  enHighlight,
+}: {
+  text: string;
+  enFocus: string | null;
+  enHighlight: SpeechHighlight | null;
+}) {
+  if (!text) return null;
+  const parts = text.split("\n");
+  return (
+    <>
+      {parts.map((part, i) => {
+        const trimmed = part.trim();
+        const enActive =
+          enFocus !== null &&
+          enHighlight !== null &&
+          trimmed.length > 0 &&
+          (trimmed === enFocus || trimmed.includes(enFocus));
+        return (
+          <span key={i}>
+            {enActive ? (
+              <HighlightedEnglish
+                text={enFocus!}
+                className="ppq-feedback-en"
+                highlight={enHighlight}
+              />
+            ) : (
+              part
+            )}
+            {i < parts.length - 1 ? <br /> : null}
+          </span>
+        );
+      })}
+    </>
   );
 }

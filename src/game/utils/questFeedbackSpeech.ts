@@ -4,7 +4,7 @@ export type FeedbackSpeakSegment = {
 };
 
 const QUOTE_RE = /「([^」]+)」/g;
-const EMOJI_PREFIX_RE = /^[✅❌💡]\s*/;
+const EMOJI_PREFIX_RE = /^[✅❌💡✓🌟△✕↻🛠️]\s*/;
 
 /**
  * Hiragana, katakana, CJK ideographs, halfwidth kana, prolonged sound, and
