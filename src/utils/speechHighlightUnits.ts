@@ -1144,6 +1144,11 @@ const EN_COMMA_PAUSE = 2.25;
 const EN_CLAUSE_PAUSE = 1.5;
 /** Andrew pause after sentence-final . ! ? */
 const EN_SENTENCE_PAUSE = 1.2;
+/**
+ * Nanami breath after 。！？ — kept modest for single-utterance fallback;
+ * multi-sentence JA uses a real inter-utterance pause in speechService.
+ */
+const JA_SENTENCE_PAUSE = 2.8;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -1250,8 +1255,7 @@ export function estimateUnitDurationMs(
       lang === "en" ? EN_CLAUSE_PAUSE : 0.35 + KARAOKE_BREAK_POINT;
   }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
-    punctPause +=
-      lang === "en" ? EN_SENTENCE_PAUSE : 0.5 + KARAOKE_BREAK_POINT;
+    punctPause += lang === "en" ? EN_SENTENCE_PAUSE : JA_SENTENCE_PAUSE;
   }
   // Lone particles as their own karaoke unit
   if (lang === "ja" && isParticleBreakUnit(text)) {

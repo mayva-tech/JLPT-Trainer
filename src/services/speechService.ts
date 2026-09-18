@@ -20,7 +20,7 @@ import {
   findUnitForBoundary,
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
-import { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+import { buildJapaneseSpeakText, splitJapaneseBySentences } from "../utils/japaneseSpeakText";
 import {
   buildEnglishSpeakText,
   splitEnglishByClauses,
@@ -118,10 +118,12 @@ type KaraokeTimeline = {
 };
 
 /**
- * Real silence between gloss head/aside or EN clause segments — neural voices
- * ignore in-utterance periods/ellipsis pauses.
+ * Real silence between gloss head/aside, EN clause segments, or JA sentences —
+ * neural voices ignore in-utterance periods/ellipsis pauses.
  */
 const ENGLISH_CHAIN_PAUSE_MS = 680;
+/** Nanami breath between Japanese sentences split on 。！？ */
+const JAPANESE_CHAIN_PAUSE_MS = 650;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -769,17 +771,23 @@ export const speechService = {
     options?: SpeakJapaneseOptions
   ) {
     const reading = options?.reading ?? null;
-    const speakText = buildJapaneseSpeakText(text, reading);
-    runUtterance(
-      text,
-      JAPANESE_TTS_LANG,
-      pickNanamiVoice(),
-      callbacks,
-      true,
-      rate,
-      speakText,
-      reading
-    );
+    const segments = buildJapaneseSpeakSegments(text, reading);
+    if (segments.length <= 1) {
+      const speakText = buildJapaneseSpeakText(text, reading);
+      runUtterance(
+        text,
+        JAPANESE_TTS_LANG,
+        pickNanamiVoice(),
+        callbacks,
+        true,
+        rate,
+        speakText,
+        reading
+      );
+      return;
+    }
+
+    speakJapaneseSegments(text, segments, callbacks, rate);
   },
 
   speakEnglish(
@@ -806,10 +814,118 @@ export const speechService = {
   },
 };
 
+type JapaneseSpeakSegment = {
+  speak: string;
+  reading: string | null;
+  steps: HighlightUnit[] | null;
+};
+
 type EnglishSpeakSegment = {
   speak: string;
   steps: HighlightUnit[] | null;
 };
+
+/**
+ * Split multi-sentence JA on 。！？ so Nanami takes a real breath between
+ * sentences and karaoke does not race into the next clause.
+ */
+function buildJapaneseSpeakSegments(
+  text: string,
+  reading: string | null
+): JapaneseSpeakSegment[] {
+  const clauses = splitJapaneseBySentences(text, reading);
+  if (!clauses) return [];
+
+  const allUnits = buildJapaneseHighlightUnits(text);
+  const readingTrim = reading?.trim() || "";
+  const allSteps: HighlightUnit[] = readingTrim
+    ? buildJapaneseSpokenKaraokeSteps(
+        text,
+        deriveSpacedReadingForUnits(text, readingTrim, allUnits) ?? readingTrim,
+        allUnits
+      ).map((s) => ({
+        start: s.start,
+        end: s.end,
+        text: s.text,
+        kind: s.kind,
+        spokenText: s.spokenText,
+        speakGapAfter: s.speakGapAfter,
+      }))
+    : activeHighlightUnits(allUnits);
+
+  return clauses.map((clause) => {
+    const clauseSteps = allSteps.filter(
+      (s) => s.start >= clause.start && s.start < clause.end
+    );
+    return {
+      speak: clause.speak,
+      reading: clause.reading,
+      steps: clauseSteps.length > 0 ? clauseSteps : null,
+    };
+  });
+}
+
+function speakJapaneseSegments(
+  displayText: string,
+  segments: JapaneseSpeakSegment[],
+  callbacks: SpeakCallbacks | undefined,
+  rate: number
+) {
+  const voice = pickNanamiVoice();
+  let started = false;
+  let index = 0;
+
+  const playNext = () => {
+    const seg = segments[index];
+    if (!seg) {
+      callbacks?.onEnd?.();
+      return;
+    }
+    const isLast = index >= segments.length - 1;
+    index += 1;
+
+    runUtterance(
+      displayText,
+      JAPANESE_TTS_LANG,
+      voice,
+      {
+        onStart: () => {
+          if (!started) {
+            started = true;
+            callbacks?.onStart?.();
+          }
+        },
+        onBoundary: callbacks?.onBoundary,
+        onError: (error) => {
+          clearPendingAsideChain();
+          callbacks?.onError?.(error);
+        },
+        onEnd: () => {
+          if (isLast) {
+            callbacks?.onEnd?.();
+            return;
+          }
+          const pauseGen = playbackGeneration;
+          clearAsidePauseTimer();
+          pendingAsideCallbacks = callbacks ?? null;
+          asidePauseTimer = window.setTimeout(() => {
+            asidePauseTimer = null;
+            pendingAsideCallbacks = null;
+            if (playbackGeneration !== pauseGen) return;
+            playNext();
+          }, JAPANESE_CHAIN_PAUSE_MS);
+        },
+      },
+      true,
+      rate,
+      seg.speak,
+      seg.reading,
+      seg.steps
+    );
+  };
+
+  playNext();
+}
 
 /**
  * Prefer trailing gloss aside splits, else `;` / em-dash / sentence clause
@@ -943,7 +1059,10 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE_EN,
 };
 
-export { buildJapaneseSpeakText } from "../utils/japaneseSpeakText";
+export {
+  buildJapaneseSpeakText,
+  splitJapaneseBySentences,
+} from "../utils/japaneseSpeakText";
 export {
   buildEnglishSpeakText,
   splitEnglishByClauses,
