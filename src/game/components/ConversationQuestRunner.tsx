@@ -1078,7 +1078,11 @@ export function ConversationQuestRunner({
           </button>
           <button
             type="button"
-            className="ppq-btn ppq-btn--ghost"
+            className={
+              speech.rateMode === "normal"
+                ? "ppq-btn ppq-btn--ghost ppq-btn--speech-on"
+                : "ppq-btn ppq-btn--ghost"
+            }
             aria-pressed={speech.rateMode === "normal"}
             onClick={() => speech.setRateMode("normal")}
           >
@@ -1086,7 +1090,11 @@ export function ConversationQuestRunner({
           </button>
           <button
             type="button"
-            className="ppq-btn ppq-btn--ghost"
+            className={
+              speech.rateMode === "slow"
+                ? "ppq-btn ppq-btn--ghost ppq-btn--speech-on"
+                : "ppq-btn ppq-btn--ghost"
+            }
             aria-pressed={speech.rateMode === "slow"}
             onClick={() => speech.setRateMode("slow")}
           >

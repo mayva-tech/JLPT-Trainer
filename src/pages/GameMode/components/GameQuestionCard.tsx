@@ -143,7 +143,11 @@ export function GameQuestionCard({
           </button>
           <button
             type="button"
-            className="gm-btn gm-btn--ghost"
+            className={
+              speech.rateMode === "normal"
+                ? "gm-btn gm-btn--ghost gm-btn--speech-on"
+                : "gm-btn gm-btn--ghost"
+            }
             aria-pressed={speech.rateMode === "normal"}
             onClick={() => speech.setRateMode("normal")}
           >
@@ -151,7 +155,11 @@ export function GameQuestionCard({
           </button>
           <button
             type="button"
-            className="gm-btn gm-btn--ghost"
+            className={
+              speech.rateMode === "slow"
+                ? "gm-btn gm-btn--ghost gm-btn--speech-on"
+                : "gm-btn gm-btn--ghost"
+            }
             aria-pressed={speech.rateMode === "slow"}
             onClick={() => speech.setRateMode("slow")}
           >
