@@ -172,24 +172,25 @@ function AndrewHead({ viseme, blinking, speaking }: HeadProps) {
       {/* jaw slightly squarer than Nanami's oval */}
       <path
         d="M24 52 Q24 26 50 26 Q76 26 76 52 L76 64 Q76 88 50 90 Q24 88 24 64 Z"
-        fill="#eac6a8"
+        fill="#f4d8c6"
       />
       {/* hair */}
-      <path d="M22 48 Q22 20 50 20 Q78 20 78 48 Q72 36 50 37 Q28 36 22 48 Z" fill="#43342a" />
+      <path d="M22 48 Q22 20 50 20 Q78 20 78 48 Q72 36 50 37 Q28 36 22 48 Z" fill="#6b4c33" />
       {/* ears */}
-      <ellipse cx="23" cy="60" rx="3.2" ry="4.6" fill="#e0b596" />
-      <ellipse cx="77" cy="60" rx="3.2" ry="4.6" fill="#e0b596" />
-      <Eyes closed={blinking} irisColor="#3d5a6c" />
+      <ellipse cx="23" cy="60" rx="3.2" ry="4.6" fill="#eec4ad" />
+      <ellipse cx="77" cy="60" rx="3.2" ry="4.6" fill="#eec4ad" />
+      <Eyes closed={blinking} irisColor="#4a7ba7" />
       {/* heavier brows */}
-      <g stroke="#43342a" strokeWidth="2.4" strokeLinecap="round" fill="none">
+      <g stroke="#6b4c33" strokeWidth="2.4" strokeLinecap="round" fill="none">
         <path d="M33 41 q6 -2.5 11 0.5" />
         <path d="M56 41.5 q5 -3 11 -0.5" />
       </g>
       {/* nose */}
-      <path d="M50 56 q2 5 -1.5 6.5" stroke="#c99a7c" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <Mouth viseme={viseme} lipColor="#a8515a" />
-      {/* stubble shading under the mouth */}
-      <ellipse cx="50" cy="78" rx="13" ry="7" fill="#43342a" opacity="0.12" />
+      <path d="M50 56 q2 5 -1.5 6.5" stroke="#dda488" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      {/* warmth at the cheeks — a fair complexion reads flat without it */}
+      <ellipse cx="32" cy="63" rx="4" ry="2.2" fill="#e8907f" opacity="0.18" />
+      <ellipse cx="68" cy="63" rx="4" ry="2.2" fill="#e8907f" opacity="0.18" />
+      <Mouth viseme={viseme} lipColor="#b25f64" />
     </svg>
   );
 }
