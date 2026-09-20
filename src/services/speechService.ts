@@ -33,7 +33,11 @@ import {
   resolveEnglishVoice,
   resolveJapaneseVoice,
 } from "./ttsVoices";
-import { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
+import {
+  SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_JA_COMMA_PAUSE_MS,
+  SPEECH_JA_SENTENCE_PAUSE_MS,
+} from "../config/speechTiming";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -120,12 +124,11 @@ type KaraokeTimeline = {
 
 /**
  * Real silence between gloss head/aside, EN clause segments (`;` / em-dash /
- * tip newlines / sentence ends), or JA sentences — neural voices ignore
- * in-utterance periods/ellipsis pauses. Shared breath for EN + JP.
+ * tip newlines / sentence ends) — neural voices ignore in-utterance pauses.
  */
-const ENGLISH_CHAIN_PAUSE_MS = SPEECH_CLAUSE_PAUSE_MS;
-/** Nanami breath between Japanese clauses split on 、。！？ */
-const JAPANESE_CHAIN_PAUSE_MS = SPEECH_CLAUSE_PAUSE_MS;
+const ENGLISH_CHAIN_PAUSE_MS = SPEECH_EN_CHAIN_PAUSE_MS;
+/** Default Nanami sentence breath (。！？); commas use SPEECH_JA_COMMA_PAUSE_MS. */
+const JAPANESE_CHAIN_PAUSE_MS = SPEECH_JA_SENTENCE_PAUSE_MS;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -820,7 +823,15 @@ type JapaneseSpeakSegment = {
   speak: string;
   reading: string | null;
   steps: HighlightUnit[] | null;
+  /** Silence before the next JA clause (0 on the last segment). */
+  pauseAfterMs: number;
 };
+
+function japanesePauseAfterSurface(surface: string): number {
+  if (/[、，]\s*$/u.test(surface)) return SPEECH_JA_COMMA_PAUSE_MS;
+  if (/[。！？]\s*$/u.test(surface)) return SPEECH_JA_SENTENCE_PAUSE_MS;
+  return SPEECH_JA_SENTENCE_PAUSE_MS;
+}
 
 type EnglishSpeakSegment = {
   speak: string;
@@ -855,14 +866,17 @@ function buildJapaneseSpeakSegments(
       }))
     : activeHighlightUnits(allUnits);
 
-  return clauses.map((clause) => {
+  return clauses.map((clause, i) => {
     const clauseSteps = allSteps.filter(
       (s) => s.start >= clause.start && s.start < clause.end
     );
+    const surface = text.slice(clause.start, clause.end);
+    const isLast = i >= clauses.length - 1;
     return {
       speak: clause.speak,
       reading: clause.reading,
       steps: clauseSteps.length > 0 ? clauseSteps : null,
+      pauseAfterMs: isLast ? 0 : japanesePauseAfterSurface(surface),
     };
   });
 }
@@ -908,6 +922,7 @@ function speakJapaneseSegments(
             return;
           }
           const pauseGen = playbackGeneration;
+          const pauseMs = seg.pauseAfterMs || JAPANESE_CHAIN_PAUSE_MS;
           clearAsidePauseTimer();
           pendingAsideCallbacks = callbacks ?? null;
           asidePauseTimer = window.setTimeout(() => {
@@ -915,7 +930,7 @@ function speakJapaneseSegments(
             pendingAsideCallbacks = null;
             if (playbackGeneration !== pauseGen) return;
             playNext();
-          }, JAPANESE_CHAIN_PAUSE_MS);
+          }, pauseMs);
         },
       },
       true,
@@ -1070,12 +1085,22 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE,
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
-  SPEECH_CLAUSE_PAUSE_MS,
+  SPEECH_CLAUSE_PAUSE_MS: SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_JA_SENTENCE_PAUSE_MS,
+  SPEECH_JA_COMMA_PAUSE_MS,
   ENGLISH_CHAIN_PAUSE_MS,
   JAPANESE_CHAIN_PAUSE_MS,
 };
 
-export { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
+export {
+  SPEECH_CLAUSE_PAUSE_MS,
+  SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_JA_SENTENCE_PAUSE_MS,
+  SPEECH_JA_COMMA_PAUSE_MS,
+  SPEECH_JP_EN_HANDOFF_MS,
+  SPEECH_BILINGUAL_FIELD_GAP_MS,
+} from "../config/speechTiming";
 export {
   buildJapaneseSpeakText,
   splitJapaneseBySentences,

@@ -11,7 +11,11 @@ import {
   shouldKeepWoTight,
 } from "./japaneseSpeakText";
 import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
-import { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
+import {
+  SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_JA_COMMA_PAUSE_MS,
+  SPEECH_JA_SENTENCE_PAUSE_MS,
+} from "../config/speechTiming";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -1128,14 +1132,20 @@ const WAVE_DASH_PAUSE = 0.9;
 const EN_WEIGHT_MS = 315;
 /**
  * Punctuation / clause breath weight for English karaoke.
- * × EN_WEIGHT_MS ≈ SPEECH_CLAUSE_PAUSE_MS (~300ms) at rate 1.
+ * × EN_WEIGHT_MS ≈ SPEECH_EN_CHAIN_PAUSE_MS at rate 1.
  */
-const EN_PUNCT_PAUSE = SPEECH_CLAUSE_PAUSE_MS / EN_WEIGHT_MS;
+const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
+/** Karaoke weight for Japanese sentence punct (。！？). */
+const JA_SENTENCE_PAUSE = SPEECH_JA_SENTENCE_PAUSE_MS / JA_MORA_MS;
 /**
- * Punctuation / clause breath weight for Japanese karaoke.
- * × JA_MORA_MS ≈ SPEECH_CLAUSE_PAUSE_MS (~300ms) at rate 1.
+ * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
+ * Mid-string commas are split into real utterances in speechService; this
+ * weight covers single-utterance fallback. TTS-inserted particle commas
+ * (わ、) still use the small break below when only spokenText has `、`.
  */
-const JA_PUNCT_PAUSE = SPEECH_CLAUSE_PAUSE_MS / JA_MORA_MS;
+const JA_COMMA_PAUSE = SPEECH_JA_COMMA_PAUSE_MS / JA_MORA_MS;
+/** Light JA punct (`;` / `:` fallback) — between comma and sentence. */
+const JA_PUNCT_PAUSE = JA_COMMA_PAUSE;
 /** English ellipsis / em-dash / tip-newline / slash breath. */
 const EN_ELLIPSIS_PAUSE = EN_PUNCT_PAUSE;
 /** English comma breath (example sentences). */
@@ -1144,20 +1154,8 @@ const EN_COMMA_PAUSE = EN_PUNCT_PAUSE;
 const EN_CLAUSE_PAUSE = EN_PUNCT_PAUSE;
 /** English sentence-final . ! ? breath. */
 const EN_SENTENCE_PAUSE = EN_PUNCT_PAUSE;
-/**
- * Nanami breath after 。！？ — single-utterance fallback;
- * multi-clause JA uses SPEECH_CLAUSE_PAUSE_MS in speechService.
- */
-const JA_SENTENCE_PAUSE = JA_PUNCT_PAUSE;
-/**
- * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
- * Mid-string commas are split into real utterances in speechService; this
- * weight covers single-utterance fallback. TTS-inserted particle commas
- * (わ、) still use the small break below when only spokenText has `、`.
- */
-const JA_COMMA_PAUSE = JA_PUNCT_PAUSE;
-/** JA "/" / ellipsis alternate pause — same clause breath. */
-const SLASH_PAUSE = JA_PUNCT_PAUSE;
+/** JA "/" / ellipsis alternate pause — match comma breath. */
+const SLASH_PAUSE = JA_COMMA_PAUSE;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",

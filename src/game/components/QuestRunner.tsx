@@ -29,6 +29,7 @@ import {
   parseBilingualSpeakSegments,
   type FeedbackSpeakSegment,
 } from "../utils/questFeedbackSpeech";
+import { scheduleAfterLanguageHandoff } from "../../utils/jpEnHandoff";
 import {
   resolveQuestSpeech,
   type ResolvedQuestSpeech,
@@ -341,7 +342,12 @@ function LinearQuestRunner({
           onDone();
           return;
         }
-        const next = () => playSeg(index + 1);
+        const next = () =>
+          scheduleAfterLanguageHandoff(
+            seg.language,
+            segments[index + 1]?.language,
+            () => playSeg(index + 1)
+          );
         if (seg.language === "ja") {
           setKaraokeSurface("feedback");
           setFeedbackJaFocus(seg.text);
@@ -364,7 +370,22 @@ function LinearQuestRunner({
         setKaraokeSurface(null);
         return;
       }
-      const next = () => playItem(index + 1);
+      const upcoming = queue[index + 1];
+      const toLang =
+        upcoming?.kind === "en"
+          ? ("en" as const)
+          : upcoming?.kind === "ja"
+            ? ("ja" as const)
+            : undefined;
+      const advance = () => {
+        if (item.kind === "ja" || item.kind === "en") {
+          scheduleAfterLanguageHandoff(item.kind, toLang, () =>
+            playItem(index + 1)
+          );
+        } else {
+          playItem(index + 1);
+        }
+      };
       setKaraokeSurface(item.surface);
       if (item.kind === "ja") {
         setFeedbackJaFocus(null);
@@ -375,7 +396,7 @@ function LinearQuestRunner({
           karaoke: item.karaoke,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
-            next();
+            advance();
           },
         });
       } else if (item.kind === "en") {
@@ -386,12 +407,12 @@ function LinearQuestRunner({
           karaoke: item.karaoke,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
-            next();
+            advance();
           },
         });
       } else {
         setChoiceHighlightId(null);
-        playBilingual(item.text, next);
+        playBilingual(item.text, () => playItem(index + 1));
       }
     };
 
@@ -756,7 +777,12 @@ function LinearQuestRunner({
         setKaraokeSurface(null);
         return;
       }
-      const next = () => play(index + 1);
+      const next = () => {
+        const upcoming = segments[index + 1];
+        scheduleAfterLanguageHandoff(seg.language, upcoming?.language, () =>
+          play(index + 1)
+        );
+      };
       if (seg.language === "ja") {
         setFeedbackJaFocus(seg.text);
         speech.speakJapanese(seg.text, {

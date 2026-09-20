@@ -165,8 +165,8 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 3, text: "75%", kind: "word", spokenText: "75%" },
       "en"
     );
-    // Clause breath alone should add ~SPEECH_CLAUSE_PAUSE_MS (300ms).
-    expect(withPause).toBeGreaterThan(plainPct + 220);
+    // Clause breath alone should add ~SPEECH_EN_CHAIN_PAUSE_MS (400ms).
+    expect(withPause).toBeGreaterThan(plainPct + 300);
   });
 
   it("keeps embedded 私 on the karaoke timeline as watashi", () => {
@@ -225,8 +225,8 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       },
       "en"
     );
-    // Clause breath targets ~SPEECH_CLAUSE_PAUSE_MS (300ms) at rate 1.
-    expect(withComma - plain).toBeGreaterThanOrEqual(280);
+    // Clause breath targets ~SPEECH_EN_CHAIN_PAUSE_MS (400ms) at rate 1.
+    expect(withComma - plain).toBeGreaterThanOrEqual(350);
   });
 
   it.each(["~", "〜", "～"])(
@@ -655,8 +655,8 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       "ja",
       { start: 1, end: 2, text: "彼", kind: "word" }
     );
-    // Display clause comma should add a clear breath (~SPEECH_CLAUSE_PAUSE_MS)
-    expect(haiComma - haiPlain).toBeGreaterThan(200);
+    // Display clause comma should add a clear breath (~SPEECH_JA_COMMA_PAUSE_MS)
+    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(180);
     // Particle TTS comma still pauses, but must not dwarf はい、
     expect(haiComma).toBeGreaterThan(particleInserted);
   });

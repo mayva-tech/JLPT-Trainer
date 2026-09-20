@@ -5,7 +5,8 @@ import { styleExpressions } from "../../data/speechStyles";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
-  SPEECH_CLAUSE_PAUSE_MS,
+  SPEECH_BILINGUAL_FIELD_GAP_MS,
+  SPEECH_JP_EN_HANDOFF_MS,
   type SpeechHighlight,
 } from "../../services/speechService";
 import type { StyleCategoryId, StyleExpression } from "../../types/speechStyle";
@@ -151,7 +152,8 @@ async function speakMixedAsync(
 ): Promise<void> {
   const segments = segmentsWithOffsets(text);
   if (segments.length === 0) return;
-  for (const segment of segments) {
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i]!;
     if (cancelled?.()) return;
     const chunk = segment.text.trim();
     if (!chunk) continue;
@@ -185,6 +187,10 @@ async function speakMixedAsync(
           SPEECH_RATE_NORMAL
         );
       });
+      // Brief breath before Andrew when the next run is English.
+      if (segments[i + 1]?.lang === "en" && !cancelled?.()) {
+        await pause(SPEECH_JP_EN_HANDOFF_MS);
+      }
     } else {
       await speakEnAsync(chunk, target, ui, cancelled, offset);
     }
@@ -209,7 +215,7 @@ async function speakItemClassification(
       cancelled
     );
     if (cancelled?.()) return;
-    await pause(SPEECH_CLAUSE_PAUSE_MS);
+    await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
   }
 }
 
@@ -235,7 +241,7 @@ async function speakClassificationIntro(
     });
   }
   if (cancelled?.()) return;
-  await pause(SPEECH_CLAUSE_PAUSE_MS);
+  await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
 }
 
 async function playExpression(
@@ -256,7 +262,7 @@ async function playExpression(
     cancelled
   );
   if (cancelled()) return;
-  await pause(SPEECH_CLAUSE_PAUSE_MS);
+  await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
   if (cancelled()) return;
   await speakEnAsync(
     item.english,
@@ -265,7 +271,7 @@ async function playExpression(
     cancelled
   );
   if (cancelled()) return;
-  await pause(SPEECH_CLAUSE_PAUSE_MS);
+  await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
   if (item.example.japanese) {
     if (cancelled()) return;
     await speakJpAsync(
@@ -276,7 +282,7 @@ async function playExpression(
       cancelled
     );
     if (cancelled()) return;
-    await pause(SPEECH_CLAUSE_PAUSE_MS);
+    await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
   }
   if (item.example.english) {
     if (cancelled()) return;
@@ -287,7 +293,7 @@ async function playExpression(
       cancelled
     );
     if (cancelled()) return;
-    await pause(SPEECH_CLAUSE_PAUSE_MS);
+    await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
   }
   if (item.warning?.trim()) {
     if (cancelled()) return;
@@ -299,7 +305,7 @@ async function playExpression(
     );
     if (cancelled()) return;
   }
-  await pause(SPEECH_CLAUSE_PAUSE_MS);
+  await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
 }
 
 export default function StyleTrainer() {
@@ -480,7 +486,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(SPEECH_CLAUSE_PAUSE_MS);
+            await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
           } else {
             await speakClassificationIntro(
               entry.ctx.context,
@@ -497,7 +503,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(SPEECH_CLAUSE_PAUSE_MS);
+            await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
             if (cancelled()) break;
             await speakMixedAsync(
               entry.ctx.note,
@@ -506,7 +512,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(SPEECH_CLAUSE_PAUSE_MS);
+            await pause(SPEECH_BILINGUAL_FIELD_GAP_MS);
           }
         }
       } else if (mode === "compare") {

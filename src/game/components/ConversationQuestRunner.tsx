@@ -26,6 +26,7 @@ import {
   hasSpeakableFeedback,
   parseBilingualSpeakSegments,
 } from "../utils/questFeedbackSpeech";
+import { scheduleAfterLanguageHandoff } from "../../utils/jpEnHandoff";
 import {
   bumpRepairCount,
   emptyRepairCounts,
@@ -485,7 +486,12 @@ export function ConversationQuestRunner({
           onDone();
           return;
         }
-        const next = () => playSeg(index + 1);
+        const next = () =>
+          scheduleAfterLanguageHandoff(
+            seg.language,
+            segments[index + 1]?.language,
+            () => playSeg(index + 1)
+          );
         setKaraokeSurface("feedback");
         if (seg.language === "ja") {
           setFeedbackJaFocus(seg.text);
@@ -508,7 +514,22 @@ export function ConversationQuestRunner({
         setKaraokeSurface(null);
         return;
       }
-      const next = () => playItem(index + 1);
+      const upcoming = queue[index + 1];
+      const toLang =
+        upcoming?.kind === "en"
+          ? ("en" as const)
+          : upcoming?.kind === "ja"
+            ? ("ja" as const)
+            : undefined;
+      const advance = () => {
+        if (item.kind === "ja" || item.kind === "en") {
+          scheduleAfterLanguageHandoff(item.kind, toLang, () =>
+            playItem(index + 1)
+          );
+        } else {
+          playItem(index + 1);
+        }
+      };
       setKaraokeSurface(item.surface);
       if (item.kind === "ja") {
         if (item.choiceId) setChoiceHighlightId(item.choiceId);
@@ -519,7 +540,7 @@ export function ConversationQuestRunner({
           karaoke: karaokeEnabled,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
-            next();
+            advance();
           },
         });
       } else if (item.kind === "en") {
@@ -529,11 +550,11 @@ export function ConversationQuestRunner({
           karaoke: true,
           onEnded: () => {
             if (item.choiceId) setChoiceHighlightId(null);
-            next();
+            advance();
           },
         });
       } else {
-        playBilingual(item.text, next);
+        playBilingual(item.text, () => playItem(index + 1));
       }
     };
 
@@ -579,19 +600,25 @@ export function ConversationQuestRunner({
         return;
       }
       setKaraokeSurface("feedback");
+      const next = () =>
+        scheduleAfterLanguageHandoff(
+          seg.language,
+          segments[index + 1]?.language,
+          () => playSeg(index + 1)
+        );
       if (seg.language === "ja") {
         setFeedbackJaFocus(seg.text);
         setFeedbackEnFocus(null);
         speech.speakJapanese(seg.text, {
           karaoke: true,
-          onEnded: () => playSeg(index + 1),
+          onEnded: next,
         });
       } else {
         setFeedbackJaFocus(null);
         setFeedbackEnFocus(seg.text);
         speech.speakEnglish(seg.text, {
           karaoke: true,
-          onEnded: () => playSeg(index + 1),
+          onEnded: next,
         });
       }
     };
@@ -1099,19 +1126,25 @@ export function ConversationQuestRunner({
         return;
       }
       setKaraokeSurface("feedback");
+      const next = () =>
+        scheduleAfterLanguageHandoff(
+          seg.language,
+          segments[index + 1]?.language,
+          () => playSeg(index + 1)
+        );
       if (seg.language === "ja") {
         setFeedbackJaFocus(seg.text);
         setFeedbackEnFocus(null);
         speech.speakJapanese(seg.text, {
           karaoke: true,
-          onEnded: () => playSeg(index + 1),
+          onEnded: next,
         });
       } else {
         setFeedbackJaFocus(null);
         setFeedbackEnFocus(seg.text);
         speech.speakEnglish(seg.text, {
           karaoke: true,
-          onEnded: () => playSeg(index + 1),
+          onEnded: next,
         });
       }
     };

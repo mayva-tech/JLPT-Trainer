@@ -844,8 +844,8 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause (mdash) — next clip must not start early.
-    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
-    expect(chainPause).toBe(300);
+    const chainPause = __speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
     expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
@@ -887,8 +887,8 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after the tip label line (shared EN chain pause).
-    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
-    expect(chainPause).toBe(300);
+    const chainPause = __speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
     expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
@@ -937,10 +937,10 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 。 — next clip must not start early.
-    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
-    expect(chainPause).toBe(300);
-    expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(chainPause);
-    vi.advanceTimersByTime(chainPause - 50);
+    const sentencePause = __speechTestHooks.SPEECH_JA_SENTENCE_PAUSE_MS;
+    expect(sentencePause).toBe(420);
+    expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(sentencePause);
+    vi.advanceTimersByTime(sentencePause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
@@ -950,7 +950,10 @@ describe("speechService karaoke timeline", () => {
     spoken[1]!.onend?.();
     expect(ended).toBe(0);
 
-    vi.advanceTimersByTime(chainPause);
+    // Next gap is after 、 (では、) — shorter comma breath.
+    const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
+    expect(commaPause).toBe(200);
+    vi.advanceTimersByTime(commaPause);
     expect(spoken).toHaveLength(3);
     expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
 
@@ -992,10 +995,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 、 — next clip must not start early.
-    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
-    expect(chainPause).toBe(300);
-    expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(chainPause);
-    vi.advanceTimersByTime(chainPause - 50);
+    const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
+    expect(commaPause).toBe(200);
+    vi.advanceTimersByTime(commaPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
