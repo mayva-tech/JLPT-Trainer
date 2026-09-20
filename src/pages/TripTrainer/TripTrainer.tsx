@@ -85,7 +85,7 @@ export default function TripTrainer() {
   const playSessionRef = useRef(0);
 
   const { progress, toggle } = useProgress(STORAGE_KEY);
-  const { speak, voiceName, supported } = useJapaneseVoice();
+  const { speak } = useJapaneseVoice();
 
   const deck = useMemo(() => DECKS.find((d) => d.id === deckId) ?? DECKS[0], [deckId]);
   const card = deck.cards[Math.min(index, deck.cards.length - 1)];
@@ -323,9 +323,6 @@ export default function TripTrainer() {
           <Furigana text="旅(たび)の日本語(にほんご)" />
         </h2>
         <p className="jt-sub">Japan Trip Trainer</p>
-        <p className="jt-voice">
-          {supported ? `voice: ${voiceName ?? 'no Japanese voice installed'}` : 'audio unavailable'}
-        </p>
       </header>
 
       <nav className="jt-tabs">
