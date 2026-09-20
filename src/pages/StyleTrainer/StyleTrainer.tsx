@@ -5,6 +5,7 @@ import { styleExpressions } from "../../data/speechStyles";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
+  SPEECH_CLAUSE_PAUSE_MS,
   type SpeechHighlight,
 } from "../../services/speechService";
 import type { StyleCategoryId, StyleExpression } from "../../types/speechStyle";
@@ -208,7 +209,7 @@ async function speakItemClassification(
       cancelled
     );
     if (cancelled?.()) return;
-    await pause(220);
+    await pause(SPEECH_CLAUSE_PAUSE_MS);
   }
 }
 
@@ -234,7 +235,7 @@ async function speakClassificationIntro(
     });
   }
   if (cancelled?.()) return;
-  await pause(320);
+  await pause(SPEECH_CLAUSE_PAUSE_MS);
 }
 
 async function playExpression(
@@ -255,7 +256,7 @@ async function playExpression(
     cancelled
   );
   if (cancelled()) return;
-  await pause(280);
+  await pause(SPEECH_CLAUSE_PAUSE_MS);
   if (cancelled()) return;
   await speakEnAsync(
     item.english,
@@ -264,7 +265,7 @@ async function playExpression(
     cancelled
   );
   if (cancelled()) return;
-  await pause(280);
+  await pause(SPEECH_CLAUSE_PAUSE_MS);
   if (item.example.japanese) {
     if (cancelled()) return;
     await speakJpAsync(
@@ -275,7 +276,7 @@ async function playExpression(
       cancelled
     );
     if (cancelled()) return;
-    await pause(280);
+    await pause(SPEECH_CLAUSE_PAUSE_MS);
   }
   if (item.example.english) {
     if (cancelled()) return;
@@ -286,7 +287,7 @@ async function playExpression(
       cancelled
     );
     if (cancelled()) return;
-    await pause(280);
+    await pause(SPEECH_CLAUSE_PAUSE_MS);
   }
   if (item.warning?.trim()) {
     if (cancelled()) return;
@@ -298,7 +299,7 @@ async function playExpression(
     );
     if (cancelled()) return;
   }
-  await pause(450);
+  await pause(SPEECH_CLAUSE_PAUSE_MS);
 }
 
 export default function StyleTrainer() {
@@ -479,7 +480,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(300);
+            await pause(SPEECH_CLAUSE_PAUSE_MS);
           } else {
             await speakClassificationIntro(
               entry.ctx.context,
@@ -496,7 +497,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(250);
+            await pause(SPEECH_CLAUSE_PAUSE_MS);
             if (cancelled()) break;
             await speakMixedAsync(
               entry.ctx.note,
@@ -505,7 +506,7 @@ export default function StyleTrainer() {
               cancelled
             );
             if (cancelled()) break;
-            await pause(400);
+            await pause(SPEECH_CLAUSE_PAUSE_MS);
           }
         }
       } else if (mode === "compare") {

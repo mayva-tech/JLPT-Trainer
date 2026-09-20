@@ -598,7 +598,7 @@ export type JapaneseSentenceSplit = {
  *
  * Neural Nanami rushes past in-utterance commas and periods the same way
  * Andrew rushes past in-utterance em dashes — real pauses need separate
- * utterances (see speechService JAPANESE_CHAIN_PAUSE_MS).
+ * utterances (see speechService SPEECH_CLAUSE_PAUSE_MS / JAPANESE_CHAIN_PAUSE_MS).
  */
 function findJapaneseClauseBreakEnds(text: string): number[] {
   const ends: number[] = [];
