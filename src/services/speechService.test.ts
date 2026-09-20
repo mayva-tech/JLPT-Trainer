@@ -938,7 +938,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after 。 — next clip must not start early.
     const sentencePause = __speechTestHooks.SPEECH_JA_SENTENCE_PAUSE_MS;
-    expect(sentencePause).toBe(420);
+    expect(sentencePause).toBe(280);
     expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(sentencePause);
     vi.advanceTimersByTime(sentencePause - 50);
     expect(spoken).toHaveLength(1);
@@ -952,7 +952,7 @@ describe("speechService karaoke timeline", () => {
 
     // Next gap is after 、 (では、) — shorter comma breath.
     const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(200);
+    expect(commaPause).toBe(120);
     vi.advanceTimersByTime(commaPause);
     expect(spoken).toHaveLength(3);
     expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
@@ -996,7 +996,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after 、 — next clip must not start early.
     const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(200);
+    expect(commaPause).toBe(120);
     vi.advanceTimersByTime(commaPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);

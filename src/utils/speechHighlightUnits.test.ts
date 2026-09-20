@@ -656,7 +656,7 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       { start: 1, end: 2, text: "彼", kind: "word" }
     );
     // Display clause comma should add a clear breath (~SPEECH_JA_COMMA_PAUSE_MS)
-    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(180);
+    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(100);
     // Particle TTS comma still pauses, but must not dwarf はい、
     expect(haiComma).toBeGreaterThan(particleInserted);
   });

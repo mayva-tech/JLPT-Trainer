@@ -1,16 +1,19 @@
 /**
  * Near-natural TTS pause targets (ms).
  * Differentiated breaths beat a single shared clause gap.
+ *
+ * JA values stay short: neural Nanami already leaves a tiny gap when starting
+ * the next utterance, so large chain pauses stack and sound instructional.
  */
 
 /** English chain: before `(`, `;` / em-dash / tip newlines / sentence splits. */
 export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
 
-/** Japanese sentence breath after `。` / `！` / `？`. */
-export const SPEECH_JA_SENTENCE_PAUSE_MS = 420;
+/** Japanese sentence breath after `。` / `！` / `？` (conversational). */
+export const SPEECH_JA_SENTENCE_PAUSE_MS = 280;
 
-/** Japanese phrase comma breath after `、`. */
-export const SPEECH_JA_COMMA_PAUSE_MS = 200;
+/** Japanese phrase comma breath after `、` (brief phrase break). */
+export const SPEECH_JA_COMMA_PAUSE_MS = 120;
 
 /** Brief JP→EN voice-switch inside one mixed line. */
 export const SPEECH_JP_EN_HANDOFF_MS = 220;

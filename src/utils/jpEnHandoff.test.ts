@@ -11,8 +11,8 @@ import { scheduleAfterLanguageHandoff } from "./jpEnHandoff";
 describe("speechTiming targets", () => {
   it("uses near-natural differentiated pauses", () => {
     expect(SPEECH_EN_CHAIN_PAUSE_MS).toBe(400);
-    expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(420);
-    expect(SPEECH_JA_COMMA_PAUSE_MS).toBe(200);
+    expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(280);
+    expect(SPEECH_JA_COMMA_PAUSE_MS).toBe(120);
     expect(SPEECH_JP_EN_HANDOFF_MS).toBe(220);
     expect(SPEECH_BILINGUAL_FIELD_GAP_MS).toBe(250);
   });
