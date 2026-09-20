@@ -240,6 +240,16 @@ describe("splitEnglishByClauses", () => {
     expect(clauses!.every((c) => !/\.\.\./.test(c.speak))).toBe(true);
   });
 
+  it("splits quest tip title/body newlines so Andrew pauses after the label", () => {
+    const text = "Natural\nClear purpose.";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toBe("Natural");
+    expect(clauses![1]!.speak).toBe("Clear purpose");
+    expect(clauses![0]!.end).toBeGreaterThan(clauses![0]!.start);
+    expect(text.slice(clauses![0]!.start, clauses![0]!.end)).toContain("\n");
+  });
+
   it("splits stacked em dashes into separate utterances", () => {
     const text = "Ah — um — next customer, please";
     const clauses = splitEnglishByClauses(text);

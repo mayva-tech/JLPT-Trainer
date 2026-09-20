@@ -107,9 +107,10 @@ export type EnglishSemicolonClause = EnglishClauseSplit;
 const ENGLISH_CLAUSE_TRAILING_PUNCT = /[;,.!?—–]+$/u;
 
 /**
- * Collect clause ends: every `;`, em/en dash (`—` / `–`), and `.` / `!` / `?`
- * before a new sentence (space + capital / quote). Skips decimals like `1.5`.
- * Dashes consume trailing spaces so the next clause starts on the next word.
+ * Collect clause ends: every `;`, em/en dash (`—` / `–`), newline (quest tip
+ * title/body), and `.` / `!` / `?` before a new sentence (space + capital /
+ * quote). Skips decimals like `1.5`. Dashes/newlines consume trailing spaces
+ * so the next clause starts on the next word.
  */
 function findEnglishClauseBreakEnds(text: string): number[] {
   const ends = new Set<number>();
@@ -121,6 +122,10 @@ function findEnglishClauseBreakEnds(text: string): number[] {
   for (const m of text.matchAll(/[—–]\s*/g)) {
     ends.add(m.index + m[0].length);
   }
+  // Quest tip lines ("✓ Natural\nClear purpose.") — same inter-utterance breath.
+  for (const m of text.matchAll(/\n+/g)) {
+    ends.add(m.index + m[0].length);
+  }
   for (const m of text.matchAll(/(?<!\d)[.!?](?=\s+["'“‘(]*[A-Z0-9])/g)) {
     ends.add(m.index + 1);
   }
@@ -128,9 +133,10 @@ function findEnglishClauseBreakEnds(text: string): number[] {
 }
 
 /**
- * Split long EN on `;`, em/en dash, and sentence endings so each clause is its
- * own utterance. A single fallback karaoke timeline over-dwells on
- * periods/ellipsis and lags Style Trainer warnings / explanations behind Andrew.
+ * Split long EN on `;`, em/en dash, newlines, and sentence endings so each
+ * clause is its own utterance. A single fallback karaoke timeline over-dwells
+ * on periods/ellipsis and lags Style Trainer warnings / explanations behind
+ * Andrew.
  */
 export function splitEnglishByClauses(
   text: string

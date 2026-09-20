@@ -1737,22 +1737,66 @@ function FeedbackPlain({
 }) {
   if (!text) return null;
   const parts = text.split("\n");
+  // Tip title/body may share one EN focus string with embedded newlines; karaoke
+  // each display line against the matching focus line + remapped highlight.
+  const focusLines = enFocus
+    ? enFocus
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+    : [];
   return (
     <>
       {parts.map((part, i) => {
         const trimmed = part.trim();
-        const enActive =
-          enFocus !== null &&
+        let focusLine: string | null = null;
+        let focusOffset = -1;
+        if (enFocus && enHighlight && trimmed) {
+          for (const fl of focusLines) {
+            if (trimmed === fl || trimmed.includes(fl)) {
+              const idx = enFocus.indexOf(fl);
+              if (idx >= 0) {
+                focusLine = fl;
+                focusOffset = idx;
+                break;
+              }
+            }
+          }
+          if (
+            !focusLine &&
+            (trimmed === enFocus || trimmed.includes(enFocus))
+          ) {
+            focusLine = enFocus;
+            focusOffset = 0;
+          }
+        }
+        const hlInLine =
+          focusLine !== null &&
           enHighlight !== null &&
-          trimmed.length > 0 &&
-          (trimmed === enFocus || trimmed.includes(enFocus));
+          focusOffset >= 0 &&
+          enHighlight.start >= focusOffset &&
+          enHighlight.start < focusOffset + focusLine.length;
+        const localHighlight =
+          hlInLine && enHighlight && focusLine
+            ? {
+                ...enHighlight,
+                start: Math.max(0, enHighlight.start - focusOffset),
+                end: Math.min(
+                  focusLine.length,
+                  Math.max(
+                    enHighlight.start - focusOffset + 1,
+                    enHighlight.end - focusOffset
+                  )
+                ),
+              }
+            : null;
         return (
           <span key={i}>
-            {enActive ? (
+            {localHighlight && focusLine ? (
               <HighlightedEnglish
-                text={enFocus!}
+                text={focusLine}
                 className="ppq-feedback-en"
-                highlight={enHighlight}
+                highlight={localHighlight}
               />
             ) : (
               part
