@@ -124,7 +124,7 @@ type KaraokeTimeline = {
  */
 const ENGLISH_CHAIN_PAUSE_MS = 400;
 /** Nanami breath between Japanese clauses split on 、。！？ */
-const JAPANESE_CHAIN_PAUSE_MS = 650;
+const JAPANESE_CHAIN_PAUSE_MS = 400;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -1070,6 +1070,7 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
   ENGLISH_CHAIN_PAUSE_MS,
+  JAPANESE_CHAIN_PAUSE_MS,
 };
 
 export {
