@@ -48,9 +48,20 @@ import {
   type ListeningAssistLevel,
 } from "../utils/nativeListening";
 import { resolveNodeSpeechRate } from "../utils/nodeSpeechRate";
+import {
+  canRetryStep,
+  canStepBack,
+  cloneConversationNavCheckpoint,
+  emptyConversationNavCheckpoint,
+  pushHistoryClearingForward,
+  stepBackNav,
+  stepForwardNav,
+  type ConversationNavCheckpoint,
+} from "../utils/conversationNav";
 import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
 import { NpcPortrait } from "./NpcPortrait";
+import { QuestStepNav } from "./QuestStepNav";
 import type { QuestRunOutcome } from "./QuestRunner";
 
 type Props = {
@@ -181,11 +192,31 @@ export function ConversationQuestRunner({
   const [karaokeSurface, setKaraokeSurface] = useState<KaraokeSurface | null>(
     null
   );
+  /** Pre-answer checkpoints for Back / Try Again / Forward. */
+  const [navHistory, setNavHistory] = useState<ConversationNavCheckpoint[]>(
+    []
+  );
+  const [navForward, setNavForward] = useState<ConversationNavCheckpoint[]>(
+    []
+  );
+  const [arrivalCheckpoint, setArrivalCheckpoint] =
+    useState<ConversationNavCheckpoint | null>(null);
 
   // Each quest page opens with Auto Voice OFF (user can turn it on).
   useEffect(() => {
     titleSpokenRef.current = false;
     setKaraokeSurface(null);
+    setNavHistory([]);
+    setNavForward([]);
+    setArrivalCheckpoint(
+      conversation
+        ? emptyConversationNavCheckpoint(
+            conversation.startNodeId,
+            quest?.startingConfidence ?? 5,
+            defaultCommunicationStart()
+          )
+        : null
+    );
     if (speech.autoVoice) speech.setAutoVoice(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questId]);
@@ -264,6 +295,68 @@ export function ConversationQuestRunner({
       setFactLabels((prev) => ({ ...prev, ...node.factLabels }));
     }
   }, [node?.id]);
+
+  // Keep a pre-answer arrival checkpoint while the step is unanswered
+  // (re-runs after listen/fact counters settle on the same node).
+  useEffect(() => {
+    if (!node || revealed) return;
+    setArrivalCheckpoint(
+      cloneConversationNavCheckpoint({
+        nodeId: node.id,
+        confidence,
+        communication,
+        naturalStreak,
+        maxNaturalStreak,
+        correctCount,
+        answeredCount,
+        mistakes,
+        conceptsLearned,
+        needsReview,
+        vocabDiscovered,
+        monsters,
+        relationshipDeltas,
+        qualityCounts,
+        socialFitQualities,
+        professionalFitQualities,
+        reportingTags,
+        repairedConversation,
+        repairCounts,
+        facts,
+        factLabels,
+        understoodFacts: [...understoodFacts],
+        firstListenCorrect,
+        firstListenTotal,
+        firstListenWithReplayCorrect,
+        listenCompromised,
+        highestAssistLevel,
+        reductionCorrect,
+        reductionTotal,
+        inferenceCorrect,
+        inferenceTotal,
+        helpUses,
+        usedEnglishAssist,
+        showHelp,
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    node?.id,
+    revealed,
+    confidence,
+    communication,
+    naturalStreak,
+    maxNaturalStreak,
+    correctCount,
+    answeredCount,
+    firstListenTotal,
+    reductionTotal,
+    inferenceTotal,
+    facts,
+    helpUses,
+    showHelp,
+    listenCompromised,
+    repairedConversation,
+  ]);
 
   // Auto-play: title JP→EN (once) → subject JP→EN → choices JP→EN → help.
   // After an answer is revealed, skip — tip/feedback TTS owns that beat.
@@ -617,6 +710,65 @@ export function ConversationQuestRunner({
     onFinished(outcome);
   }
 
+  function restoreCheckpoint(checkpoint: ConversationNavCheckpoint) {
+    setConfidence(checkpoint.confidence);
+    setCommunication(checkpoint.communication);
+    setNaturalStreak(checkpoint.naturalStreak);
+    setMaxNaturalStreak(checkpoint.maxNaturalStreak);
+    setCorrectCount(checkpoint.correctCount);
+    setAnsweredCount(checkpoint.answeredCount);
+    setMistakes(checkpoint.mistakes.map((m) => ({ ...m })));
+    setConceptsLearned([...checkpoint.conceptsLearned]);
+    setNeedsReview([...checkpoint.needsReview]);
+    setVocabDiscovered([...checkpoint.vocabDiscovered]);
+    setMonsters([...checkpoint.monsters]);
+    setRelationshipDeltas(
+      checkpoint.relationshipDeltas.map((r) => ({ ...r }))
+    );
+    setQualityCounts({ ...checkpoint.qualityCounts });
+    setSocialFitQualities([...checkpoint.socialFitQualities]);
+    setProfessionalFitQualities([...checkpoint.professionalFitQualities]);
+    setReportingTags([...checkpoint.reportingTags]);
+    setRepairedConversation(checkpoint.repairedConversation);
+    setRepairCounts({ ...checkpoint.repairCounts });
+    setFacts({ ...checkpoint.facts });
+    setFactLabels({ ...checkpoint.factLabels });
+    setUnderstoodFacts(new Set(checkpoint.understoodFacts));
+    setFirstListenCorrect(checkpoint.firstListenCorrect);
+    setFirstListenTotal(checkpoint.firstListenTotal);
+    setFirstListenWithReplayCorrect(checkpoint.firstListenWithReplayCorrect);
+    setListenCompromised(checkpoint.listenCompromised);
+    setHighestAssistLevel(checkpoint.highestAssistLevel);
+    setReductionCorrect(checkpoint.reductionCorrect);
+    setReductionTotal(checkpoint.reductionTotal);
+    setInferenceCorrect(checkpoint.inferenceCorrect);
+    setInferenceTotal(checkpoint.inferenceTotal);
+    setHelpUses(checkpoint.helpUses);
+    setUsedEnglishAssist(checkpoint.usedEnglishAssist);
+    setShowHelp(checkpoint.showHelp);
+  }
+
+  function clearStepRevealUi() {
+    setSelectedId(null);
+    setRevealed(false);
+    setFeedback(null);
+    setQualityLabel(null);
+    setContextHint(null);
+    setPendingNextId(null);
+    setRepairFlash(null);
+    setFeedbackJaFocus(null);
+    setFeedbackEnFocus(null);
+    setChoiceHighlightId(null);
+  }
+
+  function applyCheckpointToStep(checkpoint: ConversationNavCheckpoint) {
+    restoreCheckpoint(checkpoint);
+    setNodeId(checkpoint.nodeId);
+    clearStepRevealUi();
+    setArrivalCheckpoint(cloneConversationNavCheckpoint(checkpoint));
+    setNodePlayKey((k) => k + 1);
+  }
+
   function goToNode(nextId: string) {
     let targetId = nextId;
     for (let guard = 0; guard < 8; guard += 1) {
@@ -635,19 +787,48 @@ export function ConversationQuestRunner({
       finish(false);
       return;
     }
+    if (arrivalCheckpoint) {
+      const pushed = pushHistoryClearingForward(
+        navHistory,
+        arrivalCheckpoint
+      );
+      setNavHistory(pushed.history);
+      setNavForward(pushed.forward);
+    }
     setNodeId(targetId);
-    setSelectedId(null);
-    setRevealed(false);
-    setFeedback(null);
-    setQualityLabel(null);
-    setContextHint(null);
-    setPendingNextId(null);
+    clearStepRevealUi();
     setShowHelp(false);
-    setRepairFlash(null);
-    setFeedbackJaFocus(null);
-    setFeedbackEnFocus(null);
     setListenCompromised(false);
     setNodePlayKey((k) => k + 1);
+  }
+
+  function onRetryStep() {
+    if (!arrivalCheckpoint || !canRetryStep(revealed, isInteractive)) return;
+    speech.stop();
+    applyCheckpointToStep(arrivalCheckpoint);
+  }
+
+  function onNavBack() {
+    if (!arrivalCheckpoint || !canStepBack(navHistory.length)) return;
+    const moved = stepBackNav(navHistory, navForward, arrivalCheckpoint);
+    if (!moved) return;
+    speech.stop();
+    setNavHistory(moved.history);
+    setNavForward(moved.forward);
+    applyCheckpointToStep(moved.current);
+  }
+
+  function onNavForward() {
+    if (navForward.length > 0 && arrivalCheckpoint) {
+      const moved = stepForwardNav(navHistory, navForward, arrivalCheckpoint);
+      if (!moved) return;
+      speech.stop();
+      setNavHistory(moved.history);
+      setNavForward(moved.forward);
+      applyCheckpointToStep(moved.current);
+      return;
+    }
+    onContinue();
   }
 
   function onSelectChoice(choiceId: string) {
@@ -992,13 +1173,16 @@ export function ConversationQuestRunner({
       ? "Finish"
       : node.endState === "failure"
         ? "Leave"
-        : !isInteractive
-          ? node.id === "incoming" || node.id === "arrive"
-            ? "Begin"
-            : "Continue"
-          : revealed
-            ? "Continue"
-            : null;
+        : !isInteractive &&
+            (node.id === "incoming" || node.id === "arrive")
+          ? "Begin"
+          : "Forward";
+
+  const canForward =
+    navForward.length > 0 ||
+    Boolean(node.endState) ||
+    !isInteractive ||
+    revealed;
 
   const callerKnown =
     isPhone && (Boolean(npc) || Boolean(facts.caller))
@@ -1367,17 +1551,15 @@ export function ConversationQuestRunner({
           </div>
         ) : null}
 
-        {continueLabel ? (
-          <div className="ppq-actions" style={{ marginTop: 12 }}>
-            <button
-              type="button"
-              className="ppq-btn ppq-btn--primary"
-              onClick={onContinue}
-            >
-              {continueLabel}
-            </button>
-          </div>
-        ) : null}
+        <QuestStepNav
+          canBack={canStepBack(navHistory.length)}
+          canRetry={canRetryStep(revealed, isInteractive)}
+          canForward={canForward}
+          forwardLabel={continueLabel}
+          onBack={onNavBack}
+          onRetry={onRetryStep}
+          onForward={onNavForward}
+        />
 
         {naturalStreak > 0 ? (
           <p style={{ fontSize: 12, color: "var(--ppq-muted)", marginTop: 8 }}>

@@ -572,6 +572,29 @@
   gap: 8px;
 }
 
+.ppq-step-nav {
+  margin-top: 12px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.ppq-step-nav .ppq-btn {
+  flex: 1 1 auto;
+  min-width: 7.5rem;
+  justify-content: center;
+}
+
+@media (max-width: 520px) {
+  .ppq-step-nav {
+    flex-direction: column;
+  }
+
+  .ppq-step-nav .ppq-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 .ppq-panel {
   background: var(--ppq-card);
   border: 1px solid var(--ppq-line);
