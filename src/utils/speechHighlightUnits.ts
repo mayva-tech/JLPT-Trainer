@@ -12,10 +12,10 @@ import {
 } from "./japaneseSpeakText";
 import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
 import {
+  SPEECH_COMMA_PAUSE_MS,
   SPEECH_EN_CHAIN_PAUSE_MS,
   SPEECH_EN_COLON_PAUSE_MS,
   SPEECH_EN_SEMICOLON_PAUSE_MS,
-  SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
 } from "../config/speechTiming";
 
@@ -1142,26 +1142,25 @@ const EN_WEIGHT_MS = 315;
  * × EN_WEIGHT_MS ≈ SPEECH_EN_CHAIN_PAUSE_MS at rate 1.
  */
 const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
-/** English semicolon breath — half the general EN chain. */
+/** English semicolon breath — shorter than the general EN chain. */
 const EN_SEMICOLON_PAUSE = SPEECH_EN_SEMICOLON_PAUSE_MS / EN_WEIGHT_MS;
+/** Shared EN `,` / JA `、` comma breath (TTS + karaoke). */
+const EN_COMMA_PAUSE = SPEECH_COMMA_PAUSE_MS / EN_WEIGHT_MS;
 /** Karaoke weight for Japanese sentence punct (。！？). */
 const JA_SENTENCE_PAUSE =
   Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 120) / JA_MORA_MS;
 /**
  * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
- * Mid-string commas are split into real utterances in speechService; this
- * weight covers single-utterance fallback / karaoke hold. TTS chain timeout
- * may be 0ms (utterance boundary only) — karaoke still needs a brief dwell.
+ * Same ms as EN `,` via SPEECH_COMMA_PAUSE_MS. Mid-string commas may also be
+ * split into real utterances in speechService with that same pause.
  * TTS-inserted particle commas (わ、) still use the small break below when
  * only spokenText has `、`.
  */
-const JA_COMMA_PAUSE = Math.max(SPEECH_JA_COMMA_PAUSE_MS, 100) / JA_MORA_MS;
+const JA_COMMA_PAUSE = SPEECH_COMMA_PAUSE_MS / JA_MORA_MS;
 /** Light JA punct (`;` / `:` fallback) — between comma and sentence. */
 const JA_PUNCT_PAUSE = JA_COMMA_PAUSE;
 /** English ellipsis / em-dash / tip-newline / slash breath. */
 const EN_ELLIPSIS_PAUSE = EN_PUNCT_PAUSE;
-/** English comma breath (example sentences). */
-const EN_COMMA_PAUSE = EN_PUNCT_PAUSE;
 /** English sentence-final . ! ? breath. */
 const EN_SENTENCE_PAUSE = EN_PUNCT_PAUSE;
 /**

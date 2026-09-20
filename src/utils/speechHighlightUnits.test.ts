@@ -229,8 +229,9 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       },
       "en"
     );
-    // Clause breath targets ~SPEECH_EN_CHAIN_PAUSE_MS (400ms) at rate 1.
-    expect(withComma - plain).toBeGreaterThanOrEqual(350);
+    // Comma breath targets ~SPEECH_COMMA_PAUSE_MS (120ms) at rate 1.
+    expect(withComma - plain).toBeGreaterThanOrEqual(90);
+    expect(withComma - plain).toBeLessThan(180);
   });
 
   it.each(["~", "〜", "～"])(
@@ -659,8 +660,9 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       "ja",
       { start: 1, end: 2, text: "彼", kind: "word" }
     );
-    // Display clause comma keeps a karaoke floor even when TTS chain is 0ms.
-    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(80);
+    // Display clause comma matches SPEECH_COMMA_PAUSE_MS (~120ms) karaoke dwell.
+    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(90);
+    expect(haiComma - haiPlain).toBeLessThan(180);
     // Particle TTS comma still pauses, but must not dwarf はい、
     expect(haiComma).toBeGreaterThan(particleInserted);
   });
