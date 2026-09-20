@@ -1127,11 +1127,11 @@ const WAVE_DASH_PAUSE = 0.9;
 const SLASH_PAUSE = 0.85;
 /**
  * English ellipsis / em-dash / tip-newline breath — match speechService
- * ENGLISH_CHAIN_PAUSE_MS (~400ms) so karaoke does not race past "75% — …"
+ * ENGLISH_CHAIN_PAUSE_MS (~300ms) so karaoke does not race past "75% — …"
  * while Andrew pauses. Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN
  * / rate divisor.
  */
-const EN_ELLIPSIS_PAUSE = 1.27;
+const EN_ELLIPSIS_PAUSE = 0.95;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
 const EN_WEIGHT_MS = 315;
 /**

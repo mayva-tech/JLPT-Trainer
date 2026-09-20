@@ -845,7 +845,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause (mdash) — next clip must not start early.
     const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(300);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -887,7 +887,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after the tip label line (shared EN chain pause).
     const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(300);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -936,7 +936,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after 。 — next clip must not start early.
     const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(300);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -990,7 +990,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after 、 — next clip must not start early.
     const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(300);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);

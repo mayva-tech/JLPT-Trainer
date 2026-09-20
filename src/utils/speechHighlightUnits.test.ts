@@ -165,8 +165,8 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 3, text: "75%", kind: "word", spokenText: "75%" },
       "en"
     );
-    // Ellipsis breath alone should add hundreds of ms (chain pause ~400ms).
-    expect(withPause).toBeGreaterThan(plainPct + 300);
+    // Ellipsis breath alone should add hundreds of ms (chain pause ~300ms).
+    expect(withPause).toBeGreaterThan(plainPct + 220);
   });
 
   it("keeps embedded 私 on the karaoke timeline as watashi", () => {

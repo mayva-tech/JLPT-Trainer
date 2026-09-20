@@ -122,9 +122,9 @@ type KaraokeTimeline = {
  * tip newlines / sentence ends), or JA sentences — neural voices ignore
  * in-utterance periods/ellipsis pauses.
  */
-const ENGLISH_CHAIN_PAUSE_MS = 400;
+const ENGLISH_CHAIN_PAUSE_MS = 300;
 /** Nanami breath between Japanese clauses split on 、。！？ */
-const JAPANESE_CHAIN_PAUSE_MS = 400;
+const JAPANESE_CHAIN_PAUSE_MS = 300;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
