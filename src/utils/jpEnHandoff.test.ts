@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   SPEECH_BILINGUAL_FIELD_GAP_MS,
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
   SPEECH_JP_EN_HANDOFF_MS,
@@ -11,6 +12,7 @@ import { scheduleAfterLanguageHandoff } from "./jpEnHandoff";
 describe("speechTiming targets", () => {
   it("uses near-natural differentiated pauses", () => {
     expect(SPEECH_EN_CHAIN_PAUSE_MS).toBe(400);
+    expect(SPEECH_EN_SEMICOLON_PAUSE_MS).toBe(200);
     expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(40);
     expect(SPEECH_JA_COMMA_PAUSE_MS).toBe(0);
     expect(SPEECH_JP_EN_HANDOFF_MS).toBe(220);

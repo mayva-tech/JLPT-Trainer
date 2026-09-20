@@ -788,6 +788,28 @@ describe("speechService karaoke timeline", () => {
     expect(cancelled).toBe(true);
   });
 
+  it("uses a shorter pause after semicolon than the general EN chain", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "arising from; stemming from";
+    speechService.speakEnglish(text, {});
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text.toLowerCase()).toMatch(/arising from$/i);
+    spoken[0]!.onstart?.();
+    spoken[0]!.onend?.();
+    expect(spoken).toHaveLength(1);
+
+    const semiPause = __speechTestHooks.SPEECH_EN_SEMICOLON_PAUSE_MS;
+    expect(semiPause).toBe(200);
+    expect(semiPause).toBe(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS / 2);
+    vi.advanceTimersByTime(semiPause - 20);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(40);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text.toLowerCase()).toMatch(/stemming from/i);
+  });
+
   it("splits soft; warning into two utterances and highlights through 私", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");

@@ -13,6 +13,7 @@ import {
 import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
 import {
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
 } from "../config/speechTiming";
@@ -1135,6 +1136,8 @@ const EN_WEIGHT_MS = 315;
  * × EN_WEIGHT_MS ≈ SPEECH_EN_CHAIN_PAUSE_MS at rate 1.
  */
 const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
+/** English semicolon breath — half the general EN chain. */
+const EN_SEMICOLON_PAUSE = SPEECH_EN_SEMICOLON_PAUSE_MS / EN_WEIGHT_MS;
 /** Karaoke weight for Japanese sentence punct (。！？). */
 const JA_SENTENCE_PAUSE =
   Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 120) / JA_MORA_MS;
@@ -1262,10 +1265,17 @@ export function estimateUnitDurationMs(
   }
   // "/" / semicolon / mdash ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
-    punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
+    if (lang === "en" && /[;；]/.test(spokenForPunct)) {
+      // Semicolon rewritten to "..." — use the shorter semicolon breath.
+      punctPause += EN_SEMICOLON_PAUSE;
+    } else {
+      punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
+    }
   }
   // Other phrase separators (only when not already an ellipsis pause)
-  if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
+  if (/[;；]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
+    punctPause += lang === "en" ? EN_SEMICOLON_PAUSE : JA_PUNCT_PAUSE;
+  } else if (/[:：]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
     punctPause += lang === "en" ? EN_CLAUSE_PAUSE : JA_PUNCT_PAUSE;
   }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {

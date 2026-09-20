@@ -126,6 +126,10 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "en"
     );
     expect(withSemi).toBeGreaterThan(plainSoft);
+    // Semicolon breath targets ~SPEECH_EN_SEMICOLON_PAUSE_MS (200ms), not the
+    // full 400ms EN chain used for em dash / tip newlines.
+    expect(withSemi - plainSoft).toBeGreaterThanOrEqual(150);
+    expect(withSemi - plainSoft).toBeLessThan(320);
   });
 
   it("pauses after em dash on the karaoke timeline", () => {

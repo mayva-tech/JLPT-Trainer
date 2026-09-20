@@ -35,6 +35,7 @@ import {
 } from "./ttsVoices";
 import {
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
 } from "../config/speechTiming";
@@ -853,7 +854,14 @@ function japanesePauseAfterSurface(surface: string): number {
 type EnglishSpeakSegment = {
   speak: string;
   steps: HighlightUnit[] | null;
+  /** Silence before the next EN clause (0 on the last segment). */
+  pauseAfterMs: number;
 };
+
+function englishPauseAfterSurface(surface: string): number {
+  if (/;\s*$/u.test(surface)) return SPEECH_EN_SEMICOLON_PAUSE_MS;
+  return SPEECH_EN_CHAIN_PAUSE_MS;
+}
 
 /**
  * Split JA on 、。！？ so Nanami takes a real breath between clauses and
@@ -983,10 +991,12 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
       {
         speak: buildEnglishSpeakText(aside.head),
         steps: headSteps.length > 0 ? headSteps : null,
+        pauseAfterMs: SPEECH_EN_CHAIN_PAUSE_MS,
       },
       {
         speak: buildEnglishSpeakText(aside.aside),
         steps: asideSteps.length > 0 ? asideSteps : null,
+        pauseAfterMs: 0,
       },
     ];
   }
@@ -995,7 +1005,7 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
   if (!clauses) return [];
 
   const steps = buildEnglishSpokenKaraokeSteps(text);
-  return clauses.map((clause) => {
+  return clauses.map((clause, i) => {
     const clauseSlice = text.slice(clause.start, clause.end);
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
@@ -1026,9 +1036,11 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
       last.spokenText = `${base} ...`;
       last.end = clause.end;
     }
+    const isLast = i >= clauses.length - 1;
     return {
       speak: clause.speak,
       steps: clauseSteps.length > 0 ? clauseSteps : null,
+      pauseAfterMs: isLast ? 0 : englishPauseAfterSurface(clauseSlice),
     };
   });
 }
@@ -1074,6 +1086,7 @@ function speakEnglishSegments(
             return;
           }
           const pauseGen = playbackGeneration;
+          const pauseMs = seg.pauseAfterMs;
           clearAsidePauseTimer();
           pendingAsideCallbacks = callbacks ?? null;
           asidePauseTimer = window.setTimeout(() => {
@@ -1081,7 +1094,7 @@ function speakEnglishSegments(
             pendingAsideCallbacks = null;
             if (playbackGeneration !== pauseGen) return;
             playNext();
-          }, ENGLISH_CHAIN_PAUSE_MS);
+          }, pauseMs);
         },
       },
       true,
@@ -1104,6 +1117,7 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE_EN,
   SPEECH_CLAUSE_PAUSE_MS: SPEECH_EN_CHAIN_PAUSE_MS,
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   ENGLISH_CHAIN_PAUSE_MS,
@@ -1114,6 +1128,7 @@ export const __speechTestHooks = {
 export {
   SPEECH_CLAUSE_PAUSE_MS,
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JP_EN_HANDOFF_MS,

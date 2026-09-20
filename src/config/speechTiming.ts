@@ -7,8 +7,14 @@
  * sound slow. Keep JA timeouts near zero; EN still needs a real breath.
  */
 
-/** English chain: before `(`, `;` / em-dash / tip newlines / sentence splits. */
+/** English chain: before `(`, em-dash / tip newlines / sentence splits. */
 export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
+
+/**
+ * English semicolon breath (`arising from; stemming from`).
+ * Half of SPEECH_EN_CHAIN_PAUSE_MS — gloss lists need a quicker beat.
+ */
+export const SPEECH_EN_SEMICOLON_PAUSE_MS = 200;
 
 /**
  * Japanese sentence breath after `。` / `！` / `？`.
