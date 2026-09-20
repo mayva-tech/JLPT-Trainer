@@ -41,6 +41,8 @@ import {
   SPEECH_JA_SENTENCE_PAUSE_MS,
 } from "../config/speechTiming";
 
+import { emitSpeechEvent } from "./speechBus";
+
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
 export type SpeechHighlight = {
@@ -505,6 +507,36 @@ function runUtterance(
     lastBoundaryEnd = h.end;
     debug("highlight", playbackId, h);
     callbacks?.onBoundary?.(h);
+    // Announce the unit globally so shared UI (the talking heads) can follow
+    // the voice without every caller threading callbacks down to it. Uses the
+    // same duration estimate that drives the karaoke timeline, so the mouth
+    // inherits every timing fix made there.
+    const unitIndex = units.findIndex(
+      (u) => u.start === h.start && u.end === h.end
+    );
+    const spokenUnit = unitIndex >= 0 ? units[unitIndex] : null;
+    if (spokenUnit) {
+      const unitDurationMs =
+        (estimateUnitDurationMs(
+          spokenUnit,
+          unitLang,
+          units[unitIndex + 1] ?? null
+        ) /
+          rateDivisor) *
+        timingScale;
+      // Decorative listeners schedule timers off this value; a non-finite one
+      // would fire them all immediately and make the mouth chatter. Audio is
+      // unaffected either way, so drop the announcement rather than risk it.
+      if (Number.isFinite(unitDurationMs) && unitDurationMs > 0) {
+        emitSpeechEvent({
+          type: "unit",
+          lang: unitLang,
+          text: spokenUnit.text,
+          spokenText: spokenUnit.spokenText ?? null,
+          durationMs: unitDurationMs,
+        });
+      }
+    }
   };
 
   // ── Karaoke timeline ────────────────────────────────────────────────
@@ -641,6 +673,7 @@ function runUtterance(
     if (!alive()) return;
     utteranceStarted = true;
     debug("onstart", playbackId);
+    emitSpeechEvent({ type: "start", lang: unitLang, rate });
     callbacks?.onStart?.();
     startTimeline();
   };
@@ -719,6 +752,7 @@ function runUtterance(
       if (kind === "error") {
         callbacks?.onError?.(error);
       }
+      emitSpeechEvent({ type: "end" });
       callbacks?.onEnd?.();
     }
   };
@@ -767,6 +801,8 @@ export const speechService = {
     clearPlaybackHandles();
     settleActiveAsCancelled();
     debug("stop", playbackGeneration);
+    // Close the mouth even when nothing was mid-utterance to settle.
+    emitSpeechEvent({ type: "end" });
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
   },

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { speechService } from "./services/speechService";
+import TalkingHead from "./components/TalkingHead/TalkingHead";
 import type { OpenTrainer, TrainerView } from "./navigation";
 
 /**
@@ -176,6 +177,10 @@ export default function App() {
           ) : null}
         </Suspense>
       </div>
+
+      {/* Mounted once at the shell: it listens to the global speech bus, so it
+          animates for every view without each page wiring it up. */}
+      <TalkingHead />
     </div>
   );
 }

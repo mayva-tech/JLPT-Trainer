@@ -1,0 +1,88 @@
+/* Talking head overlay. Scoped under .th- so it cannot reach the trainers. */
+
+.th-root {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 40;
+  width: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  animation: th-enter 180ms ease-out;
+}
+
+.th-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+}
+
+/* The mouth is redrawn every frame; a short transition smooths the steps
+   between shapes without lagging behind the voice. Keep it well under the
+   ~55ms minimum frame, or shapes blur into each other. */
+.th-mouth-shape {
+  transition: rx 40ms linear, ry 40ms linear;
+}
+
+/* A faint breathing motion while speaking, so the head does not look like a
+   static image with a moving mouth pasted on. */
+.th-speaking {
+  animation: th-breathe 2.4s ease-in-out infinite;
+}
+
+.th-name {
+  font-family: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes th-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes th-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+/* Motion is decoration here — the mouth still changes shape, it just stops
+   drifting and sliding. */
+@media (prefers-reduced-motion: reduce) {
+  .th-root {
+    animation: none;
+  }
+
+  .th-speaking {
+    animation: none;
+  }
+
+  .th-mouth-shape {
+    transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .th-root {
+    width: 68px;
+    right: 8px;
+    bottom: 8px;
+  }
+}
