@@ -1136,14 +1136,17 @@ const EN_WEIGHT_MS = 315;
  */
 const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
 /** Karaoke weight for Japanese sentence punct (。！？). */
-const JA_SENTENCE_PAUSE = SPEECH_JA_SENTENCE_PAUSE_MS / JA_MORA_MS;
+const JA_SENTENCE_PAUSE =
+  Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 120) / JA_MORA_MS;
 /**
  * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
  * Mid-string commas are split into real utterances in speechService; this
- * weight covers single-utterance fallback. TTS-inserted particle commas
- * (わ、) still use the small break below when only spokenText has `、`.
+ * weight covers single-utterance fallback / karaoke hold. TTS chain timeout
+ * may be 0ms (utterance boundary only) — karaoke still needs a brief dwell.
+ * TTS-inserted particle commas (わ、) still use the small break below when
+ * only spokenText has `、`.
  */
-const JA_COMMA_PAUSE = SPEECH_JA_COMMA_PAUSE_MS / JA_MORA_MS;
+const JA_COMMA_PAUSE = Math.max(SPEECH_JA_COMMA_PAUSE_MS, 100) / JA_MORA_MS;
 /** Light JA punct (`;` / `:` fallback) — between comma and sentence. */
 const JA_PUNCT_PAUSE = JA_COMMA_PAUSE;
 /** English ellipsis / em-dash / tip-newline / slash breath. */

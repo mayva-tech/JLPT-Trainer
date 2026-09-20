@@ -922,7 +922,7 @@ function speakJapaneseSegments(
             return;
           }
           const pauseGen = playbackGeneration;
-          const pauseMs = seg.pauseAfterMs || JAPANESE_CHAIN_PAUSE_MS;
+          const pauseMs = seg.pauseAfterMs;
           clearAsidePauseTimer();
           pendingAsideCallbacks = callbacks ?? null;
           asidePauseTimer = window.setTimeout(() => {

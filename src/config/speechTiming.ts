@@ -2,18 +2,25 @@
  * Near-natural TTS pause targets (ms).
  * Differentiated breaths beat a single shared clause gap.
  *
- * JA values stay short: neural Nanami already leaves a tiny gap when starting
- * the next utterance, so large chain pauses stack and sound instructional.
+ * Japanese clauses are separate utterances. Chromium already inserts a short
+ * gap when starting the next speak(), so large JA chain pauses stack and
+ * sound slow. Keep JA timeouts near zero; EN still needs a real breath.
  */
 
 /** English chain: before `(`, `;` / em-dash / tip newlines / sentence splits. */
 export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
 
-/** Japanese sentence breath after `。` / `！` / `？` (conversational). */
-export const SPEECH_JA_SENTENCE_PAUSE_MS = 280;
+/**
+ * Japanese sentence breath after `。` / `！` / `？`.
+ * Near-zero: the next-utterance handoff is the audible pause.
+ */
+export const SPEECH_JA_SENTENCE_PAUSE_MS = 40;
 
-/** Japanese phrase comma breath after `、` (brief phrase break). */
-export const SPEECH_JA_COMMA_PAUSE_MS = 120;
+/**
+ * Japanese phrase comma breath after `、`.
+ * Zero: rely on utterance boundary only (no extra setTimeout).
+ */
+export const SPEECH_JA_COMMA_PAUSE_MS = 0;
 
 /** Brief JP→EN voice-switch inside one mixed line. */
 export const SPEECH_JP_EN_HANDOFF_MS = 220;
