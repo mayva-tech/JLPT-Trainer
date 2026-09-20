@@ -26,7 +26,7 @@ export type SpeechBusEvent =
       text: string;
       /** Kana reading when the karaoke path has one — needed for JA vowels. */
       spokenText: string | null;
-      /** Estimated voiced length of this unit in ms (rate-scaled). Excludes karaoke pause dwell. */
+      /** Estimated spoken length of this unit in ms, already rate-scaled — same value that drives karaoke. */
       durationMs: number;
     }
   | { type: "end" };

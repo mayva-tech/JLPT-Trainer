@@ -41,6 +41,13 @@
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
+/* Head-only tilt — pivot at the collar so shoulders/kimono stay planted. */
+.th-head-tilt {
+  transform-box: view-box;
+  transform-origin: 50px 82px;
+  transition: transform 520ms ease-in-out;
+}
+
 /* The mouth is redrawn every frame; a short transition smooths the steps
    between shapes without lagging behind the voice. Keep it well under the
    ~55ms minimum frame, or shapes blur into each other. */
@@ -57,14 +64,6 @@
    static image with a moving mouth pasted on. */
 .th-speaking {
   animation: th-breathe 2.4s ease-in-out infinite;
-}
-
-.th-name {
-  font-family: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  color: rgba(255, 255, 255, 0.75);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 @keyframes th-enter {
@@ -97,6 +96,10 @@
 
   .th-speaking {
     animation: none;
+  }
+
+  .th-head-tilt {
+    transition: none;
   }
 
   .th-mouth-shape {

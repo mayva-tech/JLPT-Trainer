@@ -13,8 +13,9 @@ export interface SpeechFace {
 /**
  * Tracks the current speaker and mouth shape from the global speech bus.
  *
- * Each unit arrives with its estimated voiced duration, and its mouth shapes
- * are scheduled across that window. Timers are cleared on every new unit, so a
+ * Each unit arrives with its karaoke duration, and its mouth shapes are
+ * scheduled across that window — the same estimate Andrew and Nanami share
+ * with the highlight timeline. Timers are cleared on every new unit, so a
  * unit that arrives early (a native boundary overtaking the estimate) cancels
  * the previous unit's remaining frames instead of letting two units animate
  * over each other.
@@ -85,8 +86,8 @@ export function useSpeechFace(): SpeechFace {
         }, frame.atMs);
         timers.current.push(id);
       }
-      // Close the mouth at the end of the voiced span so particle/punct karaoke
-      // dwell is held with a closed mouth, not leftover shapes.
+      // Close the mouth at the end of the unit so a gap before the next unit
+      // is not held open on the final shape.
       const last = frames[frames.length - 1]!;
       const closeId = window.setTimeout(() => {
         if (generation.current !== gen) return;

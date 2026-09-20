@@ -17,7 +17,6 @@ import {
   buildJapaneseSpokenKaraokeSteps,
   deriveSpacedReadingForUnits,
   estimateUnitDurationMs,
-  estimateUnitSpeechDurationMs,
   findUnitForBoundary,
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
@@ -515,9 +514,9 @@ function runUtterance(
     debug("highlight", playbackId, h);
     callbacks?.onBoundary?.(h);
     // Announce the unit globally so shared UI (the talking heads) can follow
-    // the voice without every caller threading callbacks down to it. Mouth
-    // duration is the voiced span only — karaoke still dwells on particle /
-    // punct holds via estimateUnitDurationMs.
+    // the voice without every caller threading callbacks down to it. Same
+    // duration as the karaoke timeline (EN and JA) so Nanami/Andrew mouths
+    // stay locked to the highlight and the voice.
     if (opts?.announceMouth === false) return;
     const unitIndex = units.findIndex(
       (u) => u.start === h.start && u.end === h.end
@@ -525,15 +524,17 @@ function runUtterance(
     const spokenUnit = unitIndex >= 0 ? units[unitIndex] : null;
     if (spokenUnit) {
       const unitDurationMs =
-        (estimateUnitSpeechDurationMs(spokenUnit, unitLang) /
+        (estimateUnitDurationMs(
+          spokenUnit,
+          unitLang,
+          units[unitIndex + 1] ?? null
+        ) /
           rateDivisor) *
         timingScale;
       // Decorative listeners schedule timers off this value; a non-finite one
       // would fire them all immediately and make the mouth chatter. Audio is
       // unaffected either way, so drop the announcement rather than risk it.
-      if (!Number.isFinite(unitDurationMs) || unitDurationMs < 0) return;
-      // durationMs === 0 (punct / pause-only hold): still announce so the mouth
-      // closes for the karaoke dwell instead of chewing leftover shapes.
+      if (!Number.isFinite(unitDurationMs) || unitDurationMs <= 0) return;
       emitSpeechEvent({
         type: "unit",
         lang: unitLang,
