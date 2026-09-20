@@ -10,7 +10,7 @@
  */
 
 /** English chain: before `(`, em-dash / tip newlines / sentence splits. */
-export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
+export const SPEECH_EN_CHAIN_PAUSE_MS = 200;
 
 /**
  * English semicolon breath (`arising from; stemming from`).
@@ -26,19 +26,37 @@ export const SPEECH_EN_SEMICOLON_PAUSE_MS = 100;
 export const SPEECH_EN_COLON_PAUSE_MS = 250;
 
 /**
- * Shared comma breath for EN `,` and JA `、`.
- * Used by JA utterance chains and EN/JA karaoke dwells in all speech paths.
+ * English comma breath. EN needs a real breath at `,` — it is not split into
+ * separate utterances, so there is no natural handoff gap to lean on.
+ * Also used as the JA karaoke *visual* dwell weight at `、` (see
+ * SPEECH_JA_COMMA_PAUSE_MS below for why the real JA audio silence differs).
  */
-export const SPEECH_COMMA_PAUSE_MS = 120;
+export const SPEECH_COMMA_PAUSE_MS = 80;
 
 /**
  * Japanese sentence breath after `。` / `！` / `？`.
  * Near-zero: the next-utterance handoff is the audible pause.
  */
-export const SPEECH_JA_SENTENCE_PAUSE_MS = 40;
+export const SPEECH_JA_SENTENCE_PAUSE_MS = 60;
 
-/** Japanese `、` chain pause — same as EN comma (SPEECH_COMMA_PAUSE_MS). */
-export const SPEECH_JA_COMMA_PAUSE_MS = SPEECH_COMMA_PAUSE_MS;
+/**
+ * Japanese `、` chain pause — real silence added between the two Nanami
+ * utterances split at a comma.
+ *
+ * Zero, deliberately: unlike English, a JA comma sits inside one breath group
+ * and native speakers barely pause there — often less than the sentence
+ * boundary that follows it, not three times more. Nanami's own handoff gap
+ * between speak() calls is the audible pause; adding SPEECH_COMMA_PAUSE_MS
+ * (120ms) on top made 、 pause longer than 。, which is backwards from natural
+ * pacing and was audible as a stall (e.g. "…ございます。では、いくつか…" —
+ * では、held longer than the sentence break before it).
+ *
+ * This was already the value once (see "Drop JA chain timeouts so pauses use
+ * utterance handoff only"); a later merge coupled it to the shared EN/JA
+ * comma constant and reintroduced the 120ms. Keep this independent of
+ * SPEECH_COMMA_PAUSE_MS so raising the EN comma breath never drags JA along.
+ */
+export const SPEECH_JA_COMMA_PAUSE_MS = 0;
 
 /** Brief JP→EN voice-switch inside one mixed line. */
 export const SPEECH_JP_EN_HANDOFF_MS = 220;

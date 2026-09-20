@@ -26,12 +26,12 @@ export function speechRateToNumber(rate: NodeSpeechRate | undefined): number {
 
 /**
  * Resolve effective TTS rate for a node.
- * User Slow mode and forceSlowSpeech always take priority.
+ * User Slow / Fast prefs and forceSlowSpeech always take priority.
  */
 export function resolveNodeSpeechRate(input: {
   nodeSpeechRate?: NodeSpeechRate;
   forceSlowSpeech?: boolean;
-  userRateMode?: "normal" | "slow";
+  userRateMode?: "normal" | "slow" | "fast";
   forceSlowReplay?: boolean;
 }): number {
   if (
@@ -40,6 +40,9 @@ export function resolveNodeSpeechRate(input: {
     input.userRateMode === "slow"
   ) {
     return SPEECH_RATE_SLOW;
+  }
+  if (input.userRateMode === "fast") {
+    return SPEECH_RATE_FAST;
   }
   return speechRateToNumber(input.nodeSpeechRate);
 }

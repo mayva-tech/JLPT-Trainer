@@ -593,17 +593,17 @@ export type JapaneseSentenceSplit = {
 };
 
 /**
- * Collect mid-string clause ends: `、` / `，` / `。` / `！` / `？` when more
- * content follows. Trailing-only punct does not create a break.
+ * Collect mid-string sentence ends: `。` / `！` / `？` when more content
+ * follows. Trailing-only punct does not create a break.
  *
- * Neural Nanami rushes past in-utterance commas and periods the same way
- * Andrew rushes past in-utterance em dashes — real pauses need separate
- * utterances (see speechService SPEECH_JA_COMMA_PAUSE_MS /
- * SPEECH_JA_SENTENCE_PAUSE_MS).
+ * Phrase commas (`、` / `，`) stay inside one utterance — splitting them made
+ * Chromium insert a speak() handoff gap even when SPEECH_JA_COMMA_PAUSE_MS is
+ * 0, which sounded like a stall mid-breath. Neural Nanami still needs real
+ * utterance breaks for sentence ends (see SPEECH_JA_SENTENCE_PAUSE_MS).
  */
 function findJapaneseClauseBreakEnds(text: string): number[] {
   const ends: number[] = [];
-  for (const m of text.matchAll(/[、，。！？]+/g)) {
+  for (const m of text.matchAll(/[。！？]+/g)) {
     const end = m.index! + m[0].length;
     if (text.slice(end).replace(/\s+/g, "").length > 0) {
       ends.push(end);
@@ -613,9 +613,9 @@ function findJapaneseClauseBreakEnds(text: string): number[] {
 }
 
 /**
- * Split JA on phrase commas and sentence endings so each clause is its own
- * Nanami utterance with a real inter-utterance pause (neural voices often
- * rush past in-string `、` / `。`).
+ * Split JA on sentence endings so each sentence is its own Nanami utterance
+ * with a real inter-utterance pause (neural voices often rush past in-string
+ * `。`). Commas stay in-utterance — no Chromium handoff gap mid-phrase.
  */
 export function splitJapaneseBySentences(
   text: string,

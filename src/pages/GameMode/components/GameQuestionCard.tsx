@@ -156,6 +156,18 @@ export function GameQuestionCard({
           <button
             type="button"
             className={
+              speech.rateMode === "fast"
+                ? "gm-btn gm-btn--ghost gm-btn--speech-on"
+                : "gm-btn gm-btn--ghost"
+            }
+            aria-pressed={speech.rateMode === "fast"}
+            onClick={() => speech.setRateMode("fast")}
+          >
+            1.25×
+          </button>
+          <button
+            type="button"
+            className={
               speech.rateMode === "slow"
                 ? "gm-btn gm-btn--ghost gm-btn--speech-on"
                 : "gm-btn gm-btn--ghost"

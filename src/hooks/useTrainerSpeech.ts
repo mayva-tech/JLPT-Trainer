@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   isSpeechCancelled,
   speechService,
+  SPEECH_RATE_FAST,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   type SpeechHighlight,
@@ -61,7 +62,9 @@ export function useTrainerSpeech(options?: { stopOnUnmount?: boolean }) {
   const resolveRate = useCallback(
     (override?: number) => {
       if (typeof override === "number") return override;
-      return prefs.rateMode === "slow" ? SPEECH_RATE_SLOW : SPEECH_RATE_NORMAL;
+      if (prefs.rateMode === "slow") return SPEECH_RATE_SLOW;
+      if (prefs.rateMode === "fast") return SPEECH_RATE_FAST;
+      return SPEECH_RATE_NORMAL;
     },
     [prefs.rateMode]
   );

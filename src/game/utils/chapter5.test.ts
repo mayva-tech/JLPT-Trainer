@@ -121,6 +121,12 @@ describe("Chapter 5 · ネイティブスピード", () => {
     expect(
       resolveNodeSpeechRate({ nodeSpeechRate: "fast" })
     ).toBe(SPEECH_RATE_FAST);
+    expect(
+      resolveNodeSpeechRate({
+        nodeSpeechRate: "normal",
+        userRateMode: "fast",
+      })
+    ).toBe(SPEECH_RATE_FAST);
   });
 
   it("uses audio-first nodes with hidden-transcript karaoke mode", () => {

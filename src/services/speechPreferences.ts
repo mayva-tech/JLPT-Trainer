@@ -6,7 +6,7 @@
 /** v2: Auto Voice defaults OFF for Pera Pera Quest page opens. */
 export const SPEECH_PREFS_KEY = "jlpt-trainer:speech-prefs:v2";
 
-export type SpeechRateMode = "normal" | "slow";
+export type SpeechRateMode = "normal" | "slow" | "fast";
 
 export type SpeechPreferences = {
   /** Auto-play Japanese→English lines when a new step appears. */
@@ -18,6 +18,11 @@ const DEFAULTS: SpeechPreferences = {
   autoVoice: false,
   rateMode: "normal",
 };
+
+function parseRateMode(value: unknown): SpeechRateMode {
+  if (value === "slow" || value === "fast") return value;
+  return "normal";
+}
 
 type Store = {
   getItem(key: string): string | null;
@@ -47,7 +52,7 @@ export function loadSpeechPreferences(
         typeof parsed.autoVoice === "boolean"
           ? parsed.autoVoice
           : DEFAULTS.autoVoice,
-      rateMode: parsed.rateMode === "slow" ? "slow" : "normal",
+      rateMode: parseRateMode(parsed.rateMode),
     };
   } catch {
     return { ...DEFAULTS };

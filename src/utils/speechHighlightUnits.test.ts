@@ -127,7 +127,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     );
     expect(withSemi).toBeGreaterThan(plainSoft);
     // Semicolon breath targets ~SPEECH_EN_SEMICOLON_PAUSE_MS (100ms), not the
-    // full 400ms EN chain used for em dash / tip newlines.
+    // full 200ms EN chain used for em dash / tip newlines.
     expect(withSemi - plainSoft).toBeGreaterThanOrEqual(70);
     expect(withSemi - plainSoft).toBeLessThan(220);
   });
@@ -169,8 +169,8 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 3, text: "75%", kind: "word", spokenText: "75%" },
       "en"
     );
-    // Clause breath alone should add ~SPEECH_EN_CHAIN_PAUSE_MS (400ms).
-    expect(withPause).toBeGreaterThan(plainPct + 300);
+    // Clause breath alone should add ~SPEECH_EN_CHAIN_PAUSE_MS (200ms).
+    expect(withPause).toBeGreaterThan(plainPct + 150);
   });
 
   it("keeps embedded 私 on the karaoke timeline as watashi", () => {
@@ -229,9 +229,9 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       },
       "en"
     );
-    // Comma breath targets ~SPEECH_COMMA_PAUSE_MS (120ms) at rate 1.
-    expect(withComma - plain).toBeGreaterThanOrEqual(90);
-    expect(withComma - plain).toBeLessThan(180);
+    // Comma breath targets ~SPEECH_COMMA_PAUSE_MS (80ms) at rate 1.
+    expect(withComma - plain).toBeGreaterThanOrEqual(60);
+    expect(withComma - plain).toBeLessThan(120);
   });
 
   it.each(["~", "〜", "～"])(
@@ -660,9 +660,12 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       "ja",
       { start: 1, end: 2, text: "彼", kind: "word" }
     );
-    // Display clause comma matches SPEECH_COMMA_PAUSE_MS (~120ms) karaoke dwell.
-    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(90);
-    expect(haiComma - haiPlain).toBeLessThan(180);
+    // Display clause comma dwells on its own floor (JA_COMMA_KARAOKE_FLOOR_MS,
+    // ~70ms) — deliberately below the JA sentence-punct floor (~120ms), since
+    // real JA comma silence is now 0 and the visual dwell should not outlast
+    // that near-immediate handoff by more than a small readability margin.
+    expect(haiComma - haiPlain).toBeGreaterThanOrEqual(50);
+    expect(haiComma - haiPlain).toBeLessThan(100);
     // Particle TTS comma still pauses, but must not dwarf はい、
     expect(haiComma).toBeGreaterThan(particleInserted);
   });

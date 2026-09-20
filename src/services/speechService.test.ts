@@ -802,7 +802,7 @@ describe("speechService karaoke timeline", () => {
 
     const semiPause = __speechTestHooks.SPEECH_EN_SEMICOLON_PAUSE_MS;
     expect(semiPause).toBe(100);
-    expect(semiPause * 4).toBe(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS);
+    expect(semiPause * 2).toBe(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS);
     vi.advanceTimersByTime(semiPause - 20);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(40);
@@ -915,7 +915,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause (mdash) — next clip must not start early.
     const chainPause = __speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(200);
     expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
@@ -958,7 +958,7 @@ describe("speechService karaoke timeline", () => {
 
     // Real inter-utterance pause after the tip label line (shared EN chain pause).
     const chainPause = __speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS;
-    expect(chainPause).toBe(400);
+    expect(chainPause).toBe(200);
     expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
@@ -1008,38 +1008,26 @@ describe("speechService karaoke timeline", () => {
 
     // Near-zero chain after 。 — next clip starts on the utterance handoff.
     const sentencePause = __speechTestHooks.SPEECH_JA_SENTENCE_PAUSE_MS;
-    expect(sentencePause).toBe(40);
+    expect(sentencePause).toBe(60);
     expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(sentencePause);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(sentencePause);
     expect(spoken).toHaveLength(2);
+    // 、 stays inside the second utterance — no Chromium handoff mid-phrase.
     expect(spoken[1]!.text).toMatch(/では/);
+    expect(spoken[1]!.text).toMatch(/確認|かくにん|いくつ/);
+    expect(__speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS).toBe(0);
 
     spoken[1]!.onstart?.();
-    spoken[1]!.onend?.();
-    expect(ended).toBe(0);
-
-    // After 、 — shared SPEECH_COMMA_PAUSE_MS before the next clause.
-    const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(120);
-    expect(__speechTestHooks.SPEECH_COMMA_PAUSE_MS).toBe(commaPause);
-    expect(spoken).toHaveLength(2);
-    vi.advanceTimersByTime(commaPause - 1);
-    expect(spoken).toHaveLength(2);
-    vi.advanceTimersByTime(1);
-    expect(spoken).toHaveLength(3);
-    expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
-
-    spoken[2]!.onstart?.();
     vi.advanceTimersByTime(
       __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
     );
-    spoken[2]!.onend?.();
+    spoken[1]!.onend?.();
     expect(highlights.some((h) => /では|確認|いくつ/.test(h))).toBe(true);
     expect(ended).toBe(1);
   });
 
-  it("splits Japanese on 、 with a real pause after はい", async () => {
+  it("keeps Japanese 、 inside one utterance (no Chromium handoff)", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");
 
@@ -1059,32 +1047,19 @@ describe("speechService karaoke timeline", () => {
 
     expect(spoken).toHaveLength(1);
     expect(spoken[0]!.text).toMatch(/はい/);
-    expect(spoken[0]!.text).not.toMatch(/転入|出したい/);
+    expect(spoken[0]!.text).toMatch(/転入|出したい/);
     spoken[0]!.onstart?.();
     vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
     expect(highlights.some((h) => h.includes("はい"))).toBe(true);
-    spoken[0]!.onend?.();
-    expect(ended).toBe(0);
-    expect(spoken).toHaveLength(1);
+    expect(__speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS).toBe(0);
 
-    // Shared SPEECH_COMMA_PAUSE_MS after 、 before the next clause.
-    const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(120);
-    expect(__speechTestHooks.SPEECH_COMMA_PAUSE_MS).toBe(commaPause);
-    expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(commaPause - 1);
-    expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(1);
-    expect(spoken).toHaveLength(2);
-    expect(spoken[1]!.text).toMatch(/転入|出したい/);
-
-    spoken[1]!.onstart?.();
     vi.advanceTimersByTime(
       __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
     );
-    spoken[1]!.onend?.();
+    spoken[0]!.onend?.();
     expect(highlights.some((h) => /転入|出し/.test(h))).toBe(true);
     expect(ended).toBe(1);
+    expect(spoken).toHaveLength(1);
   });
 });
 

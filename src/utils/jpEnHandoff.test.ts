@@ -12,11 +12,15 @@ import { scheduleAfterLanguageHandoff } from "./jpEnHandoff";
 
 describe("speechTiming targets", () => {
   it("uses near-natural differentiated pauses", () => {
-    expect(SPEECH_EN_CHAIN_PAUSE_MS).toBe(400);
+    expect(SPEECH_EN_CHAIN_PAUSE_MS).toBe(200);
     expect(SPEECH_EN_SEMICOLON_PAUSE_MS).toBe(100);
-    expect(SPEECH_COMMA_PAUSE_MS).toBe(120);
-    expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(40);
-    expect(SPEECH_JA_COMMA_PAUSE_MS).toBe(SPEECH_COMMA_PAUSE_MS);
+    expect(SPEECH_COMMA_PAUSE_MS).toBe(80);
+    expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(60);
+    // JA 、 adds no real silence — independent of the EN comma breath above,
+    // and shorter than the JA sentence pause, matching natural JA pacing
+    // (a comma is a lighter beat than a sentence end, not a longer one).
+    expect(SPEECH_JA_COMMA_PAUSE_MS).toBe(0);
+    expect(SPEECH_JA_COMMA_PAUSE_MS).toBeLessThan(SPEECH_JA_SENTENCE_PAUSE_MS);
     expect(SPEECH_JP_EN_HANDOFF_MS).toBe(220);
     expect(SPEECH_BILINGUAL_FIELD_GAP_MS).toBe(250);
   });
@@ -42,5 +46,30 @@ describe("scheduleAfterLanguageHandoff", () => {
     scheduleAfterLanguageHandoff("ja", "ja", b);
     expect(a).toHaveBeenCalledTimes(1);
     expect(b).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("JA 。 vs 、 pause ordering", () => {
+  it("never lets the comma pause exceed the sentence pause, in real silence or karaoke dwell", async () => {
+    const { SPEECH_JA_COMMA_PAUSE_MS, SPEECH_JA_SENTENCE_PAUSE_MS } = await import(
+      "../config/speechTiming"
+    );
+    const { estimateUnitDurationMs } = await import("./speechHighlightUnits");
+
+    // Real audible silence between utterances.
+    expect(SPEECH_JA_COMMA_PAUSE_MS).toBeLessThan(SPEECH_JA_SENTENCE_PAUSE_MS);
+
+    // Karaoke visual dwell, on a case drawn from an actual reported line
+    // ("ありがとうございます。では、いくつか確認しますね。" — the では、
+    // held longer than the 。 before it prior to this fix).
+    const sentenceDwell = estimateUnitDurationMs(
+      { start: 0, end: 6, text: "ございます。", kind: "word" },
+      "ja"
+    );
+    const commaDwell = estimateUnitDurationMs(
+      { start: 0, end: 3, text: "では、", kind: "word" },
+      "ja"
+    );
+    expect(commaDwell).toBeLessThan(sentenceDwell);
   });
 });

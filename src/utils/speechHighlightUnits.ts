@@ -16,6 +16,7 @@ import {
   SPEECH_EN_CHAIN_PAUSE_MS,
   SPEECH_EN_COLON_PAUSE_MS,
   SPEECH_EN_SEMICOLON_PAUSE_MS,
+  SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
 } from "../config/speechTiming";
 
@@ -1144,19 +1145,30 @@ const EN_WEIGHT_MS = 315;
 const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
 /** English semicolon breath — shorter than the general EN chain. */
 const EN_SEMICOLON_PAUSE = SPEECH_EN_SEMICOLON_PAUSE_MS / EN_WEIGHT_MS;
-/** Shared EN `,` / JA `、` comma breath (TTS + karaoke). */
+/** EN `,` breath (TTS + karaoke). JA `、` has its own floor below — see there. */
 const EN_COMMA_PAUSE = SPEECH_COMMA_PAUSE_MS / EN_WEIGHT_MS;
 /** Karaoke weight for Japanese sentence punct (。！？). */
 const JA_SENTENCE_PAUSE =
   Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 120) / JA_MORA_MS;
 /**
- * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
- * Same ms as EN `,` via SPEECH_COMMA_PAUSE_MS. Mid-string commas may also be
- * split into real utterances in speechService with that same pause.
- * TTS-inserted particle commas (わ、) still use the small break below when
- * only spokenText has `、`.
+ * Readability floor for the karaoke dwell at a display-clause `、`
+ * (はい、 / 明日、), independent of SPEECH_COMMA_PAUSE_MS (that constant is
+ * EN's real breath value now that JA's real comma silence is 0 — see
+ * SPEECH_JA_COMMA_PAUSE_MS). Deliberately smaller than the 120ms sentence
+ * floor above: a comma is a lighter beat than a sentence end, and the
+ * highlight dwell should not outlast the near-immediate audio handoff by more
+ * than a small readability margin.
  */
-const JA_COMMA_PAUSE = SPEECH_COMMA_PAUSE_MS / JA_MORA_MS;
+const JA_COMMA_KARAOKE_FLOOR_MS = 70;
+/**
+ * Karaoke dwell for a display-clause `、`.
+ * Mid-string commas may also be split into real utterances in speechService,
+ * with SPEECH_JA_COMMA_PAUSE_MS (0) as the real silence there — this is the
+ * visual floor only. TTS-inserted particle commas (わ、) still use the small
+ * break below when only spokenText has `、`.
+ */
+const JA_COMMA_PAUSE =
+  Math.max(SPEECH_JA_COMMA_PAUSE_MS, JA_COMMA_KARAOKE_FLOOR_MS) / JA_MORA_MS;
 /** Light JA punct (`;` / `:` fallback) — between comma and sentence. */
 const JA_PUNCT_PAUSE = JA_COMMA_PAUSE;
 /** English ellipsis / em-dash / tip-newline / slash breath. */

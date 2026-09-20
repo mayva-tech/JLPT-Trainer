@@ -917,6 +917,20 @@ function LinearQuestRunner({
           <button
             type="button"
             className={
+              speech.rateMode === "fast"
+                ? "ppq-btn ppq-btn--ghost ppq-btn--speech-on"
+                : "ppq-btn ppq-btn--ghost"
+            }
+            aria-pressed={speech.rateMode === "fast"}
+            onClick={() => {
+              speech.setRateMode("fast");
+            }}
+          >
+            1.25×
+          </button>
+          <button
+            type="button"
+            className={
               speech.rateMode === "slow"
                 ? "ppq-btn ppq-btn--ghost ppq-btn--speech-on"
                 : "ppq-btn ppq-btn--ghost"

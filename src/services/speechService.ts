@@ -865,8 +865,8 @@ function englishPauseAfterSurface(surface: string): number {
 }
 
 /**
- * Split JA on 、。！？ so Nanami takes a real breath between clauses and
- * karaoke does not race past はい、 into the next phrase.
+ * Split JA on `。` / `！` / `？` so Nanami takes a real breath between
+ * sentences. Commas stay in one utterance (no Chromium handoff mid-phrase).
  */
 function buildJapaneseSpeakSegments(
   text: string,

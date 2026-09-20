@@ -32,4 +32,10 @@ describe("speechPreferences", () => {
       rateMode: "slow",
     });
   });
+
+  it("persists and reloads the 1.25× fast rate", () => {
+    const store = memoryStore();
+    updateSpeechPreferences({ rateMode: "fast" }, store);
+    expect(loadSpeechPreferences(store).rateMode).toBe("fast");
+  });
 });
