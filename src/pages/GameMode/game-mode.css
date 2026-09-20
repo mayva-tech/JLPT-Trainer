@@ -362,7 +362,8 @@
 
 .gm-btn--speech-on {
   border-color: #fbbf24 !important;
-  color: #fde68a !important;
+  background: #fbbf24 !important;
+  color: #111827 !important;
 }
 
 .gm-line-row {

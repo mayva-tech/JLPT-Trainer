@@ -639,7 +639,8 @@
 
 .ppq-btn--speech-on {
   border-color: var(--ppq-accent) !important;
-  color: var(--ppq-accent-soft) !important;
+  background: var(--ppq-accent) !important;
+  color: #1a1510 !important;
 }
 
 .ppq-line-row,
