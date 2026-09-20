@@ -1019,10 +1019,13 @@ describe("speechService karaoke timeline", () => {
     spoken[1]!.onend?.();
     expect(ended).toBe(0);
 
-    // After 、 — zero extra timeout; flush the scheduled handoff.
+    // Next gap is after 、 (では、) — same as EN comma (SPEECH_COMMA_PAUSE_MS).
     const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(0);
-    vi.advanceTimersByTime(0);
+    expect(commaPause).toBe(__speechTestHooks.SPEECH_COMMA_PAUSE_MS);
+    expect(commaPause).toBe(400);
+    vi.advanceTimersByTime(commaPause - 50);
+    expect(spoken).toHaveLength(2);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(3);
     expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
 
@@ -1063,11 +1066,14 @@ describe("speechService karaoke timeline", () => {
     expect(ended).toBe(0);
     expect(spoken).toHaveLength(1);
 
-    // Zero extra timeout after 、 — next clip on the utterance handoff only.
+    // JA 、 pause matches EN comma (SPEECH_COMMA_PAUSE_MS).
     const commaPause = __speechTestHooks.SPEECH_JA_COMMA_PAUSE_MS;
-    expect(commaPause).toBe(0);
+    expect(commaPause).toBe(__speechTestHooks.SPEECH_COMMA_PAUSE_MS);
+    expect(commaPause).toBe(400);
     expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(0);
+    vi.advanceTimersByTime(commaPause - 50);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text).toMatch(/転入|出したい/);
 
