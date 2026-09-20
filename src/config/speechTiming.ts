@@ -12,9 +12,9 @@ export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
 
 /**
  * English semicolon breath (`arising from; stemming from`).
- * Half of SPEECH_EN_CHAIN_PAUSE_MS — gloss lists need a quicker beat.
+ * Short gloss-list beat for all EN TTS (including mixed JP/EN lines).
  */
-export const SPEECH_EN_SEMICOLON_PAUSE_MS = 200;
+export const SPEECH_EN_SEMICOLON_PAUSE_MS = 100;
 
 /**
  * Japanese sentence breath after `。` / `！` / `？`.

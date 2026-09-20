@@ -801,8 +801,8 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     const semiPause = __speechTestHooks.SPEECH_EN_SEMICOLON_PAUSE_MS;
-    expect(semiPause).toBe(200);
-    expect(semiPause).toBe(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS / 2);
+    expect(semiPause).toBe(100);
+    expect(semiPause * 4).toBe(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS);
     vi.advanceTimersByTime(semiPause - 20);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(40);
