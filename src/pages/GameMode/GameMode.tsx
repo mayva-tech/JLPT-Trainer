@@ -1,7 +1,8 @@
 import { PeraPeraQuestApp } from "../../game/pages/PeraPeraQuestApp";
+import type { OpenTrainer } from "../../navigation";
 
 type Props = {
-  onOpenTrainer?: () => void;
+  onOpenTrainer?: OpenTrainer;
 };
 
 /**

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { speechService } from "./services/speechService";
+import type { OpenTrainer, TrainerView } from "./navigation";
 
 /**
  * Trainers are lazy so that opening the app does not download every corpus at
@@ -21,16 +22,9 @@ const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
 const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
 const GameMode = lazy(() => import("./pages/GameMode/GameMode"));
 
-type AppView =
-  | "player"
-  | "game"
-  | "konbini"
-  | "trip"
-  | "relations"
-  | "phone"
-  | "style";
+type AppView = TrainerView | "game";
 
-const VIEW_COMPONENTS: Record<Exclude<AppView, "game">, React.ComponentType> = {
+const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
   player: PlayerPage,
   konbini: KonbiniTrainer,
   trip: TripTrainer,
@@ -52,6 +46,10 @@ export default function App() {
   useEffect(() => {
     return () => speechService.stop();
   }, [view]);
+
+  const openTrainer: OpenTrainer = (target) => {
+    setView(target ?? "player");
+  };
 
   return (
     <div
@@ -172,7 +170,7 @@ export default function App() {
       >
         <Suspense fallback={<TrainerFallback />}>
           {view === "game" ? (
-            <GameMode onOpenTrainer={() => setView("player")} />
+            <GameMode onOpenTrainer={openTrainer} />
           ) : ActiveTrainer ? (
             <ActiveTrainer />
           ) : null}
