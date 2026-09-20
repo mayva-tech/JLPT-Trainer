@@ -883,10 +883,12 @@ describe("speechService karaoke timeline", () => {
     expect(ended).toBe(0);
     expect(spoken).toHaveLength(1);
 
-    // Real inter-utterance pause after the tip label line.
-    vi.advanceTimersByTime(400);
+    // Tip label→body uses ENGLISH_TIP_CHAIN_PAUSE_MS (shorter than mdash chain).
+    const tipPause = __speechTestHooks.ENGLISH_TIP_CHAIN_PAUSE_MS;
+    expect(tipPause).toBeLessThan(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS);
+    vi.advanceTimersByTime(tipPause - 50);
     expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text).toBe("Clear purpose");
 
