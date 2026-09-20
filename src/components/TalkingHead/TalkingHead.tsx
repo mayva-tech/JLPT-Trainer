@@ -169,28 +169,85 @@ function AndrewHead({ viseme, blinking, speaking }: HeadProps) {
       role="img"
       aria-label="Andrew, the English voice"
     >
-      {/* jaw slightly squarer than Nanami's oval */}
-      <path
-        d="M24 52 Q24 26 50 26 Q76 26 76 52 L76 64 Q76 88 50 90 Q24 88 24 64 Z"
-        fill="#f4d8c6"
-      />
-      {/* hair */}
-      <path d="M22 48 Q22 20 50 20 Q78 20 78 48 Q72 36 50 37 Q28 36 22 48 Z" fill="#6b4c33" />
+      {/* neck and shoulders */}
+      <path d="M40 84 L40 96 Q50 101 60 96 L60 84 Z" fill="#dda87c" />
+      <path d="M28 110 Q30 98 42 94 Q50 99 58 94 Q70 98 72 110 Z" fill="#e9dcc9" />
       {/* ears */}
-      <ellipse cx="23" cy="60" rx="3.2" ry="4.6" fill="#eec4ad" />
-      <ellipse cx="77" cy="60" rx="3.2" ry="4.6" fill="#eec4ad" />
-      <Eyes closed={blinking} irisColor="#4a7ba7" />
-      {/* heavier brows */}
-      <g stroke="#6b4c33" strokeWidth="2.4" strokeLinecap="round" fill="none">
-        <path d="M33 41 q6 -2.5 11 0.5" />
-        <path d="M56 41.5 q5 -3 11 -0.5" />
+      <ellipse cx="24" cy="60" rx="4" ry="5.4" fill="#e3ab7e" />
+      <ellipse cx="76" cy="60" rx="4" ry="5.4" fill="#e3ab7e" />
+      {/* face */}
+      <path
+        d="M26 50 Q26 25 50 25 Q74 25 74 50 L74 62 Q74 86 50 90 Q26 86 26 62 Z"
+        fill="#eec096"
+      />
+      {/* beard — wraps the jaw and rises to meet the sideburns. The mouth is
+          drawn after this, so the lips sit inside the beard rather than under it. */}
+      <path
+        d="M25 50 Q23 74 33 86 Q41 93 50 93 Q59 93 67 86 Q77 74 75 50
+           Q72 62 64 64 Q57 66 50 66 Q43 66 36 64 Q28 62 25 50 Z"
+        fill="#d79a44"
+      />
+      {/* beard shadow along the jaw edge, for depth */}
+      <path
+        d="M33 86 Q41 93 50 93 Q59 93 67 86 Q58 89 50 89 Q42 89 33 86 Z"
+        fill="#bd8236"
+        opacity="0.55"
+      />
+      {/* cheeks */}
+      <ellipse cx="33" cy="58" rx="5" ry="3" fill="#e08a6e" opacity="0.32" />
+      <ellipse cx="67" cy="58" rx="5" ry="3" fill="#e08a6e" opacity="0.32" />
+      {/* brows */}
+      <g stroke="#b8792d" strokeWidth="3" strokeLinecap="round" fill="none">
+        <path d="M32 42 q7 -4 13 -0.5" />
+        <path d="M55 41.5 q6 -3.5 13 0.5" />
       </g>
+      <Eyes closed={blinking} irisColor="#6d9464" />
       {/* nose */}
-      <path d="M50 56 q2 5 -1.5 6.5" stroke="#dda488" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      {/* warmth at the cheeks — a fair complexion reads flat without it */}
-      <ellipse cx="32" cy="63" rx="4" ry="2.2" fill="#e8907f" opacity="0.18" />
-      <ellipse cx="68" cy="63" rx="4" ry="2.2" fill="#e8907f" opacity="0.18" />
-      <Mouth viseme={viseme} lipColor="#b25f64" />
+      <path
+        d="M50 52 q3 7 -1 9"
+        stroke="#d39a6e"
+        strokeWidth="1.8"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* moustache — sits above the mouth so the mouth stays fully visible */}
+      <path
+        d="M50 63 Q44 58 38 60 Q35 63 37 65 Q43 66 50 64.5 Q57 66 63 65 Q65 63 62 60 Q56 58 50 63 Z"
+        fill="#c78c37"
+      />
+      <Mouth viseme={viseme} lipColor="#b35f57" />
+      {/* hair — asymmetric on purpose: low at the left temple, rising across
+          the head and flicking up to the right, which is what makes it read as
+          a swept quiff rather than a rounded cap */}
+      <path
+        d="M26 50
+           C24 37, 26 27, 33 21
+           C42 13, 55 8, 65 11
+           C73 14, 76 23, 75 37
+           C75 42, 75 46, 75 50
+           C72 36, 65 31, 55 30
+           C46 29, 39 33, 35 39
+           C33 42, 31 46, 26 50 Z"
+        fill="#e0a845"
+      />
+      {/* the crest, lifted clear of the silhouette at the front */}
+      <path
+        d="M33 23
+           C39 10, 55 3, 66 8
+           C72 11, 75 17, 74 22
+           C70 14, 58 10, 48 15
+           C41 18, 36 21, 33 23 Z"
+        fill="#e8b14e"
+      />
+      {/* lit edge riding the top of the sweep */}
+      <path
+        d="M38 19
+           C44 10, 57 5, 66 10
+           C70 12, 72 15, 72 18
+           C66 12, 55 11, 47 16
+           C43 17, 40 18, 38 19 Z"
+        fill="#f2c76a"
+      />
     </svg>
   );
 }
