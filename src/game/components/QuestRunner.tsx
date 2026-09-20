@@ -8,12 +8,20 @@ import { getQuestById } from "../data/quests";
 import type { QuestDefinition, QuestRunMistake, QuestStep } from "../types";
 import { filterStepsForProfile } from "../utils/chapterProgress";
 import {
+  canRetryStep,
+  canStepBack,
+  pushHistoryClearingForward,
+  stepBackNav,
+  stepForwardNav,
+} from "../utils/conversationNav";
+import {
   accuracyFromCounts,
   buildStepAnswerDelta,
   evaluateChoiceAnswer,
   noteQuestVocabMiss,
   undoStepAnswer,
   type QuestStepAnswerDelta,
+  type QuestStepRunStats,
 } from "../utils/questEngine";
 import { buildQuestAutoPlayQueue, type KaraokeSurface } from "../utils/questAutoPlay";
 import {
@@ -29,6 +37,7 @@ import { ConfidenceHearts } from "./ConfidenceHearts";
 import { CommunicationMeter } from "./CommunicationMeter";
 import { ConversationQuestRunner } from "./ConversationQuestRunner";
 import { NpcPortrait } from "./NpcPortrait";
+import { QuestStepNav } from "./QuestStepNav";
 import { communicationFromConfidence } from "../utils/communicationMeter";
 
 export type QuestRunOutcome = {
@@ -110,6 +119,17 @@ type Props = {
 };
 
 const STEP_SETTLE_MS = 280;
+
+type LinearNavCheckpoint = {
+  stepIndex: number;
+  stats: QuestStepRunStats;
+  freeRepairLeft: number;
+  helpUses: number;
+  usedEnglishAssist: boolean;
+  firstListenOk: boolean;
+  listeningStepsSeen: number;
+  repairedConversation: boolean;
+};
 
 export function QuestRunner({
   questId,
@@ -206,6 +226,10 @@ function LinearQuestRunner({
   const [usedEnglishAssist, setUsedEnglishAssist] = useState(false);
   const [firstListenOk, setFirstListenOk] = useState(true);
   const [listeningStepsSeen, setListeningStepsSeen] = useState(0);
+  const [navHistory, setNavHistory] = useState<LinearNavCheckpoint[]>([]);
+  const [navForward, setNavForward] = useState<LinearNavCheckpoint[]>([]);
+  const [arrivalCheckpoint, setArrivalCheckpoint] =
+    useState<LinearNavCheckpoint | null>(null);
   const autoPlayTokenRef = useRef(0);
   /** Speak quest title JP→EN once per Auto Voice session. */
   const titleSpokenRef = useRef(false);
@@ -222,6 +246,9 @@ function LinearQuestRunner({
   // Each quest page opens with Auto Voice OFF (user can turn it on).
   useEffect(() => {
     titleSpokenRef.current = false;
+    setNavHistory([]);
+    setNavForward([]);
+    setArrivalCheckpoint(null);
     if (speech.autoVoice) speech.setAutoVoice(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questId]);
@@ -229,6 +256,39 @@ function LinearQuestRunner({
   useEffect(() => {
     if (!speech.autoVoice) titleSpokenRef.current = false;
   }, [speech.autoVoice]);
+
+  // Capture pre-answer arrival while the step is unanswered.
+  useEffect(() => {
+    if (revealed) return;
+    setArrivalCheckpoint({
+      stepIndex,
+      stats: {
+        confidence,
+        correctCount,
+        answeredCount,
+        mistakes: mistakes.map((m) => ({ ...m })),
+        monsters: [...monsters],
+        vocabDiscovered: [...vocabDiscovered],
+      },
+      freeRepairLeft,
+      helpUses,
+      usedEnglishAssist,
+      firstListenOk,
+      listeningStepsSeen,
+      repairedConversation,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    stepIndex,
+    revealed,
+    confidence,
+    correctCount,
+    answeredCount,
+    freeRepairLeft,
+    helpUses,
+    listeningStepsSeen,
+    repairedConversation,
+  ]);
 
   // Auto-play: title JP→EN (once) → subject JP→EN → each MCQ JP→EN → help.
   useEffect(() => {
@@ -413,6 +473,32 @@ function LinearQuestRunner({
     });
   }
 
+  function applyLinearCheckpoint(checkpoint: LinearNavCheckpoint) {
+    setStepIndex(checkpoint.stepIndex);
+    setConfidence(checkpoint.stats.confidence);
+    setCorrectCount(checkpoint.stats.correctCount);
+    setAnsweredCount(checkpoint.stats.answeredCount);
+    setMistakes(checkpoint.stats.mistakes.map((m) => ({ ...m })));
+    setMonsters([...checkpoint.stats.monsters]);
+    setVocabDiscovered([...checkpoint.stats.vocabDiscovered]);
+    setFreeRepairLeft(checkpoint.freeRepairLeft);
+    setHelpUses(checkpoint.helpUses);
+    setUsedEnglishAssist(checkpoint.usedEnglishAssist);
+    setFirstListenOk(checkpoint.firstListenOk);
+    setListeningStepsSeen(checkpoint.listeningStepsSeen);
+    setRepairedConversation(checkpoint.repairedConversation);
+    setSelectedId(null);
+    setRevealed(false);
+    setFeedback(null);
+    setMonsterFlash(null);
+    setShowHelp(false);
+    setChoiceHighlightId(null);
+    setLastAnswerDelta(null);
+    setFeedbackJaFocus(null);
+    setArrivalCheckpoint(checkpoint);
+    setStepPlayKey((k) => k + 1);
+  }
+
   function goNext(
     conf: number,
     correct: number,
@@ -431,6 +517,11 @@ function LinearQuestRunner({
     if (nextIndex >= steps.length) {
       finish(true, conf, correct, answered, miss, mons, vocab, helps);
       return;
+    }
+    if (arrivalCheckpoint) {
+      const pushed = pushHistoryClearingForward(navHistory, arrivalCheckpoint);
+      setNavHistory(pushed.history);
+      setNavForward(pushed.forward);
     }
     setStepIndex(nextIndex);
     setSelectedId(null);
@@ -546,7 +637,7 @@ function LinearQuestRunner({
   }
 
   function onRetryStep() {
-    if (!revealed || !isInteractive) return;
+    if (!canRetryStep(revealed, isInteractive)) return;
     speech.stop();
     if (lastAnswerDelta) {
       const restored = undoStepAnswer(
@@ -576,6 +667,39 @@ function LinearQuestRunner({
     setLastAnswerDelta(null);
     setFeedbackJaFocus(null);
     setStepPlayKey((k) => k + 1);
+  }
+
+  function onNavBack() {
+    if (!arrivalCheckpoint || !canStepBack(navHistory.length)) return;
+    const moved = stepBackNav(navHistory, navForward, arrivalCheckpoint);
+    if (!moved) return;
+    speech.stop();
+    setNavHistory(moved.history);
+    setNavForward(moved.forward);
+    applyLinearCheckpoint(moved.current);
+  }
+
+  function onNavForward() {
+    if (navForward.length > 0 && arrivalCheckpoint) {
+      const moved = stepForwardNav(navHistory, navForward, arrivalCheckpoint);
+      if (!moved) return;
+      speech.stop();
+      setNavHistory(moved.history);
+      setNavForward(moved.forward);
+      applyLinearCheckpoint(moved.current);
+      return;
+    }
+    if (currentStep.kind === "intro" || currentStep.kind === "outro") {
+      onContinueIntro();
+      return;
+    }
+    if (revealed) {
+      onContinueAfterAnswer();
+      return;
+    }
+    if (!isInteractive) {
+      onContinueIntro();
+    }
   }
 
   function onToggleHelp() {
@@ -669,7 +793,14 @@ function LinearQuestRunner({
       ? "Finish"
       : currentStep.kind === "intro"
         ? "Begin"
-        : "Continue";
+        : "Forward";
+
+  const canForward =
+    navForward.length > 0 ||
+    currentStep.kind === "intro" ||
+    currentStep.kind === "outro" ||
+    !isInteractive ||
+    revealed;
 
   const showJaTranscript =
     !currentResolved.hideTranscriptUntilAnswer ||
@@ -853,16 +984,12 @@ function LinearQuestRunner({
             ? () => replayHelpHint(currentStep.helpHint!)
             : undefined
         }
-        onContinue={
-          currentStep.kind === "intro" || currentStep.kind === "outro"
-            ? onContinueIntro
-            : revealed
-              ? onContinueAfterAnswer
-              : !isInteractive
-                ? onContinueIntro
-                : undefined
-        }
-        onRetry={revealed && isInteractive ? onRetryStep : undefined}
+        onRetry={onRetryStep}
+        onBack={onNavBack}
+        onForward={onNavForward}
+        canBack={canStepBack(navHistory.length)}
+        canRetry={canRetryStep(revealed, isInteractive)}
+        canForward={canForward}
         continueLabel={continueLabel}
       />
     </div>
@@ -894,8 +1021,12 @@ function DialogueStep({
   onReplayChoice,
   onReplayFeedback,
   onReplayHelpHint,
-  onContinue,
   onRetry,
+  onBack,
+  onForward,
+  canBack,
+  canRetry,
+  canForward,
   continueLabel,
 }: {
   step: QuestStep;
@@ -922,8 +1053,12 @@ function DialogueStep({
   onReplayChoice: (id: string, labelJa: string) => void;
   onReplayFeedback?: () => void;
   onReplayHelpHint?: () => void;
-  onContinue?: () => void;
-  onRetry?: () => void;
+  onRetry: () => void;
+  onBack: () => void;
+  onForward: () => void;
+  canBack: boolean;
+  canRetry: boolean;
+  canForward: boolean;
   continueLabel: string;
 }) {
   const showInstructionEn =
@@ -1164,28 +1299,15 @@ function DialogueStep({
         </div>
       ) : null}
 
-      {onContinue || onRetry ? (
-        <div className="ppq-actions" role="group" aria-label="Quest step actions">
-          {onRetry ? (
-            <button
-              type="button"
-              className="ppq-btn ppq-btn--secondary"
-              onClick={onRetry}
-            >
-              ↺ Try again
-            </button>
-          ) : null}
-          {onContinue ? (
-            <button
-              type="button"
-              className="ppq-btn ppq-btn--primary"
-              onClick={onContinue}
-            >
-              {continueLabel}
-            </button>
-          ) : null}
-        </div>
-      ) : null}
+      <QuestStepNav
+        canBack={canBack}
+        canRetry={canRetry}
+        canForward={canForward}
+        forwardLabel={continueLabel}
+        onBack={onBack}
+        onRetry={onRetry}
+        onForward={onForward}
+      />
     </section>
   );
 }
