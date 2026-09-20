@@ -935,9 +935,11 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 。 — next clip must not start early.
-    vi.advanceTimersByTime(400);
+    const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
+    vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text).toMatch(/では/);
 
@@ -945,7 +947,7 @@ describe("speechService karaoke timeline", () => {
     spoken[1]!.onend?.();
     expect(ended).toBe(0);
 
-    vi.advanceTimersByTime(650);
+    vi.advanceTimersByTime(chainPause);
     expect(spoken).toHaveLength(3);
     expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
 
@@ -987,9 +989,11 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 、 — next clip must not start early.
-    vi.advanceTimersByTime(400);
+    const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
+    vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text).toMatch(/転入|出したい/);
 
