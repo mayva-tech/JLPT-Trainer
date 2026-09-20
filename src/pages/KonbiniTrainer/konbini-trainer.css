@@ -63,14 +63,6 @@
   opacity: 0.55;
 }
 
-.fm-voice {
-  margin: 6px 0 0;
-  font-family: var(--fm-mono);
-  font-size: 11px;
-  letter-spacing: 1px;
-  opacity: 0.45;
-}
-
 /* ---- tabs and chips ---- */
 
 .fm-tabs {

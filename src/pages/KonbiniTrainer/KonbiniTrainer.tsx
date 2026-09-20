@@ -83,7 +83,7 @@ export default function KonbiniTrainer() {
   const playSessionRef = useRef(0);
 
   const { progress, toggle } = useProgress(STORAGE_KEY);
-  const { speak, voiceName, supported } = useJapaneseVoice();
+  const { speak } = useJapaneseVoice();
 
   const deck = useMemo(() => DECKS.find((d) => d.id === deckId) ?? DECKS[0], [deckId]);
   const card = deck.cards[Math.min(index, deck.cards.length - 1)];
@@ -312,9 +312,6 @@ export default function KonbiniTrainer() {
       <header className="fm-header">
         <p className="fm-title">コンビニ日本語トレーナー</p>
         <p className="fm-sub">Family Mart Japanese Trainer</p>
-        <p className="fm-voice">
-          {supported ? `voice: ${voiceName ?? 'no Japanese voice installed'}` : 'audio unavailable'}
-        </p>
       </header>
 
       <nav className="fm-tabs">
