@@ -1146,9 +1146,18 @@ const EN_CLAUSE_PAUSE = 1.5;
 const EN_SENTENCE_PAUSE = 1.2;
 /**
  * Nanami breath after 。！？ — kept modest for single-utterance fallback;
- * multi-sentence JA uses a real inter-utterance pause in speechService.
+ * multi-clause JA uses a real inter-utterance pause in speechService.
  */
 const JA_SENTENCE_PAUSE = 2.8;
+/**
+ * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
+ * Mid-string commas are split into real utterances in speechService; this
+ * weight covers single-utterance fallback and holds the highlight on the
+ * comma unit until the clause utterance ends. Kept well below EN_COMMA_PAUSE
+ * so TTS-inserted particle commas (わ、) do not lag the voice — those still
+ * use the small break below when only spokenText has `、`.
+ */
+const JA_COMMA_PAUSE = 1.6;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -1240,10 +1249,15 @@ export function estimateUnitDurationMs(
 
   let punctPause = 0;
   const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
-  // Commas / Japanese phrase commas (、) — include TTS-inserted pauses in spokenText
-  if (/[,，、]/.test(spokenForPunct)) {
-    punctPause +=
-      lang === "en" ? EN_COMMA_PAUSE : 0.3 + KARAOKE_BREAK_POINT;
+  // Commas / Japanese phrase commas (、)
+  if (lang === "en" && /[,，、]/.test(spokenForPunct)) {
+    punctPause += EN_COMMA_PAUSE;
+  } else if (/[、，]/.test(text)) {
+    // Display clause comma — longer dwell (utterance splits handle the breath)
+    punctPause += JA_COMMA_PAUSE;
+  } else if (/[、，]/.test(unit.spokenText ?? "")) {
+    // TTS-inserted particle comma only — light break so karaoke stays tight
+    punctPause += 0.3 + KARAOKE_BREAK_POINT;
   }
   // "/" / semicolon / mdash ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
@@ -1272,9 +1286,13 @@ export function estimateUnitDurationMs(
       nextUnit?.spokenText ?? nextUnit?.text
     )
   ) {
-    const commaWeight = 0.3 + KARAOKE_BREAK_POINT;
-    if (/[,，、]/.test(spokenForPunct)) {
-      punctPause += Math.max(0, PHRASE_PARTICLE_PAUSE - commaWeight);
+    const existingCommaWeight = /[、，]/.test(text)
+      ? JA_COMMA_PAUSE
+      : /[、，]/.test(unit.spokenText ?? "")
+        ? 0.3 + KARAOKE_BREAK_POINT
+        : 0;
+    if (existingCommaWeight > 0) {
+      punctPause += Math.max(0, PHRASE_PARTICLE_PAUSE - existingCommaWeight);
     } else {
       punctPause += PHRASE_PARTICLE_PAUSE;
     }

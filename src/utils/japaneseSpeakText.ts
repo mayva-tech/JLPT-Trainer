@@ -581,7 +581,7 @@ export function buildJapaneseSpeakToken(token: string): string {
 }
 
 /**
- * One sentence from a Japanese `。` / `！` / `？` split — display range is
+ * One clause from a Japanese `、` / `。` / `！` / `？` split — display range is
  * UTF-16 into the full string (for karaoke); `speak` is what Nanami says.
  */
 export type JapaneseSentenceSplit = {
@@ -593,13 +593,17 @@ export type JapaneseSentenceSplit = {
 };
 
 /**
- * Collect mid-string sentence ends: `。` / `！` / `？` when more content follows.
- * Trailing-only punct does not create a break (single sentence).
+ * Collect mid-string clause ends: `、` / `，` / `。` / `！` / `？` when more
+ * content follows. Trailing-only punct does not create a break.
+ *
+ * Neural Nanami rushes past in-utterance commas and periods the same way
+ * Andrew rushes past in-utterance em dashes — real pauses need separate
+ * utterances (see speechService JAPANESE_CHAIN_PAUSE_MS).
  */
-function findJapaneseSentenceBreakEnds(text: string): number[] {
+function findJapaneseClauseBreakEnds(text: string): number[] {
   const ends: number[] = [];
-  for (const m of text.matchAll(/[。！？]+/g)) {
-    const end = m.index + m[0].length;
+  for (const m of text.matchAll(/[、，。！？]+/g)) {
+    const end = m.index! + m[0].length;
     if (text.slice(end).replace(/\s+/g, "").length > 0) {
       ends.push(end);
     }
@@ -608,18 +612,19 @@ function findJapaneseSentenceBreakEnds(text: string): number[] {
 }
 
 /**
- * Split multi-sentence JA so each sentence is its own Nanami utterance with a
- * real inter-utterance pause (neural voices often rush past in-string `。`).
+ * Split JA on phrase commas and sentence endings so each clause is its own
+ * Nanami utterance with a real inter-utterance pause (neural voices often
+ * rush past in-string `、` / `。`).
  */
 export function splitJapaneseBySentences(
   text: string,
   spacedReading?: string | null
 ): JapaneseSentenceSplit[] | null {
-  const breakEnds = findJapaneseSentenceBreakEnds(text);
+  const breakEnds = findJapaneseClauseBreakEnds(text);
   if (breakEnds.length === 0) return null;
 
   const reading = spacedReading?.trim() || "";
-  const readingBreaks = reading ? findJapaneseSentenceBreakEnds(reading) : [];
+  const readingBreaks = reading ? findJapaneseClauseBreakEnds(reading) : [];
   const readingSplitsCleanly = readingBreaks.length === breakEnds.length;
 
   const clauses: JapaneseSentenceSplit[] = [];
