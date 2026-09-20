@@ -844,9 +844,11 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause (mdash) — next clip must not start early.
-    vi.advanceTimersByTime(400);
+    const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
+    vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text).toBe("I'll be a bit late");
 
@@ -883,10 +885,10 @@ describe("speechService karaoke timeline", () => {
     expect(ended).toBe(0);
     expect(spoken).toHaveLength(1);
 
-    // Tip label→body uses ENGLISH_TIP_CHAIN_PAUSE_MS (shorter than mdash chain).
-    const tipPause = __speechTestHooks.ENGLISH_TIP_CHAIN_PAUSE_MS;
-    expect(tipPause).toBeLessThan(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS);
-    vi.advanceTimersByTime(tipPause - 50);
+    // Real inter-utterance pause after the tip label line (shared EN chain pause).
+    const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
+    expect(chainPause).toBe(400);
+    vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
     expect(spoken).toHaveLength(2);

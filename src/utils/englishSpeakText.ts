@@ -122,8 +122,7 @@ function findEnglishClauseBreakEnds(text: string): number[] {
   for (const m of text.matchAll(/[—–]\s*/g)) {
     ends.add(m.index + m[0].length);
   }
-  // Quest tip lines ("✓ Natural\nClear purpose.") — clause split; tip pause is
-  // shorter than mdash/semicolon (see ENGLISH_TIP_CHAIN_PAUSE_MS).
+  // Quest tip lines ("✓ Natural\nClear purpose.") — same inter-utterance breath.
   for (const m of text.matchAll(/\n+/g)) {
     ends.add(m.index + m[0].length);
   }

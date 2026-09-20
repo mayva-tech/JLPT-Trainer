@@ -16,7 +16,6 @@ import {
   buildJapaneseHighlightUnits,
   buildJapaneseSpokenKaraokeSteps,
   deriveSpacedReadingForUnits,
-  EN_TIP_NEWLINE_PAUSE,
   estimateUnitDurationMs,
   findUnitForBoundary,
   type HighlightUnit,
@@ -119,16 +118,11 @@ type KaraokeTimeline = {
 };
 
 /**
- * Real silence between gloss head/aside, EN clause segments, or JA sentences —
- * neural voices ignore in-utterance periods/ellipsis pauses.
- * Used for `;` / em-dash / sentence clause chains (and descriptive asides).
+ * Real silence between gloss head/aside, EN clause segments (`;` / em-dash /
+ * tip newlines / sentence ends), or JA sentences — neural voices ignore
+ * in-utterance periods/ellipsis pauses.
  */
-const ENGLISH_CHAIN_PAUSE_MS = 680;
-/**
- * Shorter breath after quest tip quality labels ("✓ Natural" → body).
- * Same chain machinery as ENGLISH_CHAIN_PAUSE_MS, but tips feel too long at 680.
- */
-const ENGLISH_TIP_CHAIN_PAUSE_MS = 400;
+const ENGLISH_CHAIN_PAUSE_MS = 400;
 /** Nanami breath between Japanese clauses split on 、。！？ */
 const JAPANESE_CHAIN_PAUSE_MS = 650;
 
@@ -830,8 +824,6 @@ type JapaneseSpeakSegment = {
 type EnglishSpeakSegment = {
   speak: string;
   steps: HighlightUnit[] | null;
-  /** Inter-utterance silence before the next segment (tip newlines use a shorter breath). */
-  pauseAfterMs?: number;
 };
 
 /**
@@ -992,21 +984,18 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
         return { ...s, speakGapAfter: false };
       });
     // Quest tip line breaks ("Natural\nClear purpose.") — hold karaoke on the
-    // last word with tip-length dwell (not full mdash ellipsis ~680ms).
-    const isTipNewline = /\n/.test(clauseSlice);
-    if (isTipNewline && clauseSteps.length > 0) {
+    // last word through the same breath as ENGLISH_CHAIN_PAUSE_MS.
+    if (/\n/.test(clauseSlice) && clauseSteps.length > 0) {
       const last = clauseSteps[clauseSteps.length - 1]!;
       const base = (last.spokenText ?? last.text)
         .replace(/\s*\.{3}\s*$/u, "")
         .trim();
-      last.spokenText = base;
-      last.extraPauseWeight = EN_TIP_NEWLINE_PAUSE;
+      last.spokenText = `${base} ...`;
       last.end = clause.end;
     }
     return {
       speak: clause.speak,
       steps: clauseSteps.length > 0 ? clauseSteps : null,
-      ...(isTipNewline ? { pauseAfterMs: ENGLISH_TIP_CHAIN_PAUSE_MS } : {}),
     };
   });
 }
@@ -1051,7 +1040,6 @@ function speakEnglishSegments(
             callbacks?.onEnd?.();
             return;
           }
-          const pauseMs = seg.pauseAfterMs ?? ENGLISH_CHAIN_PAUSE_MS;
           const pauseGen = playbackGeneration;
           clearAsidePauseTimer();
           pendingAsideCallbacks = callbacks ?? null;
@@ -1060,7 +1048,7 @@ function speakEnglishSegments(
             pendingAsideCallbacks = null;
             if (playbackGeneration !== pauseGen) return;
             playNext();
-          }, pauseMs);
+          }, ENGLISH_CHAIN_PAUSE_MS);
         },
       },
       true,
@@ -1082,7 +1070,6 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
   ENGLISH_CHAIN_PAUSE_MS,
-  ENGLISH_TIP_CHAIN_PAUSE_MS,
 };
 
 export {

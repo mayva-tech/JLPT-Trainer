@@ -30,11 +30,6 @@ export type HighlightUnit = {
   spokenText?: string;
   /** Extra pause after this unit for the space Nanami hears between reading tokens. */
   speakGapAfter?: boolean;
-  /**
-   * Extra karaoke dwell in punct-pause weight units (× EN_WEIGHT_MS / JA mora scale).
-   * Used for tip newline holds that should be shorter than full ellipsis / mdash.
-   */
-  extraPauseWeight?: number;
 };
 
 /**
@@ -1131,16 +1126,12 @@ const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
 /**
- * English ellipsis / em-dash breath — match speechService ENGLISH_CHAIN_PAUSE_MS
- * (~680ms) so karaoke does not race past "75% — …" while Andrew pauses.
- * Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN / rate divisor.
+ * English ellipsis / em-dash / tip-newline breath — match speechService
+ * ENGLISH_CHAIN_PAUSE_MS (~400ms) so karaoke does not race past "75% — …"
+ * while Andrew pauses. Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN
+ * / rate divisor.
  */
-const EN_ELLIPSIS_PAUSE = 2.2;
-/**
- * Quest tip label→body karaoke hold — match speechService
- * ENGLISH_TIP_CHAIN_PAUSE_MS (~400ms). Lighter than EN_ELLIPSIS_PAUSE.
- */
-export const EN_TIP_NEWLINE_PAUSE = 1.27;
+const EN_ELLIPSIS_PAUSE = 1.27;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
 const EN_WEIGHT_MS = 315;
 /**
@@ -1317,9 +1308,6 @@ export function estimateUnitDurationMs(
   }
   if (unit.speakGapAfter && !/\.\.\./.test(spokenForPunct)) {
     punctPause += SPEAK_TOKEN_GAP;
-  }
-  if (typeof unit.extraPauseWeight === "number" && unit.extraPauseWeight > 0) {
-    punctPause += unit.extraPauseWeight;
   }
 
   if (lang === "en") {
