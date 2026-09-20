@@ -881,7 +881,7 @@ describe("speechService karaoke timeline", () => {
 
     expect(spoken).toHaveLength(1);
     expect(spoken[0]!.text).toMatch(/ございます/);
-    expect(spoken[0]!.text).not.toMatch(/確認|かくにん/);
+    expect(spoken[0]!.text).not.toMatch(/では|確認|かくにん/);
     spoken[0]!.onstart?.();
     vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
     expect(highlights.some((h) => h.includes("ありがとう") || h.includes("ございます"))).toBe(
@@ -896,14 +896,66 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(300);
     expect(spoken).toHaveLength(2);
-    expect(spoken[1]!.text).toMatch(/では|確認|かくにん/);
+    expect(spoken[1]!.text).toMatch(/では/);
+
+    spoken[1]!.onstart?.();
+    spoken[1]!.onend?.();
+    expect(ended).toBe(0);
+
+    vi.advanceTimersByTime(650);
+    expect(spoken).toHaveLength(3);
+    expect(spoken[2]!.text).toMatch(/確認|かくにん|いくつ/);
+
+    spoken[2]!.onstart?.();
+    vi.advanceTimersByTime(
+      __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
+    );
+    spoken[2]!.onend?.();
+    expect(highlights.some((h) => /では|確認|いくつ/.test(h))).toBe(true);
+    expect(ended).toBe(1);
+  });
+
+  it("splits Japanese on 、 with a real pause after はい", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "はい、転入届を出したいです。";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakJapanese(
+      text,
+      {
+        onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+        onEnd: () => {
+          ended += 1;
+        },
+      },
+      1
+    );
+
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toMatch(/はい/);
+    expect(spoken[0]!.text).not.toMatch(/転入|出したい/);
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights.some((h) => h.includes("はい"))).toBe(true);
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken).toHaveLength(1);
+
+    // Real inter-utterance pause after 、 — next clip must not start early.
+    vi.advanceTimersByTime(400);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(300);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text).toMatch(/転入|出したい/);
 
     spoken[1]!.onstart?.();
     vi.advanceTimersByTime(
       __speechTestHooks.FALLBACK_START_OFFSET_MS + 20000
     );
     spoken[1]!.onend?.();
-    expect(highlights.some((h) => /では|確認|いくつ/.test(h))).toBe(true);
+    expect(highlights.some((h) => /転入|出し/.test(h))).toBe(true);
     expect(ended).toBe(1);
   });
 });

@@ -432,15 +432,31 @@ describe("splitJapaneseBySentences", () => {
   it("splits after 。 so Nanami can pause between sentences", () => {
     const text = "ありがとうございます。では、いくつか確認しますね。";
     const clauses = splitJapaneseBySentences(text);
-    expect(clauses).toHaveLength(2);
+    expect(clauses).toHaveLength(3);
     expect(clauses![0]!.speak).toContain("ありがとうございます");
-    expect(clauses![1]!.speak).toContain("確認");
+    expect(clauses![1]!.speak).toMatch(/では/);
+    expect(clauses![2]!.speak).toContain("確認");
     expect(clauses![0]!.end).toBe(clauses![1]!.start);
+    expect(clauses![1]!.end).toBe(clauses![2]!.start);
+  });
+
+  it("splits after 、 so Nanami pauses after はい", () => {
+    const text = "はい、転入届を出したいです。";
+    const clauses = splitJapaneseBySentences(text);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toMatch(/^はい、?$/);
+    expect(clauses![1]!.speak).toContain("転入届");
+    expect(clauses![0]!.end).toBe(clauses![1]!.start);
+    expect(text.slice(clauses![0]!.start, clauses![0]!.end)).toBe("はい、");
   });
 
   it("does not split a single trailing period", () => {
     expect(splitJapaneseBySentences("確認してください。")).toBeNull();
     expect(splitJapaneseBySentences("はい")).toBeNull();
+  });
+
+  it("does not split a trailing-only comma", () => {
+    expect(splitJapaneseBySentences("はい、")).toBeNull();
   });
 
   it("splits reading when it also has sentence punct", () => {
@@ -450,5 +466,14 @@ describe("splitJapaneseBySentences", () => {
     expect(clauses).toHaveLength(2);
     expect(clauses![0]!.reading).toMatch(/いきます/);
     expect(clauses![1]!.reading).toMatch(/わかりました/);
+  });
+
+  it("splits reading on matching 、", () => {
+    const text = "はい、転入届を出したいです。";
+    const reading = "はい、てんにゅうとどけをだしたいです。";
+    const clauses = splitJapaneseBySentences(text, reading);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.reading).toMatch(/はい/);
+    expect(clauses![1]!.reading).toMatch(/てんにゅう/);
   });
 });

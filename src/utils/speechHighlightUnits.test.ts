@@ -635,6 +635,33 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
     expect(particle).toBeGreaterThan(contentMora);
   });
 
+  it("holds karaoke on display 、 (はい、) longer than TTS-inserted particle commas", () => {
+    const haiComma = estimateUnitDurationMs(
+      { start: 0, end: 3, text: "はい、", kind: "word" },
+      "ja"
+    );
+    const haiPlain = estimateUnitDurationMs(
+      { start: 0, end: 2, text: "はい", kind: "word" },
+      "ja"
+    );
+    const particleInserted = estimateUnitDurationMs(
+      {
+        start: 0,
+        end: 1,
+        text: "は",
+        kind: "word",
+        spokenText: "わ、",
+        speakGapAfter: true,
+      },
+      "ja",
+      { start: 1, end: 2, text: "彼", kind: "word" }
+    );
+    // Display clause comma should add a clear breath (~JA_COMMA_PAUSE)
+    expect(haiComma - haiPlain).toBeGreaterThan(200);
+    // Particle TTS comma still pauses, but must not dwarf はい、
+    expect(haiComma).toBeGreaterThan(particleInserted);
+  });
+
   it("extends dwell after topic は and subject が before the next word", () => {
     const de = estimateUnitDurationMs(
       {

@@ -122,7 +122,7 @@ type KaraokeTimeline = {
  * neural voices ignore in-utterance periods/ellipsis pauses.
  */
 const ENGLISH_CHAIN_PAUSE_MS = 680;
-/** Nanami breath between Japanese sentences split on 。！？ */
+/** Nanami breath between Japanese clauses split on 、。！？ */
 const JAPANESE_CHAIN_PAUSE_MS = 650;
 
 let playbackGeneration = 0;
@@ -826,8 +826,8 @@ type EnglishSpeakSegment = {
 };
 
 /**
- * Split multi-sentence JA on 。！？ so Nanami takes a real breath between
- * sentences and karaoke does not race into the next clause.
+ * Split JA on 、。！？ so Nanami takes a real breath between clauses and
+ * karaoke does not race past はい、 into the next phrase.
  */
 function buildJapaneseSpeakSegments(
   text: string,
