@@ -860,6 +860,45 @@ describe("speechService karaoke timeline", () => {
     expect(ended).toBe(1);
   });
 
+  it("splits quest tip newlines with a real pause so Andrew breathes after the label", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService, __speechTestHooks } = await import("./speechService");
+
+    const text = "Natural\nClear purpose.";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toBe("Natural");
+    spoken[0]!.onstart?.();
+    vi.advanceTimersByTime(__speechTestHooks.FALLBACK_START_OFFSET_MS + 50);
+    expect(highlights[0]).toMatch(/^Natural/);
+    spoken[0]!.onend?.();
+    expect(ended).toBe(0);
+    expect(spoken).toHaveLength(1);
+
+    // Real inter-utterance pause after the tip label line.
+    vi.advanceTimersByTime(400);
+    expect(spoken).toHaveLength(1);
+    vi.advanceTimersByTime(300);
+    expect(spoken).toHaveLength(2);
+    expect(spoken[1]!.text).toBe("Clear purpose");
+
+    spoken[1]!.onstart?.();
+    vi.advanceTimersByTime(
+      __speechTestHooks.FALLBACK_START_OFFSET_MS + 15000
+    );
+    spoken[1]!.onend?.();
+    expect(highlights.some((h) => /Clear/.test(h))).toBe(true);
+    expect(ended).toBe(1);
+  });
+
   it("splits Japanese on 。 with a real pause so karaoke stays aligned", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");

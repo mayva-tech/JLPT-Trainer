@@ -962,6 +962,7 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
 
   const steps = buildEnglishSpokenKaraokeSteps(text);
   return clauses.map((clause) => {
+    const clauseSlice = text.slice(clause.start, clause.end);
     const clauseSteps = steps
       .filter((s) => s.start >= clause.start && s.start < clause.end)
       .map((s) => {
@@ -981,6 +982,16 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
         // Preserve "75% ..." style mdash dwell attached to the prior word.
         return { ...s, speakGapAfter: false };
       });
+    // Quest tip line breaks ("Natural\nClear purpose.") — hold karaoke on the
+    // last word through the same breath as ENGLISH_CHAIN_PAUSE_MS.
+    if (/\n/.test(clauseSlice) && clauseSteps.length > 0) {
+      const last = clauseSteps[clauseSteps.length - 1]!;
+      const base = (last.spokenText ?? last.text)
+        .replace(/\s*\.{3}\s*$/u, "")
+        .trim();
+      last.spokenText = `${base} ...`;
+      last.end = clause.end;
+    }
     return {
       speak: clause.speak,
       steps: clauseSteps.length > 0 ? clauseSteps : null,

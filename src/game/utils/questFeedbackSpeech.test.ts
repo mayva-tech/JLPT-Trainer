@@ -25,12 +25,44 @@ describe("parseBilingualSpeakSegments", () => {
         "❌ That would sound unnatural here.\n\nBetter: 「転入届を出したいんですが。」\n\n「届を出す」 means to submit/file a notification or form."
       )
     ).toEqual([
-      { language: "en", text: "That would sound unnatural here. Better:" },
+      {
+        language: "en",
+        text: "That would sound unnatural here.\nBetter:",
+      },
       { language: "ja", text: "転入届を出したいんですが。" },
       { language: "ja", text: "届を出す" },
       {
         language: "en",
         text: "means to submit/file a notification or form.",
+      },
+    ]);
+  });
+
+  it("keeps tip title and body on separate lines for Andrew's pause", () => {
+    expect(
+      parseBilingualSpeakSegments("✓ Natural\n\nClear purpose.")
+    ).toEqual([
+      { language: "en", text: "Natural\nClear purpose." },
+    ]);
+    expect(
+      parseBilingualSpeakSegments(
+        "✓ Natural\n\nClear purpose. 「〜したいです」works politely at a counter."
+      )
+    ).toEqual([
+      { language: "en", text: "Natural\nClear purpose." },
+      { language: "ja", text: "〜したいです" },
+      { language: "en", text: "works politely at a counter." },
+    ]);
+    expect(
+      parseBilingualSpeakSegments(
+        "△ Awkward\n\nVague 「いろいろ」before facts wastes a manager's time."
+      )
+    ).toEqual([
+      { language: "en", text: "Awkward\nVague" },
+      { language: "ja", text: "いろいろ" },
+      {
+        language: "en",
+        text: "before facts wastes a manager's time.",
       },
     ]);
   });

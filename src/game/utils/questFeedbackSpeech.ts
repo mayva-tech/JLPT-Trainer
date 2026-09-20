@@ -76,7 +76,13 @@ function pushJapanese(segments: FeedbackSpeakSegment[], chunk: string) {
 }
 
 function normalizeEnglish(chunk: string): string {
-  let text = chunk.replace(/\s+/g, " ").trim();
+  // Keep newlines so tip title/body ("✓ Natural" + "Clear purpose.") stay
+  // separate clauses for Andrew's EN chain pause — do not glue into one line.
+  let text = chunk
+    .replace(/[^\S\n]+/g, " ")
+    .replace(/ ?\n ?/g, "\n")
+    .replace(/\n{2,}/g, "\n")
+    .trim();
   // Drop leading gloss separators after a JA headword ("= current address").
   text = text.replace(/^[=:：≈~～\-–—·•／/]+\s*/u, "").trim();
   // Drop trailing breath/gloss marks before the next JA run ("dropped — 今…").
@@ -99,8 +105,15 @@ function mergeAdjacent(
     const prev = out[out.length - 1];
     // Merge adjacent English only — keep each Japanese phrase as its own beat
     // so Nanami gets a clean utterance (not glued into Andrew).
+    // Preserve newlines when either side already has a tip line break.
     if (prev && prev.language === "en" && seg.language === "en") {
-      prev.text = `${prev.text} ${seg.text}`.replace(/\s+/g, " ").trim();
+      const joiner =
+        prev.text.includes("\n") || seg.text.includes("\n") ? "\n" : " ";
+      prev.text = `${prev.text}${joiner}${seg.text}`
+        .replace(/[^\S\n]+/g, " ")
+        .replace(/ ?\n ?/g, "\n")
+        .replace(/\n{2,}/g, "\n")
+        .trim();
     } else {
       out.push({ ...seg });
     }
