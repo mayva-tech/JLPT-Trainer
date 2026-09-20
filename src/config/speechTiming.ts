@@ -17,6 +17,13 @@ export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
 export const SPEECH_EN_SEMICOLON_PAUSE_MS = 100;
 
 /**
+ * English colon breath (`meaning: to prepare in advance`).
+ * A colon lifts into the gloss rather than stopping, so it sits between the
+ * comma and the full chain pause.
+ */
+export const SPEECH_EN_COLON_PAUSE_MS = 250;
+
+/**
  * Japanese sentence breath after `。` / `！` / `？`.
  * Near-zero: the next-utterance handoff is the audible pause.
  */

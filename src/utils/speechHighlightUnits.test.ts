@@ -1268,3 +1268,54 @@ describe("deriveSpacedReadingForUnits", () => {
     expect(deriveSpacedReadingForUnits(text, "まったくちがう", units)).toBeNull();
   });
 });
+
+describe("estimateUnitDurationMs sentence-final detection", () => {
+  const dwell = (text: string) => {
+    const units = buildEnglishSpokenKaraokeSteps(text);
+    return units.map((u, i) =>
+      estimateUnitDurationMs(u, "en", units[i + 1] ?? null)
+    );
+  };
+
+  it("does not give an abbreviation a sentence breath", () => {
+    const [mister] = dwell("Mr. Tanaka");
+    const [approx] = dwell("approx. 5 min");
+    const [no] = dwell("No. 23");
+    // A real sentence end on a word of similar length for comparison.
+    const [done] = dwell("Done. Next");
+    expect(mister!).toBeLessThan(done!);
+    expect(approx!).toBeLessThan(done!);
+    expect(no!).toBeLessThan(done!);
+  });
+
+  it("does not give a decimal point a sentence breath", () => {
+    const [decimal] = dwell("3.5 million");
+    const [sentence] = dwell("35. million");
+    expect(decimal!).toBeLessThan(sentence!);
+  });
+
+  it("treats a.m. / e.g. as one token without a sentence breath", () => {
+    const units = buildEnglishSpokenKaraokeSteps("at 8 a.m. tomorrow");
+    const am = units.findIndex((u) => /a\.m\./.test(u.text));
+    expect(am).toBeGreaterThanOrEqual(0);
+    const amDwell = estimateUnitDurationMs(
+      units[am]!,
+      "en",
+      units[am + 1] ?? null
+    );
+    const [ended] = dwell("noon. tomorrow");
+    expect(amDwell).toBeLessThan(ended!);
+  });
+
+  it("still gives a genuine sentence end its breath", () => {
+    const units = buildEnglishSpokenKaraokeSteps("Go home. Rest now");
+    const home = units.findIndex((u) => /home/.test(u.text));
+    const homeDwell = estimateUnitDurationMs(
+      units[home]!,
+      "en",
+      units[home + 1] ?? null
+    );
+    const [go] = dwell("Go home");
+    expect(homeDwell).toBeGreaterThan(go!);
+  });
+});

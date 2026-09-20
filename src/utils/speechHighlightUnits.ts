@@ -13,6 +13,7 @@ import {
 import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
 import {
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_COLON_PAUSE_MS,
   SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
@@ -1123,8 +1124,13 @@ const KARAOKE_BREAK_POINT = 0.15;
  * Tuned so JA karaoke stays near the voice (EN weights are separate).
  */
 const SPEAK_TOKEN_GAP = 0.2;
-/** ms per mora-weight at speech rate 1 (callers divide by utterance rate). */
-const JA_MORA_MS = 160;
+/**
+ * ms per mora-weight at speech rate 1 (callers divide by utterance rate).
+ * Nanami runs near 7.3 mora/s at rate 1 (~137 ms/mora); 145 keeps karaoke a
+ * touch behind the voice without the ~25% overshoot 160 produced on example
+ * sentences. Pause constants below are ms-derived, so they are unaffected.
+ */
+const JA_MORA_MS = 145;
 /** Minimum dwell for a Japanese content unit at rate 1. */
 const JA_MIN_UNIT_MS = 120;
 /** Extra dwell after grammar-slot 〜 before the next pattern piece. */
@@ -1156,12 +1162,72 @@ const JA_PUNCT_PAUSE = JA_COMMA_PAUSE;
 const EN_ELLIPSIS_PAUSE = EN_PUNCT_PAUSE;
 /** English comma breath (example sentences). */
 const EN_COMMA_PAUSE = EN_PUNCT_PAUSE;
-/** English ";" / ":" clause breath. */
-const EN_CLAUSE_PAUSE = EN_PUNCT_PAUSE;
 /** English sentence-final . ! ? breath. */
 const EN_SENTENCE_PAUSE = EN_PUNCT_PAUSE;
+/**
+ * English `:` breath. A colon introduces a list or gloss ("meaning: to
+ * prepare") and is spoken with a short lift, not the full stop the general
+ * chain pause gives it.
+ */
+const EN_COLON_PAUSE = SPEECH_EN_COLON_PAUSE_MS / EN_WEIGHT_MS;
 /** JA "/" / ellipsis alternate pause — match comma breath. */
 const SLASH_PAUSE = JA_COMMA_PAUSE;
+
+/**
+ * Common English abbreviations whose trailing `.` is not a sentence end.
+ * Compared case-insensitively against the unit core.
+ */
+const EN_ABBREVIATIONS = new Set([
+  "mr",
+  "mrs",
+  "ms",
+  "dr",
+  "prof",
+  "st",
+  "no",
+  "vs",
+  "etc",
+  "approx",
+  "est",
+  "fig",
+  "eg",
+  "ie",
+  "jr",
+  "sr",
+  "inc",
+  "ltd",
+  "co",
+  "dept",
+  "min",
+  "max",
+  "sec",
+  "hr",
+  "yen",
+]);
+
+/**
+ * True when a `.` in `text` is a real sentence end rather than an
+ * abbreviation dot or a decimal point.
+ *
+ * Without this, `Mr.`, `a.m.`, `approx.` and `3.5` each collect a full
+ * sentence breath mid-phrase — measured at 649 ms against a natural ~200 ms,
+ * which is heard as the voice stalling in the middle of a clause.
+ * `!` and `?` are unambiguous and always count.
+ */
+function hasSentenceFinalPunct(text: string): boolean {
+  if (/[!?！？。]/.test(text)) return true;
+  if (!/\./.test(text)) return false;
+
+  // Neutralise every dot that is not a sentence end, then see if any remain.
+  // Works token-wise, because callers pass display text and spoken text joined
+  // together rather than a single clean token.
+  let rest = text.replace(/(\d)\.(\d)/g, "$1$2"); // decimals: 3.5
+  rest = rest.replace(/(?:[A-Za-z]\.){2,}/g, " "); // a.m., e.g., U.S.A.
+  rest = rest.replace(/([A-Za-z]+)\./g, (match, word: string) =>
+    EN_ABBREVIATIONS.has(word.toLowerCase()) ? " " : match
+  );
+  return /\./.test(rest);
+}
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -1194,9 +1260,12 @@ const PARTICLE_BREAK_CORES = new Set([
 /**
  * Extra mora-weight after phrase particles は / が / を / に so karaoke dwells
  * longer before the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
- * Keep modest — long example sentences stack many of these and overshoot Nanami.
+ *
+ * Held at roughly a comma's worth of breath. A speaker does not stop after
+ * every particle — the dwell marks the phrase edge, and at 0.95 the stack of
+ * them in a long sentence was the single largest source of the overshoot.
  */
-const PHRASE_PARTICLE_PAUSE = 0.95;
+const PHRASE_PARTICLE_PAUSE = 0.55;
 
 function isParticleBreakUnit(text: string): boolean {
   const { core } = stripTrailingPunct(text);
@@ -1276,9 +1345,14 @@ export function estimateUnitDurationMs(
   if (/[;；]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
     punctPause += lang === "en" ? EN_SEMICOLON_PAUSE : JA_PUNCT_PAUSE;
   } else if (/[:：]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
-    punctPause += lang === "en" ? EN_CLAUSE_PAUSE : JA_PUNCT_PAUSE;
+    punctPause += lang === "en" ? EN_COLON_PAUSE : JA_PUNCT_PAUSE;
   }
-  if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
+  if (
+    !/\.\.\./.test(spokenForPunct) &&
+    (lang === "en"
+      ? hasSentenceFinalPunct(spokenForPunct)
+      : /[.!?。！？]/.test(spokenForPunct))
+  ) {
     punctPause += lang === "en" ? EN_SENTENCE_PAUSE : JA_SENTENCE_PAUSE;
   }
   // Lone particles as their own karaoke unit
