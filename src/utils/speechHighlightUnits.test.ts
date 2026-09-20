@@ -7,6 +7,7 @@ import {
   buildJapaneseSpokenKaraokeSteps,
   deriveSpacedReadingForUnits,
   estimateUnitDurationMs,
+  estimateUnitSpeechDurationMs,
   findUnitForBoundary,
 } from "./speechHighlightUnits";
 
@@ -639,6 +640,24 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
     expect(particle).toBeGreaterThan(contentMora);
   });
 
+  it("speech duration excludes punct/particle holds used by karaoke dwell", () => {
+    const withComma = {
+      start: 0,
+      end: 3,
+      text: "映画、",
+      kind: "word" as const,
+      spokenText: "えいが",
+    };
+    const total = estimateUnitDurationMs(withComma, "ja");
+    const speech = estimateUnitSpeechDurationMs(withComma, "ja");
+    expect(speech).toBeLessThan(total);
+    expect(speech).toBeGreaterThan(0);
+    expect(estimateUnitSpeechDurationMs(
+      { start: 0, end: 1, text: "。", kind: "punctuation" },
+      "ja"
+    )).toBe(0);
+  });
+
   it("holds karaoke on display 、 (はい、) longer than TTS-inserted particle commas", () => {
     const haiComma = estimateUnitDurationMs(
       { start: 0, end: 3, text: "はい、", kind: "word" },
@@ -734,8 +753,9 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       },
       "ja"
     );
-    // Extra dwell beyond the added わ mora (~150ms) — topic pause
-    expect(nounHa - noun).toBeGreaterThan(250);
+    // Extra dwell beyond the added わ mora — light topic pause (kept small so
+    // long quest sentences do not trail Nanami).
+    expect(nounHa - noun).toBeGreaterThan(150);
   });
 
   it("does not add a standalone は pause to compound では", () => {
@@ -902,7 +922,7 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
     );
     expect(wo).toBeGreaterThan(de);
     expect(ni).toBeGreaterThan(de);
-    expect(nihongoWo - noun).toBeGreaterThan(250);
+    expect(nihongoWo - noun).toBeGreaterThan(150);
   });
 
   it("does not add long pause after を before きっかけに", () => {

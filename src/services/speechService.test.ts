@@ -523,6 +523,13 @@ describe("speechService karaoke timeline", () => {
     expect(karaokeRateDivisor("ja", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
     expect(karaokeRateDivisor("en", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
 
+    // At normal rate the JA scale×floor product must stay ≤ 1 so quest
+    // sentence highlights do not outlast Nanami's voiceover.
+    const jaNet =
+      __speechTestHooks.FALLBACK_TIMING_SCALE_JA /
+      karaokeRateDivisor("ja", SPEECH_RATE_NORMAL);
+    expect(jaNet).toBeLessThanOrEqual(1);
+
     const text = "ありがとうございます。では、いくつか確認しますね。";
     const reading =
       "ありがとう ございます では いくつ か かくにん します ね";

@@ -10,8 +10,28 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   animation: th-enter 180ms ease-out;
+}
+
+.th-root:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.th-root.th-dragging {
+  cursor: grabbing;
+  animation: none;
+  z-index: 50;
+}
+
+.th-root.th-placed {
+  animation: none;
 }
 
 .th-svg {
@@ -26,6 +46,11 @@
    ~55ms minimum frame, or shapes blur into each other. */
 .th-mouth-shape {
   transition: rx 40ms linear, ry 40ms linear;
+}
+
+/* Gaze drifts — keep the slide short so it reads as a glance, not a lag. */
+.th-gaze {
+  transition: transform 160ms ease-out;
 }
 
 /* A faint breathing motion while speaking, so the head does not look like a
@@ -75,6 +100,10 @@
   }
 
   .th-mouth-shape {
+    transition: none;
+  }
+
+  .th-gaze {
     transition: none;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { useSpeechFace } from "../../hooks/useSpeechFace";
 import type { Viseme } from "../../utils/visemes";
 import "./talking-head.css";
@@ -32,7 +32,15 @@ const MOUTH: Record<Viseme, { rx: number; ry: number; round: number }> = {
   TH: { rx: 7, ry: 3, round: 0.25 }, // tongue visible
 };
 
-function Mouth({ viseme, lipColor }: { viseme: Viseme; lipColor: string }) {
+function Mouth({
+  viseme,
+  lipColor,
+  cy = 70,
+}: {
+  viseme: Viseme;
+  lipColor: string;
+  cy?: number;
+}) {
   const shape = MOUTH[viseme];
   const showTeeth = shape.ry > 3;
   const showTongue = viseme === "TH";
@@ -41,7 +49,7 @@ function Mouth({ viseme, lipColor }: { viseme: Viseme; lipColor: string }) {
     <g className="th-mouth">
       <ellipse
         cx="50"
-        cy="70"
+        cy={cy}
         rx={shape.rx}
         ry={Math.max(shape.ry, 0.7)}
         fill={shape.ry > 1.5 ? "#3b1f26" : lipColor}
@@ -52,7 +60,7 @@ function Mouth({ viseme, lipColor }: { viseme: Viseme; lipColor: string }) {
       {showTeeth && (
         <rect
           x={50 - shape.rx * 0.62}
-          y={70 - shape.ry + 0.4}
+          y={cy - shape.ry + 0.4}
           width={shape.rx * 1.24}
           height={Math.min(2.2, shape.ry * 0.45)}
           rx="0.6"
@@ -60,7 +68,13 @@ function Mouth({ viseme, lipColor }: { viseme: Viseme; lipColor: string }) {
         />
       )}
       {showTongue && (
-        <ellipse cx="50" cy={70 + shape.ry * 0.35} rx={shape.rx * 0.45} ry="1.2" fill="#c96b74" />
+        <ellipse
+          cx="50"
+          cy={cy + shape.ry * 0.35}
+          rx={shape.rx * 0.45}
+          ry="1.2"
+          fill="#c96b74"
+        />
       )}
     </g>
   );
@@ -102,25 +116,97 @@ function useBlink(active: boolean): boolean {
   return closed;
 }
 
-function Eyes({ closed, irisColor }: { closed: boolean; irisColor: string }) {
-  if (closed) {
-    return (
-      <g stroke="#2b2118" strokeWidth="1.8" strokeLinecap="round" fill="none">
-        <path d="M34 50 q5 3 10 0" />
-        <path d="M56 50 q5 3 10 0" />
-      </g>
-    );
-  }
-  return (
-    <g>
-      <ellipse cx="39" cy="50" rx="4.6" ry="5.2" fill="#fdfdfa" />
-      <ellipse cx="61" cy="50" rx="4.6" ry="5.2" fill="#fdfdfa" />
-      <circle cx="39.5" cy="50.4" r="2.7" fill={irisColor} />
-      <circle cx="61.5" cy="50.4" r="2.7" fill={irisColor} />
-      <circle cx="40.4" cy="49.3" r="0.9" fill="#fff" />
-      <circle cx="62.4" cy="49.3" r="0.9" fill="#fff" />
-    </g>
-  );
+/**
+ * Livelier blinks (with occasional double-blinks) so the face feels alive
+ * while speaking.
+ */
+function useLiveBlink(active: boolean): boolean {
+  const [closed, setClosed] = useState(false);
+  const timer = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!active) {
+      setClosed(false);
+      return;
+    }
+    let cancelled = false;
+
+    const blinkOnce = (afterClose: () => void) => {
+      setClosed(true);
+      timer.current = window.setTimeout(() => {
+        if (cancelled) return;
+        setClosed(false);
+        afterClose();
+      }, 110 + Math.random() * 40);
+    };
+
+    const schedule = () => {
+      const delay = 1400 + Math.random() * 2800;
+      timer.current = window.setTimeout(() => {
+        if (cancelled) return;
+        blinkOnce(() => {
+          if (cancelled) return;
+          // Roughly one in four blinks is a quick double-blink.
+          if (Math.random() < 0.25) {
+            timer.current = window.setTimeout(() => {
+              if (cancelled) return;
+              blinkOnce(schedule);
+            }, 90 + Math.random() * 80);
+          } else {
+            schedule();
+          }
+        });
+      }, delay);
+    };
+    schedule();
+
+    return () => {
+      cancelled = true;
+      if (timer.current) window.clearTimeout(timer.current);
+    };
+  }, [active]);
+
+  return closed;
+}
+
+type GazeOffset = { dx: number; dy: number };
+
+/** Random gaze drifts within the sclera, often returning to center. */
+function useGaze(active: boolean): GazeOffset {
+  const [gaze, setGaze] = useState<GazeOffset>({ dx: 0, dy: 0 });
+  const timer = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!active) {
+      setGaze({ dx: 0, dy: 0 });
+      return;
+    }
+    let cancelled = false;
+
+    const schedule = () => {
+      const delay = 700 + Math.random() * 2400;
+      timer.current = window.setTimeout(() => {
+        if (cancelled) return;
+        if (Math.random() < 0.32) {
+          setGaze({ dx: 0, dy: 0 });
+        } else {
+          setGaze({
+            dx: (Math.random() - 0.5) * 3.0,
+            dy: (Math.random() - 0.5) * 2.2,
+          });
+        }
+        schedule();
+      }, delay);
+    };
+    schedule();
+
+    return () => {
+      cancelled = true;
+      if (timer.current) window.clearTimeout(timer.current);
+    };
+  }, [active]);
+
+  return gaze;
 }
 
 interface HeadProps {
@@ -129,8 +215,74 @@ interface HeadProps {
   speaking: boolean;
 }
 
-/** Nanami — the Japanese voice. */
-function NanamiHead({ viseme, blinking, speaking }: HeadProps) {
+/** Nanami — the Japanese voice (kimono portrait). */
+function NanamiEyes({ irisColor, active }: { irisColor: string; active: boolean }) {
+  const closed = useLiveBlink(active);
+  const { dx, dy } = useGaze(active);
+
+  if (closed) {
+    return (
+      <g stroke="#2a1810" strokeWidth="1.8" strokeLinecap="round" fill="none">
+        <path d="M32 48 q7 2.6 14 0" />
+        <path d="M54 48 q7 2.6 14 0" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <defs>
+        <clipPath id="th-nanami-eye-l">
+          <ellipse cx="39" cy="48" rx="5.6" ry="5.0" />
+        </clipPath>
+        <clipPath id="th-nanami-eye-r">
+          <ellipse cx="61" cy="48" rx="5.6" ry="5.0" />
+        </clipPath>
+      </defs>
+      <ellipse cx="39" cy="48" rx="5.6" ry="5.0" fill="#fdfcfa" />
+      <ellipse cx="61" cy="48" rx="5.6" ry="5.0" fill="#fdfcfa" />
+      {/* upper lash line */}
+      <path
+        d="M33.5 45.2 Q39 42.8 44.5 45.2"
+        stroke="#1a1210"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M55.5 45.2 Q61 42.8 66.5 45.2"
+        stroke="#1a1210"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <g clipPath="url(#th-nanami-eye-l)">
+        <g
+          className="th-gaze"
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`}
+        >
+          <ellipse cx="39.2" cy="48.3" rx="3.4" ry="3.5" fill={irisColor} />
+          <circle cx="39.2" cy="48.3" r="1.7" fill="#1a1210" />
+          <circle cx="37.6" cy="46.6" r="1.0" fill="#fff" />
+          <circle cx="40.2" cy="49.4" r="0.45" fill="#fff" opacity="0.85" />
+        </g>
+      </g>
+      <g clipPath="url(#th-nanami-eye-r)">
+        <g
+          className="th-gaze"
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`}
+        >
+          <ellipse cx="61.2" cy="48.3" rx="3.4" ry="3.5" fill={irisColor} />
+          <circle cx="61.2" cy="48.3" r="1.7" fill="#1a1210" />
+          <circle cx="59.6" cy="46.6" r="1.0" fill="#fff" />
+          <circle cx="62.2" cy="49.4" r="0.45" fill="#fff" opacity="0.85" />
+        </g>
+      </g>
+    </g>
+  );
+}
+
+function NanamiHead({ viseme, speaking }: HeadProps) {
   return (
     <svg
       viewBox="0 0 100 110"
@@ -138,30 +290,154 @@ function NanamiHead({ viseme, blinking, speaking }: HeadProps) {
       role="img"
       aria-label="Nanami, the Japanese voice"
     >
-      {/* hair back */}
-      <path d="M20 58 Q18 20 50 18 Q82 20 80 58 L80 92 Q66 84 50 84 Q34 84 20 92 Z" fill="#2f2a33" />
-      {/* face */}
-      <ellipse cx="50" cy="58" rx="27" ry="31" fill="#f6d9c4" />
-      {/* fringe */}
-      <path d="M23 46 Q26 22 50 21 Q74 22 77 46 Q66 34 50 35 Q34 34 23 46 Z" fill="#3a333f" />
-      <Eyes closed={blinking} irisColor="#5b3a2e" />
-      {/* brows */}
-      <g stroke="#3a333f" strokeWidth="1.7" strokeLinecap="round" fill="none">
-        <path d="M34 42 q5 -2 10 0" />
-        <path d="M56 42 q5 -2 10 0" />
+      {/* updo hair mass behind the head */}
+      <ellipse cx="50" cy="42" rx="34" ry="36" fill="#2c252c" />
+      <ellipse cx="50" cy="28" rx="28" ry="18" fill="#241e24" />
+      {/* kimono — brick red */}
+      <path
+        d="M18 110 Q24 84 38 80 Q50 86 62 80 Q76 84 82 110 Z"
+        fill="#c43a2f"
+      />
+      {/* floral pattern — white blossom, cyan bloom, pink accent */}
+      <g>
+        <circle cx="32" cy="98" r="4.2" fill="#f7f2ea" />
+        <circle cx="32" cy="98" r="1.6" fill="#e8c84a" />
+        <circle cx="28" cy="94" r="1.8" fill="#f7f2ea" />
+        <circle cx="36" cy="94" r="1.8" fill="#f7f2ea" />
+        <circle cx="28" cy="102" r="1.6" fill="#f7f2ea" />
+        <circle cx="36" cy="102" r="1.6" fill="#f7f2ea" />
       </g>
-      {/* nose */}
-      <path d="M50 57 q1.5 4 -1 5.5" stroke="#d9ab92" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-      {/* blush */}
-      <ellipse cx="33" cy="64" rx="4" ry="2.4" fill="#f0a8a0" opacity="0.5" />
-      <ellipse cx="67" cy="64" rx="4" ry="2.4" fill="#f0a8a0" opacity="0.5" />
-      <Mouth viseme={viseme} lipColor="#c2586a" />
+      <g>
+        <circle cx="68" cy="97" r="3.6" fill="#7ec8d8" />
+        <circle cx="68" cy="97" r="1.4" fill="#f7f2ea" />
+        <circle cx="64" cy="93" r="1.5" fill="#7ec8d8" />
+        <circle cx="72" cy="93" r="1.5" fill="#7ec8d8" />
+      </g>
+      <circle cx="54" cy="105" r="2.0" fill="#e8a0a8" />
+      <circle cx="76" cy="106" r="1.6" fill="#e8a0a8" />
+      {/* layered eri: cream (inner) → teal → red edge */}
+      <path
+        d="M41 82 L44 94 Q50 100 56 94 L59 82 Q50 90 41 82 Z"
+        fill="#f3eee6"
+      />
+      <path
+        d="M39 80 L42 90 Q50 96 58 90 L61 80 Q50 88 39 80 Z"
+        fill="#1a5c56"
+      />
+      <path
+        d="M37 78 L40 86 Q50 92 60 86 L63 78 Q50 86 37 78 Z"
+        fill="#b83228"
+      />
+      {/* neck */}
+      <path d="M43 70 L43 86 Q50 90 57 86 L57 70 Z" fill="#d9ab86" />
+      <ellipse cx="50" cy="80" rx="5.5" ry="1.8" fill="#c8946e" opacity="0.4" />
+      {/* ears */}
+      <ellipse cx="24" cy="56" rx="3.2" ry="4.8" fill="#d4a07e" />
+      <ellipse cx="76" cy="56" rx="3.2" ry="4.8" fill="#d4a07e" />
+      {/* face */}
+      <ellipse cx="50" cy="54" rx="25" ry="29" fill="#e0b894" />
+      {/* soft cheek blush */}
+      <ellipse cx="34" cy="62" rx="4.2" ry="2.4" fill="#e09080" opacity="0.4" />
+      <ellipse cx="66" cy="62" rx="4.2" ry="2.4" fill="#e09080" opacity="0.4" />
+      {/* crown + fringe, swept across the forehead */}
+      <path
+        d="M25 50
+           Q22 20 50 16
+           Q78 20 75 50
+           Q68 34 50 32
+           Q32 34 25 50 Z"
+        fill="#322b32"
+      />
+      {/* side-swept bang across forehead (right → left) */}
+      <path
+        d="M26 46
+           Q38 30 56 28
+           Q70 28 76 42
+           Q64 36 48 38
+           Q34 42 26 46 Z"
+        fill="#2a232a"
+      />
+      {/* strand detail */}
+      <path
+        d="M38 26 Q48 22 60 26"
+        stroke="#1a151a"
+        strokeWidth="1.1"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      {/* brows */}
+      <g stroke="#3a2a22" strokeWidth="1.9" strokeLinecap="round" fill="none">
+        <path d="M32 40 q7 -2.6 14 0.2" />
+        <path d="M54 40.2 q7 -2.6 14 0.2" />
+      </g>
+      <NanamiEyes irisColor="#4a2c22" active={speaking} />
+      {/* nose — simple tip + nostrils */}
+      <path
+        d="M48.5 58 q1.5 4 3 0"
+        stroke="#c8946e"
+        strokeWidth="1.4"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <Mouth viseme={viseme} lipColor="#a84858" cy={67} />
     </svg>
   );
 }
 
-/** Andrew — the English voice. */
-function AndrewHead({ viseme, blinking, speaking }: HeadProps) {
+/** Andrew — the English voice (andrew2 portrait). */
+function AndrewEyes({ irisColor, active }: { irisColor: string; active: boolean }) {
+  const closed = useLiveBlink(active);
+  const { dx, dy } = useGaze(active);
+
+  if (closed) {
+    return (
+      <g stroke="#5a4632" strokeWidth="1.7" strokeLinecap="round" fill="none">
+        <path d="M33 48 q6 2.8 12 0" />
+        <path d="M55 48 q6 2.8 12 0" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <defs>
+        <clipPath id="th-andrew-eye-l">
+          <ellipse cx="39" cy="48" rx="5.2" ry="4.1" />
+        </clipPath>
+        <clipPath id="th-andrew-eye-r">
+          <ellipse cx="61" cy="48" rx="5.2" ry="4.1" />
+        </clipPath>
+      </defs>
+      {/* almond sclera */}
+      <ellipse cx="39" cy="48" rx="5.2" ry="4.1" fill="#fdfcfa" />
+      <ellipse cx="61" cy="48" rx="5.2" ry="4.1" fill="#fdfcfa" />
+      {/* iris + pupil look around together; clipped so they stay in the eye */}
+      <g clipPath="url(#th-andrew-eye-l)">
+        <g
+          className="th-gaze"
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`}
+        >
+          <ellipse cx="39.3" cy="48.2" rx="3.1" ry="2.9" fill={irisColor} />
+          <circle cx="39.3" cy="48.2" r="1.55" fill="#2a241c" />
+          <circle cx="40.5" cy="46.9" r="0.85" fill="#fff" />
+        </g>
+      </g>
+      <g clipPath="url(#th-andrew-eye-r)">
+        <g
+          className="th-gaze"
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)})`}
+        >
+          <ellipse cx="61.3" cy="48.2" rx="3.1" ry="2.9" fill={irisColor} />
+          <circle cx="61.3" cy="48.2" r="1.55" fill="#2a241c" />
+          <circle cx="62.5" cy="46.9" r="0.85" fill="#fff" />
+        </g>
+      </g>
+    </g>
+  );
+}
+
+function AndrewHead({ viseme, speaking }: HeadProps) {
   return (
     <svg
       viewBox="0 0 100 110"
@@ -169,84 +445,123 @@ function AndrewHead({ viseme, blinking, speaking }: HeadProps) {
       role="img"
       aria-label="Andrew, the English voice"
     >
-      {/* neck and shoulders */}
-      <path d="M40 84 L40 96 Q50 101 60 96 L60 84 Z" fill="#dda87c" />
-      <path d="M28 110 Q30 98 42 94 Q50 99 58 94 Q70 98 72 110 Z" fill="#e9dcc9" />
+      {/* charcoal crew-neck + shoulders */}
+      <path
+        d="M30 108 Q32 96 42 92 Q50 97 58 92 Q68 96 70 108 Z"
+        fill="#6b6560"
+      />
+      {/* neck */}
+      <path d="M42 78 L42 94 Q50 98 58 94 L58 78 Z" fill="#e8c4a4" />
+      {/* chin cast on neck */}
+      <ellipse cx="50" cy="86" rx="7" ry="2.2" fill="#d4a888" opacity="0.45" />
       {/* ears */}
-      <ellipse cx="24" cy="60" rx="4" ry="5.4" fill="#e3ab7e" />
-      <ellipse cx="76" cy="60" rx="4" ry="5.4" fill="#e3ab7e" />
-      {/* face */}
+      <ellipse cx="27" cy="56" rx="3.6" ry="5.2" fill="#e3b48f" />
+      <ellipse cx="73" cy="56" rx="3.6" ry="5.2" fill="#e3b48f" />
+      {/* elongated face */}
       <path
-        d="M26 50 Q26 25 50 25 Q74 25 74 50 L74 62 Q74 86 50 90 Q26 86 26 62 Z"
-        fill="#eec096"
+        d="M30 42
+           Q30 24 50 22
+           Q70 24 70 42
+           L70 68
+           Q70 86 50 90
+           Q30 86 30 68 Z"
+        fill="#edd0b0"
       />
-      {/* beard — wraps the jaw and rises to meet the sideburns. The mouth is
-          drawn after this, so the lips sit inside the beard rather than under it. */}
+      {/* soft right-side face shade */}
       <path
-        d="M25 50 Q23 74 33 86 Q41 93 50 93 Q59 93 67 86 Q77 74 75 50
-           Q72 62 64 64 Q57 66 50 66 Q43 66 36 64 Q28 62 25 50 Z"
-        fill="#d79a44"
+        d="M58 28 Q68 32 68 48 L68 70 Q64 82 52 86 Q60 72 60 48 Q60 34 58 28 Z"
+        fill="#dcb896"
+        opacity="0.35"
       />
-      {/* beard shadow along the jaw edge, for depth */}
+      {/* beard — connected to sideburns, with a mouth window + soul-patch notch */}
       <path
-        d="M33 86 Q41 93 50 93 Q59 93 67 86 Q58 89 50 89 Q42 89 33 86 Z"
-        fill="#bd8236"
-        opacity="0.55"
+        d="M30 52
+           Q28 70 36 84
+           Q44 94 50 94
+           Q56 94 64 84
+           Q72 70 70 52
+           Q68 60 62 62
+           Q56 64 50 64
+           Q44 64 38 62
+           Q32 60 30 52 Z"
+        fill="#c9a15e"
+      />
+      {/* soul-patch notch under the lip */}
+      <path
+        d="M46 72 Q50 69 54 72 Q50 76 46 72 Z"
+        fill="#edd0b0"
       />
       {/* cheeks */}
-      <ellipse cx="33" cy="58" rx="5" ry="3" fill="#e08a6e" opacity="0.32" />
-      <ellipse cx="67" cy="58" rx="5" ry="3" fill="#e08a6e" opacity="0.32" />
-      {/* brows */}
-      <g stroke="#b8792d" strokeWidth="3" strokeLinecap="round" fill="none">
-        <path d="M32 42 q7 -4 13 -0.5" />
-        <path d="M55 41.5 q6 -3.5 13 0.5" />
+      <ellipse cx="36" cy="58" rx="4.5" ry="2.8" fill="#e8a090" opacity="0.4" />
+      <ellipse cx="64" cy="58" rx="4.5" ry="2.8" fill="#e8a090" opacity="0.4" />
+      {/* brows — friendly upward angle toward center */}
+      <g stroke="#b8925a" strokeWidth="2.6" strokeLinecap="round" fill="none">
+        <path d="M32 40 q7 -3.5 13 0.2" />
+        <path d="M55 40.2 q6 -3.5 13 0.2" />
       </g>
-      <Eyes closed={blinking} irisColor="#6d9464" />
-      {/* nose */}
+      <AndrewEyes irisColor="#7a8f6a" active={speaking} />
+      {/* nose — long bridge with soft right shade */}
       <path
-        d="M50 52 q3 7 -1 9"
-        stroke="#d39a6e"
-        strokeWidth="1.8"
+        d="M50 46 L50 58"
+        stroke="#e0b898"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+      <path
+        d="M50 48 q3.2 8 -0.5 11"
+        stroke="#d4a07e"
+        strokeWidth="1.7"
         fill="none"
         strokeLinecap="round"
       />
-      {/* moustache — sits above the mouth so the mouth stays fully visible */}
+      <ellipse cx="50.5" cy="59.5" rx="2.1" ry="1.5" fill="#e8b4a0" opacity="0.55" />
+      {/* moustache — connects into the beard sides */}
       <path
-        d="M50 63 Q44 58 38 60 Q35 63 37 65 Q43 66 50 64.5 Q57 66 63 65 Q65 63 62 60 Q56 58 50 63 Z"
-        fill="#c78c37"
+        d="M50 63
+           Q42 60 36 62
+           Q34 65 38 66.5
+           Q44 68 50 66.5
+           Q56 68 62 66.5
+           Q66 65 64 62
+           Q58 60 50 63 Z"
+        fill="#c9a15e"
       />
-      <Mouth viseme={viseme} lipColor="#b35f57" />
-      {/* hair — asymmetric on purpose: low at the left temple, rising across
-          the head and flicking up to the right, which is what makes it read as
-          a swept quiff rather than a rounded cap */}
+      <Mouth viseme={viseme} lipColor="#b56860" />
+      {/* quiff — same sandy tone as the beard */}
       <path
-        d="M26 50
-           C24 37, 26 27, 33 21
-           C42 13, 55 8, 65 11
-           C73 14, 76 23, 75 37
-           C75 42, 75 46, 75 50
-           C72 36, 65 31, 55 30
-           C46 29, 39 33, 35 39
-           C33 42, 31 46, 26 50 Z"
-        fill="#e0a845"
+        d="M68 38
+           C72 28, 70 16, 60 10
+           C50 3, 36 2, 28 10
+           C22 16, 24 26, 28 34
+           C32 28, 42 24, 52 26
+           C60 28, 65 33, 68 38 Z"
+        fill="#c9a15e"
       />
-      {/* the crest, lifted clear of the silhouette at the front */}
+      {/* quiff texture arcs */}
       <path
-        d="M33 23
-           C39 10, 55 3, 66 8
-           C72 11, 75 17, 74 22
-           C70 14, 58 10, 48 15
-           C41 18, 36 21, 33 23 Z"
-        fill="#e8b14e"
+        d="M60 16 Q50 10 38 12"
+        stroke="#b8925a"
+        strokeWidth="1.2"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.55"
       />
-      {/* lit edge riding the top of the sweep */}
       <path
-        d="M38 19
-           C44 10, 57 5, 66 10
-           C70 12, 72 15, 72 18
-           C66 12, 55 11, 47 16
-           C43 17, 40 18, 38 19 Z"
-        fill="#f2c76a"
+        d="M62 24 Q50 18 34 22"
+        stroke="#b8925a"
+        strokeWidth="1.1"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      {/* lit crest on the quiff tip */}
+      <path
+        d="M58 12
+           C50 5, 38 5, 30 12
+           C34 8, 44 7, 52 11
+           C55 12, 57 12, 58 12 Z"
+        fill="#d4b06e"
       />
     </svg>
   );
@@ -257,14 +572,153 @@ export interface TalkingHeadProps {
   enabled?: boolean;
 }
 
+const HEAD_POS_KEY = "jlpt-trainer:talking-head-pos:v1";
+
+type HeadPos = { x: number; y: number };
+
+function loadHeadPos(): HeadPos | null {
+  try {
+    const raw = globalThis.localStorage?.getItem(HEAD_POS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<HeadPos>;
+    if (typeof parsed.x === "number" && typeof parsed.y === "number") {
+      return { x: parsed.x, y: parsed.y };
+    }
+  } catch {
+    // private mode / quota
+  }
+  return null;
+}
+
+function saveHeadPos(pos: HeadPos) {
+  try {
+    globalThis.localStorage?.setItem(HEAD_POS_KEY, JSON.stringify(pos));
+  } catch {
+    // private mode / quota
+  }
+}
+
+function clampHeadPos(x: number, y: number, el: HTMLElement): HeadPos {
+  const { width, height } = el.getBoundingClientRect();
+  const maxX = Math.max(4, window.innerWidth - width - 4);
+  const maxY = Math.max(4, window.innerHeight - height - 4);
+  return {
+    x: Math.min(Math.max(4, x), maxX),
+    y: Math.min(Math.max(4, y), maxY),
+  };
+}
+
 export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { lang, viseme, speaking } = useSpeechFace();
   const blinking = useBlink(speaking);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<HeadPos | null>(() => loadHeadPos());
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef<{
+    pointerId: number;
+    offsetX: number;
+    offsetY: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const onResize = () => {
+      const el = rootRef.current;
+      if (!el) return;
+      setPos((prev) => {
+        if (!prev) return prev;
+        const clamped = clampHeadPos(prev.x, prev.y, el);
+        saveHeadPos(clamped);
+        return clamped;
+      });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || !pos) return;
+    const next = clampHeadPos(pos.x, pos.y, el);
+    if (next.x !== pos.x || next.y !== pos.y) {
+      setPos(next);
+      saveHeadPos(next);
+    }
+  }, [lang]);
 
   if (!enabled || !lang) return null;
 
+  const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const start: HeadPos = pos ?? { x: rect.left, y: rect.top };
+    if (!pos) {
+      setPos(start);
+    }
+    dragRef.current = {
+      pointerId: e.pointerId,
+      offsetX: e.clientX - start.x,
+      offsetY: e.clientY - start.y,
+    };
+    el.setPointerCapture(e.pointerId);
+    setDragging(true);
+    e.preventDefault();
+  };
+
+  const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    const el = rootRef.current;
+    if (!drag || drag.pointerId !== e.pointerId || !el) return;
+    const next = clampHeadPos(
+      e.clientX - drag.offsetX,
+      e.clientY - drag.offsetY,
+      el
+    );
+    setPos(next);
+  };
+
+  const endDrag = (e: PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    dragRef.current = null;
+    setDragging(false);
+    try {
+      rootRef.current?.releasePointerCapture(e.pointerId);
+    } catch {
+      // already released
+    }
+    setPos((prev) => {
+      if (!prev) return prev;
+      saveHeadPos(prev);
+      return prev;
+    });
+  };
+
   return (
-    <div className="th-root" aria-hidden={!speaking}>
+    <div
+      ref={rootRef}
+      className={[
+        "th-root",
+        dragging ? "th-dragging" : "",
+        pos ? "th-placed" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      style={
+        pos
+          ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" }
+          : undefined
+      }
+      role="button"
+      tabIndex={0}
+      aria-label={`${lang === "ja" ? "Nanami" : "Andrew"} talking head — drag to move`}
+      aria-grabbed={dragging}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+    >
       {lang === "ja" ? (
         <NanamiHead viseme={viseme} blinking={blinking} speaking={speaking} />
       ) : (

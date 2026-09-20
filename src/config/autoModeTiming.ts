@@ -17,7 +17,7 @@ export const autoModeTiming = {
 } as const;
 
 /** ms per mora at rate 1 — matches the karaoke model in speechHighlightUnits. */
-const MORA_MS = 145;
+const MORA_MS = 135;
 
 /**
  * Rough spoken length of a Japanese line, in ms at rate 1.

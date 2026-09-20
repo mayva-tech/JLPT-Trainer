@@ -1127,13 +1127,13 @@ const KARAOKE_BREAK_POINT = 0.15;
 const SPEAK_TOKEN_GAP = 0.2;
 /**
  * ms per mora-weight at speech rate 1 (callers divide by utterance rate).
- * Nanami runs near 7.3 mora/s at rate 1 (~137 ms/mora); 145 keeps karaoke a
- * touch behind the voice without the ~25% overshoot 160 produced on example
- * sentences. Pause constants below are ms-derived, so they are unaffected.
+ * Nanami runs near 7.3 mora/s at rate 1 (~137 ms/mora). 135 stays a hair
+ * ahead of that so fallback karaoke does not trail the voice on long quest
+ * sentences (145 + the normal-rate divisor floor was still overshooting).
  */
-const JA_MORA_MS = 145;
+const JA_MORA_MS = 135;
 /** Minimum dwell for a Japanese content unit at rate 1. */
-const JA_MIN_UNIT_MS = 120;
+const JA_MIN_UNIT_MS = 110;
 /** Extra dwell after grammar-slot 〜 before the next pattern piece. */
 const WAVE_DASH_PAUSE = 0.9;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
@@ -1147,19 +1147,23 @@ const EN_PUNCT_PAUSE = SPEECH_EN_CHAIN_PAUSE_MS / EN_WEIGHT_MS;
 const EN_SEMICOLON_PAUSE = SPEECH_EN_SEMICOLON_PAUSE_MS / EN_WEIGHT_MS;
 /** EN `,` breath (TTS + karaoke). JA `、` has its own floor below — see there. */
 const EN_COMMA_PAUSE = SPEECH_COMMA_PAUSE_MS / EN_WEIGHT_MS;
-/** Karaoke weight for Japanese sentence punct (。！？). */
+/**
+ * Karaoke weight for Japanese sentence punct (。！？).
+ * Cap to the real chain pause — a 120ms floor held the last highlight (and
+ * mouth) after Nanami had already finished the clause.
+ */
 const JA_SENTENCE_PAUSE =
-  Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 120) / JA_MORA_MS;
+  Math.max(SPEECH_JA_SENTENCE_PAUSE_MS, 60) / JA_MORA_MS;
 /**
  * Readability floor for the karaoke dwell at a display-clause `、`
  * (はい、 / 明日、), independent of SPEECH_COMMA_PAUSE_MS (that constant is
  * EN's real breath value now that JA's real comma silence is 0 — see
- * SPEECH_JA_COMMA_PAUSE_MS). Deliberately smaller than the 120ms sentence
+ * SPEECH_JA_COMMA_PAUSE_MS). Deliberately smaller than the sentence
  * floor above: a comma is a lighter beat than a sentence end, and the
  * highlight dwell should not outlast the near-immediate audio handoff by more
  * than a small readability margin.
  */
-const JA_COMMA_KARAOKE_FLOOR_MS = 70;
+const JA_COMMA_KARAOKE_FLOOR_MS = 50;
 /**
  * Karaoke dwell for a display-clause `、`.
  * Mid-string commas may also be split into real utterances in speechService,
@@ -1272,11 +1276,10 @@ const PARTICLE_BREAK_CORES = new Set([
  * Extra mora-weight after phrase particles は / が / を / に so karaoke dwells
  * longer before the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
  *
- * Held at roughly a comma's worth of breath. A speaker does not stop after
- * every particle — the dwell marks the phrase edge, and at 0.95 the stack of
- * them in a long sentence was the single largest source of the overshoot.
+ * Kept light: stacked particle holds on long quest sentences were a major
+ * source of highlight/mouth continuing after Nanami had finished.
  */
-const PHRASE_PARTICLE_PAUSE = 0.55;
+const PHRASE_PARTICLE_PAUSE = 0.35;
 
 function isParticleBreakUnit(text: string): boolean {
   const { core } = stripTrailingPunct(text);
@@ -1323,14 +1326,17 @@ function estimateSpokenMoraWeight(spoken: string): number {
   return mora;
 }
 
-export function estimateUnitDurationMs(
+/**
+ * Karaoke dwell weights that are silence / phrase-edge holds — not voiced
+ * content. Mouth shapes must not keep articulating across these, or the head
+ * chatters after Nanami has already finished the mora.
+ */
+function estimateUnitPauseWeight(
   unit: HighlightUnit,
   lang: "ja" | "en",
   nextUnit?: HighlightUnit | null
 ): number {
   const text = unit.text;
-  if (unit.kind === "space") return 0;
-
   let punctPause = 0;
   const spokenForPunct = `${text}\n${unit.spokenText ?? ""}`;
   // Commas / Japanese phrase commas (、)
@@ -1403,24 +1409,25 @@ export function estimateUnitDurationMs(
   if (unit.speakGapAfter && !/\.\.\./.test(spokenForPunct)) {
     punctPause += SPEAK_TOKEN_GAP;
   }
+  return punctPause;
+}
+
+/** Voiced content weight only (mora / letters) — no pause dwell. */
+function estimateUnitSpeechWeight(
+  unit: HighlightUnit,
+  lang: "ja" | "en"
+): number {
+  const text = unit.text;
+  if (unit.kind === "punctuation") return 0;
 
   if (lang === "en") {
     const spoken = unit.spokenText ?? text;
     const letters = spoken.replace(/[^A-Za-z0-9']/g, "").length;
-    // Balanced letter curve: short Game Mode glosses keep pace with Andrew
-    // without racing through the first words of longer prompts.
-    const weight = 0.62 + Math.min(letters, 14) * 0.085 + punctPause;
-    return Math.max(130, weight * EN_WEIGHT_MS);
+    return 0.62 + Math.min(letters, 14) * 0.085;
   }
 
-  // Prefer aligned spoken kana whenever available.
   if (unit.spokenText) {
-    const mora = estimateSpokenMoraWeight(unit.spokenText);
-    if (unit.kind === "punctuation") {
-      return Math.max(90, punctPause * JA_MORA_MS);
-    }
-    const weight = Math.max(0.75, mora) + punctPause;
-    return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
+    return Math.max(0.75, estimateSpokenMoraWeight(unit.spokenText));
   }
 
   let mora = 0;
@@ -1432,11 +1439,46 @@ export function estimateUnitDurationMs(
     else if (/\d/.test(ch)) mora += 0.8;
     else if (!/\s/.test(ch) && !PUNCT_ONLY.test(ch)) mora += 0.5;
   }
+  return Math.max(0.75, mora);
+}
+
+export function estimateUnitDurationMs(
+  unit: HighlightUnit,
+  lang: "ja" | "en",
+  nextUnit?: HighlightUnit | null
+): number {
+  if (unit.kind === "space") return 0;
+
+  const punctPause = estimateUnitPauseWeight(unit, lang, nextUnit);
+
+  if (lang === "en") {
+    const weight = estimateUnitSpeechWeight(unit, lang) + punctPause;
+    return Math.max(130, weight * EN_WEIGHT_MS);
+  }
+
   if (unit.kind === "punctuation") {
     return Math.max(90, punctPause * JA_MORA_MS);
   }
-  const weight = Math.max(0.75, mora) + punctPause;
+  const weight = estimateUnitSpeechWeight(unit, lang) + punctPause;
   return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
+}
+
+/**
+ * Voiced portion of a unit's karaoke dwell (ms at rate 1).
+ * Used by talking-head lip-sync so the mouth closes for particle/punct holds
+ * instead of chewing through leftover shapes after the audio mora ended.
+ */
+export function estimateUnitSpeechDurationMs(
+  unit: HighlightUnit,
+  lang: "ja" | "en"
+): number {
+  if (unit.kind === "space" || unit.kind === "punctuation") return 0;
+
+  const speechWeight = estimateUnitSpeechWeight(unit, lang);
+  if (lang === "en") {
+    return Math.max(130, speechWeight * EN_WEIGHT_MS);
+  }
+  return Math.max(JA_MIN_UNIT_MS, speechWeight * JA_MORA_MS);
 }
 
 /**

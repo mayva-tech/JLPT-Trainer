@@ -17,6 +17,7 @@ import {
   buildJapaneseSpokenKaraokeSteps,
   deriveSpacedReadingForUnits,
   estimateUnitDurationMs,
+  estimateUnitSpeechDurationMs,
   findUnitForBoundary,
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
@@ -106,10 +107,13 @@ const FALLBACK_START_OFFSET_MS = 0;
  */
 const FALLBACK_TIMING_SCALE_EN = 1.08;
 /**
- * Japanese fallback scale (Nanami). Under 1 pulls karaoke slightly ahead of
- * the voice so example sentences do not trail after particle/mora estimates.
+ * Japanese fallback scale (Nanami). Neural Nanami at SPEECH_RATE_NORMAL (0.80)
+ * barely slows vs rate 1, while karaokeRateDivisor floors at 0.85 — so
+ * duration = estimate/0.85*scale. Keep scale low enough that the product is
+ * under 1.0; 0.91 yielded ~1.07× and let quest sentence highlights (and the
+ * talking-head mouth) keep running after the voiceover already ended.
  */
-const FALLBACK_TIMING_SCALE_JA = 0.91;
+const FALLBACK_TIMING_SCALE_JA = 0.80;
 /** @deprecated alias — tests / callers that expect a single scale get JA. */
 const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
@@ -498,7 +502,10 @@ function runUtterance(
 
   const alive = () => playbackId === playbackGeneration;
 
-  const emitHighlight = (h: SpeechHighlight) => {
+  const emitHighlight = (
+    h: SpeechHighlight,
+    opts?: { announceMouth?: boolean }
+  ) => {
     if (!alive()) return;
     if (h.start === lastBoundaryStart && h.end === lastBoundaryEnd) return;
     // Never move backward.
@@ -508,34 +515,32 @@ function runUtterance(
     debug("highlight", playbackId, h);
     callbacks?.onBoundary?.(h);
     // Announce the unit globally so shared UI (the talking heads) can follow
-    // the voice without every caller threading callbacks down to it. Uses the
-    // same duration estimate that drives the karaoke timeline, so the mouth
-    // inherits every timing fix made there.
+    // the voice without every caller threading callbacks down to it. Mouth
+    // duration is the voiced span only — karaoke still dwells on particle /
+    // punct holds via estimateUnitDurationMs.
+    if (opts?.announceMouth === false) return;
     const unitIndex = units.findIndex(
       (u) => u.start === h.start && u.end === h.end
     );
     const spokenUnit = unitIndex >= 0 ? units[unitIndex] : null;
     if (spokenUnit) {
       const unitDurationMs =
-        (estimateUnitDurationMs(
-          spokenUnit,
-          unitLang,
-          units[unitIndex + 1] ?? null
-        ) /
+        (estimateUnitSpeechDurationMs(spokenUnit, unitLang) /
           rateDivisor) *
         timingScale;
       // Decorative listeners schedule timers off this value; a non-finite one
       // would fire them all immediately and make the mouth chatter. Audio is
       // unaffected either way, so drop the announcement rather than risk it.
-      if (Number.isFinite(unitDurationMs) && unitDurationMs > 0) {
-        emitSpeechEvent({
-          type: "unit",
-          lang: unitLang,
-          text: spokenUnit.text,
-          spokenText: spokenUnit.spokenText ?? null,
-          durationMs: unitDurationMs,
-        });
-      }
+      if (!Number.isFinite(unitDurationMs) || unitDurationMs < 0) return;
+      // durationMs === 0 (punct / pause-only hold): still announce so the mouth
+      // closes for the karaoke dwell instead of chewing leftover shapes.
+      emitSpeechEvent({
+        type: "unit",
+        lang: unitLang,
+        text: spokenUnit.text,
+        spokenText: spokenUnit.spokenText ?? null,
+        durationMs: unitDurationMs,
+      });
     }
   };
 
@@ -728,15 +733,20 @@ function runUtterance(
     clearFallbackTimer();
     // Browser TTS sometimes skips the final unit's boundary. Light that one
     // remaining span once — never rush a multi-unit 80ms sweep (fake sync).
+    // Do not announce the mouth: audio is already over, and a full-duration
+    // unit event here would schedule visemes after Nanami has stopped.
     if (withHighlight) {
       const remaining = units.filter(
         (u) => u.kind !== "space" && u.start >= Math.max(0, lastBoundaryEnd)
       );
       if (remaining.length === 1) {
-        emitHighlight({
-          start: remaining[0]!.start,
-          end: remaining[0]!.end,
-        });
+        emitHighlight(
+          {
+            start: remaining[0]!.start,
+            end: remaining[0]!.end,
+          },
+          { announceMouth: false }
+        );
       }
     }
     clearAndEnd();
