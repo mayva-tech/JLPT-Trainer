@@ -165,7 +165,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 3, text: "75%", kind: "word", spokenText: "75%" },
       "en"
     );
-    // Ellipsis breath alone should add hundreds of ms (chain pause ~300ms).
+    // Clause breath alone should add ~SPEECH_CLAUSE_PAUSE_MS (300ms).
     expect(withPause).toBeGreaterThan(plainPct + 220);
   });
 
@@ -225,9 +225,8 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       },
       "en"
     );
-    // Andrew's post-comma gap is often ~500–700ms; require a real clause
-    // pause in the estimate (speechService still scales this down slightly).
-    expect(withComma - plain).toBeGreaterThanOrEqual(550);
+    // Clause breath targets ~SPEECH_CLAUSE_PAUSE_MS (300ms) at rate 1.
+    expect(withComma - plain).toBeGreaterThanOrEqual(280);
   });
 
   it.each(["~", "〜", "～"])(
@@ -656,7 +655,7 @@ describe("estimateUnitDurationMs karaoke breaks", () => {
       "ja",
       { start: 1, end: 2, text: "彼", kind: "word" }
     );
-    // Display clause comma should add a clear breath (~JA_COMMA_PAUSE)
+    // Display clause comma should add a clear breath (~SPEECH_CLAUSE_PAUSE_MS)
     expect(haiComma - haiPlain).toBeGreaterThan(200);
     // Particle TTS comma still pauses, but must not dwarf はい、
     expect(haiComma).toBeGreaterThan(particleInserted);

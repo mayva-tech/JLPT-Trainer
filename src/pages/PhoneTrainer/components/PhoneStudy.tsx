@@ -4,6 +4,7 @@ import type { SpeechHighlight } from "../../../services/speechService";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
+  SPEECH_CLAUSE_PAUSE_MS,
 } from "../../../services/speechService";
 import { buildJapaneseHighlightUnits } from "../../../utils/speechHighlightUnits";
 import { PhoneRuby } from "./PhoneRuby";
@@ -303,11 +304,11 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
       if (cancelRef.current) return;
       await introJp(scenario.title, "title");
       if (cancelRef.current) return;
-      await pause(300);
+      await pause(SPEECH_CLAUSE_PAUSE_MS);
       if (cancelRef.current) return;
       await introEn(scenario.titleEn, "titleEn");
       if (cancelRef.current) return;
-      await pause(400);
+      await pause(SPEECH_CLAUSE_PAUSE_MS);
       if (cancelRef.current) return;
       await introEn(scenario.situation, "situation");
       if (cancelRef.current) return;
@@ -321,7 +322,7 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
         await doSpeakJp(lines[i].japanese, lines[i].reading);
         if (cancelRef.current) break;
         setHighlight(null);
-        await pause(400);
+        await pause(SPEECH_CLAUSE_PAUSE_MS);
         if (cancelRef.current) break;
         await doSpeakEn(lines[i].english);
         if (cancelRef.current) break;

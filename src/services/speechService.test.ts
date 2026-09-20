@@ -844,8 +844,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause (mdash) — next clip must not start early.
-    const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
+    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
     expect(chainPause).toBe(300);
+    expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -886,8 +887,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after the tip label line (shared EN chain pause).
-    const chainPause = __speechTestHooks.ENGLISH_CHAIN_PAUSE_MS;
+    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
     expect(chainPause).toBe(300);
+    expect(__speechTestHooks.ENGLISH_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -935,8 +937,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 。 — next clip must not start early.
-    const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
+    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
     expect(chainPause).toBe(300);
+    expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);
@@ -989,8 +992,9 @@ describe("speechService karaoke timeline", () => {
     expect(spoken).toHaveLength(1);
 
     // Real inter-utterance pause after 、 — next clip must not start early.
-    const chainPause = __speechTestHooks.JAPANESE_CHAIN_PAUSE_MS;
+    const chainPause = __speechTestHooks.SPEECH_CLAUSE_PAUSE_MS;
     expect(chainPause).toBe(300);
+    expect(__speechTestHooks.JAPANESE_CHAIN_PAUSE_MS).toBe(chainPause);
     vi.advanceTimersByTime(chainPause - 50);
     expect(spoken).toHaveLength(1);
     vi.advanceTimersByTime(100);

@@ -33,6 +33,7 @@ import {
   resolveEnglishVoice,
   resolveJapaneseVoice,
 } from "./ttsVoices";
+import { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -120,11 +121,11 @@ type KaraokeTimeline = {
 /**
  * Real silence between gloss head/aside, EN clause segments (`;` / em-dash /
  * tip newlines / sentence ends), or JA sentences — neural voices ignore
- * in-utterance periods/ellipsis pauses.
+ * in-utterance periods/ellipsis pauses. Shared breath for EN + JP.
  */
-const ENGLISH_CHAIN_PAUSE_MS = 300;
+const ENGLISH_CHAIN_PAUSE_MS = SPEECH_CLAUSE_PAUSE_MS;
 /** Nanami breath between Japanese clauses split on 、。！？ */
-const JAPANESE_CHAIN_PAUSE_MS = 300;
+const JAPANESE_CHAIN_PAUSE_MS = SPEECH_CLAUSE_PAUSE_MS;
 
 let playbackGeneration = 0;
 let fallbackTimer: number | null = null;
@@ -1069,10 +1070,12 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE,
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
+  SPEECH_CLAUSE_PAUSE_MS,
   ENGLISH_CHAIN_PAUSE_MS,
   JAPANESE_CHAIN_PAUSE_MS,
 };
 
+export { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
 export {
   buildJapaneseSpeakText,
   splitJapaneseBySentences,

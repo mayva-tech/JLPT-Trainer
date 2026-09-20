@@ -11,6 +11,7 @@ import {
   shouldKeepWoTight,
 } from "./japaneseSpeakText";
 import { buildEnglishSpeakText, isSkippedParentheticalNote } from "./englishSpeakText";
+import { SPEECH_CLAUSE_PAUSE_MS } from "../config/speechTiming";
 
 const DEBUG_KARAOKE_ALIGN = false;
 
@@ -1123,42 +1124,40 @@ const JA_MORA_MS = 160;
 const JA_MIN_UNIT_MS = 120;
 /** Extra dwell after grammar-slot 〜 before the next pattern piece. */
 const WAVE_DASH_PAUSE = 0.9;
-/** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
-const SLASH_PAUSE = 0.85;
-/**
- * English ellipsis / em-dash / tip-newline breath — match speechService
- * ENGLISH_CHAIN_PAUSE_MS (~300ms) so karaoke does not race past "75% — …"
- * while Andrew pauses. Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN
- * / rate divisor.
- */
-const EN_ELLIPSIS_PAUSE = 0.95;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
 const EN_WEIGHT_MS = 315;
 /**
- * Andrew clause pause after a comma (example sentences). Measured against
- * neural Andrew: post-comma gaps are often ~500–700ms. Weight is applied
- * before FALLBACK_TIMING_SCALE_EN and the EN rate divisor, so keep this high
- * enough that the scheduled dwell still lands near half a second.
+ * Punctuation / clause breath weight for English karaoke.
+ * × EN_WEIGHT_MS ≈ SPEECH_CLAUSE_PAUSE_MS (~300ms) at rate 1.
  */
-const EN_COMMA_PAUSE = 2.25;
-/** Andrew pause after ";" / ":" in English glosses and examples. */
-const EN_CLAUSE_PAUSE = 1.5;
-/** Andrew pause after sentence-final . ! ? */
-const EN_SENTENCE_PAUSE = 1.2;
+const EN_PUNCT_PAUSE = SPEECH_CLAUSE_PAUSE_MS / EN_WEIGHT_MS;
 /**
- * Nanami breath after 。！？ — kept modest for single-utterance fallback;
- * multi-clause JA uses a real inter-utterance pause in speechService.
+ * Punctuation / clause breath weight for Japanese karaoke.
+ * × JA_MORA_MS ≈ SPEECH_CLAUSE_PAUSE_MS (~300ms) at rate 1.
  */
-const JA_SENTENCE_PAUSE = 2.8;
+const JA_PUNCT_PAUSE = SPEECH_CLAUSE_PAUSE_MS / JA_MORA_MS;
+/** English ellipsis / em-dash / tip-newline / slash breath. */
+const EN_ELLIPSIS_PAUSE = EN_PUNCT_PAUSE;
+/** English comma breath (example sentences). */
+const EN_COMMA_PAUSE = EN_PUNCT_PAUSE;
+/** English ";" / ":" clause breath. */
+const EN_CLAUSE_PAUSE = EN_PUNCT_PAUSE;
+/** English sentence-final . ! ? breath. */
+const EN_SENTENCE_PAUSE = EN_PUNCT_PAUSE;
+/**
+ * Nanami breath after 。！？ — single-utterance fallback;
+ * multi-clause JA uses SPEECH_CLAUSE_PAUSE_MS in speechService.
+ */
+const JA_SENTENCE_PAUSE = JA_PUNCT_PAUSE;
 /**
  * Karaoke dwell for a display-clause `、` (はい、 / 明日、).
  * Mid-string commas are split into real utterances in speechService; this
- * weight covers single-utterance fallback and holds the highlight on the
- * comma unit until the clause utterance ends. Kept well below EN_COMMA_PAUSE
- * so TTS-inserted particle commas (わ、) do not lag the voice — those still
- * use the small break below when only spokenText has `、`.
+ * weight covers single-utterance fallback. TTS-inserted particle commas
+ * (わ、) still use the small break below when only spokenText has `、`.
  */
-const JA_COMMA_PAUSE = 1.6;
+const JA_COMMA_PAUSE = JA_PUNCT_PAUSE;
+/** JA "/" / ellipsis alternate pause — same clause breath. */
+const SLASH_PAUSE = JA_PUNCT_PAUSE;
 
 const PARTICLE_BREAK_CORES = new Set([
   "を",
@@ -1266,8 +1265,7 @@ export function estimateUnitDurationMs(
   }
   // Other phrase separators (only when not already an ellipsis pause)
   if (/[;；:]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
-    punctPause +=
-      lang === "en" ? EN_CLAUSE_PAUSE : 0.35 + KARAOKE_BREAK_POINT;
+    punctPause += lang === "en" ? EN_CLAUSE_PAUSE : JA_PUNCT_PAUSE;
   }
   if (/[.!?。！？]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {
     punctPause += lang === "en" ? EN_SENTENCE_PAUSE : JA_SENTENCE_PAUSE;
@@ -1323,7 +1321,7 @@ export function estimateUnitDurationMs(
   if (unit.spokenText) {
     const mora = estimateSpokenMoraWeight(unit.spokenText);
     if (unit.kind === "punctuation") {
-      return Math.max(90, punctPause * EN_WEIGHT_MS);
+      return Math.max(90, punctPause * JA_MORA_MS);
     }
     const weight = Math.max(0.75, mora) + punctPause;
     return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
@@ -1339,7 +1337,7 @@ export function estimateUnitDurationMs(
     else if (!/\s/.test(ch) && !PUNCT_ONLY.test(ch)) mora += 0.5;
   }
   if (unit.kind === "punctuation") {
-    return Math.max(90, punctPause * EN_WEIGHT_MS);
+    return Math.max(90, punctPause * JA_MORA_MS);
   }
   const weight = Math.max(0.75, mora) + punctPause;
   return Math.max(JA_MIN_UNIT_MS, weight * JA_MORA_MS);
