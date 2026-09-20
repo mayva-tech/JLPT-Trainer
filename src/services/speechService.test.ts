@@ -309,8 +309,9 @@ describe("speechService karaoke timeline", () => {
     const units = buildEnglishSpokenKaraokeSteps(text);
     const offsets: number[] = [];
     let acc = __speechTestHooks.FALLBACK_START_OFFSET_MS;
-    // Mirror speechService EN rate handling (neural Andrew is nonlinear < ~0.88).
-    const rateDivisor = Math.max(rate, 0.88);
+    // Mirror speechService rate handling (neural floors at normal; real rate when slow).
+    const { karaokeRateDivisor } = await import("./speechService");
+    const rateDivisor = karaokeRateDivisor("en", rate);
     for (let i = 0; i < units.length; i += 1) {
       offsets.push(acc);
       acc +=
@@ -501,6 +502,53 @@ describe("speechService karaoke timeline", () => {
     const spanNormal = atNormal.at(-1)!;
     // Neural floor still stretches past rate=1 so highlights do not outrun Andrew.
     expect(spanNormal).toBeGreaterThan(spanFull);
+  });
+
+  it("JA karaoke at slow rate stretches longer than at normal (tracks 0.75× voice)", async () => {
+    const {
+      karaokeRateDivisor,
+      SPEECH_RATE_NORMAL,
+      SPEECH_RATE_SLOW,
+      __speechTestHooks,
+    } = await import("./speechService");
+    const {
+      buildJapaneseSpokenKaraokeSteps,
+      buildJapaneseHighlightUnits,
+      estimateUnitDurationMs,
+      deriveSpacedReadingForUnits,
+    } = await import("../utils/speechHighlightUnits");
+
+    // Floors apply at normal; slow uses the real utterance rate.
+    expect(karaokeRateDivisor("ja", SPEECH_RATE_NORMAL)).toBe(0.85);
+    expect(karaokeRateDivisor("ja", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
+    expect(karaokeRateDivisor("en", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
+
+    const text = "ありがとうございます。では、いくつか確認しますね。";
+    const reading =
+      "ありがとう ございます では いくつ か かくにん します ね";
+    const units = buildJapaneseHighlightUnits(text);
+    const steps = buildJapaneseSpokenKaraokeSteps(
+      text,
+      deriveSpacedReadingForUnits(text, reading, units) ?? reading,
+      units
+    );
+
+    const spanAt = (rate: number) => {
+      const divisor = karaokeRateDivisor("ja", rate);
+      let acc = __speechTestHooks.FALLBACK_START_OFFSET_MS;
+      for (let i = 0; i < steps.length; i += 1) {
+        acc +=
+          (estimateUnitDurationMs(steps[i]!, "ja", steps[i + 1] ?? null) /
+            divisor) *
+          __speechTestHooks.FALLBACK_TIMING_SCALE_JA;
+      }
+      return acc;
+    };
+
+    const spanNormal = spanAt(SPEECH_RATE_NORMAL);
+    const spanSlow = spanAt(SPEECH_RATE_SLOW);
+    // Slow karaoke must be clearly longer — old floor of 0.85 made them nearly equal.
+    expect(spanSlow / spanNormal).toBeGreaterThan(1.15);
   });
 
   it("pause freezes karaoke and resume preserves sync", async () => {

@@ -109,6 +109,23 @@ const FALLBACK_TIMING_SCALE_JA = 0.91;
 /** @deprecated alias — tests / callers that expect a single scale get JA. */
 const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
+/**
+ * Karaoke timeline rate divisor.
+ * Floors mild normal-rate slowdown for neural voices; uses the real rate
+ * when the user picks slow (0.75×) so highlights track Nanami/Andrew.
+ */
+export function karaokeRateDivisor(
+  lang: "ja" | "en",
+  rate: number
+): number {
+  const normalFloor = lang === "en" ? 0.88 : 0.85;
+  if (rate < SPEECH_RATE_NORMAL - 0.001) {
+    // Slow mode (and any below-normal override): track the utterance rate.
+    return Math.max(rate, 0.5);
+  }
+  return Math.max(rate, normalFloor);
+}
+
 /** Monotonic clock for karaoke scheduling. */
 function nowMs(): number {
   return typeof performance !== "undefined" && typeof performance.now === "function"
@@ -495,12 +512,12 @@ function runUtterance(
   // so late timers cannot accumulate drift.
   const timingScale =
     unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
-  // Andrew/Nanami neural rates are nonlinear below ~0.9 — don't stretch
-  // karaoke as if SPEECH_RATE_NORMAL (0.80) were a true 20% slowdown.
-  // EN floor 0.88 gives a mild slowdown at normal rate without the lag of /0.80.
-  // JA floor is slightly lower: Nanami slows a bit more than Andrew.
-  const rateDivisor =
-    unitLang === "en" ? Math.max(rate, 0.88) : Math.max(rate, 0.85);
+  // Andrew/Nanami neural rates are nonlinear near SPEECH_RATE_NORMAL —
+  // don't stretch karaoke as if 0.80 were a true 20% slowdown.
+  // EN floor 0.88 / JA floor 0.85 at normal (and faster) rates.
+  // At SPEECH_RATE_SLOW (0.75× UI → 0.68), use the real rate so karaoke
+  // does not keep racing ahead at ~0.85 while the voice is at 0.68.
+  const rateDivisor = karaokeRateDivisor(unitLang, rate);
 
   const plannedStart: number[] = [];
   {
@@ -1091,6 +1108,7 @@ export const __speechTestHooks = {
   SPEECH_JA_COMMA_PAUSE_MS,
   ENGLISH_CHAIN_PAUSE_MS,
   JAPANESE_CHAIN_PAUSE_MS,
+  karaokeRateDivisor,
 };
 
 export {
