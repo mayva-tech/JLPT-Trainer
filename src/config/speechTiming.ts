@@ -3,8 +3,10 @@
  * Differentiated breaths beat a single shared clause gap.
  *
  * Japanese clauses are separate utterances. Chromium already inserts a short
- * gap when starting the next speak(), so large JA chain pauses stack and
- * sound slow. Keep JA timeouts near zero; EN still needs a real breath.
+ * gap when starting the next speak(), so large JA sentence chain pauses stack
+ * and sound slow. Keep JA sentence timeouts near zero; EN still needs a real
+ * breath on `;` / em-dash / tip newlines. Commas (EN `,` / JA `、`) share one
+ * constant so both languages — TTS chains and karaoke — pause the same.
  */
 
 /** English chain: before `(`, em-dash / tip newlines / sentence splits. */
@@ -17,16 +19,19 @@ export const SPEECH_EN_CHAIN_PAUSE_MS = 400;
 export const SPEECH_EN_SEMICOLON_PAUSE_MS = 100;
 
 /**
+ * Shared comma breath for EN `,` and JA `、`.
+ * Used by JA utterance chains and EN/JA karaoke dwells in all speech paths.
+ */
+export const SPEECH_COMMA_PAUSE_MS = 120;
+
+/**
  * Japanese sentence breath after `。` / `！` / `？`.
  * Near-zero: the next-utterance handoff is the audible pause.
  */
 export const SPEECH_JA_SENTENCE_PAUSE_MS = 40;
 
-/**
- * Japanese phrase comma breath after `、`.
- * Zero: rely on utterance boundary only (no extra setTimeout).
- */
-export const SPEECH_JA_COMMA_PAUSE_MS = 0;
+/** Japanese `、` chain pause — same as EN comma (SPEECH_COMMA_PAUSE_MS). */
+export const SPEECH_JA_COMMA_PAUSE_MS = SPEECH_COMMA_PAUSE_MS;
 
 /** Brief JP→EN voice-switch inside one mixed line. */
 export const SPEECH_JP_EN_HANDOFF_MS = 220;
