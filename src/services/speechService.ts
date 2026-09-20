@@ -118,10 +118,11 @@ type KaraokeTimeline = {
 };
 
 /**
- * Real silence between gloss head/aside, EN clause segments, or JA sentences —
- * neural voices ignore in-utterance periods/ellipsis pauses.
+ * Real silence between gloss head/aside, EN clause segments (`;` / em-dash /
+ * tip newlines / sentence ends), or JA sentences — neural voices ignore
+ * in-utterance periods/ellipsis pauses.
  */
-const ENGLISH_CHAIN_PAUSE_MS = 680;
+const ENGLISH_CHAIN_PAUSE_MS = 400;
 /** Nanami breath between Japanese clauses split on 、。！？ */
 const JAPANESE_CHAIN_PAUSE_MS = 650;
 
@@ -1068,6 +1069,7 @@ export const __speechTestHooks = {
   FALLBACK_TIMING_SCALE,
   FALLBACK_TIMING_SCALE_JA,
   FALLBACK_TIMING_SCALE_EN,
+  ENGLISH_CHAIN_PAUSE_MS,
 };
 
 export {

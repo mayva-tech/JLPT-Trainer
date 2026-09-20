@@ -1126,11 +1126,12 @@ const WAVE_DASH_PAUSE = 0.9;
 /** Extra dwell when "/" alternates are spoken with an ellipsis pause (make/let). */
 const SLASH_PAUSE = 0.85;
 /**
- * English ellipsis / em-dash breath — match speechService ENGLISH_CHAIN_PAUSE_MS
- * (~680ms) so karaoke does not race past "75% — …" while Andrew pauses.
- * Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN / rate divisor.
+ * English ellipsis / em-dash / tip-newline breath — match speechService
+ * ENGLISH_CHAIN_PAUSE_MS (~400ms) so karaoke does not race past "75% — …"
+ * while Andrew pauses. Weight is × EN_WEIGHT_MS before FALLBACK_TIMING_SCALE_EN
+ * / rate divisor.
  */
-const EN_ELLIPSIS_PAUSE = 2.2;
+const EN_ELLIPSIS_PAUSE = 1.27;
 /** English ms weight multiplier at speech rate 1 — tuned for Andrew karaoke. */
 const EN_WEIGHT_MS = 315;
 /**
