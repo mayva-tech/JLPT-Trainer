@@ -376,7 +376,8 @@ export function QuestSuccessScreen({
 
       {outcome.vocabDiscovered.length > 0 ? (
         <p style={{ fontSize: 13 }}>
-          Vocabulary discovered: {outcome.vocabDiscovered.join(" · ")}
+          Vocabulary discovered:{" "}
+          {[...new Set(outcome.vocabDiscovered)].join(" · ")}
         </p>
       ) : null}
 

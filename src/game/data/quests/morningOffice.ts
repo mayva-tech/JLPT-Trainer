@@ -14,6 +14,7 @@ export const MORNING_OFFICE_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "朝のオフィスです。まず挨拶から始めましょう。",
+      reading: "あさ の オフィス です まず あいさつ から はじめましょう",
       english:
         "Morning at the office.\n\nGreetings change by time of day and who you're talking to — おはよう vs お疲れ様 vs leaving phrases.",
       nextNodeId: "morning-greet",
@@ -85,6 +86,8 @@ export const MORNING_OFFICE_CONVERSATION: ConversationDefinition = {
       id: "hallway",
       japanese:
         "午前の途中。廊下で人とすれ違います。相手で言葉を変えましょう。",
+      reading:
+        "ごぜん の とちゅう ろうか で ひと と すれちがい ます あいて で ことば を かえましょう",
       english:
         "Mid-morning in the hallway. Who you bump into changes how お疲れ様です lands.",
       nextNodeId: "hallway-router",
@@ -225,6 +228,8 @@ export const MORNING_OFFICE_CONVERSATION: ConversationDefinition = {
       id: "need-ask",
       japanese:
         "佐藤先輩に短い確認が必要です。声をかける前に、時間を伺いましょう。",
+      reading:
+        "さとうせんぱい に みじかい かくにん が ひつよう です こえ を かける まえ に じかん を うかがいましょう",
       english:
         "You need a quick check with Sato-senpai. Ask if they have a moment first.",
       nextNodeId: "ask-time",
@@ -363,6 +368,8 @@ export const MORNING_OFFICE_CONVERSATION: ConversationDefinition = {
       id: "end-of-day",
       japanese:
         "夕方。先に帰ります。上司や先輩の前では、帰る言い方が大事です。",
+      reading:
+        "ゆうがた さき に かえります じょうし や せんぱい の まえ で は かえる いいかた が だいじ です",
       english:
         "Evening — you're leaving first. How you exit matters in front of coworkers and senpai.",
       nextNodeId: "leaving",
@@ -430,6 +437,8 @@ export const MORNING_OFFICE_CONVERSATION: ConversationDefinition = {
     {
       id: "success",
       japanese: "朝から帰りまで、職場の基本フレーズを使えました。",
+      reading:
+        "あさ から かえり まで しょくば の きほん フレーズ を つかえました",
       english:
         "Morning through leaving — you practiced core office phrases. Next: report clearly to your boss.",
       endState: "success",
@@ -442,6 +451,7 @@ export const MORNING_OFFICE_QUEST: QuestDefinition = {
   id: "morning-office",
   title: "Morning at the Office",
   japaneseTitle: "朝の職場",
+  japaneseTitleReading: "あさ の しょくば",
   locationId: "office",
   chapter: 4,
   description:

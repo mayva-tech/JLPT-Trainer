@@ -7,6 +7,7 @@ export const AWKWARD_APOLOGY_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "約束の時間に遅れました。はるかと、会社の鈴木さんが待っています。",
+      reading: "やくそく の じかん に おくれました はるか と かいしゃ の すずき さん が まって います",
       english:
         "You're late. Haruka (friend) and Manager Suzuki are waiting — apologize with the right register.",
       nextNodeId: "see-them",
@@ -202,6 +203,7 @@ export const AWKWARD_APOLOGY_QUEST: QuestDefinition = {
   id: "awkward-apology",
   title: "An Awkward Situation",
   japaneseTitle: "ちょっと気まずい…",
+  japaneseTitleReading: "ちょっと きまずい…",
   locationId: "cafe",
   chapter: 3,
   description:

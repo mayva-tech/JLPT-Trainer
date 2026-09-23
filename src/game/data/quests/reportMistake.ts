@@ -11,6 +11,8 @@ export const REPORT_MISTAKE_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "クライアントに送った添付ファイルが間違っていました。",
+      reading:
+        "クライアント に おくった てんぷ ファイル が まちがって いました",
       english:
         "You sent the wrong attachment to a client.\n\nOwn it: state the issue, apologize, explain impact, say what you already fixed, then prevent a repeat.",
       nextNodeId: "realize",
@@ -434,6 +436,7 @@ export const REPORT_MISTAKE_QUEST: QuestDefinition = {
   id: "report-mistake",
   title: "Reporting a Mistake",
   japaneseTitle: "ミスを報告",
+  japaneseTitleReading: "みす を ほうこく",
   locationId: "office",
   chapter: 4,
   description:

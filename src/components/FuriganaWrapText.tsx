@@ -45,8 +45,18 @@ export function FuriganaWrapText({
       className={`jp-wrap furigana-wrap ${showFurigana ? "" : "furigana-hidden"} ${className}`.trim()}
     >
       <span className="jp-wrap-line">
-        {groups.map((group, gi) => (
-          <span className="jp-word" key={`w-${gi}-${group[0]?.start ?? 0}`}>
+        {groups.map((group, gi) => {
+          const groupStart = group[0]?.start ?? 0;
+          const groupEnd = group[group.length - 1]?.end ?? groupStart;
+          const wordActive =
+            !!highlight &&
+            highlight.start < groupEnd &&
+            highlight.end > groupStart;
+          return (
+          <span
+            className={`jp-word${wordActive ? " speech-active" : ""}`}
+            key={`w-${gi}-${groupStart}`}
+          >
             {group.map((piece) => {
               let state = "";
               if (highlight) {
@@ -67,7 +77,8 @@ export function FuriganaWrapText({
               );
             })}
           </span>
-        ))}
+          );
+        })}
       </span>
     </div>
   );

@@ -14,6 +14,8 @@ export const REPORTING_TO_BOSS_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "鈴木マネージャーに進捗を報告します。結論から、短く。",
+      reading:
+        "すずき マネージャー に しんちょく を ほうこく します けつろん から みじかく",
       english:
         "Time to update Suzuki-manager.\n\n報連相 (report / contact / consult): lead with the conclusion, then status, problem, and next action.",
       nextNodeId: "notes-prep",
@@ -477,6 +479,8 @@ export const REPORTING_TO_BOSS_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "報告完了。結論→進捗→残件→期限→次の行動。これが報連相の型です。",
+      reading:
+        "ほうこく かんりょう けつろん しんちょく ざんけん きげん つぎ の こうどう これ が ほうれんそう の かた です",
       english:
         "Report complete. Conclusion → progress → pending → deadline → next action — that's 報連相.",
       endState: "success",
@@ -489,6 +493,7 @@ export const REPORTING_TO_BOSS_QUEST: QuestDefinition = {
   id: "reporting-to-boss",
   title: "Reporting to Your Boss",
   japaneseTitle: "上司に報告",
+  japaneseTitleReading: "じょうし に ほうこく",
   locationId: "office",
   chapter: 4,
   description:

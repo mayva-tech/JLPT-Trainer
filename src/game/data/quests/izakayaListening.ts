@@ -13,6 +13,8 @@ export const IZAKAYA_LISTENING_CONVERSATION: ConversationDefinition = {
       id: "arrive",
       japanese:
         "居酒屋のテーブル。会話は速い。話題は飛ぶ。相づちで追いついてください。",
+      reading:
+        "いざかや の テーブル かいわ は はやい わだい は とぶ あいづち で おいついて ください",
       english:
         "Izakaya table. Chat is fast, topics jump, sentences trail off.\n\nTrack who said what — short aizuchi keep you in the circle.",
       nextNodeId: "h-teiuka",
@@ -548,6 +550,8 @@ export const IZAKAYA_LISTENING_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "飲み会クリア。ていうか・なんか・まあ・えっとを追い、相づちで話題のジャンプに乗れました。",
+      reading:
+        "のみかい クリア ていうか なんか まあ えっと を おい あいづち で わだい の ジャンプ に のれました",
       english:
         "Izakaya clear. You rode ていうか / なんか / まあ / えっと and kept up with aizuchi across topic jumps.",
       endState: "success",
@@ -560,6 +564,7 @@ export const IZAKAYA_LISTENING_QUEST: QuestDefinition = {
   id: "izakaya-listening",
   title: "Izakaya Listening Challenge",
   japaneseTitle: "聞き取れない飲み会",
+  japaneseTitleReading: "ききとれない のみかい",
   locationId: "cafe",
   chapter: 5,
   description:

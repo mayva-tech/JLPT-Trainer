@@ -154,6 +154,24 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
     expect(withDash).toBeGreaterThan(plainSorry);
   });
 
+  it("pauses after a slash alternate on the karaoke timeline", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "not all day / all lines."
+    );
+    expect(steps.map((s) => s.text)).not.toContain("/");
+    const day = steps.find((s) => s.text === "day");
+    expect(day?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(day?.end).toBeGreaterThan("day".length);
+  });
+
+  it("speaks 22:00 as 10 p.m. on the karaoke unit", () => {
+    const steps = buildEnglishSpokenKaraokeSteps(
+      "Only after 22:00, and only some trains."
+    );
+    const time = steps.find((s) => s.text.startsWith("22:00"));
+    expect(time?.spokenText).toMatch(/^10 p\.m\./);
+  });
+
   it("holds karaoke on 75% — long enough to match the TTS breath pause", () => {
     const text =
       "Communication starts around 75% — natural replies raise it;";
@@ -285,9 +303,52 @@ describe("buildJapaneseHighlightUnits", () => {
   it("keeps スマートフォン as one unit (not スマート|フォン)", () => {
     const text = "スマートフォンやタブレットといったデバイスが普及した。";
     const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
-    expect(active.map((u) => u.text)).toContain("スマートフォン");
+    expect(active.map((u) => u.text)).toEqual([
+      "スマートフォン",
+      "や",
+      "タブレット",
+      "といった",
+      "デバイス",
+      "が",
+      "普及した。",
+    ]);
     expect(active.map((u) => u.text)).not.toContain("スマート");
     expect(active.map((u) => u.text)).not.toContain("フォン");
+  });
+
+  it("keeps ところに as one karaoke unit so に is not skipped", () => {
+    const text = "出かけようとしているところに、友達が来た。";
+    const reading =
+      "でかけよう と して いる ところに、ともだち が きた。";
+    const active = activeHighlightUnits(buildJapaneseHighlightUnits(text));
+    expect(active.map((u) => u.text)).toContain("ところに、");
+    expect(active.map((u) => u.text)).not.toContain("ところ");
+    expect(active.map((u) => u.text)).not.toContain("に、");
+
+    const steps = buildJapaneseSpokenKaraokeSteps(text, reading);
+    const tokoro = steps.find((s) => s.text.includes("ところ"));
+    expect(tokoro).toEqual(
+      expect.objectContaining({
+        text: "ところに、",
+        spokenText: expect.stringMatching(/^ところに/),
+      })
+    );
+  });
+
+  it("karaoke-lights smartphone / ya / tablet as three spoken words", () => {
+    const text = "スマートフォンやタブレットといったデバイスが普及した。";
+    const reading =
+      "すまーとふぉん や たぶれっと といった でばいす が ふきゅう した。";
+    const steps = buildJapaneseSpokenKaraokeSteps(text, reading);
+    const head = steps.slice(0, 3).map((s) => ({
+      text: s.text,
+      spoken: s.spokenText,
+    }));
+    expect(head).toEqual([
+      { text: "スマートフォン", spoken: "すまあとふぉん" },
+      { text: "や", spoken: "や、" },
+      { text: "タブレット", spoken: "たぶれっと" },
+    ]);
   });
 
   it("maps a char index inside a word to the whole word", () => {

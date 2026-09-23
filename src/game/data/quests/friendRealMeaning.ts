@@ -16,6 +16,8 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
       id: "arrive",
       japanese:
         "カフェではるかと話しています。友だちの「やわらかい断り」を読み取りましょう。",
+      reading:
+        "カフェ で はるか と はなして います ともだち の やわらかい ことわり を よみとりましょう",
       english:
         "Coffee with Haruka. Friends rarely say a hard no — listen for soft refusals and what they likely mean here.",
       nextNodeId: "suggest-out",
@@ -24,6 +26,7 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
     {
       id: "suggest-out",
       japanese: "あなた：今夜、どこか行かない？",
+      reading: "あなた こんや どこか いかない",
       english: "You suggest going out tonight.",
       nextNodeId: "tired-maybe",
       speech: { autoPlay: true, language: "en" },
@@ -103,6 +106,7 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
     {
       id: "suggest-movie",
       japanese: "あなた：じゃあ映画とかどう？家で見るだけでも。",
+      reading: "あなた じゃあ えいが とか どう いえ で みる だけ でも",
       english: "You pivot: how about a movie — even just at home?",
       nextNodeId: "chotto-trail",
       speech: { autoPlay: true, language: "en" },
@@ -179,6 +183,7 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
     {
       id: "suggest-karaoke",
       japanese: "あなた：カラオケなら気分変わるかもよ？",
+      reading: "あなた カラオケ なら きぶん かわる かも よ",
       english: "You try karaoke — maybe that’ll change her mood?",
       nextNodeId: "ii-kana",
       speech: { autoPlay: true, language: "en" },
@@ -322,6 +327,7 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
     {
       id: "how-about",
       japanese: "あなた：日曜のランチとかどうかな？",
+      reading: "あなた にちよう の ランチ とか どう かな",
       english: "You float Sunday lunch — carefully.",
       nextNodeId: "dou-shiyou",
       speech: { autoPlay: true, language: "en" },
@@ -460,6 +466,8 @@ export const FRIEND_REAL_MEANING_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "読み取り成功。かも・ちょっと…・いいかな・また今度・どうしようかな — 文脈の本音をキャッチできました。",
+      reading:
+        "よみとり せいこう かも ちょっと いい かな また こんど どう しよう かな ぶんみゃく の ほんね を キャッチ できました",
       english:
         "Room read. You caught soft refusals in context — かも, ちょっと…, いいかな, また今度, どうしようかな — without treating any phrase as a fixed dictionary meaning.",
       endState: "success",
@@ -472,6 +480,7 @@ export const FRIEND_REAL_MEANING_QUEST: QuestDefinition = {
   id: "friend-real-meaning",
   title: "What Your Friend Really Means",
   japaneseTitle: "友だちの本音",
+  japaneseTitleReading: "ともだち の ほんね",
   locationId: "cafe",
   chapter: 5,
   description:

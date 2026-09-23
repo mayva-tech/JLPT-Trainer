@@ -15,6 +15,7 @@ export const PHONE_CALL_CONVERSATION: ConversationDefinition = {
     {
       id: "incoming",
       japanese: "着信です。クリニックからの電話に出てください。",
+      reading: "ちゃくしん です クリニック から の でんわ に でて ください",
       english:
         "Incoming call from the clinic.\n\nSurvive the call with your ears — transcript stays hidden on listening beats.",
       nextNodeId: "identify-caller",
@@ -653,6 +654,7 @@ export const PHONE_CALL_CONVERSATION: ConversationDefinition = {
     {
       id: "success",
       japanese: "通話終了。予約内容を確認できました。",
+      reading: "つうわ しゅうりょう よやく ないよう を かくにん できました",
       english:
         "Call ended. You confirmed the appointment — listening under pressure pays off.",
       endState: "success",
@@ -665,6 +667,7 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
   id: "phone-call",
   title: "Handle a Phone Inquiry",
   japaneseTitle: "電話で問い合わせ",
+  japaneseTitleReading: "でんわ で といあわせ",
   locationId: "phone-center",
   chapter: 2,
   description:
@@ -701,6 +704,7 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "電話の最初の一言を聞いてください。相手は誰ですか。",
+      promptEn: "Listen to the opening line. Who is calling?",
       listenText:
         "もしもし、ことばクリニックの田中と申しますが、お客様のお電話でよろしいでしょうか。",
       listenReading:
@@ -713,18 +717,21 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "カフェ琴の葉のケンだ。",
+          labelEn: "It’s Ken from Café Kotoba.",
           correct: false,
           feedbackWrong: "❌ Wrong workplace — listen for クリニック.",
         },
         {
           id: "b",
           labelJa: "市役所の田中さんだ。",
+          labelEn: "It’s Tanaka from City Hall.",
           correct: false,
           feedbackWrong: "❌ Not City Hall.",
         },
         {
           id: "c",
           labelJa: "ことばクリニックの田中さんだ。",
+          labelEn: "It’s Tanaka from Kotoba Clinic.",
           correct: true,
           feedbackCorrect: "✅ Formal phone opening: clinic → name → check.",
         },
@@ -806,6 +813,7 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "保留のあと、スタッフが戻ってきました。何と言いましたか。",
+      promptEn: "After hold, staff comes back. What did they say?",
       listenText: "お待たせしました。水曜日の午後三時でよろしいでしょうか。",
       listenReading:
         "おまたせ しました すいようび の ごご さんじ で よろしい でしょう か",
@@ -817,18 +825,21 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "電話を切れと言っている。",
+          labelEn: "They’re telling you to hang up.",
           correct: false,
           feedbackWrong: "❌ They're back and confirming the slot.",
         },
         {
           id: "b",
           labelJa: "待たせて申し訳ない、と戻ってきた。",
+          labelEn: "They’re back, apologizing for keeping you waiting.",
           correct: true,
           feedbackCorrect: "✅ Classic hold-return phrase.",
         },
         {
           id: "c",
           labelJa: "初診の案内をしている。",
+          labelEn: "They’re giving a first-visit orientation.",
           correct: false,
           feedbackWrong: "❌ This is confirmation, not a first-visit spiel.",
         },
@@ -840,6 +851,7 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "日時の確認です。正しい内容はどれですか。",
+      promptEn: "Confirming the date and time. Which is correct?",
       listenText: "水曜日の午後三時でよろしいでしょうか。",
       listenReading: "すいようび の ごご さんじ で よろしい でしょう か",
       skillHint: "listening",
@@ -850,18 +862,21 @@ export const PHONE_CALL_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "月曜日の朝9時に変更したいと言っている。",
+          labelEn: "They want to change it to Monday at 9 a.m.",
           correct: false,
           feedbackWrong: "❌ They're confirming Wednesday 3 p.m.",
         },
         {
           id: "b",
           labelJa: "水曜日の午後三時で合っているか確認している。",
+          labelEn: "They’re checking that Wednesday at 3 p.m. is correct.",
           correct: true,
           feedbackCorrect: "✅ Day + time locked: 水曜日の午後三時.",
         },
         {
           id: "c",
           labelJa: "予約をキャンセルすると言っている。",
+          labelEn: "They’re canceling the appointment.",
           correct: false,
           feedbackWrong: "❌ This is confirmation, not cancellation.",
         },

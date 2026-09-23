@@ -14,6 +14,8 @@ export const CUSTOMER_SERVICE_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "来客対応です。吉田様が受付にいらっしゃいます。",
+      reading:
+        "らいきゃく たいおう です よしださま が うけつけ に いらっしゃいます",
       english:
         "A client visit. Yoshida-sama is at reception.\n\nUse customer keigo — then notice how register flips with Mika afterward.",
       nextNodeId: "greet",
@@ -612,6 +614,7 @@ export const CUSTOMER_SERVICE_CONVERSATION: ConversationDefinition = {
     {
       id: "success",
       japanese: "お客様対応クリア。敬語は相手で切り替える。",
+      reading: "おきゃくさま たいおう クリア けいご は あいて で きりかえる",
       english:
         "Customer service clear. Keigo flips with the person — client vs coworker.",
       endState: "success",
@@ -624,6 +627,7 @@ export const CUSTOMER_SERVICE_QUEST: QuestDefinition = {
   id: "customer-service",
   title: "Customer Interaction",
   japaneseTitle: "お客様対応",
+  japaneseTitleReading: "おきゃくさま たいおう",
   locationId: "office",
   chapter: 4,
   description:

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   hasSpeakableFeedback,
+  hasJapaneseSpeechRuns,
   parseBilingualSpeakSegments,
+  withQuestStepGuidance,
 } from "./questFeedbackSpeech";
 
 describe("parseBilingualSpeakSegments", () => {
@@ -127,6 +129,28 @@ describe("parseBilingualSpeakSegments", () => {
     ]);
   });
 
+  it("routes choice English with 「記入」 through Nanami, not Andrew alone", () => {
+    expect(
+      parseBilingualSpeakSegments("Sorry — what does 「記入」mean?")
+    ).toEqual([
+      { language: "en", text: "Sorry — what does" },
+      { language: "ja", text: "記入" },
+      { language: "en", text: "mean?" },
+    ]);
+    expect(
+      parseBilingualSpeakSegments("What does 『記入』mean?")
+    ).toEqual([
+      { language: "en", text: "What does" },
+      { language: "ja", text: "記入" },
+      { language: "en", text: "mean?" },
+    ]);
+  });
+
+  it("detects embedded Japanese that must not go to Andrew alone", () => {
+    expect(hasJapaneseSpeechRuns("Sorry — what does 「記入」mean?")).toBe(true);
+    expect(hasJapaneseSpeechRuns("Sorry, one more time please.")).toBe(false);
+  });
+
   it("speaks repair tips with Nanami for 「ゆっくり」 then Andrew for the gloss", () => {
     expect(
       parseBilingualSpeakSegments(
@@ -172,9 +196,41 @@ describe("parseBilingualSpeakSegments", () => {
     ]);
   });
 
+  it("splits outro EN that embeds a Japanese chapter title", () => {
+    expect(
+      parseBilingualSpeakSegments(
+        "You made it through a full day in Kotoba Town.\n\nChapter 1 clear. Coming next: 社会生活 — life in society."
+      )
+    ).toEqual([
+      {
+        language: "en",
+        text: "You made it through a full day in Kotoba Town.\nChapter 1 clear. Coming next:",
+      },
+      { language: "ja", text: "社会生活" },
+      { language: "en", text: "life in society." },
+    ]);
+    expect(
+      hasJapaneseSpeechRuns(
+        "Chapter 1 clear. Coming next: 社会生活 — life in society."
+      )
+    ).toBe(true);
+  });
+
   it("reports speakable when any text remains", () => {
     expect(hasSpeakableFeedback("✅ Correct")).toBe(true);
     expect(hasSpeakableFeedback("")).toBe(false);
     expect(hasSpeakableFeedback("✅")).toBe(false);
+  });
+
+  it("appends Try Again / Forward hints to MCQ feedback", () => {
+    expect(
+      withQuestStepGuidance("❌ She's adding a café stop, not canceling plans.", false)
+    ).toContain("Try Again");
+    expect(
+      withQuestStepGuidance("✅ 「寄る」= stop by on the way.", true)
+    ).toContain("Forward");
+    expect(
+      withQuestStepGuidance("✅ Already has hint\n\n→ Forward when you're ready to continue.", true)
+    ).toBe("✅ Already has hint\n\n→ Forward when you're ready to continue.");
   });
 });

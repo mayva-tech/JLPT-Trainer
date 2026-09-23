@@ -12,6 +12,8 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "dawn",
       japanese: "長い一日の始まりです。朝から締めで、全てをつなげてください。",
+      reading:
+        "ながい いちにち の はじまり です あさ から しめ で すべて を つなげて ください",
       english:
         "A full workday starts now.\n\nMorning → boss status → phone → customer → mistake → report → meeting → urgent → close. Facts locked early will be recalled later.",
       nextNodeId: "morning-mika",
@@ -186,6 +188,7 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "phone-ring",
       japanese: "外線が鳴っています。出てください。",
+      reading: "がいせん が なっています でて ください",
       english: "Outside line ringing. Answer with company manners.",
       nextNodeId: "phone-answer",
       speech: { autoPlay: true, language: "en" },
@@ -193,6 +196,7 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "phone-answer",
       japanese: "受話器を取りました。最初の一言は？",
+      reading: "じゅわき を とりました さいしょ の ひとこと は",
       english: "You pick up. Opening line?",
       objectiveType: "social-choice",
       socialContext: "external-caller",
@@ -428,6 +432,7 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "customer-arrive",
       japanese: "通話終了。続いて吉田様が来社されました。",
+      reading: "つうわ しゅうりょう つづいて よしださま が らいしゃ されました",
       english: "Call ended. Yoshida-sama has arrived for a visit.",
       nextNodeId: "customer-greet",
       speech: { autoPlay: true, language: "en" },
@@ -537,6 +542,8 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
       id: "mistake-hit",
       japanese:
         "吉田様への対応後、添付ファイルを間違えて送ったことに気づきました。",
+      reading:
+        "よしださま へ の たいおうご てんぷ ファイル を まちがえて おくった こと に きづきました",
       english:
         "After the visit, you realize you sent Yoshida the wrong attachment.",
       nextNodeId: "report-open",
@@ -681,6 +688,8 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "meeting-open",
       japanese: "午後の定例。スケジュール案に意見を求められます。",
+      reading:
+        "ごご の ていれい スケジュールあん に いけん を もとめられます",
       english: "Afternoon meeting. You'll need soft disagreement — not blunt rejection.",
       nextNodeId: "meeting-pitch",
       speech: { autoPlay: true, language: "en" },
@@ -932,6 +941,8 @@ export const WORKDAY_SURVIVAL_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "一日仕事サバイバル、クリア。報連相・電話・お客様・ミス報告・会議意見 — 全てをつなげた。",
+      reading:
+        "いちにち しごと サバイバル クリア ほうれんそう でんわ おきゃくさま みす ほうこく かいぎ いけん すべて を つなげた",
       english:
         "Workday survival clear. You chained reporting, phone, customer keigo, mistake recovery, and soft disagreement into one day.",
       endState: "success",
@@ -944,6 +955,7 @@ export const WORKDAY_SURVIVAL_QUEST: QuestDefinition = {
   id: "workday-survival",
   title: "Workday Survival",
   japaneseTitle: "一日仕事サバイバル",
+  japaneseTitleReading: "いちにち しごと さばいばる",
   locationId: "office",
   chapter: 4,
   description:

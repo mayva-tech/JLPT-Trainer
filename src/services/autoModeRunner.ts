@@ -6,6 +6,7 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
+  resolveAutoModeSpeechRate,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -14,6 +15,8 @@ export type AutoModeUi = {
   setStep: (step: StepName) => void;
   setShowFurigana: (show: boolean) => void;
   setSpeechRate: (rate: number) => void;
+  /** Current chrome rate — when 1.25×, Auto Mode stays locked at fast. */
+  getPreferredSpeechRate?: () => number;
   setSpeechLang: (lang: "ja" | "en" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setHighlight: (h: SpeechHighlight | null) => void;
@@ -306,7 +309,8 @@ export class AutoModeRunner {
   }
 
   /** JP normal あ off → pause → EN → pause → JP slow あ on
-   *  (no final normal JA repeat — next section follows). */
+   *  (no final normal JA repeat — next section follows).
+   *  While chrome is on 1.25×, every pass stays at fast. */
   private async runSection(
     sid: number,
     ui: AutoModeUi,
@@ -315,11 +319,14 @@ export class AutoModeRunner {
   ): Promise<void> {
     const { ja, reading, en, step } = this.sectionTexts(item, section);
     ui.setStep(step);
+    const rateFor = (scripted: number) =>
+      resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), scripted);
 
     // 1. Japanese, normal, hiragana hidden
     ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakJapanese(ui, ja, SPEECH_RATE_NORMAL, sid, reading);
+    const rate1 = rateFor(SPEECH_RATE_NORMAL);
+    ui.setSpeechRate(rate1);
+    await this.speakJapanese(ui, ja, rate1, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
     // 2. Pause
@@ -328,8 +335,9 @@ export class AutoModeRunner {
 
     // 3. English, normal
     ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
-    await this.speakEnglish(ui, en, SPEECH_RATE_NORMAL, sid);
+    const rate3 = rateFor(SPEECH_RATE_NORMAL);
+    ui.setSpeechRate(rate3);
+    await this.speakEnglish(ui, en, rate3, sid);
     if (!this.shouldContinue(sid)) return;
 
     // 4. Pause
@@ -338,8 +346,9 @@ export class AutoModeRunner {
 
     // 5. Japanese, slow, hiragana visible
     ui.setShowFurigana(true);
-    ui.setSpeechRate(SPEECH_RATE_SLOW);
-    await this.speakJapanese(ui, ja, SPEECH_RATE_SLOW, sid, reading);
+    const rate5 = rateFor(SPEECH_RATE_SLOW);
+    ui.setSpeechRate(rate5);
+    await this.speakJapanese(ui, ja, rate5, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
     await this.pause(T.normalPause, sid);
@@ -350,14 +359,18 @@ export class AutoModeRunner {
     ui: AutoModeUi,
     item: VocabularyItem
   ): Promise<void> {
+    const rateFor = (scripted: number) =>
+      resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), scripted);
+
     // Play Japanese sentence again (shadowing rate, hiragana hidden) for listen
     ui.setStep("sentence");
     ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_SHADOWING);
+    const shadowRate = rateFor(SPEECH_RATE_SHADOWING);
+    ui.setSpeechRate(shadowRate);
     await this.speakJapanese(
       ui,
       item.sentence,
-      SPEECH_RATE_SHADOWING,
+      shadowRate,
       sid,
       item.sentenceReading
     );
@@ -371,11 +384,12 @@ export class AutoModeRunner {
     // Review: Japanese word once (normal, hiragana hidden)
     ui.setStep("review");
     ui.setShowFurigana(false);
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
+    const reviewRate = rateFor(SPEECH_RATE_NORMAL);
+    ui.setSpeechRate(reviewRate);
     await this.speakJapanese(
       ui,
       item.word,
-      SPEECH_RATE_NORMAL,
+      reviewRate,
       sid,
       item.reading
     );

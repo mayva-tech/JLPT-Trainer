@@ -17,6 +17,7 @@ import {
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
   SPEECH_RATE_SHADOWING,
+  resolveAutoModeSpeechRate,
   type SpeechHighlight,
 } from "./speechService";
 
@@ -42,6 +43,8 @@ export type GrammarAutoModeUi = {
   setStep: (step: GrammarStep) => void;
   setShowFurigana: (show: boolean) => void;
   setSpeechRate: (rate: number) => void;
+  /** Current chrome rate — when 1.25×, Auto Mode stays locked at fast. */
+  getPreferredSpeechRate?: () => number;
   setSpeechLang: (lang: "ja" | "en" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setHighlight: (h: SpeechHighlight | null) => void;
@@ -101,28 +104,32 @@ export class GrammarAutoModeRunner {
         // ② pattern + meaning
         ui.setStep("pattern");
         ui.setShowFurigana(false);
-        ui.setSpeechRate(SPEECH_RATE_NORMAL);
+        const rateFor = (scripted: number) =>
+          resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), scripted);
+        const ratePattern = rateFor(SPEECH_RATE_NORMAL);
+        ui.setSpeechRate(ratePattern);
         await this.speakJapanese(
           ui,
           item.pattern,
-          SPEECH_RATE_NORMAL,
+          ratePattern,
           sid,
           item.patternReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.shortPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
-        await this.speakEnglish(ui, item.meaning, SPEECH_RATE_NORMAL, sid);
+        await this.speakEnglish(ui, item.meaning, rateFor(SPEECH_RATE_NORMAL), sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         // Pattern again — slow, furigana on
         ui.setShowFurigana(true);
-        ui.setSpeechRate(SPEECH_RATE_SLOW);
+        const ratePatternSlow = rateFor(SPEECH_RATE_SLOW);
+        ui.setSpeechRate(ratePatternSlow);
         await this.speakJapanese(
           ui,
           item.pattern,
-          SPEECH_RATE_SLOW,
+          ratePatternSlow,
           sid,
           item.patternReading
         );
@@ -139,27 +146,34 @@ export class GrammarAutoModeRunner {
         // ④ example sentence
         ui.setStep("sentence");
         ui.setShowFurigana(false);
-        ui.setSpeechRate(SPEECH_RATE_NORMAL);
+        const rateSentence = rateFor(SPEECH_RATE_NORMAL);
+        ui.setSpeechRate(rateSentence);
         await this.speakJapanese(
           ui,
           item.sentence,
-          SPEECH_RATE_NORMAL,
+          rateSentence,
           sid,
           item.sentenceReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.shortPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
-        await this.speakEnglish(ui, item.sentenceMeaning, SPEECH_RATE_NORMAL, sid);
+        await this.speakEnglish(
+          ui,
+          item.sentenceMeaning,
+          rateFor(SPEECH_RATE_NORMAL),
+          sid
+        );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         ui.setShowFurigana(true);
-        ui.setSpeechRate(SPEECH_RATE_SLOW);
+        const rateSentenceSlow = rateFor(SPEECH_RATE_SLOW);
+        ui.setSpeechRate(rateSentenceSlow);
         await this.speakJapanese(
           ui,
           item.sentence,
-          SPEECH_RATE_SLOW,
+          rateSentenceSlow,
           sid,
           item.sentenceReading
         );
@@ -170,11 +184,12 @@ export class GrammarAutoModeRunner {
         // ⑤ shadowing
         ui.setStep("sentence");
         ui.setShowFurigana(false);
-        ui.setSpeechRate(SPEECH_RATE_SHADOWING);
+        const rateShadow = rateFor(SPEECH_RATE_SHADOWING);
+        ui.setSpeechRate(rateShadow);
         await this.speakJapanese(
           ui,
           item.sentence,
-          SPEECH_RATE_SHADOWING,
+          rateShadow,
           sid,
           item.sentenceReading
         );
@@ -186,11 +201,12 @@ export class GrammarAutoModeRunner {
         // ⑥ review
         ui.setStep("review");
         ui.setShowFurigana(false);
-        ui.setSpeechRate(SPEECH_RATE_NORMAL);
+        const rateReview = rateFor(SPEECH_RATE_NORMAL);
+        ui.setSpeechRate(rateReview);
         await this.speakJapanese(
           ui,
           item.pattern,
-          SPEECH_RATE_NORMAL,
+          rateReview,
           sid,
           item.patternReading
         );

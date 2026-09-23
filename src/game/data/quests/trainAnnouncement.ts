@@ -14,6 +14,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "ことば駅のホーム。アナウンスは速く、きちんとした敬語です。",
+      reading: "ことばえき の ホーム アナウンス は はやく きちん と した けいご です",
       english:
         "Kotoba Station platform.\n\nAnnouncements are fast and formally worded — lock platform, destination, train type, and any changes.",
       nextNodeId: "platform-wait",
@@ -22,6 +23,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "platform-wait",
       japanese: "東京行きの電車を待っています。スピーカーが鳴ります…",
+      reading: "とうきょうゆき の でんしゃ を まって います スピーカー が なります",
       english: "You're waiting for a train to Tokyo. The speakers crackle…",
       nextNodeId: "announce-1",
       speech: { autoPlay: true, language: "en" },
@@ -151,6 +153,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "recall-change",
       japanese: "4番線へ向かいます。もう一度アナウンスが流れます…",
+      reading: "よんばんせん へ むかいます もう いちど アナウンス が ながれます",
       english: "You head toward track 4. Another announcement plays…",
       nextNodeId: "announce-delay",
       speech: { autoPlay: true, language: "en" },
@@ -223,6 +226,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "recall-delay",
       japanese: "遅延と乗り換え、覚えていますか？",
+      reading: "ちえん と のりかえ おぼえて います か",
       english: "Do you have the delay and transfer details?",
       objectiveType: "listening",
       socialContext: "stranger",
@@ -355,6 +359,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "board-check",
       japanese: "4番線のホーム。黄色い線の内側まで下がって待ちます。",
+      reading: "よんばんせん の ホーム きいろい せん の うちがわ まで さがって まちます",
       english:
         "Track 4 platform. You step behind the yellow line and wait.",
       nextNodeId: "final-recall",
@@ -363,6 +368,7 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
     {
       id: "final-recall",
       japanese: "出発前に、覚えた情報を確認しましょう。",
+      reading: "しゅっぱつまえ に おぼえた じょうほう を かくにん しましょう",
       english: "Before departure — lock in what you caught from the announcements.",
       objectiveType: "listening",
       socialContext: "stranger",
@@ -411,6 +417,8 @@ export const TRAIN_ANNOUNCEMENT_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "アナウンス突破。番線変更・遅延・乗り換えを、速い敬語のまま聞き取れました。",
+      reading:
+        "アナウンス とっぱ ばんせん へんこう ちえん のりかえ を はやい けいご の まま ききとれました",
       english:
         "Announcement clear. You caught platform changes, delays, and transfer info at compressed formal speed.",
       endState: "success",
@@ -423,6 +431,7 @@ export const TRAIN_ANNOUNCEMENT_QUEST: QuestDefinition = {
   id: "train-announcement",
   title: "Train Announcement Challenge",
   japaneseTitle: "電車のアナウンス",
+  japaneseTitleReading: "でんしゃ の あなうんす",
   locationId: "train-station",
   chapter: 5,
   description:

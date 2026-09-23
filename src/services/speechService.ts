@@ -81,7 +81,7 @@ export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
 /** Chapter 5 "natural" — slightly faster than RPG default, still clear. */
 export const SPEECH_RATE_NATURAL = 0.92;
-/** Chapter 5 "fast" — modest bump only (accessibility). */
+/** Chapter 5 "fast" — modest bump only (accessibility). UI label: 1.25×. */
 export const SPEECH_RATE_FAST = 1.0;
 /** Slightly faster normal used only for the shadowing listen pass. */
 export const SPEECH_RATE_SHADOWING = 0.85;
@@ -90,6 +90,26 @@ export const SPEECH_RATE_INTERVIEW_EN = 1.05;
 /** Nanami rate for N3 JP+EN mix interview (raised from 0.85). */
 export const SPEECH_RATE_INTERVIEW_MIX = 0.88;
 
+/** True when the UI rate is the 1.25× fast preset. */
+export function isFastSpeechRate(rate: number): boolean {
+  return Math.abs(rate - SPEECH_RATE_FAST) < 0.001;
+}
+
+/**
+ * Auto Mode rate: while 1.25× is selected, lock every scripted pass to fast
+ * so Normal/Slow/Shadowing steps do not flip the chrome rate. Otherwise use
+ * the scripted pass rate (normal / slow / shadowing).
+ */
+export function resolveAutoModeSpeechRate(
+  preferred: number | null | undefined,
+  scripted: number
+): number {
+  if (preferred != null && isFastSpeechRate(preferred)) {
+    return SPEECH_RATE_FAST;
+  }
+  return scripted;
+}
+
 const DEBUG_SPEECH = false;
 /**
  * Lead-in after onstart before the first karaoke unit (ms).
@@ -97,22 +117,17 @@ const DEBUG_SPEECH = false;
  */
 const FALLBACK_START_OFFSET_MS = 0;
 /**
- * English (Andrew) estimate scale.
- * Neural Andrew at SPEECH_RATE_NORMAL (0.80) does not slow linearly — dividing
+ * Shared estimate scale (Andrew + Nanami).
+ * Neural voices at SPEECH_RATE_NORMAL (0.80) do not slow linearly — dividing
  * by the raw rate stretches karaoke past the voice. Keep a mild stretch above
- * 1.0 so Game Mode / Quest EN karaoke does not race ahead of the utterance;
- * browser word boundaries still rebase when present.
- * (Play/Quiz historically used ~1.35; 0.88 overshot the other way.)
+ * 1.0 so Game Mode / Quest karaoke does not race ahead of the utterance;
+ * browser word boundaries still rebase when present (EN always; JA via spoken
+ * reading indices when audioText ≠ display).
+ * (Play/Quiz historically used ~1.35; 0.88 overshot the other way. JA briefly
+ * used 0.80 estimate-only and raced Nanami whenever readings forced fallback.)
  */
 const FALLBACK_TIMING_SCALE_EN = 1.08;
-/**
- * Japanese fallback scale (Nanami). Neural Nanami at SPEECH_RATE_NORMAL (0.80)
- * barely slows vs rate 1, while karaokeRateDivisor floors at 0.85 — so
- * duration = estimate/0.85*scale. Keep scale low enough that the product is
- * under 1.0; 0.91 yielded ~1.07× and let quest sentence highlights (and the
- * talking-head mouth) keep running after the voiceover already ended.
- */
-const FALLBACK_TIMING_SCALE_JA = 0.80;
+const FALLBACK_TIMING_SCALE_JA = 1.08;
 /** @deprecated alias — tests / callers that expect a single scale get JA. */
 const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
 
@@ -125,7 +140,8 @@ export function karaokeRateDivisor(
   lang: "ja" | "en",
   rate: number
 ): number {
-  const normalFloor = lang === "en" ? 0.88 : 0.85;
+  // Same floor for JA and EN so reading-driven JA karaoke stretches like EN.
+  const normalFloor = 0.88;
   if (rate < SPEECH_RATE_NORMAL - 0.001) {
     // Slow mode (and any below-normal override): track the utterance rate.
     return Math.max(rate, 0.5);
@@ -354,12 +370,15 @@ function isUsefulBoundaryName(name: string | undefined): boolean {
 }
 
 /**
- * Map an Andrew boundary in `audioText` onto a display karaoke unit when the
- * spoken string differs from the visible gloss (stripped notes, overrides).
- * Walks units by their spoken form so quiz meanings like "to return (goods)"
- * still rebase instead of running estimate-only.
+ * Map a browser boundary in `audioText` onto a display karaoke unit when the
+ * spoken string differs from the visible text (EN stripped notes / JA readings).
+ * Walks units by their spoken form so glosses like "to return (goods)" and
+ * kanji+reading lines still rebase instead of running estimate-only.
+ *
+ * Matching tolerates TTS whitespace / 、 inserted by particle pauses so a unit
+ * spoken as "さいしょの" still hits audio "さいしょ の".
  */
-function findEnglishSpokenBoundaryUnit(
+function findSpokenBoundaryUnit(
   units: HighlightUnit[],
   audioText: string,
   charIndex: number
@@ -369,9 +388,9 @@ function findEnglishSpokenBoundaryUnit(
   for (let i = 0; i < units.length; i += 1) {
     const spoken = (units[i]!.spokenText ?? units[i]!.text).trim();
     if (!spoken) continue;
-    const at = audioText.indexOf(spoken, searchFrom);
-    if (at < 0) continue;
-    const end = at + spoken.length;
+    const hit = indexOfSpokenInAudio(audioText, spoken, searchFrom);
+    if (!hit) continue;
+    const { at, end } = hit;
     if (charIndex >= at && charIndex < Math.max(end, at + 1)) {
       return { start: units[i]!.start, end: units[i]!.end };
     }
@@ -382,6 +401,69 @@ function findEnglishSpokenBoundaryUnit(
   }
   const last = units[units.length - 1]!;
   return { start: last.start, end: last.end };
+}
+
+/**
+ * Locate `spoken` inside `audioText` starting at `from`.
+ * Exact match first; then allow optional spaces / ideographic commas between
+ * characters, and treat hiragana/katakana as equivalent so かあど still hits
+ * audio that kept カあド (or the reverse).
+ */
+function indexOfSpokenInAudio(
+  audioText: string,
+  spoken: string,
+  from: number
+): { at: number; end: number } | null {
+  const exact = audioText.indexOf(spoken, from);
+  if (exact >= 0) {
+    return { at: exact, end: exact + spoken.length };
+  }
+
+  const toHira = (ch: string): string => {
+    const code = ch.codePointAt(0)!;
+    if (code >= 0x30a1 && code <= 0x30f6) {
+      return String.fromCodePoint(code - 0x60);
+    }
+    return ch;
+  };
+
+  const chars = [...spoken.replace(/\s+/gu, "")].map(toHira);
+  if (chars.length === 0) return null;
+
+  // Walk audio from `from`, matching each spoken char with optional gaps.
+  // Indices stay in the original string (1:1 with BMP kana).
+  const audioChars = [...audioText];
+  // Map code-unit index → char index for slice(from)
+  let cu = 0;
+  let startChar = 0;
+  while (cu < from && startChar < audioChars.length) {
+    cu += audioChars[startChar]!.length;
+    startChar += 1;
+  }
+
+  for (let start = startChar; start < audioChars.length; start += 1) {
+    let ai = start;
+    let si = 0;
+    while (si < chars.length && ai < audioChars.length) {
+      const a = audioChars[ai]!;
+      if (/[\s、，]/u.test(a)) {
+        ai += 1;
+        continue;
+      }
+      if (toHira(a) !== chars[si]) break;
+      si += 1;
+      ai += 1;
+    }
+    if (si === chars.length) {
+      // Convert char indices back to code-unit offsets
+      let at = 0;
+      for (let i = 0; i < start; i += 1) at += audioChars[i]!.length;
+      let end = at;
+      for (let i = start; i < ai; i += 1) end += audioChars[i]!.length;
+      return { at, end };
+    }
+  }
+  return null;
 }
 
 function runUtterance(
@@ -554,9 +636,9 @@ function runUtterance(
     unitLang === "en" ? FALLBACK_TIMING_SCALE_EN : FALLBACK_TIMING_SCALE_JA;
   // Andrew/Nanami neural rates are nonlinear near SPEECH_RATE_NORMAL —
   // don't stretch karaoke as if 0.80 were a true 20% slowdown.
-  // EN floor 0.88 / JA floor 0.85 at normal (and faster) rates.
+  // Shared floor 0.88 at normal (and faster) rates.
   // At SPEECH_RATE_SLOW (0.75× UI → 0.68), use the real rate so karaoke
-  // does not keep racing ahead at ~0.85 while the voice is at 0.68.
+  // does not keep racing ahead at ~0.88 while the voice is at 0.68.
   const rateDivisor = karaokeRateDivisor(unitLang, rate);
 
   const plannedStart: number[] = [];
@@ -698,19 +780,13 @@ function runUtterance(
 
     // Boundary indices refer to `audioText`. When it differs from the visible
     // text (JA readings / EN speak transforms), map via the karaoke units'
-    // spoken form instead of ignoring the boundary entirely — quiz English
-    // glosses with "(formal)" notes need this rebasing.
+    // spoken form — same wiring for Andrew notes and Nanami readings so JA
+    // does not race on estimate-only while EN rebases.
     if (forceFallback) {
-      if (!isJa) {
-        const mapped = findEnglishSpokenBoundaryUnit(
-          units,
-          audioText,
-          charIndex
-        );
-        if (mapped) {
-          debug("spoken-boundary", playbackId, { charIndex, mapped });
-          applyBoundary(mapped);
-        }
+      const mapped = findSpokenBoundaryUnit(units, audioText, charIndex);
+      if (mapped) {
+        debug("spoken-boundary", playbackId, { charIndex, mapped, lang: unitLang });
+        applyBoundary(mapped);
       }
       return;
     }
@@ -924,19 +1000,23 @@ function buildJapaneseSpeakSegments(
 
   const allUnits = buildJapaneseHighlightUnits(text);
   const readingTrim = reading?.trim() || "";
-  const allSteps: HighlightUnit[] = readingTrim
-    ? buildJapaneseSpokenKaraokeSteps(
-        text,
-        deriveSpacedReadingForUnits(text, readingTrim, allUnits) ?? readingTrim,
-        allUnits
-      ).map((s) => ({
-        start: s.start,
-        end: s.end,
-        text: s.text,
-        kind: s.kind,
-        spokenText: s.spokenText,
-        speakGapAfter: s.speakGapAfter,
-      }))
+  // Prefer the author spaced reading when it already has token breaks — deriving
+  // from display units can glue particles (さいしょの) that Nanami speaks apart.
+  const karaokeReading =
+    readingTrim && !/\s/u.test(readingTrim)
+      ? deriveSpacedReadingForUnits(text, readingTrim, allUnits) ?? readingTrim
+      : readingTrim;
+  const allSteps: HighlightUnit[] = karaokeReading
+    ? buildJapaneseSpokenKaraokeSteps(text, karaokeReading, allUnits).map(
+        (s) => ({
+          start: s.start,
+          end: s.end,
+          text: s.text,
+          kind: s.kind,
+          spokenText: s.spokenText,
+          speakGapAfter: s.speakGapAfter,
+        })
+      )
     : activeHighlightUnits(allUnits);
 
   return clauses.map((clause, i) => {

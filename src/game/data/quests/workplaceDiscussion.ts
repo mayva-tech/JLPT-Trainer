@@ -7,6 +7,7 @@ export const WORKPLACE_DISCUSSION_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "みかが新しい案を説明しています。少し気になる点があります。",
+      reading: "みか が あたらしい あん を せつめい して います すこし き に なる てん が あります",
       english:
         "Mika presents an idea. You disagree a bit — acknowledge first, then soften.",
       nextNodeId: "pitch",
@@ -207,6 +208,7 @@ export const WORKPLACE_DISCUSSION_QUEST: QuestDefinition = {
   id: "workplace-discussion",
   title: "Workplace Discussion",
   japaneseTitle: "仕事の相談",
+  japaneseTitleReading: "しごと の そうだん",
   locationId: "office",
   chapter: 3,
   description:

@@ -58,6 +58,8 @@ export type QuestStepKind =
 export type QuestChoice = {
   id: string;
   labelJa: string;
+  /** Spaced reading for furigana on the choice label. */
+  reading?: string;
   labelEn?: string;
   correct: boolean;
   feedbackCorrect?: string;
@@ -80,6 +82,8 @@ export type QuestStep = {
   promptReading?: string;
   promptEn?: string;
   bodyJa?: string;
+  /** Spaced reading for furigana / karaoke on `bodyJa` (station notices, etc.). */
+  bodyReading?: string;
   bodyEn?: string;
   choices?: QuestChoice[];
   formFields?: { id: string; labelJa: string; meaningEn: string }[];
@@ -321,6 +325,8 @@ export type QuestDefinition = {
   id: string;
   title: string;
   japaneseTitle: string;
+  /** Spaced reading for furigana on the quest banner title. */
+  japaneseTitleReading?: string;
   locationId: LocationId;
   chapter: number;
   description: string;
@@ -458,6 +464,8 @@ export type PlayerRpgProfile = {
   unlockedSkillNodes: string[];
   /** Immersion Mode preferences. */
   immersion: ImmersionPrefs;
+  /** Show furigana above kanji in quest dialogue (home + in-quest toggle). */
+  showFurigana: boolean;
   /** Daily quest board state. */
   daily: DailyQuestProgress | null;
   /** Living Japanese reinforcement weights keyed by vocab/grammar hint. */

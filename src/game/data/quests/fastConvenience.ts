@@ -15,6 +15,7 @@ export const FAST_CONVENIENCE_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "夕方のコンビニ。レジは混んでいます。店員の早口に備えましょう。",
+      reading: "ゆうがた の コンビニ レジ は こんで います てんいん の はやくち に そなえましょう",
       english:
         "Evening rush at the convenience store.\n\nThe cashier will fire questions fast — bag, heat, points, receipt. Short answers win.",
       nextNodeId: "line-up",
@@ -137,7 +138,8 @@ export const FAST_CONVENIENCE_CONVERSATION: ConversationDefinition = {
       listenOnly: true,
       speechRate: "fast",
       spokenFeature: ["omitted-particle", "filler"],
-      helpHint: "温めますか？ = heat the bento/food. Short yes/no.",
+      helpHint:
+        "温めますか？（あたためます）= heat the bento/food. Short yes/no.",
       vocabHint: "温める",
       speech: { autoPlay: true, karaokeMode: "after-answer" },
       choices: [
@@ -402,6 +404,8 @@ export const FAST_CONVENIENCE_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "レジ突破。早口の袋・温め・ポイント・レシートを聞き分けられました。",
+      reading:
+        "レジ とっぱ はやくち の ふくろ あたため ポイント レシート を ききわけられました",
       english:
         "Register cleared. You caught bag, heat, points, and receipt at native rush speed.",
       endState: "success",
@@ -414,6 +418,7 @@ export const FAST_CONVENIENCE_QUEST: QuestDefinition = {
   id: "fast-convenience",
   title: "Fast Convenience Store",
   japaneseTitle: "早口のコンビニ",
+  japaneseTitleReading: "はやくち の こんびに",
   locationId: "convenience-store",
   chapter: 5,
   description:

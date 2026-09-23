@@ -519,16 +519,17 @@ describe("speechService karaoke timeline", () => {
     } = await import("../utils/speechHighlightUnits");
 
     // Floors apply at normal; slow uses the real utterance rate.
-    expect(karaokeRateDivisor("ja", SPEECH_RATE_NORMAL)).toBe(0.85);
+    expect(karaokeRateDivisor("ja", SPEECH_RATE_NORMAL)).toBe(0.88);
+    expect(karaokeRateDivisor("en", SPEECH_RATE_NORMAL)).toBe(0.88);
     expect(karaokeRateDivisor("ja", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
     expect(karaokeRateDivisor("en", SPEECH_RATE_SLOW)).toBe(SPEECH_RATE_SLOW);
 
-    // At normal rate the JA scale×floor product must stay ≤ 1 so quest
-    // sentence highlights do not outlast Nanami's voiceover.
+    // Same stretch as EN — scale ≥ 1 so quest JA karaoke does not race Nanami.
+    expect(__speechTestHooks.FALLBACK_TIMING_SCALE_JA).toBeGreaterThanOrEqual(1);
     const jaNet =
       __speechTestHooks.FALLBACK_TIMING_SCALE_JA /
       karaokeRateDivisor("ja", SPEECH_RATE_NORMAL);
-    expect(jaNet).toBeLessThanOrEqual(1);
+    expect(jaNet).toBeGreaterThan(1);
 
     const text = "ありがとうございます。では、いくつか確認しますね。";
     const reading =
@@ -644,7 +645,38 @@ describe("speechService karaoke timeline", () => {
     expect(highlights[0]).toBe("妊娠");
   });
 
-  it("ignores browser boundaries when audio text differs from visible text", async () => {
+  it("rebases Japanese karaoke from spoken reading audio (same as EN notes)", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "本人確認書類をお持ちですか。";
+    const reading = "ほんにん かくにん しょるい を おもち です か。";
+    const highlights: string[] = [];
+    speechService.speakJapanese(
+      text,
+      { onBoundary: (h) => highlights.push(text.slice(h.start, h.end)) },
+      1,
+      { reading }
+    );
+    const utter = spoken[0]!;
+    utter.onstart?.();
+    expect(highlights[0]).toContain("本人");
+
+    // charIndex into audioText (kana), not display kanji — must still snap.
+    const audio = utter.text as string;
+    const secondTok = "かくにん";
+    const at = audio.indexOf(secondTok);
+    expect(at).toBeGreaterThan(0);
+    utter.onboundary?.({
+      name: "word",
+      charIndex: at,
+      charLength: secondTok.length,
+    });
+    expect(highlights.at(-1)).toContain("確認");
+    expect(highlights.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("does not map raw display indices when reading audio differs (spoken path only)", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");
 
@@ -658,10 +690,10 @@ describe("speechService karaoke timeline", () => {
     );
     const utter = spoken[0]!;
     utter.onstart?.();
-    const count = highlights.length;
-    // charIndex refers to にんしん, not 妊娠 — must not be mapped.
+    expect(highlights).toEqual(["妊娠"]);
+    // Mid-reading boundary still resolves to the single display unit (spoken map).
     utter.onboundary?.({ name: "word", charIndex: 3, charLength: 2 });
-    expect(highlights.length).toBe(count);
+    expect(highlights.at(-1)).toBe("妊娠");
   });
 
   it("recovers unit timing when the reading is an unspaced kana blob", async () => {

@@ -377,13 +377,50 @@ function expandMountAbbreviation(text: string): string {
   );
 }
 
+/**
+ * Clock times for Andrew karaoke.
+ * - `22:00` → `10 p.m.` (24h → 12h)
+ * - `3:00 p.m.` → `3 p.m.` (drop :00 so he does not say "colon")
+ * - bare `9:00` → `9` (same as the hour unit next to `p.m.`)
+ * - `9:15` → `9 15` (no colon)
+ */
+function expandSpokenClockTimes(text: string): string {
+  let out = text.replace(
+    /\b([01]?\d|2[0-3]):([0-5]\d)\s*(a\.m\.|p\.m\.|am|pm)\b/gi,
+    (_full, hs: string, ms: string, merRaw: string) => {
+      const h = Number(hs);
+      const m = Number(ms);
+      const mer = /p/i.test(merRaw) ? "p.m." : "a.m.";
+      if (m === 0) return `${h} ${mer}`;
+      return `${h} ${String(m).padStart(2, "0")} ${mer}`;
+    }
+  );
+  return out.replace(
+    /\b([01]?\d|2[0-3]):([0-5]\d)\b/g,
+    (_full, hs: string, ms: string) => {
+      const h = Number(hs);
+      const m = Number(ms);
+      if (h >= 13 || h === 0) {
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        const mer = h < 12 ? "a.m." : "p.m.";
+        if (m === 0) return `${h12} ${mer}`;
+        return `${h12} ${String(m).padStart(2, "0")} ${mer}`;
+      }
+      if (m === 0) return String(h);
+      return `${h} ${String(m).padStart(2, "0")}`;
+    }
+  );
+}
+
 export function buildEnglishSpeakText(text: string): string {
   let out = expandMountAbbreviation(
     appendSlashSpeakPause(
       appendWaveDashSpeakPause(
         expandSpokenPercents(
           expandSpokenMoney(
-            expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+            expandSpokenClockTimes(
+              expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+            )
           )
         )
       )

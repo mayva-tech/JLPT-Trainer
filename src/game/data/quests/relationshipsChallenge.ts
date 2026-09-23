@@ -9,6 +9,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "人間関係チャレンジ開始。相手に合わせて言い方を切り替えてください。",
+      reading:
+        "にんげんかんけい ちゃれんじ かいし あいて に あわせて いいかた を きりかえて ください",
       english:
         "Social Intelligence Challenge. Switch register based on who you're talking to — Help is costly.",
       nextNodeId: "s1",
@@ -29,6 +31,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ex",
           japanese: "うん、ひまだよ。行きたい！",
+          reading: "うん ひま だ よ いきたい",
+          english: "Yeah, I'm free. I wanna go!",
           quality: "excellent",
           nextNodeId: "s1-ok",
           relationshipDelta: 1,
@@ -37,6 +41,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "stiff",
           japanese: "はい、時間があります。",
+          reading: "はい じかん が あります",
+          english: "Yes, I have time.",
           quality: "awkward",
           nextNodeId: "s1-ok",
           feedback: "△ Stiff for a friend.",
@@ -44,6 +50,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "formal",
           japanese: "承知いたしました。参ります。",
+          reading: "しょうち いたしました まいります",
+          english: "Understood. I shall attend.",
           quality: "awkward",
           nextNodeId: "s1-ok",
           feedback: "△ Temptingly formal — wrong register for Haruka.",
@@ -54,12 +62,14 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
       id: "s1-ok",
       npcId: "haruka",
       japanese: "やった！じゃあ後でね。",
+      reading: "やった じゃあ あと で ね",
       nextNodeId: "bridge-1",
       speech: { autoPlay: true },
     },
     {
       id: "bridge-1",
       japanese: "次は職場。先輩対応に切り替えます。",
+      reading: "つぎ は しょくば せんぱい たいおう に きりかえます",
       english: "Next: workplace. Switch to senpai register.",
       nextNodeId: "s2",
       speech: { autoPlay: true, language: "en" },
@@ -79,6 +89,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ex",
           japanese: "はい、もちろんです。",
+          english: "Yes, of course.",
           quality: "excellent",
           nextNodeId: "s2b",
           relationshipDelta: 1,
@@ -87,6 +98,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "cas",
           japanese: "うん、いいよ。",
+          english: "Yeah, sure.",
           quality: "acceptable",
           nextNodeId: "s2b",
           feedback: "✓ Okay with a friendly senpai; riskier with others.",
@@ -94,6 +106,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "rude",
           japanese: "今忙しいから無理。",
+          reading: "いま いそがしい から むり",
+          english: "I'm busy right now, so no.",
           quality: "incorrect",
           nextNodeId: "s2-repair",
           confidenceDelta: -1,
@@ -114,6 +128,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "fix",
           japanese: "すみません、言い方が悪かったです。今見ます。",
+          reading: "すみません いいかた が わるかった です いま みます",
+          english: "Sorry — that came out wrong. I'll look at it now.",
           quality: "excellent",
           nextNodeId: "s2b",
           isRepair: true,
@@ -136,6 +152,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ex",
           japanese: "はい、この列が合計です。",
+          reading: "はい この れつ が ごうけい です",
+          english: "Yes — this column is the total.",
           quality: "natural",
           nextNodeId: "bridge-2",
           feedback: "✓ Clear.",
@@ -143,6 +161,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ask",
           japanese: "『合計』はこの数字ですか？",
+          reading: "ごうけい は この すうじ です か",
+          english: "Does 『合計』 mean this number?",
           quality: "excellent",
           nextNodeId: "bridge-2",
           isClarification: true,
@@ -151,6 +171,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "cas",
           japanese: "わかんない。",
+          english: "Dunno.",
           quality: "awkward",
           nextNodeId: "bridge-2",
           feedback: "△ Too casual / dismissive.",
@@ -160,6 +181,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "bridge-2",
       japanese: "次は断り方。友だちでも、言い方で印象が変わります。",
+      reading:
+        "つぎ は ことわりかた ともだち でも いいかた で いんしょう が かわります",
       english: "Next: saying no. Even with friends, wording changes the vibe.",
       nextNodeId: "s3",
       speech: { autoPlay: true, language: "en" },
@@ -178,6 +201,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "soft",
           japanese: "行きたいんだけど、その日はちょっと…また今度！",
+          reading: "いきたいん だ けど その ひ は ちょっと また こんど",
+          english: "I'd love to, but that day's a bit… next time!",
           quality: "excellent",
           nextNodeId: "bridge-3",
           feedback: "🌟 Soft refuse.",
@@ -186,6 +211,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "direct",
           japanese: "いいえ、行きません。",
+          reading: "いいえ いきません",
+          english: "No, I won't go.",
           quality: "awkward",
           nextNodeId: "bridge-3",
           feedback: "△ Cold-sounding.",
@@ -193,6 +220,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "yes",
           japanese: "承知いたしました。伺います。",
+          reading: "しょうち いたしました うかがいます",
+          english: "Understood. I'll come.",
           quality: "awkward",
           nextNodeId: "bridge-3",
           feedback: "△ Overly formal acceptance — tempting wrong register.",
@@ -202,6 +231,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "bridge-3",
       japanese: "次は仕事の相談。反対意見は柔らかく。",
+      reading: "つぎ は しごと の そうだん はんたい いけん は やわらかく",
       english: "Next: workplace disagreement — stay soft.",
       nextNodeId: "s4",
       speech: { autoPlay: true, language: "en" },
@@ -220,6 +250,10 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ex",
           japanese: "そうですね。ただ、優先順位を付けた方が安全かと…",
+          reading:
+            "そう です ね ただ ゆうせん じゅんい を つけた ほう が あんぜん か と",
+          english:
+            "Right. Still, it might be safer to set priorities…",
           quality: "excellent",
           nextNodeId: "bridge-4",
           relationshipDelta: 1,
@@ -229,6 +263,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "blunt",
           japanese: "無理です。",
+          reading: "むり です",
+          english: "That's impossible.",
           quality: "awkward",
           nextNodeId: "bridge-4",
           feedback: "△ Too absolute.",
@@ -236,6 +272,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "cas",
           japanese: "えー、めんどくさい。",
+          english: "Ugh, what a hassle.",
           quality: "incorrect",
           nextNodeId: "bridge-4",
           confidenceDelta: -1,
@@ -247,6 +284,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "bridge-4",
       japanese: "最後は上司への謝罪。カジュアルは危険です。",
+      reading: "さいご は じょうし へ の しゃざい カジュアル は きけん です",
       english: "Finally: apologize to your manager. Casual is risky.",
       nextNodeId: "s5",
       speech: { autoPlay: true, language: "en" },
@@ -266,6 +304,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "ex",
           japanese: "お待たせしてしまい、すみません。次回気をつけます。",
+          reading: "おまたせ して しまい すみません じかい き を つけます",
+          english: "Sorry for keeping you waiting. I'll be more careful next time.",
           quality: "excellent",
           nextNodeId: "finale",
           relationshipDelta: 2,
@@ -275,6 +315,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "cas",
           japanese: "ごめん！待った？",
+          reading: "ごめん まった",
+          english: "Sorry! Did you wait?",
           quality: "awkward",
           nextNodeId: "finale",
           relationshipDelta: -1,
@@ -283,6 +325,8 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
         {
           id: "deny",
           japanese: "遅れてません。",
+          reading: "おくれて ません",
+          english: "I wasn't late.",
           quality: "incorrect",
           nextNodeId: "finale",
           confidenceDelta: -1,
@@ -293,6 +337,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "finale",
       japanese: "切り替え、完了。空気を読む力は会話で育ちます。",
+      reading: "きりかえ かんりょう くうき を よむ ちから は かいわ で そだちます",
       english: "Register switching complete. Reading the room is a skill you train.",
       nextNodeId: "success",
       speech: { autoPlay: true, language: "en" },
@@ -300,6 +345,7 @@ export const RELATIONSHIPS_CHALLENGE_CONVERSATION: ConversationDefinition = {
     {
       id: "success",
       japanese: "第3章クリア！人間関係チャレンジ成功。",
+      reading: "だいさんしょう クリア にんげんかんけい ちゃれんじ せいこう",
       english: "Chapter 3 clear — Social Intelligence Challenge complete.",
       endState: "success",
       speech: { autoPlay: true },
@@ -311,6 +357,7 @@ export const RELATIONSHIPS_CHALLENGE_QUEST: QuestDefinition = {
   id: "relationships-challenge",
   title: "Social Intelligence Challenge",
   japaneseTitle: "人間関係チャレンジ",
+  japaneseTitleReading: "にんげんかんけい ちゃれんじ",
   locationId: "office",
   chapter: 3,
   description:

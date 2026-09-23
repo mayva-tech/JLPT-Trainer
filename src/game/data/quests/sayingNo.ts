@@ -7,6 +7,7 @@ export const SAYING_NO_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "カフェのケンから誘いが来ました。でも今夜は予定があります。",
+      reading: "カフェ の ケン から さそい が きました でも こんや は よてい が あります",
       english:
         "Ken from the café invites you out — but you already have plans. Learn soft refusal.",
       nextNodeId: "invite",
@@ -205,6 +206,7 @@ export const SAYING_NO_QUEST: QuestDefinition = {
   id: "saying-no",
   title: "How to Say No",
   japaneseTitle: "断り方",
+  japaneseTitleReading: "ことわりかた",
   locationId: "cafe",
   chapter: 3,
   description:

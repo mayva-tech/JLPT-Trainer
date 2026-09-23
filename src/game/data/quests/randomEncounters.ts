@@ -6,6 +6,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
   id: "random-bag-ask",
   title: "Bag Needed?",
   japaneseTitle: "袋いりますか？",
+  japaneseTitleReading: "ふくろ いります か？",
   locationId: "convenience-store",
   chapter: 1,
   description: "A quick counter question — bag or no bag.",
@@ -21,6 +22,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "コンビニのレジで、さっと聞かれる一言。",
+      promptReading: "コンビニ の レジ で さっと きかれる ひとこと",
       promptEn: "A quick question at the convenience-store register.",
       speech: { autoPlay: true, language: "en" },
     },
@@ -38,6 +40,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
         {
           id: "yes",
           labelJa: "はい、お願いします。",
+          reading: "はい おねがい します",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Natural yes.\n\n「お願いします」keeps it polite.",
@@ -45,6 +48,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
         {
           id: "no",
           labelJa: "いいえ、結構です。",
+          reading: "いいえ けっこう です",
           labelEn: "No, I'm fine.",
           correct: false,
           feedbackWrong:
@@ -53,6 +57,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
         {
           id: "wrong",
           labelJa: "袋を食べます。",
+          reading: "ふくろ を たべます",
           labelEn: "I'll eat the bag.",
           correct: false,
           feedbackWrong:
@@ -64,6 +69,7 @@ export const RANDOM_BAG_ASK_QUEST: QuestDefinition = {
       id: "outro",
       kind: "outro",
       promptJa: "短いやり取り、クリア！",
+      promptReading: "みじかい やりとり クリア",
       promptEn: "Short exchange — clear!",
     },
   ],
@@ -82,6 +88,7 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
   id: "random-heat-ask",
   title: "Shall I Heat It?",
   japaneseTitle: "温めますか？",
+  japaneseTitleReading: "あたためます か？",
   locationId: "convenience-store",
   chapter: 1,
   description: "The clerk asks if you want your bento heated.",
@@ -97,6 +104,7 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "お弁当を買うと、よく聞かれる一言。",
+      promptReading: "おべんとう を かう と よく きかれる ひとこと",
       promptEn: "A common question when you buy a bento.",
       speech: { autoPlay: true, language: "en" },
     },
@@ -107,13 +115,14 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
       promptJa: "温めますか？",
       promptReading: "あたためます か",
       promptEn: "Shall I heat this up?",
-      helpHint: "温めますか？= Shall I warm it？",
+      helpHint: "温めますか？（あたためます）= Shall I warm it？",
       vocabHint: "温める",
       speech: { autoPlay: true },
       choices: [
         {
           id: "yes",
           labelJa: "はい、お願いします。",
+          reading: "はい おねがい します",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Clear and polite.",
@@ -121,6 +130,7 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
         {
           id: "no",
           labelJa: "大丈夫です。",
+          reading: "だいじょうぶ です",
           labelEn: "I'm fine (no heat).",
           correct: false,
           feedbackWrong:
@@ -129,6 +139,7 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
         {
           id: "wrong",
           labelJa: "冷やしてください。",
+          reading: "ひやして ください",
           labelEn: "Please chill it.",
           correct: false,
           feedbackWrong:
@@ -140,6 +151,7 @@ export const RANDOM_HEAT_ASK_QUEST: QuestDefinition = {
       id: "outro",
       kind: "outro",
       promptJa: "スムーズなレジ対応！",
+      promptReading: "スムーズ な レジ たいおう",
       promptEn: "Smooth register skills!",
     },
   ],
@@ -158,6 +170,7 @@ export const RANDOM_DIRECTIONS_QUEST: QuestDefinition = {
   id: "random-directions",
   title: "Someone Asks the Way",
   japaneseTitle: "道を聞かれます",
+  japaneseTitleReading: "みち を きかれます",
   locationId: "train-station",
   chapter: 1,
   description: "A stranger asks for the ticket gates.",
@@ -173,6 +186,7 @@ export const RANDOM_DIRECTIONS_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "駅で、通りがかりの人に道を聞かれました。",
+      promptReading: "えき で とおりがかり の ひと に みち を きかれました",
       promptEn: "At the station, a passerby asks you for directions.",
       speech: { autoPlay: true, language: "en" },
     },
@@ -189,6 +203,7 @@ export const RANDOM_DIRECTIONS_QUEST: QuestDefinition = {
         {
           id: "good",
           labelJa: "まっすぐ行くと、あそこにあります。",
+          reading: "まっすぐ いく と あそこ に あります",
           labelEn: "Go straight — they're over there.",
           correct: true,
           feedbackCorrect: "✅ Helpful and natural.",
@@ -196,6 +211,7 @@ export const RANDOM_DIRECTIONS_QUEST: QuestDefinition = {
         {
           id: "ok",
           labelJa: "改札はあちらです。",
+          reading: "かいさつ は あちら です",
           labelEn: "The gates are that way.",
           correct: false,
           feedbackWrong:
@@ -222,6 +238,7 @@ export const RANDOM_DIRECTIONS_QUEST: QuestDefinition = {
       id: "outro",
       kind: "outro",
       promptJa: "小さな親切、クリア。",
+      promptReading: "ちいさな しんせつ クリア",
       promptEn: "A small kindness — clear.",
     },
   ],
@@ -239,6 +256,7 @@ export const RANDOM_AFTER_WORK_QUEST: QuestDefinition = {
   id: "random-after-work",
   title: "After Work?",
   japaneseTitle: "バイト終わったあと暇？",
+  japaneseTitleReading: "ばいと おわった あと ひま？",
   locationId: "home",
   chapter: 3,
   description: "A quick friend check-in after work.",
@@ -254,6 +272,7 @@ export const RANDOM_AFTER_WORK_QUEST: QuestDefinition = {
       id: "v2-shim",
       kind: "intro",
       promptJa: "バイト終わったあと暇？",
+      promptReading: "ばいと おわった あと ひま",
       promptEn: "V2 random.",
       costsConfidence: false,
     },
@@ -274,6 +293,7 @@ export const RANDOM_AFTER_WORK_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "うん、ひまだよ。",
+            english: "Yeah, I'm free.",
             quality: "excellent",
             nextNodeId: "ok",
             relationshipDelta: 1,
@@ -282,6 +302,8 @@ export const RANDOM_AFTER_WORK_QUEST: QuestDefinition = {
           {
             id: "stiff",
             japanese: "はい、時間がございます。",
+            reading: "はい じかん が ございます",
+            english: "Yes, I have time available.",
             quality: "awkward",
             nextNodeId: "ok",
             feedback: "△ Too formal for Haruka.",
@@ -289,6 +311,8 @@ export const RANDOM_AFTER_WORK_QUEST: QuestDefinition = {
           {
             id: "no",
             japanese: "ごめん、今日はちょっと…",
+            reading: "ごめん きょう は ちょっと",
+            english: "Sorry — today's a bit…",
             quality: "natural",
             nextNodeId: "ok",
             feedback: "✓ Soft busy.",
@@ -319,6 +343,7 @@ export const RANDOM_HELP_DESK_QUEST: QuestDefinition = {
   id: "random-coworker-help",
   title: "Quick Favor",
   japaneseTitle: "ちょっと手伝ってもらえる？",
+  japaneseTitleReading: "ちょっと てつだって もらえる？",
   locationId: "office",
   chapter: 3,
   description: "A coworker asks for a quick hand.",
@@ -334,6 +359,7 @@ export const RANDOM_HELP_DESK_QUEST: QuestDefinition = {
       id: "v2-shim",
       kind: "intro",
       promptJa: "ちょっと手伝ってもらえる？",
+      promptReading: "ちょっと てつだって もらえる",
       promptEn: "V2 random.",
       costsConfidence: false,
     },
@@ -354,6 +380,7 @@ export const RANDOM_HELP_DESK_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "はい、いいですよ。",
+            english: "Sure, no problem.",
             quality: "excellent",
             nextNodeId: "ok",
             relationshipDelta: 1,
@@ -362,6 +389,7 @@ export const RANDOM_HELP_DESK_QUEST: QuestDefinition = {
           {
             id: "cas",
             japanese: "うん、いいよ。",
+            english: "Yeah, sure.",
             quality: "acceptable",
             nextNodeId: "ok",
             feedback: "✓ Fine with Mika.",
@@ -369,6 +397,8 @@ export const RANDOM_HELP_DESK_QUEST: QuestDefinition = {
           {
             id: "no",
             japanese: "今は無理。",
+            reading: "いま は むり",
+            english: "Not right now.",
             quality: "awkward",
             nextNodeId: "ok",
             feedback: "△ Soften refusals at work.",
@@ -399,6 +429,7 @@ export const RANDOM_LATE_TEXT_QUEST: QuestDefinition = {
   id: "random-running-late",
   title: "Running Late",
   japaneseTitle: "ごめん、ちょっと遅れる！",
+  japaneseTitleReading: "ごめん、 ちょっと おくれる！",
   locationId: "home",
   chapter: 3,
   description: "Someone apologizes for being late — reply naturally.",
@@ -414,6 +445,7 @@ export const RANDOM_LATE_TEXT_QUEST: QuestDefinition = {
       id: "v2-shim",
       kind: "intro",
       promptJa: "ごめん、ちょっと遅れる！",
+      promptReading: "ごめん ちょっと おくれる",
       promptEn: "V2 random.",
       costsConfidence: false,
     },
@@ -434,6 +466,8 @@ export const RANDOM_LATE_TEXT_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "うん、大丈夫だよ。気をつけて！",
+            reading: "うん だいじょうぶ だ よ きをつけて",
+            english: "Yeah, no worries. Take care!",
             quality: "excellent",
             nextNodeId: "ok",
             relationshipDelta: 1,
@@ -442,6 +476,8 @@ export const RANDOM_LATE_TEXT_QUEST: QuestDefinition = {
           {
             id: "ok",
             japanese: "承知しました。お待ちしています。",
+            reading: "しょうち しました おまち して います",
+            english: "Understood. I'll be waiting.",
             quality: "awkward",
             nextNodeId: "ok",
             feedback: "△ Too formal for Ken.",
@@ -449,6 +485,7 @@ export const RANDOM_LATE_TEXT_QUEST: QuestDefinition = {
           {
             id: "nat",
             japanese: "りょーかい。ゆっくりで。",
+            english: "Got it. Take your time.",
             quality: "natural",
             nextNodeId: "ok",
             feedback: "✓ Natural.",
@@ -480,6 +517,7 @@ export const RANDOM_DOCS_TODAY_QUEST: QuestDefinition = {
   id: "random-docs-today",
   title: "Docs by Today?",
   japaneseTitle: "資料は今日中？",
+  japaneseTitleReading: "しりょう は きょうじゅう？",
   locationId: "office",
   chapter: 4,
   description: "A coworker asks if you can review a document today.",
@@ -508,6 +546,8 @@ export const RANDOM_DOCS_TODAY_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "はい、今日中に確認します。",
+            reading: "はい きょうじゅう に かくにん します",
+            english: "Yes — I'll check it by end of day.",
             quality: "excellent",
             nextNodeId: "done",
             feedback: "🌟 Natural coworker reply — clear deadline acceptance.",
@@ -516,6 +556,8 @@ export const RANDOM_DOCS_TODAY_QUEST: QuestDefinition = {
           {
             id: "awk",
             japanese: "かしこまりました。拝見いたします。",
+            reading: "かしこまりました はいけん いたします",
+            english: "Certainly. I shall look it over.",
             quality: "awkward",
             nextNodeId: "done",
             feedback:
@@ -525,6 +567,8 @@ export const RANDOM_DOCS_TODAY_QUEST: QuestDefinition = {
           {
             id: "bad",
             japanese: "無理。",
+            reading: "むり",
+            english: "No way.",
             quality: "incorrect",
             nextNodeId: "done",
             feedback: "✕ Too blunt for a coworker request.",
@@ -536,6 +580,7 @@ export const RANDOM_DOCS_TODAY_QUEST: QuestDefinition = {
         id: "done",
         npcId: "mika-coworker",
         japanese: "助かる！",
+        reading: "たすかる",
         endState: "success",
         speech: { autoPlay: true },
       },
@@ -556,6 +601,7 @@ export const RANDOM_MANAGER_MINUTE_QUEST: QuestDefinition = {
   id: "random-manager-minute",
   title: "Got a Minute?",
   japaneseTitle: "今ちょっといい？",
+  japaneseTitleReading: "いま ちょっと いい？",
   locationId: "office",
   chapter: 4,
   description: "Your manager asks if you have a moment.",
@@ -584,6 +630,8 @@ export const RANDOM_MANAGER_MINUTE_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "はい。今、お時間よろしいでしょうか。",
+            reading: "はい いま おじかん よろしい でしょう か",
+            english: "Yes — is now a good time?",
             quality: "excellent",
             nextNodeId: "done",
             feedback: "🌟 Soft availability check — good manager register.",
@@ -592,6 +640,8 @@ export const RANDOM_MANAGER_MINUTE_QUEST: QuestDefinition = {
           {
             id: "nat",
             japanese: "はい、大丈夫です。",
+            reading: "はい だいじょうぶ です",
+            english: "Yes, that's fine.",
             quality: "natural",
             nextNodeId: "done",
             feedback: "✓ Natural.",
@@ -599,6 +649,8 @@ export const RANDOM_MANAGER_MINUTE_QUEST: QuestDefinition = {
           {
             id: "awk",
             japanese: "いま無理です。",
+            reading: "いま むり です",
+            english: "I can't right now.",
             quality: "awkward",
             nextNodeId: "done",
             feedback: "△ Soften refusals to a manager — offer another time.",
@@ -609,6 +661,7 @@ export const RANDOM_MANAGER_MINUTE_QUEST: QuestDefinition = {
         id: "done",
         npcId: "suzuki-manager",
         japanese: "じゃあ、少しだけ。",
+        reading: "じゃあ すこし だけ",
         endState: "success",
         speech: { autoPlay: true },
       },
@@ -629,6 +682,7 @@ export const RANDOM_EXTERNAL_CALLER_QUEST: QuestDefinition = {
   id: "random-external-caller",
   title: "Looking for Sato",
   japaneseTitle: "佐藤はいますか",
+  japaneseTitleReading: "さとう は います か",
   locationId: "office",
   chapter: 4,
   description: "An external caller asks for Sato-senpai.",
@@ -660,6 +714,8 @@ export const RANDOM_EXTERNAL_CALLER_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "少々お待ちください。確認いたします。",
+            reading: "しょうしょう おまち ください かくにん いたします",
+            english: "One moment please. I'll check.",
             quality: "excellent",
             nextNodeId: "done",
             feedback: "🌟 Hold + confirm — solid business phone Japanese.",
@@ -668,6 +724,8 @@ export const RANDOM_EXTERNAL_CALLER_QUEST: QuestDefinition = {
           {
             id: "nat",
             japanese: "ただいま席を外しております。",
+            reading: "ただいま せき を はずして おります",
+            english: "They're away from their desk at the moment.",
             quality: "natural",
             nextNodeId: "done",
             feedback: "✓ Natural if they are away.",
@@ -676,6 +734,7 @@ export const RANDOM_EXTERNAL_CALLER_QUEST: QuestDefinition = {
           {
             id: "bad",
             japanese: "いません。",
+            english: "They're not here.",
             quality: "incorrect",
             nextNodeId: "done",
             feedback: "✕ Too blunt for an external caller.",
@@ -686,6 +745,7 @@ export const RANDOM_EXTERNAL_CALLER_QUEST: QuestDefinition = {
       {
         id: "done",
         japanese: "短い外線対応、クリア。",
+        reading: "みじかい がいせん たいおう クリア",
         english: "Short external-call drill clear.",
         endState: "success",
         speech: { autoPlay: true, language: "en" },
@@ -708,6 +768,7 @@ export const RANDOM_BAG_OK_QUEST: QuestDefinition = {
   id: "random-bag-ok",
   title: "Bag Okay?",
   japaneseTitle: "袋大丈夫ですか？",
+  japaneseTitleReading: "ふくろ だいじょうぶ です か？",
   locationId: "convenience-store",
   chapter: 5,
   description: "A rushed cashier asks about a bag at natural speed.",
@@ -743,6 +804,8 @@ export const RANDOM_BAG_OK_QUEST: QuestDefinition = {
           {
             id: "ok",
             japanese: "大丈夫です。",
+            reading: "だいじょうぶ です",
+            english: "I'm fine (no bag).",
             quality: "excellent",
             nextNodeId: "done",
             feedback:
@@ -752,6 +815,8 @@ export const RANDOM_BAG_OK_QUEST: QuestDefinition = {
           {
             id: "yes",
             japanese: "お願いします。",
+            reading: "おねがい します",
+            english: "Yes, please.",
             quality: "natural",
             nextNodeId: "done",
             feedback: "✓ Clear yes for a bag.",
@@ -759,6 +824,8 @@ export const RANDOM_BAG_OK_QUEST: QuestDefinition = {
           {
             id: "awk",
             japanese: "袋はご不要でございます。",
+            reading: "ふくろ は ごふよう で ございます",
+            english: "I have no need of a bag.",
             quality: "awkward",
             nextNodeId: "done",
             feedback: "△ Too stiff for a convenience rush.",
@@ -768,6 +835,7 @@ export const RANDOM_BAG_OK_QUEST: QuestDefinition = {
       {
         id: "done",
         japanese: "短いレジ一言、クリア。",
+        reading: "みじかい レジ ひとこと クリア",
         english: "Short register line — clear.",
         endState: "success",
         speech: { autoPlay: true, language: "en" },
@@ -789,6 +857,7 @@ export const RANDOM_WHERE_NOW_QUEST: QuestDefinition = {
   id: "random-where-now",
   title: "Where Are You?",
   japaneseTitle: "今どこ？",
+  japaneseTitleReading: "いま どこ？",
   locationId: "phone-center",
   chapter: 5,
   description: "A friend texts/calls with ultra-short casual Japanese.",
@@ -824,6 +893,8 @@ export const RANDOM_WHERE_NOW_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "駅前。もうすぐ着く。",
+            reading: "えきまえ もうすぐ つく",
+            english: "In front of the station. Almost there.",
             quality: "excellent",
             nextNodeId: "done",
             relationshipDelta: 1,
@@ -834,6 +905,8 @@ export const RANDOM_WHERE_NOW_QUEST: QuestDefinition = {
           {
             id: "nat",
             japanese: "今コンビニ。",
+            reading: "いま コンビニ",
+            english: "At the convenience store now.",
             quality: "natural",
             nextNodeId: "done",
             feedback: "✓ Short and clear.",
@@ -841,6 +914,8 @@ export const RANDOM_WHERE_NOW_QUEST: QuestDefinition = {
           {
             id: "awk",
             japanese: "現在、私は駅の前におります。",
+            reading: "げんざい わたし は えき の まえ に おります",
+            english: "At present, I am located in front of the station.",
             quality: "awkward",
             nextNodeId: "done",
             feedback: "△ Over-formal for a friend ping.",
@@ -851,6 +926,7 @@ export const RANDOM_WHERE_NOW_QUEST: QuestDefinition = {
         id: "done",
         npcId: "haruka",
         japanese: "オッケー、待ってるね。",
+        reading: "オッケー まってる ね",
         endState: "success",
         speech: { autoPlay: true },
       },
@@ -871,6 +947,7 @@ export const RANDOM_RUNNING_LATE_QUEST: QuestDefinition = {
   id: "random-running-late",
   title: "Might Be Late",
   japaneseTitle: "今日ちょっと遅れるかも",
+  japaneseTitleReading: "きょう ちょっと おくれる かも",
   locationId: "office",
   chapter: 5,
   description: "A coworker softens a delay with かも.",
@@ -906,6 +983,8 @@ export const RANDOM_RUNNING_LATE_QUEST: QuestDefinition = {
           {
             id: "ex",
             japanese: "うん、了解。気をつけて。",
+            reading: "うん りょうかい きをつけて",
+            english: "Yeah, got it. Take care.",
             quality: "excellent",
             nextNodeId: "done",
             relationshipDelta: 1,
@@ -916,6 +995,8 @@ export const RANDOM_RUNNING_LATE_QUEST: QuestDefinition = {
           {
             id: "nat",
             japanese: "わかった。大丈夫だよ。",
+            reading: "わかった だいじょうぶ だ よ",
+            english: "Got it. No problem.",
             quality: "natural",
             nextNodeId: "done",
             feedback: "✓ Clear acknowledgment.",
@@ -923,6 +1004,8 @@ export const RANDOM_RUNNING_LATE_QUEST: QuestDefinition = {
           {
             id: "miss",
             japanese: "じゃあ今日は来ないの？",
+            reading: "じゃあ きょう は こない の",
+            english: "So you're not coming today?",
             quality: "incorrect",
             nextNodeId: "done",
             feedback:

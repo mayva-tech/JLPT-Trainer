@@ -113,6 +113,22 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
     { text: "界", reading: "かい" },
     { text: "中", reading: "じゅう" },
   ],
+  // 中 = じゅう as a suffix (一日中 / 年内中) — not in the base on/kun list
+  一日中: [
+    { text: "一", reading: "いち" },
+    { text: "日", reading: "にち" },
+    { text: "中", reading: "じゅう" },
+  ],
+  一週間: [
+    { text: "一", reading: "いっ" },
+    { text: "週", reading: "しゅう" },
+    { text: "間", reading: "かん" },
+  ],
+  日本語: [
+    { text: "日", reading: "に" },
+    { text: "本", reading: "ほん" },
+    { text: "語", reading: "ご" },
+  ],
   // 古く / むかし — irregular (not ふるく)
   古く: [{ text: "古く", reading: "むかし" }],
   結果: [
@@ -527,6 +543,20 @@ export function ensureKanjiReadingsSeeded(): void {
       ...entry,
     }))
   );
+  // Also register per-kanji readings from irregular compounds (日/に, 中/じゅう…)
+  // so token DP can recover when the full compound matcher does not fire.
+  // Only single-glyph compound segments — jukujikun like 今日/きょう stay whole-word.
+  for (const [, segs] of COMPOUND_ENTRIES) {
+    for (const seg of segs) {
+      if (!seg.reading) continue;
+      const chars = [...seg.text];
+      if (chars.length !== 1) continue;
+      const ch = chars[0]!;
+      if (isKanji(ch) || isIterationMark(ch)) {
+        registerKanjiReadingCandidates(ch, [seg.reading]);
+      }
+    }
+  }
 }
 
 type Candidate = {
@@ -1059,11 +1089,84 @@ function matchToken(
   const iteration = matchKanjiIteration(surface, pos, token, limit);
   if (iteration) return iteration;
 
+  // 在留カード / ざいりゅうカード — kanji reading + trailing katakana loanword
+  const kanjiKata = matchKanjiThenKatakanaLoan(surface, pos, token, limit);
+  if (kanjiKata) return kanjiKata;
+
   const kanjiMatch = matchKanjiToken(surface, pos, token, limit);
   if (kanjiMatch) {
     return { segments: kanjiMatch.segments, end: kanjiMatch.end };
   }
   return null;
+}
+
+/**
+ * 在留カード ← ざいりゅうカード: hiragana reading for the kanji stem, then a
+ * katakana loanword that also appears on the surface.
+ */
+function matchKanjiThenKatakanaLoan(
+  surface: string,
+  pos: number,
+  token: string,
+  limit: number
+): { segments: FuriganaSegment[]; end: number } | null {
+  if (!isKanji(surface[pos]!)) return null;
+
+  const { core, punct } = stripTrailingPunct(token);
+  const chars = [...core];
+  if (chars.length < 2) return null;
+
+  // Trailing katakana (+ choonpu) run in the reading token
+  let kataStart = chars.length;
+  while (
+    kataStart > 0 &&
+    (isKatakana(chars[kataStart - 1]!) ||
+      chars[kataStart - 1] === "ー" ||
+      chars[kataStart - 1] === "ｰ")
+  ) {
+    kataStart -= 1;
+  }
+  if (kataStart <= 0 || kataStart >= chars.length) return null;
+  // Stem must be hiragana (kanji reading), not more katakana
+  const hiraPart = chars.slice(0, kataStart).join("");
+  const loanPart = chars.slice(kataStart).join("");
+  if (![...hiraPart].every((ch) => isHiragana(ch) || ch === "ー")) return null;
+  if (!loanPart || ![...loanPart].some((ch) => isKatakana(ch))) return null;
+
+  const kanjiMatch = matchKanjiToken(surface, pos, hiraPart, limit);
+  if (!kanjiMatch) return null;
+
+  let end = kanjiMatch.end;
+  if (end >= limit || end >= surface.length || !isKatakana(surface[end]!)) {
+    return null;
+  }
+
+  let kataEnd = end;
+  while (
+    kataEnd < limit &&
+    kataEnd < surface.length &&
+    isKatakana(surface[kataEnd]!)
+  ) {
+    kataEnd += 1;
+  }
+  const kataRun = surface.slice(end, kataEnd);
+  if (toHiragana(kataRun) !== toHiragana(loanPart)) return null;
+
+  const segments: FuriganaSegment[] = [
+    ...kanjiMatch.segments,
+    { text: kataRun },
+  ];
+  end = kataEnd;
+
+  if (punct) {
+    if (!surface.startsWith(punct, end) || end + punct.length > limit) {
+      return null;
+    }
+    segments.push({ text: punct });
+    end += punct.length;
+  }
+
+  return { segments, end };
 }
 
 /**

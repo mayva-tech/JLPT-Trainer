@@ -14,6 +14,8 @@ export const READ_BETWEEN_LINES_CONVERSATION: ConversationDefinition = {
       id: "arrive",
       japanese:
         "同じ言葉でも、場面で意味が変わる。表面だけでなく、意図を察してください。",
+      reading:
+        "おなじ ことば でも ばめん で いみ が かわる ひょうめん だけ で なく いと を さっし て ください",
       english:
         "Same words, different jobs by context.\n\nDon’t lock one translation forever — decode what it most likely means here.\n\nFirst stop: café — Haruka invites you.",
       nextNodeId: "h-chotto",
@@ -626,6 +628,8 @@ export const READ_BETWEEN_LINES_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "察しクリア。ちょっと…・考えておきます・大丈夫です — 同じ形でも場面で意図が違うと分かりました。",
+      reading:
+        "さっし クリア ちょっと かんがえて おきます だいじょうぶ です おなじ かたち でも ばめん で いと が ちがう と わかりました",
       english:
         "Context decode clear. ちょっと… / 考えておきます / 大丈夫です — same shapes, different jobs by scene.",
       endState: "success",
@@ -638,6 +642,7 @@ export const READ_BETWEEN_LINES_QUEST: QuestDefinition = {
   id: "read-between-lines",
   title: "Read Between the Lines",
   japaneseTitle: "察してみよう",
+  japaneseTitleReading: "さっし て みよう",
   locationId: "office",
   chapter: 5,
   description:

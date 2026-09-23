@@ -190,6 +190,19 @@ function wouldBreakLexicalStem(particle: string, nextRest: string): boolean {
   }
   // ほか — do not peel か from ほ
   if (particle === "か" && /(ほ)$/u.test(nextRest)) return true;
+  // ところに / ところを / ところが — N2 grammar; keep particle on ところ
+  // (peeling left karaoke speaking ところに on the ところ span and skipping に)
+  if (
+    (particle === "に" ||
+      particle === "を" ||
+      particle === "が" ||
+      particle === "へ" ||
+      particle === "で" ||
+      particle === "は") &&
+    nextRest === "ところ"
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -956,6 +969,19 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
     // Lone em/en dash — attach ellipsis dwell to the previous word (same as `;`)
     // and extend the highlight through the dash so the pause is visible.
     if (/^[—–]+$/u.test(raw)) {
+      const prev = steps.at(-1);
+      if (prev) {
+        const base = (prev.spokenText ?? prev.text)
+          .replace(/\s*\.{3}\s*$/u, "")
+          .replace(/[,.]+$/u, "");
+        prev.spokenText = `${base} ...`;
+        prev.end = unit.end;
+      }
+      continue;
+    }
+
+    // Lone "/" alternate — same ellipsis breath as speak text (`day / all`).
+    if (/^\/+$/u.test(raw)) {
       const prev = steps.at(-1);
       if (prev) {
         const base = (prev.spokenText ?? prev.text)

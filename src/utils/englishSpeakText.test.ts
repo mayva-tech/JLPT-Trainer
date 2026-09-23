@@ -174,6 +174,18 @@ describe("buildEnglishSpeakText", () => {
       "There is a five-yen charge"
     );
   });
+
+  it("speaks clock times without a colon so karaoke can track Andrew", () => {
+    expect(buildEnglishSpeakText("Only after 22:00")).toBe(
+      "Only after 10 p.m."
+    );
+    expect(buildEnglishSpeakText("after 10 p.m.")).toBe("after 10 p.m.");
+    expect(buildEnglishSpeakText("Wednesday at 3:00 p.m.")).toBe(
+      "Wednesday at 3 p.m."
+    );
+    expect(buildEnglishSpeakText("until 5:15")).toBe("until 5 15");
+    expect(buildEnglishSpeakText("Meet at 9:00.")).toBe("Meet at 9.");
+  });
 });
 
 describe("splitEnglishDescriptiveAside", () => {

@@ -29,11 +29,11 @@
   overflow: hidden;
   container-type: size; /* enables cqw / cqh */
 
-  /* Lesson card typography (JP + EN) */
-  --lesson-jp-word: 14cqw;
-  --lesson-jp-line: 10.5cqw;
-  --lesson-en-word: 5.6cqw;
-  --lesson-en-line: 4.5cqw;
+  /* Lesson card typography (JP + EN) — ~70% of prior sizes */
+  --lesson-jp-word: 9.8cqw;
+  --lesson-jp-line: 7.35cqw;
+  --lesson-en-word: 3.92cqw;
+  --lesson-en-line: 3.15cqw;
 }
 
 /* YouTube-safe inner area */
@@ -170,6 +170,27 @@
   max-height: 48cqh;
   overflow: hidden;
   line-height: 1.25;
+}
+
+/* Tip quotes 「…」 — stay in the sentence; no block flex centering. */
+.jp-wrap--inline {
+  display: inline;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  line-height: inherit;
+}
+
+.jp-wrap--inline .jp-wrap-line {
+  display: inline;
+  max-width: none;
+  row-gap: 0;
+}
+
+.jp-wrap--inline .jp-word {
+  display: inline;
+  white-space: nowrap;
+  max-width: none;
 }
 
 /*

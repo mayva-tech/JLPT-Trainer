@@ -4,10 +4,20 @@ type Props = {
   text: string;
   className: string;
   highlight: SpeechHighlight | null;
+  /**
+   * Inline tip/gloss spans. Block `div` would yank the English gloss onto its
+   * own line during karaoke, then jump back when TTS ends.
+   */
+  inline?: boolean;
 };
 
 /** English text with per-word speech highlight (spaces preserved between words). */
-export function HighlightedEnglish({ text, className, highlight }: Props) {
+export function HighlightedEnglish({
+  text,
+  className,
+  highlight,
+  inline = false,
+}: Props) {
   const parts: { text: string; start: number }[] = [];
   const re = /(\s+|\S+)/g;
   let match: RegExpExecArray | null;
@@ -15,8 +25,10 @@ export function HighlightedEnglish({ text, className, highlight }: Props) {
     parts.push({ text: match[0], start: match.index });
   }
 
+  const Wrapper = inline ? "span" : "div";
+
   return (
-    <div className={className} lang="en">
+    <Wrapper className={className} lang="en">
       <span className="speech-line speech-line--en">
         {parts.map((part, i) => {
           const start = part.start;
@@ -43,6 +55,6 @@ export function HighlightedEnglish({ text, className, highlight }: Props) {
           );
         })}
       </span>
-    </div>
+    </Wrapper>
   );
 }

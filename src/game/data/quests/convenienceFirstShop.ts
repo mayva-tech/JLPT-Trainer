@@ -4,6 +4,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
   id: "convenience-first-shop",
   title: "Your First Convenience Store Visit",
   japaneseTitle: "初めての買い物",
+  japaneseTitleReading: "はじめて の かいもの",
   locationId: "convenience-store",
   chapter: 1,
   description:
@@ -26,6 +27,8 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "ことばマートに入りました。夕飯の支度をしなければなりません。",
+      promptReading:
+        "ことばマート に はいりました。ゆうはん の したく を しなければなりません。",
       promptEn:
         "You step into Kotoba Mart. You need dinner and a few basics before unpacking.",
       costsConfidence: false,
@@ -53,6 +56,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "結構です。",
+          reading: "けっこう です。",
           labelEn: "No thank you.",
           correct: false,
           feedbackWrong:
@@ -61,6 +65,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "はい、お願いします。",
+          reading: "はい、 おねがい します。",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect:
@@ -79,11 +84,12 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       skillHint: "listening",
       vocabHint: "温める",
       listenText: "温めますか？",
-      helpHint: "温める = to heat / warm up (food).",
+      helpHint: "温める（あたためる）= to heat / warm up (food).",
       choices: [
         {
           id: "a",
           labelJa: "お弁当などを温めるかどうか聞いている。",
+          reading: "おべんとう など を あたためる か どう か きいている。",
           labelEn: "Asking whether to heat your food.",
           correct: true,
           feedbackCorrect: "✅ 「温めますか？」= Shall I heat this up for you?",
@@ -91,6 +97,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "袋がいるかどうか聞いている。",
+          reading: "ふくろ が いる か どう か きいている。",
           labelEn: "Asking whether you need a bag.",
           correct: false,
           feedbackWrong:
@@ -99,6 +106,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "ポイントカードがあるか聞いている。",
+          reading: "ポイントカード が ある か きいている。",
           labelEn: "Asking if you have a point card.",
           correct: false,
           feedbackWrong:
@@ -112,12 +120,14 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       objectiveType: "dialogue",
       npcId: "sato-clerk",
       promptJa: "温めますか？",
+      promptReading: "あたためます か？",
       promptEn: "You bought a bento. You want it heated.",
       skillHint: "conversation",
       choices: [
         {
           id: "a",
           labelJa: "いいえ、冷たいままがいいです。",
+          reading: "いいえ、 つめたい まま が いい です。",
           labelEn: "No, cold is fine.",
           correct: false,
           feedbackWrong: "❌ That declines heating. You want it warmed.",
@@ -125,6 +135,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "はい、お願いします。",
+          reading: "はい、 おねがい します。",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Clear and polite.",
@@ -132,6 +143,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "あとで自分で温めます。",
+          reading: "あとで じぶん で あたためます。",
           labelEn: "I’ll heat it myself later.",
           correct: false,
           feedbackWrong:
@@ -154,6 +166,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "はい、お願いします。",
+          reading: "はい、 おねがい します。",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Accepting chopsticks politely.",
@@ -169,6 +182,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "スプーンをお願いします。",
+          reading: "スプーン を おねがい します。",
           labelEn: "Spoon, please.",
           correct: false,
           feedbackWrong:
@@ -182,6 +196,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       objectiveType: "reading",
       npcId: "sato-clerk",
       promptJa: "レシートをお渡しします。",
+      promptReading: "レシート を おわたし します。",
       promptEn: "Here’s your receipt. Which line is the total?",
       formAskEn: "Which field means “total amount”?",
       formCorrectFieldId: "total",
@@ -196,18 +211,24 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "received",
           labelJa: "お預り",
+          labelEn: "Amount received",
+          reading: "おあずかり",
           correct: false,
           feedbackWrong: "❌ 「お預り」= what the clerk took from you.",
         },
         {
           id: "change",
           labelJa: "お釣り",
+          labelEn: "Change",
+          reading: "おつり",
           correct: false,
           feedbackWrong: "❌ 「お釣り」= change returned.",
         },
         {
           id: "total",
           labelJa: "合計",
+          labelEn: "Total",
+          reading: "ごうけい",
           correct: true,
           feedbackCorrect: "✅ 「合計」= total.",
         },
@@ -219,6 +240,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       objectiveType: "reading",
       npcId: "sato-clerk",
       promptJa: "レシートの「お釣り」は何を表しますか。",
+      promptReading: "レシート の 「おつり」 は なに を あらわします か。",
       promptEn: "What does お釣り mean on the receipt?",
       skillHint: "vocabulary",
       vocabHint: "お釣り",
@@ -226,6 +248,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "お預りした金額",
+          reading: "おあずかり した きんがく",
           labelEn: "The amount the clerk received",
           correct: false,
           feedbackWrong:
@@ -234,6 +257,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "返ってきたお金",
+          reading: "かえって きた おかね",
           labelEn: "Money returned to you",
           correct: true,
           feedbackCorrect: "✅ Change given back to you.",
@@ -241,6 +265,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "合計金額",
+          reading: "ごうけい きんがく",
           labelEn: "The total amount",
           correct: false,
           feedbackWrong:
@@ -271,6 +296,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "クレジットカードでお願いします。",
+          reading: "クレジットカード で おねがい します。",
           labelEn: "Credit card, please.",
           correct: false,
           feedbackWrong:
@@ -279,6 +305,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "いいえ、作っていません。",
+          reading: "いいえ、 つくって いません。",
           labelEn: "No, I haven’t made one.",
           correct: false,
           feedbackWrong:
@@ -300,6 +327,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "ポイントカードでお願いします。",
+          reading: "ポイントカード で おねがい します。",
           labelEn: "Point card, please.",
           correct: false,
           feedbackWrong:
@@ -308,6 +336,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "電子マネーでお願いします。",
+          reading: "でんしマネー で おねがい します。",
           labelEn: "E-money, please.",
           correct: false,
           feedbackWrong:
@@ -316,6 +345,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "カードでお願いします。",
+          reading: "カード で おねがい します。",
           labelEn: "Card, please.",
           correct: true,
           feedbackCorrect: "✅ Clear payment choice.",
@@ -328,12 +358,14 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       objectiveType: "dialogue",
       npcId: "sato-clerk",
       promptJa: "レシートはご利用ですか？",
+      promptReading: "レシート は ごりよう です か？",
       promptEn: "Would you like the receipt?",
       skillHint: "politeness",
       choices: [
         {
           id: "a",
           labelJa: "いいえ、結構です。",
+          reading: "いいえ、 けっこう です。",
           labelEn: "No thank you.",
           correct: false,
           feedbackWrong:
@@ -342,6 +374,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "はい、お願いします。",
+          reading: "はい、 おねがい します。",
           labelEn: "Yes, please.",
           correct: true,
           feedbackCorrect: "✅ Accepting the receipt.",
@@ -349,6 +382,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "袋はいりません。",
+          reading: "ふくろ は いりません。",
           labelEn: "I don’t need a bag.",
           correct: false,
           feedbackWrong:
@@ -361,6 +395,7 @@ export const CONVENIENCE_FIRST_SHOP_QUEST: QuestDefinition = {
       kind: "outro",
       npcId: "sato-clerk",
       promptJa: "ありがとうございました。またお越しください。",
+      promptReading: "ありがとう ございました。また おこし ください。",
       promptEn: "Thank you. Please come again. You head home with dinner.",
       costsConfidence: false,
     },

@@ -51,4 +51,26 @@ describe("alignFuriganaWithTokenSpans karaoke fallback", () => {
     expect(tokenSpans[1]?.start).toBe(5);
     expect(tokenSpans[1]?.end).toBe(10);
   });
+
+  it("aligns first-week challenge prompt (日本語 / 乗り切れる)", () => {
+    const surface =
+      "ことば町での最初の一週間。今日は一日中、日本語で乗り切れるか？";
+    const reading =
+      "ことばまち で の さいしょ の いっしゅうかん。きょう は いちにちじゅう、 にほんご で のりきれる か？";
+    const segments = alignFurigana(surface, reading);
+    const dump = segments
+      .map((s) => (s.reading ? `${s.text}[${s.reading}]` : s.text))
+      .join("");
+    expect(dump).toBe(
+      "ことば町[まち]での最[さい]初[しょ]の一[いっ]週[しゅう]間[かん]。今日[きょう]は一[いち]日[にち]中[じゅう]、日[に]本[ほん]語[ご]で乗[の]り切[き]れるか？"
+    );
+    // No unaligned kanji left for the destructive kana-anchor fallback
+    expect(
+      segments.some(
+        (s) =>
+          !s.reading &&
+          [...s.text].some((ch) => /[\u4e00-\u9faf]/.test(ch))
+      )
+    ).toBe(false);
+  });
 });

@@ -10,6 +10,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
   id: "first-day-office",
   title: "First Day at Work",
   japaneseTitle: "職場での一日",
+  japaneseTitleReading: "しょくば で の いちにち",
   locationId: "office",
   chapter: 2,
   description:
@@ -35,6 +36,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       kind: "intro",
       promptJa:
         "本日からことば町のオフィスで働き始めます。上司と同僚に、ちゃんと日本語で挨拶しよう。",
+      promptReading:
+        "ほんじつ から ことばまち の オフィス で はたらき はじめます。じょうし と どうりょう に、 ちゃんと にほんご で あいさつ しよう。",
       promptEn:
         "Today is your first day at the office in Kotoba Town.\n\nGreet people properly, understand instructions, and never pretend you understood when you didn’t.",
       costsConfidence: false,
@@ -55,6 +58,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "やあ、よろしく。今日から来たよ。",
+          reading: "やあ、 よろしく。きょう から きた よ。",
           labelEn: "Hey — I started today.",
           correct: false,
           feedbackWrong: "❌ Too casual for a first greeting with your manager.",
@@ -63,6 +67,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           id: "b",
           labelJa:
             "おはようございます。本日からお世話になります。よろしくお願いいたします。",
+          reading:
+            "おはよう ございます。ほんじつ から おせわ に なります。よろしく おねがい いたします。",
           labelEn:
             "Good morning. I’ll be in your care starting today. Nice to meet you.",
           correct: true,
@@ -72,6 +78,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "お電話ありがとうございます。",
+          reading: "おでんわ ありがとう ございます。",
           labelEn: "Thank you for calling.",
           correct: false,
           feedbackWrong: "❌ Phone-support opener — you’re the new hire.",
@@ -84,6 +91,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "suzuki-manager",
       promptJa: "上司の指示を聞いてください。何をしますか。",
+      promptReading: "じょうし の しじ を きいて ください。なに を します か。",
+      promptEn: "Listen to your manager’s instructions. What will you do?",
       listenText:
         "この資料なんですが、午後の会議までに数字を確認して、修正したものを共有してもらえますか。",
       listenReading:
@@ -97,12 +106,16 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "印刷だけして机に置く。",
+          reading: "いんさつ だけ して つくえ に おく。",
+          labelEn: "Just print it and leave it on the desk.",
           correct: false,
           feedbackWrong: "❌ Sharing a corrected file is required — not just printing.",
         },
         {
           id: "b",
           labelJa: "会議をキャンセルする。",
+          reading: "かいぎ を キャンセル する。",
+          labelEn: "Cancel the meeting.",
           correct: false,
           feedbackWrong: "❌ The meeting stays; the document must be ready.",
         },
@@ -110,6 +123,10 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           id: "c",
           labelJa:
             "数字を確認し、修正して、午後の会議までに共有する。",
+          reading:
+            "すうじ を かくにん し、 しゅうせい して、 ごご の かいぎ まで に きょうゆう する。",
+          labelEn:
+            "Confirm the numbers, correct the file, and share it before the afternoon meeting.",
           correct: true,
           feedbackCorrect:
             "✅ All three: confirm numbers, correct the file, share before the meeting.",
@@ -134,6 +151,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           id: "a",
           labelJa:
             "すみません、確認させてください。修正した資料を午後の会議までに共有すればいいですか。",
+          reading:
+            "すみません、 かくにん させて ください。しゅうせい した しりょう を ごご の かいぎ まで に きょうゆう すれば いい です か。",
           labelEn:
             "Sorry — let me confirm. I should share the corrected document before the afternoon meeting, right?",
           correct: true,
@@ -151,6 +170,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "無理です。やりません。",
+          reading: "むり です。やりません。",
           labelEn: "Impossible. I won’t do it.",
           correct: false,
           feedbackWrong: "❌ Too blunt. Ask to confirm the steps first.",
@@ -172,6 +192,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "ちょっと行ってくる。",
+          reading: "ちょっと いって くる。",
           labelEn: "Gonna step out.",
           correct: false,
           feedbackWrong: "❌ Too casual for your manager on day one.",
@@ -179,6 +200,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "印刷室に少し行ってもよろしいでしょうか。",
+          reading: "いんさつしつ に すこし いって も よろしい でしょう か。",
           labelEn: "May I step over to the print room briefly?",
           correct: true,
           feedbackCorrect:
@@ -187,6 +209,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "少々お待ちください。確認いたします。",
+          reading: "しょうしょう おまち ください。かくにん いたします。",
           labelEn: "Please wait. I’ll check.",
           correct: false,
           feedbackWrong: "❌ Phone-support hold language.",
@@ -210,6 +233,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "恐れ入りますが、ご指摘いただき誠にありがとうございます。",
+          reading:
+            "おそれいります が、 ごしてき いただき まことに ありがとう ございます。",
           labelEn: "I humbly thank you for your most gracious correction.",
           correct: false,
           feedbackWrong:
@@ -218,6 +243,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "別にずれてないよ。",
+          reading: "べつ に ずれて ない よ。",
           labelEn: "It’s not off.",
           correct: false,
           feedbackWrong: "❌ Defensive — she asked you to check again.",
@@ -225,6 +251,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "ありがとう。念のため確認するね。",
+          reading: "ありがとう。ねんのため かくにん する ね。",
           labelEn: "Thanks — I’ll double-check just in case.",
           correct: true,
           feedbackCorrect:
@@ -249,6 +276,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           id: "a",
           labelJa:
             "申し訳ありません。まだ終わっていませんが、4時までには終わる予定です。",
+          reading:
+            "もうしわけ ありません。まだ おわって いません が、 よじ まで に は おわる よてい です。",
           labelEn:
             "I’m sorry — it’s not finished yet, but I plan to finish by 4.",
           correct: true,
@@ -258,6 +287,7 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "はい、全部終わりました。",
+          reading: "はい、 ぜんぶ おわりました。",
           labelEn: "Yes, everything’s finished.",
           correct: false,
           feedbackWrong:
@@ -290,6 +320,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "会議を延期すると言っている。",
+          reading: "かいぎ を えんき する と いって いる。",
+          labelEn: "She’s saying to postpone the meeting.",
           correct: false,
           feedbackWrong: "❌ She’s asking you to re-check, not postpone.",
         },
@@ -297,6 +329,10 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
           id: "b",
           labelJa:
             "少し前に共有したファイルを会議前にもう一度確認してほしい。間に合うか聞いている。",
+          reading:
+            "すこし まえ に きょうゆう した ファイル を かいぎまえ に もう いちど かくにん して ほしい。まにあう か きいて いる。",
+          labelEn:
+            "She wants you to re-check the file shared earlier before the meeting, and asks if you’ll make it in time.",
           correct: true,
           feedbackCorrect:
             "✅ 先ほど共有 + 会議前に確認 + 間に合いそう？",
@@ -304,6 +340,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "ランチに行こうと誘っている。",
+          reading: "ランチ に いこう と さそって いる。",
+          labelEn: "She’s inviting you to lunch.",
           correct: false,
           feedbackWrong: "❌ Work message about the shared file.",
         },
@@ -314,6 +352,8 @@ export const FIRST_DAY_OFFICE_QUEST: QuestDefinition = {
       kind: "outro",
       promptJa:
         "初出勤おつかれさま。分からないときは確認。次は一日まるごとの社会生活チャレンジだ。",
+      promptReading:
+        "はつしゅっきん おつかれさま。わからない とき は かくにん。つぎ は いちにち まるごと の しゃかいせいかつ チャレンジ だ。",
       promptEn:
         "First day clear. Clarifying beats bluffing.\n\nNext: the Chapter 2 boss — Social Life Challenge.",
       costsConfidence: false,

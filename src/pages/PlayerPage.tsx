@@ -53,6 +53,7 @@ import {
   speechService,
   SPEECH_RATE_NORMAL,
   SPEECH_RATE_SLOW,
+  SPEECH_RATE_FAST,
   SPEECH_RATE_INTERVIEW_EN,
   SPEECH_RATE_INTERVIEW_MIX,
   type SpeechHighlight,
@@ -788,6 +789,7 @@ export function PlayerPage() {
       },
       setShowFurigana,
       setSpeechRate,
+      getPreferredSpeechRate: () => speechRateRef.current,
       setSpeechLang,
       setSpeechStatus,
       setHighlight,
@@ -811,6 +813,7 @@ export function PlayerPage() {
       setStep: (step: GrammarStep) => setGrammarStep(step),
       setShowFurigana: setGrammarShowFurigana,
       setSpeechRate,
+      getPreferredSpeechRate: () => speechRateRef.current,
       setSpeechLang,
       setSpeechStatus,
       setHighlight,
@@ -1920,7 +1923,11 @@ export function PlayerPage() {
           if (event.repeat) return;
           event.preventDefault();
           setSpeechRate((r) =>
-            r === SPEECH_RATE_NORMAL ? SPEECH_RATE_SLOW : SPEECH_RATE_NORMAL
+            r === SPEECH_RATE_NORMAL
+              ? SPEECH_RATE_FAST
+              : r === SPEECH_RATE_FAST
+                ? SPEECH_RATE_SLOW
+                : SPEECH_RATE_NORMAL
           );
           return;
         }
@@ -1975,7 +1982,11 @@ export function PlayerPage() {
           if (event.repeat) break;
           event.preventDefault();
           setSpeechRate((r) =>
-            r === SPEECH_RATE_NORMAL ? SPEECH_RATE_SLOW : SPEECH_RATE_NORMAL
+            r === SPEECH_RATE_NORMAL
+              ? SPEECH_RATE_FAST
+              : r === SPEECH_RATE_FAST
+                ? SPEECH_RATE_SLOW
+                : SPEECH_RATE_NORMAL
           );
           break;
         case "Control":
@@ -3183,7 +3194,7 @@ export function PlayerPage() {
                     ? "rate-btn rate-btn--active"
                     : "rate-btn"
                 }
-                title="Normal speed (0.80) — Shift toggles"
+                title="Normal speed (0.80) — Shift cycles"
                 disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
               >
@@ -3192,11 +3203,24 @@ export function PlayerPage() {
               <button
                 type="button"
                 className={
+                  speechRate === SPEECH_RATE_FAST
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                title="Fast speed (1.25×) — Shift cycles"
+                disabled={quizAutoOn}
+                onClick={() => setSpeechRate(SPEECH_RATE_FAST)}
+              >
+                1.25×
+              </button>
+              <button
+                type="button"
+                className={
                   speechRate === SPEECH_RATE_SLOW
                     ? "rate-btn rate-btn--active"
                     : "rate-btn"
                 }
-                title="Slow speed (0.7) — Shift toggles"
+                title="Slow speed (0.7) — Shift cycles"
                 disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_SLOW)}
               >
@@ -3356,6 +3380,19 @@ export function PlayerPage() {
               <button
                 type="button"
                 className={
+                  speechRate === SPEECH_RATE_FAST
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                tabIndex={-1}
+                title="Fast speed (1.25×)"
+                onClick={() => setSpeechRate(SPEECH_RATE_FAST)}
+              >
+                1.25×
+              </button>
+              <button
+                type="button"
+                className={
                   speechRate === SPEECH_RATE_SLOW
                     ? "rate-btn rate-btn--active"
                     : "rate-btn"
@@ -3495,6 +3532,19 @@ export function PlayerPage() {
               <button
                 type="button"
                 className={
+                  speechRate === SPEECH_RATE_FAST
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                tabIndex={-1}
+                title="Fast speed (1.25×)"
+                onClick={() => setSpeechRate(SPEECH_RATE_FAST)}
+              >
+                1.25×
+              </button>
+              <button
+                type="button"
+                className={
                   speechRate === SPEECH_RATE_SLOW
                     ? "rate-btn rate-btn--active"
                     : "rate-btn"
@@ -3566,10 +3616,23 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 tabIndex={-1}
-                title="Normal speed (0.80) — Shift toggles"
+                title="Normal speed (0.80) — Shift cycles"
                 onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
               >
                 Normal
+              </button>
+              <button
+                type="button"
+                className={
+                  speechRate === SPEECH_RATE_FAST
+                    ? "rate-btn rate-btn--active"
+                    : "rate-btn"
+                }
+                tabIndex={-1}
+                title="Fast speed (1.25×) — Shift cycles"
+                onClick={() => setSpeechRate(SPEECH_RATE_FAST)}
+              >
+                1.25×
               </button>
               <button
                 type="button"
@@ -3579,7 +3642,7 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 tabIndex={-1}
-                title="Slow speed (0.7) — Shift toggles"
+                title="Slow speed (0.7) — Shift cycles"
                 onClick={() => setSpeechRate(SPEECH_RATE_SLOW)}
               >
                 Slow

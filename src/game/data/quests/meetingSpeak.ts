@@ -13,6 +13,7 @@ export const MEETING_SPEAK_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "午後の定例会議です。意見を求められます。",
+      reading: "ごご の ていれい かいぎ です いけん を もとめられます",
       english:
         "Afternoon stand-up meeting.\n\nAcknowledge → hedge → soft concern → tentative suggestion. Blunt contradiction is the trap.",
       nextNodeId: "open",
@@ -381,6 +382,7 @@ export const MEETING_SPEAK_QUEST: QuestDefinition = {
   id: "meeting-speak",
   title: "Speaking in a Meeting",
   japaneseTitle: "会議で意見を言う",
+  japaneseTitleReading: "かいぎ で いけん を いう",
   locationId: "office",
   chapter: 4,
   description:

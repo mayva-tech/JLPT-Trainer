@@ -11,6 +11,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
   id: "first-week-challenge",
   title: "First Week Challenge",
   japaneseTitle: "最初の一週間",
+  japaneseTitleReading: "さいしょ の いっしゅうかん",
   locationId: "home",
   chapter: 1,
   description:
@@ -36,6 +37,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "ことば町での最初の一週間。今日は一日中、日本語で乗り切れるか？",
+      promptReading:
+        "ことばまち で の さいしょ の いっしゅうかん。きょう は いちにちじゅう、 にほんご で のりきれる か？",
       promptEn:
         "Your first week in Kotoba Town.\n\nBoss challenge: Can you handle one full day — City Hall, the convenience store, a chat with Haruka, the station, and the café — without running out of Confidence?",
       costsConfidence: false,
@@ -57,6 +60,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "a",
           labelJa: "転入届を出したいんですが。",
           labelEn: "I’d like to submit a moving-in notification.",
+          reading: "てんにゅうとどけ を だしたいん です が。",
           correct: false,
           feedbackWrong:
             "❌ You already registered. Today you need a 住民票の写し.",
@@ -65,6 +69,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "b",
           labelJa: "住民票の写しをいただきたいんですが。",
           labelEn: "I’d like a copy of my residence record.",
+          reading: "じゅうみんひょう の うつし を いただきたいん です が。",
           correct: true,
           feedbackCorrect:
             "✅ Clear purpose.\n\n「〜たいんですが」softens a counter request.",
@@ -73,6 +78,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "c",
           labelJa: "印鑑登録をしたいんですが。",
           labelEn: "I’d like to register my personal seal.",
+          reading: "いんかん とうろく を したいん です が。",
           correct: false,
           feedbackWrong:
             "❌ Also City Hall, but today’s errand is a 住民票の写し.",
@@ -95,22 +101,25 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "a",
           labelJa: "はい、在留カードを持っています。",
           labelEn: "Yes, I have my residence card.",
+          reading: "はい、 ざいりゅう かーど を もって います。",
           correct: true,
           feedbackCorrect:
             "✅ 「本人確認書類」includes a residence card, passport, etc.",
         },
         {
           id: "b",
-          labelJa: "はい、ポイントカードを持っています。",
-          labelEn: "Yes, I have a point card.",
+          labelJa: "はい、会員証を持っています。",
+          labelEn: "Yes, I have my membership card.",
+          reading: "はい、 かいいんしょう を もって います。",
           correct: false,
           feedbackWrong:
-            "❌ A point card is not ID. Offer a passport or residence card.",
+            "❌ A membership card is not ID. Offer a passport or residence card.",
         },
         {
           id: "c",
           labelJa: "はい、申請書の控えを持っています。",
           labelEn: "Yes, I have a copy of my application form.",
+          reading: "はい、 しんせいしょ の ひかえ を もって います。",
           correct: false,
           feedbackWrong:
             "❌ A form copy isn’t ID. Use a residence card or passport.",
@@ -137,18 +146,24 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "name",
           labelJa: "氏名",
+          labelEn: "Full name",
+          reading: "しめい",
           correct: false,
           feedbackWrong: "❌ 氏名 = full name. Current address is 「現住所」.",
         },
         {
           id: "purpose",
           labelJa: "使用目的",
+          labelEn: "Purpose of use",
+          reading: "しよう もくてき",
           correct: false,
           feedbackWrong: "❌ 使用目的 = why you need the document.",
         },
         {
           id: "address",
           labelJa: "現住所",
+          labelEn: "Current address",
+          reading: "げんじゅうしょ",
           correct: true,
           feedbackCorrect: "✅ 「現住所」= current address.",
         },
@@ -163,27 +178,35 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       npcId: "sato-clerk",
       promptJa: "温めますか？",
       promptReading: "あたためます か？",
-      promptEn: "You bought a bento. What is the clerk asking?",
+      promptEn: "Shall I heat this up? (What is the clerk asking?)",
       listenText: "温めますか？",
       speech: { karaokeMode: "after-answer", autoPlay: true },
       skillHint: "listening",
       vocabHint: "温める",
+      helpHint:
+        "温めますか？（あたためます）= Shall I warm/heat this for you? ぬくめます is an older/rare reading.",
       choices: [
         {
           id: "a",
           labelJa: "袋が必要かどうか聞いている。",
+          labelEn: "They're asking if you need a bag.",
+          reading: "ふくろ が ひつよう か どう か きいている。",
           correct: false,
           feedbackWrong: "❌ That would be 「袋はご利用ですか？」",
         },
         {
           id: "b",
-          labelJa: "ポイントを付けるか聞いている。",
+          labelJa: "割引があるかどうか聞いている。",
+          labelEn: "They're asking if there's a discount.",
+          reading: "わりびき が ある か どう か きいている。",
           correct: false,
-          feedbackWrong: "❌ That would mention ポイントカード.",
+          feedbackWrong: "❌ That would mention a sale or discount, not heating.",
         },
         {
           id: "c",
           labelJa: "お弁当を温めるかどうか聞いている。",
+          labelEn: "They're asking whether to heat your bento.",
+          reading: "おべんとう を あたためる か どう か きいている。",
           correct: true,
           feedbackCorrect: "✅ 「温めますか？」= Shall I heat this up?",
         },
@@ -203,12 +226,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "カードでお願いします。",
+          labelEn: "Card, please.",
+          reading: "カード で おねがい します。",
           correct: true,
           feedbackCorrect: "✅ Clear payment choice.",
         },
         {
           id: "b",
           labelJa: "現金で結構です。",
+          labelEn: "Cash is fine.",
+          reading: "げんきん で けっこう です。",
           correct: false,
           feedbackWrong:
             "❌ 「結構です」here sounds like declining — and you wanted card.",
@@ -216,6 +243,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "後払いでお願いします。",
+          labelEn: "Pay later, please.",
+          reading: "あとばらい で おねがい します。",
           correct: false,
           feedbackWrong:
             "❌ Konbini checkout needs payment now. Choose カード.",
@@ -238,6 +267,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "ううん、今日は特に予定ないよ。",
+          labelEn: "Nah, I don’t really have any plans today.",
+          reading: "ううん、 きょう は とくに よてい ない よ。",
           correct: false,
           feedbackWrong:
             "❌ She asked about plans — you’ve got the station this afternoon.",
@@ -245,6 +276,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "うん、午後ちょっと駅まで行く予定。",
+          labelEn: "Yeah, I’m planning to head to the station this afternoon.",
+          reading: "うん、 ごご ちょっと えき まで いく よてい。",
           correct: true,
           feedbackCorrect:
             "✅ Casual and clear. 「予定」fits her question naturally.",
@@ -252,6 +285,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "うん、この辺もう慣れたよ。",
+          labelEn: "Yeah, I’m used to this area already.",
+          reading: "うん、 この へん もう なれた よ。",
           correct: false,
           feedbackWrong:
             "❌ That answers a different question. Tell her your afternoon plan.",
@@ -264,7 +299,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "haruka",
       promptJa: "じゃあ一緒に行こうか？カフェ寄ってもいいし。",
-      promptReading: "じゃあ いっしょ に いこう か？カフェ よっても いい し。",
+      promptReading: "じゃあ いっしょ に いこう か？ かふぇ よって も いい し。",
       promptEn: "What is Haruka suggesting?",
       listenText: "じゃあ一緒に行こうか？カフェ寄ってもいいし。",
       speech: { karaokeMode: "after-answer", autoPlay: true },
@@ -273,12 +308,17 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "一緒に行って、途中でカフェに寄ってもいいと言っている。",
+          labelEn:
+            "She’s saying we can go together and stop by a café on the way.",
+          reading: "いっしょ に いって、 とちゅう で カフェ に よっても いい と いって いる。",
           correct: true,
           feedbackCorrect: "✅ 「寄る」= stop by on the way.",
         },
         {
           id: "b",
           labelJa: "一人で行って、あとで合流しようと言っている。",
+          labelEn: "She’s saying you should go alone and meet up later.",
+          reading: "ひとり で いって、 あとで ごうりゅう しよう と いって いる。",
           correct: false,
           feedbackWrong:
             "❌ She said 「一緒に行こう」— she’s offering to go with you.",
@@ -286,6 +326,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "今日の予定は全部キャンセルしようと言っている。",
+          labelEn: "She’s saying we should cancel all of today’s plans.",
+          reading: "きょう の よてい は ぜんぶ キャンセル しよう と いって いる。",
           correct: false,
           feedbackWrong:
             "❌ She’s adding a café stop, not canceling plans.",
@@ -310,6 +352,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "a",
           labelJa: "左手のトイレの先が改札です。",
           labelEn: "The gates are past the restrooms on your left.",
+          reading: "ひだりて の トイレ の さき が かいさつ です。",
           correct: false,
           feedbackWrong:
             "❌ Wrong landmark. Listen for the yellow line on the right.",
@@ -318,6 +361,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "b",
           labelJa: "地下の出口の先が改札です。",
           labelEn: "The gates are past the underground exit.",
+          reading: "ちか の でぐち の さき が かいさつ です。",
           correct: false,
           feedbackWrong:
             "❌ Exits and 改札 are different. Follow the yellow line right.",
@@ -326,6 +370,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
           id: "c",
           labelJa: "右手の黄色い線の先が改札です。",
           labelEn: "The gates are past the yellow line on your right.",
+          reading: "みぎて の きいろい せん の さき が かいさつ です。",
           correct: true,
           feedbackCorrect: "✅ 「改札」= ticket gates.",
         },
@@ -349,12 +394,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "1番線に乗れば中央線になる。",
+          labelEn: "If you take platform 1, you’ll be on the Chūō Line.",
+          reading: "いちばんせん に のれば ちゅうおうせん に なる。",
           correct: false,
           feedbackWrong: "❌ 1番線 is Yamanote, not Chūō.",
         },
         {
           id: "b",
           labelJa: "改札を通って2番線へ行く。",
+          labelEn: "Go through the gates and head to platform 2.",
+          reading: "かいさつ を とおって にばんせん へ いく。",
           correct: true,
           feedbackCorrect:
             "✅ 中央線 is platform 2. 「乗り換え」happens inside after the gates.",
@@ -362,6 +411,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "改札を通らずに3番線へ行く。",
+          labelEn: "Go to platform 3 without going through the gates.",
+          reading: "かいさつ を とおらず に さんばんせん へ いく。",
           correct: false,
           feedbackWrong: "❌ You need the gates first, and 3 is the wrong line.",
         },
@@ -372,6 +423,7 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       kind: "listening",
       objectiveType: "listening",
       promptJa: "駅の放送を聞いてください。",
+      promptReading: "えき の ほうそう を きいて ください。",
       promptEn: "What does this announcement mean?",
       listenText: "ただいま人身事故の影響で、運転を見合わせております。",
       listenReading:
@@ -388,12 +440,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "いつもどおり全線平常運転している。",
+          labelEn: "All lines are running normally as usual.",
+          reading: "いつも どおり ぜんせん へいじょう うんてん して いる。",
           correct: false,
           feedbackWrong: "❌ 「見合わせております」means service is stopped.",
         },
         {
           id: "b",
           labelJa: "人身事故があったが、もう運転を再開した。",
+          labelEn: "There was a passenger accident, but service has already resumed.",
+          reading: "じんしん じこ が あった が、 もう うんてん を さいかい した。",
           correct: false,
           feedbackWrong:
             "❌ It says service is suspended now — not that it already resumed.",
@@ -401,6 +457,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "事故の影響で、しばらく電車が動いていない。",
+          labelEn: "Because of an accident, trains aren’t running for a while.",
+          reading: "じこ の えいきょう で、 しばらく でんしゃ が うごいて いない。",
           correct: true,
           feedbackCorrect:
             "✅ 「運転を見合わせる」= pause / suspend service for now.",
@@ -420,6 +478,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "遅延証明書はいつまでもらえますか。",
+          labelEn: "Until when can I get a delay certificate?",
+          reading: "ちえん しょうめいしょ は いつ まで もらえます か。",
           correct: false,
           feedbackWrong:
             "❌ Related, but you’re asking when service might resume.",
@@ -427,12 +487,16 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "再開はいつ頃になりますか。",
+          labelEn: "About when will service resume?",
+          reading: "さいかい は いつごろ に なります か。",
           correct: true,
           feedbackCorrect: "✅ Polite and on-topic.",
         },
         {
           id: "c",
           labelJa: "何番線から出発しますか。",
+          labelEn: "Which platform does it depart from?",
+          reading: "なんばんせん から しゅっぱつ します か。",
           correct: false,
           feedbackWrong:
             "❌ Platform talk. Ask about 再開 (when trains start again).",
@@ -460,18 +524,24 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "ホットコーヒーを一つお願いします。",
+          labelEn: "One hot coffee, please.",
+          reading: "ホットコーヒー を ひとつ おねがい します。",
           correct: false,
           feedbackWrong: "❌ That’s the hot one — you wanted iced.",
         },
         {
           id: "b",
           labelJa: "ブレンドコーヒーを一つお願いします。",
+          labelEn: "One blend coffee, please.",
+          reading: "ブレンドコーヒー を ひとつ おねがい します。",
           correct: false,
           feedbackWrong: "❌ Close, but you wanted アイスコーヒー.",
         },
         {
           id: "c",
           labelJa: "アイスコーヒーを一つお願いします。",
+          labelEn: "One iced coffee, please.",
+          reading: "アイスコーヒー を ひとつ おねがい します。",
           correct: true,
           feedbackCorrect: "✅ Clear order with 「〜を一つお願いします」.",
         },
@@ -491,18 +561,24 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "店内でお願いします。",
+          labelEn: "For here, please.",
+          reading: "てんない で おねがい します。",
           correct: true,
           feedbackCorrect: "✅ 「店内で」= for here.",
         },
         {
           id: "b",
           labelJa: "お持ち帰りでお願いします。",
+          labelEn: "To go, please.",
+          reading: "おもちかえり で おねがい します。",
           correct: false,
           feedbackWrong: "❌ That’s takeout. You want to stay.",
         },
         {
           id: "c",
           labelJa: "どちらでも大丈夫です。",
+          labelEn: "Either is fine.",
+          reading: "どちら でも だいじょうぶ です。",
           correct: false,
           feedbackWrong:
             "❌ Staff need a clear choice. Say 「店内でお願いします。」",
@@ -516,10 +592,13 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       kind: "reading",
       objectiveType: "reading",
       promptJa: "駅の掲示を読んでください。",
+      promptReading: "えき の けいじ を よんで ください。",
       promptEn: "Read the station notice carefully.",
       speech: { karaokeMode: "off", autoPlay: false },
       bodyJa:
         "【お知らせ】中央線は信号点検のため、本日22時以降、一部列車の運転を見合わせる場合があります。お乗り換えの際は、改札内の案内表示をご確認ください。",
+      bodyReading:
+        "【 おしらせ 】 ちゅうおうせん は しんごう てんけん の ため、 ほんじつ にじゅうにじ いこう、 いちぶ れっしゃ の うんてん を みあわせる ばあい が あります。 お のりかえ の さい は、 かいさつない の あんない ひょうじ を ごかくにん ください。",
       bodyEn:
         "Notice: Due to signal inspection, some Chūō Line trains may be suspended after 10 p.m. today. When transferring, please check the information boards inside the ticket gates.",
       skillHint: "reading",
@@ -528,19 +607,25 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "終日、全線が完全に止まっている。",
+          labelEn: "All lines are completely stopped all day.",
+          reading: "しゅうじつ、 ぜんせん が かんぜん に とまって いる。",
           correct: false,
           feedbackWrong:
-            "❌ Only after 22:00, and only some trains — not all day / all lines.",
+            "❌ Only after 10 p.m., and only some trains — not all day / all lines.",
         },
         {
           id: "b",
           labelJa: "改札の外で乗り換えるように書いてある。",
+          labelEn: "It says to transfer outside the ticket gates.",
+          reading: "かいさつ の そと で のりかえる よう に かいて ある。",
           correct: false,
           feedbackWrong: "❌ It says to check boards 改札内 (inside the gates).",
         },
         {
           id: "c",
           labelJa: "夜遅く、中央線の一部が止まる可能性がある。",
+          labelEn: "Late at night, some Chūō Line trains may stop.",
+          reading: "よる おそく、 ちゅうおうせん の いちぶ が とまる かのうせい が ある。",
           correct: true,
           feedbackCorrect:
             "✅ 「22時以降」「一部列車」「運転を見合わせる場合」→ possible late suspensions.",
@@ -563,6 +648,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "別の申請書も書いてほしいと言っている。",
+          labelEn: "They’re asking you to fill out another application form too.",
+          reading: "べつ の しんせいしょ も かいて ほしい と いって いる。",
           correct: false,
           feedbackWrong:
             "❌ No extra form — they’re asking you to wait for 交付.",
@@ -570,6 +657,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "発行まで少し待ってほしいと丁寧に頼んでいる。",
+          labelEn: "They’re politely asking you to wait a bit until it’s issued.",
+          reading: "はっこう まで すこし まって ほしい と ていねい に たのんで いる。",
           correct: true,
           feedbackCorrect:
             "✅ 「恐れ入りますが」softens the request; 「お待ちいただけますでしょうか」= could you wait?",
@@ -577,6 +666,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "別の窓口へ移動してほしいと言っている。",
+          labelEn: "They’re asking you to move to a different counter.",
+          reading: "べつ の まどぐち へ いどう して ほしい と いって いる。",
           correct: false,
           feedbackWrong:
             "❌ No window change — they’re asking you to wait for 交付.",
@@ -599,6 +690,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "うん、なんとかなったよ。助かった。",
+          labelEn: "Yeah, I managed somehow. That helped.",
+          reading: "うん、 なんとか なった よ。たすかった。",
           correct: true,
           feedbackCorrect:
             "✅ Matches her casual tone and 「なんとかなった」.",
@@ -606,6 +699,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "うん、まだ全然だめだったよ。",
+          labelEn: "Yeah, it was still a total mess.",
+          reading: "うん、 まだ ぜんぜん だめ だった よ。",
           correct: false,
           feedbackWrong:
             "❌ Contradicts her 「なんとかなった」check-in.",
@@ -613,6 +708,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "うん、明日もう一回最初からやるよ。",
+          labelEn: "Yeah, I’ll start from the beginning again tomorrow.",
+          reading: "うん、 あした もう いっかい さいしょ から やる よ。",
           correct: false,
           feedbackWrong:
             "❌ Sounds like a restart, not agreeing you got through it.",
@@ -625,6 +722,8 @@ export const FIRST_WEEK_CHALLENGE_QUEST: QuestDefinition = {
       kind: "outro",
       promptJa:
         "最初の一週間、お疲れさま。ことば町の一日を乗り越えました。次は社会生活へ。",
+      promptReading:
+        "さいしょ の いっしゅうかん、 おつかれさま。ことばまち の いちにち を のりこえました。つぎ は しゃかいせいかつ へ。",
       promptEn:
         "You made it through a full day in Kotoba Town.\n\nChapter 1 clear. Coming next: 社会生活 — life in society.",
       costsConfidence: false,

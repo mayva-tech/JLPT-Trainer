@@ -7,6 +7,7 @@ export const FRIEND_INVITATION_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "仕事のあと、はるかからメッセージが来ました。",
+      reading: "しごと の あと はるか から メッセージ が きました",
       english:
         "After work, a message from Haruka. Japanese changes depending on who you're talking to.",
       nextNodeId: "invite-router",
@@ -337,6 +338,7 @@ export const FRIEND_INVITATION_QUEST: QuestDefinition = {
   id: "friend-invitation",
   title: "Friend Invitation",
   japaneseTitle: "友だちの誘い",
+  japaneseTitleReading: "ともだち の さそい",
   locationId: "home",
   chapter: 3,
   description:

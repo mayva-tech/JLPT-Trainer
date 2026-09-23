@@ -109,6 +109,7 @@ describe("buildQuestAutoPlayQueue", () => {
       includeTitle: true,
       titleJa: "電話",
       titleEn: "Phone Call",
+      jaTranscriptVisible: false,
     });
     expect(queue.map((q) => [q.kind, "text" in q ? q.text : ""])).toEqual([
       ["ja", "電話"],
@@ -117,6 +118,26 @@ describe("buildQuestAutoPlayQueue", () => {
       ["ja", "転入届を出したいんですが。"],
       ["ja", "転出届を出したいんですが。"],
     ]);
+    expect(queue.find((q) => q.kind === "ja" && q.surface === "prompt")).toMatchObject({
+      karaoke: false,
+    });
+  });
+
+  it("keeps prompt karaoke on for after-answer when JA transcript is visible", () => {
+    const queue = buildQuestAutoPlayQueue({
+      step,
+      resolved: {
+        ...baseResolved,
+        hideTranscriptUntilAnswer: true,
+        karaokeMode: "after-answer",
+      },
+      showHelp: false,
+      revealed: false,
+      jaTranscriptVisible: true,
+    });
+    expect(queue.find((q) => q.kind === "ja" && q.surface === "prompt")).toMatchObject({
+      karaoke: true,
+    });
   });
 
   it("skips choices after the answer is revealed", () => {

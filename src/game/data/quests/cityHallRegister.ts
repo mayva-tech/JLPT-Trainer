@@ -13,6 +13,7 @@ export const CITY_HALL_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "ことば町の市役所に着きました。",
+      reading: "ことばまち の しやくしょ に つきました。",
       english:
         "You arrive at Kotoba Town City Hall.\n\nComplete your address registration. Communication starts around 75% — natural replies raise it; mistakes lower Confidence.",
       nextNodeId: "reception",
@@ -615,6 +616,7 @@ export const CITY_HALL_REGISTER_QUEST: QuestDefinition = {
   id: "city-hall-register",
   title: "Register Your New Address",
   japaneseTitle: "転入届を出せ！",
+  japaneseTitleReading: "てんにゅうとどけ を だせ！",
   locationId: "city-hall",
   chapter: 1,
   description:

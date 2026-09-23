@@ -63,18 +63,28 @@ function expandChoonpu(kana: string): string {
 function speakParticleKana(kana: string): string {
   if (!kana) return kana;
 
+  // Normalize katakana (カード) to hiragana before particle rewrite / ー expand
+  // so TTS audio and karaoke spokenText share one script (かあど, not カあド).
+  let out = [...kana]
+    .map((ch) => {
+      const code = ch.codePointAt(0)!;
+      if (code >= 0x30a1 && code <= 0x30f6) {
+        return String.fromCodePoint(code - 0x60);
+      }
+      return ch;
+    })
+    .join("");
+
   // Isolated particles (own reading token)
-  if (kana === "は") return "わ";
-  if (kana === "へ") return "え";
+  if (out === "は") return "わ";
+  if (out === "へ") return "え";
 
   // Whole-token particle compounds
-  if (/^(に|で|と|の|から|まで|より|へ|て)は$/u.test(kana)) {
-    return `${kana.slice(0, -1)}わ`;
+  if (/^(に|で|と|の|から|まで|より|へ|て)は$/u.test(out)) {
+    return `${out.slice(0, -1)}わ`;
   }
   // 経て
-  if (kana === "へて") return "えて";
-
-  let out = kana;
+  if (out === "へて") return "えて";
 
   // Grammar-pattern / set-phrase particle は (longest / most specific first)
   if (out.startsWith("とは")) {
@@ -111,6 +121,10 @@ function speakParticleKana(kana: string): string {
 
   // Directional へて inside a longer token (〜をへて)
   out = out.replace(/へて/g, "えて");
+
+  // Remaining へ is the consonant mora (部屋→へや, 変→へん). Hiragana へ is
+  // often voiced as particle "e" by ja-JP synthesis; katakana ヘ keeps "he".
+  out = out.replace(/へ/g, "ヘ");
 
   return expandChoonpu(out);
 }
@@ -508,6 +522,8 @@ export function shouldKeepNiTight(next: string): boolean {
 /**
  * Append a phrase comma after spoken phrase particles so Nanami pauses before
  * the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
+ * Listing や (スマートフォンやタブレット) also pauses so loanwords stay
+ * separate words in TTS/karaoke.
  * Skips を/が when bound to a pattern complement or governing predicate.
  * Also used by karaoke timing so dwell matches the audio string.
  */
@@ -522,7 +538,8 @@ export function appendPhraseParticleSpeakPause(
     core !== "は" &&
     core !== "が" &&
     core !== "を" &&
-    core !== "に"
+    core !== "に" &&
+    core !== "や"
   ) {
     return token;
   }

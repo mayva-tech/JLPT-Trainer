@@ -6,6 +6,11 @@ type Props = {
   className: string;
   highlight: SpeechHighlight | null;
   lang?: string;
+  /**
+   * Inline tip/feedback quotes (「…」). Block `jp-wrap` + flex centering would
+   * yank the active word out of the sentence onto its own centered line.
+   */
+  inline?: boolean;
 };
 
 /**
@@ -17,11 +22,16 @@ export function HighlightedJapanese({
   text,
   className,
   highlight,
+  inline = false,
 }: Props) {
   const units = buildJapaneseHighlightUnits(text);
+  const Wrapper = inline ? "span" : "div";
 
   return (
-    <div className={`jp-wrap ${className}`} lang="ja">
+    <Wrapper
+      className={`jp-wrap ${inline ? "jp-wrap--inline" : ""} ${className}`.trim()}
+      lang="ja"
+    >
       <span className="jp-wrap-line">
         {units.map((unit, ui) => {
           const slice = text.slice(unit.start, unit.end);
@@ -43,6 +53,6 @@ export function HighlightedJapanese({
           );
         })}
       </span>
-    </div>
+    </Wrapper>
   );
 }

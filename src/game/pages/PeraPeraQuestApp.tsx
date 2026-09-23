@@ -1,6 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../styles/pera-pera.css";
 import "../../pages/GameMode/game-mode.css";
+import {
+  loadSpeechPreferences,
+  updateSpeechPreferences,
+} from "../../services/speechPreferences";
 import { getChapterByNumber } from "../data/chapters";
 import { getLocationById } from "../data/locations";
 import { getNpcById } from "../data/npcs";
@@ -85,6 +89,14 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
   const [chapterSummary, setChapterSummary] =
     useState<ChapterCompleteSummary | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [autoVoicePref, setAutoVoicePref] = useState(
+    () => loadSpeechPreferences().autoVoice
+  );
+
+  useEffect(() => {
+    if (screen !== "landing") return;
+    setAutoVoicePref(loadSpeechPreferences().autoVoice);
+  }, [screen]);
 
   const level = getProfileLevel(profile);
   const rank = getProfileRank(profile);
@@ -549,6 +561,23 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
                   : "Immersion Mode OFF"
               );
             }}
+            autoVoiceEnabled={autoVoicePref}
+            onToggleAutoVoice={() => {
+              const next = !autoVoicePref;
+              updateSpeechPreferences({ autoVoice: next });
+              setAutoVoicePref(next);
+              flashToast(next ? "Auto Voice ON" : "Auto Voice OFF");
+            }}
+            showFurigana={profile.showFurigana}
+            onToggleFurigana={() => {
+              const next = !profile.showFurigana;
+              persist({
+                ...profile,
+                showFurigana: next,
+                updatedAt: Date.now(),
+              });
+              flashToast(next ? "Furigana ON" : "Furigana OFF");
+            }}
             coins={profile.coins}
           />
         ) : null}
@@ -616,7 +645,9 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
           </div>
         ) : null}
 
-        {screen === "log" ? <AdventureLog profile={profile} /> : null}
+        {screen === "log" ? (
+          <AdventureLog profile={profile} onOpenQuest={startQuest} />
+        ) : null}
 
         {screen === "dojo" ? (
           <TrainingDojo
@@ -638,6 +669,14 @@ export function PeraPeraQuestApp({ onOpenTrainer }: Props) {
             questId={runningQuestId}
             metNpcIds={profile.metNpcIds}
             immersionEnabled={profile.immersion.enabled}
+            showFuriganaEnabled={profile.showFurigana}
+            onShowFuriganaChange={(next) => {
+              persist({
+                ...profile,
+                showFurigana: next,
+                updatedAt: Date.now(),
+              });
+            }}
             extraRepair={hasSkillEffect(profile, "extra-repair")}
             relationships={profile.relationships}
             showContextHint={hasSkillEffect(profile, "context-hint")}
@@ -719,6 +758,10 @@ function Landing({
   onRandom,
   immersionEnabled,
   onToggleImmersion,
+  autoVoiceEnabled,
+  onToggleAutoVoice,
+  showFurigana,
+  onToggleFurigana,
   coins,
 }: {
   profile: PlayerRpgProfile;
@@ -744,6 +787,10 @@ function Landing({
   onRandom: () => void;
   immersionEnabled: boolean;
   onToggleImmersion: () => void;
+  autoVoiceEnabled: boolean;
+  onToggleAutoVoice: () => void;
+  showFurigana: boolean;
+  onToggleFurigana: () => void;
   coins: number;
 }) {
   return (
@@ -858,6 +905,32 @@ function Landing({
             onClick={onToggleImmersion}
           >
             {immersionEnabled ? "🎧 Immersion ON" : "🎧 Immersion"}
+          </button>
+          <button
+            type="button"
+            className={
+              autoVoiceEnabled
+                ? "ppq-btn ppq-btn--primary"
+                : "ppq-btn ppq-btn--ghost"
+            }
+            aria-pressed={autoVoiceEnabled}
+            title="Auto-play Japanese and English in quests"
+            onClick={onToggleAutoVoice}
+          >
+            {autoVoiceEnabled ? "🔊 Auto Voice ON" : "🔇 Auto Voice"}
+          </button>
+          <button
+            type="button"
+            className={
+              showFurigana
+                ? "ppq-btn ppq-btn--primary"
+                : "ppq-btn ppq-btn--ghost"
+            }
+            aria-pressed={showFurigana}
+            title="Show furigana above kanji in quests"
+            onClick={onToggleFurigana}
+          >
+            あ {showFurigana ? "ON" : "OFF"}
           </button>
           <button type="button" className="ppq-btn ppq-btn--ghost" onClick={onRandom}>
             Random Encounter
@@ -1222,24 +1295,45 @@ function ChapterPanel({
   );
 }
 
-function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
+function AdventureLog({
+  profile,
+  onOpenQuest,
+}: {
+  profile: PlayerRpgProfile;
+  onOpenQuest: (questId: string) => void;
+}) {
   const completed = useMemo(
     () =>
       [...profile.completedQuests].sort((a, b) => b.completedAt - a.completedAt),
     [profile.completedQuests]
   );
+  const activeQuest = profile.activeQuestId
+    ? getQuestById(profile.activeQuestId)
+    : null;
 
   return (
     <div>
       <h2>📖 Adventure Log</h2>
       <div className="ppq-panel" style={{ marginTop: 12 }}>
         <h2>Active quest</h2>
-        <p style={{ margin: 0 }}>
-          {profile.activeQuestId
-            ? getQuestById(profile.activeQuestId)?.japaneseTitle ??
-              profile.activeQuestId
-            : "None"}
-        </p>
+        {profile.activeQuestId ? (
+          <button
+            type="button"
+            className="ppq-log-item"
+            onClick={() => onOpenQuest(profile.activeQuestId!)}
+          >
+            <span className="ppq-log-item__title">
+              {activeQuest?.japaneseTitle ?? profile.activeQuestId}
+            </span>
+            <span className="ppq-log-item__meta">
+              {activeQuest?.locationId
+                ? `${activeQuest.locationId} · Tap to continue`
+                : "Tap to continue"}
+            </span>
+          </button>
+        ) : (
+          <p style={{ margin: 0 }}>None</p>
+        )}
       </div>
 
       <div className="ppq-panel" style={{ marginTop: 12 }}>
@@ -1254,11 +1348,19 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
               const quest = getQuestById(row.questId);
               return (
                 <li key={`${row.questId}-${row.completedAt}`}>
-                  ✅ {quest?.japaneseTitle ?? row.questId}
-                  <div style={{ color: "var(--ppq-muted)" }}>
-                    {quest?.locationId ?? ""} · Accuracy {row.accuracy}% ·{" "}
-                    {formatDate(row.completedAt)}
-                  </div>
+                  <button
+                    type="button"
+                    className="ppq-log-item"
+                    onClick={() => onOpenQuest(row.questId)}
+                  >
+                    <span className="ppq-log-item__title">
+                      ✅ {quest?.japaneseTitle ?? row.questId}
+                    </span>
+                    <span className="ppq-log-item__meta">
+                      {quest?.locationId ?? ""} · Accuracy {row.accuracy}% ·{" "}
+                      {formatDate(row.completedAt)}
+                    </span>
+                  </button>
                 </li>
               );
             })}
@@ -1282,7 +1384,13 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
                     : npc
                       ? `${npc.japaneseName} · ${npc.role}`
                       : id;
-              return <li key={id}>✅ {label}</li>;
+              return (
+                <li key={id}>
+                  <span className="ppq-log-item ppq-log-item--static">
+                    <span className="ppq-log-item__title">✅ {label}</span>
+                  </span>
+                </li>
+              );
             })}
           </ul>
         )}
@@ -1321,9 +1429,33 @@ function AdventureLog({ profile }: { profile: PlayerRpgProfile }) {
         <ul className="ppq-log-list">
           {QUESTS.map((q) => {
             const done = profile.completedQuestIds.includes(q.id);
+            const openable =
+              done ||
+              q.id === profile.activeQuestId ||
+              isQuestPlayable(q, profile);
             return (
               <li key={q.id}>
-                {done ? "✅" : "○"} {q.japaneseTitle} — {q.title}
+                {openable ? (
+                  <button
+                    type="button"
+                    className="ppq-log-item"
+                    onClick={() => onOpenQuest(q.id)}
+                  >
+                    <span className="ppq-log-item__title">
+                      {done ? "✅" : "○"} {q.japaneseTitle} — {q.title}
+                    </span>
+                    <span className="ppq-log-item__meta">
+                      {done ? "Tap to review" : "Tap to play"}
+                    </span>
+                  </button>
+                ) : (
+                  <span className="ppq-log-item ppq-log-item--locked">
+                    <span className="ppq-log-item__title">
+                      ○ {q.japaneseTitle} — {q.title}
+                    </span>
+                    <span className="ppq-log-item__meta">Locked</span>
+                  </span>
+                )}
               </li>
             );
           })}

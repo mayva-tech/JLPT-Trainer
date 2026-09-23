@@ -11,7 +11,7 @@ import "./talking-head.css";
  * wiring it up. It renders nothing at all while nothing is speaking.
  *
  * Drawn as flat vector portraits rather than attempts at realism: a stylised
- * face reads clearly at 96px and, unlike a realistic one, does not fall into
+ * face reads clearly at 120px and, unlike a realistic one, does not fall into
  * the uncanny valley when the mouth timing is approximate — which, for
  * English, it unavoidably is.
  */
@@ -118,7 +118,7 @@ function useBlink(active: boolean): boolean {
 
 /**
  * Livelier blinks (with occasional double-blinks) so the face feels alive
- * while speaking.
+ * while on screen — including idle waits between lines.
  */
 function useLiveBlink(active: boolean): boolean {
   const [closed, setClosed] = useState(false);
@@ -171,7 +171,7 @@ function useLiveBlink(active: boolean): boolean {
 
 type GazeOffset = { dx: number; dy: number };
 
-/** Random gaze drifts within the sclera, often returning to center. */
+/** Random gaze drifts within the sclera, often returning to center — idle too. */
 function useGaze(active: boolean): GazeOffset {
   const [gaze, setGaze] = useState<GazeOffset>({ dx: 0, dy: 0 });
   const timer = useRef<number | null>(null);
@@ -408,7 +408,7 @@ function NanamiHead({ viseme, speaking, tiltDeg }: HeadProps) {
           <path d="M32 40 q7 -2.6 14 0.2" />
           <path d="M54 40.2 q7 -2.6 14 0.2" />
         </g>
-        <NanamiEyes irisColor="#4a2c22" active={speaking} />
+        <NanamiEyes irisColor="#4a2c22" active />
         <path
           d="M48.5 58 q1.5 4 3 0"
           stroke="#c8946e"
@@ -532,7 +532,7 @@ function AndrewHead({ viseme, speaking, tiltDeg }: HeadProps) {
           <path d="M32 40 q7 -3.5 13 0.2" />
           <path d="M55 40.2 q6 -3.5 13 0.2" />
         </g>
-        <AndrewEyes irisColor="#7a8f6a" active={speaking} />
+        <AndrewEyes irisColor="#7a8f6a" active />
         <path
           d="M50 46 L50 58"
           stroke="#e0b898"

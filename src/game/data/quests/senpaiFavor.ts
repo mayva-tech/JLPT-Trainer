@@ -7,6 +7,7 @@ export const SENPAI_FAVOR_CONVERSATION: ConversationDefinition = {
     {
       id: "arrive",
       japanese: "オフィスで、佐藤先輩に少しお願いしたいことがあります。",
+      reading: "オフィス で さとう せんぱい に すこし おねがい したい こと が あります",
       english:
         "At the office, you need a small favor from Sato-senpai. Soften the ask.",
       nextNodeId: "timing",
@@ -294,6 +295,7 @@ export const SENPAI_FAVOR_QUEST: QuestDefinition = {
   id: "senpai-favor",
   title: "Asking a Senpai for Help",
   japaneseTitle: "先輩にお願い",
+  japaneseTitleReading: "せんぱい に おねがい",
   locationId: "office",
   chapter: 3,
   description:

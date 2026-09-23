@@ -3,7 +3,8 @@ export type FeedbackSpeakSegment = {
   text: string;
 };
 
-const QUOTE_RE = /「([^」]+)」/g;
+/** Corner quotes 「…」 and double-corner 『…』 used in quest EN glosses. */
+const QUOTE_RE = /[「『]([^」』]+)[」』]/g;
 const EMOJI_PREFIX_RE = /^[✅❌💡✓🌟△✕↻🛠️]\s*/;
 
 /**
@@ -13,10 +14,16 @@ const EMOJI_PREFIX_RE = /^[✅❌💡✓🌟△✕↻🛠️]\s*/;
 const JA_RUN_RE =
   /[\u3040-\u309f\u30a0-\u30ff\u31f0-\u31ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9fー〜～]+[ー〜～、。！？]*/gu;
 
+/** True when the line needs Nanami for embedded Japanese (not Andrew alone). */
+export function hasJapaneseSpeechRuns(raw: string): boolean {
+  return parseBilingualSpeakSegments(raw).some((s) => s.language === "ja");
+}
+
 /**
  * Split quest feedback / help text into JA + EN speak segments so lines like
  * `ご用件 = your business / reason for coming.` play Nanami then Andrew
- * (not Andrew mangling the Japanese). Also covers `「届を出す」 means…` glosses.
+ * (not Andrew mangling the Japanese). Also covers `「届を出す」 means…` glosses
+ * and choice English like `Sorry — what does 「記入」mean?`.
  */
 export function parseBilingualSpeakSegments(
   raw: string
@@ -44,6 +51,20 @@ export function parseBilingualSpeakSegments(
 
 export function hasSpeakableFeedback(raw: string): boolean {
   return parseBilingualSpeakSegments(raw).length > 0;
+}
+
+const QUEST_TRY_AGAIN_HINT = "↻ Try Again to pick another answer.";
+const QUEST_FORWARD_HINT = "→ Forward when you're ready to continue.";
+
+/** Append nav guidance after MCQ feedback (wrong → retry, correct → continue). */
+export function withQuestStepGuidance(
+  feedback: string,
+  appropriate: boolean
+): string {
+  const hint = appropriate ? QUEST_FORWARD_HINT : QUEST_TRY_AGAIN_HINT;
+  if (feedback.includes(hint)) return feedback;
+  const trimmed = feedback.trim();
+  return trimmed ? `${trimmed}\n\n${hint}` : hint;
 }
 
 /** Split a non-quoted chunk into Nanami (JA) / Andrew (EN) runs by script. */

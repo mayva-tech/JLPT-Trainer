@@ -3,7 +3,7 @@ import type { ResolvedQuestSpeech } from "./questSpeech";
 import { parseBilingualSpeakSegments } from "./questFeedbackSpeech";
 
 /** Which on-screen surface should receive karaoke for this utterance. */
-export type KaraokeSurface = "title" | "prompt" | "choice" | "feedback";
+export type KaraokeSurface = "title" | "prompt" | "choice" | "feedback" | "body";
 
 export type QuestAutoPlayItem =
   | {
@@ -29,6 +29,23 @@ export type QuestAutoPlayItem =
     };
 
 /**
+ * Whether the Japanese prompt transcript is on screen.
+ * Listening (`after-answer`) hides JA only under Immersion; karaoke must match.
+ */
+export function isQuestJaTranscriptVisible(options: {
+  hideTranscriptUntilAnswer: boolean;
+  revealed: boolean;
+  immersionEnabled: boolean;
+}): boolean {
+  const { hideTranscriptUntilAnswer, revealed, immersionEnabled } = options;
+  return (
+    !hideTranscriptUntilAnswer ||
+    revealed ||
+    !immersionEnabled
+  );
+}
+
+/**
  * Build the Auto Voice speak queue for a quest step.
  *
  * Order when Auto Voice is ON:
@@ -51,6 +68,11 @@ export function buildQuestAutoPlayQueue(options: {
   titleJa?: string | null;
   titleEn?: string | null;
   includeTitle?: boolean;
+  /**
+   * When false, JA transcript is hidden (Immersion listening) — suppress karaoke.
+   * Defaults to true so visible transcript always gets highlights.
+   */
+  jaTranscriptVisible?: boolean;
 }): QuestAutoPlayItem[] {
   const {
     step,
@@ -61,13 +83,14 @@ export function buildQuestAutoPlayQueue(options: {
     titleJa,
     titleEn,
     includeTitle = false,
+    jaTranscriptVisible = true,
   } = options;
   if (!resolved.enabled) return [];
 
   const queue: QuestAutoPlayItem[] = [];
   const hideKaraoke =
     resolved.karaokeMode === "off" ||
-    (resolved.hideTranscriptUntilAnswer && !revealed);
+    (resolved.hideTranscriptUntilAnswer && !revealed && !jaTranscriptVisible);
   const promptKaraoke =
     !hideKaraoke && resolved.karaokeMode !== "off";
   const speakEn =
@@ -147,6 +170,7 @@ export function buildQuestAutoPlayQueue(options: {
         queue.push({
           kind: "ja",
           text: ja,
+          reading: choice.reading?.trim() || null,
           karaoke: true,
           surface: "choice",
           choiceId: choice.id,

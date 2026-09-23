@@ -14,6 +14,8 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
       id: "dusk",
       japanese:
         "夕方スタート。コンビニ → 駅アナウンス → 友だち電話 → 合流 → 本音 → 仕上げ。止まらずにつなげてください。",
+      reading:
+        "ゆうがた スタート コンビニ えき アナウンス ともだち でんわ ごうりゅう ほんね しあげ とまらず に つなげて ください",
       english:
         "Evening run. Convenience → station announcement → friend call → meetup → implied meaning → finish. Chain it — no giant tutorial breaks.",
       nextNodeId: "konbini-line",
@@ -215,6 +217,7 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "to-station",
       japanese: "駅へ。ホームのアナウンスが流れ始めます。",
+      reading: "えき へ ホーム の アナウンス が ながれはじめます",
       english: "To the station. A platform announcement starts.",
       nextNodeId: "announce-main",
       speech: { autoPlay: true, language: "en" },
@@ -349,6 +352,7 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "phone-buzz",
       japanese: "ホームではるかから電話。カジュアルな省略に切り替え。",
+      reading: "ホーム で はるか から でんわ カジュアル な しょうりゃく に きりかえ",
       english: "Haruka calls on the platform. Switch to casual reduced speech.",
       nextNodeId: "haruka-call",
       speech: { autoPlay: true, language: "en" },
@@ -489,6 +493,7 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "to-meetup",
       japanese: "改札へ。はるかとみかが待っています。",
+      reading: "かいさつ へ はるか と みか が まって います",
       english: "To the ticket gates — Haruka and Mika are waiting.",
       nextNodeId: "group-hello",
       speech: { autoPlay: true, language: "en" },
@@ -836,6 +841,7 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "msg-bridge",
       japanese: "その時、グループに短いメッセージが飛んできます。",
+      reading: "その とき グループ に みじかい メッセージ が とんで きます",
       english: "A short group message lands.",
       nextNodeId: "msg-listen",
       speech: { autoPlay: true, language: "en" },
@@ -1055,6 +1061,7 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
     {
       id: "final-bridge",
       japanese: "店の手前。最後のネイティブスピード — 省略も本音も一気に。",
+      reading: "みせ の てまえ さいご の ネイティブ スピード しょうりゃく も ほんね も いっき に",
       english:
         "Just outside the place. Final native-speed burst — reductions and implications together.",
       nextNodeId: "final-speed",
@@ -1190,6 +1197,8 @@ export const NATIVE_SPEED_SURVIVAL_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "ネイティブスピードチャレンジ、クリア。早口レジ・駅アナウンス・省略友だち話・本音・事実リコール — 全部つなげた。流暢の証への道が開いた。",
+      reading:
+        "ネイティブ スピード チャレンジ クリア はやくち レジ えき アナウンス しょうりゃく ともだちばなし ほんね じじつ リコール ぜんぶ つなげた りゅうちょう の あかし へ の みち が ひらいた",
       english:
         "Native-Speed Survival clear. You chained rush-register Japanese, fast formal announcements, reduced friend talk, implied meaning, and fact recall into one evening.\n\nFluency Seal path unlocked.",
       endState: "success",
@@ -1202,6 +1211,7 @@ export const NATIVE_SPEED_SURVIVAL_QUEST: QuestDefinition = {
   id: "native-speed-survival",
   title: "Native-Speed Survival",
   japaneseTitle: "ネイティブスピードチャレンジ",
+  japaneseTitleReading: "ねいてぃぶ すぴーど ちゃれんじ",
   locationId: "train-station",
   chapter: 5,
   description:

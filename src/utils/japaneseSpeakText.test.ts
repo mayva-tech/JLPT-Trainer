@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildJapaneseSpeakText,
   buildJapaneseSpeakToken,
+  appendPhraseParticleSpeakPause,
   shouldKeepGaTight,
   shouldKeepNiTight,
   shouldKeepWoTight,
@@ -174,12 +175,26 @@ describe("buildJapaneseSpeakText", () => {
     ]);
   });
 
-  it("keeps へや but reads directional へ as え", () => {
-    expect(buildJapaneseSpeakText("部屋", "へや")).toBe("へや");
+  it("speaks へや as ヘや but reads directional へ as え", () => {
+    expect(buildJapaneseSpeakText("部屋", "へや")).toBe("ヘや");
+    expect(
+      buildJapaneseSpeakText("隣の部屋", "となり の へや")
+    ).toBe("となり の ヘや");
     expect(
       buildJapaneseSpeakText("学校へ行く", "がっこう へ いく")
     ).toContain("がっこう え いく");
     expect(buildJapaneseSpeakText("〜を経て", "〜をへて")).toBe("〜、をえて");
+  });
+
+  it("pauses after listing や so tablet stays a separate word", () => {
+    expect(
+      buildJapaneseSpeakText(
+        "スマートフォンやタブレットといったデバイスが普及した。",
+        "すまーとふぉん や たぶれっと といった でばいす が ふきゅう した。"
+      )
+    ).toBe(
+      "すまあとふぉん や、 たぶれっと といった でばいす が ふきゅう した。"
+    );
   });
 
   it("pauses after every grammar-slot 〜 (〜ばかりか〜も)", () => {
@@ -252,35 +267,15 @@ describe("TTS particle audit (all lesson readings)", () => {
     const failures: string[] = [];
     for (const c of cases) {
       const spoken = buildJapaneseSpeakText(c.surface, c.reading);
-      const expected = c.reading
+      const tokens = c.reading
         .trim()
         .split(/\s+/)
         .filter(Boolean)
-        .map((t) => buildJapaneseSpeakToken(t))
-        .map((tok, i, arr) => {
-          const punct = tok.match(/[、。！？．，!?,]+$/u)?.[0] ?? "";
-          const core = punct ? tok.slice(0, -punct.length) : tok;
-          if (
-            (core === "わ" ||
-              core === "は" ||
-              core === "が" ||
-              core === "を" ||
-              core === "に") &&
-            !/[、,]/.test(punct)
-          ) {
-            if (core === "を" && arr[i + 1] && shouldKeepWoTight(arr[i + 1]!)) {
-              return tok;
-            }
-            if (core === "が" && arr[i + 1] && shouldKeepGaTight(arr[i + 1]!)) {
-              return tok;
-            }
-            if (core === "に" && arr[i + 1] && shouldKeepNiTight(arr[i + 1]!)) {
-              return tok;
-            }
-            return `${core}、${punct}`;
-          }
-          return tok;
-        })
+        .map((t) => buildJapaneseSpeakToken(t));
+      const expected = tokens
+        .map((tok, i) =>
+          appendPhraseParticleSpeakPause(tok, tokens[i + 1])
+        )
         .join(" ");
       if (spoken !== expected) {
         failures.push(

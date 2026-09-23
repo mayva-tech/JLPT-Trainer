@@ -8,6 +8,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
   id: "cafe-order",
   title: "Order at the Café",
   japaneseTitle: "カフェで注文",
+  japaneseTitleReading: "かふぇ で ちゅうもん",
   locationId: "cafe",
   chapter: 1,
   description:
@@ -33,6 +34,8 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "はるかが勧めてくれたカフェ琴の葉に入りました。",
+      promptReading:
+        "はるか が すすめて くれた カフェ ことのは に はいりました。",
       promptEn:
         "You step into Café Kotonoha — the place Haruka recommended near the station.\n\nOrder something, keep it polite, and don’t empty your Confidence.",
       costsConfidence: false,
@@ -52,6 +55,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "すみません、まだ決まっていません。",
+          reading: "すみません、 まだ きまって いません。",
           labelEn: "Sorry — I haven’t decided yet.",
           correct: false,
           feedbackWrong:
@@ -60,6 +64,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "はい、お願いします。",
+          reading: "はい、 おねがい します。",
           labelEn: "Yes, please (I’m ready).",
           correct: true,
           feedbackCorrect:
@@ -68,6 +73,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "お会計をお願いします。",
+          reading: "おかいけい を おねがい します。",
           labelEn: "The check, please.",
           correct: false,
           feedbackWrong:
@@ -92,6 +98,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "店内でお願いします。",
+          reading: "てんない で おねがい します。",
           labelEn: "For here, please.",
           correct: true,
           feedbackCorrect:
@@ -100,6 +107,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "お持ち帰りでお願いします。",
+          reading: "おもちかえり で おねがい します。",
           labelEn: "To go, please.",
           correct: false,
           feedbackWrong:
@@ -108,6 +116,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "どちらでも大丈夫です。",
+          reading: "どちら でも だいじょうぶ です。",
           labelEn: "Either is fine.",
           correct: false,
           feedbackWrong:
@@ -121,6 +130,8 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       objectiveType: "menu",
       npcId: "ken",
       promptJa: "メニューをご覧ください。抹茶ラテはいくらですか。",
+      promptReading:
+        "メニュー を ごらん ください。まっちゃラテ は いくら です か。",
       promptEn: "Look at the menu. How much is the matcha latte?",
       menuItems: [
         { nameJa: "ブレンドコーヒー", priceYen: 420 },
@@ -134,18 +145,24 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "480円",
+          labelEn: "480 yen",
+          reading: "よんひゃくはちじゅうえん",
           correct: false,
           feedbackWrong: "❌ That’s カフェラテ. 抹茶ラテ is ¥520.",
         },
         {
           id: "b",
           labelJa: "420円",
+          labelEn: "420 yen",
+          reading: "よんひゃくにじゅうえん",
           correct: false,
           feedbackWrong: "❌ That’s ブレンドコーヒー. 抹茶ラテ is ¥520.",
         },
         {
           id: "c",
           labelJa: "520円",
+          labelEn: "520 yen",
+          reading: "ごひゃくにじゅうえん",
           correct: true,
           feedbackCorrect: "✅ 抹茶ラテ is ¥520 on the board.",
         },
@@ -165,6 +182,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "カフェラテを一つお願いします。",
+          reading: "カフェラテ を ひとつ おねがい します。",
           labelEn: "One café latte, please.",
           correct: false,
           feedbackWrong:
@@ -173,6 +191,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "抹茶ラテを一つお願いします。",
+          reading: "まっちゃラテ を ひとつ おねがい します。",
           labelEn: "One matcha latte, please.",
           correct: true,
           feedbackCorrect:
@@ -181,6 +200,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "チーズケーキを一つお願いします。",
+          reading: "チーズケーキ を ひとつ おねがい します。",
           labelEn: "One cheesecake, please.",
           correct: false,
           feedbackWrong:
@@ -203,6 +223,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "砂糖なしでお願いします。",
+          reading: "さとう なし で おねがい します。",
           labelEn: "No sugar, please.",
           correct: true,
           feedbackCorrect:
@@ -211,6 +232,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "シロップ多めでお願いします。",
+          reading: "シロップ おおめ で おねがい します。",
           labelEn: "Extra syrup, please.",
           correct: false,
           feedbackWrong:
@@ -219,6 +241,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "氷なしでお願いします。",
+          reading: "こおり なし で おねがい します。",
           labelEn: "No ice, please.",
           correct: false,
           feedbackWrong:
@@ -240,6 +263,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "もう結構です。",
+          reading: "もう けっこう です。",
           labelEn: "That’s all, thanks.",
           correct: false,
           feedbackWrong:
@@ -248,6 +272,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "水を一杯ください。",
+          reading: "みず を いっぱい ください。",
           labelEn: "A glass of water, please.",
           correct: false,
           feedbackWrong:
@@ -256,6 +281,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "おすすめは何ですか。",
+          reading: "おすすめ は なん です か。",
           labelEn: "What do you recommend?",
           correct: true,
           feedbackCorrect:
@@ -277,6 +303,8 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "今日はチーズケーキが人気で、ラテと一緒だとお得だと言っている。",
+          reading:
+            "きょう は チーズケーキ が にんき で、 ラテ と いっしょ だ と おとく だ と いって いる。",
           labelEn: "Cheesecake is popular today and pairs well with a latte.",
           correct: true,
           feedbackCorrect:
@@ -285,6 +313,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "トーストセットだけが売り切れたと言っている。",
+          reading: "トーストセット だけ が うりきれた と いって いる。",
           labelEn: "He’s saying only the toast set is sold out.",
           correct: false,
           feedbackWrong: "❌ He highlighted cheesecake, not a sell-out.",
@@ -292,6 +321,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "ブレンドコーヒーが値上がりしたと言っている。",
+          reading: "ブレンドコーヒー が ねあがり した と いって いる。",
           labelEn: "He’s saying blend coffee got more expensive.",
           correct: false,
           feedbackWrong:
@@ -315,6 +345,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "いいえ、千円では足りないので払えない。",
+          reading: "いいえ、 せんえん で は たりない ので はらえない。",
           labelEn: "No — ¥1000 isn’t enough, so you can’t pay.",
           correct: false,
           feedbackWrong:
@@ -323,6 +354,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "トーストセットと同じ金額になる。",
+          reading: "トーストセット と おなじ きんがく に なる。",
           labelEn: "It costs the same as the toast set.",
           correct: false,
           feedbackWrong:
@@ -331,6 +363,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "はい、千円で足ります。お釣りがもらえます。",
+          reading: "はい、 せんえん で たります。おつり が もらえます。",
           labelEn: "Yes — ¥1000 is enough; you’ll get change.",
           correct: true,
           feedbackCorrect:
@@ -352,6 +385,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "はい、もう全部覚えました。",
+          reading: "はい、 もう ぜんぶ おぼえました。",
           labelEn: "Yes — I’ve memorized everything already.",
           correct: false,
           feedbackWrong:
@@ -360,6 +394,8 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "ええ、少しずつです。駅もだいぶ分かってきました。",
+          reading:
+            "ええ、 すこし ずつ です。えき も だいぶ わかって きました。",
           labelEn: "Yeah, little by little. I’m starting to understand the station too.",
           correct: true,
           feedbackCorrect:
@@ -368,6 +404,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "すみません、注文を変えたいです。",
+          reading: "すみません、 ちゅうもん を かえたい です。",
           labelEn: "Excuse me — I’d like to change my order.",
           correct: false,
           feedbackWrong:
@@ -380,6 +417,7 @@ export const CAFE_ORDER_QUEST: QuestDefinition = {
       kind: "outro",
       npcId: "ken",
       promptJa: "抹茶ラテ、お待ちくださいね。また来てください。",
+      promptReading: "まっちゃラテ、 おまち ください ね。また きて ください。",
       promptEn:
         "Ken starts your matcha latte. First café clear — Kotoba Town feels a little more like home.",
       costsConfidence: false,

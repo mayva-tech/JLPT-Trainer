@@ -11,6 +11,8 @@ export const CONTRACTION_CITY_CONVERSATION: ConversationDefinition = {
       id: "arrive",
       japanese:
         "省略だらけの街。ネイティブは短く言う。形を直さず、意味をキャッチしてください。",
+      reading:
+        "しょうりゃく だらけ の まち ネイティブ は みじかく いう かたち を なおさず いみ を キャッチ して ください",
       english:
         "Contraction City. Natives shorten everything. Catch the meaning — don’t convert to formal Japanese yet.",
       nextNodeId: "n1-nani-shitenno",
@@ -90,6 +92,7 @@ export const CONTRACTION_CITY_CONVERSATION: ConversationDefinition = {
     {
       id: "n2-bridge",
       japanese: "カフェへ。ケンがさっきの話をしている。",
+      reading: "カフェ へ ケン が さっき の はなし を して いる",
       english: "Over at the café — Ken is filling you in.",
       nextNodeId: "n2-kaetchatta",
       speech: { autoPlay: true, language: "en" },
@@ -415,6 +418,8 @@ export const CONTRACTION_CITY_CONVERSATION: ConversationDefinition = {
       id: "success",
       japanese:
         "省略だらけクリア。してんの・帰っちゃった・行かなきゃ・知らないって — 聞こえた形のまま意味を取れた。",
+      reading:
+        "しょうりゃく だらけ クリア してんの かえっちゃった いかなきゃ しらない って きこえた かたち の まま いみ を とれた",
       english:
         "Contraction City clear. You caught してんの / 帰っちゃった / 行かなきゃ / 知らないって by meaning, not by rewriting.",
       endState: "success",
@@ -427,6 +432,7 @@ export const CONTRACTION_CITY_QUEST: QuestDefinition = {
   id: "contraction-city",
   title: "Everything Gets Shortened",
   japaneseTitle: "省略だらけ",
+  japaneseTitleReading: "しょうりゃく だらけ",
   locationId: "cafe",
   chapter: 5,
   description:

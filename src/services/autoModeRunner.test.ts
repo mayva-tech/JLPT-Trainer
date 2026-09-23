@@ -127,4 +127,39 @@ describe("autoModeRunner abort while speaking", () => {
     await vi.advanceTimersByTimeAsync(8000);
     expect(spoken.length).toBe(afterAbort);
   });
+
+  it("locks every Auto Mode pass at 1.25× while fast is preferred", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+    const { SPEECH_RATE_FAST } = await import("./speechService");
+
+    const rates: number[] = [];
+    const ui = mockUi();
+    ui.getPreferredSpeechRate = () => SPEECH_RATE_FAST;
+    ui.setSpeechRate = vi.fn((rate: number) => {
+      rates.push(rate);
+    });
+
+    const started = autoModeRunner.start([sampleItem], 0, ui, vi.fn());
+
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+    // Finish first JA (normal pass) + EN + JA (slow pass) of the word section
+    for (let n = 0; n < 3; n++) {
+      const u = spoken[n];
+      expect(u).toBeTruthy();
+      u!.onstart?.();
+      u!.onend?.();
+      await vi.advanceTimersByTimeAsync(autoModeTiming.normalPause);
+    }
+
+    autoModeRunner.abort();
+    await started;
+
+    expect(rates.length).toBeGreaterThanOrEqual(3);
+    expect(rates.every((r) => r === SPEECH_RATE_FAST)).toBe(true);
+    expect(spoken.slice(0, 3).every((u) => u.rate === SPEECH_RATE_FAST)).toBe(
+      true
+    );
+  });
 });

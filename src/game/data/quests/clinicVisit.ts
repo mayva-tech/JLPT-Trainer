@@ -10,6 +10,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
   id: "clinic-visit",
   title: "Visit the Clinic",
   japaneseTitle: "クリニックを受診",
+  japaneseTitleReading: "くりにっく を じゅしん",
   locationId: "clinic",
   chapter: 2,
   description:
@@ -32,6 +33,8 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "朝から熱っぽくて、のども痛みます。近所のクリニックに来ました。",
+      promptReading:
+        "あさ から ねつっぽくて、 のど も いたみます。きんじょ の クリニック に きました。",
       promptEn:
         "You’ve felt feverish since this morning, and your throat hurts.\n\nYou arrive at the neighborhood clinic. Time to get seen — in Japanese.",
       costsConfidence: false,
@@ -51,6 +54,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "住民票の写しをいただきたいんですが。",
+          reading: "じゅうみんひょう の うつし を いただきたいん です が。",
           labelEn: "I’d like a copy of my residence record.",
           correct: false,
           feedbackWrong: "❌ City Hall language — this is a clinic.",
@@ -58,6 +62,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "今日、受診したいんですが。",
+          reading: "きょう、 じゅしん したいん です が。",
           labelEn: "I’d like to be seen today.",
           correct: true,
           feedbackCorrect:
@@ -66,6 +71,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "アイスコーヒーを一つお願いします。",
+          reading: "アイスコーヒー を ひとつ おねがい します。",
           labelEn: "One iced coffee, please.",
           correct: false,
           feedbackWrong: "❌ Café order — wrong place.",
@@ -78,6 +84,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "mori-clinic",
       promptJa: "受付の話を聞いてください。",
+      promptReading: "うけつけ の はなし を きいて ください。",
       promptEn: "Listen. What is reception asking for?",
       listenText: "保険証かマイナンバーカードをお持ちですか。",
       listenReading: "ほけんしょう か マイナンバーカード を おもち です か。",
@@ -90,6 +97,8 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "保険証かマイナンバーカードを見せてほしい。",
+          reading:
+            "ほけんしょう か マイナンバーカード を みせて ほしい。",
           labelEn: "They want to see your insurance card or My Number Card.",
           correct: true,
           feedbackCorrect:
@@ -98,6 +107,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "ポイントカードを出してほしい。",
+          reading: "ポイントカード を だして ほしい。",
           labelEn: "They want your point card.",
           correct: false,
           feedbackWrong: "❌ Not a konbini — they’re asking for medical ID.",
@@ -105,6 +115,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "乗車券を確認したい。",
+          reading: "じょうしゃけん を かくにん したい。",
           labelEn: "They want to check your train ticket.",
           correct: false,
           feedbackWrong: "❌ Wrong document for a clinic.",
@@ -126,6 +137,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "今日、受診したいんですが。",
+          reading: "きょう、 じゅしん したいん です が。",
           labelEn: "I’d like to be examined today.",
           correct: false,
           feedbackWrong:
@@ -134,6 +146,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "おすすめは何ですか。",
+          reading: "おすすめ は なん です か。",
           labelEn: "What do you recommend?",
           correct: false,
           feedbackWrong: "❌ Café language. List your symptoms.",
@@ -141,6 +154,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "熱があって、のどが痛いです。",
+          reading: "ねつ が あって、 のど が いたい です。",
           labelEn: "I have a fever and a sore throat.",
           correct: true,
           feedbackCorrect:
@@ -163,6 +177,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "来週の月曜日からです。",
+          reading: "らいしゅう の げつようび から です。",
           labelEn: "Starting next Monday.",
           correct: false,
           feedbackWrong: "❌ Future time — symptoms already started.",
@@ -170,6 +185,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "昨日の夕方からです。",
+          reading: "きのう の ゆうがた から です。",
           labelEn: "Since yesterday evening.",
           correct: true,
           feedbackCorrect:
@@ -178,6 +194,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "少々お待ちください。",
+          reading: "しょうしょう おまち ください。",
           labelEn: "Please wait a moment.",
           correct: false,
           feedbackWrong: "❌ Staff phrase — answer when it started.",
@@ -190,6 +207,8 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "doctor-nakamura",
       promptJa: "先生の指示を聞いてください。何をするように言われましたか。",
+      promptReading:
+        "せんせい の しじ を きいて ください。なに を する ように いわれました か。",
       promptEn: "Listen carefully. What were you instructed to do?",
       listenText:
         "薬を三日分出します。今日はできるだけ安静にして、水分をよく取ってください。",
@@ -205,6 +224,8 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
           id: "a",
           labelJa:
             "三日分の薬をもらい、安静にして水分をよく取る。",
+          reading:
+            "みっかぶん の くすり を もらい、 あんせい に して すいぶん を よく とる。",
           labelEn:
             "Get three days of medicine, rest, and drink plenty of fluids.",
           correct: true,
@@ -214,6 +235,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "今日からすぐに運動して汗を出す。",
+          reading: "きょう から すぐに うんどう して あせ を だす。",
           labelEn: "Exercise hard today to sweat it out.",
           correct: false,
           feedbackWrong: "❌ The doctor said 安静 — rest, not hard exercise.",
@@ -221,6 +243,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "薬は一週間分で、水分は控える。",
+          reading: "くすり は いっしゅうかんぶん で、 すいぶん は ひかえる。",
           labelEn: "One week of medicine, and avoid fluids.",
           correct: false,
           feedbackWrong:
@@ -233,6 +256,8 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       kind: "outro",
       promptJa:
         "受診おつかれさま。症状の伝え方と指示の聞き取りができた。次は電話での問い合わせだ。",
+      promptReading:
+        "じゅしん おつかれさま。しょうじょう の つたえかた と しじ の ききとり が できた。つぎ は でんわ で の といあわせ だ。",
       promptEn:
         "Clinic visit clear. You can check in, describe symptoms, and catch medical instructions.\n\nNext: a phone inquiry — no visual context to lean on.",
       costsConfidence: false,

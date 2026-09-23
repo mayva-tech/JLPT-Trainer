@@ -338,7 +338,7 @@
 
 .ppq-quest-banner h1 {
   font-family: var(--ppq-jp);
-  font-size: 22px;
+  font-size: clamp(24px, 4.5vw, 28px);
   margin: 0 0 4px;
 }
 
@@ -409,8 +409,46 @@
 
 .ppq-prompt-ja {
   font-family: var(--ppq-jp);
-  font-size: clamp(18px, 4vw, 24px);
-  line-height: 1.45;
+  font-size: clamp(22px, 5vw, 30px);
+  line-height: 1.55;
+}
+
+/* Furigana above kanji — readable on dark quest chrome */
+.ppq-root .furigana-wrap.jp-wrap {
+  max-height: none;
+}
+
+.ppq-root .furigana-wrap .jp-wrap-line {
+  justify-content: flex-start;
+  row-gap: 0.65em;
+}
+
+.ppq-root .furigana-wrap .furi-reading {
+  color: var(--ppq-accent-soft);
+  font-family: var(--ppq-jp);
+  font-weight: 600;
+  font-size: 0.5em;
+}
+
+.ppq-choice .furigana-wrap.jp-wrap,
+.ppq-choice .furigana-wrap {
+  display: inline;
+  max-height: none;
+  vertical-align: baseline;
+}
+
+.ppq-choice .furigana-wrap .jp-wrap-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  row-gap: 0.45em;
+}
+
+.ppq-choice .furigana-wrap .jp-word {
+  display: inline-flex;
+  align-items: flex-end;
+  white-space: nowrap;
 }
 
 .ppq-prompt-en {
@@ -420,13 +458,53 @@
 }
 
 .ppq-reading-body {
-  padding: 12px;
+  padding: 14px 12px 12px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.22);
   border: 1px dashed var(--ppq-line);
   font-family: var(--ppq-jp);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: clamp(17px, 3.5vw, 20px);
+  line-height: 1.85;
+  overflow: visible;
+}
+
+.ppq-reading-body-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ppq-reading-body .furigana-wrap.jp-wrap,
+.ppq-reading-body-ja.furigana-wrap {
+  display: block;
+  max-height: none;
+  overflow: visible;
+}
+
+.ppq-reading-body .furigana-wrap .jp-wrap-line {
+  justify-content: flex-start;
+  row-gap: 0.7em;
+}
+
+.ppq-reading-body-ja {
+  display: block;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+
+.ppq-reading-body-en {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--ppq-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.ppq-reading-body-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .ppq-form-preview {
@@ -466,6 +544,9 @@
 .ppq-choice {
   text-align: left;
   font: inherit;
+  font-family: var(--ppq-jp);
+  font-size: clamp(17px, 3.6vw, 22px);
+  line-height: 1.5;
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--ppq-line);
@@ -495,8 +576,27 @@
 .ppq-choice-en {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
+  font-family: var(--ppq-en);
+  font-size: 13px;
   color: var(--ppq-muted);
+}
+
+.ppq-choice-en .ppq-feedback-rich {
+  display: inline;
+  margin: 0;
+}
+
+.ppq-prompt-en .ppq-feedback-rich {
+  display: block;
+  margin: 0;
+  white-space: pre-line;
+  font-size: inherit;
+  color: inherit;
+}
+
+.ppq-prompt-en .ppq-feedback-en {
+  color: inherit;
+  font-size: inherit;
 }
 
 .ppq-feedback {
@@ -616,11 +716,58 @@
 }
 
 .ppq-log-list li {
+  padding: 0;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+}
+
+.ppq-log-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
   padding: 10px 12px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.18);
   border: 1px solid var(--ppq-line);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+button.ppq-log-item:hover,
+button.ppq-log-item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.28);
+  outline: none;
+}
+
+.ppq-log-item--locked {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.ppq-log-item--static {
+  cursor: default;
+}
+
+.ppq-log-item__title {
   font-size: 13px;
+  line-height: 1.35;
+}
+
+.ppq-log-item__meta {
+  color: var(--ppq-muted);
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 .ppq-empty {
@@ -646,10 +793,9 @@
 
 .ppq-quest-toolbar {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
   margin-bottom: 10px;
 }
 
@@ -725,6 +871,7 @@
 .ppq-choice-index {
   opacity: 0.7;
   margin-right: 2px;
+  font-family: var(--ppq-en);
 }
 
 .ppq-choice-ja.jp-wrap,
@@ -880,10 +1027,17 @@
 
 .ppq-feedback-ja {
   font-family: var(--ppq-jp);
+  font-size: 1.05em;
 }
 
 .ppq-feedback-ja-inner {
   display: inline;
+}
+
+.ppq-feedback-en {
+  display: inline;
+  font: inherit;
+  color: inherit;
 }
 
 /* Karaoke on dark RPG surfaces — same timing classes as Play/Quiz */
@@ -893,11 +1047,33 @@
   border-radius: 0.1em;
 }
 
+/* player.css forces #000 on furigana active cells — invisible on dark quest UI */
+.ppq-root .furigana-wrap .furi-cell.speech-active {
+  color: var(--ppq-ink) !important;
+  background: rgba(232, 165, 75, 0.45);
+  opacity: 1;
+  border-radius: 0.12em;
+}
+
+.ppq-root .furigana-wrap .furi-cell.speech-active .furi-surface {
+  color: var(--ppq-ink) !important;
+}
+
+.ppq-root .furigana-wrap .furi-cell.speech-active .furi-reading {
+  color: var(--ppq-accent-soft) !important;
+}
+
 .ppq-root [lang="ja"] .speech-spoken,
 .ppq-root [lang="en"] .speech-spoken,
 .ppq-root .speech-spoken {
   opacity: 1;
   color: var(--ppq-muted) !important;
+}
+
+.ppq-root .furigana-wrap .furi-cell.speech-spoken,
+.ppq-root .furigana-wrap .furi-cell.speech-spoken .furi-surface {
+  color: var(--ppq-muted) !important;
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1080,11 +1256,30 @@
 .ppq-quest-meters {
   display: grid;
   gap: 8px;
+  flex: 1;
   min-width: min(100%, 220px);
+}
+
+.ppq-confidence-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ppq-quest-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .ppq-comm-meter {
   font-size: 12px;
+  width: 33%;
+  max-width: 220px;
+  min-width: 120px;
 }
 
 .ppq-comm-meter-head {
@@ -1257,10 +1452,6 @@
 }
 
 @media (max-width: 640px) {
-  .ppq-quest-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
   .ppq-quest-meters {
     min-width: 0;
   }

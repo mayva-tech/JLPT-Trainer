@@ -10,6 +10,7 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
   id: "social-life-challenge",
   title: "Social Life Challenge",
   japaneseTitle: "社会生活チャレンジ",
+  japaneseTitleReading: "しゃかいせいかつ ちゃれんじ",
   locationId: "office",
   chapter: 2,
   description:
@@ -34,6 +35,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       id: "intro",
       kind: "intro",
       promptJa: "日本語だけで、一日を乗り切れるか？朝から夜まで、社会生活の本番だ。",
+      promptReading:
+        "にほんご だけ で、 いちにち を のりきれる か？あさ から よる まで、 しゃかいせいかつ の ほんばん だ。",
       promptEn:
         "Boss challenge: Can you get through one day in Japanese alone?\n\nMorning clinic call, commute surprise, office pressure, phone interrupt, honest status, and a denser message — Confidence starts at 5.",
       costsConfidence: false,
@@ -44,6 +47,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "朝、クリニックから電話が来ました。内容は？",
+      promptReading: "あさ、 クリニック から でんわ が きました。ないよう は？",
+      promptEn: "Morning call from the clinic. What did they say?",
       listenText:
         "先日受診された件ですが、検査結果に問題はありませんでした。処方薬は指示どおりお飲みください。",
       listenReading:
@@ -57,6 +62,9 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           id: "a",
           labelJa:
             "検査結果は問題なし。薬は指示どおり飲む。",
+          reading: "けんさけっか は もんだい なし。くすり は しじ どおり のむ。",
+          labelEn:
+            "Test results are fine. Take the medicine as directed.",
           correct: true,
           feedbackCorrect:
             "✅ Clear morning news: results OK + keep taking the medicine as directed.",
@@ -64,12 +72,16 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "すぐ再診に来るように言われた。",
+          reading: "すぐ さいしん に くる ように いわれた。",
+          labelEn: "They told me to come in for a follow-up right away.",
           correct: false,
           feedbackWrong: "❌ No urgent return visit was requested.",
         },
         {
           id: "c",
           labelJa: "保険証の再発行が必要だと言われた。",
+          reading: "ほけんしょう の さいはっこう が ひつよう だ と いわれた。",
+          labelEn: "They said I need to reissue my insurance card.",
           correct: false,
           feedbackWrong: "❌ Not about insurance reissue.",
         },
@@ -80,6 +92,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       kind: "listening",
       objectiveType: "listening",
       promptJa: "駅の掲示・放送です。予定はどう変わりますか。",
+      promptReading: "えき の けいじ・ほうそう です。よてい は どう かわります か。",
+      promptEn: "Station notice and announcement. How does your plan change?",
       listenText:
         "さくら線は遅延のため、到着まで約15分ほど余分にお時間がかかります。余裕をもってお越しください。",
       listenReading:
@@ -96,18 +110,24 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "全線運休なので在宅する。",
+          reading: "ぜんせん うんきゅう な ので ざいたく する。",
+          labelEn: "All lines are suspended, so I’ll work from home.",
           correct: false,
           feedbackWrong: "❌ Delay, not a full suspension.",
         },
         {
           id: "b",
           labelJa: "快速が増便されたので早く着く。",
+          reading: "かいそく が ぞうびん された ので はやく つく。",
+          labelEn: "More express trains, so I’ll arrive earlier.",
           correct: false,
           feedbackWrong: "❌ Extra time needed — not faster service.",
         },
         {
           id: "c",
           labelJa: "約15分遅れそうなので、余裕を見て向かう。",
+          reading: "やく じゅうごふん おくれ そう な ので、 よゆう を みて むかう。",
+          labelEn: "Looks like about a 15-minute delay, so I’ll leave with extra time.",
           correct: true,
           feedbackCorrect:
             "✅ Delay ~15 minutes — leave earlier margin, don’t rush blindly.",
@@ -120,6 +140,9 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "suzuki-manager",
       promptJa: "鈴木さんからの指示です。いちばん先に何をしますか。",
+      promptReading:
+        "すずきさん から の しじ です。いちばん さき に なに を します か。",
+      promptEn: "Instructions from Suzuki. What do you do first?",
       listenText:
         "朝一で昨日の数字を確認してから、修正版を共有してください。そのあとで午後の会議用のメモを用意してもらえますか。確認が先です。",
       listenReading:
@@ -132,12 +155,16 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "先に会議メモを全部書く。",
+          reading: "さき に かいぎ メモ を ぜんぶ かく。",
+          labelEn: "Write all the meeting notes first.",
           correct: false,
           feedbackWrong: "❌ Notes come after confirm + share.",
         },
         {
           id: "b",
           labelJa: "まず昨日の数字を確認する。",
+          reading: "まず きのう の すうじ を かくにん する。",
+          labelEn: "First, confirm yesterday’s numbers.",
           correct: true,
           feedbackCorrect:
             "✅ 「確認が先」— confirm numbers before sharing or writing notes.",
@@ -145,6 +172,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "確認せずに古いファイルを共有する。",
+          reading: "かくにん せず に ふるい ファイル を きょうゆう する。",
+          labelEn: "Share the old file without checking.",
           correct: false,
           feedbackWrong: "❌ Never share before confirming.",
         },
@@ -156,6 +185,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       objectiveType: "listening",
       npcId: "arai-phone",
       promptJa: "作業中に電話。用件は何ですか。",
+      promptReading: "さぎょうちゅう に でんわ。ようけん は なん です か。",
+      promptEn: "A call while you’re working. What’s it about?",
       listenText:
         "お疲れさまです。先日の再診枠の件で、念のため日時の最終確認をさせてください。",
       listenReading:
@@ -168,18 +199,24 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "再診の日時を最終確認したい。",
+          reading: "さいしん の にちじ を さいしゅうかくにん したい。",
+          labelEn: "They want a final confirmation of the follow-up date and time.",
           correct: true,
           feedbackCorrect: "✅ Purpose: final check of the follow-up slot.",
         },
         {
           id: "b",
           labelJa: "新しい仕事の面接をしたい。",
+          reading: "あたらしい しごと の めんせつ を したい。",
+          labelEn: "They want to interview you for a new job.",
           correct: false,
           feedbackWrong: "❌ Clinic appointment follow-up, not a job interview.",
         },
         {
           id: "c",
           labelJa: "資料の共有リンクを送りたい。",
+          reading: "しりょう の きょうゆう リンク を おくりたい。",
+          labelEn: "They want to send a shared link to documents.",
           correct: false,
           feedbackWrong: "❌ Not about file sharing.",
         },
@@ -209,6 +246,7 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "全部終わりました。問題ありません。",
+          reading: "ぜんぶ おわりました。もんだい ありません。",
           labelEn: "Everything’s finished. No problems.",
           correct: false,
           feedbackWrong: "❌ Wrong script for a booking confirmation.",
@@ -217,6 +255,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           id: "c",
           labelJa:
             "恐れ入りますが、もう一度お願いできますか。木曜日の午後3時で変更なし、ということでよろしいでしょうか。",
+          reading:
+            "おそれいります が、 もう いちど おねがい できます か。もくようび の ごご さんじ で へんこう なし、 と いう こと で よろしい でしょう か。",
           labelEn:
             "Sorry — could you say that again? So Thursday 3 p.m. with no change, correct?",
           correct: true,
@@ -241,6 +281,7 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "はい、全部確認済みです。",
+          reading: "はい、 ぜんぶ かくにんずみ です。",
           labelEn: "Yes, everything’s already confirmed.",
           correct: false,
           feedbackWrong: "❌ Rewarding a lie would wreck the meeting.",
@@ -249,6 +290,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           id: "b",
           labelJa:
             "申し訳ありません。まだ確認が終わっていませんが、4時までには終わる予定です。",
+          reading:
+            "もうしわけ ありません。まだ かくにん が おわって いません が、 よじ まで に は おわる よてい です。",
           labelEn:
             "I’m sorry — confirmation isn’t finished yet, but I plan to finish by 4.",
           correct: true,
@@ -258,6 +301,7 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "c",
           labelJa: "知りません。誰かやってください。",
+          reading: "しりません。だれ か やって ください。",
           labelEn: "No idea. Someone else should do it.",
           correct: false,
           feedbackWrong: "❌ Own the task and give a plan.",
@@ -282,12 +326,16 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "a",
           labelJa: "古いファイルのまま会議で説明する。",
+          reading: "ふるい ファイル の まま かいぎ で せつめい する。",
+          labelEn: "Present in the meeting using the old file as-is.",
           correct: false,
           feedbackWrong: "❌ Explicitly asked not to use the old file.",
         },
         {
           id: "b",
           labelJa: "メッセージを無視して帰宅する。",
+          reading: "メッセージ を むし して きたく する。",
+          labelEn: "Ignore the message and go home.",
           correct: false,
           feedbackWrong: "❌ You need the corrected materials for the meeting.",
         },
@@ -295,6 +343,10 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           id: "c",
           labelJa:
             "古いファイルは使わず、会議前に差し替えられる修正版を待つ／使う。",
+          reading:
+            "ふるい ファイル は つかわず、 かいぎまえ に さしかえられる しゅうせいばん を まつ／つかう。",
+          labelEn:
+            "Don’t use the old file — wait for / use the corrected version before the meeting.",
           correct: true,
           feedbackCorrect:
             "✅ Don’t use the old file; a corrected version will replace it before the meeting.",
@@ -319,6 +371,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
           id: "a",
           labelJa:
             "ありがとうございます。これからも分からないことがあれば確認するようにします。",
+          reading:
+            "ありがとう ございます。これから も わからない こと が あれば かくにん する ように します。",
           labelEn:
             "Thank you. I’ll keep checking whenever something isn’t clear.",
           correct: true,
@@ -328,6 +382,7 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
         {
           id: "b",
           labelJa: "もう全部分かってます。問題ないです。",
+          reading: "もう ぜんぶ わかって ます。もんだい ない です。",
           labelEn: "I already understand everything. No issues.",
           correct: false,
           feedbackWrong: "❌ Overconfident — the point is to keep confirming.",
@@ -346,6 +401,8 @@ export const SOCIAL_LIFE_CHALLENGE_QUEST: QuestDefinition = {
       kind: "outro",
       promptJa:
         "社会生活チャレンジ、クリア。確認する力で一日を乗り越えた。次は人間関係の章へ——近日公開。",
+      promptReading:
+        "しゃかいせいかつ チャレンジ、 クリア。かくにん する ちから で いちにち を のりこえた。つぎ は にんげんかんけい の しょう へ——きんじつ こうかい。",
       promptEn:
         "Chapter 2 clear. You survived a full social day by listening, confirming, and staying honest.\n\nComing next: 第3章・人間関係 — Work, Friends & Relationships.",
       costsConfidence: false,

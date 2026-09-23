@@ -1,5 +1,6 @@
 import { recordVocabQuizAnswer } from "../../utils/vocabQuizStats";
 import type { QuestChoice, QuestRunMistake, QuestStep } from "../types";
+import { withQuestStepGuidance } from "./questFeedbackSpeech";
 
 export type StepAnswerResult = {
   correct: boolean;
@@ -29,10 +30,13 @@ export function evaluateChoiceAnswer(
     step.kind !== "intro" &&
     step.kind !== "outro";
 
-  const feedback = correct
-    ? selected?.feedbackCorrect ?? "✅ Correct"
-    : selected?.feedbackWrong ??
-      `❌ Not quite.\n\nBetter: ${correctChoice?.labelJa ?? ""}`;
+  const feedback = withQuestStepGuidance(
+    correct
+      ? selected?.feedbackCorrect ?? "✅ Correct"
+      : selected?.feedbackWrong ??
+        `❌ Not quite.\n\nBetter: ${correctChoice?.labelJa ?? ""}`,
+    correct
+  );
 
   const result: StepAnswerResult = {
     correct,

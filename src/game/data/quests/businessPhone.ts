@@ -15,6 +15,7 @@ export const BUSINESS_PHONE_CONVERSATION: ConversationDefinition = {
     {
       id: "incoming",
       japanese: "オフィスで外線が鳴っています。出てください。",
+      reading: "オフィス で がいせん が なっています でて ください",
       english:
         "An outside line is ringing at the office.\n\nAnswer like a company receptionist — listen carefully; details will matter later.",
       nextNodeId: "answer",
@@ -23,6 +24,7 @@ export const BUSINESS_PHONE_CONVERSATION: ConversationDefinition = {
     {
       id: "answer",
       japanese: "受話器を取りました。最初の一言は？",
+      reading: "じゅわき を とりました さいしょ の ひとこと は",
       english: "You pick up. What’s the opening line?",
       objectiveType: "social-choice",
       socialContext: "external-caller",
@@ -183,6 +185,7 @@ export const BUSINESS_PHONE_CONVERSATION: ConversationDefinition = {
     {
       id: "back-on-line",
       japanese: "保留を解除しました。相手が待っています。",
+      reading: "ほりゅう を かいじょ しました あいて が まって います",
       english: "You’re back on the line. The caller is waiting.",
       nextNodeId: "unavailable",
       speech: { autoPlay: true, language: "en" },
@@ -570,6 +573,7 @@ export const BUSINESS_PHONE_CONVERSATION: ConversationDefinition = {
     {
       id: "hang-up",
       japanese: "通話終了。みかが伝言の確認に来ました。",
+      reading: "つうわ しゅうりょう みか が でんごん の かくにん に きました",
       english:
         "Call ended. Mika comes over to check the message — no peeking at the caller’s lines.",
       nextNodeId: "recall",
@@ -658,6 +662,7 @@ export const BUSINESS_PHONE_CONVERSATION: ConversationDefinition = {
     {
       id: "success",
       japanese: "伝言メモ完了。ビジネス電話、クリアです。",
+      reading: "でんごん メモ かんりょう ビジネス でんわ クリア です",
       english:
         "Message logged. You handled an external business call — hold, unavailable status, and recall under pressure.",
       endState: "success",
@@ -670,6 +675,7 @@ export const BUSINESS_PHONE_QUEST: QuestDefinition = {
   id: "business-phone",
   title: "Business Phone Call",
   japaneseTitle: "電話を受ける",
+  japaneseTitleReading: "でんわ を うける",
   locationId: "office",
   chapter: 4,
   description:
