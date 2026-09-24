@@ -13,10 +13,10 @@
 export const SPEECH_EN_CHAIN_PAUSE_MS = 200;
 
 /**
- * English semicolon breath (`arising from; stemming from`).
- * Short gloss-list beat for all EN TTS (including mixed JP/EN lines).
+ * English semicolon breath (`Nursery school; daycare center`).
+ * Short gloss-list beat — lighter than the general EN chain pause.
  */
-export const SPEECH_EN_SEMICOLON_PAUSE_MS = 100;
+export const SPEECH_EN_SEMICOLON_PAUSE_MS = 50;
 
 /**
  * English colon breath (`meaning: to prepare in advance`).

@@ -1,4 +1,8 @@
-import { speechService, SPEECH_RATE_NORMAL } from "../../services/speechService";
+import {
+  speechService,
+  SPEECH_RATE_NORMAL,
+  type SpeechHighlight,
+} from "../../services/speechService";
 import type { WordRelation } from "../../types/wordRelation";
 import { splitNuanceForSpeech } from "../../utils/nuanceSpeech";
 
@@ -15,29 +19,45 @@ export function playRelationSequence(
   _session: number,
   isAlive: () => boolean,
   onPart: (part: RelationPlayPart | null) => void,
-  onComplete: () => void
+  onComplete: () => void,
+  onHighlight: (h: SpeechHighlight | null) => void = () => {}
 ): void {
   const finish = () => {
     if (!isAlive()) return;
+    onHighlight(null);
     onPart(null);
     onComplete();
   };
 
   const speakJa = (
-    text: string,
+    surface: string,
+    reading: string | undefined,
     part: RelationPlayPart,
     onEnd: () => void
   ) => {
     if (!isAlive()) return;
-    if (!text.trim()) {
+    const text = surface.trim();
+    if (!text) {
       onEnd();
       return;
     }
     onPart(part);
+    onHighlight(null);
     speechService.speakJapanese(
       text,
-      { onEnd, onError: finish },
-      SPEECH_RATE_NORMAL
+      {
+        onBoundary: (h) => {
+          if (!isAlive()) return;
+          onHighlight(h);
+        },
+        onEnd: () => {
+          onHighlight(null);
+          onEnd();
+        },
+        onError: finish,
+      },
+      SPEECH_RATE_NORMAL,
+      reading?.trim() ? { reading: reading.trim() } : undefined
     );
   };
 
@@ -47,14 +67,26 @@ export function playRelationSequence(
     onEnd: () => void
   ) => {
     if (!isAlive()) return;
-    if (!text.trim()) {
+    const trimmed = text.trim();
+    if (!trimmed) {
       onEnd();
       return;
     }
     onPart(part);
+    onHighlight(null);
     speechService.speakEnglish(
-      text,
-      { onEnd, onError: finish },
+      trimmed,
+      {
+        onBoundary: (h) => {
+          if (!isAlive()) return;
+          onHighlight(h);
+        },
+        onEnd: () => {
+          onHighlight(null);
+          onEnd();
+        },
+        onError: finish,
+      },
       SPEECH_RATE_NORMAL
     );
   };
@@ -66,14 +98,22 @@ export function playRelationSequence(
       return;
     }
 
+    let cursor = 0;
+    const located = segments.map((segment) => {
+      const start = nuance.indexOf(segment.text, cursor);
+      const resolved = start >= 0 ? start : cursor;
+      cursor = resolved + segment.text.length;
+      return { ...segment, start: resolved };
+    });
+
     const run = (index: number) => {
       if (!isAlive()) return;
-      if (index >= segments.length) {
+      if (index >= located.length) {
         onEnd();
         return;
       }
 
-      const segment = segments[index]!;
+      const segment = located[index]!;
       const text = segment.text.trim();
       if (!text) {
         run(index + 1);
@@ -81,17 +121,36 @@ export function playRelationSequence(
       }
 
       onPart("nuance");
-      const advance = () => run(index + 1);
+      onHighlight(null);
+      const trimStart = segment.text.indexOf(text);
+      const offset = segment.start + (trimStart >= 0 ? trimStart : 0);
+      const advance = () => {
+        onHighlight(null);
+        run(index + 1);
+      };
+      const mapBoundary = (h: SpeechHighlight) => {
+        if (!isAlive()) return;
+        onHighlight({ start: h.start + offset, end: h.end + offset });
+      };
+
       if (segment.lang === "ja") {
         speechService.speakJapanese(
           text,
-          { onEnd: advance, onError: finish },
+          {
+            onBoundary: mapBoundary,
+            onEnd: advance,
+            onError: finish,
+          },
           SPEECH_RATE_NORMAL
         );
       } else {
         speechService.speakEnglish(
           text,
-          { onEnd: advance, onError: finish },
+          {
+            onBoundary: mapBoundary,
+            onEnd: advance,
+            onError: finish,
+          },
           SPEECH_RATE_NORMAL
         );
       }
@@ -101,12 +160,14 @@ export function playRelationSequence(
   };
 
   speakJa(
-    relation.word1.reading || relation.word1.japanese,
+    relation.word1.japanese,
+    relation.word1.reading,
     "word1-jp",
     () =>
       speakEn(relation.word1.meaning, "word1-en", () =>
         speakJa(
-          relation.word2.reading || relation.word2.japanese,
+          relation.word2.japanese,
+          relation.word2.reading,
           "word2-jp",
           () =>
             speakEn(relation.word2.meaning, "word2-en", () => {

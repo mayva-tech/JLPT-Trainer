@@ -1043,14 +1043,14 @@ button.ppq-log-item:focus-visible {
 /* Karaoke on dark RPG surfaces — same timing classes as Play/Quiz */
 .ppq-root .speech-active {
   color: var(--ppq-ink) !important;
-  background: rgba(232, 165, 75, 0.45);
+  background: rgba(168, 108, 38, 0.5);
   border-radius: 0.1em;
 }
 
 /* player.css forces #000 on furigana active cells — invisible on dark quest UI */
 .ppq-root .furigana-wrap .furi-cell.speech-active {
   color: var(--ppq-ink) !important;
-  background: rgba(232, 165, 75, 0.45);
+  background: rgba(168, 108, 38, 0.5);
   opacity: 1;
   border-radius: 0.12em;
 }

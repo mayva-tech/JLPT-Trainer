@@ -144,14 +144,16 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
   }, []);
 
   /**
-   * Speak JP with karaoke. When `reading` (full kana) is available, feed it
-   * as a single-token "reading" so `buildJapaneseSpeakText` uses it for audio
-   * and `forceFallback` kicks in for surface-text-weighted karaoke timing.
+   * Speak JP with karaoke. Pass kana `reading` for kanji lines. Skip it when
+   * the surface still has ASCII digits — Nanami must expand those via
+   * `splitDigitsForTTS` (いち に さん よん); glued kana readings race karaoke.
    */
-  const speakJpSolo = useCallback((text: string, id: string, _reading?: string) => {
+  const speakJpSolo = useCallback((text: string, id: string, reading?: string) => {
     setSoloId(id);
     setSoloLang("ja");
     setSoloHighlight(null);
+    const useReading =
+      reading?.trim() && !/\d/.test(text) ? { reading: reading.trim() } : undefined;
     speechService.speakJapanese(
       text,
       {
@@ -159,7 +161,8 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
         onEnd: () => { setSoloId(null); setSoloLang(null); setSoloHighlight(null); },
         onError: () => { setSoloId(null); setSoloLang(null); setSoloHighlight(null); },
       },
-      SPEECH_RATE_NORMAL
+      SPEECH_RATE_NORMAL,
+      useReading
     );
   }, []);
 
@@ -237,10 +240,14 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
     const lines = scenario.dialogue;
     let i = 0;
 
-    const doSpeakJp = (text: string, _reading: string): Promise<void> =>
+    const doSpeakJp = (text: string, reading: string): Promise<void> =>
       new Promise((resolve) => {
         setActiveKind("jp");
         setHighlight(null);
+        const useReading =
+          reading?.trim() && !/\d/.test(text)
+            ? { reading: reading.trim() }
+            : undefined;
         speechService.speakJapanese(
           text,
           {
@@ -248,7 +255,8 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
             onEnd: () => resolve(),
             onError: () => resolve(),
           },
-          SPEECH_RATE_NORMAL
+          SPEECH_RATE_NORMAL,
+          useReading
         );
       });
 

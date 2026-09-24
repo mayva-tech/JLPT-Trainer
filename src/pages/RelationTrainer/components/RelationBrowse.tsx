@@ -1,7 +1,13 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { speechService } from "../../../services/speechService";
+import {
+  speechService,
+  type SpeechHighlight,
+} from "../../../services/speechService";
 import type { RelationStatus, WordRelation } from "../../../types/wordRelation";
-import { playRelationSequence } from "../relationPlayback";
+import {
+  playRelationSequence,
+  type RelationPlayPart,
+} from "../relationPlayback";
 import { RelationPairCard } from "./RelationPairCard";
 
 interface Props {
@@ -22,6 +28,9 @@ export function RelationBrowse({
   const playSessionRef = useRef(0);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [playingAll, setPlayingAll] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [playPart, setPlayPart] = useState<RelationPlayPart | null>(null);
+  const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
 
   const shown = useMemo(
     () => relations.slice(0, visible),
@@ -32,6 +41,9 @@ export function RelationBrowse({
     playSessionRef.current += 1;
     speechService.stop();
     setPlayingAll(false);
+    setActiveId(null);
+    setPlayPart(null);
+    setHighlight(null);
   }, []);
 
   const playAll = useCallback(() => {
@@ -44,6 +56,7 @@ export function RelationBrowse({
     speechService.stop();
     const session = ++playSessionRef.current;
     setPlayingAll(true);
+    setHighlight(null);
 
     const run = (cardIndex: number) => {
       if (session !== playSessionRef.current) return;
@@ -52,11 +65,14 @@ export function RelationBrowse({
         stopAll();
         return;
       }
+      setActiveId(item.id);
+      setPlayPart(null);
+      setHighlight(null);
       playRelationSequence(
         item,
         session,
         () => session === playSessionRef.current,
-        () => {},
+        setPlayPart,
         () => {
           if (session !== playSessionRef.current) return;
           const next = cardIndex + 1;
@@ -65,7 +81,8 @@ export function RelationBrowse({
             return;
           }
           run(next);
-        }
+        },
+        setHighlight
       );
     };
 
@@ -105,6 +122,12 @@ export function RelationBrowse({
             status={statusOf(relation.id)}
             onToggleLearning={onToggleLearning}
             onToggleLearned={onToggleLearned}
+            playOverride={
+              playingAll && activeId === relation.id
+                ? { part: playPart, highlight }
+                : null
+            }
+            onStopExternal={playingAll ? stopAll : undefined}
           />
         ))}
       </div>

@@ -75,4 +75,34 @@ describe("QuizAutoRunner.start startAt", () => {
     expect(ui.indices.includes(0)).toBe(false);
     expect(ui.indices.includes(1)).toBe(false);
   });
+
+  it("locks every quiz TTS pass at 1.25× while fast is preferred", async () => {
+    const { SPEECH_RATE_FAST } = await import("./speechService");
+    const rates: number[] = [];
+    const setRates: number[] = [];
+    vi.spyOn(speechService, "speakJapanese").mockImplementation(
+      (_text, cbs, rate) => {
+        rates.push(rate ?? 0);
+        queueMicrotask(() => cbs?.onEnd?.());
+      }
+    );
+
+    const runner = new QuizAutoRunner();
+    const ui = makeUi();
+    ui.getPreferredSpeechRate = () => SPEECH_RATE_FAST;
+    ui.setSpeechRate = (rate: number) => {
+      setRates.push(rate);
+    };
+    const deck = [makeQuestion(1, "賞味期限")];
+
+    const started = runner.start(deck, ui, () => {}, 0);
+    await vi.waitFor(() => {
+      expect(rates.length).toBeGreaterThan(0);
+    });
+    runner.abort();
+    await started;
+
+    expect(rates.every((r) => r === SPEECH_RATE_FAST)).toBe(true);
+    expect(setRates.every((r) => r === SPEECH_RATE_FAST)).toBe(true);
+  });
 });

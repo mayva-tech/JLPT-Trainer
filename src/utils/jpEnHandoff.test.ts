@@ -13,7 +13,7 @@ import { scheduleAfterLanguageHandoff } from "./jpEnHandoff";
 describe("speechTiming targets", () => {
   it("uses near-natural differentiated pauses", () => {
     expect(SPEECH_EN_CHAIN_PAUSE_MS).toBe(200);
-    expect(SPEECH_EN_SEMICOLON_PAUSE_MS).toBe(100);
+    expect(SPEECH_EN_SEMICOLON_PAUSE_MS).toBe(50);
     expect(SPEECH_COMMA_PAUSE_MS).toBe(80);
     expect(SPEECH_JA_SENTENCE_PAUSE_MS).toBe(60);
     // JA 、 adds no real silence — independent of the EN comma breath above,

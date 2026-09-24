@@ -36,7 +36,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       promptReading:
         "あさ から ねつっぽくて、 のど も いたみます。きんじょ の クリニック に きました。",
       promptEn:
-        "You’ve felt feverish since this morning, and your throat hurts.\n\nYou arrive at the neighborhood clinic. Time to get seen — in Japanese.",
+        "You’ve felt feverish since this morning, and your throat hurts.\n\nYou arrive at the neighborhood clinic. Time to get a medical exam — in Japanese.",
       costsConfidence: false,
     },
     {
@@ -46,7 +46,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       npcId: "mori-clinic",
       promptJa: "今日はどうされましたか。",
       promptReading: "きょう は どう されました か。",
-      promptEn: "Mori at reception greets you. How do you ask to be examined?",
+      promptEn: "At reception, Mori greets you. How do you ask for a medical exam?",
       skillHint: "conversation",
       vocabHint: "受診",
       helpHint: "受診する = to see a doctor / receive a medical exam.",
@@ -87,7 +87,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
       promptReading: "うけつけ の はなし を きいて ください。",
       promptEn: "Listen. What is reception asking for?",
       listenText: "保険証かマイナンバーカードをお持ちですか。",
-      listenReading: "ほけんしょう か マイナンバーカード を おもち です か。",
+      listenReading: "ほけん しょう か、 マイナンバーカード を おもち です か。",
       skillHint: "listening",
       vocabHint: "保険証",
       speech: { karaokeMode: "after-answer", autoPlay: true },
@@ -98,7 +98,7 @@ export const CLINIC_VISIT_QUEST: QuestDefinition = {
           id: "a",
           labelJa: "保険証かマイナンバーカードを見せてほしい。",
           reading:
-            "ほけんしょう か マイナンバーカード を みせて ほしい。",
+            "ほけん しょう か、 マイナンバーカード を みせて ほしい。",
           labelEn: "They want to see your insurance card or My Number Card.",
           correct: true,
           feedbackCorrect:

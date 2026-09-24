@@ -64,7 +64,7 @@ function speakParticleKana(kana: string): string {
   if (!kana) return kana;
 
   // Normalize katakana (カード) to hiragana before particle rewrite / ー expand
-  // so TTS audio and karaoke spokenText share one script (かあど, not カあド).
+  // so TTS audio and karaoke spokenText share one script (かど, not カあド).
   let out = [...kana]
     .map((ch) => {
       const code = ch.codePointAt(0)!;
@@ -125,6 +125,9 @@ function speakParticleKana(kana: string): string {
   // Remaining へ is the consonant mora (部屋→へや, 変→へん). Hiragana へ is
   // often voiced as particle "e" by ja-JP synthesis; katakana ヘ keeps "he".
   out = out.replace(/へ/g, "ヘ");
+
+  // カード: expanding ー → あ makes Nanami say "ka-ado"; speak かど (ka-do).
+  out = out.replace(/かーど/g, "かど");
 
   return expandChoonpu(out);
 }

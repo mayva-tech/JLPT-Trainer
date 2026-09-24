@@ -107,10 +107,52 @@ export type EnglishSemicolonClause = EnglishClauseSplit;
 const ENGLISH_CLAUSE_TRAILING_PUNCT = /[;,.!?—–]+$/u;
 
 /**
+ * Title / honorific abbreviations whose `.` is not a sentence end
+ * (`Dr. Nakamura` must stay one utterance — no pause after Doctor).
+ */
+const ENGLISH_TITLE_ABBREVIATIONS = new Set([
+  "mr",
+  "mrs",
+  "ms",
+  "dr",
+  "prof",
+  "mt",
+  "st",
+  "jr",
+  "sr",
+  "vs",
+  "etc",
+  "approx",
+  "no",
+  "fig",
+  "dept",
+  "inc",
+  "ltd",
+  "co",
+  "gen",
+  "sgt",
+  "cpl",
+  "lt",
+  "col",
+  "rev",
+]);
+
+/** True when `periodIndex` is the `.` of `Dr.` / `Mr.` / `Ms.` / … */
+function isEnglishTitleAbbreviationPeriod(
+  text: string,
+  periodIndex: number
+): boolean {
+  if (text[periodIndex] !== ".") return false;
+  const before = text.slice(0, periodIndex);
+  const m = before.match(/([A-Za-z]+)\s*$/);
+  if (!m?.[1]) return false;
+  return ENGLISH_TITLE_ABBREVIATIONS.has(m[1].toLowerCase());
+}
+
+/**
  * Collect clause ends: every `;`, em/en dash (`—` / `–`), newline (quest tip
  * title/body), and `.` / `!` / `?` before a new sentence (space + capital /
- * quote). Skips decimals like `1.5`. Dashes/newlines consume trailing spaces
- * so the next clause starts on the next word.
+ * quote). Skips decimals like `1.5` and title abbreviations like `Dr. Name`.
  */
 function findEnglishClauseBreakEnds(text: string): number[] {
   const ends = new Set<number>();
@@ -127,7 +169,10 @@ function findEnglishClauseBreakEnds(text: string): number[] {
     ends.add(m.index + m[0].length);
   }
   for (const m of text.matchAll(/(?<!\d)[.!?](?=\s+["'“‘(]*[A-Z0-9])/g)) {
-    ends.add(m.index + 1);
+    if (m[0] === "." && isEnglishTitleAbbreviationPeriod(text, m.index!)) {
+      continue;
+    }
+    ends.add(m.index! + 1);
   }
   return [...ends].sort((a, b) => a - b);
 }
@@ -370,6 +415,27 @@ function appendSlashSpeakPause(text: string): string {
  * "Mt Fuji" / "Mt." — Andrew spells "M-T" unless expanded to "Mount".
  * Display text stays "Mt"; only the spoken string changes.
  */
+/**
+ * Title abbreviations Andrew otherwise spells letter-by-letter (D-R).
+ * Display / karaoke surface stays `Dr.`; only the speak string expands.
+ */
+function expandTitleAbbreviations(text: string): string {
+  const titles: Array<[RegExp, string]> = [
+    [/\bMrs\b\.?/gi, "missus"],
+    [/\bMs\b\.?/gi, "miss"],
+    [/\bMr\b\.?/gi, "mister"],
+    [/\bDr\b\.?/gi, "doctor"],
+    [/\bProf\b\.?/gi, "professor"],
+  ];
+  let out = text;
+  for (const [re, spoken] of titles) {
+    out = out.replace(re, (match) =>
+      applyCase(match.replace(/\.$/, ""), spoken)
+    );
+  }
+  return out;
+}
+
 function expandMountAbbreviation(text: string): string {
   // `\b` between "Mt" and "." so match "Mt" then consume the abbrev period.
   return text.replace(/\bMt\b\.?/gi, (match) =>
@@ -413,13 +479,15 @@ function expandSpokenClockTimes(text: string): string {
 }
 
 export function buildEnglishSpeakText(text: string): string {
-  let out = expandMountAbbreviation(
-    appendSlashSpeakPause(
-      appendWaveDashSpeakPause(
-        expandSpokenPercents(
-          expandSpokenMoney(
-            expandSpokenClockTimes(
-              expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+  let out = expandTitleAbbreviations(
+    expandMountAbbreviation(
+      appendSlashSpeakPause(
+        appendWaveDashSpeakPause(
+          expandSpokenPercents(
+            expandSpokenMoney(
+              expandSpokenClockTimes(
+                expandJapaneseInEnglish(rewriteParentheticalNotes(text))
+              )
             )
           )
         )

@@ -5,20 +5,20 @@
    All rules are scoped under .jt-root. */
 
 .jt-root {
-  --jt-night: #0c1a2b;
+  --jt-night: #1a2332;
   --jt-panel: rgba(255, 255, 255, 0.04);
-  --jt-line-faint: rgba(255, 255, 255, 0.1);
-  --jt-board: #f7f7f4;
-  --jt-ink: #14181d;
-  --jt-line: #4f9d5d; /* overridden per deck */
+  --jt-line-faint: #3d4d66;
+  --jt-board: #2a374d;
+  --jt-ink: #f3f0e8;
+  --jt-line: #5cb88a; /* overridden per deck */
   --jt-sans: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', system-ui, sans-serif;
   --jt-sign: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
 
   max-width: 560px;
   margin: 0 auto;
   padding: 18px 14px 48px;
-  background: var(--jt-night);
-  color: #e8edf3;
+  background: var(--stage-band);
+  color: #f3f0e8;
   font-family: var(--jt-sans);
   min-height: 100%;
   box-sizing: border-box;
@@ -333,29 +333,13 @@
 
 .jt-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   font-family: var(--jt-sign);
   font-size: 13px;
   letter-spacing: 1.5px;
   opacity: 0.55;
   margin-bottom: 10px;
-}
-
-.jt-listen {
-  border: 1px solid var(--jt-line-faint);
-  background: var(--jt-panel);
-  color: inherit;
-  border-radius: 999px;
-  padding: 5px 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--jt-sign);
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  opacity: 0.9;
 }
 
 .jt-nav {
@@ -630,8 +614,9 @@
 
 .jt-root ruby > rt {
   font-size: 0.5em;
-  font-weight: 400;
-  opacity: 0.8;
+  font-weight: 600;
+  color: var(--accent-soft, #f0c078);
+  opacity: 1;
   letter-spacing: 0;
 }
 

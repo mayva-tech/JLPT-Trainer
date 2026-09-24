@@ -2,22 +2,22 @@
    JLPT Trainer app. */
 
 .fm-root {
-  --fm-shell: #101215;
-  --fm-panel: rgba(255, 255, 255, 0.03);
-  --fm-line: rgba(255, 255, 255, 0.08);
-  --fm-paper: #f3eee2;
-  --fm-ink: #17130d;
-  --fm-mint: #2c9d78;
-  --fm-mint-deep: #1d6b53;
-  --fm-amber: #f2b134;
+  --fm-shell: #1a2332;
+  --fm-panel: rgba(255, 255, 255, 0.04);
+  --fm-line: #3d4d66;
+  --fm-paper: #2a374d;
+  --fm-ink: #f3f0e8;
+  --fm-mint: #5cb88a;
+  --fm-mint-deep: #3d8f6a;
+  --fm-amber: #e8a54b;
   --fm-mono: ui-monospace, 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
   --fm-jp: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', system-ui, sans-serif;
 
   max-width: 560px;
   margin: 0 auto;
   padding: 18px 14px 48px;
-  background: var(--fm-shell);
-  color: #eceff2;
+  background: var(--stage-band);
+  color: #f3f0e8;
   font-family: var(--fm-jp);
   min-height: 100%;
   box-sizing: border-box;
@@ -194,12 +194,12 @@
 
 .fm-card .fm-jp.fm-speaking,
 .fm-card .fm-en.fm-speaking {
-  color: var(--fm-mint-deep);
+  color: var(--fm-amber);
 }
 
 .fm-bubblewrap.left .fm-jp.fm-speaking,
 .fm-bubblewrap.left .fm-en.fm-speaking {
-  color: var(--fm-mint-deep);
+  color: var(--fm-amber);
 }
 
 .fm-bubblewrap.right .fm-jp.fm-speaking,
@@ -217,7 +217,7 @@
 .fm-cardtop {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 8px;
 }
 
@@ -295,20 +295,6 @@
   font-size: 13px;
   letter-spacing: 1px;
   opacity: 0.5;
-}
-
-.fm-speak {
-  border: 1px solid var(--fm-line);
-  background: var(--fm-panel);
-  color: inherit;
-  border-radius: 999px;
-  padding: 5px 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--fm-mono);
-  font-size: 13px;
-  letter-spacing: 0.5px;
 }
 
 .fm-nav {
@@ -559,8 +545,9 @@
 
 .fm-root ruby > rt {
   font-size: 0.5em;
-  font-weight: 400;
-  opacity: 0.8;
+  font-weight: 600;
+  color: var(--accent-soft, #f0c078);
+  opacity: 1;
   letter-spacing: 0;
 }
 

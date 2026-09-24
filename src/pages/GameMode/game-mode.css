@@ -336,7 +336,7 @@
 }
 
 .gm-root .furigana-wrap .furi-reading {
-  color: #c7d2fe;
+  color: var(--accent-soft, #f0c078);
 }
 
 .gm-qcard-en,
@@ -425,7 +425,7 @@
 /* Karaoke on Game Mode dark cards */
 .gm-root .speech-active {
   color: #fff !important;
-  background: rgba(251, 191, 36, 0.45);
+  background: rgba(178, 120, 38, 0.5);
   border-radius: 0.1em;
 }
 

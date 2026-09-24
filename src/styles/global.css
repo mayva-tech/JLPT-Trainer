@@ -1,12 +1,34 @@
 :root {
-  --bg: #f7f8fa;
-  --text: #000;
-  --text-soft: #000;
-  --text-softer: #9ca3af;
-  --accent: #1e3a8a;
-  --accent-chip: #e2e8f4;
-  --reading-color: #000;
-  --sentence-color: #000;
+  /* Perapera Quest palette — shared by Player stage + app chrome */
+  --bg: #1a2332;
+  --bg-soft: #243044;
+  --card: #2a374d;
+  --text: #f3f0e8;
+  --text-soft: #c4cad6;
+  --text-softer: #a8b0c0;
+  --accent: #e8a54b;
+  --accent-soft: #f0c078;
+  --accent-chip: rgba(232, 165, 75, 0.16);
+  --accent-ink: #1a1510;
+  --line: #3d4d66;
+  --good: #5cb88a;
+  --bad: #d97a6c;
+  --reading-color: #f0c078;
+  --sentence-color: #f3f0e8;
+  --border: #3d4d66;
+  --panel-bg: #243044;
+
+  /* Lighter upper band → dark lower (Player stage + all trainer modes) */
+  --stage-band:
+    radial-gradient(90% 70% at 18% 0%, rgba(232, 165, 75, 0.12), transparent 62%),
+    radial-gradient(80% 65% at 88% 5%, rgba(92, 140, 180, 0.16), transparent 58%),
+    linear-gradient(
+      180deg,
+      #2a374d 0%,
+      #243044 42%,
+      #1a2332 68%,
+      #121a26 100%
+    );
 
   --font-jp: "Yu Gothic", "YuGothic", "Meiryo",
     "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
@@ -28,7 +50,8 @@ body,
 }
 
 body {
-  background: #0e1116;
+  background: var(--stage-band);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-en);
   -webkit-font-smoothing: antialiased;
@@ -53,8 +76,8 @@ body {
   gap: 8px;
   align-items: center;
   padding: 6px 10px;
-  background: #161a22;
-  border-bottom: 1px solid #2a3140;
+  background: #15202e;
+  border-bottom: 1px solid var(--line);
   z-index: 20;
 }
 
@@ -65,10 +88,10 @@ body {
   gap: 1px;
   font-family: var(--font-en);
   padding: 5px 11px;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: #3a4452;
-  color: #e5e7eb;
+  background: var(--bg-soft);
+  color: var(--text-softer);
   cursor: pointer;
   line-height: 1.15;
 }
@@ -85,13 +108,14 @@ body {
 }
 
 .app-nav-btn:hover {
-  background: #4b5563;
+  border-color: var(--accent-soft);
+  color: var(--text);
 }
 
 .app-nav-btn--active {
-  background: #1e3a8a;
-  border-color: #1e40af;
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .app-nav-btn--active .app-nav-jp {

@@ -2,6 +2,7 @@ import { quizTiming as T } from "../config/quizTiming";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
+  resolveAutoModeSpeechRate,
   type SpeechHighlight,
 } from "./speechService";
 import type { VocabularyQuizQuestion } from "../types/vocabularyQuiz";
@@ -32,6 +33,8 @@ export type QuizAutoUi = {
   setShowReading: (show: boolean) => void;
   setShowFurigana: (show: boolean) => void;
   setSpeechRate: (rate: number) => void;
+  /** Current chrome rate — when 1.25×, quiz TTS stays locked at fast. */
+  getPreferredSpeechRate?: () => number;
   setSpeechLang: (lang: "ja" | "en" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setJaHighlight: (h: SpeechHighlight | null) => void;
@@ -102,17 +105,17 @@ export class QuizAutoRunner {
     }
   }
 
+  private rateFor(ui: QuizAutoUi, scripted = SPEECH_RATE_NORMAL): number {
+    return resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), scripted);
+  }
+
   private async playRevealSequence(
     ui: QuizAutoUi,
     question: VocabularyQuizQuestion,
     sid: number
   ): Promise<void> {
-    await this.speakEnglish(
-      ui,
-      question.item.meaning,
-      SPEECH_RATE_NORMAL,
-      sid
-    );
+    const rate = this.rateFor(ui);
+    await this.speakEnglish(ui, question.item.meaning, rate, sid);
     if (!this.shouldContinue(sid)) return;
 
     const example = getQuizExample(question);
@@ -122,14 +125,14 @@ export class QuizAutoRunner {
     if (!this.shouldContinue(sid)) return;
 
     ui.setPhase("example");
-    ui.setSpeechRate(SPEECH_RATE_NORMAL);
+    ui.setSpeechRate(rate);
     ui.setJaHighlight(null);
     ui.setEnHighlight(null);
 
     await this.speakJapanese(
       ui,
       example.text,
-      SPEECH_RATE_NORMAL,
+      rate,
       sid,
       example.reading
     );
@@ -139,7 +142,7 @@ export class QuizAutoRunner {
       await this.pause(T.revealPause, sid);
       if (!this.shouldContinue(sid)) return;
 
-      await this.speakEnglish(ui, example.meaning, SPEECH_RATE_NORMAL, sid);
+      await this.speakEnglish(ui, example.meaning, rate, sid);
       if (!this.shouldContinue(sid)) return;
     }
 
@@ -149,7 +152,7 @@ export class QuizAutoRunner {
     await this.speakJapanese(
       ui,
       example.text,
-      SPEECH_RATE_NORMAL,
+      rate,
       sid,
       example.reading
     );
@@ -181,19 +184,20 @@ export class QuizAutoRunner {
         }
 
         const question = items[i]!;
+        const rate = this.rateFor(ui);
 
         ui.setQuizIndex(i);
         ui.setSelectedChoiceIndex(null);
         ui.setPhase("asking");
         ui.setShowReading(!shouldHideReadingOnAsk(question));
         ui.setShowFurigana(false);
-        ui.setSpeechRate(SPEECH_RATE_NORMAL);
+        ui.setSpeechRate(rate);
         this.clearSpeechUi(ui);
 
         await this.speakJapanese(
           ui,
           question.promptText,
-          SPEECH_RATE_NORMAL,
+          rate,
           sid,
           question.item.reading
         );
@@ -224,13 +228,14 @@ export class QuizAutoRunner {
           break;
         }
 
+        const closeRate = this.rateFor(ui);
         ui.setShowFurigana(true);
         ui.setShowReading(true);
-        ui.setSpeechRate(SPEECH_RATE_NORMAL);
+        ui.setSpeechRate(closeRate);
         await this.speakJapanese(
           ui,
           question.item.word,
-          SPEECH_RATE_NORMAL,
+          closeRate,
           sid,
           question.item.reading
         );

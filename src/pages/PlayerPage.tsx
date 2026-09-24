@@ -543,6 +543,7 @@ export function PlayerPage() {
       setShowReading: setQuizShowReading,
       setShowFurigana,
       setSpeechRate,
+      getPreferredSpeechRate: () => speechRateRef.current,
       setSpeechLang,
       setSpeechStatus,
       setJaHighlight,
@@ -738,7 +739,22 @@ export function PlayerPage() {
       }
       return;
     }
-    startQuizAuto();
+
+    const phase = quizPhaseRef.current;
+    // Finished / after-comment: full restart from the top.
+    if (phase === "after" || phase === "finished") {
+      startQuizAuto();
+      return;
+    }
+
+    // Start on the item currently on screen (vocab or grammar quiz).
+    if (quizDeckRef.current.length === 0) {
+      reshuffleQuizDeck(quizItemsRef.current, activeTocId);
+    }
+    if (quizDeckRef.current.length === 0) return;
+
+    const startAt = phase === "pre" ? 0 : quizIndexRef.current;
+    startQuizAuto({ startAt, skipPre: true, keepDeck: true });
   }
 
   function onQuizSelectChoice(choiceIndex: number) {
@@ -2522,36 +2538,6 @@ export function PlayerPage() {
     }
   }
 
-  const hintAutoState =
-    screen === "grammar"
-      ? grammarAutoState
-      : screen === "lesson"
-        ? autoState
-        : "off";
-
-  const speechHint =
-    flowActive
-      ? `Video flow ${flowPos + 1}/${flowQueue.length} · controls stay live`
-      : quizAutoOn
-        ? "QUIZ AUTO ON · Q or ■ Stop"
-        : screen === "quiz"
-          ? quizPhase === "pre"
-            ? "QUIZ AUTO OFF · ▶ Play or Next to start here · Q for full auto"
-            : quizPhase === "after" || quizPhase === "finished"
-              ? "Quiz done · Prev to review · Q to restart auto"
-              : "←→ navigate · ▶ Play from here · ↑ JP · ↓ EN · E Example · Shift rate · Q full auto"
-      : hintAutoState === "on"
-        ? "Auto ON · A to stop after current audio"
-        : hintAutoState === "stopping"
-          ? "Auto stopping after audio…"
-          : speechStatus === "speaking" && speechLang === "ja"
-            ? "JP Nanami… (Esc stop)"
-            : speechStatus === "speaking" && speechLang === "en"
-              ? "EN Andrew… (Esc stop)"
-              : screen === "lesson" || screen === "grammar"
-                ? `← → navigate · ↑ JP · ↓ EN · Shift rate · Ctrl あ · A Auto`
-                : "TOC · Intro · Lessons · Quizzes · Ending CTA";
-
   const activeAutoState =
     screen === "grammar" ? grammarAutoState : autoState;
 
@@ -3195,7 +3181,6 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 title="Normal speed (0.80) — Shift cycles"
-                disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_NORMAL)}
               >
                 Normal
@@ -3208,7 +3193,6 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 title="Fast speed (1.25×) — Shift cycles"
-                disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_FAST)}
               >
                 1.25×
@@ -3221,7 +3205,6 @@ export function PlayerPage() {
                     : "rate-btn"
                 }
                 title="Slow speed (0.7) — Shift cycles"
-                disabled={quizAutoOn}
                 onClick={() => setSpeechRate(SPEECH_RATE_SLOW)}
               >
                 Slow
@@ -3256,18 +3239,6 @@ export function PlayerPage() {
           </div>
         </div>
       ) : null}
-
-      <div className="step-indicator" aria-hidden="true">
-        {screen === "lesson" && items.length > 0
-          ? `Step ${stepIndex + 1} of ${STEPS.length} — ${step}`
-          : screen === "grammar" && grammarItems.length > 0
-            ? `Step ${GRAMMAR_STEPS.indexOf(grammarStep) + 1} of ${GRAMMAR_STEPS.length} — ${grammarStep}`
-            : screen === "toc"
-              ? "Table of Contents"
-              : tocItem?.label ?? screen}
-        {" · "}
-        {speechHint}
-      </div>
 
       <div className="nav-bar">
         <button

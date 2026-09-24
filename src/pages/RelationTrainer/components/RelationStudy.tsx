@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WORD_RELATION_TYPE_LABELS } from "../../../data/wordRelations";
-import { speechService } from "../../../services/speechService";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
+import {
+  speechService,
+  type SpeechHighlight,
+} from "../../../services/speechService";
 import type { WordRelation } from "../../../types/wordRelation";
 import {
   playRelationSequence,
@@ -38,9 +42,7 @@ const ChevronRight = () => (
   </svg>
 );
 
-export function RelationStudy({
-  relations,
-}: Props) {
+export function RelationStudy({ relations }: Props) {
   const playSessionRef = useRef(0);
   const [order, setOrder] = useState<string[]>(() =>
     relations.map((relation) => relation.id)
@@ -49,6 +51,7 @@ export function RelationStudy({
   const [playingCard, setPlayingCard] = useState(false);
   const [playingAll, setPlayingAll] = useState(false);
   const [playPart, setPlayPart] = useState<RelationPlayPart | null>(null);
+  const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
 
   const stopAuto = useCallback(() => {
     playSessionRef.current += 1;
@@ -56,6 +59,7 @@ export function RelationStudy({
     setPlayingCard(false);
     setPlayingAll(false);
     setPlayPart(null);
+    setHighlight(null);
   }, []);
 
   useEffect(() => {
@@ -98,6 +102,7 @@ export function RelationStudy({
     const session = ++playSessionRef.current;
     setPlayingAll(false);
     setPlayingCard(true);
+    setHighlight(null);
     playRelationSequence(
       relation,
       session,
@@ -107,7 +112,9 @@ export function RelationStudy({
         if (session !== playSessionRef.current) return;
         setPlayingCard(false);
         setPlayPart(null);
-      }
+        setHighlight(null);
+      },
+      setHighlight
     );
   }, [relation, playingCard, stopAuto]);
 
@@ -122,6 +129,7 @@ export function RelationStudy({
     const session = ++playSessionRef.current;
     setPlayingCard(false);
     setPlayingAll(true);
+    setHighlight(null);
 
     const startIndex = index;
 
@@ -133,6 +141,7 @@ export function RelationStudy({
         return;
       }
       setIndex(cardIndex);
+      setHighlight(null);
       playRelationSequence(
         item,
         session,
@@ -146,7 +155,8 @@ export function RelationStudy({
             return;
           }
           run(next);
-        }
+        },
+        setHighlight
       );
     };
 
@@ -209,6 +219,7 @@ export function RelationStudy({
                 word={relation.word1}
                 activeJp={playPart === "word1-jp"}
                 activeEn={playPart === "word1-en"}
+                highlight={highlight}
               />
               <span className="rt-symbol" aria-hidden="true">
                 {typeLabel.symbol}
@@ -217,6 +228,7 @@ export function RelationStudy({
                 word={relation.word2}
                 activeJp={playPart === "word2-jp"}
                 activeEn={playPart === "word2-en"}
+                highlight={highlight}
               />
             </RelationPair>
             {relation.nuance ? (
@@ -228,7 +240,11 @@ export function RelationStudy({
                 }
               >
                 <span className="rt-nuance-label">Nuance</span>
-                <p>{relation.nuance}</p>
+                <HighlightedEnglish
+                  text={relation.nuance}
+                  className="rt-nuance-body"
+                  highlight={playPart === "nuance" ? highlight : null}
+                />
               </div>
             ) : null}
           </div>

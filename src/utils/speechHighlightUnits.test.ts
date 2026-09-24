@@ -127,10 +127,10 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "en"
     );
     expect(withSemi).toBeGreaterThan(plainSoft);
-    // Semicolon breath targets ~SPEECH_EN_SEMICOLON_PAUSE_MS (100ms), not the
+    // Semicolon breath targets ~SPEECH_EN_SEMICOLON_PAUSE_MS (50ms), not the
     // full 200ms EN chain used for em dash / tip newlines.
-    expect(withSemi - plainSoft).toBeGreaterThanOrEqual(70);
-    expect(withSemi - plainSoft).toBeLessThan(220);
+    expect(withSemi - plainSoft).toBeGreaterThanOrEqual(35);
+    expect(withSemi - plainSoft).toBeLessThan(120);
   });
 
   it("pauses after em dash on the karaoke timeline", () => {
@@ -543,6 +543,19 @@ describe("buildJapaneseHighlightUnits", () => {
     ).toEqual(["冗談", "に", "しても"]);
   });
 
+  it("keeps 起因して as one unit so karaoke does not skip to して", () => {
+    const text = "〜に起因して";
+    const reading = "〜にきいんして";
+    expect(
+      activeHighlightUnits(buildJapaneseHighlightUnits(text)).map((u) => u.text)
+    ).toEqual(["に", "起因して"]);
+    const steps = buildJapaneseSpokenKaraokeSteps(text, reading);
+    expect(steps.map((s) => `${s.text}/${s.spokenText}`)).toEqual([
+      "に/に",
+      "起因して/きいんして",
+    ]);
+  });
+
   it("splits としても / にしては on the same boundary", () => {
     expect(
       activeHighlightUnits(buildJapaneseHighlightUnits("〜としても")).map(
@@ -680,6 +693,32 @@ describe("buildJapaneseHighlightUnits", () => {
 });
 
 describe("estimateUnitDurationMs karaoke breaks", () => {
+  it("dwells phone-number digit runs at per-digit kana length (いち に さん よん)", () => {
+    const text = "1234の5678です。";
+    const steps = buildJapaneseSpokenKaraokeSteps(text, "");
+    const d1234 = steps.find((s) => s.text === "1234");
+    const d5678 = steps.find((s) => s.text === "5678");
+    expect(d1234?.spokenText).toBe("いち に さん よん");
+    expect(d5678?.spokenText).toBe("ご ろく なな はち");
+    const digitDur = estimateUnitDurationMs(
+      {
+        start: d1234!.start,
+        end: d1234!.end,
+        text: d1234!.text,
+        kind: "word",
+        spokenText: d1234!.spokenText,
+      },
+      "ja"
+    );
+    // Four spaced digit tokens must dwell ~Nanami pace (not plain glyph weight).
+    const plainFourKana = estimateUnitDurationMs(
+      { start: 0, end: 4, text: "あいうえ", kind: "word", spokenText: "あいうえ" },
+      "ja"
+    );
+    expect(digitDur).toBeGreaterThan(plainFourKana * 1.5);
+    expect(digitDur).toBeGreaterThan(1700);
+  });
+
   it("gives commas and particles more dwell than plain content of similar length", () => {
     const plain = estimateUnitDurationMs(
       { start: 0, end: 2, text: "映画", kind: "word" },

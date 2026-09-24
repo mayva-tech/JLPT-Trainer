@@ -7,15 +7,17 @@
    All rules are scoped under .pt-root. */
 
 .pt-root {
-  --pt-bg: #f7f8fa;
-  --pt-card: #ffffff;
-  --pt-ink: #101418;
-  --pt-ink-soft: #5b6470;
-  --pt-line: #dfe3ea;
-  --pt-accent: #1e3a8a;
-  --pt-you: #eef3fb;
-  --pt-ok: #197a52;
-  --pt-no: #b3402f;
+  --pt-bg: #1a2332;
+  --pt-card: #232e42;
+  --pt-ink: #f3f0e8;
+  --pt-ink-soft: #a8b0c0;
+  --pt-line: #36455c;
+  --pt-accent: #e8a54b;
+  --pt-accent-ink: #1a1510;
+  --pt-chip: rgba(232, 165, 75, 0.16);
+  --pt-you: rgba(232, 165, 75, 0.12);
+  --pt-ok: #5cb88a;
+  --pt-no: #d97a6c;
   --pt-n5: #2f9e6d;
   --pt-n4: #2f7fd6;
   --pt-n3: #d08a2f;
@@ -27,7 +29,7 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 18px 14px 56px;
-  background: var(--pt-bg);
+  background: var(--stage-band);
   color: var(--pt-ink);
   font-family: var(--pt-en);
   font-weight: 500;
@@ -48,6 +50,7 @@
 
 .pt-root button {
   cursor: pointer;
+  color: inherit;
 }
 
 .pt-root :focus-visible {
@@ -109,7 +112,7 @@
   font-weight: 600;
   padding: 4px 9px;
   border-radius: 999px;
-  background: #e2e8f4;
+  background: var(--pt-chip);
   color: var(--pt-accent);
 }
 
@@ -203,7 +206,7 @@
 }
 
 .pt-chip[aria-pressed="true"] {
-  color: #fff;
+  color: var(--pt-accent-ink);
   background: var(--pt-accent);
   border-color: var(--pt-accent);
 }
@@ -285,6 +288,7 @@
   background: transparent;
   border: 0;
   border-radius: 10px;
+  color: var(--pt-ink);
 }
 
 .pt-list-head {
@@ -298,22 +302,26 @@
   padding: 3px 8px;
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: var(--pt-accent-ink);
   border-radius: 4px;
   background: var(--pt-accent);
 }
 
 .pt-level[data-level="N5"] {
   background: var(--pt-n5);
+  color: #fff;
 }
 .pt-level[data-level="N4"] {
   background: var(--pt-n4);
+  color: #fff;
 }
 .pt-level[data-level="N3"] {
   background: var(--pt-n3);
+  color: #fff;
 }
 .pt-level[data-level="N2"] {
   background: var(--pt-n2);
+  color: #fff;
 }
 
 .pt-list-category {
@@ -343,6 +351,7 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 1.35;
+  color: var(--pt-ink);
 }
 
 .pt-list-title-en {
@@ -475,7 +484,7 @@
 .pt-mode[aria-pressed="true"] {
   background: var(--pt-accent);
   border-color: var(--pt-accent);
-  color: #fff;
+  color: var(--pt-accent-ink);
 }
 
 /* ---- dialogue ---- */
@@ -545,7 +554,7 @@
 .pt-line-jp rt {
   font-size: 0.55em;
   font-weight: 600;
-  color: var(--pt-ink-soft);
+  color: var(--accent-soft, #f0c078);
 }
 
 .pt-line-reading {
@@ -558,6 +567,8 @@
 
 .pt-line-en {
   margin: 6px 0 0;
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 17px;
   line-height: 1.5;
 }
@@ -644,18 +655,20 @@
 .pt-phrase-jp rt {
   font-size: 0.55em;
   font-weight: 600;
-  color: var(--pt-ink-soft);
+  color: var(--accent-soft, #f0c078);
 }
 
 .pt-phrase-en {
   margin: 4px 0 0;
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 17px;
-  font-weight: 600;
 }
 
 .pt-phrase-note {
   margin: 4px 0 0;
-  font-family: var(--pt-jp);
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 17px;
   line-height: 1.6;
   color: var(--pt-ink-soft);
@@ -697,10 +710,12 @@
 .pt-vocab-jp rt {
   font-size: 0.55em;
   font-weight: 600;
-  color: var(--pt-ink-soft);
+  color: var(--accent-soft, #f0c078);
 }
 
 .pt-vocab-en {
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 17px;
 }
 
@@ -713,7 +728,8 @@
 
 .pt-politeness p {
   margin: 0;
-  font-family: var(--pt-jp);
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.7;
 }
@@ -796,6 +812,8 @@
 .pt-option-en {
   display: block;
   margin-top: 3px;
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 12px;
   color: var(--pt-ink-soft);
 }
@@ -829,6 +847,8 @@
 
 .pt-explanation-en {
   margin: 2px 0 0;
+  font-family: var(--pt-en);
+  font-weight: 400;
   font-size: 13px;
   color: var(--pt-ink-soft);
 }
@@ -895,7 +915,7 @@
 }
 
 .pt-btn--primary {
-  color: #fff;
+  color: var(--pt-accent-ink);
   background: var(--pt-accent);
   border-color: var(--pt-accent);
 }
@@ -929,8 +949,8 @@
 }
 
 .pt-root .speech-active {
-  color: #000 !important;
-  background: rgba(245, 196, 70, 0.45);
+  color: var(--pt-ink) !important;
+  background: rgba(178, 120, 38, 0.5);
 }
 
 .pt-root .speech-spoken {

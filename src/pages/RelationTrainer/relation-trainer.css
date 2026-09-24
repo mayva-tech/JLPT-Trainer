@@ -7,14 +7,17 @@
    All rules are scoped under .rt-root. */
 
 .rt-root {
-  --rt-bg: #f7f8fa;
-  --rt-card: #ffffff;
-  --rt-ink: #101418;
-  --rt-ink-soft: #5b6470;
-  --rt-line: #dfe3ea;
-  --rt-accent: #1e3a8a;
-  --rt-syn: #197a52;
-  --rt-ant: #b3402f;
+  --rt-bg: #1c2029;
+  /* Cool slate panel — vertical gradient from the chosen swatch */
+  --rt-card: linear-gradient(180deg, #2d323f 0%, #232834 48%, #1c2029 100%);
+  --rt-ink: #f3f0e8;
+  --rt-ink-soft: #a8b0c0;
+  --rt-line: #3a4050;
+  --rt-accent: #e8a54b;
+  --rt-accent-ink: #1a1510;
+  --rt-chip: rgba(232, 165, 75, 0.16);
+  --rt-syn: #5cb88a;
+  --rt-ant: #d97a6c;
   --rt-n5: #2f9e6d;
   --rt-n4: #2f7fd6;
   --rt-n3: #d08a2f;
@@ -26,7 +29,17 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 18px 14px 56px;
-  background: var(--rt-bg);
+  /* Page ground sits under the cooler panel gradient */
+  background:
+    radial-gradient(90% 70% at 18% 0%, rgba(232, 165, 75, 0.06), transparent 62%),
+    radial-gradient(80% 65% at 88% 5%, rgba(92, 140, 180, 0.08), transparent 58%),
+    linear-gradient(
+      180deg,
+      #262a36 0%,
+      #1e222c 42%,
+      #1a1e26 68%,
+      #151820 100%
+    );
   color: var(--rt-ink);
   font-family: var(--rt-en);
   min-height: 100%;
@@ -127,6 +140,7 @@
 
 .rt-root button {
   cursor: pointer;
+  color: inherit;
 }
 
 .rt-root :focus-visible {
@@ -188,7 +202,7 @@
   font-weight: 600;
   padding: 4px 9px;
   border-radius: 999px;
-  background: #e2e8f4;
+  background: var(--rt-chip);
   color: var(--rt-accent);
 }
 
@@ -214,7 +228,7 @@
 .rt-mode[aria-pressed="true"] {
   background: var(--rt-accent);
   border-color: var(--rt-accent);
-  color: #fff;
+  color: var(--rt-accent-ink);
 }
 
 /* ---- stats ---- */
@@ -291,7 +305,7 @@
 }
 
 .rt-playbtn--active {
-  color: #fff;
+  color: var(--rt-accent-ink);
   background: var(--rt-accent);
   border-color: var(--rt-accent);
 }
@@ -304,21 +318,66 @@
 
 .rt-word-jp--active,
 .rt-word-jp--active.furigana-wrap .furi-surface {
-  color: var(--rt-accent);
+  color: var(--rt-ink);
 }
 
 .rt-word-jp--active.furigana-wrap .furi-reading {
-  color: var(--rt-accent);
+  color: var(--accent-soft, #f0c078);
 }
 
 .rt-word-meaning--active {
-  color: var(--rt-accent);
+  color: var(--rt-ink);
   font-weight: 600;
 }
 
 .rt-nuance--active {
-  background: #e2e8f4;
-  outline: 2px solid #e67e22;
+  background: var(--rt-chip);
+  outline: 2px solid var(--rt-accent);
+}
+
+/* Karaoke — same gold wash as Player / Quest / Quiz */
+.rt-root .speech-char {
+  display: inline;
+  border-radius: 0.08em;
+}
+
+.rt-root .speech-spoken {
+  opacity: 1;
+  color: var(--rt-ink);
+}
+
+.rt-root .speech-active,
+.rt-root .furigana-wrap .furi-cell.speech-active,
+.rt-root .jp-word.speech-active .furi-surface {
+  color: var(--rt-ink) !important;
+  background: rgba(168, 108, 38, 0.4);
+  opacity: 1;
+  border-radius: 0.12em;
+}
+
+.rt-root .furigana-wrap .furi-cell.speech-spoken .furi-surface {
+  color: var(--rt-ink);
+}
+
+.rt-word-meaning-text {
+  display: inline;
+}
+
+.rt-nuance-body {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: var(--rt-en);
+  font-weight: 400;
+  color: var(--rt-ink);
+}
+
+.rt-root--study .rt-nuance-body {
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-family: var(--rt-en);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--rt-ink);
 }
 
 /* ---- filters ---- */
@@ -385,7 +444,7 @@
 }
 
 .rt-chip[aria-pressed="true"] {
-  color: #fff;
+  color: var(--rt-accent-ink);
   background: var(--rt-accent);
   border-color: var(--rt-accent);
 }
@@ -393,26 +452,32 @@
 .rt-chip[aria-pressed="true"][data-level="N5"] {
   background: var(--rt-n5);
   border-color: var(--rt-n5);
+  color: #fff;
 }
 .rt-chip[aria-pressed="true"][data-level="N4"] {
   background: var(--rt-n4);
   border-color: var(--rt-n4);
+  color: #fff;
 }
 .rt-chip[aria-pressed="true"][data-level="N3"] {
   background: var(--rt-n3);
   border-color: var(--rt-n3);
+  color: #fff;
 }
 .rt-chip[aria-pressed="true"][data-level="N2"] {
   background: var(--rt-n2);
   border-color: var(--rt-n2);
+  color: #fff;
 }
 .rt-chip[aria-pressed="true"][data-type="synonym"] {
   background: var(--rt-syn);
   border-color: var(--rt-syn);
+  color: #fff;
 }
 .rt-chip[aria-pressed="true"][data-type="antonym"] {
   background: var(--rt-ant);
   border-color: var(--rt-ant);
+  color: #fff;
 }
 
 .rt-chip-count,
@@ -490,9 +555,16 @@
   padding: 3px 8px;
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: var(--rt-accent-ink);
   border-radius: 4px;
   background: var(--rt-accent);
+}
+
+.rt-level[data-level="N5"],
+.rt-level[data-level="N4"],
+.rt-level[data-level="N3"],
+.rt-level[data-level="N2"] {
+  color: #fff;
 }
 
 .rt-level[data-level="N5"] {
@@ -567,7 +639,7 @@
 
 .rt-type-jp .furi-reading {
   font-size: 0.42em;
-  color: var(--rt-ink-soft);
+  color: var(--accent-soft, #f0c078);
 }
 
 .rt-type-banner-wrap {
@@ -648,7 +720,7 @@
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  --rt-jp-size: calc(clamp(56px, 14vh, 128px) * var(--fit-scale, 1));
+  --rt-jp-size: calc(clamp(56px, 14vh, 128px) * 0.7 * var(--fit-scale, 1));
 }
 
 .rt-symbol {
@@ -713,13 +785,13 @@
 }
 
 .rt-word-jp .furi-surface {
-  color: #000;
+  color: var(--rt-ink);
   font-weight: 700;
 }
 
 .rt-word-jp.furigana-wrap .furi-reading {
   font-size: 0.42em;
-  color: var(--rt-ink-soft);
+  color: var(--accent-soft, #f0c078);
 }
 
 .rt-word--small .rt-word-jp,
@@ -743,7 +815,7 @@
 
 .rt-root--study .rt-word-meaning {
   margin-top: 8px;
-  font-size: clamp(16px, 1.8vw, 22px);
+  font-size: clamp(11px, 1.26vw, 15px);
   font-weight: 600;
   line-height: 1.35;
 }
@@ -754,7 +826,7 @@
   font-weight: 400;
   font-style: italic;
   letter-spacing: 0.8px;
-  color: #196b3a;
+  color: var(--rt-syn);
 }
 
 .rt-speak {
@@ -810,7 +882,7 @@
 .rt-nuance {
   margin-top: 10px;
   padding: 9px 12px;
-  background: #f3f5f9;
+  background: var(--rt-chip);
   border-radius: 7px;
   width: fit-content;
   max-width: 100%;
@@ -843,20 +915,6 @@
   margin-bottom: 6px;
 }
 
-.rt-nuance p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.55;
-  font-family: var(--rt-jp);
-}
-
-.rt-root--study .rt-nuance p {
-  font-size: clamp(18px, 2.2vw, 26px);
-  font-weight: 700;
-  line-height: 1.45;
-  color: #000;
-}
-
 .rt-root--study .rt-btn {
   padding: 10px 18px;
   font-size: 15px;
@@ -879,7 +937,7 @@
 }
 
 .rt-btn--primary {
-  color: #fff;
+  color: var(--rt-accent-ink);
   background: var(--rt-accent);
   border-color: var(--rt-accent);
 }
@@ -1088,6 +1146,8 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.6;
+  font-family: var(--rt-en);
+  font-weight: 400;
   color: var(--rt-ink-soft);
 }
 
@@ -1120,6 +1180,8 @@
 
 .rt-quiz-prompt-en {
   margin: 4px 0 0;
+  font-family: var(--rt-en);
+  font-weight: 400;
   font-size: 13px;
   color: var(--rt-ink-soft);
 }
@@ -1148,6 +1210,7 @@
   min-height: 48px;
   padding: 11px 13px;
   text-align: left;
+  color: var(--rt-ink);
   background: var(--rt-card);
   border: 1px solid var(--rt-line);
   border-radius: 8px;
@@ -1159,12 +1222,12 @@
 
 .rt-option[data-state="correct"] {
   border-color: var(--rt-syn);
-  background: #eaf6f0;
+  background: rgba(92, 184, 138, 0.16);
 }
 
 .rt-option[data-state="wrong"] {
   border-color: var(--rt-ant);
-  background: #fbeeec;
+  background: rgba(217, 122, 108, 0.16);
 }
 
 .rt-option-label {
@@ -1199,7 +1262,8 @@
 
 .rt-explanation {
   margin: 5px 0 0;
-  font-family: var(--rt-jp);
+  font-family: var(--rt-en);
+  font-weight: 400;
   font-size: 13px;
   line-height: 1.6;
 }
@@ -1277,7 +1341,8 @@
 
 .rt-review-a {
   margin: 3px 0 0;
-  font-family: var(--rt-jp);
+  font-family: var(--rt-en);
+  font-weight: 400;
   font-size: 13px;
   line-height: 1.6;
   color: var(--rt-ink-soft);

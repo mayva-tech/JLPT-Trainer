@@ -61,13 +61,6 @@ const Check = ({ size = 15 }: { size?: number }) => (
   </svg>
 );
 
-const Volume = ({ size = 12 }: { size?: number }) => (
-  <svg width={size} height={size} {...svgProps}>
-    <path d="M11 5 6 9H2v6h4l5 4V5Z" />
-    <path d="M15.5 8.5a5 5 0 0 1 0 7" />
-  </svg>
-);
-
 /* ---- page ---- */
 
 export default function TripTrainer() {
@@ -262,7 +255,7 @@ export default function TripTrainer() {
         stopAuto();
         return;
       }
-      setIndex(0);
+      const startIndex = Math.min(index, cards.length - 1);
       setReveal(2);
 
       const run = (cardIndex: number) => {
@@ -285,7 +278,7 @@ export default function TripTrainer() {
         });
       };
 
-      run(0);
+      run(startIndex);
       return;
     }
 
@@ -293,6 +286,12 @@ export default function TripTrainer() {
       stopAuto();
       return;
     }
+
+    const startScriptIndex = (() => {
+      if (!openScript) return 0;
+      const at = SCRIPTS.findIndex((s) => s.id === openScript);
+      return at >= 0 ? at : 0;
+    })();
 
     const runScript = (scriptIndex: number) => {
       if (!alive()) return;
@@ -313,7 +312,7 @@ export default function TripTrainer() {
       });
     };
 
-    runScript(0);
+    runScript(startScriptIndex);
   }
 
   return (
@@ -388,8 +387,10 @@ export default function TripTrainer() {
           className={`jt-playbtn ${playingAll ? 'active' : ''}`}
           title={
             tab === 'cards'
-              ? 'Play every card in this deck from the start'
-              : 'Play every scenario from the start'
+              ? 'Play every card from this one to the end of the deck'
+              : openScript
+                ? 'Play every scenario from the open one to the end'
+                : 'Play every scenario from the start'
           }
           onClick={playAll}
         >
@@ -416,17 +417,6 @@ export default function TripTrainer() {
             <span>
               {index + 1} / {deck.cards.length}
             </span>
-            <button
-              type="button"
-              className="jt-listen"
-              onClick={() => {
-                speechService.stop();
-                stopAuto();
-                speak(variant.jp);
-              }}
-            >
-              <Volume /> listen
-            </button>
           </div>
 
           <button

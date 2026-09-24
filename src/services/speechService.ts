@@ -20,7 +20,7 @@ import {
   findUnitForBoundary,
   type HighlightUnit,
 } from "../utils/speechHighlightUnits";
-import { buildJapaneseSpeakText, splitJapaneseBySentences } from "../utils/japaneseSpeakText";
+import { buildJapaneseSpeakText, buildJapaneseSpeakToken, splitJapaneseBySentences } from "../utils/japaneseSpeakText";
 import {
   buildEnglishSpeakText,
   splitEnglishByClauses,
@@ -557,6 +557,8 @@ function runUtterance(
   // Japanese + alignable reading: schedule fallback from spoken kana tokens,
   // not kanji weight. English with speak transforms (skipped (notes), ~
   // pauses): time from spoken form.
+  // Bare JA surface (no reading): still expand digit runs / speak transforms onto
+  // spokenText so karaoke dwell matches Nanami (1234 → いち に さん よん).
   const fallbackUnits: HighlightUnit[] =
     karaokeUnits && karaokeUnits.length > 0
       ? karaokeUnits
@@ -573,7 +575,10 @@ function runUtterance(
           )
         : !isJa
           ? buildEnglishSpokenKaraokeSteps(text)
-          : activeHighlightUnits(allUnits);
+          : activeHighlightUnits(allUnits).map((u) => ({
+              ...u,
+              spokenText: buildJapaneseSpeakToken(u.text),
+            }));
 
   const units = fallbackUnits;
 

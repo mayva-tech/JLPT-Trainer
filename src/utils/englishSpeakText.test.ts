@@ -14,6 +14,14 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("MT FUJI")).toBe("MOUNT FUJI");
   });
 
+  it("expands Dr. to Doctor so TTS does not spell D-R", () => {
+    expect(buildEnglishSpeakText("Dr. Nakamura asks about your symptoms.")).toBe(
+      "Doctor Nakamura asks about your symptoms."
+    );
+    expect(buildEnglishSpeakText("Dr Nakamura")).toBe("Doctor Nakamura");
+    expect(buildEnglishSpeakText("MR. SMITH")).toBe("MISTER SMITH");
+  });
+
   it('speaks "fare" as "fair" (not "far")', () => {
     expect(buildEnglishSpeakText("fare")).toBe("fair");
   });
@@ -231,6 +239,27 @@ describe("splitEnglishBySemicolon", () => {
 });
 
 describe("splitEnglishByClauses", () => {
+  it("does not pause after Dr. / Mr. / Ms. before a name", () => {
+    expect(
+      splitEnglishByClauses("Dr. Nakamura asks about your symptoms.")
+    ).toBeNull();
+    expect(splitEnglishByClauses("Mr. Smith is here.")).toBeNull();
+    expect(splitEnglishByClauses("Ms. Tanaka will help.")).toBeNull();
+    expect(
+      buildEnglishSpeakText("Dr. Nakamura asks about your symptoms.")
+    ).toBe("Doctor Nakamura asks about your symptoms.");
+  });
+
+  it("still splits a real sentence after a titled name", () => {
+    const text = "Dr. Nakamura asks about your symptoms. Then he waits.";
+    const clauses = splitEnglishByClauses(text);
+    expect(clauses).toHaveLength(2);
+    expect(clauses![0]!.speak).toBe(
+      "Doctor Nakamura asks about your symptoms"
+    );
+    expect(clauses![1]!.speak).toBe("Then he waits");
+  });
+
   it("splits explanation sentences so karaoke does not lag behind Andrew", () => {
     const text =
       "From a senior to a junior it can sound condescending. In song lyrics it is romantic; in an office it can grate.";

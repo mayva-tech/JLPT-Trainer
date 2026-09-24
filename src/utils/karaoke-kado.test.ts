@@ -16,14 +16,16 @@ describe("カード karaoke", () => {
     const kado = steps.find((s) => s.text.includes("カード"));
     expect(kado).toBeTruthy();
     expect(audio.includes(kado!.spokenText)).toBe(true);
-    expect(kado!.spokenText).toMatch(/かあど/);
+    expect(kado!.spokenText).toMatch(/かど/);
+    expect(kado!.spokenText).not.toMatch(/かあど/);
   });
 
   it("glued ざいりゅうカード: audio is hiragana and token span covers カード", () => {
     const surface = "はい、在留カードを持っています。";
     const reading = "はい、 ざいりゅうカード を もって います。";
     const audio = buildJapaneseSpeakText(surface, reading);
-    expect(audio).toContain("かあど");
+    expect(audio).toContain("かど");
+    expect(audio).not.toContain("かあど");
     expect(audio).not.toMatch(/カ[ぁあ]/);
 
     const { tokenSpans } = alignFuriganaWithTokenSpans(surface, reading);
@@ -35,8 +37,20 @@ describe("カード karaoke", () => {
     const steps = buildJapaneseSpokenKaraokeSteps(surface, reading, units);
     const kado = steps.find((s) => s.text.includes("カード"));
     expect(kado).toBeTruthy();
-    // Soft script-insensitive: spoken かあど must occur in audio as kana
+    // Soft script-insensitive: spoken かど must occur in audio as kana
     const compact = audio.replace(/\s+/g, "");
     expect(compact.includes(kado!.spokenText.replace(/\s+/g, ""))).toBe(true);
+  });
+
+  it("マイナンバーカード speaks card as かど, not かあど", () => {
+    expect(
+      buildJapaneseSpeakText(
+        "保険証かマイナンバーカードを見せてほしい。",
+        "ほけん しょう か、 マイナンバーカード を みせて ほしい。"
+      )
+    ).toMatch(/マイナンバーかど|まいなんばあかど/);
+    expect(
+      buildJapaneseSpeakText("カード", "カード")
+    ).toBe("かど");
   });
 });

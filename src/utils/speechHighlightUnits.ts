@@ -114,6 +114,7 @@ const ATTACHABLE_KANA = new Set([
   "たら",
   "いた",
   "した",
+  "して",
   "れた",
   "みた",
   "きて",
@@ -717,6 +718,12 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
         !!next &&
         next.kind !== "space" &&
         isPureKanaCore(next.text));
+    // 確認|して|ください — keep te-form free so ください stays its own unit.
+    // Do not apply to しまう / いる / etc. (落ち込んで|しまった).
+    const nextIsKudasaiFamily =
+      !!next &&
+      next.kind !== "space" &&
+      /^(ください|下さい|なさい|なさる)/u.test(nextCore);
 
     const canAttach =
       prev &&
@@ -726,6 +733,7 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       isAttachableOkurigana(u.text) &&
       !isDarouSplit &&
       !isAtomicAuxHead &&
+      !(nextIsKudasaiFamily && /^(して|いて|って|んで|て)$/u.test(uCore)) &&
       !(kanaCoreLen(u.text) === 1 && nextIsKanaFragment);
 
     if (canAttach) {
@@ -777,6 +785,11 @@ function mergeJapaneseSpeechUnits(units: HighlightUnit[]): HighlightUnit[] {
       isPureKanaCore(u.text) &&
       stripTrailingPunct(prev.text).punct === "" &&
       !blockCaseParticle &&
+      // して+ください must stay split (確認|して|ください)
+      !(
+        /^(して|いて|って|んで|て)$/u.test(prevCore) &&
+        /^(ください|下さい|なさい|なさる)/u.test(uCore)
+      ) &&
       (isKanaFragment(prev.text) ||
         isKanaFragment(u.text) ||
         isPoliteAuxContinuation(prevCore, uCore))
@@ -1353,6 +1366,25 @@ function estimateSpokenMoraWeight(spoken: string): number {
 }
 
 /**
+ * Nanami reads phone-number / ID digit runs slower than plain mora — spaced
+ * tokens like 「いち に さん よん」 get deliberate gaps. Without this scale,
+ * karaoke races ahead on lines like 「1234の5678です。」.
+ */
+const DIGIT_RUN_MORA_SCALE = 1.9;
+
+function surfaceIsDigitRun(text: string): boolean {
+  const core = text.replace(/[、。！？．，!?\s]+$/u, "");
+  return /^\d{2,}$/.test(core);
+}
+
+/** True when spokenText is expanded per-digit kana (いち に さん よん). */
+function spokenIsDigitExpansion(spoken: string): boolean {
+  return /(?:ゼロ|いち|に|さん|よん|ご|ろく|なな|はち|きゅう)(?:\s+(?:ゼロ|いち|に|さん|よん|ご|ろく|なな|はち|きゅう))+/u.test(
+    spoken
+  );
+}
+
+/**
  * Karaoke dwell weights that are silence / phrase-edge holds — not voiced
  * content. Mouth shapes must not keep articulating across these, or the head
  * chatters after Nanami has already finished the mora.
@@ -1453,7 +1485,20 @@ function estimateUnitSpeechWeight(
   }
 
   if (unit.spokenText) {
-    return Math.max(0.75, estimateSpokenMoraWeight(unit.spokenText));
+    let weight = Math.max(0.75, estimateSpokenMoraWeight(unit.spokenText));
+    if (surfaceIsDigitRun(text) || spokenIsDigitExpansion(unit.spokenText)) {
+      weight *= DIGIT_RUN_MORA_SCALE;
+    }
+    return weight;
+  }
+
+  // Surface digit IDs with no spokenText yet — match TTS per-digit kana weight.
+  if (/\d{2,}/.test(text)) {
+    return Math.max(
+      0.75,
+      estimateSpokenMoraWeight(buildJapaneseSpeakToken(text)) *
+        DIGIT_RUN_MORA_SCALE
+    );
   }
 
   let mora = 0;
@@ -1462,7 +1507,7 @@ function estimateUnitSpeechWeight(
     else if (ch === "ー" || ch === "〜") mora += 0.5;
     else if (isKanji(ch)) mora += 1.6;
     else if (isKana(ch)) mora += 1;
-    else if (/\d/.test(ch)) mora += 0.8;
+    else if (/\d/.test(ch)) mora += 0.8 * DIGIT_RUN_MORA_SCALE;
     else if (!/\s/.test(ch) && !PUNCT_ONLY.test(ch)) mora += 0.5;
   }
   return Math.max(0.75, mora);
@@ -1921,7 +1966,8 @@ export function buildJapaneseSpokenKaraokeSteps(
       end: u.end,
       text: u.text,
       kind: u.kind,
-      spokenText: u.text,
+      // Match TTS digit expansion (1234 → いち に さん よん) so dwell ≠ glyph count.
+      spokenText: buildJapaneseSpeakToken(u.text),
       speakGapAfter: false,
     }));
   }
@@ -1933,7 +1979,7 @@ export function buildJapaneseSpokenKaraokeSteps(
       end: u.end,
       text: u.text,
       kind: u.kind,
-      spokenText: u.text,
+      spokenText: buildJapaneseSpeakToken(u.text),
       speakGapAfter: false,
     }));
   }
@@ -2008,7 +2054,14 @@ export function buildJapaneseSpokenKaraokeSteps(
   }
 
   debugKaraoke("final-steps", monotonic.map((s) => `${s.text}/${s.spokenText}`));
-  return monotonic;
+  // Phone numbers / digit IDs: TTS reads per-digit kana (いち に さん よん).
+  // Alignment often leaves spokenText as raw "1234", which under-dwells and
+  // races the highlight ahead of Nanami.
+  return monotonic.map((step) => {
+    const core = step.text.replace(/[、。！？．，!?\s]+$/u, "");
+    if (!/^\d{2,}$/.test(core)) return step;
+    return { ...step, spokenText: buildJapaneseSpeakToken(step.text) };
+  });
 }
 
 /** Attach spoken-kana timing fields onto existing display units (span merge). */
