@@ -19,7 +19,10 @@ import { SentenceCard } from "../components/SentenceCard";
 import { ShadowingCard } from "../components/ShadowingCard";
 import { ReviewCard } from "../components/ReviewCard";
 import { ProgressIndicator } from "../components/ProgressIndicator";
-import { VocabularyRangeLabel } from "../components/VocabularyRangeLabel";
+import {
+  StageCategoryLabel,
+  VocabularyRangeLabel,
+} from "../components/VocabularyRangeLabel";
 import { TableOfContents } from "../components/TableOfContents";
 import { IntroHookDisplay } from "../components/IntroHookDisplay";
 import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
@@ -2347,6 +2350,13 @@ export function PlayerPage() {
             />
           );
         }
+        const grammarRange = grammarBatchRangeLabel(grammarLessonId);
+        const grammarHeader = (
+          <StageCategoryLabel
+            primary={grammarRange ? `Grammar ${grammarRange}` : "Grammar"}
+            category={gItem.subcategory}
+          />
+        );
         switch (grammarStep) {
           case "category":
             return (
@@ -2366,6 +2376,7 @@ export function PlayerPage() {
           case "pattern":
             return (
               <>
+                {grammarHeader}
                 <GrammarProgressIndicator
                   current={grammarItemIndex}
                   total={grammarItems.length}
@@ -2382,6 +2393,7 @@ export function PlayerPage() {
           case "formation":
             return (
               <>
+                {grammarHeader}
                 <GrammarProgressIndicator
                   current={grammarItemIndex}
                   total={grammarItems.length}
@@ -2393,6 +2405,7 @@ export function PlayerPage() {
           case "sentence":
             return (
               <>
+                {grammarHeader}
                 <GrammarProgressIndicator
                   current={grammarItemIndex}
                   total={grammarItems.length}
@@ -2409,6 +2422,7 @@ export function PlayerPage() {
           case "shadowing":
             return (
               <>
+                {grammarHeader}
                 <GrammarProgressIndicator
                   current={grammarItemIndex}
                   total={grammarItems.length}
@@ -2425,6 +2439,7 @@ export function PlayerPage() {
           case "review":
             return (
               <>
+                {grammarHeader}
                 <GrammarProgressIndicator
                   current={grammarItemIndex}
                   total={grammarItems.length}
@@ -2526,7 +2541,16 @@ export function PlayerPage() {
         }
         return (
           <>
-            <VocabularyRangeLabel lessonId={lessonId} kind="lesson" />
+            <VocabularyRangeLabel
+              lessonId={lessonId}
+              kind="lesson"
+              category={step !== "category" ? item?.category : undefined}
+              theme={
+                step !== "category"
+                  ? lesson.subtitle?.trim() || item?.subcategory
+                  : undefined
+              }
+            />
             <ProgressIndicator
               current={itemIndex}
               total={items.length}

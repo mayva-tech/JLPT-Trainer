@@ -228,6 +228,8 @@ export function grammarToQuizSource(item: GrammarItem): QuizSourceItem {
     sentenceReading: item.sentenceReading,
     sentenceMeaning: item.sentenceMeaning,
     jlpt: item.jlpt,
+    category: item.category,
+    subcategory: item.subcategory,
   };
 }
 

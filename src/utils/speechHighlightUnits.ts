@@ -2060,6 +2060,8 @@ export function buildJapaneseSpokenKaraokeSteps(
   return monotonic.map((step) => {
     const core = step.text.replace(/[、。！？．，!?\s]+$/u, "");
     if (!/^\d{2,}$/.test(core)) return step;
+    // Keep reading-aligned kana (22時 → にじゅうに); only expand raw digits.
+    if (step.spokenText && !/\d/.test(step.spokenText)) return step;
     return { ...step, spokenText: buildJapaneseSpeakToken(step.text) };
   });
 }

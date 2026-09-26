@@ -1,6 +1,7 @@
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { FitScale } from "./FitScale";
+import { StageCategoryLine } from "./VocabularyRangeLabel";
 import type { SpeechHighlight } from "../services/speechService";
 import type { QuizPhase } from "../services/quizAutoRunner";
 import type { VocabularyQuizQuestion } from "../types/vocabularyQuiz";
@@ -54,12 +55,18 @@ export function QuizQuestionCard({
   );
   const example = getQuizExample(question);
   const { choices, correctChoiceIndex } = question;
+  const isGrammarItem = question.item.category === "Grammar";
 
   return (
     <div className="safe-area safe-area--quiz">
       <div className="quiz-layout card-fade">
         <div className="quiz-header">
           <div className="category-chip">{title}</div>
+          <StageCategoryLine
+            className="vocabulary-range-label__primary quiz-header-category"
+            category={isGrammarItem ? question.item.subcategory : question.item.category}
+            theme={isGrammarItem ? undefined : question.item.subcategory}
+          />
           <div className="quiz-progress">
             {index + 1} / {total}
           </div>

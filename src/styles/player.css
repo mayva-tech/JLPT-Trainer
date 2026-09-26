@@ -1068,19 +1068,54 @@
 
 .vocabulary-range-label {
   text-align: center;
+  margin-top: 2.6cqh;
   margin-bottom: 0.8cqh;
 }
 
 .vocabulary-range-label__primary {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.6cqw;
+  /* Stays clear of the step label (left) and item counter (right). */
+  max-width: 62cqw;
+  margin: 0 auto;
   font-family: var(--font-en);
-  font-size: 1.35cqw;
+  font-size: 1.9cqw;
   font-weight: 600;
   color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.vocabulary-range-label__primary > span {
+  flex: 0 0 auto;
+}
+
+.vocabulary-range-label__sep {
+  color: var(--text-softer);
+  font-weight: 400;
+}
+
+.vocabulary-range-label__category {
+  font-size: 1.6cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vocabulary-range-label__primary > .vocabulary-range-label__theme {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  color: var(--text-soft);
 }
 
 .vocabulary-range-label__secondary {
+  margin-top: 0.4cqh;
   font-family: var(--font-en);
-  font-size: 1.2cqw;
+  font-size: 1.55cqw;
   color: var(--text-softer);
 }
 
@@ -1179,6 +1214,18 @@
 
 .quiz-header .category-chip {
   margin-bottom: 0;
+  flex: 0 0 auto;
+}
+
+.quiz-header .quiz-progress {
+  flex: 0 0 auto;
+}
+
+.quiz-header-category.vocabulary-range-label__primary {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+  margin: 0 1.5cqw;
 }
 
 .quiz-split {

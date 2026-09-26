@@ -21,6 +21,8 @@ export type QuizSourceItem = {
   sentenceMeaning?: string;
   audioWord?: string;
   jlpt?: "N1" | "N2" | "N3";
+  category?: string;
+  subcategory?: string;
 };
 
 /** Japanese word → English meaning (same shape as grammar quizzes). */
