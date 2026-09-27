@@ -119,6 +119,7 @@ const header = `import type {
   WordRelationLevel,
   WordRelationType,
 } from "../types/wordRelation";
+import { wordRelationExamples } from "./wordRelationExamples";
 
 /**
  * Synonyms & Antonyms (類義語・反対語) corpus — N5 through N2.
@@ -151,10 +152,18 @@ export const WORD_RELATION_TYPE_LABELS: Readonly<
   antonym: { japanese: "反対語", english: "Antonym", symbol: "↔" },
 };
 
-export const wordRelations: readonly WordRelation[] = [
+const baseWordRelations: readonly WordRelation[] = [
 `;
 
 const footer = `];
+
+/** Example sentences live in ./wordRelationExamples so they survive regeneration. */
+export const wordRelations: readonly WordRelation[] = baseWordRelations.map(
+  (relation) => {
+    const example = wordRelationExamples[relation.id];
+    return example ? { ...relation, example } : relation;
+  },
+);
 `;
 
 writeFileSync(OUT, header + body + "\n" + footer, "utf8");

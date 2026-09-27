@@ -89,7 +89,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "(refined,",
       "feminine)",
     ]);
-    expect(steps[0]?.spokenText).toBe("I.");
+    expect(steps[0]?.spokenText).toBe("I,");
     expect(steps[0]?.speakGapAfter).toBe(true);
     expect(steps[1]?.spokenText).toBe("refined");
     expect(steps[2]?.spokenText).toBe("feminine");
@@ -98,7 +98,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
   it("pauses after I before soft, casual gloss", () => {
     const steps = buildEnglishSpokenKaraokeSteps("I (soft, casual)");
     expect(steps[0]?.text).toBe("I");
-    expect(steps[0]?.spokenText).toBe("I.");
+    expect(steps[0]?.spokenText).toBe("I,");
     expect(steps.map((s) => s.text)).toEqual(["I", "(soft,", "casual)"]);
     expect(steps[2]?.start).toBe(9);
     expect(steps[2]?.end).toBe(16);
@@ -115,7 +115,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "it sounds too soft; many women use it"
     );
     const soft = steps.find((s) => s.text === "soft;");
-    expect(soft?.spokenText).toMatch(/\.\.\.\s*$/);
+    expect(soft?.spokenText).toMatch(/,\s*$/);
     expect(soft?.speakGapAfter).toBeFalsy();
     const withSemi = estimateUnitDurationMs(
       soft!,
@@ -126,11 +126,9 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 4, text: "soft", kind: "word", spokenText: "soft" },
       "en"
     );
-    expect(withSemi).toBeGreaterThan(plainSoft);
-    // Semicolon breath targets ~SPEECH_EN_SEMICOLON_PAUSE_MS (50ms), not the
-    // full 200ms EN chain used for em dash / tip newlines.
-    expect(withSemi - plainSoft).toBeGreaterThanOrEqual(35);
-    expect(withSemi - plainSoft).toBeLessThan(120);
+    // Semicolon is spoken as a comma beat — never the full 200ms EN chain.
+    expect(withSemi).toBeGreaterThanOrEqual(plainSoft);
+    expect(withSemi - plainSoft).toBeLessThan(150);
   });
 
   it("pauses after em dash on the karaoke timeline", () => {

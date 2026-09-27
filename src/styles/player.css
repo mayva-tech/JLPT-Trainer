@@ -1113,10 +1113,62 @@
 }
 
 .vocabulary-range-label__secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9cqw;
   margin-top: 0.4cqh;
   font-family: var(--font-en);
   font-size: 1.55cqw;
   color: var(--text-softer);
+}
+
+/* Level + speed chips — level colours match the Synonyms trainer. */
+.stage-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  font-family: var(--font-en);
+  font-size: 0.92em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  padding: 0.14em 0.6em;
+  border-radius: 0.3em;
+  border: 1px solid transparent;
+  text-transform: none;
+}
+
+.stage-chip--level {
+  color: #fff;
+  background: var(--accent);
+}
+
+.stage-chip--level[data-level="N1"] { background: #8a4fc8; }
+.stage-chip--level[data-level="N2"] { background: #c8443c; }
+.stage-chip--level[data-level="N3"] { background: #d08a2f; }
+.stage-chip--level[data-level="N4"] { background: #2f7fd6; }
+.stage-chip--level[data-level="N5"] { background: #2f9e6d; }
+
+.stage-chip--speed {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(232, 165, 75, 0.25), 0 0 6px rgba(232, 165, 75, 0.3);
+  font-weight: 600;
+}
+
+.stage-chip--speed[data-speed="1.25×"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.stage-chip--speed[data-speed="Slow"] {
+  color: #cfe2ff;
+  background: rgba(47, 127, 214, 0.28);
+  border-color: #4f9bf0;
+  box-shadow: 0 0 0 1px rgba(79, 155, 240, 0.25), 0 0 6px rgba(79, 155, 240, 0.35);
 }
 
 .weak-progress-summary {
@@ -1629,6 +1681,265 @@
 
   .nav-bar {
     bottom: 10px;
+  }
+}
+
+/* Phone-width portrait: one full-height stage (no 16:9 letterbox) with larger
+   item text, and a compact control bar so the item stays the focus. */
+@media (max-width: 700px) and (orientation: portrait) {
+  .stage-wrapper,
+  .stage-wrapper--with-panel,
+  .stage-wrapper--interview {
+    height: 100%;
+    /* Clears the fixed two-row control bar. */
+    padding: 0 0 var(--portrait-nav-clear, 74px);
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+
+  .stage-wrapper--with-panel,
+  .stage-wrapper--interview {
+    --portrait-nav-clear: 34vh;
+  }
+
+  .stage {
+    width: 100cqw;
+    height: 100cqh;
+
+    --lesson-jp-word: 15cqw;
+    --lesson-jp-line: 10.5cqw;
+    --lesson-en-word: 6.2cqw;
+    --lesson-en-line: 5.2cqw;
+  }
+
+  .safe-area {
+    inset: 15% 5% 4% 5%;
+  }
+
+  .progress-label,
+  .lesson-label {
+    top: 2.5%;
+    font-size: 3.8cqw;
+  }
+
+  .lesson-label {
+    left: 5%;
+  }
+
+  .progress-label {
+    right: 5%;
+  }
+
+  .category-chip {
+    font-size: 4.4cqw;
+    padding: 1cqw 3cqw;
+  }
+
+  .category-word-preview {
+    font-size: 5.2cqw !important;
+  }
+
+  .vocabulary-range-label {
+    margin-top: 8cqh;
+  }
+
+  .vocabulary-range-label__primary {
+    max-width: 94cqw;
+    font-size: 3.6cqw;
+    gap: 1.2cqw;
+  }
+
+  .vocabulary-range-label__category {
+    font-size: 3.1cqw;
+  }
+
+  .vocabulary-range-label__secondary {
+    font-size: 3.2cqw;
+  }
+
+  .grammar-formation {
+    font-size: 5.6cqw;
+  }
+
+  /* Wrap long English instead of shrinking it onto one line. */
+  .sentence-meaning,
+  .sentence-meaning .speech-line--en,
+  .register-meaning-text,
+  .register-meaning-text .speech-line--en {
+    white-space: normal;
+  }
+
+  .shadowing-cue {
+    font-size: 4.6cqw;
+  }
+
+  .hook-line--ja {
+    font-size: 6cqw;
+  }
+
+  .hook-line--en {
+    font-size: 5cqw;
+  }
+
+  .placeholder-title {
+    font-size: 7cqw;
+  }
+
+  .placeholder-subtitle {
+    font-size: 4cqw;
+  }
+
+  /* Quiz: stack word above choices instead of a side-by-side split. */
+  .safe-area--quiz {
+    inset: 3% 4% 3% 4%;
+  }
+
+  .quiz-header {
+    flex-wrap: wrap;
+    row-gap: 1cqh;
+  }
+
+  .quiz-header-category.vocabulary-range-label__primary {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0;
+  }
+
+  .quiz-progress {
+    font-size: 3.8cqw;
+  }
+
+  .quiz-split {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 2.5cqh;
+  }
+
+  .quiz-word-panel {
+    padding-right: 0;
+  }
+
+  .quiz-word-ja {
+    font-size: calc(12cqw * var(--fit-scale, 1));
+  }
+
+  .quiz-prompt {
+    font-size: 4.2cqw;
+  }
+
+  .quiz-choice {
+    font-size: 5cqw;
+  }
+
+  .quiz-example-ja {
+    font-size: 5.6cqw;
+  }
+
+  .quiz-example-meaning {
+    font-size: 4.4cqw;
+  }
+
+  .quiz-reveal-meaning,
+  .quiz-word-en-prompt {
+    font-size: 4.4cqw;
+  }
+
+  .quiz-score {
+    font-size: 8cqw;
+  }
+
+  .nav-bar {
+    /* left: 50% alone caps the shrink-to-fit width at half the screen. */
+    left: 0;
+    right: 0;
+    transform: none;
+    bottom: 6px;
+    gap: 5px;
+    row-gap: 5px;
+    max-width: none;
+    padding: 0 6px;
+  }
+
+  .nav-bar button,
+  .nav-bar .toc-nav-btn,
+  .nav-bar .btn-secondary {
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 7px;
+  }
+
+  .rate-btn,
+  .furi-btn,
+  .auto-btn,
+  .register-btn,
+  .quiz-auto-btn {
+    font-size: 11px !important;
+    padding: 5px 9px !important;
+    border-radius: 7px !important;
+  }
+
+  .auto-btn {
+    min-width: 0;
+  }
+
+  .rate-group {
+    gap: 4px;
+    margin: 0;
+  }
+
+  /* Same action as the Table of Contents button beside it. */
+  .nav-back-toc {
+    display: none;
+  }
+
+  .production-panel {
+    bottom: 96px;
+    max-height: 30vh;
+    overflow: auto;
+  }
+
+  /* Quiz controls: a slim strip just above the TOC button, not a floating box. */
+  .production-panel--compact {
+    bottom: 40px;
+    width: 100vw;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    padding: 5px 6px;
+    box-shadow: none;
+  }
+
+  .production-panel--compact .production-actions {
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .production-panel--compact .production-actions button {
+    font-size: 11px;
+    padding: 5px 9px;
+    border-radius: 7px;
+  }
+
+  .app-view:has(.production-panel--compact) .stage-wrapper--with-panel {
+    --portrait-nav-clear: 128px;
+  }
+
+  .quiz-header .category-chip {
+    font-size: 3.2cqw;
+    padding: 0.8cqw 2.4cqw;
+    max-width: 76cqw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .quiz-example-panel--review .quiz-example-ja {
+    font-size: 5cqw;
+  }
+
+  .quiz-example-panel--review .quiz-example-meaning {
+    font-size: 4cqw;
   }
 }
 

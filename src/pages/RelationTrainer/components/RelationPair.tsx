@@ -44,7 +44,18 @@ function fitPairToSingleLine(pair: HTMLElement) {
     gap * Math.max(0, items - 1);
 
   const cap = pair.clientWidth;
-  const scale = total > cap + 1 ? Math.max(0.32, cap / total) : 1;
+  let scale = total > cap + 1 ? Math.max(0.32, cap / total) : 1;
+
+  // Each word is capped (CSS max-width) so meanings wrap; the JP must fit that cap too.
+  for (const word of words) {
+    if (getComputedStyle(word).maxWidth === "none") continue;
+    const maxW = word.clientWidth;
+    if (maxW <= 0) continue;
+    const jp = word.querySelector<HTMLElement>(".rt-word-jp");
+    const line = jp?.querySelector<HTMLElement>(".jp-wrap-line") ?? jp;
+    const need = Math.max(line?.scrollWidth ?? 0, jp?.scrollWidth ?? 0);
+    if (need > maxW + 1) scale = Math.min(scale, Math.max(0.32, maxW / need));
+  }
   pair.style.setProperty("--fit-scale", String(scale));
 }
 

@@ -15,6 +15,7 @@ import {
 type Props = {
   title: string;
   question: VocabularyQuizQuestion;
+  speedLabel?: string;
   index: number;
   total: number;
   selectedChoiceIndex: number | null;
@@ -35,6 +36,7 @@ function formatMeaning(text: string): string {
 export function QuizQuestionCard({
   title,
   question,
+  speedLabel,
   index,
   total,
   selectedChoiceIndex,
@@ -66,6 +68,8 @@ export function QuizQuestionCard({
             className="vocabulary-range-label__primary quiz-header-category"
             category={isGrammarItem ? question.item.subcategory : question.item.category}
             theme={isGrammarItem ? undefined : question.item.subcategory}
+            level={question.item.jlpt}
+            speed={speedLabel}
           />
           <div className="quiz-progress">
             {index + 1} / {total}

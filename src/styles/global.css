@@ -122,6 +122,26 @@ body {
   opacity: 0.95;
 }
 
+@media (max-width: 700px) and (orientation: portrait) {
+  .app-nav {
+    gap: 5px;
+    padding: 5px 6px;
+  }
+
+  .app-nav-btn {
+    padding: 3px 8px;
+    border-radius: 7px;
+  }
+
+  .app-nav-en {
+    font-size: 11px;
+  }
+
+  .app-nav-jp {
+    font-size: 10px;
+  }
+}
+
 .app-view {
   flex: 1 1 auto;
   min-height: 0;

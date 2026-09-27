@@ -827,24 +827,32 @@ describe("speechService karaoke timeline", () => {
     expect(cancelled).toBe(true);
   });
 
+  it("keeps a short gloss list in one utterance with a comma beat at ;", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    speechService.speakEnglish("really; super", {});
+    expect(spoken).toHaveLength(1);
+    expect(spoken[0]!.text).toMatch(/^really, super$/i);
+  });
+
   it("uses a shorter pause after semicolon than the general EN chain", async () => {
     const { spoken } = installSpeechMock();
     const { speechService, __speechTestHooks } = await import("./speechService");
 
-    const text = "arising from; stemming from";
+    const text =
+      "It is used when something is arising from a cause; stemming from is more formal";
     speechService.speakEnglish(text, {});
     expect(spoken).toHaveLength(1);
-    expect(spoken[0]!.text.toLowerCase()).toMatch(/arising from$/i);
+    expect(spoken[0]!.text.toLowerCase()).toMatch(/from a cause$/i);
     spoken[0]!.onstart?.();
     spoken[0]!.onend?.();
     expect(spoken).toHaveLength(1);
 
     const semiPause = __speechTestHooks.SPEECH_EN_SEMICOLON_PAUSE_MS;
-    expect(semiPause).toBe(50);
+    expect(semiPause).toBe(0);
     expect(semiPause).toBeLessThan(__speechTestHooks.SPEECH_EN_CHAIN_PAUSE_MS);
-    vi.advanceTimersByTime(semiPause - 20);
-    expect(spoken).toHaveLength(1);
-    vi.advanceTimersByTime(40);
+    vi.advanceTimersByTime(semiPause + 1);
     expect(spoken).toHaveLength(2);
     expect(spoken[1]!.text.toLowerCase()).toMatch(/stemming from/i);
   });

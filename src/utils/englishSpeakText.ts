@@ -13,8 +13,9 @@ const WORD_OVERRIDES: Readonly<Record<string, string>> = {
   die: "dai",
   // /streɪndʒ/ as one word — "straynj" is spelled out by neural voices.
   strange: "straynge",
-  // Isolated "odd" often comes out as "ode".
-  odd: "awd",
+  // Andrew raises "bag" toward "beyg"; the doubled g keeps a flat /bæg/.
+  bag: "bagg",
+  bags: "baggz",
 };
 
 function applyCase(match: string, spoken: string): string {
@@ -154,10 +155,27 @@ function isEnglishTitleAbbreviationPeriod(
  * title/body), and `.` / `!` / `?` before a new sentence (space + capital /
  * quote). Skips decimals like `1.5` and title abbreviations like `Dr. Name`.
  */
+const SHORT_GLOSS_MAX_WORDS = 4;
+
+/**
+ * "really; super" style gloss lists: each utterance carries ~1s of built-in
+ * voice silence, so splitting one-word glosses sounds like a long stop.
+ */
+function isShortGlossList(text: string): boolean {
+  if (/[.!?—–\n]/u.test(text)) return false;
+  return text
+    .split(";")
+    .every(
+      (part) => part.trim().split(/\s+/u).filter(Boolean).length <= SHORT_GLOSS_MAX_WORDS
+    );
+}
+
 function findEnglishClauseBreakEnds(text: string): number[] {
   const ends = new Set<number>();
-  for (const m of text.matchAll(/;/g)) {
-    ends.add(m.index + 1);
+  if (!isShortGlossList(text)) {
+    for (const m of text.matchAll(/;/g)) {
+      ends.add(m.index + 1);
+    }
   }
   // Em/en dash = breath pause (Game Mode EN like "Sorry — I'll…").
   // Include trailing spaces so karaoke ranges do not leave a dangling gap unit.
@@ -246,14 +264,14 @@ function expandJapaneseInEnglish(text: string): string {
 /** Drop meta notes like "(formal)"; speak descriptive `(nuance)` after a pause. */
 function rewriteParentheticalNotes(text: string): string {
   return text
-    // Consume the space before "(" so "I (soft" → "I. soft" (sentence break).
+    // Consume the space before "(" so "I (soft" → "I, soft" (short breath).
     // Prefer `splitEnglishDescriptiveAside` + two utterances when the aside
-    // ends the string — Andrew often ignores this period in one utterance.
+    // ends the string.
     .replace(/\s*\(([^)]*)\)/g, (_full, inner: string) => {
       if (isSkippedParentheticalNote(inner)) return "";
       const trimmed = inner.trim();
-      // Period = Andrew breathes before the aside; do not rush into "(...)".
-      return trimmed ? `. ${trimmed}` : "";
+      // Comma, not period — a light beat into the aside, not a full stop.
+      return trimmed ? `, ${trimmed}` : "";
     })
     .replace(/\s{2,}/g, " ")
     .replace(/\s+([,;:.!?])/g, "$1")
@@ -264,8 +282,8 @@ function rewriteParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
-    // Semicolon = clause break. Ellipsis makes Andrew pause (comma is too short).
-    .replace(/\s*;\s*/g, " ... ")
+    // Semicolon = light beat; "..." made Andrew hold far longer than a `;`.
+    .replace(/\s*;\s*/g, ", ")
     // Em/en dash = same breath pause when kept in a single utterance.
     .replace(/\s*[—–]\s*/g, " ... ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").

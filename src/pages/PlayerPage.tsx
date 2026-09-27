@@ -228,6 +228,12 @@ export function PlayerPage() {
   const [speechLang, setSpeechLang] = useState<"ja" | "en" | null>(null);
   const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
   const [speechRate, setSpeechRate] = useState(SPEECH_RATE_NORMAL);
+  const speechRateLabel =
+    speechRate === SPEECH_RATE_FAST
+      ? "1.25×"
+      : speechRate === SPEECH_RATE_SLOW
+        ? "Slow"
+        : "Normal";
   const [showFurigana, setShowFurigana] = useState(true);
   const [autoState, setAutoState] = useState<AutoState>("off");
 
@@ -2355,6 +2361,8 @@ export function PlayerPage() {
           <StageCategoryLabel
             primary={grammarRange ? `Grammar ${grammarRange}` : "Grammar"}
             category={gItem.subcategory}
+            level={gItem.jlpt}
+            speed={speechRateLabel}
           />
         );
         switch (grammarStep) {
@@ -2466,6 +2474,7 @@ export function PlayerPage() {
                 : "Quiz")
             }
             question={quizDeck[quizIndex] ?? null}
+            speedLabel={speechRateLabel}
             index={quizIndex}
             total={Math.max(quizDeck.length || quizItems.length, 1)}
             selectedChoiceIndex={quizSelectedIndex}
@@ -2544,6 +2553,8 @@ export function PlayerPage() {
             <VocabularyRangeLabel
               lessonId={lessonId}
               kind="lesson"
+              level={step !== "category" ? item?.jlpt : undefined}
+              speed={step !== "category" ? speechRateLabel : undefined}
               category={step !== "category" ? item?.category : undefined}
               theme={
                 step !== "category"
@@ -3279,7 +3290,12 @@ export function PlayerPage() {
         </button>
 
         {showBackToToc ? (
-          <button type="button" className="btn-secondary" tabIndex={-1} onClick={goToToc}>
+          <button
+            type="button"
+            className="btn-secondary nav-back-toc"
+            tabIndex={-1}
+            onClick={goToToc}
+          >
             Back to Table of Contents
           </button>
         ) : null}

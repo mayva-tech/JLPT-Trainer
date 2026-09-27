@@ -36,6 +36,7 @@ import {
 import {
   SPEECH_COMMA_PAUSE_MS,
   SPEECH_EN_CHAIN_PAUSE_MS,
+  SPEECH_EN_PAREN_PAUSE_MS,
   SPEECH_EN_SEMICOLON_PAUSE_MS,
   SPEECH_JA_COMMA_PAUSE_MS,
   SPEECH_JA_SENTENCE_PAUSE_MS,
@@ -1124,7 +1125,7 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
       {
         speak: buildEnglishSpeakText(aside.head),
         steps: headSteps.length > 0 ? headSteps : null,
-        pauseAfterMs: SPEECH_EN_CHAIN_PAUSE_MS,
+        pauseAfterMs: SPEECH_EN_PAREN_PAUSE_MS,
       },
       {
         speak: buildEnglishSpeakText(aside.aside),
@@ -1149,7 +1150,9 @@ function buildEnglishSpeakSegments(text: string): EnglishSpeakSegment[] {
         if (/[;,.!?—–]$/u.test(s.text)) {
           const stripped = s.text.replace(/[;,.!?—–]+$/u, "").trim();
           const base = buildEnglishSpeakText(stripped).trim() || stripped;
-          const keepEllipsis = /\.\.\.\s*$/u.test(s.spokenText ?? "");
+          // `;` has no added silence now — only dashes keep the karaoke hold.
+          const keepEllipsis =
+            /\.\.\.\s*$/u.test(s.spokenText ?? "") && !/;$/u.test(s.text);
           return {
             ...s,
             spokenText: keepEllipsis ? `${base.replace(/\s*\.{3}\s*$/u, "")} ...` : base,

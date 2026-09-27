@@ -3,6 +3,10 @@ import {
   speechService,
   type SpeechHighlight,
 } from "../../../services/speechService";
+import {
+  PLAY_ALL_CARD_HOLD_MS,
+  PLAY_ALL_CARD_LEAD_IN_MS,
+} from "../../../config/speechTiming";
 import type { RelationStatus, WordRelation } from "../../../types/wordRelation";
 import {
   playRelationSequence,
@@ -58,8 +62,10 @@ export function RelationBrowse({
     setPlayingAll(true);
     setHighlight(null);
 
-    const run = (cardIndex: number) => {
-      if (session !== playSessionRef.current) return;
+    const isAlive = () => session === playSessionRef.current;
+
+    const run = (cardIndex: number, leadIn: number) => {
+      if (!isAlive()) return;
       const item = shown[cardIndex];
       if (!item) {
         stopAll();
@@ -68,25 +74,31 @@ export function RelationBrowse({
       setActiveId(item.id);
       setPlayPart(null);
       setHighlight(null);
-      playRelationSequence(
-        item,
-        session,
-        () => session === playSessionRef.current,
-        setPlayPart,
-        () => {
-          if (session !== playSessionRef.current) return;
-          const next = cardIndex + 1;
-          if (next >= shown.length) {
-            stopAll();
-            return;
-          }
-          run(next);
-        },
-        setHighlight
-      );
+      window.setTimeout(() => {
+        if (!isAlive()) return;
+        playRelationSequence(
+          item,
+          session,
+          isAlive,
+          setPlayPart,
+          () => {
+            if (!isAlive()) return;
+            const next = cardIndex + 1;
+            if (next >= shown.length) {
+              stopAll();
+              return;
+            }
+            window.setTimeout(
+              () => run(next, PLAY_ALL_CARD_LEAD_IN_MS),
+              PLAY_ALL_CARD_HOLD_MS
+            );
+          },
+          setHighlight
+        );
+      }, leadIn);
     };
 
-    run(0);
+    run(0, 0);
   }, [playingAll, shown, stopAll]);
 
   if (relations.length === 0) {
@@ -104,7 +116,7 @@ export function RelationBrowse({
         <button
           type="button"
           className={`rt-playbtn${playingAll ? " rt-playbtn--active" : ""}`}
-          title="Play every visible card: both words JP+EN, then nuance"
+          title="Play every visible card: both words JP+EN, nuance, then example"
           onClick={playAll}
         >
           {playingAll ? "■ Stop All" : "▶ Play All"}

@@ -71,10 +71,19 @@ function overflowsSingleLine(root: HTMLElement): boolean {
   return el.scrollWidth > el.clientWidth + 1;
 }
 
-function overflowsMaxLines(root: HTMLElement, maxLines: number): boolean {
-  if (maxLines <= 1) return overflowsSingleLine(root);
+/** Phone portrait: the stage is taller than wide, so text wraps instead of shrinking. */
+function isPortraitStage(root: HTMLElement): boolean {
+  const stage = root.closest(".stage") as HTMLElement | null;
+  return !!stage && stage.clientHeight > stage.clientWidth;
+}
 
-  if (countJpLines(root) > maxLines) return true;
+function overflowsMaxLines(root: HTMLElement, maxLines: number): boolean {
+  const portrait = isPortraitStage(root);
+  if (maxLines <= 1) {
+    return portrait ? false : overflowsSingleLine(root);
+  }
+
+  if (!portrait && countJpLines(root) > maxLines) return true;
 
   const wrap =
     (root.querySelector(".jp-wrap") as HTMLElement | null) ?? root;

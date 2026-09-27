@@ -1006,7 +1006,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Descriptive "(soft, casual)" aside — period pause after the headword.
+    // Descriptive "(soft, casual)" aside — short comma beat after the headword.
     const opensDescriptiveParen =
       raw.startsWith("(") &&
       !isSkippedParentheticalNote(raw.replace(/^\(/, "").replace(/\)[^)]*$/, ""));
@@ -1017,7 +1017,7 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
         const base = (prev.spokenText ?? prev.text)
           .replace(/\s*\.{3}\s*$/u, "")
           .replace(/[,.]+$/u, "");
-        prev.spokenText = `${base}.`;
+        prev.spokenText = `${base},`;
         prev.speakGapAfter = true;
       }
     }
@@ -1029,9 +1029,11 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Keep semicolon / mdash clause breaks on the karaoke timeline (spoken as "...").
-    // Ellipsis already carries the pause — do not also set speakGapAfter.
-    if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+    // Semicolon → comma: "..." made the voice hold far longer than a `;` beat.
+    if (/;/.test(raw) && !/[—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+      spoken = `${spoken.replace(/[;,.]+$/u, "")},`;
+    } else if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+      // Mdash clause breaks stay "..." — the ellipsis carries the pause.
       spoken = `${spoken.replace(/[,.—–]+$/u, "")} ...`;
     }
 

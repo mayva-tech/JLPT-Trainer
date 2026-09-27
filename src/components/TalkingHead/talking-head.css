@@ -34,6 +34,11 @@
   animation: none;
 }
 
+/* Glide aside when it would cover text; drags stay 1:1 with the pointer. */
+.th-root.th-placed:not(.th-dragging) {
+  transition: left 280ms ease, top 280ms ease;
+}
+
 .th-svg {
   width: 100%;
   height: auto;
@@ -90,8 +95,10 @@
 /* Motion is decoration here — the mouth still changes shape, it just stops
    drifting and sliding. */
 @media (prefers-reduced-motion: reduce) {
-  .th-root {
+  .th-root,
+  .th-root.th-placed:not(.th-dragging) {
     animation: none;
+    transition: none;
   }
 
   .th-speaking {

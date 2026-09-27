@@ -29,6 +29,14 @@ export interface RelatedWord {
   partOfSpeech: PartOfSpeech;
 }
 
+/** One sentence that uses both words of a pair. */
+export interface RelationExample {
+  japanese: string;
+  /** Space-separated hiragana tokens, katakana folded to hiragana. */
+  reading: string;
+  english: string;
+}
+
 export interface WordRelation {
   /** Stable id, e.g. 'rel-n2-042'. Used for progress keys. */
   id: string;
@@ -41,6 +49,7 @@ export interface WordRelation {
    * pair and on antonyms where the boundary is easy to get wrong.
    */
   nuance?: string;
+  example?: RelationExample;
   /** Derived facets for filtering: level, type and parts of speech. */
   tags: string[];
 }

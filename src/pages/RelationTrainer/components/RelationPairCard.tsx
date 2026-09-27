@@ -10,6 +10,7 @@ import {
   playRelationSequence,
   type RelationPlayPart,
 } from "../relationPlayback";
+import { RelationExampleBlock } from "./RelationExampleBlock";
 import { RelationPair } from "./RelationPair";
 import { RelationTypeBanner } from "./RelationTypeBanner";
 import { RelationWord } from "./RelationWord";
@@ -146,6 +147,14 @@ export function RelationPairCard({
             highlight={activePart === "nuance" ? activeHighlight : null}
           />
         </div>
+      ) : null}
+
+      {relation.example ? (
+        <RelationExampleBlock
+          example={relation.example}
+          activePart={activePart}
+          highlight={activeHighlight}
+        />
       ) : null}
 
       <div className="rt-card-foot">

@@ -8,6 +8,8 @@ import { QuizResultScreen } from "./QuizResultScreen";
 type Props = {
   title: string;
   question: VocabularyQuizQuestion | null;
+  /** TTS speed label shown in the question header (Normal / 1.25× / Slow). */
+  speedLabel?: string;
   index: number;
   total: number;
   selectedChoiceIndex: number | null;
@@ -34,6 +36,7 @@ type Props = {
 export function QuizCard({
   title,
   question,
+  speedLabel,
   index,
   total,
   selectedChoiceIndex,
@@ -93,6 +96,7 @@ export function QuizCard({
     <QuizQuestionCard
       title={title}
       question={question}
+      speedLabel={speedLabel}
       index={index}
       total={total}
       selectedChoiceIndex={selectedChoiceIndex}

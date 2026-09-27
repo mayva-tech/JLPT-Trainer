@@ -14,9 +14,15 @@ export const SPEECH_EN_CHAIN_PAUSE_MS = 200;
 
 /**
  * English semicolon breath (`Nursery school; daycare center`).
- * Short gloss-list beat — lighter than the general EN chain pause.
+ * Zero: the next-utterance handoff alone is the gloss-list beat.
  */
-export const SPEECH_EN_SEMICOLON_PAUSE_MS = 50;
+export const SPEECH_EN_SEMICOLON_PAUSE_MS = 0;
+
+/**
+ * English descriptive aside `I (soft, casual)` — gap between the headword and
+ * the aside utterance. Short beat, not a full chain pause.
+ */
+export const SPEECH_EN_PAREN_PAUSE_MS = 60;
 
 /**
  * English colon breath (`meaning: to prepare in advance`).
@@ -63,6 +69,12 @@ export const SPEECH_JP_EN_HANDOFF_MS = 220;
 
 /** Gap between separate bilingual fields (JP headword → EN gloss). */
 export const SPEECH_BILINGUAL_FIELD_GAP_MS = 250;
+
+/** Play All: hold on a finished card before turning to the next one. */
+export const PLAY_ALL_CARD_HOLD_MS = 700;
+
+/** Play All: let the new card settle on screen before speech starts. */
+export const PLAY_ALL_CARD_LEAD_IN_MS = 400;
 
 /**
  * @deprecated Prefer the specific pause constants above.

@@ -5,11 +5,16 @@ import {
   speechService,
   type SpeechHighlight,
 } from "../../../services/speechService";
+import {
+  PLAY_ALL_CARD_HOLD_MS,
+  PLAY_ALL_CARD_LEAD_IN_MS,
+} from "../../../config/speechTiming";
 import type { WordRelation } from "../../../types/wordRelation";
 import {
   playRelationSequence,
   type RelationPlayPart,
 } from "../relationPlayback";
+import { RelationExampleBlock } from "./RelationExampleBlock";
 import { RelationPair } from "./RelationPair";
 import { RelationTypeBanner } from "./RelationTypeBanner";
 import { RelationWord } from "./RelationWord";
@@ -83,6 +88,25 @@ export function RelationStudy({ relations }: Props) {
 
   const relation = deck[index] ?? null;
 
+  const backRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const back = backRef.current;
+    if (!back) return;
+    if (!playPart) {
+      back.scrollTop = 0;
+      return;
+    }
+    const target = back.querySelector<HTMLElement>(
+      playPart.startsWith("example")
+        ? ".rt-example"
+        : playPart === "nuance"
+          ? ".rt-nuance"
+          : ".rt-pair"
+    );
+    target?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [playPart, relation?.id]);
+
   const go = useCallback(
     (delta: number) => {
       if (deck.length === 0) return;
@@ -133,34 +157,43 @@ export function RelationStudy({ relations }: Props) {
 
     const startIndex = index;
 
-    const run = (cardIndex: number) => {
-      if (session !== playSessionRef.current) return;
+    const isAlive = () => session === playSessionRef.current;
+
+    const run = (cardIndex: number, leadIn: number) => {
+      if (!isAlive()) return;
       const item = deck[cardIndex];
       if (!item) {
         stopAuto();
         return;
       }
       setIndex(cardIndex);
+      setPlayPart(null);
       setHighlight(null);
-      playRelationSequence(
-        item,
-        session,
-        () => session === playSessionRef.current,
-        setPlayPart,
-        () => {
-          if (session !== playSessionRef.current) return;
-          const next = cardIndex + 1;
-          if (next >= deck.length) {
-            stopAuto();
-            return;
-          }
-          run(next);
-        },
-        setHighlight
-      );
+      window.setTimeout(() => {
+        if (!isAlive()) return;
+        playRelationSequence(
+          item,
+          session,
+          isAlive,
+          setPlayPart,
+          () => {
+            if (!isAlive()) return;
+            const next = cardIndex + 1;
+            if (next >= deck.length) {
+              stopAuto();
+              return;
+            }
+            window.setTimeout(
+              () => run(next, PLAY_ALL_CARD_LEAD_IN_MS),
+              PLAY_ALL_CARD_HOLD_MS
+            );
+          },
+          setHighlight
+        );
+      }, leadIn);
     };
 
-    run(startIndex);
+    run(startIndex, 0);
   }, [deck, playingAll, stopAuto, index]);
 
   if (deck.length === 0) {
@@ -182,7 +215,7 @@ export function RelationStudy({ relations }: Props) {
           <button
             type="button"
             className={`rt-playbtn${playingCard ? " rt-playbtn--active" : ""}`}
-            title="Play both words JP+EN, then the nuance"
+            title="Play both words JP+EN, the nuance, then the example"
             onClick={playCurrent}
           >
             {playingCard ? "■ Stop" : "▶ Play"}
@@ -212,7 +245,7 @@ export function RelationStudy({ relations }: Props) {
         </button>
 
         <div className="rt-study-panel">
-          <div className="rt-study-back">
+          <div className="rt-study-back" ref={backRef}>
             <RelationTypeBanner type={relation.type} level={relation.jlptLevel} />
             <RelationPair watch={relation.id}>
               <RelationWord
@@ -246,6 +279,13 @@ export function RelationStudy({ relations }: Props) {
                   highlight={playPart === "nuance" ? highlight : null}
                 />
               </div>
+            ) : null}
+            {relation.example ? (
+              <RelationExampleBlock
+                example={relation.example}
+                activePart={playPart}
+                highlight={highlight}
+              />
             ) : null}
           </div>
         </div>

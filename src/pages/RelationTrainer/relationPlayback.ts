@@ -11,9 +11,14 @@ export type RelationPlayPart =
   | "word1-en"
   | "word2-jp"
   | "word2-en"
-  | "nuance";
+  | "nuance"
+  | "example-jp"
+  | "example-en";
 
-/** Speaks word1 JP → EN, word2 JP → EN, then the nuance note by language. */
+/**
+ * Speaks word1 JP → EN, word2 JP → EN, the nuance note by language, then the
+ * example sentence JP → EN.
+ */
 export function playRelationSequence(
   relation: WordRelation,
   _session: number,
@@ -159,6 +164,17 @@ export function playRelationSequence(
     run(0);
   };
 
+  const speakExample = () => {
+    const example = relation.example;
+    if (!example) {
+      finish();
+      return;
+    }
+    speakJa(example.japanese, example.reading, "example-jp", () =>
+      speakEn(example.english, "example-en", finish)
+    );
+  };
+
   speakJa(
     relation.word1.japanese,
     relation.word1.reading,
@@ -172,9 +188,9 @@ export function playRelationSequence(
           () =>
             speakEn(relation.word2.meaning, "word2-en", () => {
               if (relation.nuance?.trim()) {
-                speakNuance(relation.nuance, finish);
+                speakNuance(relation.nuance, speakExample);
               } else {
-                finish();
+                speakExample();
               }
             })
         )

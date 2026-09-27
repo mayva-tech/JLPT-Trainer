@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+} from "react";
 import { useSpeechFace } from "../../hooks/useSpeechFace";
 import type { Viseme } from "../../utils/visemes";
 import "./talking-head.css";
@@ -637,19 +643,197 @@ function clampHeadPos(x: number, y: number, el: HTMLElement): HeadPos {
   };
 }
 
+type Box = { left: number; top: number; right: number; bottom: number };
+
+/** Breathing room kept between the head and any text it steps aside for. */
+const AVOID_PAD = 6;
+const AVOID_INTERVAL_MS = 350;
+const AVOID_GRID_STEP = 12;
+
+function boxAt(pos: HeadPos, w: number, h: number): Box {
+  return { left: pos.x, top: pos.y, right: pos.x + w, bottom: pos.y + h };
+}
+
+function boxesIntersect(a: Box, b: Box): boolean {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
+function overlapArea(a: Box, b: Box): number {
+  const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+  const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+  return w > 0 && h > 0 ? w * h : 0;
+}
+
+/** The panel the head must stay inside: the Player stage, else the trainer view. */
+function findAvoidPanel(): { el: HTMLElement; box: Box } | null {
+  const stage = document.querySelector<HTMLElement>(".stage");
+  const el =
+    stage && stage.getBoundingClientRect().width > 0
+      ? stage
+      : document.querySelector<HTMLElement>(".app-view:not(.app-view--hidden)");
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return null;
+  return {
+    el,
+    box: {
+      left: Math.max(0, r.left),
+      top: Math.max(0, r.top),
+      right: Math.min(window.innerWidth, r.right),
+      bottom: Math.min(window.innerHeight, r.bottom),
+    },
+  };
+}
+
+/** Visible text line boxes inside the panel, plus the fixed control bars. */
+function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
+  const out: Box[] = [];
+  const pad = (r: DOMRect | Box): Box => ({
+    left: r.left - AVOID_PAD,
+    top: r.top - AVOID_PAD,
+    right: r.right + AVOID_PAD,
+    bottom: r.bottom + AVOID_PAD,
+  });
+
+  const walker = document.createTreeWalker(panelEl, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  const visibleCache = new Map<Element, boolean>();
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    if (!node.textContent?.trim()) continue;
+    const parent = node.parentElement;
+    if (!parent) continue;
+    let visible = visibleCache.get(parent);
+    if (visible === undefined) {
+      const cs = getComputedStyle(parent);
+      visible = cs.visibility !== "hidden" && cs.opacity !== "0";
+      visibleCache.set(parent, visible);
+    }
+    if (!visible) continue;
+    range.selectNodeContents(node);
+    for (const r of range.getClientRects()) {
+      if (r.width < 1 || r.height < 1) continue;
+      if (!boxesIntersect(r, panel)) continue;
+      out.push(pad(r));
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLElement>(".nav-bar, .production-panel")
+    .forEach((bar) => {
+      const r = bar.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) out.push(pad(r));
+    });
+  return out;
+}
+
+function isClear(box: Box, obstacles: Box[]): boolean {
+  return !obstacles.some((o) => boxesIntersect(box, o));
+}
+
+/**
+ * Nearest spot to `prefer` inside `panel` that covers no text. Falls back to
+ * the least-overlapping spot when the panel is packed.
+ */
+function findClearSpot(
+  panel: Box,
+  w: number,
+  h: number,
+  obstacles: Box[],
+  prefer: HeadPos
+): HeadPos | null {
+  const minX = panel.left + 4;
+  const minY = panel.top + 4;
+  const maxX = panel.right - w - 4;
+  const maxY = panel.bottom - h - 4;
+  if (maxX < minX || maxY < minY) return null;
+
+  const xs: number[] = [];
+  for (let x = minX; x < maxX; x += AVOID_GRID_STEP) xs.push(x);
+  xs.push(maxX);
+  const ys: number[] = [];
+  for (let y = minY; y < maxY; y += AVOID_GRID_STEP) ys.push(y);
+  ys.push(maxY);
+
+  let best: HeadPos | null = null;
+  let bestScore = Number.POSITIVE_INFINITY;
+  for (const y of ys) {
+    for (const x of xs) {
+      const box = { left: x, top: y, right: x + w, bottom: y + h };
+      let overlap = 0;
+      for (const o of obstacles) overlap += overlapArea(box, o);
+      // Any overlap outweighs distance, so a clear spot always wins.
+      const score = overlap * 1000 + Math.hypot(x - prefer.x, y - prefer.y);
+      if (score < bestScore) {
+        bestScore = score;
+        best = { x, y };
+      }
+    }
+  }
+  return best;
+}
+
+/** Where the CSS parks the head before the user has dragged it. */
+function defaultHeadPos(w: number, h: number): HeadPos {
+  const inset = window.innerWidth <= 480 ? 8 : 14;
+  return {
+    x: window.innerWidth - w - inset,
+    y: window.innerHeight - h - inset,
+  };
+}
+
 export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { lang, viseme, speaking } = useSpeechFace();
   const blinking = useBlink(speaking);
   // Tilt whenever the head is on screen — keeps idle motion after speech too.
   const tiltDeg = useHeadTilt(Boolean(lang));
   const rootRef = useRef<HTMLDivElement>(null);
+  /** User's chosen spot (drag); the head returns here whenever it is clear. */
   const [pos, setPos] = useState<HeadPos | null>(() => loadHeadPos());
+  /** Temporary spot while the chosen one would cover text. */
+  const [autoPos, setAutoPos] = useState<HeadPos | null>(null);
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef<{
     pointerId: number;
     offsetX: number;
     offsetY: number;
   } | null>(null);
+  const posRef = useRef(pos);
+  posRef.current = pos;
+  const autoPosRef = useRef(autoPos);
+  autoPosRef.current = autoPos;
+
+  useLayoutEffect(() => {
+    if (!enabled || !lang) return;
+
+    const tick = () => {
+      if (dragRef.current) return;
+      const el = rootRef.current;
+      if (!el) return;
+      const panel = findAvoidPanel();
+      if (!panel) return;
+      const { width: w, height: h } = el.getBoundingClientRect();
+      if (w < 1 || h < 1) return;
+
+      const obstacles = collectObstacles(panel.el, panel.box);
+      const home = posRef.current ?? defaultHeadPos(w, h);
+      if (isClear(boxAt(home, w, h), obstacles)) {
+        if (autoPosRef.current) setAutoPos(null);
+        return;
+      }
+      const current = autoPosRef.current;
+      if (current && isClear(boxAt(current, w, h), obstacles)) return;
+
+      const spot = findClearSpot(panel.box, w, h, obstacles, home);
+      if (spot && (spot.x !== current?.x || spot.y !== current?.y)) {
+        setAutoPos(spot);
+      }
+    };
+
+    tick();
+    const id = window.setInterval(tick, AVOID_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, [enabled, lang]);
 
   useEffect(() => {
     const onResize = () => {
@@ -678,15 +862,16 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
 
   if (!enabled || !lang) return null;
 
+  const shown = autoPos ?? pos;
+
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
     const el = rootRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const start: HeadPos = pos ?? { x: rect.left, y: rect.top };
-    if (!pos) {
-      setPos(start);
-    }
+    const start: HeadPos = shown ?? { x: rect.left, y: rect.top };
+    setPos(start);
+    setAutoPos(null);
     dragRef.current = {
       pointerId: e.pointerId,
       offsetX: e.clientX - start.x,
@@ -732,13 +917,13 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       className={[
         "th-root",
         dragging ? "th-dragging" : "",
-        pos ? "th-placed" : "",
+        shown ? "th-placed" : "",
       ]
         .filter(Boolean)
         .join(" ")}
       style={
-        pos
-          ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" }
+        shown
+          ? { left: shown.x, top: shown.y, right: "auto", bottom: "auto" }
           : undefined
       }
       role="button"

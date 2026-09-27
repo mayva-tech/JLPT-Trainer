@@ -4,7 +4,33 @@ import {
   getVocabularyDisplayRange,
 } from "../utils/vocabularyDisplay";
 
-type CategoryLineProps = {
+/** Level + playback speed chips (level colours match the Synonyms trainer). */
+type StageChipsProps = {
+  /** JLPT level of the current item, e.g. `N2`. */
+  level?: string;
+  /** Current TTS speed label, e.g. `Normal` / `1.25×` / `Slow`. */
+  speed?: string;
+};
+
+export function StageLevelChip({ level }: { level?: string }) {
+  if (!level) return null;
+  return (
+    <span className="stage-chip stage-chip--level" data-level={level}>
+      {level}
+    </span>
+  );
+}
+
+export function StageSpeedChip({ speed }: { speed?: string }) {
+  if (!speed) return null;
+  return (
+    <span className="stage-chip stage-chip--speed" data-speed={speed}>
+      {speed}
+    </span>
+  );
+}
+
+type CategoryLineProps = StageChipsProps & {
   /** Leading label (e.g. Vocabulary Lesson 3, Grammar 1–10). Omit for category-only. */
   primary?: string;
   /** Category text (e.g. Daily Life) — reminds which group the items belong to. */
@@ -14,11 +40,16 @@ type CategoryLineProps = {
   className?: string;
 };
 
-/** Single-line `primary · CATEGORY · theme` header shared by lesson, grammar and quiz. */
+/**
+ * Single-line `primary · CATEGORY · theme` header shared by lesson, grammar
+ * and quiz. `level` / `speed` chips render inline only when passed here.
+ */
 export function StageCategoryLine({
   primary,
   category,
   theme,
+  level,
+  speed,
   className = "vocabulary-range-label__primary",
 }: CategoryLineProps) {
   const parts = [
@@ -38,41 +69,51 @@ export function StageCategoryLine({
   ].filter((p): p is { key: string; text: string; cls: string | undefined } =>
     Boolean(p)
   );
-  if (parts.length === 0) return null;
+  if (parts.length === 0 && !level && !speed) return null;
 
   return (
     <div className={className} aria-hidden="true">
+      <StageLevelChip level={level} />
       {parts.map((part, i) => (
         <Fragment key={part.key}>
           {i > 0 ? <span className="vocabulary-range-label__sep">·</span> : null}
           <span className={part.cls}>{part.text}</span>
         </Fragment>
       ))}
+      <StageSpeedChip speed={speed} />
     </div>
   );
 }
 
-type StageHeaderProps = CategoryLineProps & {
+type StageHeaderProps = Omit<CategoryLineProps, "className"> & {
   secondary?: string | null;
 };
 
+/** Title line, then a meta row: `[N2]  Words 11–20  [Normal]`. */
 export function StageCategoryLabel({
   primary,
   category,
   theme,
   secondary,
+  level,
+  speed,
 }: StageHeaderProps) {
+  const showMeta = Boolean(secondary || level || speed);
   return (
     <div className="vocabulary-range-label" aria-hidden="true">
       <StageCategoryLine primary={primary} category={category} theme={theme} />
-      {secondary ? (
-        <div className="vocabulary-range-label__secondary">{secondary}</div>
+      {showMeta ? (
+        <div className="vocabulary-range-label__secondary">
+          <StageLevelChip level={level} />
+          {secondary ? <span>{secondary}</span> : null}
+          <StageSpeedChip speed={speed} />
+        </div>
       ) : null}
     </div>
   );
 }
 
-type Props = {
+type Props = StageChipsProps & {
   lessonId: string;
   kind: "lesson" | "quiz";
   category?: string;
@@ -80,7 +121,14 @@ type Props = {
 };
 
 /** Secondary lesson/quiz numbering shown under the main topic title. */
-export function VocabularyRangeLabel({ lessonId, kind, category, theme }: Props) {
+export function VocabularyRangeLabel({
+  lessonId,
+  kind,
+  category,
+  theme,
+  level,
+  speed,
+}: Props) {
   const range = getVocabularyDisplayRange(lessonId);
   if (!range) return null;
 
@@ -95,6 +143,8 @@ export function VocabularyRangeLabel({ lessonId, kind, category, theme }: Props)
       category={category}
       theme={theme}
       secondary={formatVocabularyLessonSubheader(lessonId)}
+      level={level}
+      speed={speed}
     />
   );
 }

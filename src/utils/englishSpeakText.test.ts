@@ -57,11 +57,18 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("Die")).toBe("Dai");
   });
 
+  it('speaks "bag" as flat /bæg/, not "beyg"', () => {
+    expect(buildEnglishSpeakText("a paper bag")).toBe("a paper bagg");
+    expect(buildEnglishSpeakText("Bag")).toBe("Bagg");
+    expect(buildEnglishSpeakText("two bags")).toBe("two baggz");
+    expect(buildEnglishSpeakText("baggage")).toBe("baggage");
+  });
+
   it('speaks "strange; odd" under 変 as two clear words with a pause', () => {
-    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... awd");
-    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge ... funny");
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, odd");
+    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge, funny");
     expect(buildEnglishSpeakText("Strange")).toBe("Straynge");
-    expect(buildEnglishSpeakText("odd")).toBe("awd");
+    expect(buildEnglishSpeakText("odd")).toBe("odd");
   });
 
   it("does not speak meta parenthetical notes like (formal)", () => {
@@ -69,10 +76,10 @@ describe("buildEnglishSpeakText", () => {
       buildEnglishSpeakText(
         "on the occasion of; at the time of (formal)"
       )
-    ).toBe("on the occasion of ... at the time of");
+    ).toBe("on the occasion of, at the time of");
     expect(
       buildEnglishSpeakText("must be; certainly (strong inference)")
-    ).toBe("must be ... certainly");
+    ).toBe("must be, certainly");
     expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
       "word and more"
     );
@@ -80,19 +87,19 @@ describe("buildEnglishSpeakText", () => {
 
   it("speaks descriptive gloss parentheticals used by Style Trainer", () => {
     expect(buildEnglishSpeakText("I (refined, feminine)")).toBe(
-      "I. refined, feminine"
+      "I, refined, feminine"
     );
-    expect(buildEnglishSpeakText("I (humble)")).toBe("I. humble");
-    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I. soft, casual");
+    expect(buildEnglishSpeakText("I (humble)")).toBe("I, humble");
+    expect(buildEnglishSpeakText("I (soft, casual)")).toBe("I, soft, casual");
   });
 
   it("pauses after semicolons instead of rushing the next clause", () => {
-    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... awd");
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, odd");
     expect(
       buildEnglishSpeakText(
         "it sounds too soft; many women use 私 in every situation"
       )
-    ).toBe("it sounds too soft ... many women use watashi in every situation");
+    ).toBe("it sounds too soft, many women use watashi in every situation");
   });
 
   it("pauses after em dash / en dash instead of rushing the next clause", () => {
