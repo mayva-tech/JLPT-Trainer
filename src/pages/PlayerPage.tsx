@@ -15,6 +15,9 @@ import type { StepName } from "../types/player";
 import { CategoryCard } from "../components/CategoryCard";
 import { WordCard } from "../components/WordCard";
 import { PhraseCard } from "../components/PhraseCard";
+import { speakNuance } from "../services/nuancePlayback";
+import { useStageHeaderClearance } from "../hooks/useStageHeaderClearance";
+import { grammarStepNuance, vocabStepNuance } from "../utils/lessonNuance";
 import { SentenceCard } from "../components/SentenceCard";
 import { ShadowingCard } from "../components/ShadowingCard";
 import { ReviewCard } from "../components/ReviewCard";
@@ -225,7 +228,12 @@ export function PlayerPage() {
   const [itemIndex, setItemIndex] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [speechStatus, setSpeechStatus] = useState<SpeechUiStatus>("idle");
-  const [speechLang, setSpeechLang] = useState<"ja" | "en" | null>(null);
+  const [speechLang, setSpeechLang] = useState<"ja" | "en" | "nuance" | null>(
+    null
+  );
+  const manualNuanceGenRef = useRef(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  useStageHeaderClearance(stageRef);
   const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
   const [speechRate, setSpeechRate] = useState(SPEECH_RATE_NORMAL);
   const speechRateLabel =
@@ -1212,6 +1220,7 @@ export function PlayerPage() {
 
   function playJapanese() {
     softStopAuto();
+    manualNuanceGenRef.current += 1;
     if (screenRef.current === "quiz") {
       // Full quiz-auto owns the timeline; manual reveal may be interrupted.
       if (quizAutoOnRef.current) return;
@@ -1337,19 +1346,7 @@ export function PlayerPage() {
       if (!gItem) return;
       const text = getGrammarSpeakableEnglish(gStep, gItem);
       if (!text) return;
-      setSpeechLang("en");
-      setHighlight(null);
-      setSpeechStatus("speaking");
-      speechService.speakEnglish(
-        text,
-        {
-          onStart: () => setSpeechStatus("speaking"),
-          onBoundary: (h) => setHighlight(h),
-          onEnd: () => clearSpeechUi(),
-          onError: () => clearSpeechUi(),
-        },
-        speechRateRef.current
-      );
+      speakEnglishThenNuance(text, grammarStepNuance(gStep, gItem));
       return;
     }
     const item = currentItem();
@@ -1357,15 +1354,35 @@ export function PlayerPage() {
     if (!item || !step) return;
     const text = getSpeakableEnglish(step, item);
     if (!text) return;
+    speakEnglishThenNuance(text, vocabStepNuance(step, item));
+  }
+
+  /** EN meaning, then the step's Nuance note (JA runs in the JA voice) when present. */
+  function speakEnglishThenNuance(text: string, nuance: string | undefined) {
     setSpeechLang("en");
     setHighlight(null);
     setSpeechStatus("speaking");
+    const generation = ++manualNuanceGenRef.current;
     speechService.speakEnglish(
       text,
       {
         onStart: () => setSpeechStatus("speaking"),
         onBoundary: (h) => setHighlight(h),
-        onEnd: () => clearSpeechUi(),
+        onEnd: () => {
+          if (!nuance || generation !== manualNuanceGenRef.current) {
+            clearSpeechUi();
+            return;
+          }
+          setSpeechLang("nuance");
+          setHighlight(null);
+          speakNuance(nuance, speechRateRef.current, {
+            isAlive: () => generation === manualNuanceGenRef.current,
+            onHighlight: setHighlight,
+            onEnd: () => {
+              if (generation === manualNuanceGenRef.current) clearSpeechUi();
+            },
+          });
+        },
         onError: () => clearSpeechUi(),
       },
       speechRateRef.current
@@ -2093,6 +2110,7 @@ export function PlayerPage() {
     !quizAutoOn;
   const jaLessonHighlight = speechLang === "ja" ? highlight : null;
   const enLessonHighlight = speechLang === "en" ? highlight : null;
+  const nuanceLessonHighlight = speechLang === "nuance" ? highlight : null;
 
   function renderWeakWordsProgressSummary() {
     const summary = getVocabQuizSummary(loadVocabQuizStats());
@@ -2161,6 +2179,8 @@ export function PlayerPage() {
             item={item}
             jaHighlight={jaLessonHighlight}
             enHighlight={enLessonHighlight}
+            nuanceHighlight={nuanceLessonHighlight}
+            nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
           />
         );
@@ -2170,6 +2190,8 @@ export function PlayerPage() {
             item={item}
             jaHighlight={jaLessonHighlight}
             enHighlight={enLessonHighlight}
+            nuanceHighlight={nuanceLessonHighlight}
+            nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
           />
         );
@@ -2179,6 +2201,8 @@ export function PlayerPage() {
             item={item}
             jaHighlight={jaLessonHighlight}
             enHighlight={enLessonHighlight}
+            nuanceHighlight={nuanceLessonHighlight}
+            nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
           />
         );
@@ -2395,6 +2419,8 @@ export function PlayerPage() {
                   showFurigana={grammarShowFurigana}
                   jaHighlight={jaLessonHighlight}
                   enHighlight={enLessonHighlight}
+                  nuanceHighlight={nuanceLessonHighlight}
+                  nuanceActive={speechLang === "nuance"}
                 />
               </>
             );
@@ -2424,6 +2450,8 @@ export function PlayerPage() {
                   showFurigana={grammarShowFurigana}
                   jaHighlight={jaLessonHighlight}
                   enHighlight={enLessonHighlight}
+                  nuanceHighlight={nuanceLessonHighlight}
+                  nuanceActive={speechLang === "nuance"}
                 />
               </>
             );
@@ -2620,7 +2648,9 @@ export function PlayerPage() {
             : "stage-wrapper"
         }
       >
-        <div className="stage">{renderStage()}</div>
+        <div className="stage" ref={stageRef}>
+          {renderStage()}
+        </div>
       </div>
 
       {screen === "intro" ? (

@@ -14,14 +14,20 @@ export type VocabularyItem = {
   word: string;
   reading: string;
   meaning: string;
+  /** Short usage note for the word — only when something is worth noting. */
+  wordNuance?: string;
 
   phrase: string;
   phraseReading: string;
   phraseMeaning: string;
+  /** Short usage note for the phrase — only when something is worth noting. */
+  phraseNuance?: string;
 
   sentence: string;
   sentenceReading: string;
   sentenceMeaning: string;
+  /** Short usage note for the example sentence — only when something is worth noting. */
+  sentenceNuance?: string;
 
   kanjiDetails: KanjiDetail[];
   wordType: string;

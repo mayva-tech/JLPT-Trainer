@@ -649,6 +649,7 @@ type Box = { left: number; top: number; right: number; bottom: number };
 const AVOID_PAD = 6;
 const AVOID_INTERVAL_MS = 350;
 const AVOID_GRID_STEP = 12;
+const PRIORITY_SELECTOR = ".lesson-nuance--active";
 
 function boxAt(pos: HeadPos, w: number, h: number): Box {
   return { left: pos.x, top: pos.y, right: pos.x + w, bottom: pos.y + h };
@@ -727,20 +728,40 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
   return out;
 }
 
+/** Panels being read aloud right now (e.g. the active Nuance box) — never cover these. */
+function collectPriorityObstacles(panel: Box): Box[] {
+  const out: Box[] = [];
+  document
+    .querySelectorAll<HTMLElement>(PRIORITY_SELECTOR)
+    .forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.width < 1 || r.height < 1 || !boxesIntersect(r, panel)) return;
+      out.push({
+        left: r.left - AVOID_PAD,
+        top: r.top - AVOID_PAD,
+        right: r.right + AVOID_PAD,
+        bottom: r.bottom + AVOID_PAD,
+      });
+    });
+  return out;
+}
+
 function isClear(box: Box, obstacles: Box[]): boolean {
   return !obstacles.some((o) => boxesIntersect(box, o));
 }
 
 /**
  * Nearest spot to `prefer` inside `panel` that covers no text. Falls back to
- * the least-overlapping spot when the panel is packed.
+ * the least-overlapping spot when the panel is packed, always keeping
+ * `priority` boxes uncovered if any spot allows it.
  */
 function findClearSpot(
   panel: Box,
   w: number,
   h: number,
   obstacles: Box[],
-  prefer: HeadPos
+  prefer: HeadPos,
+  priority: Box[] = []
 ): HeadPos | null {
   const minX = panel.left + 4;
   const minY = panel.top + 4;
@@ -762,8 +783,12 @@ function findClearSpot(
       const box = { left: x, top: y, right: x + w, bottom: y + h };
       let overlap = 0;
       for (const o of obstacles) overlap += overlapArea(box, o);
-      // Any overlap outweighs distance, so a clear spot always wins.
-      const score = overlap * 1000 + Math.hypot(x - prefer.x, y - prefer.y);
+      let covered = 0;
+      for (const p of priority) covered += overlapArea(box, p);
+      // Covering a priority panel outweighs any other text, and any overlap
+      // outweighs distance, so a clear spot always wins.
+      const score =
+        covered * 1e6 + overlap * 1000 + Math.hypot(x - prefer.x, y - prefer.y);
       if (score < bestScore) {
         bestScore = score;
         best = { x, y };
@@ -816,15 +841,17 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       if (w < 1 || h < 1) return;
 
       const obstacles = collectObstacles(panel.el, panel.box);
+      const priority = collectPriorityObstacles(panel.box);
+      const all = priority.length ? [...obstacles, ...priority] : obstacles;
       const home = posRef.current ?? defaultHeadPos(w, h);
-      if (isClear(boxAt(home, w, h), obstacles)) {
+      if (isClear(boxAt(home, w, h), all)) {
         if (autoPosRef.current) setAutoPos(null);
         return;
       }
       const current = autoPosRef.current;
-      if (current && isClear(boxAt(current, w, h), obstacles)) return;
+      if (current && isClear(boxAt(current, w, h), all)) return;
 
-      const spot = findClearSpot(panel.box, w, h, obstacles, home);
+      const spot = findClearSpot(panel.box, w, h, obstacles, home, priority);
       if (spot && (spot.x !== current?.x || spot.y !== current?.y)) {
         setAutoPos(spot);
       }

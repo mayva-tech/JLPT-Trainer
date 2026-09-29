@@ -2,6 +2,7 @@ import type { GrammarItem } from "../types/grammar";
 import type { SpeechHighlight } from "../services/speechService";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { LessonNuance } from "./LessonNuance";
 import { FitScale } from "./FitScale";
 
 type Props = {
@@ -9,6 +10,8 @@ type Props = {
   showFurigana?: boolean;
   jaHighlight?: SpeechHighlight | null;
   enHighlight?: SpeechHighlight | null;
+  nuanceHighlight?: SpeechHighlight | null;
+  nuanceActive?: boolean;
 };
 
 /** ④ Example sentence with furigana and English translation. */
@@ -17,6 +20,8 @@ export function GrammarSentenceCard({
   showFurigana = true,
   jaHighlight = null,
   enHighlight = null,
+  nuanceHighlight = null,
+  nuanceActive = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -43,6 +48,11 @@ export function GrammarSentenceCard({
           />
         </FitScale>
       </div>
+      <LessonNuance
+        note={item.sentenceNuance}
+        active={nuanceActive}
+        highlight={nuanceHighlight}
+      />
     </div>
   );
 }

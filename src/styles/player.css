@@ -42,10 +42,13 @@
   position: absolute;
   /* Top inset clears lesson-label / progress-label (at ~5.5%) */
   inset: 12% 8% 16% 8%;
+  /* Start below a header that wraps (--header-clear from useStageHeaderClearance). */
+  top: max(12%, var(--header-clear, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Tall cards (furigana + nuance) overflow downward, never into the header. */
+  justify-content: safe center;
   text-align: center;
   user-select: none;
   -webkit-user-select: none;
@@ -100,10 +103,9 @@
   letter-spacing: 0.02em;
   font-size: 1.7cqw;
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
   max-width: 98%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-align: center;
   margin-bottom: 1.2cqh;
   padding: 0.55cqw 1.4cqw;
 }
@@ -290,6 +292,52 @@
 
 .phrase-main {
   font-size: var(--lesson-jp-line);
+  color: var(--text);
+}
+
+/* Same amber note box as the Synonyms trainer's Nuance. */
+.lesson-nuance {
+  margin-top: 3cqh;
+  max-width: 86%;
+  padding: 1.4cqh 2.4cqw;
+  border-radius: 1.2cqw;
+  background: rgba(232, 165, 75, 0.16);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  text-align: center;
+  transition: outline-color 0.2s ease;
+}
+
+.lesson-nuance--active {
+  outline-color: var(--accent);
+}
+
+/* Cards with a nuance note: LessonNuance also scales the --lesson-* type sizes to fit. */
+.safe-area--nuance-fit .furigana-wrap .jp-wrap-line {
+  row-gap: 0.2em;
+}
+
+.safe-area--nuance-fit > .lesson-nuance {
+  margin-top: 1.6cqh;
+}
+
+.lesson-nuance-label {
+  display: block;
+  font-family: var(--font-en);
+  font-size: 1.5cqw;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6cqh;
+}
+
+.lesson-nuance-body {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 2.3cqw;
+  line-height: 1.45;
   color: var(--text);
 }
 
@@ -1084,17 +1132,35 @@
   font-size: 1.9cqw;
   font-weight: 600;
   color: var(--accent);
-  white-space: nowrap;
-  overflow: hidden;
+  flex-wrap: wrap;
+  row-gap: 0.2cqh;
+  line-height: 1.25;
 }
 
 .vocabulary-range-label__primary > span {
   flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.vocabulary-range-label__part {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6cqw;
 }
 
 .vocabulary-range-label__sep {
   color: var(--text-softer);
   font-weight: 400;
+}
+
+/* Own full row: dropping the separator must not let it rejoin the line above. */
+.vocabulary-range-label__primary > .vocabulary-range-label__part.vocabulary-range-label__part--line-start {
+  flex-basis: 100%;
+  justify-content: center;
+}
+
+.vocabulary-range-label__part--line-start > .vocabulary-range-label__sep {
+  display: none;
 }
 
 .vocabulary-range-label__category {
@@ -1103,11 +1169,13 @@
   text-transform: uppercase;
 }
 
-.vocabulary-range-label__primary > .vocabulary-range-label__theme {
+.vocabulary-range-label__primary > .vocabulary-range-label__part--theme {
   flex: 0 1 auto;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.vocabulary-range-label__theme {
   font-weight: 400;
   color: var(--text-soft);
 }
@@ -1714,6 +1782,21 @@
 
   .safe-area {
     inset: 15% 5% 4% 5%;
+    top: max(15%, var(--header-clear, 0px));
+  }
+
+  .lesson-nuance {
+    max-width: 96%;
+    padding: 1.4cqh 4cqw;
+    border-radius: 2.4cqw;
+  }
+
+  .lesson-nuance-label {
+    font-size: 3.2cqw;
+  }
+
+  .lesson-nuance-body {
+    font-size: 4.4cqw;
   }
 
   .progress-label,
@@ -1929,9 +2012,8 @@
     font-size: 3.2cqw;
     padding: 0.8cqw 2.4cqw;
     max-width: 76cqw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
   }
 
   .quiz-example-panel--review .quiz-example-ja {

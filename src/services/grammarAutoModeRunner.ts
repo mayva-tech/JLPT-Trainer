@@ -20,6 +20,8 @@ import {
   resolveAutoModeSpeechRate,
   type SpeechHighlight,
 } from "./speechService";
+import { speakNuance } from "./nuancePlayback";
+import { grammarStepNuance } from "../utils/lessonNuance";
 
 export type GrammarStep =
   | "category"
@@ -45,7 +47,7 @@ export type GrammarAutoModeUi = {
   setSpeechRate: (rate: number) => void;
   /** Current chrome rate — when 1.25×, Auto Mode stays locked at fast. */
   getPreferredSpeechRate?: () => number;
-  setSpeechLang: (lang: "ja" | "en" | null) => void;
+  setSpeechLang: (lang: "ja" | "en" | "nuance" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setHighlight: (h: SpeechHighlight | null) => void;
 };
@@ -134,6 +136,10 @@ export class GrammarAutoModeRunner {
           item.patternReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
+        if (!(await this.playNuance(ui, grammarStepNuance("pattern", item), rateFor, sid))) {
+          completedAll = false;
+          break;
+        }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
 
@@ -178,6 +184,10 @@ export class GrammarAutoModeRunner {
           item.sentenceReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
+        if (!(await this.playNuance(ui, grammarStepNuance("sentence", item), rateFor, sid))) {
+          completedAll = false;
+          break;
+        }
         await this.pause(T.normalPause, sid);
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
 
@@ -229,6 +239,41 @@ export class GrammarAutoModeRunner {
     }
 
     return sid === this.session && completedAll && !this.softStop;
+  }
+
+  /** Short pause, then the note at normal rate; false when the run was stopped. */
+  private async playNuance(
+    ui: GrammarAutoModeUi,
+    nuance: string | undefined,
+    rateFor: (scripted: number) => number,
+    sid: number
+  ): Promise<boolean> {
+    if (!nuance) return true;
+    await this.pause(T.shortPause, sid);
+    if (!this.shouldContinue(sid)) return false;
+    const rate = rateFor(SPEECH_RATE_NORMAL);
+    ui.setSpeechRate(rate);
+    await new Promise<void>((resolve) => {
+      this.speaking = true;
+      ui.setSpeechLang("nuance");
+      ui.setHighlight(null);
+      ui.setSpeechStatus("speaking");
+      speakNuance(nuance, rate, {
+        isAlive: () => sid === this.session,
+        onHighlight: (h) => {
+          if (sid === this.session) ui.setHighlight(h);
+        },
+        onEnd: () => {
+          if (sid === this.session) {
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+          }
+          resolve();
+        },
+      });
+    });
+    return this.shouldContinue(sid);
   }
 
   private shouldContinue(sid: number): boolean {

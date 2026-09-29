@@ -9,6 +9,8 @@ import {
   resolveAutoModeSpeechRate,
   type SpeechHighlight,
 } from "./speechService";
+import { speakNuance } from "./nuancePlayback";
+import { vocabStepNuance } from "../utils/lessonNuance";
 
 export type AutoModeUi = {
   setItemIndex: (index: number) => void;
@@ -17,7 +19,7 @@ export type AutoModeUi = {
   setSpeechRate: (rate: number) => void;
   /** Current chrome rate — when 1.25×, Auto Mode stays locked at fast. */
   getPreferredSpeechRate?: () => number;
-  setSpeechLang: (lang: "ja" | "en" | null) => void;
+  setSpeechLang: (lang: "ja" | "en" | "nuance" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setHighlight: (h: SpeechHighlight | null) => void;
 };
@@ -351,7 +353,49 @@ export class AutoModeRunner {
     await this.speakJapanese(ui, ja, rate5, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
+    const nuance = vocabStepNuance(step, item);
+    if (nuance) {
+      await this.pause(T.shortPause, sid);
+      if (!this.shouldContinue(sid)) return;
+      const nuanceRate = rateFor(SPEECH_RATE_NORMAL);
+      ui.setSpeechRate(nuanceRate);
+      await this.speakNuanceNote(ui, nuance, nuanceRate, sid);
+      if (!this.shouldContinue(sid)) return;
+    }
+
     await this.pause(T.normalPause, sid);
+  }
+
+  private speakNuanceNote(
+    ui: AutoModeUi,
+    text: string,
+    rate: number,
+    sid: number
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.shouldContinue(sid) && !this.speaking) {
+        resolve();
+        return;
+      }
+      this.speaking = true;
+      ui.setSpeechLang("nuance");
+      ui.setHighlight(null);
+      ui.setSpeechStatus("speaking");
+      speakNuance(text, rate, {
+        isAlive: () => sid === this.session,
+        onHighlight: (h) => {
+          if (sid === this.session) ui.setHighlight(h);
+        },
+        onEnd: () => {
+          if (sid === this.session) {
+            this.speaking = false;
+            this.clearSpeechUi(ui);
+            if (this.softStop) this.clearPauses();
+          }
+          resolve();
+        },
+      });
+    });
   }
 
   private async runShadowingAndReview(

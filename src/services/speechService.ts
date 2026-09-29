@@ -43,6 +43,7 @@ import {
 } from "../config/speechTiming";
 
 import { emitSpeechEvent } from "./speechBus";
+import { splitNuanceForSpeech } from "../utils/nuanceSpeech";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -76,6 +77,17 @@ export type SpeakJapaneseOptions = {
    * (e.g. 間に → まに, not あいだに). Highlights still track `text` surface indices.
    */
   reading?: string | null;
+  /** See {@link SpeakEnglishOptions.followVoice}. */
+  followVoice?: boolean;
+};
+
+export type SpeakEnglishOptions = {
+  /**
+   * Once the voice reports word boundaries, advance karaoke only on them
+   * instead of the estimate timeline (which races kanji and comma pauses in
+   * short mixed-language runs such as nuance notes).
+   */
+  followVoice?: boolean;
 };
 
 export const SPEECH_RATE_NORMAL = 0.80;
@@ -482,7 +494,8 @@ function runUtterance(
    * When set, fallback karaoke uses these steps (display indices into `text`)
    * instead of rebuilding from the full string — used for split EN asides/clauses.
    */
-  karaokeUnits?: HighlightUnit[] | null
+  karaokeUnits?: HighlightUnit[] | null,
+  followVoice = false
 ) {
   if (!window.speechSynthesis || !text.trim()) {
     callbacks?.onEnd?.();
@@ -586,6 +599,8 @@ function runUtterance(
   let lastBoundaryStart = -1;
   let lastBoundaryEnd = -1;
   let utteranceStarted = false;
+  /** followVoice: the voice reports words, so the estimate timeline stands down. */
+  let voiceLed = false;
 
   const alive = () => playbackId === playbackGeneration;
 
@@ -678,6 +693,7 @@ function runUtterance(
   const armTimer = () => {
     clearFallbackTimer();
     if (!alive() || !timelineRunning || pausedAt !== null) return;
+    if (voiceLed) return;
     if (nextIndex >= units.length) return;
     const delay = Math.max(
       0,
@@ -777,6 +793,10 @@ function runUtterance(
     if (!withHighlight) return;
     if (!isUsefulBoundaryName(event.name)) return;
     if (!utteranceStarted) return;
+    if (followVoice && event.name === "word") {
+      voiceLed = true;
+      clearFallbackTimer();
+    }
 
     const charIndex = event.charIndex ?? 0;
     const charLength =
@@ -924,6 +944,7 @@ export const speechService = {
     options?: SpeakJapaneseOptions
   ) {
     const reading = options?.reading ?? null;
+    const followVoice = options?.followVoice ?? false;
     const segments = buildJapaneseSpeakSegments(text, reading);
     if (segments.length <= 1) {
       const speakText = buildJapaneseSpeakText(text, reading);
@@ -935,19 +956,29 @@ export const speechService = {
         true,
         rate,
         speakText,
-        reading
+        reading,
+        null,
+        followVoice
       );
       return;
     }
 
-    speakJapaneseSegments(text, segments, callbacks, rate);
+    speakJapaneseSegments(text, segments, callbacks, rate, followVoice);
   },
 
   speakEnglish(
     text: string,
     callbacks?: SpeakCallbacks,
-    rate = SPEECH_RATE_NORMAL
+    rate = SPEECH_RATE_NORMAL,
+    options?: SpeakEnglishOptions
   ) {
+    // Andrew (multilingual) garbles embedded Japanese and the English around
+    // it, so hand Japanese runs to Nanami.
+    if (JAPANESE_CHAR_RE.test(text)) {
+      speakMixedEnglish(text, callbacks, rate);
+      return;
+    }
+    const followVoice = options?.followVoice ?? false;
     const segments = buildEnglishSpeakSegments(text);
     if (segments.length <= 1) {
       const speakText = buildEnglishSpeakText(text);
@@ -958,14 +989,83 @@ export const speechService = {
         callbacks,
         true,
         rate,
-        speakText
+        speakText,
+        null,
+        null,
+        followVoice
       );
       return;
     }
 
-    speakEnglishSegments(text, segments, callbacks, rate);
+    speakEnglishSegments(text, segments, callbacks, rate, followVoice);
   },
 };
+
+const JAPANESE_CHAR_RE = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9faf]/u;
+const SPEAKABLE_CHAR_RE = /[\p{L}\p{N}]/u;
+
+/**
+ * English line with embedded Japanese: each run in its own voice, karaoke
+ * offsets rebased onto `text`. Punctuation-only runs (a closing `)`) are skipped.
+ */
+function speakMixedEnglish(
+  text: string,
+  callbacks: SpeakCallbacks | undefined,
+  rate: number
+) {
+  let cursor = 0;
+  const runs = splitNuanceForSpeech(text).flatMap((segment) => {
+    const found = text.indexOf(segment.text, cursor);
+    const start = found >= 0 ? found : cursor;
+    cursor = start + segment.text.length;
+    // A Japanese run inside `( … )` leaves unbalanced brackets on the English
+    // runs, which skews boundary mapping — speak the bracket pieces separately.
+    const pieces =
+      segment.lang === "en"
+        ? [...segment.text.matchAll(/[^()]+/g)].map((m) => ({ text: m[0], at: m.index }))
+        : [{ text: segment.text, at: 0 }];
+    return pieces.flatMap((piece) => {
+      const speak = piece.text.trim();
+      if (!SPEAKABLE_CHAR_RE.test(speak)) return [];
+      return [
+        {
+          lang: segment.lang,
+          speak,
+          offset: start + piece.at + piece.text.indexOf(speak),
+        },
+      ];
+    });
+  });
+
+  let started = false;
+  let index = 0;
+  const playNext = () => {
+    const run = runs[index];
+    if (!run) {
+      callbacks?.onEnd?.();
+      return;
+    }
+    index += 1;
+    const runCallbacks: SpeakCallbacks = {
+      onStart: () => {
+        if (started) return;
+        started = true;
+        callbacks?.onStart?.();
+      },
+      onBoundary: (h) =>
+        callbacks?.onBoundary?.({ start: h.start + run.offset, end: h.end + run.offset }),
+      onEnd: playNext,
+      onError: (error) => callbacks?.onError?.(error),
+    };
+    if (run.lang === "ja") {
+      speechService.speakJapanese(run.speak, runCallbacks, rate, { followVoice: true });
+    } else {
+      speechService.speakEnglish(run.speak, runCallbacks, rate, { followVoice: true });
+    }
+  };
+
+  playNext();
+}
 
 type JapaneseSpeakSegment = {
   speak: string;
@@ -1044,7 +1144,8 @@ function speakJapaneseSegments(
   displayText: string,
   segments: JapaneseSpeakSegment[],
   callbacks: SpeakCallbacks | undefined,
-  rate: number
+  rate: number,
+  followVoice = false
 ) {
   const voice = pickNanamiVoice();
   let started = false;
@@ -1096,7 +1197,8 @@ function speakJapaneseSegments(
       rate,
       seg.speak,
       seg.reading,
-      seg.steps
+      seg.steps,
+      followVoice
     );
   };
 
@@ -1185,7 +1287,8 @@ function speakEnglishSegments(
   displayText: string,
   segments: EnglishSpeakSegment[],
   callbacks: SpeakCallbacks | undefined,
-  rate: number
+  rate: number,
+  followVoice = false
 ) {
   const voice = pickEnglishVoice();
   let started = false;
@@ -1237,7 +1340,8 @@ function speakEnglishSegments(
       rate,
       seg.speak,
       null,
-      seg.steps
+      seg.steps,
+      followVoice
     );
   };
 

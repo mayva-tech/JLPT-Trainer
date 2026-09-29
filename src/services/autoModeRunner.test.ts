@@ -162,4 +162,70 @@ describe("autoModeRunner abort while speaking", () => {
       true
     );
   });
+
+  it("speaks the phrase nuance after the phrase, only when one exists", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+
+    const langs: (string | null)[] = [];
+    const ui = mockUi();
+    ui.setSpeechLang = vi.fn((lang) => {
+      langs.push(lang);
+    });
+    const item: VocabularyItem = {
+      ...sampleItem,
+      phraseNuance: "確認 is the everyday word for checking.",
+    };
+    const started = autoModeRunner.start([item], 0, ui, vi.fn());
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+
+    // Word JA/EN/JA, then phrase JA/EN/JA, then the two nuance runs.
+    for (let n = 0; n < 8; n++) {
+      const u = spoken[n];
+      expect(u, `utterance ${n}`).toBeTruthy();
+      u!.onstart?.();
+      u!.onend?.();
+      await vi.advanceTimersByTimeAsync(autoModeTiming.normalPause);
+    }
+
+    expect(spoken[6]!.text).toBe("確認");
+    expect(spoken[7]!.text).toMatch(/is the everyday word for checking/);
+    expect(langs).toContain("nuance");
+
+    autoModeRunner.abort();
+    await started;
+  });
+
+  it("speaks word and sentence nuances after their own sections", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+
+    const item: VocabularyItem = {
+      ...sampleItem,
+      wordNuance: "Stock is a business word.",
+      sentenceNuance: "The sentence is plain and polite.",
+    };
+    const started = autoModeRunner.start([item], 0, mockUi(), vi.fn());
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+
+    const texts: string[] = [];
+    for (let n = 0; n < 14 && spoken[n]; n++) {
+      const u = spoken[n]!;
+      texts.push(u.text);
+      u.onstart?.();
+      u.onend?.();
+      await vi.advanceTimersByTimeAsync(autoModeTiming.normalPause * 3);
+    }
+
+    // JA is spoken from the reading; word note after the word, sentence note after the slow sentence.
+    expect(texts[3]).toBe("Stock is a business word.");
+    expect(texts[5]).toBe("check stock");
+    expect(texts[9]).toBe("ざいこ です。");
+    expect(texts[10]).toBe("The sentence is plain and polite.");
+
+    autoModeRunner.abort();
+    await started;
+  });
 });

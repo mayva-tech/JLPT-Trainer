@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { useLayoutEffect, useRef } from "react";
 import {
   formatVocabularyLessonSubheader,
   getVocabularyDisplayRange,
@@ -69,16 +69,55 @@ export function StageCategoryLine({
   ].filter((p): p is { key: string; text: string; cls: string | undefined } =>
     Boolean(p)
   );
+  const lineRef = useRef<HTMLDivElement>(null);
+  const partsKey = parts.map((p) => p.text).join("|");
+
+  useLayoutEffect(() => {
+    const line = lineRef.current;
+    if (!line) return;
+    const mark = () => {
+      let prevTop: number | null = null;
+      for (const el of line.querySelectorAll<HTMLElement>(
+        ".vocabulary-range-label__part"
+      )) {
+        el.classList.remove("vocabulary-range-label__part--line-start");
+      }
+      for (const el of line.querySelectorAll<HTMLElement>(
+        ".vocabulary-range-label__part"
+      )) {
+        const top = el.offsetTop;
+        if (prevTop !== null && top > prevTop + 2) {
+          el.classList.add("vocabulary-range-label__part--line-start");
+        }
+        prevTop = top;
+      }
+    };
+    mark();
+    // Width-only: hiding a separator changes height, which must not re-trigger.
+    let lastWidth = line.clientWidth;
+    const ro = new ResizeObserver(() => {
+      if (line.clientWidth === lastWidth) return;
+      lastWidth = line.clientWidth;
+      mark();
+    });
+    ro.observe(line);
+    return () => ro.disconnect();
+  }, [partsKey]);
+
   if (parts.length === 0 && !level && !speed) return null;
 
   return (
-    <div className={className} aria-hidden="true">
+    <div className={className} aria-hidden="true" ref={lineRef}>
       <StageLevelChip level={level} />
       {parts.map((part, i) => (
-        <Fragment key={part.key}>
+        // Separator rides with the next item so a wrap never leaves "·" dangling.
+        <span
+          key={part.key}
+          className={`vocabulary-range-label__part vocabulary-range-label__part--${part.key}`}
+        >
           {i > 0 ? <span className="vocabulary-range-label__sep">·</span> : null}
           <span className={part.cls}>{part.text}</span>
-        </Fragment>
+        </span>
       ))}
       <StageSpeedChip speed={speed} />
     </div>

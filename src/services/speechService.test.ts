@@ -895,10 +895,44 @@ describe("speechService karaoke timeline", () => {
       }
     }
     expect(spoken.length).toBeGreaterThanOrEqual(3);
-    expect(spoken.some((u) => u.text.includes("watashi"))).toBe(true);
+    // Nanami speaks the embedded Japanese; Andrew never reads it.
+    expect(spoken.some((u) => u.text === "私" && u.lang.startsWith("ja"))).toBe(true);
+    expect(spoken.some((u) => u.lang.startsWith("en") && /私|watashi/.test(u.text))).toBe(false);
     expect(highlights).toContain("私");
     expect(highlights).toContain("lives.");
     expect(ended).toBe(1);
+  });
+
+  it("speaks Japanese inside an English gloss aside with the Japanese voice", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    const text = "must not; shall not (firm prohibition, more formal than てはいけない)";
+    const highlights: string[] = [];
+    let ended = 0;
+    speechService.speakEnglish(text, {
+      onBoundary: (h) => highlights.push(text.slice(h.start, h.end)),
+      onEnd: () => {
+        ended += 1;
+      },
+    });
+
+    for (let i = 0; i < 12 && ended === 0; i++) {
+      const utter = spoken[spoken.length - 1]!;
+      utter.onstart?.();
+      vi.advanceTimersByTime(20000);
+      utter.onend?.();
+      vi.advanceTimersByTime(1000);
+    }
+
+    expect(ended).toBe(1);
+    const english = spoken.filter((u) => u.lang.startsWith("en")).map((u) => u.text);
+    const japanese = spoken.filter((u) => u.lang.startsWith("ja")).map((u) => u.text);
+    expect(japanese).toEqual(["てはいけない"]);
+    expect(english.join(" ")).not.toMatch(/[()ぁ-ん]/u);
+    expect(english.some((t) => /^firm prohibition/.test(t))).toBe(true);
+    expect(highlights).toContain("firm");
+    expect(highlights).toContain("てはいけない");
   });
 
   it("splits explanation sentences and keeps karaoke from lagging on the last clause", async () => {

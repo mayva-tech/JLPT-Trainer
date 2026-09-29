@@ -2,6 +2,7 @@ import type { KanjiDetail, VocabularyItem } from "../types/vocabulary";
 import { KANJI } from "./kanji";
 import { lessons } from "./lessons";
 import { core2000Seeds } from "./vocabularyCore2000Seeds";
+import { vocabNuanceFields } from "./vocabularyNuances";
 
 const audio = (folder: string, id: string) => ({
   audioWord: `/audio/n2/${folder}/${id}-word.mp3`,
@@ -11459,6 +11460,7 @@ for (const lesson of lessons) {
 
 export const vocabulary: VocabularyItem[] = seeds.map(({ folder, ...seed }) => ({
   ...seed,
+  ...vocabNuanceFields(seed.id),
   jlpt: N1_VOCAB_IDS.has(seed.id) ? "N1" : "N2",
   category: VOCAB_CATEGORY_BY_ID.get(seed.id) ?? "Daily Life",
   kanjiDetails: kanjiDetailsFor(seed.word, seed.phrase, seed.sentence),

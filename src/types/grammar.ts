@@ -22,12 +22,16 @@ export type GrammarItem = {
   pattern: string;
   patternReading: string;
   meaning: string;
+  /** Short usage note for the pattern — only when something is worth noting. */
+  nuance?: string;
 
   formation: string;
 
   sentence: string;
   sentenceReading: string;
   sentenceMeaning: string;
+  /** Short usage note for the example sentence — only when something is worth noting. */
+  sentenceNuance?: string;
 
   audioSentence: string;
 };

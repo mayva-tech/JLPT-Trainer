@@ -1,5 +1,6 @@
 import type { GrammarItem } from "../types/grammar";
 import type { GrammarLesson } from "../types/lesson";
+import { grammarNuanceFields } from "./grammarNuances";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Grammar Lesson 01–10 · Concession & Contrast
@@ -17,7 +18,7 @@ import type { GrammarLesson } from "../types/lesson";
 // Grammar Lesson 41–50 · Purpose, Tendency & Formal Expression
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const grammar: GrammarItem[] = [
+const baseGrammar: GrammarItem[] = [
   // ── Lesson 01–10: Concession & Contrast ──────────────────────────────────
   {
     id: 5001,
@@ -8712,6 +8713,11 @@ export const grammar: GrammarItem[] = [
     audioSentence: "/audio/n2/grammar/5500-sentence.mp3",
   },
 ];
+
+export const grammar: GrammarItem[] = baseGrammar.map((item) => ({
+  ...item,
+  ...grammarNuanceFields(item.id),
+}));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Grammar Lessons
