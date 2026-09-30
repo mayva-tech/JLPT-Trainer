@@ -1,3 +1,5 @@
+import { useHeadScene } from '../../hooks/useHeadScene';
+import { tripBackdrop } from '../../components/TalkingHead/scenes';
 import { useMemo, useRef, useState } from 'react';
 import './trip-trainer.css';
 import { DECKS, SCRIPTS } from './data';
@@ -86,6 +88,7 @@ export default function TripTrainer() {
   const variant: Variant = card[shownRegister];
   const isKnown = progress.known.includes(card.id);
   const script = SCRIPTS.find((s) => s.id === openScript) ?? null;
+  useHeadScene({ backdrop: tripBackdrop(tab === 'scenarios' ? openScript : null) });
   const playDisabled = tab === 'scenarios' && !script;
 
   function stopAuto() {

@@ -1,3 +1,5 @@
+import { useHeadScene } from "../../hooks/useHeadScene";
+import { phoneBackdrop } from "../../components/TalkingHead/scenes";
 import { useCallback, useMemo, useState } from "react";
 import "./phone-trainer.css";
 import { phoneScenarios } from "../../data/phoneCalls";
@@ -100,6 +102,8 @@ export default function PhoneTrainer() {
   }, [listed]);
 
   const open = openId ? getPhoneScenarioById(openId) : undefined;
+  // Talking head: on the phone, in the place the call is about.
+  useHeadScene(open ? { backdrop: phoneBackdrop(open.category), prop: "phone" } : null);
 
   if (open) {
     const status = statusOf(open.id);

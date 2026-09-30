@@ -1,3 +1,4 @@
+import { useHeadScene } from "../hooks/useHeadScene";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { HighlightedJapanese } from "./HighlightedJapanese";
 import type { InterviewLine } from "../data/interviewPrep";
@@ -47,6 +48,8 @@ export function InterviewPracticeDisplay({
   jaHighlight,
   enHighlight,
 }: Props) {
+  // Talking head: an interview happens at the office.
+  useHeadScene({ backdrop: "office" });
   let offset = 0;
 
   return (

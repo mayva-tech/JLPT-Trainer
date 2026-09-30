@@ -13,6 +13,22 @@ import type { Viseme } from "../../utils/visemes";
 import type { HeadLook } from "./looks";
 import { useHeadLook } from "./useHeadLook";
 import { useHeadReaction } from "./useHeadReaction";
+import { useAizuchi, useDuoAttention, useDuoMode } from "./useDuoMode";
+import {
+  DUO_ORDER,
+  facingSign,
+  gazeBias,
+  seatRole,
+  tiltBias,
+  type SeatRole,
+  type Voice,
+} from "./duo";
+import type { HeadReactionEvent } from "../../services/reactionBus";
+import type { SceneProp } from "../../services/sceneBus";
+import { useStageScene } from "./useStageScene";
+import { SceneBackdropArt } from "./backdrops";
+import { CupProp, PhoneProp } from "./props";
+import { SCENE_LABELS } from "./scenes";
 import { AroundFx, ExpressionMouth, HeadFx } from "./reactionFx";
 import {
   REACTION_STYLE,
@@ -44,6 +60,15 @@ import "./talking-head.css";
  * answers with an expression (brows, a held mouth, happy eyes), a small head
  * motion, manga-style effects and a one-line speech bubble. Focus the head
  * and press R to switch reactions off/on (remembered).
+ *
+ * Duo: when both voices speak within a short window (a JA line and its EN
+ * translation), Nanami and Andrew share the stage and face each other — the
+ * speaker animates, the listener turns toward them and nods (aizuchi).
+ * Press D with the head focused to switch duo off/on (remembered).
+ *
+ * Scenes: a trainer declares where the conversation happens (useHeadScene);
+ * the stage shows that backdrop with its name in Japanese, and the heads hold
+ * the scene's prop (a phone to the ear, a coffee cup). B toggles scenes.
  */
 
 /**
@@ -108,42 +133,6 @@ function Mouth({
       )}
     </g>
   );
-}
-
-/** Eyes blink on their own timer — a still face reads as frozen, not calm. */
-function useBlink(active: boolean): boolean {
-  const [closed, setClosed] = useState(false);
-  const timer = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!active) {
-      setClosed(false);
-      return;
-    }
-    let cancelled = false;
-
-    const schedule = () => {
-      // Irregular interval: a metronomic blink is its own kind of uncanny.
-      const delay = 2600 + Math.random() * 3200;
-      timer.current = window.setTimeout(() => {
-        if (cancelled) return;
-        setClosed(true);
-        timer.current = window.setTimeout(() => {
-          if (cancelled) return;
-          setClosed(false);
-          schedule();
-        }, 120);
-      }, delay);
-    };
-    schedule();
-
-    return () => {
-      cancelled = true;
-      if (timer.current) window.clearTimeout(timer.current);
-    };
-  }, [active]);
-
-  return closed;
 }
 
 /**
@@ -217,12 +206,12 @@ function useGaze(active: boolean): GazeOffset {
       const delay = 700 + Math.random() * 2400;
       timer.current = window.setTimeout(() => {
         if (cancelled) return;
-        if (Math.random() < 0.32) {
+        if (Math.random() < 0.25) {
           setGaze({ dx: 0, dy: 0 });
         } else {
           setGaze({
-            dx: (Math.random() - 0.5) * 3.0,
-            dy: (Math.random() - 0.5) * 2.2,
+            dx: (Math.random() - 0.5) * 4.0,
+            dy: (Math.random() - 0.5) * 2.6,
           });
         }
         schedule();
@@ -291,7 +280,18 @@ interface HeadProps {
   expression: Expression;
   /** Reaction effects to overlay. */
   fx: readonly ReactionFx[];
+  /** Horizontal gaze bias toward the partner in duo; 0 when solo. */
+  lookX?: number;
+  /** Vertical gaze bias toward the partner when the pair is split apart. */
+  lookY?: number;
+  /** Hand-held prop from the scene, if any. */
+  prop?: SceneProp;
+  /** Which side the prop is held on (viewer's left/right). */
+  propSide?: "l" | "r";
 }
+
+const NANAMI_SKIN = { skin: "#e0b894", shade: "#d4a07e" };
+const ANDREW_SKIN = { skin: "#edd0b0", shade: "#e3b48f" };
 
 /** Brow wrapper: the brow path is unchanged, only nudged/rotated per mood. */
 function Brow({
@@ -315,13 +315,20 @@ function NanamiEyes({
   irisColor,
   active,
   happy = false,
+  lookX = 0,
+  lookY = 0,
 }: {
   irisColor: string;
   active: boolean;
   happy?: boolean;
+  /** Steady gaze bias (duo: look at the partner). */
+  lookX?: number;
+  lookY?: number;
 }) {
   const closed = useLiveBlink(active);
-  const { dx, dy } = useGaze(active);
+  const gaze = useGaze(active);
+  const dx = lookX ? gaze.dx * 0.5 + lookX : gaze.dx;
+  const dy = lookY ? gaze.dy * 0.5 + lookY : gaze.dy;
 
   if (happy) {
     return (
@@ -401,6 +408,10 @@ export function NanamiHead({
   look,
   expression,
   fx,
+  lookX = 0,
+  lookY = 0,
+  prop,
+  propSide = "l",
 }: HeadProps) {
   const tiltStyle = { transform: `rotate(${tiltDeg.toFixed(2)}deg)` };
   const { Layers } = look;
@@ -435,7 +446,13 @@ export function NanamiHead({
             <path d="M54 40.2 q7 -2.6 14 0.2" />
           </Brow>
         </g>
-        <NanamiEyes irisColor="#4a2c22" active happy={expression === "joy"} />
+        <NanamiEyes
+          irisColor="#4a2c22"
+          active
+          happy={expression === "joy"}
+          lookX={lookX}
+          lookY={lookY}
+        />
         <path
           d="M48.5 58 q1.5 4 3 0"
           stroke="#c8946e"
@@ -450,9 +467,11 @@ export function NanamiHead({
           <Mouth viseme={viseme} lipColor="#a84858" cy={67} />
         )}
         <Layers layer="top" />
+        {prop === "phone" && <PhoneProp side={propSide} earX={24} skin={NANAMI_SKIN} />}
         <HeadFx fx={fx} cheekY={62} cheekX={[34, 66]} />
       </g>
       <Layers layer="collar" />
+      {prop === "cup" && <CupProp side={propSide} skin={NANAMI_SKIN} />}
       <AroundFx fx={fx} />
     </svg>
   );
@@ -463,13 +482,20 @@ function AndrewEyes({
   irisColor,
   active,
   happy = false,
+  lookX = 0,
+  lookY = 0,
 }: {
   irisColor: string;
   active: boolean;
   happy?: boolean;
+  /** Steady gaze bias (duo: look at the partner). */
+  lookX?: number;
+  lookY?: number;
 }) {
   const closed = useLiveBlink(active);
-  const { dx, dy } = useGaze(active);
+  const gaze = useGaze(active);
+  const dx = lookX ? gaze.dx * 0.5 + lookX : gaze.dx;
+  const dy = lookY ? gaze.dy * 0.5 + lookY : gaze.dy;
 
   if (happy) {
     return (
@@ -534,6 +560,10 @@ export function AndrewHead({
   look,
   expression,
   fx,
+  lookX = 0,
+  lookY = 0,
+  prop,
+  propSide = "r",
 }: HeadProps) {
   const tiltStyle = { transform: `rotate(${tiltDeg.toFixed(2)}deg)` };
   const { Layers } = look;
@@ -581,7 +611,13 @@ export function AndrewHead({
             <path d="M55 40.2 q6 -3.5 13 0.2" />
           </Brow>
         </g>
-        <AndrewEyes irisColor="#7a8f6a" active happy={expression === "joy"} />
+        <AndrewEyes
+          irisColor="#7a8f6a"
+          active
+          happy={expression === "joy"}
+          lookX={lookX}
+          lookY={lookY}
+        />
         <path
           d="M50 46 L50 58"
           stroke="#e0b898"
@@ -604,11 +640,103 @@ export function AndrewHead({
           <Mouth viseme={viseme} lipColor="#b56860" />
         )}
         <Layers layer="top" />
+        {prop === "phone" && <PhoneProp side={propSide} earX={27} skin={ANDREW_SKIN} />}
         <HeadFx fx={fx} cheekY={58} cheekX={[36, 64]} />
       </g>
       <Layers layer="collar" />
+      {prop === "cup" && <CupProp side={propSide} skin={ANDREW_SKIN} />}
       <AroundFx fx={fx} />
     </svg>
+  );
+}
+
+/** One head on the stage — solo, or one of the duo pair. */
+function Seat({
+  voice,
+  role,
+  look,
+  viseme,
+  speakingNow,
+  idleTilt,
+  reaction,
+  toward,
+  splitAt,
+  prop,
+}: {
+  voice: Voice;
+  role: SeatRole;
+  prop?: SceneProp;
+  look: HeadLook;
+  viseme: Viseme;
+  speakingNow: boolean;
+  idleTilt: number;
+  reaction: HeadReactionEvent | null;
+  /** Unit direction to the partner; defaults to side by side. */
+  toward?: { x: number; y: number };
+  /** Own fixed spot when the pair has split up to avoid text. */
+  splitAt?: HeadPos;
+}) {
+  const nods = useAizuchi(role === "listening");
+  const attending = useDuoAttention(role);
+  const dir = toward ?? { x: facingSign(voice), y: 0 };
+  const style = reaction ? REACTION_STYLE[reaction.kind] : null;
+  const talking = role === "speaking" || (role === "solo" && speakingNow);
+  const tilt = style?.tiltDeg
+    ? style.tiltDeg * (role === "solo" ? 1 : dir.x < 0 ? -1 : 1)
+    : idleTilt * (role === "listening" ? 0.4 : 1) +
+      tiltBias(role, voice, dir.x) * (attending ? 1 : 0.4);
+  const nodding = !reaction && role === "listening" && nods > 0;
+  const motionKey = reaction ? `r${reaction.id}` : nodding ? `n${nods}` : "idle";
+  const motionClass = style
+    ? ` th-motion--${style.motion}`
+    : nodding
+      ? " th-motion--aizuchi"
+      : "";
+  const Head = voice === "ja" ? NanamiHead : AndrewHead;
+  return (
+    <div
+      className={`th-seat th-seat--${role}${splitAt ? " th-seat--split" : ""}`}
+      style={splitAt ? { left: splitAt.x, top: splitAt.y } : undefined}
+      data-voice={voice}
+    >
+      <div key={motionKey} className={`th-motion${motionClass}`}>
+        <Head
+          viseme={talking ? viseme : "rest"}
+          blinking={false}
+          speaking={talking}
+          tiltDeg={tilt}
+          look={look}
+          expression={style?.expression ?? "neutral"}
+          fx={style?.fx ?? []}
+          lookX={attending ? gazeBias(role, voice, dir.x) : 0}
+          lookY={attending ? gazeBias(role, voice, dir.y) * 0.7 : 0}
+          prop={prop}
+          propSide={voice === "ja" ? "l" : "r"}
+        />
+      </div>
+    </div>
+  );
+}
+
+const HAS_KANJI = /[\u4e00-\u9fff]/;
+
+/** Backdrop card behind the stage, with the place name as a mini vocab tag. */
+function SceneCard({ backdrop }: { backdrop: keyof typeof SCENE_LABELS }) {
+  const label = SCENE_LABELS[backdrop];
+  return (
+    <div key={backdrop} className={`th-backdrop th-backdrop--${backdrop}`} aria-hidden="true">
+      <SceneBackdropArt backdrop={backdrop} />
+      <span className="th-scene-tag" lang="ja" title={label.en}>
+        {HAS_KANJI.test(label.ja) ? (
+          <ruby>
+            {label.ja}
+            <rt>{label.reading}</rt>
+          </ruby>
+        ) : (
+          label.ja
+        )}
+      </span>
+    </div>
   );
 }
 
@@ -660,6 +788,10 @@ const AVOID_PAD = 6;
 const AVOID_INTERVAL_MS = 350;
 const AVOID_GRID_STEP = 12;
 const PRIORITY_SELECTOR = ".lesson-nuance--active";
+/** Duo root width over a single head's (228/120, 164/85 on phones). */
+const DUO_WIDTH_RATIO = 1.9;
+/** Chance the pair splits up even when both would fit together. */
+const SPLIT_CHANCE = 0.35;
 
 function boxAt(pos: HeadPos, w: number, h: number): Box {
   return { left: pos.x, top: pos.y, right: pos.x + w, bottom: pos.y + h };
@@ -685,15 +817,38 @@ function findAvoidPanel(): { el: HTMLElement; box: Box } | null {
   if (!el) return null;
   const r = el.getBoundingClientRect();
   if (r.width < 1 || r.height < 1) return null;
+  // Inner box, so the heads never sit under the panel's own scrollbars.
+  const innerRight = el.clientWidth ? r.left + el.clientLeft + el.clientWidth : r.right;
+  const innerBottom = el.clientHeight ? r.top + el.clientTop + el.clientHeight : r.bottom;
+  const viewRight = document.documentElement.clientWidth || window.innerWidth;
+  const viewBottom = document.documentElement.clientHeight || window.innerHeight;
   return {
     el,
     box: {
       left: Math.max(0, r.left),
       top: Math.max(0, r.top),
-      right: Math.min(window.innerWidth, r.right),
-      bottom: Math.min(window.innerHeight, r.bottom),
+      right: Math.min(viewRight, innerRight),
+      bottom: Math.min(viewBottom, innerBottom),
     },
   };
+}
+
+function padBox(b: Box): Box {
+  return {
+    left: b.left - AVOID_PAD,
+    top: b.top - AVOID_PAD,
+    right: b.right + AVOID_PAD,
+    bottom: b.bottom + AVOID_PAD,
+  };
+}
+
+function insidePanel(box: Box, panel: Box): boolean {
+  return (
+    box.left >= panel.left + 2 &&
+    box.top >= panel.top + 2 &&
+    box.right <= panel.right - 2 &&
+    box.bottom <= panel.bottom - 2
+  );
 }
 
 /** Visible text line boxes inside the panel, plus the fixed control bars. */
@@ -761,9 +916,10 @@ function isClear(box: Box, obstacles: Box[]): boolean {
 }
 
 /**
- * Nearest spot to `prefer` inside `panel` that covers no text. Falls back to
- * the least-overlapping spot when the panel is packed, always keeping
- * `priority` boxes uncovered if any spot allows it.
+ * Spot inside `panel` that covers no text: the nearest to `prefer`, or a
+ * random clear one when `rng` is given. Falls back to the least-overlapping
+ * spot when the panel is packed, always keeping `priority` boxes uncovered if
+ * any spot allows it.
  */
 function findClearSpot(
   panel: Box,
@@ -771,7 +927,8 @@ function findClearSpot(
   h: number,
   obstacles: Box[],
   prefer: HeadPos,
-  priority: Box[] = []
+  priority: Box[] = [],
+  rng?: () => number
 ): HeadPos | null {
   const minX = panel.left + 4;
   const minY = panel.top + 4;
@@ -788,6 +945,7 @@ function findClearSpot(
 
   let best: HeadPos | null = null;
   let bestScore = Number.POSITIVE_INFINITY;
+  const clear: HeadPos[] = [];
   for (const y of ys) {
     for (const x of xs) {
       const box = { left: x, top: y, right: x + w, bottom: y + h };
@@ -795,6 +953,7 @@ function findClearSpot(
       for (const o of obstacles) overlap += overlapArea(box, o);
       let covered = 0;
       for (const p of priority) covered += overlapArea(box, p);
+      if (rng && overlap === 0 && covered === 0) clear.push({ x, y });
       // Covering a priority panel outweighs any other text, and any overlap
       // outweighs distance, so a clear spot always wins.
       const score =
@@ -805,6 +964,7 @@ function findClearSpot(
       }
     }
   }
+  if (rng && clear.length) return clear[Math.floor(rng() * clear.length)];
   return best;
 }
 
@@ -819,14 +979,13 @@ function defaultHeadPos(w: number, h: number): HeadPos {
 
 export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { lang, viseme, speaking } = useSpeechFace();
-  const blinking = useBlink(speaking);
   // Tilt whenever the head is on screen — keeps idle motion after speech too.
   const { reaction, toggleReactions } = useHeadReaction();
   /** Voice on screen: the speaker, else Nanami for a reaction before any speech. */
   const shownLang: "ja" | "en" | null = lang ?? (reaction ? "ja" : null);
   const idleTilt = useHeadTilt(Boolean(shownLang));
-  const reactionStyle = reaction ? REACTION_STYLE[reaction.kind] : null;
-  const tiltDeg = reactionStyle?.tiltDeg ? reactionStyle.tiltDeg : idleTilt;
+  const { duo, toggleDuo } = useDuoMode(lang, speaking);
+  const { scene, toggleScenes } = useStageScene();
   const { lookFor, cycleLook } = useHeadLook();
   /** Name of a look just switched to — shown briefly under the head. */
   const [lookToast, setLookToast] = useState<string | null>(null);
@@ -842,10 +1001,18 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     offsetX: number;
     offsetY: number;
   } | null>(null);
+  /** Andrew's own spot while the duo has split up; Nanami then uses autoPos. */
+  const [split, setSplit] = useState<{ en: HeadPos } | null>(null);
   const posRef = useRef(pos);
   posRef.current = pos;
   const autoPosRef = useRef(autoPos);
   autoPosRef.current = autoPos;
+  const splitRef = useRef(split);
+  splitRef.current = split;
+  /** A scene card is one picture behind the pair, so they stay together on it. */
+  const canSplit = duo && !scene;
+  const canSplitRef = useRef(canSplit);
+  canSplitRef.current = canSplit;
 
   useLayoutEffect(() => {
     if (!enabled || !shownLang) return;
@@ -862,15 +1029,67 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       const obstacles = collectObstacles(panel.el, panel.box);
       const priority = collectPriorityObstacles(panel.box);
       const all = priority.length ? [...obstacles, ...priority] : obstacles;
-      const home = posRef.current ?? defaultHeadPos(w, h);
-      if (isClear(boxAt(home, w, h), all)) {
-        if (autoPosRef.current) setAutoPos(null);
+      const fits = (p: HeadPos, bw: number, bh: number, extra?: Box) => {
+        const b = boxAt(p, bw, bh);
+        return (
+          insidePanel(b, panel.box) &&
+          isClear(b, all) &&
+          (!extra || !boxesIntersect(b, extra))
+        );
+      };
+      const current = autoPosRef.current;
+      const apart = splitRef.current;
+
+      if (apart && !canSplitRef.current) {
+        setSplit(null);
         return;
       }
-      const current = autoPosRef.current;
-      if (current && isClear(boxAt(current, w, h), all)) return;
 
-      const spot = findClearSpot(panel.box, w, h, obstacles, home, priority);
+      // Split: the root holds Nanami alone (w = one head), Andrew sits apart.
+      if (apart) {
+        const pairW = w * DUO_WIDTH_RATIO;
+        const home = posRef.current ?? defaultHeadPos(pairW, h);
+        if (fits(home, pairW, h)) {
+          setSplit(null);
+          setAutoPos(null);
+          return;
+        }
+        const ja = current ?? home;
+        const jaBox = padBox(boxAt(ja, w, h));
+        const enBox = padBox(boxAt(apart.en, w, h));
+        if (!fits(ja, w, h, enBox)) {
+          const spot = findClearSpot(panel.box, w, h, [...obstacles, enBox], ja, priority, Math.random);
+          if (spot) setAutoPos(spot);
+        } else if (!fits(apart.en, w, h, jaBox)) {
+          const spot = findClearSpot(panel.box, w, h, [...obstacles, jaBox], apart.en, priority, Math.random);
+          if (spot) setSplit({ en: spot });
+        }
+        return;
+      }
+
+      const home = posRef.current ?? defaultHeadPos(w, h);
+      if (fits(home, w, h)) {
+        if (current) setAutoPos(null);
+        return;
+      }
+      if (current && fits(current, w, h)) return;
+
+      const spot = findClearSpot(panel.box, w, h, obstacles, home, priority, Math.random);
+      const pairFits = Boolean(spot && fits(spot, w, h));
+      // Stuck, or now and then for variety: seat the two heads apart.
+      if (canSplitRef.current && (!pairFits || Math.random() < SPLIT_CHANCE)) {
+        const sw = w / DUO_WIDTH_RATIO;
+        const ja = findClearSpot(panel.box, sw, h, obstacles, home, priority, Math.random);
+        if (ja && fits(ja, sw, h)) {
+          const jaBox = padBox(boxAt(ja, sw, h));
+          const en = findClearSpot(panel.box, sw, h, [...obstacles, jaBox], home, priority, Math.random);
+          if (en && fits(en, sw, h, jaBox)) {
+            setAutoPos(ja);
+            setSplit({ en });
+            return;
+          }
+        }
+      }
       if (spot && (spot.x !== current?.x || spot.y !== current?.y)) {
         setAutoPos(spot);
       }
@@ -904,7 +1123,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       setPos(next);
       saveHeadPos(next);
     }
-  }, [lang]);
+  }, [lang, duo]);
 
   useEffect(
     () => () => {
@@ -917,8 +1136,19 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
 
   const shown = autoPos ?? pos;
   const look = lookFor(shownLang);
-  const expression: Expression = reactionStyle?.expression ?? "neutral";
-  const fx = reactionStyle?.fx ?? [];
+  const seats: readonly Voice[] = duo ? DUO_ORDER : [shownLang];
+  const apart = canSplit && shown ? split : null;
+  /** When apart, each head looks along the real line to the other. */
+  let toward: Record<Voice, { x: number; y: number }> | null = null;
+  if (apart && shown) {
+    const dx = apart.en.x - shown.x;
+    const dy = apart.en.y - shown.y;
+    const len = Math.hypot(dx, dy) || 1;
+    toward = {
+      ja: { x: dx / len, y: dy / len },
+      en: { x: -dx / len, y: -dy / len },
+    };
+  }
   const bubble = reaction
     ? reactionLine(shownLang, reaction.kind, reaction.count, reaction.pick)
     : null;
@@ -931,16 +1161,29 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
   };
 
-  const switchLook = (step: number) => {
-    flashToast(cycleLook(shownLang, step).label);
+  const switchLook = (step: number, voice: Voice = shownLang) => {
+    flashToast(cycleLook(voice, step).label);
   };
 
   const onDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    switchLook(e.shiftKey ? -1 : 1);
+    // In duo, change the look of whichever head was double-clicked.
+    const seat = (e.target as Element | null)?.closest?.("[data-voice]");
+    const v = seat?.getAttribute("data-voice");
+    switchLook(e.shiftKey ? -1 : 1, v === "ja" || v === "en" ? v : shownLang);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "b" || e.key === "B") {
+      e.preventDefault();
+      flashToast(toggleScenes() ? "Scenes on" : "Scenes off");
+      return;
+    }
+    if (e.key === "d" || e.key === "D") {
+      e.preventDefault();
+      flashToast(toggleDuo() ? "Duo on" : "Duo off");
+      return;
+    }
     if (e.key === "r" || e.key === "R") {
       e.preventDefault();
       flashToast(toggleReactions() ? "Reactions on" : "Reactions off");
@@ -959,6 +1202,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     const start: HeadPos = shown ?? { x: rect.left, y: rect.top };
     setPos(start);
     setAutoPos(null);
+    setSplit(null);
     dragRef.current = {
       pointerId: e.pointerId,
       offsetX: e.clientX - start.x,
@@ -1005,6 +1249,9 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         "th-root",
         dragging ? "th-dragging" : "",
         shown ? "th-placed" : "",
+        duo ? "th-root--duo" : "",
+        apart ? "th-root--split" : "",
+        scene ? "th-root--scene" : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -1015,8 +1262,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       }
       role="button"
       tabIndex={0}
-      aria-label={`${shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions`}
-      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes`}
+      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off"
       aria-grabbed={dragging}
       onDoubleClick={onDoubleClick}
       onKeyDown={onKeyDown}
@@ -1025,31 +1272,23 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
     >
-      <div
-        key={reaction?.id ?? "idle"}
-        className={`th-motion${reactionStyle ? ` th-motion--${reactionStyle.motion}` : ""}`}
-      >
-        {shownLang === "ja" ? (
-          <NanamiHead
+      <div className="th-stage">
+        {scene && <SceneCard backdrop={scene.backdrop} />}
+        {seats.map((voice) => (
+          <Seat
+            key={voice}
+            voice={voice}
+            role={seatRole(duo, voice, lang, speaking)}
+            look={lookFor(voice)}
             viseme={viseme}
-            blinking={blinking}
-            speaking={speaking}
-            tiltDeg={tiltDeg}
-            look={look}
-            expression={expression}
-            fx={fx}
+            speakingNow={speaking}
+            idleTilt={idleTilt}
+            reaction={reaction}
+            toward={toward?.[voice]}
+            splitAt={apart && voice === "en" ? apart.en : undefined}
+            prop={scene?.prop}
           />
-        ) : (
-          <AndrewHead
-            viseme={viseme}
-            blinking={blinking}
-            speaking={speaking}
-            tiltDeg={tiltDeg}
-            look={look}
-            expression={expression}
-            fx={fx}
-          />
-        )}
+        ))}
       </div>
       {bubble && (
         <span

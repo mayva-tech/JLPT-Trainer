@@ -1,3 +1,4 @@
+import { useHeadScene } from '../../hooks/useHeadScene';
 import { useMemo, useRef, useState } from 'react';
 import './konbini-trainer.css';
 import { DECKS, SCRIPTS } from './data';
@@ -62,6 +63,7 @@ const Check = ({ size = 15 }: IconProps) => (
 /* ---- page ---- */
 
 export default function KonbiniTrainer() {
+  useHeadScene({ backdrop: 'konbini' });
   const [tab, setTab] = useState<'cards' | 'scripts'>('cards');
   const [deckId, setDeckId] = useState('core');
   const [register, setRegister] = useState<Register>('formal');

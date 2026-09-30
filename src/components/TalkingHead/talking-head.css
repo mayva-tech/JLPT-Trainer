@@ -453,3 +453,185 @@
     animation: none;
   }
 }
+
+/* ── Duo stage: Nanami (left) and Andrew (right) face each other ── */
+
+.th-stage {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+}
+
+.th-seat {
+  flex: 1 1 0;
+  min-width: 0;
+  transform-origin: 50% 100%;
+  transition:
+    transform 260ms ease,
+    filter 260ms ease;
+}
+
+.th-root--duo {
+  width: 228px;
+}
+
+/* The listener steps back a little so the eye goes to the speaker. */
+.th-seat--listening {
+  transform: scale(0.93);
+  filter: saturate(0.85) brightness(0.93);
+}
+
+.th-seat--speaking {
+  transform: scale(1.02);
+}
+
+/* Aizuchi — a small listening nod (うん、うん). */
+.th-motion--aizuchi {
+  animation: th-aizuchi 520ms ease-in-out;
+}
+
+@keyframes th-aizuchi {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(2.5px);
+  }
+}
+
+/* Split: the pair steps apart to clear text — the root keeps Nanami, Andrew
+   takes his own fixed spot and glides there on his own. */
+.th-root--duo.th-root--split {
+  width: 120px;
+}
+
+.th-seat--split {
+  position: fixed;
+  width: 120px;
+  flex: none;
+  transition:
+    left 280ms ease,
+    top 280ms ease,
+    transform 260ms ease,
+    filter 260ms ease;
+}
+
+@media (max-width: 480px) {
+  .th-root--duo {
+    width: 164px;
+  }
+
+  .th-root--duo.th-root--split,
+  .th-seat--split {
+    width: 85px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .th-seat,
+  .th-seat--split {
+    transition: none;
+  }
+
+  .th-motion--aizuchi {
+    animation: none;
+  }
+}
+
+/* ── Scenes: backdrop card + place-name tag ───────────────────── */
+
+.th-stage {
+  position: relative;
+}
+
+.th-root--scene .th-stage {
+  padding-top: 10px;
+}
+
+.th-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  animation: th-scene-in 420ms ease-out both;
+  pointer-events: none;
+}
+
+.th-backdrop-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.th-root--scene .th-seat {
+  position: relative;
+  z-index: 1;
+}
+
+.th-scene-tag {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  padding: 1px 6px 0;
+  border-radius: 6px;
+  background: rgba(20, 20, 24, 0.66);
+  color: #fdfbf5;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.th-scene-tag rt {
+  font-size: 7px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+@keyframes th-scene-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Coffee steam. */
+.th-steam {
+  animation: th-steam 2.4s ease-in-out infinite;
+}
+
+.th-steam--late {
+  animation-delay: 1.2s;
+}
+
+@keyframes th-steam {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  40% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .th-backdrop,
+  .th-steam {
+    animation: none;
+  }
+}

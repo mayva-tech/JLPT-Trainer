@@ -1,3 +1,4 @@
+import { useHeadScene } from "../../hooks/useHeadScene";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./style-trainer.css";
 import { registerShifts } from "../../data/registerShifts";
@@ -309,6 +310,8 @@ async function playExpression(
 }
 
 export default function StyleTrainer() {
+  // Casual speech styles: chatting over coffee.
+  useHeadScene({ backdrop: "cafe", prop: "cup" });
   const [mode, setMode] = useState<Mode>("compare");
   const [search, setSearch] = useState("");
   const [gender, setGender] = useState<GenderFilter>("all");
