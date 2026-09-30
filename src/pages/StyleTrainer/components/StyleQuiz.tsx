@@ -1,3 +1,4 @@
+import { reportAnswer, reportSessionEnd } from "../../../services/reactionBus";
 import { useMemo, useState } from "react";
 import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
 import type { SpeechHighlight } from "../../../services/speechService";
@@ -67,6 +68,7 @@ export function StyleQuiz({
   function choose(optionId: string) {
     if (!question || revealed) return;
     const correct = optionId === question.correctOptionId;
+    reportAnswer(correct);
     setSelected(optionId);
     setRevealed(true);
     setAnswers((prev) => [
@@ -77,6 +79,8 @@ export function StyleQuiz({
 
   function nextQuestion() {
     if (index + 1 >= questions.length) {
+      const right = answers.filter((a) => a.correct).length;
+      reportSessionEnd(answers.length ? right / answers.length : Number.NaN);
       setPhase("results");
       return;
     }

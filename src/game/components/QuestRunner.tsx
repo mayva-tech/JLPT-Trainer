@@ -1,6 +1,6 @@
+import { reportAnswer } from "../../services/reactionBus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { HighlightedEnglish } from "../../components/HighlightedEnglish";
-import { HighlightedJapanese } from "../../components/HighlightedJapanese";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
 import { QuestJapanese } from "./QuestJapanese";
 import { FeedbackTipText } from "./FeedbackTipText";
@@ -712,6 +712,9 @@ function LinearQuestRunner({
     if (!isInteractive || revealed) return;
     speech.stop();
     const result = evaluateChoiceAnswer(currentStep, choiceId);
+    if (currentStep.kind !== "intro" && currentStep.kind !== "outro") {
+      reportAnswer(result.correct);
+    }
     setSelectedId(choiceId);
     setRevealed(true);
     setFeedback(result.feedback);

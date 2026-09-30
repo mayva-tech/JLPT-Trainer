@@ -1,3 +1,4 @@
+import { reportAnswer } from "../../../services/reactionBus";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GameFeedbackBanner } from "../components/GameFeedbackBanner";
 import { GameHeader } from "../components/GameHeader";
@@ -121,6 +122,7 @@ export function SpeedRunMode({ onQuit, onFinished }: Props) {
   function onSelect(choiceId: string) {
     if (!question || revealed || endedRef.current) return;
     const correct = choiceId === question.correctChoiceId;
+    reportAnswer(correct);
     const selectedLabel =
       question.choices.find((choice) => choice.id === choiceId)?.label ?? "";
     setSelectedId(choiceId);

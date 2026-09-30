@@ -1,3 +1,4 @@
+import { reportAnswer } from "../../../services/reactionBus";
 import { useMemo, useRef, useState } from "react";
 import { GameFeedbackBanner } from "../components/GameFeedbackBanner";
 import { GameHeader } from "../components/GameHeader";
@@ -74,6 +75,7 @@ export function WeakWordRevengeMode({ onQuit, onFinished, onTrain }: Props) {
   function onSelect(choiceId: string) {
     if (!question || revealed || question.vocabItemId == null) return;
     const correct = choiceId === question.correctChoiceId;
+    reportAnswer(correct);
     const selectedLabel =
       question.choices.find((choice) => choice.id === choiceId)?.label ?? "";
     recordRevengeVocabAnswer(question.vocabItemId, correct);

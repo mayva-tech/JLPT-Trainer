@@ -150,7 +150,7 @@ const FALLBACK_TIMING_SCALE = FALLBACK_TIMING_SCALE_JA;
  * when the user picks slow (0.75×) so highlights track Nanami/Andrew.
  */
 export function karaokeRateDivisor(
-  lang: "ja" | "en",
+  _lang: "ja" | "en",
   rate: number
 ): number {
   // Same floor for JA and EN so reading-driven JA karaoke stretches like EN.

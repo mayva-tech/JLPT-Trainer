@@ -1,3 +1,4 @@
+import { reportAnswer } from "../../../services/reactionBus";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { GameFeedbackBanner } from "../components/GameFeedbackBanner";
 import { GameHeader } from "../components/GameHeader";
@@ -106,6 +107,7 @@ export function SurvivalMode({ onQuit, onFinished }: Props) {
   function onSelect(choiceId: string) {
     if (!question || revealed) return;
     const correct = choiceId === question.correctChoiceId;
+    reportAnswer(correct);
     recordGameVocabAnswer(question, correct);
     setSelectedId(choiceId);
     setRevealed(true);

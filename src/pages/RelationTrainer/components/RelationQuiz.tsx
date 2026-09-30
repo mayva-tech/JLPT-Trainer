@@ -1,3 +1,4 @@
+import { reportAnswer, reportSessionEnd } from "../../../services/reactionBus";
 import { useMemo, useState } from "react";
 import { WORD_RELATION_TYPE_LABELS } from "../../../data/wordRelations";
 import type { WordRelation } from "../../../types/wordRelation";
@@ -67,6 +68,7 @@ export function RelationQuiz({ relations, level, type, onSpeak }: Props) {
   function choose(optionId: string) {
     if (!question || revealed) return;
     const correct = optionId === question.correctOptionId;
+    reportAnswer(correct);
     setSelected(optionId);
     setRevealed(true);
     setAnswers((prev) => [
@@ -77,6 +79,8 @@ export function RelationQuiz({ relations, level, type, onSpeak }: Props) {
 
   function nextQuestion() {
     if (index + 1 >= questions.length) {
+      const right = answers.filter((a) => a.correct).length;
+      reportSessionEnd(answers.length ? right / answers.length : Number.NaN);
       setPhase("results");
       return;
     }

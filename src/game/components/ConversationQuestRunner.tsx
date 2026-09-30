@@ -1,6 +1,6 @@
-﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
+import { reportAnswer } from "../../services/reactionBus";
 import { HighlightedEnglish } from "../../components/HighlightedEnglish";
-import { HighlightedJapanese } from "../../components/HighlightedJapanese";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
 import type { SpeechHighlight } from "../../services/speechService";
 import { QuestJapanese } from "./QuestJapanese";
@@ -971,6 +971,13 @@ export function ConversationQuestRunner({
       setReportingTags((prev) => [...prev, ...choice.reportingTags!]);
     }
     setQualityLabel(applied.qualityLabel);
+    reportAnswer(
+      applied.quality === "excellent" || applied.quality === "natural"
+        ? true
+        : applied.quality === "incorrect"
+          ? false
+          : "almost"
+    );
     const appropriate =
       applied.quality === "excellent" ||
       applied.quality === "natural" ||

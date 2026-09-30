@@ -125,3 +125,331 @@
     bottom: 8px;
   }
 }
+
+/* Name of the look just switched to (double-click / Enter). */
+.th-look-toast {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  transform: translate(-50%, 100%);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(20, 20, 24, 0.82);
+  color: #f4f2ec;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: th-toast 1400ms ease-out forwards;
+}
+
+@keyframes th-toast {
+  0% {
+    opacity: 0;
+  }
+  12%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .th-look-toast {
+    animation: none;
+  }
+}
+
+/* ── Reactions ─────────────────────────────────────────────────── */
+
+/* Brows move as a unit around their own centre. */
+.th-brow {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 220ms ease-out;
+}
+
+/* Whole-head motion wrapper — replayed per reaction via a React key. */
+.th-motion {
+  width: 100%;
+}
+
+.th-motion--hop {
+  animation: th-hop 520ms ease-out;
+}
+
+.th-motion--hop2 {
+  animation: th-hop 460ms ease-out 2;
+}
+
+.th-motion--shake {
+  animation: th-shake 460ms ease-in-out;
+}
+
+.th-motion--nod {
+  animation: th-nod 700ms ease-in-out;
+}
+
+@keyframes th-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-9px) scale(1.03);
+  }
+  65% {
+    transform: translateY(1px) scale(0.99, 1.01);
+  }
+}
+
+@keyframes th-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes th-nod {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25%,
+  65% {
+    transform: translateY(4px);
+  }
+  45% {
+    transform: translateY(-1px);
+  }
+}
+
+/* Effects */
+.th-fx-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: th-fx-pop 900ms ease-out both;
+}
+
+.th-fx-drip {
+  animation: th-fx-drip 1600ms ease-in both;
+}
+
+.th-fx-fade {
+  animation: th-fx-fade 1700ms ease-out both;
+}
+
+.th-fx-float {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: th-fx-float 2200ms ease-out both;
+}
+
+.th-fx-confetti {
+  animation: th-fx-confetti 2400ms cubic-bezier(0.3, 0.6, 0.5, 1) both;
+}
+
+@keyframes th-fx-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-30deg);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.15) rotate(0deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes th-fx-drip {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+
+@keyframes th-fx-fade {
+  0% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes th-fx-float {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.5);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px) scale(1);
+  }
+}
+
+@keyframes th-fx-confetti {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+}
+
+/* Speech bubble — one short line per reaction. */
+.th-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 4px);
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: #fffdf7;
+  color: #2a2226;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  animation: th-bubble 1.6s ease-out both;
+}
+
+.th-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #fffdf7;
+}
+
+.th-bubble--below {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+
+.th-bubble--below::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #fffdf7;
+}
+
+.th-bubble--correct,
+.th-bubble--streak,
+.th-bubble--celebrate {
+  color: #1f7a3a;
+}
+
+.th-bubble--wrong {
+  color: #8a3a52;
+}
+
+.th-bubble--almost {
+  color: #9a6a10;
+}
+
+.th-bubble--encourage {
+  color: #b03a6a;
+}
+
+.th-bubble--streak,
+.th-bubble--celebrate {
+  animation-duration: 2.4s;
+}
+
+@keyframes th-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.8);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.06);
+  }
+  20% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .th-bubble {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+}
+
+/* Reduced motion: keep the expression and the bubble, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .th-motion--hop,
+  .th-motion--hop2,
+  .th-motion--shake,
+  .th-motion--nod,
+  .th-fx-drip,
+  .th-fx-float,
+  .th-fx-confetti {
+    animation: none;
+  }
+
+  .th-fx-pop {
+    animation: none;
+  }
+
+  .th-brow {
+    transition: none;
+  }
+
+  .th-bubble {
+    animation: none;
+  }
+}

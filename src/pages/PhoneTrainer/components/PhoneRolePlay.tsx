@@ -1,3 +1,4 @@
+import { reportAnswer, reportSessionEnd } from "../../../services/reactionBus";
 import { useCallback, useMemo, useState } from "react";
 import type { PhoneScenario } from "../../../types/phoneCall";
 import {
@@ -28,6 +29,7 @@ export function PhoneRolePlay({
   const handlePick = useCallback(
     (optionId: string) => {
       if (!step || revealed) return;
+      reportAnswer(Boolean(step.options?.find((o) => o.id === optionId)?.correct));
       setPicks((prev) => ({ ...prev, [step.lineIndex]: optionId }));
       setRevealed(true);
     },
@@ -37,12 +39,14 @@ export function PhoneRolePlay({
   const advance = useCallback(() => {
     setRevealed(false);
     if (currentStep + 1 >= steps.length) {
+      const scored = scoreRolePlay(steps, picks);
+      reportSessionEnd(scored.turns ? scored.correct / scored.turns : Number.NaN);
       setFinished(true);
       onFinish();
     } else {
       setCurrentStep(currentStep + 1);
     }
-  }, [currentStep, steps.length, onFinish]);
+  }, [currentStep, steps, picks, onFinish]);
 
   const restart = useCallback(() => {
     setCurrentStep(0);

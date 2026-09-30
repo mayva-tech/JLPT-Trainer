@@ -1,6 +1,6 @@
 /** Phrase nuance notes, batch 1. Only phrases with something worth noting. */
 export const phraseNuances1: Readonly<Record<number, string>> = {
-  4003: "割引中 means on sale now; shops also write twenty percent off as 二割引.",
+  4003: "Percent discounts are written パーセント割引 or オフ; the older style 二割引 also means twenty percent off.",
   4005: "賞味期限 marks peak flavor and food is often fine after it; 消費期限 is the stricter safety deadline.",
   4006: "消費期限 is a safety limit for perishables like bento, stricter than 賞味期限, which only marks best flavor.",
   4012: "敷金 is a refundable deposit, unlike 礼金, a non-refundable gift paid to the landlord.",
@@ -22,7 +22,7 @@ export const phraseNuances1: Readonly<Record<number, string>> = {
   4043: "処方 is the doctor prescribing; the slip you take to the pharmacy is 処方箋.",
   4049: "疲労 is formal; everyday speech uses 疲れ, as in 疲れがたまる.",
   4050: "副作用 is used for medicine; for vaccines the usual term is 副反応.",
-  4053: "上司 means your superior in general; address them by title such as 課長, never as 上司.",
+  4053: "上司 means your superior in general; when speaking to them, use a title such as 課長 instead.",
   4057: "有給休暇 is usually shortened to 有給 or 有休 in conversation.",
   4059: "転職 is moving to a new company; 転勤 is being transferred within the same company.",
   4060: "Candidates say 面接を受ける; 面接する is what the interviewer does.",
@@ -56,7 +56,7 @@ export const phraseNuances1: Readonly<Record<number, string>> = {
   4143: "断りを入れる is a set phrase for politely declining or giving advance notice.",
   4145: "謝罪 is a formal apology used in business and news; everyday apologies use 謝る.",
   4149: "お心遣いありがとうございます is a polite thank-you for someone's thoughtfulness.",
-  4154: "服用 is the formal word on medicine labels; in speech say 薬を飲む, never 食べる.",
+  4154: "服用 is the formal word on medicine labels; in speech say 薬を飲む, not 食べる.",
   4155: "副反応 is used for vaccines; for medicines the word is 副作用.",
   4158: "Patients say 手術を受ける; 手術する is what the surgeon does.",
   4162: "回覧板 is a clipboard of notices passed from house to house in a neighborhood.",

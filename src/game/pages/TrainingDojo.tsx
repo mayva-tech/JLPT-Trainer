@@ -1,3 +1,4 @@
+import { reportSessionEnd } from "../../services/reactionBus";
 import { useMemo, useState } from "react";
 import { GameModeCard } from "../../pages/GameMode/components/GameModeCard";
 import { GameResultScreen, MistakeReview } from "../../pages/GameMode/components/GameResultScreen";
@@ -50,6 +51,7 @@ export function TrainingDojo({ onBack, onOpenTrainer }: Props) {
   }
 
   function onFinished(game: FinishedGame) {
+    reportSessionEnd(game.attempted ? game.correct / game.attempted : Number.NaN);
     const prior =
       game.mode === "survival"
         ? stats.survivalBestScore

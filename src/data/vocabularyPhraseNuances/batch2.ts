@@ -1,7 +1,7 @@
 /** Phrase nuance notes, batch 2. Only phrases with something worth noting. */
 export const phraseNuances2: Readonly<Record<number, string>> = {
   4251: "応募する takes に for what you apply to, so say 求人に応募する, not を.",
-  4254: "内定 is an informal offer, often given to students months before graduation; you can also say 内定が出る.",
+  4254: "内定をもらう is the applicant's view; the company side is 内定を出す, and 内定が出る is also common.",
   4257: "資格を取得する is the formal phrasing; in conversation 資格を取る is more common.",
   4259: "新卒 refers to fresh graduates, whom Japanese companies traditionally hire in bulk each spring.",
   4262: "発送する is formal shipping language; in everyday speech people just say 荷物を送る.",
@@ -75,7 +75,7 @@ export const phraseNuances2: Readonly<Record<number, string>> = {
   4457: "お墓参り is visiting a family grave, especially during お盆 and お彼岸.",
   4460: "訃報 is a formal word used when news of someone's death is conveyed.",
   4462: "回す is the usual verb for running a machine that spins, like a washer or fan.",
-  4464: "掃除機をかける is the set phrase for vacuuming; do not use する with 掃除機.",
+  4464: "掃除機をかける is the set phrase for vacuuming; 掃除機をする sounds unnatural to most speakers.",
   4467: "故障 is for machines breaking down; people get 病気 or ケガ instead.",
   4476: "横になる means lying down to rest, not necessarily falling asleep.",
   4477: "仮眠 is a short sleep, often at work or before a night shift; a daytime nap is 昼寝.",

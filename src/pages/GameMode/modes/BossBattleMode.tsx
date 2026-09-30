@@ -1,3 +1,4 @@
+import { reportAnswer } from "../../../services/reactionBus";
 import { useMemo, useRef, useState } from "react";
 import { BossHealthBar } from "../components/BossHealthBar";
 import { GameFeedbackBanner } from "../components/GameFeedbackBanner";
@@ -100,6 +101,7 @@ export function BossBattleMode({ onQuit, onFinished, boss }: Props) {
   function onSelect(choiceId: string) {
     if (!question || !activeBoss || revealed) return;
     const correct = choiceId === question.correctChoiceId;
+    reportAnswer(correct);
     recordGameVocabAnswer(question, correct);
     const selectedLabel =
       question.choices.find((choice) => choice.id === choiceId)?.label ?? "";

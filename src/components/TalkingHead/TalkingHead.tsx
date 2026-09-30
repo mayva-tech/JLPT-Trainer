@@ -3,10 +3,24 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type KeyboardEvent,
+  type MouseEvent,
   type PointerEvent,
+  type ReactNode,
 } from "react";
 import { useSpeechFace } from "../../hooks/useSpeechFace";
 import type { Viseme } from "../../utils/visemes";
+import type { HeadLook } from "./looks";
+import { useHeadLook } from "./useHeadLook";
+import { useHeadReaction } from "./useHeadReaction";
+import { AroundFx, ExpressionMouth, HeadFx } from "./reactionFx";
+import {
+  REACTION_STYLE,
+  browTransform,
+  reactionLine,
+  type Expression,
+  type ReactionFx,
+} from "./reactionStyle";
 import "./talking-head.css";
 
 /**
@@ -20,6 +34,16 @@ import "./talking-head.css";
  * face reads clearly at 120px and, unlike a realistic one, does not fall into
  * the uncanny valley when the mouth timing is approximate — which, for
  * English, it unavoidably is.
+ *
+ * Each voice has twenty looks (see ./looks). The face shape, eyes, nose and
+ * mouth belong to the head and never change; a look only restyles hair,
+ * facial hair, clothing and accessories. Double-click the head (or press
+ * Enter) for the next look, Shift for the previous one — remembered per voice.
+ *
+ * Reactions: answer checks report through services/reactionBus, and the head
+ * answers with an expression (brows, a held mouth, happy eyes), a small head
+ * motion, manga-style effects and a one-line speech bubble. Focus the head
+ * and press R to switch reactions off/on (remembered).
  */
 
 /**
@@ -261,12 +285,52 @@ interface HeadProps {
   speaking: boolean;
   /** Degrees — applied only to the head group, not the shoulders. */
   tiltDeg: number;
+  /** Hair, clothing and accessories; the face itself is fixed. */
+  look: HeadLook;
+  /** Reaction expression; "neutral" when idle. */
+  expression: Expression;
+  /** Reaction effects to overlay. */
+  fx: readonly ReactionFx[];
+}
+
+/** Brow wrapper: the brow path is unchanged, only nudged/rotated per mood. */
+function Brow({
+  expression,
+  side,
+  children,
+}: {
+  expression: Expression;
+  side: "l" | "r";
+  children: ReactNode;
+}) {
+  return (
+    <g className="th-brow" style={{ transform: browTransform(expression, side) }}>
+      {children}
+    </g>
+  );
 }
 
 /** Nanami — the Japanese voice (kimono portrait). */
-function NanamiEyes({ irisColor, active }: { irisColor: string; active: boolean }) {
+function NanamiEyes({
+  irisColor,
+  active,
+  happy = false,
+}: {
+  irisColor: string;
+  active: boolean;
+  happy?: boolean;
+}) {
   const closed = useLiveBlink(active);
   const { dx, dy } = useGaze(active);
+
+  if (happy) {
+    return (
+      <g stroke="#2a1810" strokeWidth="1.9" strokeLinecap="round" fill="none">
+        <path d="M33 49.5 q6 -5.2 12 0" />
+        <path d="M55 49.5 q6 -5.2 12 0" />
+      </g>
+    );
+  }
 
   if (closed) {
     return (
@@ -330,53 +394,29 @@ function NanamiEyes({ irisColor, active }: { irisColor: string; active: boolean 
   );
 }
 
-function NanamiHead({ viseme, speaking, tiltDeg }: HeadProps) {
+export function NanamiHead({
+  viseme,
+  speaking,
+  tiltDeg,
+  look,
+  expression,
+  fx,
+}: HeadProps) {
   const tiltStyle = { transform: `rotate(${tiltDeg.toFixed(2)}deg)` };
+  const { Layers } = look;
   return (
     <svg
       viewBox="0 0 100 110"
       className={`th-svg ${speaking ? "th-speaking" : ""}`}
       role="img"
-      aria-label="Nanami, the Japanese voice"
+      aria-label={`Nanami, the Japanese voice — ${look.label}`}
     >
-      {/* hair mass behind — tilts with the head, drawn under the kimono */}
+      {/* hair mass behind — tilts with the head, drawn under the outfit */}
       <g className="th-head-tilt" style={tiltStyle}>
-        <ellipse cx="50" cy="42" rx="34" ry="36" fill="#2c252c" />
-        <ellipse cx="50" cy="28" rx="28" ry="18" fill="#241e24" />
+        <Layers layer="back" />
       </g>
-      {/* kimono + collar stay planted */}
-      <path
-        d="M18 110 Q24 84 38 80 Q50 86 62 80 Q76 84 82 110 Z"
-        fill="#c43a2f"
-      />
-      <g>
-        <circle cx="32" cy="98" r="4.2" fill="#f7f2ea" />
-        <circle cx="32" cy="98" r="1.6" fill="#e8c84a" />
-        <circle cx="28" cy="94" r="1.8" fill="#f7f2ea" />
-        <circle cx="36" cy="94" r="1.8" fill="#f7f2ea" />
-        <circle cx="28" cy="102" r="1.6" fill="#f7f2ea" />
-        <circle cx="36" cy="102" r="1.6" fill="#f7f2ea" />
-      </g>
-      <g>
-        <circle cx="68" cy="97" r="3.6" fill="#7ec8d8" />
-        <circle cx="68" cy="97" r="1.4" fill="#f7f2ea" />
-        <circle cx="64" cy="93" r="1.5" fill="#7ec8d8" />
-        <circle cx="72" cy="93" r="1.5" fill="#7ec8d8" />
-      </g>
-      <circle cx="54" cy="105" r="2.0" fill="#e8a0a8" />
-      <circle cx="76" cy="106" r="1.6" fill="#e8a0a8" />
-      <path
-        d="M41 82 L44 94 Q50 100 56 94 L59 82 Q50 90 41 82 Z"
-        fill="#f3eee6"
-      />
-      <path
-        d="M39 80 L42 90 Q50 96 58 90 L61 80 Q50 88 39 80 Z"
-        fill="#1a5c56"
-      />
-      <path
-        d="M37 78 L40 86 Q50 92 60 86 L63 78 Q50 86 37 78 Z"
-        fill="#b83228"
-      />
+      {/* outfit + collar stay planted */}
+      <Layers layer="outfit" />
       {/* face + neck tilt around the collar line */}
       <g className="th-head-tilt" style={tiltStyle}>
         <path d="M43 70 L43 86 Q50 90 57 86 L57 70 Z" fill="#d9ab86" />
@@ -386,35 +426,16 @@ function NanamiHead({ viseme, speaking, tiltDeg }: HeadProps) {
         <ellipse cx="50" cy="54" rx="25" ry="29" fill="#e0b894" />
         <ellipse cx="34" cy="62" rx="4.2" ry="2.4" fill="#e09080" opacity="0.4" />
         <ellipse cx="66" cy="62" rx="4.2" ry="2.4" fill="#e09080" opacity="0.4" />
-        <path
-          d="M25 50
-             Q22 20 50 16
-             Q78 20 75 50
-             Q68 34 50 32
-             Q32 34 25 50 Z"
-          fill="#322b32"
-        />
-        <path
-          d="M26 46
-             Q38 30 56 28
-             Q70 28 76 42
-             Q64 36 48 38
-             Q34 42 26 46 Z"
-          fill="#2a232a"
-        />
-        <path
-          d="M38 26 Q48 22 60 26"
-          stroke="#1a151a"
-          strokeWidth="1.1"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.4"
-        />
-        <g stroke="#3a2a22" strokeWidth="1.9" strokeLinecap="round" fill="none">
-          <path d="M32 40 q7 -2.6 14 0.2" />
-          <path d="M54 40.2 q7 -2.6 14 0.2" />
+        <Layers layer="face" />
+        <g stroke={look.browColor} strokeWidth="1.9" strokeLinecap="round" fill="none">
+          <Brow expression={expression} side="l">
+            <path d="M32 40 q7 -2.6 14 0.2" />
+          </Brow>
+          <Brow expression={expression} side="r">
+            <path d="M54 40.2 q7 -2.6 14 0.2" />
+          </Brow>
         </g>
-        <NanamiEyes irisColor="#4a2c22" active />
+        <NanamiEyes irisColor="#4a2c22" active happy={expression === "joy"} />
         <path
           d="M48.5 58 q1.5 4 3 0"
           stroke="#c8946e"
@@ -422,16 +443,42 @@ function NanamiHead({ viseme, speaking, tiltDeg }: HeadProps) {
           fill="none"
           strokeLinecap="round"
         />
-        <Mouth viseme={viseme} lipColor="#a84858" cy={67} />
+        <Layers layer="lip" />
+        {!speaking && expression !== "neutral" ? (
+          <ExpressionMouth expression={expression} lipColor="#a84858" cy={67} />
+        ) : (
+          <Mouth viseme={viseme} lipColor="#a84858" cy={67} />
+        )}
+        <Layers layer="top" />
+        <HeadFx fx={fx} cheekY={62} cheekX={[34, 66]} />
       </g>
+      <Layers layer="collar" />
+      <AroundFx fx={fx} />
     </svg>
   );
 }
 
 /** Andrew — the English voice (andrew2 portrait). */
-function AndrewEyes({ irisColor, active }: { irisColor: string; active: boolean }) {
+function AndrewEyes({
+  irisColor,
+  active,
+  happy = false,
+}: {
+  irisColor: string;
+  active: boolean;
+  happy?: boolean;
+}) {
   const closed = useLiveBlink(active);
   const { dx, dy } = useGaze(active);
+
+  if (happy) {
+    return (
+      <g stroke="#5a4632" strokeWidth="1.8" strokeLinecap="round" fill="none">
+        <path d="M33.5 49.5 q5.5 -4.8 11 0" />
+        <path d="M55.5 49.5 q5.5 -4.8 11 0" />
+      </g>
+    );
+  }
 
   if (closed) {
     return (
@@ -480,24 +527,31 @@ function AndrewEyes({ irisColor, active }: { irisColor: string; active: boolean 
   );
 }
 
-function AndrewHead({ viseme, speaking, tiltDeg }: HeadProps) {
+export function AndrewHead({
+  viseme,
+  speaking,
+  tiltDeg,
+  look,
+  expression,
+  fx,
+}: HeadProps) {
+  const tiltStyle = { transform: `rotate(${tiltDeg.toFixed(2)}deg)` };
+  const { Layers } = look;
   return (
     <svg
       viewBox="0 0 100 110"
       className={`th-svg ${speaking ? "th-speaking" : ""}`}
       role="img"
-      aria-label="Andrew, the English voice"
+      aria-label={`Andrew, the English voice — ${look.label}`}
     >
-      {/* charcoal crew-neck + shoulders stay planted */}
-      <path
-        d="M30 108 Q32 96 42 92 Q50 97 58 92 Q68 96 70 108 Z"
-        fill="#6b6560"
-      />
+      {/* anything behind the head (buns, long hair) tilts with it */}
+      <g className="th-head-tilt" style={tiltStyle}>
+        <Layers layer="back" />
+      </g>
+      {/* clothing + shoulders stay planted */}
+      <Layers layer="outfit" />
       {/* head + neck tilt around the collar */}
-      <g
-        className="th-head-tilt"
-        style={{ transform: `rotate(${tiltDeg.toFixed(2)}deg)` }}
-      >
+      <g className="th-head-tilt" style={tiltStyle}>
         <path d="M42 78 L42 94 Q50 98 58 94 L58 78 Z" fill="#e8c4a4" />
         <ellipse cx="50" cy="86" rx="7" ry="2.2" fill="#d4a888" opacity="0.45" />
         <ellipse cx="27" cy="56" rx="3.6" ry="5.2" fill="#e3b48f" />
@@ -516,29 +570,18 @@ function AndrewHead({ viseme, speaking, tiltDeg }: HeadProps) {
           fill="#dcb896"
           opacity="0.35"
         />
-        <path
-          d="M30 52
-             Q28 70 36 84
-             Q44 94 50 94
-             Q56 94 64 84
-             Q72 70 70 52
-             Q68 60 62 62
-             Q56 64 50 64
-             Q44 64 38 62
-             Q32 60 30 52 Z"
-          fill="#c9a15e"
-        />
-        <path
-          d="M46 72 Q50 69 54 72 Q50 76 46 72 Z"
-          fill="#edd0b0"
-        />
+        <Layers layer="face" />
         <ellipse cx="36" cy="58" rx="4.5" ry="2.8" fill="#e8a090" opacity="0.4" />
         <ellipse cx="64" cy="58" rx="4.5" ry="2.8" fill="#e8a090" opacity="0.4" />
-        <g stroke="#b8925a" strokeWidth="2.6" strokeLinecap="round" fill="none">
-          <path d="M32 40 q7 -3.5 13 0.2" />
-          <path d="M55 40.2 q6 -3.5 13 0.2" />
+        <g stroke={look.browColor} strokeWidth="2.6" strokeLinecap="round" fill="none">
+          <Brow expression={expression} side="l">
+            <path d="M32 40 q7 -3.5 13 0.2" />
+          </Brow>
+          <Brow expression={expression} side="r">
+            <path d="M55 40.2 q6 -3.5 13 0.2" />
+          </Brow>
         </g>
-        <AndrewEyes irisColor="#7a8f6a" active />
+        <AndrewEyes irisColor="#7a8f6a" active happy={expression === "joy"} />
         <path
           d="M50 46 L50 58"
           stroke="#e0b898"
@@ -554,50 +597,17 @@ function AndrewHead({ viseme, speaking, tiltDeg }: HeadProps) {
           strokeLinecap="round"
         />
         <ellipse cx="50.5" cy="59.5" rx="2.1" ry="1.5" fill="#e8b4a0" opacity="0.55" />
-        <path
-          d="M50 63
-             Q42 60 36 62
-             Q34 65 38 66.5
-             Q44 68 50 66.5
-             Q56 68 62 66.5
-             Q66 65 64 62
-             Q58 60 50 63 Z"
-          fill="#c9a15e"
-        />
-        <Mouth viseme={viseme} lipColor="#b56860" />
-        <path
-          d="M68 38
-             C72 28, 70 16, 60 10
-             C50 3, 36 2, 28 10
-             C22 16, 24 26, 28 34
-             C32 28, 42 24, 52 26
-             C60 28, 65 33, 68 38 Z"
-          fill="#c9a15e"
-        />
-        <path
-          d="M60 16 Q50 10 38 12"
-          stroke="#b8925a"
-          strokeWidth="1.2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.55"
-        />
-        <path
-          d="M62 24 Q50 18 34 22"
-          stroke="#b8925a"
-          strokeWidth="1.1"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.4"
-        />
-        <path
-          d="M58 12
-             C50 5, 38 5, 30 12
-             C34 8, 44 7, 52 11
-             C55 12, 57 12, 58 12 Z"
-          fill="#d4b06e"
-        />
+        <Layers layer="lip" />
+        {!speaking && expression !== "neutral" ? (
+          <ExpressionMouth expression={expression} lipColor="#b56860" cy={70} />
+        ) : (
+          <Mouth viseme={viseme} lipColor="#b56860" />
+        )}
+        <Layers layer="top" />
+        <HeadFx fx={fx} cheekY={58} cheekX={[36, 64]} />
       </g>
+      <Layers layer="collar" />
+      <AroundFx fx={fx} />
     </svg>
   );
 }
@@ -811,7 +821,16 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { lang, viseme, speaking } = useSpeechFace();
   const blinking = useBlink(speaking);
   // Tilt whenever the head is on screen — keeps idle motion after speech too.
-  const tiltDeg = useHeadTilt(Boolean(lang));
+  const { reaction, toggleReactions } = useHeadReaction();
+  /** Voice on screen: the speaker, else Nanami for a reaction before any speech. */
+  const shownLang: "ja" | "en" | null = lang ?? (reaction ? "ja" : null);
+  const idleTilt = useHeadTilt(Boolean(shownLang));
+  const reactionStyle = reaction ? REACTION_STYLE[reaction.kind] : null;
+  const tiltDeg = reactionStyle?.tiltDeg ? reactionStyle.tiltDeg : idleTilt;
+  const { lookFor, cycleLook } = useHeadLook();
+  /** Name of a look just switched to — shown briefly under the head. */
+  const [lookToast, setLookToast] = useState<string | null>(null);
+  const toastTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   /** User's chosen spot (drag); the head returns here whenever it is clear. */
   const [pos, setPos] = useState<HeadPos | null>(() => loadHeadPos());
@@ -829,7 +848,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   autoPosRef.current = autoPos;
 
   useLayoutEffect(() => {
-    if (!enabled || !lang) return;
+    if (!enabled || !shownLang) return;
 
     const tick = () => {
       if (dragRef.current) return;
@@ -860,7 +879,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     tick();
     const id = window.setInterval(tick, AVOID_INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [enabled, lang]);
+  }, [enabled, shownLang]);
 
   useEffect(() => {
     const onResize = () => {
@@ -887,9 +906,50 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     }
   }, [lang]);
 
-  if (!enabled || !lang) return null;
+  useEffect(
+    () => () => {
+      if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    },
+    []
+  );
+
+  if (!enabled || !shownLang) return null;
 
   const shown = autoPos ?? pos;
+  const look = lookFor(shownLang);
+  const expression: Expression = reactionStyle?.expression ?? "neutral";
+  const fx = reactionStyle?.fx ?? [];
+  const bubble = reaction
+    ? reactionLine(shownLang, reaction.kind, reaction.count, reaction.pick)
+    : null;
+  /** Near the top of the screen the bubble drops below the head instead. */
+  const bubbleBelow = Boolean(shown && shown.y < 56);
+
+  const flashToast = (text: string) => {
+    setLookToast(text);
+    if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
+  };
+
+  const switchLook = (step: number) => {
+    flashToast(cycleLook(shownLang, step).label);
+  };
+
+  const onDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    switchLook(e.shiftKey ? -1 : 1);
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "r" || e.key === "R") {
+      e.preventDefault();
+      flashToast(toggleReactions() ? "Reactions on" : "Reactions off");
+      return;
+    }
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    switchLook(e.shiftKey ? -1 : 1);
+  };
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
@@ -955,27 +1015,62 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       }
       role="button"
       tabIndex={0}
-      aria-label={`${lang === "ja" ? "Nanami" : "Andrew"} talking head — drag to move`}
+      aria-label={`${shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions`}
+      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off"
       aria-grabbed={dragging}
+      onDoubleClick={onDoubleClick}
+      onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
     >
-      {lang === "ja" ? (
-        <NanamiHead
-          viseme={viseme}
-          blinking={blinking}
-          speaking={speaking}
-          tiltDeg={tiltDeg}
-        />
-      ) : (
-        <AndrewHead
-          viseme={viseme}
-          blinking={blinking}
-          speaking={speaking}
-          tiltDeg={tiltDeg}
-        />
+      <div
+        key={reaction?.id ?? "idle"}
+        className={`th-motion${reactionStyle ? ` th-motion--${reactionStyle.motion}` : ""}`}
+      >
+        {shownLang === "ja" ? (
+          <NanamiHead
+            viseme={viseme}
+            blinking={blinking}
+            speaking={speaking}
+            tiltDeg={tiltDeg}
+            look={look}
+            expression={expression}
+            fx={fx}
+          />
+        ) : (
+          <AndrewHead
+            viseme={viseme}
+            blinking={blinking}
+            speaking={speaking}
+            tiltDeg={tiltDeg}
+            look={look}
+            expression={expression}
+            fx={fx}
+          />
+        )}
+      </div>
+      {bubble && (
+        <span
+          key={`bubble-${reaction?.id}`}
+          className={[
+            "th-bubble",
+            `th-bubble--${reaction?.kind}`,
+            bubbleBelow ? "th-bubble--below" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          lang={shownLang}
+          aria-live="polite"
+        >
+          {bubble}
+        </span>
+      )}
+      {lookToast && (
+        <span className="th-look-toast" aria-live="polite">
+          {lookToast}
+        </span>
       )}
     </div>
   );

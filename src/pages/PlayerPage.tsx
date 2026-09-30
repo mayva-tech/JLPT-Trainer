@@ -1,3 +1,4 @@
+import { reportAnswer } from "../services/reactionBus";
 import { useState, useEffect, useRef } from "react";
 import { getLessonById } from "../data/lessons";
 import { getVocabularyByIds, vocabulary } from "../data/vocabulary";
@@ -785,6 +786,7 @@ export function PlayerPage() {
     const question = quizDeckRef.current[quizIndexRef.current];
     const correct = question?.correctChoiceIndex ?? -1;
     const isCorrect = choiceIndex === correct;
+    reportAnswer(isCorrect);
     if (isCorrect) {
       const next = quizScoreRef.current + 1;
       quizScoreRef.current = next;

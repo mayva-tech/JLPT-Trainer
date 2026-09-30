@@ -1,3 +1,4 @@
+import { reportSessionEnd } from "../../services/reactionBus";
 import { useState } from "react";
 import "../../pages/GameMode/game-mode.css";
 import { WeakWordRevengeMode } from "../../pages/GameMode/modes/WeakWordRevengeMode";
@@ -67,6 +68,7 @@ export function WeakWordDungeon({ onBack, onOpenTrainer }: Props) {
         key={runId}
         onQuit={() => setPlaying(false)}
         onFinished={(game) => {
+          reportSessionEnd(game.attempted ? game.correct / game.attempted : Number.NaN);
           const stats = loadGameModeStats();
           const recorded = recordGameResult({
             mode: "revenge",
