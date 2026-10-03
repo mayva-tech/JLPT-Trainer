@@ -6,6 +6,10 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    watch: {
+      // Zips dropped here are still locked while downloading; watching them crashes the server (EBUSY).
+      ignored: ["**/RESEARCH-Study-reference/**", "**/scripts/pitch/.cache/**"],
+    },
   },
   test: {
     environment: "jsdom",

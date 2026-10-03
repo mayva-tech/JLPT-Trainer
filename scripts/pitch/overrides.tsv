@@ -1,0 +1,3 @@
+# Manual pitch-accent entries — used before Kanjium.
+# word<TAB>reading<TAB>accents (comma-separated mora positions; 0 = heiban; optional labels like (副)1,(名)0)<TAB>note
+# Add a line here when a word is missing from Kanjium or its entry is wrong for our usage.

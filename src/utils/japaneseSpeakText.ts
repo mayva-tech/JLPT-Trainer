@@ -438,6 +438,18 @@ const NI_BOUND_PATTERN_STEMS = [
 ];
 
 
+/**
+ * A bare particle right after another one forms a compound (に も → にも,
+ * に は → には), so no pause may fall between them. Spaced readings split
+ * them into separate tokens (おおあめ に も かかわらず).
+ */
+const FOLLOWING_PARTICLE_RE = /^(?:も|は|わ|こそ|さえ|すら|しか|だけ|でも|とも|まで)$/u;
+
+function isFollowingParticle(next: string): boolean {
+  const core = next.replace(/[、。！？．，!?,]+$/u, "").trim();
+  return FOLLOWING_PARTICLE_RE.test(core);
+}
+
 /** True when `next` is the complement of a 〜を… grammar pattern (きっかけに, etc.). */
 export function isWoBoundPatternComplement(next: string): boolean {
   const core = next
@@ -495,7 +507,11 @@ export function looksLikeVerbAfterWo(next: string): boolean {
 
 /** を should stay tight with the next word (pattern complement or governing verb). */
 export function shouldKeepWoTight(next: string): boolean {
-  return isWoBoundPatternComplement(next) || looksLikePredicateContinuation(next);
+  return (
+    isFollowingParticle(next) ||
+    isWoBoundPatternComplement(next) ||
+    looksLikePredicateContinuation(next)
+  );
 }
 
 /**
@@ -517,9 +533,9 @@ export function isNiBoundPatternComplement(next: string): boolean {
   return NI_BOUND_PATTERN_STEMS.some((stem) => core.startsWith(stem));
 }
 
-/** に should stay tight with bound pattern complements (本日に限り, ことにした). */
+/** に should stay tight with bound pattern complements (本日に限り, ことにした, にもかかわらず). */
 export function shouldKeepNiTight(next: string): boolean {
-  return isNiBoundPatternComplement(next);
+  return isFollowingParticle(next) || isNiBoundPatternComplement(next);
 }
 
 /**

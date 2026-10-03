@@ -3,6 +3,7 @@ import type { SpeechHighlight } from "../services/speechService";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { LessonNuance } from "./LessonNuance";
+import { PhrasePitchLine } from "./PitchAccent/PitchAccentLine";
 
 type Props = {
   item: VocabularyItem;
@@ -32,6 +33,12 @@ export function PhraseCard({
           showFurigana={showFurigana}
         />
       </div>
+      <PhrasePitchLine
+        phrase={item.phrase}
+        reading={item.phraseReading}
+        speaking={jaHighlight != null}
+        className="pa--card"
+      />
       <div aria-hidden="true">
         <HighlightedEnglish
           text={item.phraseMeaning}

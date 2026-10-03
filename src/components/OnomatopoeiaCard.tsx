@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import type { OnomatopoeiaItem, OnomatopoeiaPart } from "../types/onomatopoeia";
 import type { SpeechHighlight } from "../services/speechService";
 import { getOnomatopoeiaCategory } from "../data/onomatopoeia";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { OnoWordFx } from "./OnoFx/OnoWordFx";
+import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
 
 export type { OnomatopoeiaPart };
 
@@ -29,6 +32,14 @@ export function OnomatopoeiaCard({
   showFurigana = true,
 }: Props) {
   const category = getOnomatopoeiaCategory(item.category);
+
+  // The word's effect plays when the card appears, again each time the word
+  // itself is spoken, and whenever the learner taps the word.
+  const [plays, setPlays] = useState(0);
+  useEffect(() => {
+    if (activePart === "word") setPlays((n) => n + 1);
+  }, [activePart]);
+  const replay = () => setPlays((n) => n + 1);
 
   return (
     <div className="safe-area ono-safe card-fade">
@@ -60,15 +71,25 @@ export function OnomatopoeiaCard({
       <div
         className={partClass("ono-word", activePart === "word")}
         lang="ja"
+        onClick={replay}
+        title="Tap to replay the effect"
       >
-        <FuriganaWrapText
-          surface={item.japanese}
-          reading={item.reading}
-          className="ono-jp"
-          highlight={activePart === "word" ? jaHighlight : null}
-          showFurigana={showFurigana}
-        />
+        <OnoWordFx word={item.japanese} playKey={`${item.id}-${plays}`}>
+          <FuriganaWrapText
+            surface={item.japanese}
+            reading={item.reading}
+            className="ono-jp"
+            highlight={activePart === "word" ? jaHighlight : null}
+            showFurigana={showFurigana}
+          />
+        </OnoWordFx>
       </div>
+      <PitchAccentLine
+        word={item.japanese}
+        reading={item.reading}
+        speaking={activePart === "word"}
+        className="pa--card"
+      />
 
       <div
         className={partClass("ono-meaning-wrap", activePart === "meaning")}

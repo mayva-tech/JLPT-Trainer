@@ -1,0 +1,269 @@
+/* Tanuki-sensei / Neko-sensei — peeks from the bottom-left corner. */
+
+.sensei {
+  position: fixed;
+  left: 10px;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.sensei-body {
+  pointer-events: auto;
+  width: 74px;
+  height: 74px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(58%);
+  transition: transform 380ms cubic-bezier(0.3, 1.5, 0.6, 1);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+}
+
+.sensei-body:hover,
+.sensei-body:focus-visible,
+.sensei--up .sensei-body {
+  transform: translateY(8%);
+}
+
+.sensei-body:focus-visible {
+  outline: 2px solid #f2c84a;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.sensei-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sensei--up .sensei-svg {
+  animation: sensei-bob 900ms ease-in-out infinite;
+}
+
+.sensei-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sensei-blink 5.2s infinite;
+}
+
+.sensei-bubble {
+  pointer-events: auto;
+  position: relative;
+  margin-bottom: 44px;
+  max-width: min(290px, 72vw);
+  padding: 8px 12px 10px;
+  border-radius: 14px;
+  background: #fffdf6;
+  color: #2a2226;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  animation: sensei-bubble-in 320ms ease-out both;
+}
+
+.sensei-bubble::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  bottom: 14px;
+  border: 6px solid transparent;
+  border-right: 9px solid #fffdf6;
+  border-left: 0;
+}
+
+.sensei-bubble-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sensei-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8a5a2a;
+}
+
+.sensei-close {
+  border: 0;
+  background: transparent;
+  color: #8a8088;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.sensei-close:hover {
+  color: #2a2226;
+}
+
+.sensei-phrase {
+  margin: 2px 0 2px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #1f3a5a;
+}
+
+.sensei-phrase rt {
+  font-size: 9px;
+  font-weight: 500;
+  color: #6a7280;
+}
+
+.sensei-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Behind the Player's Nuance panel: a clipped slot on its top edge, so the
+   mascot slides up from behind the panel and peeks out now and then. */
+.lesson-nuance {
+  position: relative;
+}
+
+.sensei--nuance {
+  position: absolute;
+  left: auto;
+  right: 6%;
+  bottom: 100%;
+  z-index: 2;
+}
+
+.sensei-slot {
+  width: 74px;
+  height: 66px;
+  overflow: hidden;
+}
+
+.sensei--nuance .sensei-body {
+  transform: translateY(100%);
+}
+
+.sensei--nuance.sensei--peek .sensei-body {
+  transform: translateY(30%);
+}
+
+.sensei--nuance.sensei--peek .sensei-body:hover,
+.sensei--nuance .sensei-body:focus-visible,
+.sensei--nuance.sensei--up .sensei-body {
+  transform: translateY(10%);
+}
+
+.sensei--nuance .sensei-bubble {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+/* Tail on the right, pointing at the mascot. */
+.sensei--nuance .sensei-bubble::before {
+  left: auto;
+  right: -9px;
+  border-right: 0;
+  border-left: 9px solid #fffdf6;
+}
+
+.sensei-tab {
+  position: fixed;
+  left: 8px;
+  bottom: 8px;
+  z-index: 60;
+  width: 26px;
+  height: 26px;
+  padding: 3px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(20, 20, 24, 0.55);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 200ms ease;
+}
+
+.sensei-tab:hover,
+.sensei-tab:focus-visible {
+  opacity: 1;
+}
+
+.sensei-leaf-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes sensei-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes sensei-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes sensei-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .sensei-body {
+    width: 58px;
+    height: 58px;
+  }
+
+  .sensei-bubble {
+    margin-bottom: 34px;
+  }
+
+  .sensei-slot {
+    width: 58px;
+    height: 52px;
+  }
+
+  .sensei--nuance .sensei-bubble {
+    margin-bottom: 12px;
+  }
+
+  .sensei-phrase {
+    font-size: 15px;
+  }
+
+  .sensei-text {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sensei-body {
+    transition: none;
+  }
+
+  .sensei--up .sensei-svg,
+  .sensei-eyes,
+  .sensei-bubble {
+    animation: none;
+  }
+}

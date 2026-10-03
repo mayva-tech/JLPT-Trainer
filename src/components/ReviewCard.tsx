@@ -3,6 +3,7 @@ import type { SpeechHighlight } from "../services/speechService";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { JlptLevelBadge } from "./JlptLevelBadge";
+import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
 
 type Props = {
   item: VocabularyItem;
@@ -29,6 +30,12 @@ export function ReviewCard({
         />
         <JlptLevelBadge level={item.jlpt} />
       </div>
+      <PitchAccentLine
+        word={item.word}
+        reading={item.reading}
+        speaking={jaHighlight != null}
+        className="pa--card"
+      />
       <div aria-hidden="true">
         <HighlightedEnglish
           text={item.meaning}

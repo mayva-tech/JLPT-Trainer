@@ -305,6 +305,14 @@ describe("TTS particle audit (all lesson readings)", () => {
     ).toBe("〜、てわいけない");
   });
 
+  it("keeps に joined to a following particle (にもかかわらず, にも)", () => {
+    const g = (id: number) => grammar.find((x) => x.id === id)!;
+    const spoken = buildJapaneseSpeakText(g(5001).sentence, g(5001).sentenceReading);
+    expect(spoken).toContain("おおあめ に も かかわらず");
+    expect(spoken).not.toContain("おおあめ に、");
+    expect(buildJapaneseSpeakText("私にも", "わたし に も")).toBe("わたし に も");
+  });
+
   it("inserts a TTS pause after topic は and subject が", () => {
     expect(
       buildJapaneseSpeakText(

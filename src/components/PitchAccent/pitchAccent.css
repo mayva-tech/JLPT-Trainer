@@ -1,0 +1,220 @@
+/* ── Pitch-accent line ───────────────────────────────────────── */
+
+.pa {
+  --pa-cell: 1.25em;
+  --pa-ink: #e8a54b;
+  --pa-low: rgba(255, 255, 255, 0.55);
+  --pa-particle: #5cc8d8;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  margin: 0.2em auto 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pa-figures {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.15em 0.55em;
+}
+
+.pa-figure {
+  position: relative;
+  width: calc(var(--pa-cells) * var(--pa-cell));
+  padding-top: 1.1em;
+}
+
+.pa-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1em;
+  overflow: visible;
+}
+
+.pa-line,
+.pa-tail {
+  fill: none;
+  stroke: var(--pa-ink);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pa-tail {
+  stroke: var(--pa-particle);
+  stroke-dasharray: 1.2 1.2;
+  opacity: 0.8;
+}
+
+.pa-dot {
+  fill: var(--pa-ink);
+}
+
+.pa-dot--particle {
+  fill: none;
+  stroke: var(--pa-particle);
+  stroke-width: 0.6;
+}
+
+.pa-kana {
+  display: grid;
+  grid-template-columns: repeat(var(--pa-cells), var(--pa-cell));
+  font-size: 1em;
+  line-height: 1.2;
+}
+
+.pa-mora {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Two-character morae (きょ, しゃ…) squeeze into one cell. */
+.pa-mora--wide {
+  scale: 0.78 1;
+  letter-spacing: -0.08em;
+}
+
+.pa-mora--L {
+  color: var(--pa-low);
+}
+
+.pa-mora--particle {
+  color: var(--pa-particle);
+  opacity: 0.85;
+  font-size: 0.8em;
+  align-self: end;
+}
+
+.pa-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35em;
+  font-size: 0.55em;
+}
+
+.pa-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0.1em 0.6em;
+  border: 1px solid rgba(232, 165, 75, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.pa-tag--on {
+  opacity: 1;
+  border-color: var(--pa-ink);
+}
+
+.pa-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--pa-ink);
+}
+
+.pa-pos {
+  opacity: 0.75;
+}
+
+.pa-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Draw-on while spoken ─────────────────────────────────────── */
+
+.pa-play .pa-line {
+  stroke-dasharray: 1;
+  animation: pa-draw linear both;
+}
+
+.pa-play .pa-tail {
+  animation: pa-fade-in 200ms ease-out both;
+}
+
+.pa-play .pa-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pa-dot 260ms ease-out both;
+}
+
+.pa-play .pa-mora:not(.pa-mora--particle) {
+  animation: pa-mora calc(var(--pa-ms) * 2.4) ease-out both;
+}
+
+@keyframes pa-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pa-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pa-dot {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pa-mora {
+  0% {
+    color: var(--pa-ink);
+    transform: translateY(-0.08em);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pa-play .pa-line,
+  .pa-play .pa-tail,
+  .pa-play .pa-dot,
+  .pa-play .pa-mora {
+    animation: none;
+  }
+}
+
+/* Size on the player cards (container-query units, like the rest of the card). */
+.pa--card {
+  display: flex;
+  width: fit-content;
+  font-family: var(--font-jp, inherit);
+  font-size: var(--lesson-en-word, 3.9cqw);
+  font-weight: 600;
+}
+
+.pa--card.pa--phrase {
+  font-size: calc(var(--lesson-en-word, 3.9cqw) * 0.72);
+}

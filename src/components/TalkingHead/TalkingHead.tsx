@@ -29,6 +29,8 @@ import { useStageScene } from "./useStageScene";
 import { SceneBackdropArt } from "./backdrops";
 import { CupProp, PhoneProp } from "./props";
 import { SCENE_LABELS } from "./scenes";
+import SenseiMascot from "../Sensei/SenseiMascot";
+import { getSenseiSettings, setSenseiSettings } from "../../services/senseiBus";
 import { AroundFx, ExpressionMouth, HeadFx } from "./reactionFx";
 import {
   REACTION_STYLE,
@@ -69,6 +71,9 @@ import "./talking-head.css";
  * Scenes: a trainer declares where the conversation happens (useHeadScene);
  * the stage shows that backdrop with its name in Japanese, and the heads hold
  * the scene's prop (a phone to the ear, a coffee cup). B toggles scenes.
+ *
+ * The mascot sensei (tanuki / neko) is mounted alongside the head so it
+ * rides on the same single shell mount. M toggles it from the head.
  */
 
 /**
@@ -885,7 +890,9 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
   }
 
   document
-    .querySelectorAll<HTMLElement>(".nav-bar, .production-panel")
+    .querySelectorAll<HTMLElement>(
+      ".nav-bar, .production-panel, .sensei-body, .sensei-bubble, .sensei-tab"
+    )
     .forEach((bar) => {
       const r = bar.getBoundingClientRect();
       if (r.width > 0 && r.height > 0) out.push(pad(r));
@@ -1132,7 +1139,16 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     []
   );
 
-  if (!enabled || !shownLang) return null;
+  if (!enabled) return null;
+  // Same fragment shape as the full render, so the mascot keeps its state
+  // (current tip, scenes already explained) when the head appears.
+  if (!shownLang) {
+    return (
+      <>
+        <SenseiMascot />
+      </>
+    );
+  }
 
   const shown = autoPos ?? pos;
   const look = lookFor(shownLang);
@@ -1174,6 +1190,13 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "m" || e.key === "M") {
+      e.preventDefault();
+      const next = !getSenseiSettings().enabled;
+      setSenseiSettings({ enabled: next });
+      flashToast(next ? "Sensei on" : "Sensei off");
+      return;
+    }
     if (e.key === "b" || e.key === "B") {
       e.preventDefault();
       flashToast(toggleScenes() ? "Scenes on" : "Scenes off");
@@ -1243,6 +1266,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   };
 
   return (
+    <>
+    <SenseiMascot />
     <div
       ref={rootRef}
       className={[
@@ -1262,8 +1287,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       }
       role="button"
       tabIndex={0}
-      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes`}
-      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes, M to toggle sensei`}
+      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off · M: sensei on/off"
       aria-grabbed={dragging}
       onDoubleClick={onDoubleClick}
       onKeyDown={onKeyDown}
@@ -1312,5 +1337,6 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         </span>
       )}
     </div>
+    </>
   );
 }
