@@ -341,6 +341,13 @@
   color: var(--text);
 }
 
+/* Japanese wraps only at the <wbr> word-group breaks; a group too long for
+   a whole line may still break anywhere. */
+.lesson-nuance-body .speech-line {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
 .sentence-main,
 .shadowing-phrase {
   font-size: calc(var(--lesson-jp-line) * var(--fit-scale, 1));
@@ -872,6 +879,16 @@
   gap: 2cqh;
   max-height: 100%;
   overflow: hidden;
+}
+
+.hook-credit {
+  margin: 1cqh 0 0;
+  font-family: var(--font-en);
+  font-size: 1.1cqw;
+  text-align: center;
+  color: var(--text-softer);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .hook-display--scrollable {
@@ -1862,6 +1879,10 @@
 
   .hook-line--en {
     font-size: 5cqw;
+  }
+
+  .hook-credit {
+    font-size: 2cqw;
   }
 
   .placeholder-title {

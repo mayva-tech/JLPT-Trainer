@@ -40,6 +40,10 @@ export function IntroHookDisplay({
           }
           highlight={jaHighlight}
         />
+        {/* Required by Kanjium's CC BY-SA 4.0 licence (pitch-accent data). */}
+        <p className="hook-credit">
+          Pitch accent notation provided by Uros O. through his free database Kanjium (CC BY-SA 4.0).
+        </p>
       </div>
     </div>
   );

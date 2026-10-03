@@ -793,6 +793,11 @@ const AVOID_PAD = 6;
 const AVOID_INTERVAL_MS = 350;
 const AVOID_GRID_STEP = 12;
 const PRIORITY_SELECTOR = ".lesson-nuance--active";
+/** Karaoke marks inside the line being read; their whole line block is kept uncovered. */
+const READING_MARK_SELECTOR = ".speech-active, .speech-spoken";
+const READING_BLOCK_SELECTOR = ".jp-wrap, .speech-line";
+/** The pitch line drawing itself along with the spoken word or phrase. */
+const READING_PITCH_SELECTOR = ".pa-play";
 /** Duo root width over a single head's (228/120, 164/85 on phones). */
 const DUO_WIDTH_RATIO = 1.9;
 /** Chance the pair splits up even when both would fit together. */
@@ -891,7 +896,7 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
 
   document
     .querySelectorAll<HTMLElement>(
-      ".nav-bar, .production-panel, .sensei-body, .sensei-bubble, .sensei-tab"
+      ".nav-bar, .production-panel, .sensei--peek .sensei-slot, .sensei--up .sensei-slot, .sensei-bubble, .sensei-tab"
     )
     .forEach((bar) => {
       const r = bar.getBoundingClientRect();
@@ -900,21 +905,24 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
   return out;
 }
 
-/** Panels being read aloud right now (e.g. the active Nuance box) — never cover these. */
+/**
+ * What is being read aloud right now — the active Nuance box, the text line
+ * with karaoke marks, the pitch line drawing along — never cover these.
+ */
 function collectPriorityObstacles(panel: Box): Box[] {
+  const els = new Set<Element>(document.querySelectorAll(PRIORITY_SELECTOR));
+  document.querySelectorAll(READING_MARK_SELECTOR).forEach((mark) => {
+    const block = mark.closest(READING_BLOCK_SELECTOR);
+    if (block) els.add(block);
+  });
+  document.querySelectorAll(READING_PITCH_SELECTOR).forEach((el) => els.add(el));
+
   const out: Box[] = [];
-  document
-    .querySelectorAll<HTMLElement>(PRIORITY_SELECTOR)
-    .forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.width < 1 || r.height < 1 || !boxesIntersect(r, panel)) return;
-      out.push({
-        left: r.left - AVOID_PAD,
-        top: r.top - AVOID_PAD,
-        right: r.right + AVOID_PAD,
-        bottom: r.bottom + AVOID_PAD,
-      });
-    });
+  els.forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1 || !boxesIntersect(r, panel)) return;
+    out.push(padBox(r));
+  });
   return out;
 }
 
@@ -1104,7 +1112,24 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
 
     tick();
     const id = window.setInterval(tick, AVOID_INTERVAL_MS);
-    return () => window.clearInterval(id);
+    // A new card can put text under the head; re-check on the next frame
+    // instead of waiting for the interval. Karaoke class flips are attribute
+    // changes, so they don't trigger this.
+    let frame = 0;
+    const soon = () => {
+      if (!frame) frame = requestAnimationFrame(() => {
+        frame = 0;
+        tick();
+      });
+    };
+    const observed = findAvoidPanel()?.el;
+    const watcher = observed ? new MutationObserver(soon) : null;
+    if (observed) watcher?.observe(observed, { childList: true, subtree: true, characterData: true });
+    return () => {
+      window.clearInterval(id);
+      watcher?.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, [enabled, shownLang]);
 
   useEffect(() => {

@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { subscribeToReactions } from "../../services/reactionBus";
 import {
   SPEECH_RATE_NORMAL,
@@ -17,6 +16,14 @@ import {
 } from "../../services/senseiBus";
 import { SenseiArt, SenseiLeaf } from "./senseiArt";
 import {
+  candidateSpots,
+  collectObstacles,
+  findStageBox,
+  pickSpot,
+  spotIsClear,
+  type Spot,
+} from "./senseiSpots";
+import {
   CELEBRATE_TIPS,
   ENCOURAGE_TIPS,
   GENERAL_TIPS,
@@ -33,18 +40,46 @@ const SCENE_TIP_DELAY_MS = 1500;
 const AUTO_GAP_MS = 25_000;
 const RECENT_LIMIT = 6;
 const NUANCE_SELECTOR = ".lesson-nuance";
-const NUANCE_POLL_MS = 500;
-/** Peek from behind the nuance panel every so often, briefly. */
+/** How often a showing mascot re-checks that no text has moved under it. */
+const CLEAR_POLL_MS = 500;
+/** Peek out every so often, briefly, from a random spot. */
 const PEEK_EVERY_MS: [number, number] = [10_000, 22_000];
 const PEEK_FOR_MS = 2600;
+/** Let the slot mount at its new spot before sliding out, so it doesn't glide across. */
+const PEEK_SETTLE_MS = 60;
 
-/** The visible Nuance panel the mascot hides behind, if any. */
-function findNuancePanel(): HTMLElement | null {
+/** The visible Nuance panel's box, if any. */
+function findNuanceBox() {
   for (const el of document.querySelectorAll<HTMLElement>(NUANCE_SELECTOR)) {
     const r = el.getBoundingClientRect();
-    if (r.width > 0 && r.height > 0) return el;
+    if (r.width > 0 && r.height > 0) return r;
   }
   return null;
+}
+
+function spotsNow(): { cands: Spot[]; obstacles: ReturnType<typeof collectObstacles> } {
+  const stage = findStageBox();
+  const small = window.innerWidth <= 480;
+  return {
+    cands: candidateSpots(stage.box, findNuanceBox(), small),
+    obstacles: collectObstacles(stage.el),
+  };
+}
+
+/** A random spot that covers no text, or null when there is none. */
+function chooseClearSpot(): Spot | null {
+  const { cands, obstacles } = spotsNow();
+  return pickSpot(cands, obstacles);
+}
+
+/** For a tip that must show: a clear spot, else the bottom-left corner. */
+function chooseSpotForTip(): Spot | null {
+  const { cands, obstacles } = spotsNow();
+  return pickSpot(cands, obstacles) ?? cands.find((s) => s.edge === "bottom") ?? null;
+}
+
+function stillClear(spot: Spot): boolean {
+  return spotIsClear(spot, collectObstacles(findStageBox().el));
 }
 
 function speakAsync(
@@ -57,8 +92,8 @@ function speakAsync(
 
 /**
  * Tanuki-sensei / Neko-sensei — a small mascot with culture notes and study
- * tips. It hides behind the Player's Nuance panel and peeks out now and then;
- * with no panel on screen it peeks up from the bottom-left corner instead.
+ * tips. It stays hidden and peeks out now and then from a random spot — the
+ * stage's sides or bottom, or from behind the Nuance panel — never over text.
  *
  * Pops up on its own (silently) when:
  * - a new scene appears for the first time this session (a culture note),
@@ -73,8 +108,10 @@ export default function SenseiMascot() {
   const [tip, setTip] = useState<SenseiTip | null>(null);
   const [hover, setHover] = useState(false);
   const [speaking, setSpeaking] = useState(false);
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [spot, setSpot] = useState<Spot | null>(null);
   const [peeking, setPeeking] = useState(false);
+  const spotRef = useRef(spot);
+  spotRef.current = spot;
   const recent = useRef<string[]>([]);
   const lastAuto = useRef(0);
   const tippedScenes = useRef(new Set<string>());
@@ -91,6 +128,8 @@ export default function SenseiMascot() {
       0,
       RECENT_LIMIT
     );
+    const at = spotRef.current;
+    if (!at || !stillClear(at)) setSpot(chooseSpotForTip());
     setTip(next);
   }, []);
 
@@ -100,6 +139,9 @@ export default function SenseiMascot() {
   }, []);
 
   useEffect(() => subscribeToSenseiSettings(setSettings), []);
+  useEffect(() => {
+    if (!spotRef.current) setSpot(chooseSpotForTip());
+  }, [settings.enabled]);
   useEffect(() => subscribeToSenseiTips((t) => show(t, false)), [show]);
 
   // Culture note the first time each scene shows up.
@@ -139,20 +181,9 @@ export default function SenseiMascot() {
     return () => window.clearTimeout(id);
   }, [tip, hover, speaking]);
 
-  // Hide behind the Nuance panel whenever one is on screen.
+  // Peek out once in a while, each time from a new random spot clear of text.
   useEffect(() => {
-    const check = () => {
-      const next = findNuancePanel();
-      setAnchor((prev) => (prev === next ? prev : next));
-    };
-    check();
-    const id = window.setInterval(check, NUANCE_POLL_MS);
-    return () => window.clearInterval(id);
-  }, []);
-
-  // Behind the panel: peek out once in a while.
-  useEffect(() => {
-    if (!anchor || tip) {
+    if (tip || !settings.enabled) {
       setPeeking(false);
       return;
     }
@@ -160,16 +191,40 @@ export default function SenseiMascot() {
     const schedule = () => {
       const [min, max] = PEEK_EVERY_MS;
       timer = window.setTimeout(() => {
-        setPeeking(true);
-        timer = window.setTimeout(() => {
-          setPeeking(false);
+        const next = chooseClearSpot();
+        if (!next) {
           schedule();
-        }, PEEK_FOR_MS);
+          return;
+        }
+        setSpot(next);
+        timer = window.setTimeout(() => {
+          setPeeking(true);
+          timer = window.setTimeout(() => {
+            setPeeking(false);
+            schedule();
+          }, PEEK_FOR_MS);
+        }, PEEK_SETTLE_MS);
       }, min + Math.random() * (max - min));
     };
     schedule();
     return () => window.clearTimeout(timer);
-  }, [anchor, tip]);
+  }, [tip, settings.enabled]);
+
+  // While showing, step away if text moves under the mascot (card change, resize).
+  useEffect(() => {
+    if (!peeking && !tip) return;
+    const id = window.setInterval(() => {
+      const at = spotRef.current;
+      if (!at || stillClear(at)) return;
+      if (tip) {
+        const next = chooseClearSpot();
+        if (next) setSpot(next);
+      } else {
+        setPeeking(false);
+      }
+    }, CLEAR_POLL_MS);
+    return () => window.clearInterval(id);
+  }, [peeking, tip]);
 
   useEffect(
     () => () => {
@@ -296,21 +351,19 @@ export default function SenseiMascot() {
     </div>
   );
   const stateClass = `${tip ? " sensei--up" : ""}${peeking ? " sensei--peek" : ""}`;
+  const at = spot;
+  if (!at) return null;
+  const placeClass = ` sensei--${at.edge} sensei--toward-${at.inward}${at.dropBubble ? " sensei--drop" : ""}`;
 
-  if (anchor) {
-    // Clipped slot on the panel's top edge, so the mascot looks hidden behind it.
-    return createPortal(
-      <div className={`sensei sensei--nuance${stateClass}`}>
-        {bubble}
-        <div className="sensei-slot">{body}</div>
-      </div>,
-      anchor
-    );
-  }
-
+  // A clipped slot on an edge: the mascot slides out of it, so it seems to be
+  // hiding just off the stage or behind the Nuance panel.
   return (
-    <div className={`sensei${stateClass}`}>
-      {body}
+    <div
+      key={`${at.edge}-${at.x}-${at.y}`}
+      className={`sensei${placeClass}${stateClass}`}
+      style={{ left: at.x, top: at.y, width: at.w, height: at.h } as CSSProperties}
+    >
+      <div className="sensei-slot">{body}</div>
       {bubble}
     </div>
   );

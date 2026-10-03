@@ -110,6 +110,7 @@ export function LessonNuance({ note, active = false, highlight = null }: Props) 
         text={text}
         className="lesson-nuance-body"
         highlight={active ? highlight : null}
+        jpWordBreaks
       />
     </div>
   );

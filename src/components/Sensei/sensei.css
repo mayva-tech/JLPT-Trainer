@@ -1,33 +1,86 @@
-/* Tanuki-sensei / Neko-sensei — peeks from the bottom-left corner. */
+/* Tanuki-sensei / Neko-sensei — peeks out of a clipped slot on a random edge
+   (stage sides, bottom, or the top of the Nuance panel). The slot's box is
+   set inline by SenseiMascot; the mascot is only visible inside it. */
 
 .sensei {
   position: fixed;
-  left: 10px;
-  bottom: 0;
   z-index: 60;
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
   pointer-events: none;
+}
+
+.sensei-slot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .sensei-body {
   pointer-events: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 74px;
   height: 74px;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  transform: translateY(58%);
   transition: transform 380ms cubic-bezier(0.3, 1.5, 0.6, 1);
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
 }
 
-.sensei-body:hover,
-.sensei-body:focus-visible,
-.sensei--up .sensei-body {
-  transform: translateY(8%);
+/* Up from below: the stage's bottom edge, or from behind the Nuance panel. */
+.sensei--bottom .sensei-body,
+.sensei--nuance .sensei-body {
+  transform: translateY(100%);
+}
+
+.sensei--bottom.sensei--peek .sensei-body,
+.sensei--nuance.sensei--peek .sensei-body {
+  transform: translateY(30%);
+}
+
+.sensei--bottom.sensei--peek .sensei-body:hover,
+.sensei--nuance.sensei--peek .sensei-body:hover,
+.sensei--bottom .sensei-body:focus-visible,
+.sensei--nuance .sensei-body:focus-visible,
+.sensei--bottom.sensei--up .sensei-body,
+.sensei--nuance.sensei--up .sensei-body {
+  transform: translateY(10%);
+}
+
+/* From the sides: leans in around the edge. */
+.sensei--left .sensei-body {
+  transform-origin: 0 60%;
+  transform: translateX(-100%);
+}
+
+.sensei--left.sensei--peek .sensei-body {
+  transform: translateX(-35%) rotate(12deg);
+}
+
+.sensei--left.sensei--peek .sensei-body:hover,
+.sensei--left .sensei-body:focus-visible,
+.sensei--left.sensei--up .sensei-body {
+  transform: translateX(-8%) rotate(5deg);
+}
+
+.sensei--right .sensei-body {
+  left: auto;
+  right: 0;
+  transform-origin: 100% 60%;
+  transform: translateX(100%);
+}
+
+.sensei--right.sensei--peek .sensei-body {
+  transform: translateX(35%) rotate(-12deg);
+}
+
+.sensei--right.sensei--peek .sensei-body:hover,
+.sensei--right .sensei-body:focus-visible,
+.sensei--right.sensei--up .sensei-body {
+  transform: translateX(8%) rotate(-5deg);
 }
 
 .sensei-body:focus-visible {
@@ -54,13 +107,14 @@
 
 .sensei-bubble {
   pointer-events: auto;
-  position: relative;
-  margin-bottom: 44px;
+  position: absolute;
+  width: max-content;
   max-width: min(290px, 72vw);
   padding: 8px 12px 10px;
   border-radius: 14px;
   background: #fffdf6;
   color: #2a2226;
+  text-align: left;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
   animation: sensei-bubble-in 320ms ease-out both;
 }
@@ -68,11 +122,71 @@
 .sensei-bubble::before {
   content: "";
   position: absolute;
-  left: -9px;
-  bottom: 14px;
   border: 6px solid transparent;
-  border-right: 9px solid #fffdf6;
+}
+
+/* Bubble above a bottom / Nuance slot, opening toward the stage's middle;
+   the tail points down at the mascot. */
+.sensei--bottom .sensei-bubble,
+.sensei--nuance .sensei-bubble {
+  bottom: calc(100% + 10px);
+}
+
+.sensei--bottom.sensei--toward-right .sensei-bubble,
+.sensei--nuance.sensei--toward-right .sensei-bubble {
+  left: 0;
+}
+
+.sensei--bottom.sensei--toward-left .sensei-bubble,
+.sensei--nuance.sensei--toward-left .sensei-bubble {
+  right: 0;
+}
+
+.sensei--bottom .sensei-bubble::before,
+.sensei--nuance .sensei-bubble::before {
+  bottom: -9px;
+  border-bottom: 0;
+  border-top: 9px solid #fffdf6;
+}
+
+.sensei--toward-right.sensei--bottom .sensei-bubble::before,
+.sensei--toward-right.sensei--nuance .sensei-bubble::before {
+  left: 28px;
+}
+
+.sensei--toward-left.sensei--bottom .sensei-bubble::before,
+.sensei--toward-left.sensei--nuance .sensei-bubble::before {
+  right: 28px;
+}
+
+/* Bubble beside a side slot, toward the stage; the tail points at the mascot. */
+.sensei--left .sensei-bubble {
+  left: calc(100% + 10px);
+  bottom: 0;
+}
+
+.sensei--right .sensei-bubble {
+  right: calc(100% + 10px);
+  bottom: 0;
+}
+
+.sensei--drop .sensei-bubble {
+  top: 0;
+  bottom: auto;
+}
+
+.sensei--left .sensei-bubble::before {
+  left: -9px;
+  top: 22px;
   border-left: 0;
+  border-right: 9px solid #fffdf6;
+}
+
+.sensei--right .sensei-bubble::before {
+  right: -9px;
+  top: 22px;
+  border-right: 0;
+  border-left: 9px solid #fffdf6;
 }
 
 .sensei-bubble-head {
@@ -120,53 +234,6 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.45;
-}
-
-/* Behind the Player's Nuance panel: a clipped slot on its top edge, so the
-   mascot slides up from behind the panel and peeks out now and then. */
-.lesson-nuance {
-  position: relative;
-}
-
-.sensei--nuance {
-  position: absolute;
-  left: auto;
-  right: 6%;
-  bottom: 100%;
-  z-index: 2;
-}
-
-.sensei-slot {
-  width: 74px;
-  height: 66px;
-  overflow: hidden;
-}
-
-.sensei--nuance .sensei-body {
-  transform: translateY(100%);
-}
-
-.sensei--nuance.sensei--peek .sensei-body {
-  transform: translateY(30%);
-}
-
-.sensei--nuance.sensei--peek .sensei-body:hover,
-.sensei--nuance .sensei-body:focus-visible,
-.sensei--nuance.sensei--up .sensei-body {
-  transform: translateY(10%);
-}
-
-.sensei--nuance .sensei-bubble {
-  margin-bottom: 18px;
-  text-align: left;
-}
-
-/* Tail on the right, pointing at the mascot. */
-.sensei--nuance .sensei-bubble::before {
-  left: auto;
-  right: -9px;
-  border-right: 0;
-  border-left: 9px solid #fffdf6;
 }
 
 .sensei-tab {
@@ -232,19 +299,6 @@
   .sensei-body {
     width: 58px;
     height: 58px;
-  }
-
-  .sensei-bubble {
-    margin-bottom: 34px;
-  }
-
-  .sensei-slot {
-    width: 58px;
-    height: 52px;
-  }
-
-  .sensei--nuance .sensei-bubble {
-    margin-bottom: 12px;
   }
 
   .sensei-phrase {

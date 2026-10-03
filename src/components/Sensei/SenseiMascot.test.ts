@@ -102,23 +102,19 @@ describe("SenseiMascot", () => {
     vi.restoreAllMocks();
   });
 
-  it("hides behind the Nuance panel when one is on screen", () => {
-    const panel = document.createElement("div");
-    panel.className = "lesson-nuance";
-    panel.getBoundingClientRect = () =>
-      ({ width: 300, height: 60, top: 400, left: 0, right: 300, bottom: 460 }) as DOMRect;
-    document.body.appendChild(panel);
+  it("stays hidden, then peeks out of a slot on an edge now and then", () => {
     const rand = vi.spyOn(Math, "random").mockReturnValue(0);
-    act(() => vi.advanceTimersByTime(600));
-    expect(panel.querySelector(".sensei--nuance .sensei-slot .sensei-body")).not.toBeNull();
-    expect(host.querySelector(".sensei")).toBeNull();
-    expect(panel.querySelector(".sensei--peek")).toBeNull();
-    act(() => vi.advanceTimersByTime(10_100));
-    expect(panel.querySelector(".sensei--peek")).not.toBeNull();
+    expect(host.querySelector(".sensei--peek")).toBeNull();
+    const slot = host.querySelector<HTMLElement>(".sensei");
+    expect(slot?.className).toMatch(/sensei--(left|right|bottom|nuance)/);
+    expect(slot?.style.left).not.toBe("");
+    for (let t = 0; t < 23_000 && !host.querySelector(".sensei--peek"); t += 250) {
+      act(() => vi.advanceTimersByTime(250));
+    }
+    expect(host.querySelector(".sensei--peek .sensei-slot .sensei-body")).not.toBeNull();
+    act(() => vi.advanceTimersByTime(2700));
+    expect(host.querySelector(".sensei--peek")).toBeNull();
     rand.mockRestore();
-    panel.remove();
-    act(() => vi.advanceTimersByTime(600));
-    expect(host.querySelector(".sensei")).not.toBeNull();
   });
 
   it("× hides the mascot; the leaf brings it back", () => {
