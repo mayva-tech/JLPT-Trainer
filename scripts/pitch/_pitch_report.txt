@@ -1,8 +1,8 @@
-Pitch accent coverage: 2063/2173 (94.9%)
-By source: kanjium 1960, kanjium-reading 100, kanjium-kana 3
-Sample phrases: 1727/2028 (85.2%)
+Pitch accent coverage: 2112/2223 (95.0%)
+By source: kanjium 2008, kanjium-reading 101, kanjium-kana 3
+Sample phrases: 1770/2078 (85.2%)
 
-Missing (110) — add to overrides.tsv if you can verify them:
+Missing (111) — add to overrides.tsv if you can verify them:
   賞味期限|しょうみきげん	(src/data/vocabulary.ts)
   消費期限|しょうひきげん	(src/data/vocabulary.ts)
   まとめ買い|まとめがい	(src/data/vocabulary.ts)
@@ -107,6 +107,7 @@ Missing (110) — add to overrides.tsv if you can verify them:
   ちょうど|ちょうど	(src/data/vocabularyCore2000Seeds.ts)
   ひとり|ひとり	(src/data/vocabularyCore2000Seeds.ts)
   新入社員|しんにゅうしゃいん	(src/data/n3/vocabularyN3Seeds.ts)
+  こしょう|こしょう	(src/data/n3/vocabularyN3Seeds.ts)
   びっくり|びっくり	(src/data/onomatopoeia.ts)
   じっと|じっと	(src/data/onomatopoeia.ts)
   さっと|さっと	(src/data/onomatopoeia.ts)
@@ -114,7 +115,7 @@ Missing (110) — add to overrides.tsv if you can verify them:
   つくづく|つくづく	(src/data/onomatopoeia.ts)
   のびのび|のびのび	(src/data/onomatopoeia.ts)
 
-Phrases without a line (301):
+Phrases without a line (308):
   20パーセント割引|にじゅうぱーせんとわりびき
   賞味期限の表示|しょうみきげんのひょうじ
   消費期限が近い|しょうひきげんがちかい
@@ -416,3 +417,10 @@ Phrases without a line (301):
   迷子になる|まいごになる
   ひどい頭痛|ひどいずつう
   食欲がない|しょくよくがない
+  栄養のある食事|えいようのあるしょくじ
+  塩とこしょう|しおとこしょう
+  百円硬貨|ひゃくえんこうか
+  一万円札|いちまんえんさつ
+  恋人ができる|こいびとができる
+  仲のいい夫婦|なかのいいふうふ
+  休日の過ごし方|きゅうじつのすごしかた

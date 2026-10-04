@@ -181,7 +181,7 @@ describe("N3 grammar course", () => {
       expect(items.map((g) => g.id)).toEqual(lesson.grammarIds);
       expect(items.every((g) => g.jlpt === "N3" && g.courseLevel === "N3_REVIEW")).toBe(true);
     }
-    expect(n3Grammar).toHaveLength(30);
+    expect(n3Grammar).toHaveLength(n3GrammarLessons.length * 10);
   });
 
   it("gives every new item speakable pattern and sentence notes", () => {

@@ -206,4 +206,220 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "食欲 is appetite; 食欲の秋 refers to autumn as the season of good food.",
     phrase: "食欲がない is the usual way to say you have no appetite.",
   },
+  7051: {
+    word: "食材 is anything used as an ingredient; 材料 is broader and covers craft materials too.",
+    phrase: "新鮮な食材 is a common phrase on menus and in cooking shows.",
+    sentence: "地元の食材 means locally produced ingredients, a big selling point in Japan.",
+  },
+  7052: {
+    word: "小麦粉 is wheat flour; 粉 alone means any powder, and rice flour is 米粉.",
+    phrase: "混ぜる means to mix; 混ざる is the intransitive form when things become mixed.",
+  },
+  7053: {
+    phrase: "味噌汁 is miso soup; tofu and wakame are its most common ingredients.",
+    sentence: "体にいい means good for your health, a very common everyday phrase.",
+  },
+  7054: {
+    word: "納豆 is sticky fermented soybeans, usually eaten with rice at breakfast.",
+    phrase: "納豆ご飯 is natto on rice, often mixed with soy sauce and green onion.",
+    sentence: "Use 苦手 for food you dislike; it is softer than 嫌い.",
+  },
+  7055: {
+    word: "和菓子 are traditional Japanese sweets; Western cakes and cookies are 洋菓子.",
+    phrase: "Many 和菓子 change with the seasons, like sakura mochi in spring.",
+    sentence: "いただく is the humble verb for eating or receiving, used politely.",
+  },
+  7056: {
+    word: "食卓 is the dining table at mealtimes; the furniture itself is often called テーブル.",
+    phrase: "家族の食卓 suggests family meals together, not just the table.",
+  },
+  7057: {
+    word: "食品 is food as a product, as in shops or labels; 食べ物 is the everyday word.",
+    phrase: "冷凍食品 are frozen foods; 冷凍 means freezing, and 冷蔵 means chilling.",
+  },
+  7058: {
+    word: "栄養 is nutrition; a balanced diet is 栄養のバランスがいい食事.",
+    phrase: "栄養のある means nutritious; 栄養がある is the same in a full sentence.",
+    sentence: "たっぷり means plenty of, often used for food and drink.",
+  },
+  7059: {
+    word: "こしょう is usually written in hiragana; the kanji 胡椒 is rare in daily life.",
+    phrase: "Japanese lists salt first, as in 塩とこしょう.",
+    sentence: "味を調える means to adjust the seasoning, a common recipe phrase.",
+  },
+  7060: {
+    word: "油 is cooking or machine oil; 脂 with a different kanji is animal fat.",
+    phrase: "揚げる is to deep-fry; 炒める is to stir-fry with a little oil.",
+  },
+  7061: {
+    word: "梅雨 is read つゆ, though ばいう is also used in forecasts; it runs from early June to July.",
+    phrase: "梅雨の季節 is the rainy season; its end is called 梅雨明け.",
+    sentence: "梅雨に入る means the rainy season begins; forecasters say 梅雨入り.",
+  },
+  7062: {
+    word: "嵐 is a storm with strong wind and rain; a typhoon is 台風.",
+    phrase: "嵐の夜 is a stormy night, also used figuratively for a dramatic night.",
+  },
+  7063: {
+    word: "霧 is fog or mist; light mist is also called もや.",
+    phrase: "Use 濃い for thick fog; thin fog is 薄い霧.",
+  },
+  7064: {
+    word: "霜 is frost on the ground; frost on a window is also 霜, and frost-free fridges say 霜取り.",
+    phrase: "霜が降りる is the set phrase for frost forming overnight.",
+  },
+  7065: {
+    word: "雷 is thunder and lightning together; the flash itself is 稲妻 or 稲光.",
+    phrase: "雷が鳴る is thunder rumbling; 雷が落ちる means lightning strikes.",
+  },
+  7066: {
+    word: "満開 means in full bloom, used mostly for cherry blossoms.",
+    phrase: "満開の桜 is a classic spring phrase; partial bloom is 五分咲き.",
+  },
+  7067: {
+    word: "花火 literally means fire flowers; summer fireworks festivals are a big tradition.",
+    phrase: "花火大会 is a fireworks festival, where many people wear yukata.",
+  },
+  7068: {
+    word: "太陽 is the sun in science and formal speech; children often say お日様.",
+    phrase: "太陽の光 is sunlight; 日光 is a shorter word for the same thing.",
+    sentence: "沈む is used for the sun setting; rising is 昇る.",
+  },
+  7069: {
+    word: "丘 is a low hill; a mountain is 山, and a small hill can also be 小山.",
+    phrase: "丘の上 is a common spot for parks, schools and views over the town.",
+  },
+  7070: {
+    word: "波 is a wave of water; a wave of change can also be called 波.",
+    phrase: "波が高い is the usual way beaches warn swimmers about rough sea.",
+  },
+  7071: {
+    word: "代金 is the price you pay for goods or services; 料金 is a set fee like a fare.",
+    phrase: "商品の代金 is the cost of the item itself, not shipping or tax.",
+  },
+  7072: {
+    word: "値下げ is a seller lowering a price; prices falling by themselves is 値下がり.",
+    phrase: "大幅な means large in scale, often used with price cuts and changes.",
+    sentence: "Supermarkets put discount stickers on bento before closing, a well-known evening bargain.",
+  },
+  7073: {
+    word: "値上げ is a deliberate price raise by a seller; 値上がり is prices rising on their own.",
+    phrase: "電気代 is the electricity bill; 代 after a noun means the charge for it.",
+  },
+  7074: {
+    word: "偽物 is a fake; the genuine article is 本物.",
+    phrase: "ブランド品 means designer goods, a common target for fakes.",
+    sentence: "かもしれない means might be, showing the speaker is not sure.",
+  },
+  7075: {
+    word: "中古 means second-hand; brand new is 新品.",
+    phrase: "中古の車 is often shortened to 中古車.",
+  },
+  7076: {
+    word: "硬貨 is the formal word for coins; in conversation people say 小銭 for small change.",
+    phrase: "百円硬貨 is the hundred-yen coin; in speech just say 百円玉.",
+  },
+  7077: {
+    word: "合計 is the total of several amounts; the bill or check is お会計.",
+    phrase: "合計の金額 is the total amount, shown at the bottom of a receipt.",
+    sentence: "になります is the typical register phrase when telling the total.",
+  },
+  7078: {
+    word: "宝くじ is a lottery ticket; the big year-end lottery draws long lines.",
+    phrase: "宝くじが当たる is to win the lottery; 当たる also means a guess is right.",
+  },
+  7079: {
+    word: "通信販売 is mail order, usually shortened to 通販, now mostly online.",
+    phrase: "通信販売の商品 are goods sold by catalog or online, delivered to your home.",
+  },
+  7080: {
+    word: "札 read さつ is a banknote; the same kanji read ふだ means a tag or card.",
+    phrase: "一万円札 is the largest note; coins and notes together are お金.",
+  },
+  7081: {
+    word: "親友 is a best friend; a friend in general is 友達, and a formal word is 友人.",
+    phrase: "昔からの means since long ago, as in 昔からの友達.",
+  },
+  7082: {
+    word: "知り合い is someone you know but are not close to, weaker than 友達.",
+    phrase: "仕事の知り合い is a work contact, not necessarily a friend.",
+    sentence: "の紹介で means through someone's introduction, a common way to find jobs in Japan.",
+  },
+  7083: {
+    word: "恋人 is a romantic partner of any gender; in speech people also say 彼氏 or 彼女.",
+    phrase: "恋人ができる means to start dating someone; できる here means to come to have.",
+  },
+  7084: {
+    word: "夫婦 is a married couple; a dating couple is カップル.",
+    phrase: "仲のいい means on good terms, used for couples, friends and siblings.",
+  },
+  7085: {
+    word: "双子 are twins; triplets are 三つ子.",
+    phrase: "兄弟 can mean brothers or siblings; sisters are 姉妹.",
+    sentence: "そっくり means looks exactly alike, often used for family resemblance.",
+  },
+  7086: {
+    word: "いとこ is usually written in hiragana; it covers male and female cousins alike.",
+    phrase: "いとこの結婚式 is a cousin's wedding, a common family gathering.",
+  },
+  7087: {
+    word: "味方 is someone on your side; the opposite is 敵, an enemy.",
+    phrase: "子どもの味方 means siding with or supporting children.",
+    sentence: "あなたの味方だよ is a warm way to promise support.",
+  },
+  7088: {
+    word: "婚約 is engagement to marry; the fiancé or fiancée is 婚約者.",
+    phrase: "婚約の指輪 is usually shortened to 婚約指輪.",
+  },
+  7089: {
+    word: "若者 means young people as a group, often in news; 若い人 is softer.",
+    phrase: "今の若者 is how older people talk about young people today, sometimes critically.",
+  },
+  7090: {
+    word: "独身 means single and not married; living alone is 一人暮らし.",
+    phrase: "独身の生活 is single life; 独身寮 is a company dorm for single workers.",
+  },
+  7091: {
+    word: "読書 is reading as an activity or hobby; reading a document is just 読む.",
+    phrase: "読書の時間 is time for reading; 読書の秋 calls autumn the season for books.",
+    sentence: "が楽しみだ means something is a pleasure to look forward to.",
+  },
+  7092: {
+    word: "登山 is mountain climbing in general; a casual hike is ハイキング.",
+    phrase: "冬の登山 needs special gear; summer climbing season in Japan is short.",
+  },
+  7093: {
+    word: "手品 is a magic trick; a magician is 手品師 or マジシャン.",
+    phrase: "手品を見せる is to perform a trick for someone.",
+    sentence: "目を輝かせる means eyes sparkling with excitement.",
+  },
+  7094: {
+    word: "芝居 is a stage play; it also means an act or pretense, as in 芝居をする.",
+    phrase: "芝居を見る is to watch a play; to perform in one is 芝居に出る.",
+  },
+  7095: {
+    word: "キャンプ is camping; a campsite is キャンプ場.",
+    phrase: "キャンプに行く is to go camping; with する it focuses on doing it.",
+  },
+  7096: {
+    word: "ハイキング is an easy walk in nature; serious climbing is 登山.",
+    phrase: "山でハイキング is a light mountain walk, popular on weekends.",
+    sentence: "いこう is the casual let's form of 行く.",
+  },
+  7097: {
+    word: "作曲 is composing music; writing the lyrics is 作詞.",
+    phrase: "ピアノで作曲する uses で for the instrument or tool you compose with.",
+  },
+  7098: {
+    word: "漫画家 is a manga artist; 家 after a field means a professional, like 作家 or 画家.",
+    phrase: "人気の means popular, as in 人気の店 or 人気の漫画家.",
+  },
+  7099: {
+    word: "休日 is a day off or holiday; national holidays are 祝日.",
+    phrase: "過ごし方 means a way of spending time; 休日の過ごし方 is a common interview topic.",
+  },
+  7100: {
+    word: "劇場 is a theater for plays; a movie theater is 映画館.",
+    phrase: "駅前の means in front of the station, a common location in Japanese towns.",
+  },
 };

@@ -32,16 +32,16 @@
   --ss-en: "Segoe UI", system-ui, -apple-system, sans-serif;
 
   /* Card typography — bump together for readability */
-  --ss-jp-head: 28px;
-  --ss-jp-body: 19px;
-  --ss-jp-read: 15px;
-  --ss-romaji: 18px;
-  --ss-en-body: 16px;
-  --ss-en-small: 14px;
-  --ss-mini-jp: 24px;
-  --ss-mini-body: 17px;
-  --ss-mini-read: 14px;
-  --ss-mini-en: 15px;
+  --ss-jp-head: 36px;
+  --ss-jp-body: 25px;
+  --ss-jp-read: 17px;
+  --ss-romaji: 21px;
+  --ss-en-body: 21px;
+  --ss-en-small: 16px;
+  --ss-mini-jp: 30px;
+  --ss-mini-body: 22px;
+  --ss-mini-read: 16px;
+  --ss-mini-en: 19px;
   --ss-compare-title: 20px;
   --ss-compare-gloss: 15px;
 

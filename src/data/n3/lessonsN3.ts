@@ -36,4 +36,9 @@ export const n3Lessons: Lesson[] = [
   n3Lesson(3, "Work & School", "Work • School", "Work & Business", "Work & School"),
   n3Lesson(4, "Town & Travel", "Town • Travel", "Daily Life", "Town & Travel"),
   n3Lesson(5, "Health & Body", "Health • Body", "Daily Life", "Health & Body"),
+  n3Lesson(6, "Food & Cooking", "Food • Cooking", "Daily Life", "Food & Cooking"),
+  n3Lesson(7, "Nature & Seasons", "Nature • Seasons", "Daily Life", "Nature & Seasons"),
+  n3Lesson(8, "Money & Shopping", "Money • Shopping", "Daily Life", "Money & Shopping"),
+  n3Lesson(9, "People & Relationships", "People • Relationships", "Daily Life", "People & Relationships"),
+  n3Lesson(10, "Hobbies & Free Time", "Hobbies • Free Time", "Daily Life", "Hobbies & Free Time"),
 ];
