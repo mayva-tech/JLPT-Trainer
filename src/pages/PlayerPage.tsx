@@ -34,6 +34,7 @@ import { InterviewPracticeDisplay } from "../components/InterviewPracticeDisplay
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
 import { RegisterSplitCard } from "../components/RegisterSplitCard";
 import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
+import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -3728,6 +3729,8 @@ export function PlayerPage() {
             </button>
           </>
         ) : null}
+
+        {screen !== "toc" && screen !== "flow-setup" ? <HeadStyleButtons /> : null}
       </div>
     </>
   );

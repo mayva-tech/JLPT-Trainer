@@ -3,6 +3,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
@@ -27,7 +28,8 @@ import type { HeadReactionEvent } from "../../services/reactionBus";
 import type { SceneProp } from "../../services/sceneBus";
 import { useStageScene } from "./useStageScene";
 import { useSuitMode } from "./useSuitMode";
-import { SUIT_LABEL, suitLookFor } from "./suit";
+import { suitLookFor } from "./suit";
+import { getHeadStyle, subscribeHeadStyle } from "./headStyleStore";
 import { SceneBackdropArt } from "./backdrops";
 import { CupProp, PhoneProp } from "./props";
 import { SCENE_LABELS } from "./scenes";
@@ -57,9 +59,9 @@ import "./talking-head.css";
  *
  * Each voice has twenty looks (see ./looks). The face shape, eyes, nose and
  * mouth belong to the head and never change; a look only restyles hair,
- * facial hair, clothing and accessories. Each head has its own buttons at its
- * shoulder: the look button gives that head's next look (Shift-click the
- * previous one); Enter does the same for the speaker. Remembered per voice.
+ * facial hair, clothing and accessories. Separate Nanami / Andrew look buttons
+ * sit in the Player's control bar (HeadStyleButtons; Shift-click: previous);
+ * Enter on the head does the same for the speaker. Remembered per voice.
  *
  * Reactions: answer checks report through services/reactionBus, and the head
  * answers with an expression (brows, a held mouth, happy eyes), a small head
@@ -78,8 +80,8 @@ import "./talking-head.css";
  * The mascot sensei (tanuki / neko) is mounted alongside the head so it
  * rides on the same single shell mount. M toggles it from the head.
  *
- * Mecha suit: each head's helmet button (A, for armour, does the speaker)
- * suits that head up in an open-faced armoured suit — the face keeps talking
+ * Mecha suit: each head's suit button in the Player bar (A on the head does
+ * the speaker) suits that head up in an open-faced armoured suit — the face keeps talking
  * inside a glass visor. A shutter lifts off the face as it goes on. Remembered
  * per head; off by default.
  */
@@ -665,63 +667,6 @@ export function AndrewHead({
 
 const VOICE_NAME: Record<Voice, string> = { ja: "Nanami", en: "Andrew" };
 
-/** Swallow pointer and key events so the head's drag and shortcuts stay out of it. */
-const keepToButton = {
-  onPointerDown: (e: PointerEvent<HTMLButtonElement>) => e.stopPropagation(),
-  onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation(),
-};
-
-/**
- * One head's own buttons, stacked at its shoulder on the outer side: next
- * look (Shift-click: previous) and its mecha suit on/off.
- */
-function HeadControls({
-  voice,
-  lookLabel,
-  suited,
-  onLook,
-  onSuit,
-}: {
-  voice: Voice;
-  lookLabel: string;
-  suited: boolean;
-  onLook: (step: number) => void;
-  onSuit: () => void;
-}) {
-  const name = VOICE_NAME[voice];
-  return (
-    <div className="th-controls" role="group" aria-label={`${name}'s look`}>
-      <button
-        type="button"
-        className="th-look-btn"
-        aria-label={`Change ${name}'s look (now ${lookLabel})`}
-        title={`${name}: next look · now ${lookLabel} (Shift: previous)`}
-        onClick={(e) => onLook(e.shiftKey ? -1 : 1)}
-        {...keepToButton}
-      >
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M5.5 2.5 L2 4.5 L3.2 7.4 L4.6 6.8 L4.6 13.5 L11.4 13.5 L11.4 6.8 L12.8 7.4 L14 4.5 L10.5 2.5 Q8 4.6 5.5 2.5 Z" />
-        </svg>
-      </button>
-      <button
-        type="button"
-        className="th-suit-btn"
-        aria-pressed={suited}
-        aria-label={suited ? `Take off ${name}'s mecha suit` : `Put ${name} in the mecha suit`}
-        title={`${name}: mecha suit ${suited ? "on" : "off"}`}
-        onClick={onSuit}
-        {...keepToButton}
-      >
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M2.5 10.5 Q2.5 2.5 8 2.5 Q13.5 2.5 13.5 10.5 L13.5 13 L2.5 13 Z" />
-          <path d="M4.5 8 Q8 6.2 11.5 8 L11.5 11 L4.5 11 Z" className="th-suit-btn-visor" />
-          <path d="M3 6 L1.2 2" />
-        </svg>
-      </button>
-    </div>
-  );
-}
-
 /** One head on the stage — solo, or one of the duo pair. */
 function Seat({
   voice,
@@ -735,15 +680,12 @@ function Seat({
   splitAt,
   prop,
   suitReveal = false,
-  controls,
 }: {
   voice: Voice;
   role: SeatRole;
   prop?: SceneProp;
   /** Just suited up: play the armour drop and face-shutter reveal once. */
   suitReveal?: boolean;
-  /** This head's own buttons, beside its shoulder. */
-  controls?: ReactNode;
   look: HeadLook;
   viseme: Viseme;
   speakingNow: boolean;
@@ -777,7 +719,6 @@ function Seat({
       style={splitAt ? { left: splitAt.x, top: splitAt.y } : undefined}
       data-voice={voice}
     >
-      {controls}
       <div key={motionKey} className={`th-motion${motionClass}`}>
         <Head
           viseme={talking ? viseme : "rest"}
@@ -1269,6 +1210,19 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     };
   }, [enabled, shownLang]);
 
+  // Look and suit changes come from the Player bar or the keyboard; name the
+  // change under the head (and whose it was, in duo). Only changes made while
+  // mounted — not one left over from before the head appeared.
+  const styleChange = useSyncExternalStore(subscribeHeadStyle, () => getHeadStyle().change);
+  const seenChange = useRef(styleChange?.id ?? 0);
+  useEffect(() => {
+    if (!styleChange || styleChange.id <= seenChange.current) return;
+    seenChange.current = styleChange.id;
+    setLookToast(duo ? `${VOICE_NAME[styleChange.voice]}: ${styleChange.text}` : styleChange.text);
+    if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
+  }, [styleChange, duo]);
+
   useEffect(() => {
     const onResize = () => {
       const el = rootRef.current;
@@ -1339,19 +1293,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
   };
 
-  /** In duo the toast names whose look changed. */
-  const toastFor = (voice: Voice, text: string) =>
-    flashToast(duo ? `${VOICE_NAME[voice]}: ${text}` : text);
-
-  const switchLook = (step: number, voice: Voice = shownLang) => {
-    const next = cycleLook(voice, step).label;
-    // Under the suit the new look is only seen once the suit comes off.
-    toastFor(voice, suit[voice] ? `${next} (under the suit)` : next);
-  };
-
-  const flipSuit = (voice: Voice = shownLang) => {
-    toastFor(voice, toggleSuit(voice) ? `${SUIT_LABEL} on` : `${SUIT_LABEL} off`);
-  };
+  const switchLook = (step: number) => cycleLook(shownLang, step);
+  const flipSuit = () => toggleSuit(shownLang);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "m" || e.key === "M") {
@@ -1465,8 +1408,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       aria-hidden={yielding || undefined}
       role="group"
       tabIndex={0}
-      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move; each head has its own look and mecha suit buttons; Enter changes the speaker's look, A toggles the speaker's suit, R reactions, D duo, B scenes, M sensei`}
-      title="Drag to move · each head's shoulder buttons: look and mecha suit (Shift-click: previous look) · Enter / A: the speaker's look / suit · R: reactions · D: duo · B: scenes · M: sensei"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move; Enter changes the speaker's look, A toggles the speaker's mecha suit, R reactions, D duo, B scenes, M sensei`}
+      title="Drag to move · Enter: the speaker's next look (Shift: previous) · A: the speaker's mecha suit · R: reactions · D: duo · B: scenes · M: sensei"
       aria-grabbed={dragging}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
@@ -1490,15 +1433,6 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
             splitAt={apart && voice === "en" ? apart.en : undefined}
             prop={scene?.prop}
             suitReveal={suit[voice] && revealing[voice]}
-            controls={
-              <HeadControls
-                voice={voice}
-                lookLabel={chosenLook(voice).label}
-                suited={suit[voice]}
-                onLook={(step) => switchLook(step, voice)}
-                onSuit={() => flipSuit(voice)}
-              />
-            }
           />
         ))}
       </div>

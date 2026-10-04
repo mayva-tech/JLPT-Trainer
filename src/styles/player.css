@@ -439,17 +439,17 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 12px;
+  gap: 6px;
   align-items: center;
   z-index: 10;
 }
 
 .nav-bar button {
   font-family: var(--font-en);
-  font-size: 15px;
-  padding: 10px 22px;
+  font-size: 12px;
+  padding: 5px 12px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 7px;
   background: var(--accent);
   color: var(--accent-ink);
   cursor: pointer;
@@ -1736,11 +1736,40 @@
   margin-bottom: 4px;
 }
 
+/* max-content: with left: 50% the shrink-to-fit width would stop at half the
+   screen and wrap the row long before it needs to. */
 .nav-bar {
   flex-wrap: wrap;
   justify-content: center;
+  width: max-content;
   max-width: 96vw;
-  row-gap: 8px;
+  row-gap: 6px;
+}
+
+.nav-bar .btn-secondary,
+.nav-bar .toc-nav-btn {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 7px;
+}
+
+.nav-bar .rate-btn,
+.nav-bar .furi-btn,
+.nav-bar .auto-btn,
+.nav-bar .register-btn,
+.nav-bar .quiz-auto-btn {
+  font-size: 12px !important;
+  padding: 5px 10px !important;
+  border-radius: 7px !important;
+}
+
+.nav-bar .auto-btn {
+  min-width: 0;
+}
+
+.nav-bar .rate-group {
+  gap: 4px;
+  margin: 0 2px;
 }
 
 /* Keep stage readable above production chrome on typical Windows desktops */
@@ -1961,6 +1990,7 @@
     bottom: 6px;
     gap: 5px;
     row-gap: 5px;
+    width: auto;
     max-width: none;
     padding: 0 6px;
   }
@@ -1977,7 +2007,12 @@
   .furi-btn,
   .auto-btn,
   .register-btn,
-  .quiz-auto-btn {
+  .quiz-auto-btn,
+  .nav-bar .rate-btn,
+  .nav-bar .furi-btn,
+  .nav-bar .auto-btn,
+  .nav-bar .register-btn,
+  .nav-bar .quiz-auto-btn {
     font-size: 11px !important;
     padding: 5px 9px !important;
     border-radius: 7px !important;
