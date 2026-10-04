@@ -26,6 +26,8 @@ import {
 import type { HeadReactionEvent } from "../../services/reactionBus";
 import type { SceneProp } from "../../services/sceneBus";
 import { useStageScene } from "./useStageScene";
+import { useSuitMode } from "./useSuitMode";
+import { SUIT_LABEL, suitLookFor } from "./suit";
 import { SceneBackdropArt } from "./backdrops";
 import { CupProp, PhoneProp } from "./props";
 import { SCENE_LABELS } from "./scenes";
@@ -74,6 +76,11 @@ import "./talking-head.css";
  *
  * The mascot sensei (tanuki / neko) is mounted alongside the head so it
  * rides on the same single shell mount. M toggles it from the head.
+ *
+ * Mecha suit: the helmet button on the head's corner (or A, for armour) suits
+ * both heads up in an open-faced armoured suit — the face keeps talking inside
+ * a glass visor. A shutter lifts off the face as it goes on. Remembered; off by
+ * default.
  */
 
 /**
@@ -1001,7 +1008,10 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const idleTilt = useHeadTilt(Boolean(shownLang));
   const { duo, toggleDuo } = useDuoMode(lang, speaking);
   const { scene, toggleScenes } = useStageScene();
-  const { lookFor, cycleLook } = useHeadLook();
+  const { lookFor: chosenLook, cycleLook } = useHeadLook();
+  const { suit, revealing, toggleSuit } = useSuitMode();
+  const lookFor = (voice: Voice) =>
+    suit ? suitLookFor(voice, chosenLook(voice)) : chosenLook(voice);
   /** Name of a look just switched to — shown briefly under the head. */
   const [lookToast, setLookToast] = useState<string | null>(null);
   const toastTimer = useRef<number | null>(null);
@@ -1203,7 +1213,13 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   };
 
   const switchLook = (step: number, voice: Voice = shownLang) => {
-    flashToast(cycleLook(voice, step).label);
+    const next = cycleLook(voice, step).label;
+    // Under the suit the new look is only seen once the suit comes off.
+    flashToast(suit ? `${next} (under the suit)` : next);
+  };
+
+  const flipSuit = () => {
+    flashToast(toggleSuit() ? `${SUIT_LABEL} on` : `${SUIT_LABEL} off`);
   };
 
   const onDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -1230,6 +1246,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     if (e.key === "d" || e.key === "D") {
       e.preventDefault();
       flashToast(toggleDuo() ? "Duo on" : "Duo off");
+      return;
+    }
+    if (e.key === "a" || e.key === "A") {
+      e.preventDefault();
+      flipSuit();
       return;
     }
     if (e.key === "r" || e.key === "R") {
@@ -1302,6 +1323,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         duo ? "th-root--duo" : "",
         apart ? "th-root--split" : "",
         scene ? "th-root--scene" : "",
+        suit ? "th-root--suit" : "",
+        suit && revealing ? "th-root--suit-reveal" : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -1310,10 +1333,10 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
           ? { left: shown.x, top: shown.y, right: "auto", bottom: "auto" }
           : undefined
       }
-      role="button"
+      role="group"
       tabIndex={0}
-      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes, M to toggle sensei`}
-      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off · M: sensei on/off"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes, M to toggle sensei, A to toggle the mecha suit`}
+      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off · M: sensei on/off · A: mecha suit on/off"
       aria-grabbed={dragging}
       onDoubleClick={onDoubleClick}
       onKeyDown={onKeyDown}
@@ -1356,6 +1379,24 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
           {bubble}
         </span>
       )}
+      <button
+        type="button"
+        className="th-suit-btn"
+        aria-pressed={suit}
+        aria-label={suit ? "Take off the mecha suit" : "Put on the mecha suit"}
+        title={suit ? "Mecha suit: on (A)" : "Mecha suit: off (A)"}
+        onClick={flipSuit}
+        // Keep the head's own drag, double-click and key handling out of it.
+        onPointerDown={(e) => e.stopPropagation()}
+        onDoubleClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M2.5 10.5 Q2.5 2.5 8 2.5 Q13.5 2.5 13.5 10.5 L13.5 13 L2.5 13 Z" />
+          <path d="M4.5 8 Q8 6.2 11.5 8 L11.5 11 L4.5 11 Z" className="th-suit-btn-visor" />
+          <path d="M3 6 L1.2 2" />
+        </svg>
+      </button>
       {lookToast && (
         <span className="th-look-toast" aria-live="polite">
           {lookToast}
