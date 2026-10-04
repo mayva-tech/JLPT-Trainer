@@ -35,6 +35,7 @@ import { SectionPlaceholder } from "../components/SectionPlaceholder";
 import { RegisterSplitCard } from "../components/RegisterSplitCard";
 import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
 import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
+import { usePictureSetting } from "../components/Illustration/usePictureSetting";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -245,6 +246,7 @@ export function PlayerPage() {
         ? "Slow"
         : "Normal";
   const [showFurigana, setShowFurigana] = useState(true);
+  const [showPictures, togglePictures] = usePictureSetting();
   const [autoState, setAutoState] = useState<AutoState>("off");
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
@@ -2043,6 +2045,12 @@ export function PlayerPage() {
             setShowFurigana((v) => !v);
           }
           break;
+        case "p":
+        case "P":
+          if (event.repeat) break;
+          event.preventDefault();
+          togglePictures();
+          break;
         case "a":
         case "A":
           if (event.repeat) break;
@@ -2185,6 +2193,7 @@ export function PlayerPage() {
             nuanceHighlight={nuanceLessonHighlight}
             nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
+            showPicture={showPictures}
           />
         );
       case "phrase":
@@ -2420,6 +2429,7 @@ export function PlayerPage() {
                 <GrammarPatternCard
                   item={gItem}
                   showFurigana={grammarShowFurigana}
+                  showPicture={showPictures}
                   jaHighlight={jaLessonHighlight}
                   enHighlight={enLessonHighlight}
                   nuanceHighlight={nuanceLessonHighlight}
@@ -3708,6 +3718,16 @@ export function PlayerPage() {
               }}
             >
               あ {chromeShowFurigana ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={showPictures ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title="Toggle word pictures (P)"
+              aria-pressed={showPictures}
+              onClick={togglePictures}
+            >
+              絵 {showPictures ? "ON" : "OFF"}
             </button>
             <button
               type="button"

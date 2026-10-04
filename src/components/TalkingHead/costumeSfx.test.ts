@@ -86,6 +86,18 @@ describe("costume sound effects", () => {
     expect(mecha).not.toBe(samurai);
   });
 
+  it("a look change plays a swish and chime, pitched apart for Nanami and Andrew", async () => {
+    const { log, FakeCtx } = fakeAudio();
+    vi.stubGlobal("AudioContext", FakeCtx);
+    const { playLookChange } = await import("./costumeSfx");
+    playLookChange("ja");
+    expect(log.splice(0)).toEqual(expect.arrayContaining(["noise", "osc"]));
+    playLookChange("en");
+    expect(log.splice(0).length).toBeGreaterThan(4);
+    playLookChange("nobody");
+    expect(log).toEqual([]);
+  });
+
   it("never throws if the audio graph fails", async () => {
     class Broken {
       state = "running";

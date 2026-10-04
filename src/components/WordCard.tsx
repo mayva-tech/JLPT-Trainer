@@ -5,6 +5,8 @@ import { LessonNuance } from "./LessonNuance";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { JlptLevelBadge } from "./JlptLevelBadge";
 import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
+import { Illustration } from "./Illustration/Illustration";
+import { vocabPicture } from "./Illustration/pictures";
 
 type Props = {
   item: VocabularyItem;
@@ -13,6 +15,8 @@ type Props = {
   nuanceHighlight?: SpeechHighlight | null;
   nuanceActive?: boolean;
   showFurigana?: boolean;
+  /** Small animated picture of the word above it (player "絵" setting). */
+  showPicture?: boolean;
 };
 
 export function WordCard({
@@ -22,9 +26,11 @@ export function WordCard({
   nuanceHighlight = null,
   nuanceActive = false,
   showFurigana = true,
+  showPicture = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
+      {showPicture && <Illustration picture={vocabPicture(item.id)} className="lesson-picture" />}
       <div className="word-headline">
         <FuriganaWrapText
           surface={item.word}

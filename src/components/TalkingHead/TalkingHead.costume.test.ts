@@ -139,6 +139,28 @@ describe("TalkingHead costumes (Player bar menus)", () => {
     expect(host.querySelectorAll(".th-seat .th-mouth")).toHaveLength(2);
   });
 
+  it("a look or costume change is named under the head that changed", () => {
+    duo();
+    const toastIn = (voice: Voice) => seatEl(voice).querySelector(".th-look-toast")?.textContent;
+    pick("en", "Shinobi");
+    expect(toastIn("en")).toBe("Andrew: Shinobi");
+    expect(toastIn("ja")).toBeUndefined();
+    act(() => lookBtn("en").click());
+    expect(toastIn("en")).toMatch(/^Andrew: /);
+    expect(toastIn("ja")).toBeUndefined();
+    act(() => lookBtn("ja").click());
+    expect(toastIn("ja")).toMatch(/^Nanami: /);
+    expect(toastIn("en")).toBeUndefined();
+    expect(host.querySelectorAll(".th-look-toast")).toHaveLength(1);
+  });
+
+  it("a change to the head not on screen is named, whose it was", () => {
+    say("ja");
+    pick("en", "Kigurumi");
+    expect(toast()).toBe("Andrew: Kigurumi");
+    expect(seatEl("ja").querySelector(".th-look-toast")).toBeNull();
+  });
+
   it("normal clothes takes it off and brings the chosen look back", () => {
     say("ja");
     const before = lookOn("ja");
@@ -191,6 +213,19 @@ describe("TalkingHead costumes (Player bar menus)", () => {
     stop();
     say("en");
     expect(lookOn("en")).toContain("Idol stage outfit");
+  });
+
+  it("each head's look change plays the look sound in its own voice", () => {
+    const look = vi.spyOn(sfx, "playLookChange");
+    duo();
+    act(() => lookBtn("ja").click());
+    expect(look).toHaveBeenLastCalledWith("ja");
+    act(() => lookBtn("en").click());
+    expect(look).toHaveBeenLastCalledWith("en");
+    const rootEl = host.querySelector<HTMLElement>(".th-root")!;
+    act(() => rootEl.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+    expect(look).toHaveBeenCalledTimes(3);
+    look.mockRestore();
   });
 
   it("a look change under a costume says so", () => {

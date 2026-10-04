@@ -143,6 +143,7 @@
   position: absolute;
   left: 50%;
   bottom: -4px;
+  z-index: 2;
   transform: translate(-50%, 100%);
   padding: 2px 8px;
   border-radius: 999px;
@@ -476,7 +477,9 @@
   gap: 4px;
 }
 
+/* Relative so a look / costume toast sits under its own head. */
 .th-seat {
+  position: relative;
   flex: 1 1 0;
   min-width: 0;
   transform-origin: 50% 100%;
@@ -810,16 +813,20 @@
   position: relative;
 }
 
+/* One row level with the bar, beside its group, so the stage text stays clear. */
 .th-costume-menu {
   position: absolute;
-  right: -2px;
-  bottom: calc(100% + 8px);
+  left: calc(100% + 6px);
+  top: 50%;
+  transform: translate(var(--th-menu-shift, 0px), -50%);
   z-index: 30;
-  width: 214px;
-  padding: 4px;
+  padding: 3px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
   gap: 2px;
+  white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 10px;
   background: rgba(20, 22, 28, 0.95);
@@ -827,25 +834,27 @@
   cursor: default;
 }
 
-.th-costume-menu--below {
-  bottom: auto;
-  top: calc(100% + 8px);
+.th-costume-menu--left {
+  left: auto;
+  right: calc(100% + 6px);
 }
 
 .nav-bar .th-costume-item,
 .th-costume-item {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  padding: 6px 9px 5px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0;
+  flex: none;
+  min-width: 0;
+  padding: 2px 7px 3px;
   border: 0;
   border-radius: 7px;
   background: transparent;
   color: #e9ebef;
   font: inherit;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
 }
 
@@ -860,22 +869,23 @@
 .nav-bar .th-costume-item[aria-pressed="true"],
 .th-costume-item[aria-pressed="true"] {
   background: rgba(42, 157, 146, 0.32);
-  box-shadow: inset 3px 0 0 #2a9d92;
+  box-shadow: inset 0 -2px 0 #2a9d92;
 }
 
 .th-costume-ja {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
   white-space: nowrap;
 }
 
 .th-costume-ja rt {
-  font-size: 8px;
+  font-size: 7px;
   color: #aab2bd;
 }
 
 .th-costume-en {
-  font-size: 11px;
+  font-size: 9px;
+  line-height: 1.2;
   color: #aab2bd;
   white-space: nowrap;
 }

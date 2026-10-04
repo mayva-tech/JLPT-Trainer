@@ -684,12 +684,15 @@ function Seat({
   splitAt,
   prop,
   suitReveal = false,
+  toast,
 }: {
   voice: Voice;
   role: SeatRole;
   prop?: SceneProp;
   /** Just put on a costume: play its reveal (shutter or poof) once. */
   suitReveal?: boolean;
+  /** This head's look / costume change, named just under it. */
+  toast?: string;
   look: HeadLook;
   viseme: Viseme;
   speakingNow: boolean;
@@ -738,6 +741,11 @@ function Seat({
           propSide={voice === "ja" ? "l" : "r"}
         />
       </div>
+      {toast && (
+        <span className="th-look-toast" aria-live="polite">
+          {toast}
+        </span>
+      )}
     </div>
   );
 }
@@ -947,7 +955,7 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Obstacles {
 
   document
     .querySelectorAll<HTMLElement>(
-      ".nav-bar, .production-panel, .sensei--peek .sensei-slot, .sensei--up .sensei-slot, .sensei-bubble, .sensei-tab"
+      ".nav-bar, .production-panel, .lesson-picture, .sensei--peek .sensei-slot, .sensei--up .sensei-slot, .sensei-bubble, .sensei-tab"
     )
     .forEach((bar) => {
       const r = bar.getBoundingClientRect();
@@ -1074,7 +1082,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     return worn ? costumeLookFor(worn, voice, chosenLook(voice)) : chosenLook(voice);
   };
   /** Name of a look just switched to — shown briefly under the head. */
-  const [lookToast, setLookToast] = useState<string | null>(null);
+  const [lookToast, setLookToast] = useState<{ text: string; voice: Voice | null } | null>(null);
   const toastTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   /** User's chosen spot (drag); the head returns here whenever it is clear. */
@@ -1259,17 +1267,20 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   }, [enabled, shownLang]);
 
   // Look and costume changes come from the Player bar or the keyboard; name the
-  // change under the head (and whose it was, in duo). Only changes made while
-  // mounted — not one left over from before the head appeared.
+  // change under the head that changed (with whose it was, in duo or when that
+  // head isn't on screen). Only changes made while mounted — not one left over
+  // from before the head appeared.
   const styleChange = useSyncExternalStore(subscribeHeadStyle, () => getHeadStyle().change);
   const seenChange = useRef(styleChange?.id ?? 0);
   useEffect(() => {
     if (!styleChange || styleChange.id <= seenChange.current) return;
     seenChange.current = styleChange.id;
-    setLookToast(duo ? `${VOICE_NAME[styleChange.voice]}: ${styleChange.text}` : styleChange.text);
+    const { voice, text } = styleChange;
+    const named = duo || voice !== shownLang;
+    setLookToast({ text: named ? `${VOICE_NAME[voice]}: ${text}` : text, voice });
     if (toastTimer.current) window.clearTimeout(toastTimer.current);
     toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
-  }, [styleChange, duo]);
+  }, [styleChange, duo, shownLang]);
 
   useEffect(() => {
     const onResize = () => {
@@ -1336,7 +1347,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const bubbleBelow = Boolean(shown && shown.y < 56);
 
   const flashToast = (text: string) => {
-    setLookToast(text);
+    setLookToast({ text, voice: null });
     if (toastTimer.current) window.clearTimeout(toastTimer.current);
     toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
   };
@@ -1483,6 +1494,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
             splitAt={apart && voice === "en" ? apart.en : undefined}
             prop={scene?.prop}
             suitReveal={Boolean(costume[voice]) && revealing[voice]}
+            toast={lookToast?.voice === voice ? lookToast.text : undefined}
           />
         ))}
       </div>
@@ -1502,9 +1514,9 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
           {bubble}
         </span>
       )}
-      {lookToast && (
+      {lookToast && !(lookToast.voice && seats.includes(lookToast.voice)) && (
         <span className="th-look-toast" aria-live="polite">
-          {lookToast}
+          {lookToast.text}
         </span>
       )}
     </div>

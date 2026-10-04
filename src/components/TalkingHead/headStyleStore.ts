@@ -1,7 +1,7 @@
 import { looksFor, resolveLook, stepLookId, type HeadLook } from "./looks";
 import type { Voice } from "./duo";
 import { COSTUMES, costumeById, stepCostume, type Costume, type CostumeId } from "./costumes";
-import { playCostumeOff, playCostumeOn } from "./costumeSfx";
+import { playCostumeOff, playCostumeOn, playLookChange } from "./costumeSfx";
 
 /**
  * Each head's chosen look and costume, shared by the talking head and the
@@ -148,6 +148,7 @@ export function cycleHeadLook(voice: Voice, step: number): HeadLook {
   const nextId = stepLookId(looks, cur.lookIds[voice], step);
   const lookIds = { ...cur.lookIds, [voice]: nextId };
   save(LOOK_KEY, lookIds);
+  playLookChange(voice);
   const look = resolveLook(looks, nextId);
   // Under a costume the new look is only seen once it comes off.
   const text = cur.costume[voice] ? `${look.label} (under the costume)` : look.label;

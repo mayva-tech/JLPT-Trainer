@@ -13,6 +13,9 @@
  * Suiting down is the reverse: a release hiss, the servo winding down, and a
  * lighter clunk as the armour comes off.
  *
+ * Changing a look (hair / outfit) plays a cloth swish and a two-note chime,
+ * higher for Nanami than for Andrew.
+ *
  * Only called from a click or key press (a user gesture), so browsers allow
  * the AudioContext to start. Where Web Audio is missing (tests, very old
  * browsers) every call is a silent no-op.
@@ -322,4 +325,27 @@ export function playCostumeOn(id: string): void {
 /** Sound for taking a costume off. */
 export function playCostumeOff(id: string): void {
   play(OFF[id] ?? POOF_OFF);
+}
+
+/** Two-note chime root per voice: Nanami a fifth above Andrew. */
+const LOOK_CHIME: Record<string, number> = { ja: 1175, en: 784 };
+
+/** A quick cloth swish, then a light two-note chime in that voice's pitch. */
+function lookChange(root: number): Synth {
+  return (c, out, t) => {
+    burst(c, out, t, { type: "bandpass", freq: 900, freqTo: 4200, q: 1.4, peak: 0.28, attack: 0.06, decay: 0.12 });
+    burst(c, out, t + 0.08, { type: "highpass", freq: 3500, peak: 0.08, attack: 0.01, decay: 0.08 });
+    tone(c, out, t + 0.14, { type: "triangle", from: root, peak: 0.13, attack: 0.004, decay: 0.22 });
+    tone(c, out, t + 0.22, { type: "triangle", from: root * 1.5, peak: 0.11, attack: 0.004, decay: 0.32 });
+  };
+}
+
+const LOOK_CUES: Record<string, Cue> = {
+  ja: [lookChange(LOOK_CHIME.ja), 1.6],
+  en: [lookChange(LOOK_CHIME.en), 1.6],
+};
+
+/** Sound for a head changing its look ("ja" Nanami, "en" Andrew). */
+export function playLookChange(voice: string): void {
+  play(LOOK_CUES[voice]);
 }

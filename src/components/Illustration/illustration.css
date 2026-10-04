@@ -1,0 +1,160 @@
+/* ─── Word / grammar pictures ─────────────────────────────────── */
+
+.pic-tile {
+  flex: 0 0 auto;
+  width: var(--pic-size, 8.5cqw);
+  height: var(--pic-size, 8.5cqw);
+  display: grid;
+  place-items: center;
+  border-radius: 22%;
+  background: var(--accent-chip, rgba(127, 127, 127, 0.12));
+  border: 1px solid var(--line, rgba(127, 127, 127, 0.25));
+  overflow: hidden;
+}
+
+.lesson-picture {
+  margin-bottom: 1.6cqh;
+}
+
+.pic-motion {
+  width: 78%;
+  height: 78%;
+  display: grid;
+  place-items: center;
+  transform-origin: 50% 70%;
+}
+
+.pic-emoji {
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  font-size: calc(var(--pic-size, 8.5cqw) * 0.58);
+  line-height: 1;
+}
+
+.pic-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Whole-picture motions (emoji and svg alike). */
+.pic-motion--bob {
+  animation: pic-bob 2.4s ease-in-out infinite;
+}
+.pic-motion--float {
+  animation: pic-float 3.2s ease-in-out infinite;
+}
+.pic-motion--wiggle {
+  animation: pic-wiggle 2.2s ease-in-out infinite;
+}
+.pic-motion--pulse {
+  animation: pic-pulse 1.8s ease-in-out infinite;
+}
+.pic-motion--shake {
+  animation: pic-shake 2.6s ease-in-out infinite;
+}
+.pic-motion--drift {
+  animation: pic-drift 2.8s ease-in-out infinite;
+}
+.pic-motion--bounce {
+  animation: pic-bounce 1.6s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+}
+.pic-motion--rain {
+  animation: pic-rain 2s ease-in infinite;
+}
+/* Emoji turn slowly (drawings spin their own parts instead). */
+.pic-motion--spin {
+  animation: pic-spin 9s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes pic-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6%); }
+}
+@keyframes pic-float {
+  0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+  50% { transform: translate(3%, -7%) rotate(2deg); }
+}
+@keyframes pic-wiggle {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  70% { transform: rotate(-9deg); }
+  80% { transform: rotate(8deg); }
+  90% { transform: rotate(-4deg); }
+}
+@keyframes pic-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes pic-shake {
+  0%, 70%, 100% { transform: translateX(0); }
+  74% { transform: translateX(-5%); }
+  78% { transform: translateX(5%); }
+  82% { transform: translateX(-4%); }
+  86% { transform: translateX(3%); }
+}
+@keyframes pic-drift {
+  0%, 100% { transform: translateX(-5%); }
+  50% { transform: translateX(5%); }
+}
+@keyframes pic-bounce {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  40% { transform: translateY(-12%) scaleY(1.03); }
+  60% { transform: translateY(0) scaleY(0.94); }
+  70% { transform: translateY(0) scaleY(1); }
+}
+@keyframes pic-rain {
+  0% { transform: translateY(-5%); }
+  60% { transform: translateY(4%); }
+  100% { transform: translateY(-5%); }
+}
+@keyframes pic-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Moving parts inside the hand-drawn SVGs. */
+.pic-svg .pic-anim-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pic-spin 1.6s linear infinite;
+}
+.pic-svg .pic-anim-rise {
+  animation: pic-part-rise 1.8s ease-out infinite;
+}
+.pic-svg .pic-anim-glow {
+  animation: pic-part-glow 1.6s ease-in-out infinite;
+}
+.pic-svg .pic-anim-jiggle {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: pic-part-jiggle 0.5s ease-in-out infinite;
+}
+.pic-svg .pic-anim-suck {
+  animation: pic-part-suck 1.4s ease-in infinite;
+}
+
+@keyframes pic-part-rise {
+  0% { transform: translateY(3px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-6px); opacity: 0; }
+}
+@keyframes pic-part-glow {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+@keyframes pic-part-jiggle {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-8deg) translateY(-1px); }
+  75% { transform: rotate(8deg) translateY(-1px); }
+}
+@keyframes pic-part-suck {
+  0% { transform: translate(-4px, 3px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(12px, -1px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pic-motion,
+  .pic-svg [class^="pic-anim-"] {
+    animation: none !important;
+  }
+}
