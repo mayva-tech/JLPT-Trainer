@@ -92,42 +92,6 @@
   align-self: end;
 }
 
-.pa-tags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35em;
-  font-size: 0.55em;
-}
-
-.pa-tag {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35em;
-  padding: 0.1em 0.6em;
-  border: 1px solid rgba(232, 165, 75, 0.35);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  opacity: 0.65;
-  cursor: pointer;
-}
-
-.pa-tag--on {
-  opacity: 1;
-  border-color: var(--pa-ink);
-}
-
-.pa-num {
-  font-variant-numeric: tabular-nums;
-  color: var(--pa-ink);
-}
-
-.pa-pos {
-  opacity: 0.75;
-}
-
 .pa-sr {
   position: absolute;
   width: 1px;

@@ -10,7 +10,7 @@ import type { LookLayerProps } from "./looks";
  * coral, Andrew in gunmetal / amber / cyan.
  *
  * The `th-suit-shutter` plate covers the face and slides up into the crown —
- * shown only while the root carries `th-root--suit-reveal` (just after the
+ * shown only while that head's seat carries `th-seat--suit-reveal` (just after the
  * suit is switched on), so remounts during nods and reactions never replay it.
  */
 

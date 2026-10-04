@@ -31,20 +31,16 @@ describe("PitchAccentLine", () => {
     const morae = [...host.querySelectorAll(".pa-mora:not(.pa-mora--particle)")];
     expect(morae.map((m) => m.textContent)).toEqual(["ど", "き", "ど", "き"]);
     expect(morae.map((m) => m.className.match(/pa-mora--([HL])/)?.[1])).toEqual(["H", "L", "L", "L"]);
-    expect(host.querySelector(".pa-tag--on")?.textContent).toContain("Head-high");
+    expect(host.querySelector(".pa-sr")?.textContent).toContain("Head-high");
     expect(host.querySelectorAll(".pa-dot")).toHaveLength(5);
+    expect(host.querySelector("button, .pa-tags")).toBeNull();
   });
 
-  it("draws on when speech starts, and switches usage-dependent accents", () => {
+  it("draws on when speech starts", () => {
     render({ word: "いらいら", reading: "いらいら", speaking: false });
     expect(host.querySelector(".pa-play")).toBeNull();
     render({ word: "いらいら", reading: "いらいら", speaking: true });
     expect(host.querySelector(".pa-play")).not.toBeNull();
-    const tags = host.querySelectorAll<HTMLButtonElement>(".pa-tag");
-    expect(tags).toHaveLength(2);
-    act(() => tags[1].click());
-    expect(host.querySelector(".pa-tag--on")?.textContent).toContain("Flat");
-    expect(host.querySelector(".pa-sr")?.textContent).toContain("particle H");
   });
 });
 

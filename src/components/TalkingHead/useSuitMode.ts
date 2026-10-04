@@ -1,56 +1,75 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Voice } from "./duo";
+import { playSuitOff, playSuitOn } from "./suitSfx";
 
 const SUIT_KEY = "jlpt-trainer:talking-head-suit:v1";
 
 /** How long the reveal (shutter lifting off the face) is allowed to play. */
 export const SUIT_REVEAL_MS = 1400;
 
-function loadOn(): boolean {
+export type SuitState = Record<Voice, boolean>;
+
+const NONE: SuitState = { ja: false, en: false };
+
+/** Stored as JSON per voice; the older single "on"/"off" applies to both. */
+function loadSuits(): SuitState {
   try {
-    return globalThis.localStorage?.getItem(SUIT_KEY) === "on";
+    const raw = globalThis.localStorage?.getItem(SUIT_KEY);
+    if (raw === "on") return { ja: true, en: true };
+    if (!raw || raw === "off") return NONE;
+    const parsed = JSON.parse(raw) as Partial<SuitState>;
+    return { ja: parsed.ja === true, en: parsed.en === true };
   } catch {
-    return false;
+    return NONE;
   }
 }
 
 /**
- * Mecha suit on/off — off by default, remembered across sessions.
- * `revealing` is true briefly after switching on, so the stage plays the
- * reveal once rather than on every remount.
+ * Mecha suit on/off per head (Nanami and Andrew separately) — off by default,
+ * remembered across sessions. `revealing[voice]` is true briefly after that
+ * head suits up, so it plays the reveal once rather than on every remount.
+ * Each switch plays a mechanical sound; restoring a saved "on" is silent.
  */
 export function useSuitMode(): {
-  suit: boolean;
-  revealing: boolean;
-  toggleSuit: () => boolean;
+  suit: SuitState;
+  revealing: SuitState;
+  toggleSuit: (voice: Voice) => boolean;
 } {
-  const [suit, setSuit] = useState(loadOn);
-  const [revealing, setRevealing] = useState(false);
+  const [suit, setSuit] = useState(loadSuits);
+  const [revealing, setRevealing] = useState<SuitState>(NONE);
   const suitRef = useRef(suit);
   suitRef.current = suit;
-  const timer = useRef<number | null>(null);
+  const timers = useRef<Partial<Record<Voice, number>>>({});
 
   useEffect(
     () => () => {
-      if (timer.current) window.clearTimeout(timer.current);
+      Object.values(timers.current).forEach((id) => window.clearTimeout(id));
     },
     []
   );
 
-  const toggleSuit = useCallback(() => {
-    const next = !suitRef.current;
+  const toggleSuit = useCallback((voice: Voice) => {
+    const nextOn = !suitRef.current[voice];
+    const next = { ...suitRef.current, [voice]: nextOn };
     suitRef.current = next;
     setSuit(next);
     try {
-      globalThis.localStorage?.setItem(SUIT_KEY, next ? "on" : "off");
+      globalThis.localStorage?.setItem(SUIT_KEY, JSON.stringify(next));
     } catch {
       // private mode / quota
     }
-    if (timer.current) window.clearTimeout(timer.current);
-    setRevealing(next);
-    if (next) {
-      timer.current = window.setTimeout(() => setRevealing(false), SUIT_REVEAL_MS);
+    if (nextOn) playSuitOn();
+    else playSuitOff();
+    const pending = timers.current[voice];
+    if (pending) window.clearTimeout(pending);
+    setRevealing((r) => ({ ...r, [voice]: nextOn }));
+    if (nextOn) {
+      timers.current[voice] = window.setTimeout(
+        () => setRevealing((r) => ({ ...r, [voice]: false })),
+        SUIT_REVEAL_MS
+      );
     }
-    return next;
+    return nextOn;
   }, []);
 
   return { suit, revealing, toggleSuit };

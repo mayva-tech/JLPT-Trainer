@@ -3,8 +3,8 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
-  type MouseEvent,
   type PointerEvent,
   type ReactNode,
 } from "react";
@@ -57,8 +57,9 @@ import "./talking-head.css";
  *
  * Each voice has twenty looks (see ./looks). The face shape, eyes, nose and
  * mouth belong to the head and never change; a look only restyles hair,
- * facial hair, clothing and accessories. Double-click the head (or press
- * Enter) for the next look, Shift for the previous one — remembered per voice.
+ * facial hair, clothing and accessories. Each head has its own buttons at its
+ * shoulder: the look button gives that head's next look (Shift-click the
+ * previous one); Enter does the same for the speaker. Remembered per voice.
  *
  * Reactions: answer checks report through services/reactionBus, and the head
  * answers with an expression (brows, a held mouth, happy eyes), a small head
@@ -77,10 +78,10 @@ import "./talking-head.css";
  * The mascot sensei (tanuki / neko) is mounted alongside the head so it
  * rides on the same single shell mount. M toggles it from the head.
  *
- * Mecha suit: the helmet button on the head's corner (or A, for armour) suits
- * both heads up in an open-faced armoured suit — the face keeps talking inside
- * a glass visor. A shutter lifts off the face as it goes on. Remembered; off by
- * default.
+ * Mecha suit: each head's helmet button (A, for armour, does the speaker)
+ * suits that head up in an open-faced armoured suit — the face keeps talking
+ * inside a glass visor. A shutter lifts off the face as it goes on. Remembered
+ * per head; off by default.
  */
 
 /**
@@ -662,6 +663,65 @@ export function AndrewHead({
   );
 }
 
+const VOICE_NAME: Record<Voice, string> = { ja: "Nanami", en: "Andrew" };
+
+/** Swallow pointer and key events so the head's drag and shortcuts stay out of it. */
+const keepToButton = {
+  onPointerDown: (e: PointerEvent<HTMLButtonElement>) => e.stopPropagation(),
+  onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation(),
+};
+
+/**
+ * One head's own buttons, stacked at its shoulder on the outer side: next
+ * look (Shift-click: previous) and its mecha suit on/off.
+ */
+function HeadControls({
+  voice,
+  lookLabel,
+  suited,
+  onLook,
+  onSuit,
+}: {
+  voice: Voice;
+  lookLabel: string;
+  suited: boolean;
+  onLook: (step: number) => void;
+  onSuit: () => void;
+}) {
+  const name = VOICE_NAME[voice];
+  return (
+    <div className="th-controls" role="group" aria-label={`${name}'s look`}>
+      <button
+        type="button"
+        className="th-look-btn"
+        aria-label={`Change ${name}'s look (now ${lookLabel})`}
+        title={`${name}: next look · now ${lookLabel} (Shift: previous)`}
+        onClick={(e) => onLook(e.shiftKey ? -1 : 1)}
+        {...keepToButton}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5.5 2.5 L2 4.5 L3.2 7.4 L4.6 6.8 L4.6 13.5 L11.4 13.5 L11.4 6.8 L12.8 7.4 L14 4.5 L10.5 2.5 Q8 4.6 5.5 2.5 Z" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        className="th-suit-btn"
+        aria-pressed={suited}
+        aria-label={suited ? `Take off ${name}'s mecha suit` : `Put ${name} in the mecha suit`}
+        title={`${name}: mecha suit ${suited ? "on" : "off"}`}
+        onClick={onSuit}
+        {...keepToButton}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M2.5 10.5 Q2.5 2.5 8 2.5 Q13.5 2.5 13.5 10.5 L13.5 13 L2.5 13 Z" />
+          <path d="M4.5 8 Q8 6.2 11.5 8 L11.5 11 L4.5 11 Z" className="th-suit-btn-visor" />
+          <path d="M3 6 L1.2 2" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 /** One head on the stage — solo, or one of the duo pair. */
 function Seat({
   voice,
@@ -674,10 +734,16 @@ function Seat({
   toward,
   splitAt,
   prop,
+  suitReveal = false,
+  controls,
 }: {
   voice: Voice;
   role: SeatRole;
   prop?: SceneProp;
+  /** Just suited up: play the armour drop and face-shutter reveal once. */
+  suitReveal?: boolean;
+  /** This head's own buttons, beside its shoulder. */
+  controls?: ReactNode;
   look: HeadLook;
   viseme: Viseme;
   speakingNow: boolean;
@@ -707,10 +773,11 @@ function Seat({
   const Head = voice === "ja" ? NanamiHead : AndrewHead;
   return (
     <div
-      className={`th-seat th-seat--${role}${splitAt ? " th-seat--split" : ""}`}
+      className={`th-seat th-seat--${role}${splitAt ? " th-seat--split" : ""}${suitReveal ? " th-seat--suit-reveal" : ""}`}
       style={splitAt ? { left: splitAt.x, top: splitAt.y } : undefined}
       data-voice={voice}
     >
+      {controls}
       <div key={motionKey} className={`th-motion${motionClass}`}>
         <Head
           viseme={talking ? viseme : "rest"}
@@ -809,6 +876,8 @@ const READING_PITCH_SELECTOR = ".pa-play";
 const DUO_WIDTH_RATIO = 1.9;
 /** Chance the pair splits up even when both would fit together. */
 const SPLIT_CHANCE = 0.35;
+/** Sizes tried, largest first, when no full-size spot clears the line being read. */
+const FIT_SCALES = [0.75, 0.6, 0.45] as const;
 
 function boxAt(pos: HeadPos, w: number, h: number): Box {
   return { left: pos.x, top: pos.y, right: pos.x + w, bottom: pos.y + h };
@@ -913,22 +982,37 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
 }
 
 /**
- * What is being read aloud right now — the active Nuance box, the text line
- * with karaoke marks, the pitch line drawing along — never cover these.
+ * What is being read aloud right now — the active Nuance text, the JA or EN
+ * line with karaoke marks, the pitch line drawing along — never cover these.
  */
 function collectPriorityObstacles(panel: Box): Box[] {
-  const els = new Set<Element>(document.querySelectorAll(PRIORITY_SELECTOR));
+  const blocks = new Set<Element>(document.querySelectorAll(PRIORITY_SELECTOR));
   document.querySelectorAll(READING_MARK_SELECTOR).forEach((mark) => {
     const block = mark.closest(READING_BLOCK_SELECTOR);
-    if (block) els.add(block);
+    if (block) blocks.add(block);
   });
-  document.querySelectorAll(READING_PITCH_SELECTOR).forEach((el) => els.add(el));
 
   const out: Box[] = [];
-  els.forEach((el) => {
-    const r = el.getBoundingClientRect();
-    if (r.width < 1 || r.height < 1 || !boxesIntersect(r, panel)) return;
+  const add = (r: DOMRect | Box) => {
+    if (r.right - r.left < 1 || r.bottom - r.top < 1 || !boxesIntersect(r, panel)) return;
     out.push(padBox(r));
+  };
+  document.querySelectorAll(READING_PITCH_SELECTOR).forEach((el) => add(el.getBoundingClientRect()));
+  // A centred multi-line sentence or the wide Nuance box spans nearly the
+  // whole stage, leaving no clear spot; guard their actual text line boxes so
+  // the empty space beside shorter lines stays usable.
+  const range = document.createRange();
+  blocks.forEach((block) => {
+    const before = out.length;
+    const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      if (!node.textContent?.trim()) continue;
+      range.selectNodeContents(node);
+      const rects = range.getClientRects?.();
+      if (rects) for (const r of rects) add(r);
+    }
+    if (out.length === before) add(block.getBoundingClientRect());
   });
   return out;
 }
@@ -1011,7 +1095,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { lookFor: chosenLook, cycleLook } = useHeadLook();
   const { suit, revealing, toggleSuit } = useSuitMode();
   const lookFor = (voice: Voice) =>
-    suit ? suitLookFor(voice, chosenLook(voice)) : chosenLook(voice);
+    suit[voice] ? suitLookFor(voice, chosenLook(voice)) : chosenLook(voice);
   /** Name of a look just switched to — shown briefly under the head. */
   const [lookToast, setLookToast] = useState<string | null>(null);
   const toastTimer = useRef<number | null>(null);
@@ -1038,6 +1122,14 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const canSplit = duo && !scene;
   const canSplitRef = useRef(canSplit);
   canSplitRef.current = canSplit;
+  /** Scale while shrunk into a gap beside the line being read (1 = full size). */
+  const [fit, setFit] = useState(1);
+  const fitRef = useRef(fit);
+  fitRef.current = fit;
+  /** Faded out: no spot at any size keeps the line being read uncovered. */
+  const [yielding, setYielding] = useState(false);
+  const speakingRef = useRef(speaking);
+  speakingRef.current = speaking;
 
   useLayoutEffect(() => {
     if (!enabled || !shownLang) return;
@@ -1048,7 +1140,10 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       if (!el) return;
       const panel = findAvoidPanel();
       if (!panel) return;
-      const { width: w, height: h } = el.getBoundingClientRect();
+      // Measure the full-size head even while it is shrunk to fit.
+      const rect = el.getBoundingClientRect();
+      const w = rect.width / fitRef.current;
+      const h = rect.height / fitRef.current;
       if (w < 1 || h < 1) return;
 
       const obstacles = collectObstacles(panel.el, panel.box);
@@ -1069,6 +1164,38 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         setSplit(null);
         return;
       }
+
+      // The line being read must stay uncovered — any visible text when the
+      // speech has no karaoke marks. When not even one full-size head has
+      // room beside it (a sentence filling a narrow stage), shrink the pair
+      // into a gap, and as a last resort fade out until there is.
+      const guarded = priority.length ? priority : speakingRef.current ? obstacles : [];
+      if (guarded.length) {
+        const coversPriority = (p: HeadPos, bw: number, bh: number) => {
+          const b = boxAt(p, bw, bh);
+          return guarded.some((o) => boxesIntersect(b, o));
+        };
+        const prefer = current ?? posRef.current ?? defaultHeadPos(w, h);
+        const unitW = apart ? w : canSplitRef.current ? w / DUO_WIDTH_RATIO : w;
+        const unit = findClearSpot(panel.box, unitW, h, obstacles, prefer, priority);
+        if (!unit || coversPriority(unit, unitW, h)) {
+          const fullW = apart ? w * DUO_WIDTH_RATIO : w;
+          if (apart) setSplit(null);
+          for (const s of FIT_SCALES) {
+            const spot = findClearSpot(panel.box, fullW * s, h * s, obstacles, prefer, priority);
+            if (spot && !coversPriority(spot, fullW * s, h * s)) {
+              setFit(s);
+              setYielding(false);
+              if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
+              return;
+            }
+          }
+          setYielding(true);
+          return;
+        }
+      }
+      if (fitRef.current !== 1) setFit(1);
+      setYielding(false);
 
       // Split: the root holds Nanami alone (w = one head), Andrew sits apart.
       if (apart) {
@@ -1212,22 +1339,18 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     toastTimer.current = window.setTimeout(() => setLookToast(null), 1400);
   };
 
+  /** In duo the toast names whose look changed. */
+  const toastFor = (voice: Voice, text: string) =>
+    flashToast(duo ? `${VOICE_NAME[voice]}: ${text}` : text);
+
   const switchLook = (step: number, voice: Voice = shownLang) => {
     const next = cycleLook(voice, step).label;
     // Under the suit the new look is only seen once the suit comes off.
-    flashToast(suit ? `${next} (under the suit)` : next);
+    toastFor(voice, suit[voice] ? `${next} (under the suit)` : next);
   };
 
-  const flipSuit = () => {
-    flashToast(toggleSuit() ? `${SUIT_LABEL} on` : `${SUIT_LABEL} off`);
-  };
-
-  const onDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    // In duo, change the look of whichever head was double-clicked.
-    const seat = (e.target as Element | null)?.closest?.("[data-voice]");
-    const v = seat?.getAttribute("data-voice");
-    switchLook(e.shiftKey ? -1 : 1, v === "ja" || v === "en" ? v : shownLang);
+  const flipSuit = (voice: Voice = shownLang) => {
+    toastFor(voice, toggleSuit(voice) ? `${SUIT_LABEL} on` : `${SUIT_LABEL} off`);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -1323,22 +1446,28 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         duo ? "th-root--duo" : "",
         apart ? "th-root--split" : "",
         scene ? "th-root--scene" : "",
-        suit ? "th-root--suit" : "",
-        suit && revealing ? "th-root--suit-reveal" : "",
+        fit < 1 ? "th-root--fit" : "",
+        yielding ? "th-root--yield" : "",
       ]
         .filter(Boolean)
         .join(" ")}
       style={
         shown
-          ? { left: shown.x, top: shown.y, right: "auto", bottom: "auto" }
+          ? ({
+              left: shown.x,
+              top: shown.y,
+              right: "auto",
+              bottom: "auto",
+              "--th-fit": fit,
+            } as CSSProperties)
           : undefined
       }
+      aria-hidden={yielding || undefined}
       role="group"
       tabIndex={0}
-      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move, double-click or Enter to change look, R to toggle reactions, D to toggle duo, B to toggle scenes, M to toggle sensei, A to toggle the mecha suit`}
-      title="Drag to move · double-click for the next look (Shift: previous) · R: reactions on/off · D: duo on/off · B: scenes on/off · M: sensei on/off · A: mecha suit on/off"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move; each head has its own look and mecha suit buttons; Enter changes the speaker's look, A toggles the speaker's suit, R reactions, D duo, B scenes, M sensei`}
+      title="Drag to move · each head's shoulder buttons: look and mecha suit (Shift-click: previous look) · Enter / A: the speaker's look / suit · R: reactions · D: duo · B: scenes · M: sensei"
       aria-grabbed={dragging}
-      onDoubleClick={onDoubleClick}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -1360,6 +1489,16 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
             toward={toward?.[voice]}
             splitAt={apart && voice === "en" ? apart.en : undefined}
             prop={scene?.prop}
+            suitReveal={suit[voice] && revealing[voice]}
+            controls={
+              <HeadControls
+                voice={voice}
+                lookLabel={chosenLook(voice).label}
+                suited={suit[voice]}
+                onLook={(step) => switchLook(step, voice)}
+                onSuit={() => flipSuit(voice)}
+              />
+            }
           />
         ))}
       </div>
@@ -1379,24 +1518,6 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
           {bubble}
         </span>
       )}
-      <button
-        type="button"
-        className="th-suit-btn"
-        aria-pressed={suit}
-        aria-label={suit ? "Take off the mecha suit" : "Put on the mecha suit"}
-        title={suit ? "Mecha suit: on (A)" : "Mecha suit: off (A)"}
-        onClick={flipSuit}
-        // Keep the head's own drag, double-click and key handling out of it.
-        onPointerDown={(e) => e.stopPropagation()}
-        onDoubleClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M2.5 10.5 Q2.5 2.5 8 2.5 Q13.5 2.5 13.5 10.5 L13.5 13 L2.5 13 Z" />
-          <path d="M4.5 8 Q8 6.2 11.5 8 L11.5 11 L4.5 11 Z" className="th-suit-btn-visor" />
-          <path d="M3 6 L1.2 2" />
-        </svg>
-      </button>
       {lookToast && (
         <span className="th-look-toast" aria-live="polite">
           {lookToast}

@@ -36,7 +36,19 @@
 
 /* Glide aside when it would cover text; drags stay 1:1 with the pointer. */
 .th-root.th-placed:not(.th-dragging) {
-  transition: left 280ms ease, top 280ms ease;
+  transition: left 280ms ease, top 280ms ease, transform 280ms ease, opacity 220ms ease;
+}
+
+/* Shrunk into a gap beside the line being read; anchored at its top-left spot. */
+.th-root--fit {
+  transform: scale(var(--th-fit, 1));
+  transform-origin: 0 0;
+}
+
+/* No room at any size: step out of the way until the line is done. */
+.th-root--yield {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .th-svg {
@@ -126,7 +138,7 @@
   }
 }
 
-/* Name of the look just switched to (double-click / Enter). */
+/* Name of the look just switched to (look button / Enter). */
 .th-look-toast {
   position: absolute;
   left: 50%;
@@ -636,14 +648,33 @@
   }
 }
 
-/* ── Mecha suit ─────────────────────────────────────────────────── */
+/* ── Per-head buttons: look over suit, stacked at the shoulder ───── */
 
-/* Helmet toggle on the head's top-right corner. */
-.th-suit-btn {
+/* Each head has its own column on its outer side: Nanami left, Andrew right. */
+.th-seat {
+  position: relative;
+}
+
+.th-controls {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  bottom: 6%;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.th-seat[data-voice="ja"] .th-controls {
+  left: -4px;
+}
+
+.th-seat[data-voice="en"] .th-controls {
+  right: -4px;
+}
+
+.th-look-btn,
+.th-suit-btn {
+  position: relative;
   width: 24px;
   height: 24px;
   padding: 0;
@@ -661,6 +692,21 @@
     box-shadow 160ms ease;
 }
 
+.th-look-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  fill-opacity: 0.25;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+
+.th-look-btn:active {
+  background: rgba(232, 165, 75, 0.85);
+  color: #1b1b1f;
+}
+
 .th-suit-btn svg {
   width: 14px;
   height: 14px;
@@ -676,6 +722,8 @@
   fill-opacity: 0.25;
 }
 
+.th-root:hover .th-look-btn,
+.th-root:focus-within .th-look-btn,
 .th-root:hover .th-suit-btn,
 .th-root:focus-within .th-suit-btn,
 .th-suit-btn[aria-pressed="true"] {
@@ -688,17 +736,20 @@
   box-shadow: 0 0 0 2px rgba(42, 157, 146, 0.35);
 }
 
+.th-look-btn:focus-visible,
 .th-suit-btn:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
 
+.th-root.th-dragging .th-look-btn,
 .th-root.th-dragging .th-suit-btn {
   opacity: 0;
 }
 
-/* Touch screens have no hover — keep it findable. */
+/* Touch screens have no hover — keep them findable. */
 @media (hover: none) {
+  .th-look-btn,
   .th-suit-btn {
     opacity: 0.85;
   }
@@ -723,13 +774,13 @@
   display: none;
 }
 
-.th-root--suit-reveal .th-suit-shutter {
+.th-seat--suit-reveal .th-suit-shutter {
   display: inline;
   animation: th-suit-shutter 1100ms cubic-bezier(0.55, 0, 0.2, 1) forwards;
 }
 
-.th-root--suit-reveal .th-suit-armor,
-.th-root--suit-reveal .th-suit-collar {
+.th-seat--suit-reveal .th-suit-armor,
+.th-seat--suit-reveal .th-suit-collar {
   animation: th-suit-armor 450ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
@@ -757,22 +808,25 @@
 }
 
 @media (max-width: 480px) {
+  .th-controls {
+    gap: 4px;
+  }
+
+  .th-look-btn,
   .th-suit-btn {
     width: 22px;
     height: 22px;
-    top: -5px;
-    right: -5px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .th-speaking .th-suit-core,
-  .th-root--suit-reveal .th-suit-armor,
-  .th-root--suit-reveal .th-suit-collar {
+  .th-seat--suit-reveal .th-suit-armor,
+  .th-seat--suit-reveal .th-suit-collar {
     animation: none;
   }
 
-  .th-root--suit-reveal .th-suit-shutter {
+  .th-seat--suit-reveal .th-suit-shutter {
     display: none;
   }
 }

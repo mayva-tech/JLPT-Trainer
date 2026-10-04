@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   ACCENT_TYPE_LABEL,
-  POS_LABEL,
   accentType,
   getPhrasePitch,
   getPitchAccent,
@@ -103,8 +102,8 @@ function PitchFigure({
 }
 
 /**
- * The word's reading in kana with its high/low pitch drawn above it, plus
- * the accent type (Flat [0], Head-high [1] …). The last, hollow dot is the
+ * The word's reading in kana with its high/low pitch drawn above it (its
+ * primary accent when usage varies). The last, hollow dot is the
  * pitch of a sample particle — the only way to tell 端 [0] from 橋 [2].
  *
  * While the word is being spoken the line draws itself mora by mora, so the
@@ -123,13 +122,10 @@ export function PitchAccentLine({
   className?: string;
 }) {
   const accents = getPitchAccent(word, reading);
-  const [choice, setChoice] = useState(0);
   const [play, replay] = useReplay(speaking);
 
-  useEffect(() => setChoice(0), [word, reading]);
-
   if (!accents) return null;
-  const active = accents[Math.min(choice, accents.length - 1)];
+  const active = accents[0];
   const moraCount = splitMorae(reading).length;
   const { morae: pitches, particle } = pitchPattern(moraCount, active.n);
   const type = ACCENT_TYPE_LABEL[accentType(moraCount, active.n)];
@@ -146,29 +142,6 @@ export function PitchAccentLine({
     >
       <div key={`${word}-${active.n}-${play}`} className={`pa-figures${play > 0 ? " pa-play" : ""}`}>
         <PitchFigure kana={reading} n={active.n} particles="が" sample />
-      </div>
-      <div className="pa-tags">
-        {accents.map((a, i) => {
-          const t = ACCENT_TYPE_LABEL[accentType(moraCount, a.n)];
-          return (
-            <button
-              key={i}
-              type="button"
-              className={`pa-tag${i === choice ? " pa-tag--on" : ""}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setChoice(i);
-                replay();
-              }}
-              aria-pressed={i === choice}
-              title={`${t.ja} (${t.reading})${a.pos ? ` — as ${POS_LABEL[a.pos] ?? a.pos}` : ""}`}
-            >
-              {a.pos ? <span className="pa-pos">{POS_LABEL[a.pos] ?? a.pos}</span> : null}
-              <span>{t.en}</span>
-              <span className="pa-num">[{a.n}]</span>
-            </button>
-          );
-        })}
       </div>
       <span className="pa-sr">
         {`Pitch accent ${active.n}, ${type.en}: ${pitches.join(" ")}, particle ${particle}`}
