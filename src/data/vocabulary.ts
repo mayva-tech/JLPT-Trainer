@@ -1,40 +1,15 @@
-import type { KanjiDetail, VocabularyItem } from "../types/vocabulary";
-import { KANJI } from "./kanji";
+import type { VocabularyItem } from "../types/vocabulary";
+import { kanjiDetailsFor } from "./kanjiDetails";
 import { lessons } from "./lessons";
 import { core2000Seeds } from "./vocabularyCore2000Seeds";
 import { vocabNuanceFields } from "./vocabularyNuances";
+import { vocabularyN3 } from "./n3/vocabularyN3";
 
 const audio = (folder: string, id: string) => ({
   audioWord: `/audio/n2/${folder}/${id}-word.mp3`,
   audioPhrase: `/audio/n2/${folder}/${id}-phrase.mp3`,
   audioSentence: `/audio/n2/${folder}/${id}-sentence.mp3`,
 });
-
-const KANJI_RE = /[\u4e00-\u9faf々]/;
-
-/**
- * Collect, in order of first appearance, the kanji used by the given texts.
- * Entries come from the shared KANJI table in ./kanji. The furigana engine
- * seeds its reading cache from that table (alignFurigana.ts ->
- * ensureKanjiReadingsSeeded), not by iterating this corpus at startup.
- */
-function kanjiDetailsFor(...texts: string[]): KanjiDetail[] {
-  const seen = new Set<string>();
-  const details: KanjiDetail[] = [];
-  for (const text of texts) {
-    for (const character of text) {
-      if (!KANJI_RE.test(character) || seen.has(character)) continue;
-      seen.add(character);
-      const entry = KANJI[character];
-      if (!entry) {
-        console.warn(`[vocabulary] No KANJI entry for "${character}"`);
-        continue;
-      }
-      details.push({ character, ...entry });
-    }
-  }
-  return details;
-}
 
 /** One vocabulary record before kanji details / audio paths are derived. */
 type VocabularySeed = Omit<
@@ -11467,8 +11442,13 @@ export const vocabulary: VocabularyItem[] = seeds.map(({ folder, ...seed }) => (
   ...audio(folder, String(seed.id)),
 }));
 
+const VOCAB_BY_ID = new Map<number, VocabularyItem>(
+  [...vocabulary, ...vocabularyN3].map((v) => [v.id, v])
+);
+
+/** Any vocabulary item by id — N2 / Core 2000 (4001–6000) or N3 (7001+). */
 export function getVocabularyById(id: number): VocabularyItem | undefined {
-  return vocabulary.find((v) => v.id === id);
+  return VOCAB_BY_ID.get(id);
 }
 
 export function getVocabularyByIds(ids: number[]): VocabularyItem[] {

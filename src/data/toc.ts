@@ -6,6 +6,12 @@ import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
 import { formatN2VocabularyTocQuizId } from "../utils/vocabularyDisplay";
 import { registerSections } from "./registerPairs";
 import {
+  buildN3GrammarLessonTocItems,
+  buildN3GrammarQuizTocItems,
+  buildN3VocabularyLessonTocItems,
+  buildN3VocabularyQuizTocItems,
+} from "./n3/tocN3Items";
+import {
   ONOMATOPOEIA_LEVELS,
   onomatopoeiaCountByLevel,
 } from "./onomatopoeia";
@@ -16,6 +22,7 @@ export type TocItemId =
   | "word-n1-01"
   | "word-n1-02"
   | "word-n1-03"
+  | `word-n3-${string}`
   | `grammar-f${number}-${number}`
   | "n1-grammar-01"
   | "n1-grammar-02"
@@ -26,11 +33,14 @@ export type TocItemId =
   | "n1-grammar-07"
   | "n1-grammar-08"
   | "n1-grammar-09"
+  | `n3-grammar-${string}`
   | "quiz-pre-comment"
   | `quiz-vocab-${number}-${number}`
   | "quiz-vocab-n1-01"
   | "quiz-vocab-n1-02"
   | "quiz-vocab-n1-03"
+  | `quiz-vocab-n3-${string}`
+  | `quiz-grammar-n3-${string}`
   | `quiz-grammar-${number}-${number}`
   | "quiz-mixed"
   | "quiz-final"
@@ -137,6 +147,11 @@ export const tocGroups: TocGroup[] = [
     ],
   },
   {
+    id: "vocabulary-n3",
+    title: "2c. N3 Vocabulary Lessons",
+    items: buildN3VocabularyLessonTocItems(),
+  },
+  {
     id: "grammar",
     title: "3. N2 Grammar Lessons",
     items: buildN2GrammarLessonTocItems(),
@@ -155,6 +170,11 @@ export const tocGroups: TocGroup[] = [
       { id: "n1-grammar-08", label: "N1 Grammar 8: 〜てからというもの", kind: "grammar", lessonId: "n1-grammar-lesson-178" },
       { id: "n1-grammar-09", label: "N1 Grammar 9: 〜極まりない", kind: "grammar", lessonId: "n1-grammar-lesson-179" },
     ],
+  },
+  {
+    id: "grammar-n3",
+    title: "3c. N3 Grammar Lessons",
+    items: buildN3GrammarLessonTocItems(),
   },
   {
     id: "quiz-word",
@@ -176,6 +196,11 @@ export const tocGroups: TocGroup[] = [
       { id: "quiz-vocab-n1-02", label: "N1 Word Quiz 2: Formal Ceremonies & Mourning", kind: "quiz", quizId: "quiz-vocab-n1-02" },
       { id: "quiz-vocab-n1-03", label: "N1 Word Quiz 3: Specialized Register", kind: "quiz", quizId: "quiz-vocab-n1-03" },
     ],
+  },
+  {
+    id: "quiz-vocab-n3",
+    title: "4c. N3 Word Quizzes",
+    items: buildN3VocabularyQuizTocItems(),
   },
   {
     id: "quiz-grammar",
@@ -200,6 +225,11 @@ export const tocGroups: TocGroup[] = [
         kind: "quiz-after",
       },
     ],
+  },
+  {
+    id: "quiz-grammar-n3",
+    title: "5c. N3 Grammar Quizzes",
+    items: buildN3GrammarQuizTocItems(),
   },
   {
     id: "ending",
@@ -473,8 +503,10 @@ export const lessonGroupIds: TocItemId[] = tocGroups
   .filter((group) =>
     group.id === "vocabulary" ||
     group.id === "vocabulary-n1" ||
+    group.id === "vocabulary-n3" ||
     group.id === "grammar" ||
-    group.id === "grammar-n1"
+    group.id === "grammar-n1" ||
+    group.id === "grammar-n3"
   )
   .flatMap((group) => group.items.map((item) => item.id));
 
@@ -501,6 +533,8 @@ export const quizIds: TocItemId[] = [
   "quiz-grammar-131-140",
   "quiz-grammar-141-150",
   "quiz-grammar-151-152",
+  ...buildN3VocabularyQuizTocItems().map((item) => item.id),
+  ...buildN3GrammarQuizTocItems().map((item) => item.id),
   "quiz-mixed",
   "quiz-final",
 ];

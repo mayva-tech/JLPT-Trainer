@@ -1299,4 +1299,12 @@ export const KANJI: Record<string, Omit<KanjiDetail, "character">> = {
   和: { meaning: "harmony; peace; Japanese", onyomi: ["ワ", "オ"], kunyomi: ["やわ・らぐ", "やわ・らげる", "なご・む", "なご・やか"] },
   腕: { meaning: "arm; skill", onyomi: ["ワン"], kunyomi: ["うで"] },
   椒: { meaning: "pepper; spice", onyomi: ["ショウ"], kunyomi: [] },
+  // ── N3 course batch 1 ──
+  拭: { meaning: "wipe; mop; swab", onyomi: ["ショク", "シキ"], kunyomi: ["ふ・く", "ぬぐ・う"] },
+  缶: { meaning: "tin can; container", onyomi: ["カン"], kunyomi: ["かま"] },
+  蓋: { meaning: "lid; cover", onyomi: ["ガイ", "カイ", "コウ"], kunyomi: ["ふた", "けだ・し", "おお・う"] },
+  屈: { meaning: "yield; bend; flinch", onyomi: ["クツ"], kunyomi: ["かが・む", "かが・める"] },
+  冗: { meaning: "superfluous; uselessness", onyomi: ["ジョウ"] },
+  街: { meaning: "boulevard; street; town", onyomi: ["ガイ", "カイ"], kunyomi: ["まち"] },
+  咳: { meaning: "cough; clear throat", onyomi: ["ガイ"], kunyomi: ["せ・く", "せき", "しわぶ・く"] },
 };

@@ -183,7 +183,46 @@ describe("buildJapaneseSpeakText", () => {
     expect(
       buildJapaneseSpeakText("学校へ行く", "がっこう へ いく")
     ).toContain("がっこう え いく");
-    expect(buildJapaneseSpeakText("〜を経て", "〜をへて")).toBe("〜、をえて");
+    // 経て is "hete", not 得て "ete"
+    expect(buildJapaneseSpeakText("〜を経て", "〜をへて")).toBe("〜、をヘて");
+  });
+
+  it("reads particle へ as え inside an unspaced reading", () => {
+    const speak = (reading: string) => buildJapaneseSpeakToken(reading);
+    expect(speak("どちらへいらっしゃいますか？")).toBe("どちらえいらっしゃいますか？");
+    expect(speak("こちらへどうぞ")).toBe("こちらえどうぞ");
+    expect(speak("こちらへごあんないします")).toBe("こちらえごあんないします");
+    expect(speak("がっこうへいく")).toBe("がっこうえいく");
+    expect(speak("おんしゃへうかがいます")).toBe("おんしゃえうかがいます");
+    expect(speak("えきへむかう")).toBe("えきえむかう");
+    expect(speak("ほうこうへゆっくり")).toBe("ほうこうえゆっくり");
+    expect(speak("かんきょうへのかんがえ")).toBe("かんきょうえのかんがえ");
+    expect(speak("パーティーへの")).toBe("ぱあてぃいえの");
+    expect(speak("すぐどこかへ")).toBe("すぐどこかえ");
+    expect(speak("どちらへ")).toBe("どちらえ");
+  });
+
+  it("keeps the へ of a word as ヘ next to a particle へ", () => {
+    const speak = (reading: string) => buildJapaneseSpeakToken(reading);
+    expect(speak("きたないへや")).toBe("きたないヘや");
+    expect(speak("それはたいへんですね")).toBe("それはたいヘんですね");
+    expect(speak("よていをへんこうする")).toBe("よていをヘんこうする");
+    expect(speak("しごとがへる")).toBe("しごとがヘる");
+    expect(speak("うたがへた")).toBe("うたがヘた");
+    expect(speak("へいきです")).toBe("ヘいきです");
+    expect(speak("せかいのへいわ")).toBe("せかいのヘいわ");
+    expect(speak("つかれてへとへとです")).toBe("つかれてヘとヘとです");
+    expect(speak("わからへん")).toBe("わからヘん");
+    expect(speak("へえ")).toBe("ヘえ");
+    expect(speak("たいへんなへやへいく")).toBe("たいヘんなヘやえいく");
+    expect(speak("がいへきをとそうする")).toBe("がいヘきをとそうする");
+    expect(speak("がっこうへきました")).toBe("がっこうえきました");
+  });
+
+  it("reads に入る as はいる, not わいる", () => {
+    expect(buildJapaneseSpeakToken("へやにはいる")).toBe("ヘやにはいる");
+    expect(buildJapaneseSpeakToken("ここにはいない")).toBe("ここにわいない");
+    expect(buildJapaneseSpeakToken("にほんにはいろいろ")).toBe("にほんにわいろいろ");
   });
 
   it("pauses after listing や so tablet stays a separate word", () => {

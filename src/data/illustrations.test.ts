@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { GRAMMAR_PICTURE_ROWS, VOCAB_PICTURE_ROWS } from "./illustrations";
 import { vocabulary } from "./vocabulary";
 import { grammar } from "./grammar";
+import { vocabularyN3 } from "./n3/vocabularyN3";
+import { grammarN3 } from "./n3/grammarN3";
 import { SVG_ART } from "../components/Illustration/svgArt";
 import type { PictureRow } from "../types/illustration";
 
@@ -29,12 +31,12 @@ function checkRows(rows: readonly PictureRow[], corpus: Map<number, string>, wha
 }
 
 describe("illustrations corpus", () => {
-  it("vocabulary rows match the corpus, one per item", () => {
-    checkRows(VOCAB_PICTURE_ROWS, new Map(vocabulary.map((v) => [v.id, v.word])), "vocabulary");
+  it("vocabulary rows match the corpus (N2 + N3), one per item", () => {
+    checkRows(VOCAB_PICTURE_ROWS, new Map([...vocabulary, ...vocabularyN3].map((v) => [v.id, v.word])), "vocabulary");
   });
 
-  it("grammar rows match the corpus, one per item", () => {
-    checkRows(GRAMMAR_PICTURE_ROWS, new Map(grammar.map((g) => [g.id, g.pattern])), "grammar");
+  it("grammar rows match the corpus (main + N3), one per item", () => {
+    checkRows(GRAMMAR_PICTURE_ROWS, new Map([...grammar, ...grammarN3].map((g) => [g.id, g.pattern])), "grammar");
   });
 
   it("almost every item has a picture", () => {

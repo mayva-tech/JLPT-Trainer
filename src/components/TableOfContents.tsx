@@ -10,7 +10,7 @@ type Props = {
   weakWordsCount?: number;
 };
 
-type TocPage = 1 | 2 | 3 | 4;
+type TocPage = 1 | 2 | 3 | 4 | 5;
 
 /**
  * Left column on page 1: intro/ending/glossary, then interview lists
@@ -29,6 +29,14 @@ const COMPACT_COLUMN_IDS = new Set<string>(COMPACT_COLUMN_ORDER);
 /** Curated N1 browsing lenses — shown on TOC page 2. */
 const N1_GROUP_IDS = new Set(["vocabulary-n1", "grammar-n1", "quiz-vocab-n1"]);
 
+/** N3 course (vocabulary, grammar, quizzes) — TOC page 5. */
+const N3_GROUP_IDS = new Set([
+  "vocabulary-n3",
+  "grammar-n3",
+  "quiz-vocab-n3",
+  "quiz-grammar-n3",
+]);
+
 /** Casual ⇄ Formal register practice — TOC page 3. */
 const REGISTER_GROUP_IDS = new Set(["register"]);
 
@@ -42,6 +50,7 @@ function pageForSelectedId(selectedId: TocItemId | null): TocPage {
       if (N1_GROUP_IDS.has(group.id)) return 2;
       if (REGISTER_GROUP_IDS.has(group.id)) return 3;
       if (ONOMATOPOEIA_GROUP_IDS.has(group.id)) return 4;
+      if (N3_GROUP_IDS.has(group.id)) return 5;
       return 1;
     }
   }
@@ -110,10 +119,12 @@ export function TableOfContents({
       !COMPACT_COLUMN_IDS.has(g.id) &&
       !N1_GROUP_IDS.has(g.id) &&
       !REGISTER_GROUP_IDS.has(g.id) &&
-      !ONOMATOPOEIA_GROUP_IDS.has(g.id)
+      !ONOMATOPOEIA_GROUP_IDS.has(g.id) &&
+      !N3_GROUP_IDS.has(g.id)
   );
   const page2Groups = tocGroups.filter((g) => N1_GROUP_IDS.has(g.id));
   const page3Groups = tocGroups.filter((g) => REGISTER_GROUP_IDS.has(g.id));
+  const page5Groups = tocGroups.filter((g) => N3_GROUP_IDS.has(g.id));
   const page4Groups = tocGroups.filter((g) =>
     ONOMATOPOEIA_GROUP_IDS.has(g.id)
   );
@@ -170,6 +181,17 @@ export function TableOfContents({
           >
             Page 4 · オノマトペ
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={page === 5}
+            className={
+              page === 5 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
+            }
+            onClick={() => setPage(5)}
+          >
+            Page 5 · N3
+          </button>
         </div>
 
         {page === 1 ? (
@@ -200,6 +222,20 @@ export function TableOfContents({
         {page === 2 ? (
           <div className="toc-groups toc-groups--page2">
             {page2Groups.map((group) => (
+              <TocGroupSection
+                key={group.id}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                weakWordsCount={weakWordsCount}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {page === 5 ? (
+          <div className="toc-groups toc-groups--page2">
+            {page5Groups.map((group) => (
               <TocGroupSection
                 key={group.id}
                 group={group}

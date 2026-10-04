@@ -108,6 +108,7 @@ function corpusPairs() {
   const vocabRe = /\bword:\s*"([^"]+)",\s*\r?\n\s*reading:\s*"([^"]+)"/g;
   grab("src/data/vocabulary.ts", vocabRe);
   grab("src/data/vocabularyCore2000Seeds.ts", vocabRe);
+  grab("src/data/n3/vocabularyN3Seeds.ts", vocabRe);
   grab("src/data/onomatopoeia.ts", /\bjapanese:\s*'([^']+)',\s*\r?\n\s*reading:\s*'([^']+)'/g);
   return pairs;
 }
@@ -190,7 +191,7 @@ function corpusPhrases() {
   const list = [];
   const re =
     /\bword:\s*"([^"]+)",\s*\r?\n\s*reading:\s*"([^"]+)"[\s\S]*?\bphrase:\s*"([^"]+)",\s*\r?\n\s*phraseReading:\s*"([^"]+)"/g;
-  for (const file of ["src/data/vocabulary.ts", "src/data/vocabularyCore2000Seeds.ts"]) {
+  for (const file of ["src/data/vocabulary.ts", "src/data/vocabularyCore2000Seeds.ts", "src/data/n3/vocabularyN3Seeds.ts"]) {
     const text = readFileSync(join(root, file), "utf8");
     for (const m of text.matchAll(re)) {
       list.push({ word: m[1], reading: m[2], phrase: m[3], phraseReading: m[4], file });

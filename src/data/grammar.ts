@@ -1,6 +1,7 @@
 import type { GrammarItem } from "../types/grammar";
 import type { GrammarLesson } from "../types/lesson";
 import { grammarNuanceFields } from "./grammarNuances";
+import { grammarN3, n3GrammarLessons } from "./n3/grammarN3";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Grammar Lesson 01–10 · Concession & Contrast
@@ -11156,8 +11157,13 @@ export const grammarLessons: GrammarLesson[] = [
   },
 ];
 
+const GRAMMAR_BY_ID = new Map<number, GrammarItem>(
+  [...grammar, ...grammarN3].map((g) => [g.id, g])
+);
+
+/** Any grammar item by id — main corpus (5001+) or the N3 course additions (9001+). */
 export function getGrammarById(id: number): GrammarItem | undefined {
-  return grammar.find((g) => g.id === id);
+  return GRAMMAR_BY_ID.get(id);
 }
 
 export function getGrammarByIds(ids: number[]): GrammarItem[] {
@@ -11186,6 +11192,7 @@ export function getGrammarItemsForLesson(
   );
 }
 
+/** Any grammar lesson by id — main lessons or the N3 course (`n3-grammar-batch-*`). */
 export function getGrammarLessonById(id: string): GrammarLesson | undefined {
-  return grammarLessons.find((l) => l.id === id);
+  return grammarLessons.find((l) => l.id === id) ?? n3GrammarLessons.find((l) => l.id === id);
 }

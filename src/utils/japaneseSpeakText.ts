@@ -60,6 +60,44 @@ function expandChoonpu(kana: string): string {
   return out;
 }
 
+/**
+ * After particle へ: end of token, another particle (への / へと / へは…), or a
+ * motion / honorific verb (へ行く, へいらっしゃる, へ伺う, へどうぞ, へご案内).
+ */
+const HE_PARTICLE_NEXT_RE =
+  /^(?:$|[、。！？．，!?,\s]|の|と(?!へと)|も|は|わ|まで|から|だけ|でも|いく|いき(?:ま|た[いかくけ]|に)|いっ[たてち]|いか(?:な|れ|せ|ず)|いこう|いらっしゃ|まい[りるっ]|うかが|むか[うい]|もど|かえ[るりっ]|でかけ|どうぞ|ご|お)/u;
+
+/**
+ * After the へ mora of a word: 部屋 へや, 変更 へんこう, 大変, 減る / 減った,
+ * 下手 へた, 経て へて, 平和 / 平気 / 平日 へい…, 外壁 がいへき, へとへと, わからへん.
+ */
+const HE_WORD_NEXT_RE = /^(?:や|ん|ら|り|る|れ|ろ|っ|た|て|ず|そ|び|え|ば|い|き(?![まてた])|こ[まみむめん])/u;
+
+/** Particles that come before a word, never before particle へ (のへや, をへて, がへる). */
+const HE_WORD_PREV_RE = /[をがのなにはわも]$/u;
+
+/**
+ * Particle へ is spoken "e"; the へ mora inside a word stays "he". Unspaced
+ * readings (どちらへいらっしゃいますか) keep both in one token, so each へ is
+ * judged by what follows it, then by what comes before. ja-JP synthesis often
+ * says "e" for any hiragana へ, so the word mora is sent as katakana ヘ.
+ */
+function speakHeKana(kana: string): string {
+  if (!kana.includes("へ")) return kana;
+  const chars = [...kana.replace(/へとへと/gu, "ヘとヘと")];
+  return chars
+    .map((ch, i) => {
+      if (ch !== "へ") return ch;
+      const before = chars.slice(0, i).join("");
+      const after = chars.slice(i + 1).join("");
+      if (HE_PARTICLE_NEXT_RE.test(after)) return "え";
+      if (HE_WORD_NEXT_RE.test(after)) return "ヘ";
+      if (!before || HE_WORD_PREV_RE.test(before)) return "ヘ";
+      return "え";
+    })
+    .join("");
+}
+
 function speakParticleKana(kana: string): string {
   if (!kana) return kana;
 
@@ -83,8 +121,6 @@ function speakParticleKana(kana: string): string {
   if (/^(に|で|と|の|から|まで|より|へ|て)は$/u.test(out)) {
     return `${out.slice(0, -1)}わ`;
   }
-  // 経て
-  if (out === "へて") return "えて";
 
   // Grammar-pattern / set-phrase particle は (longest / most specific first)
   if (out.startsWith("とは")) {
@@ -109,8 +145,8 @@ function speakParticleKana(kana: string): string {
   out = out.replace(/ものは/g, "ものわ");
   out = out.replace(/ては/g, "てわ");
   out = out.replace(/では/g, "でわ");
-  // に反して / に反する keep はん — do not rewrite にはん
-  out = out.replace(/には(?!ん)/g, "にわ");
+  // に反して / に反する keep はん, and に入る (へやにはいる) keeps はい
+  out = out.replace(/には(?!ん|い[るりっられ])/g, "にわ");
   out = out.replace(/とは/g, "とわ");
   // 〜はともかく (not 〜はず / 〜はん / 〜はじめ)
   out = out.replace(/^〜は(?!ず|ん|じめ)/u, "〜わ");
@@ -119,12 +155,7 @@ function speakParticleKana(kana: string): string {
     out = `${out.slice(0, -1)}わ`;
   }
 
-  // Directional へて inside a longer token (〜をへて)
-  out = out.replace(/へて/g, "えて");
-
-  // Remaining へ is the consonant mora (部屋→へや, 変→へん). Hiragana へ is
-  // often voiced as particle "e" by ja-JP synthesis; katakana ヘ keeps "he".
-  out = out.replace(/へ/g, "ヘ");
+  out = speakHeKana(out);
 
   // カード: expanding ー → あ makes Nanami say "ka-ado"; speak かど (ka-do).
   out = out.replace(/かーど/g, "かど");

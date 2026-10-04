@@ -182,7 +182,11 @@ function buildQuizQuestions(
   if (vocabLessonId) {
     const lesson = getLessonById(vocabLessonId);
     if (!lesson) return [];
-    const quizLevel = vocabLessonId.startsWith("n1-") ? "N1" : "N2";
+    const quizLevel = vocabLessonId.startsWith("n1-")
+      ? "N1"
+      : vocabLessonId.startsWith("n3-")
+        ? "N3"
+        : "N2";
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel });
     return buildVocabularyQuizQuestions(items, quizTocId ?? vocabLessonId);
   }
