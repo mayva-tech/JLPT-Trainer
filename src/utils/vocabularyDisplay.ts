@@ -8,6 +8,7 @@ export type VocabularyDisplayRange = {
 };
 
 const LESSON_ID_RE = /^lesson-(\d+)$/;
+const N3_LESSON_ID_RE = /^n3-lesson-(\d+)$/;
 
 /** Display ordinal from a data vocabulary id (4001 → 1, 4750 → 750). */
 export function vocabularyIdToDisplayNumber(id: number): number {
@@ -27,13 +28,14 @@ export function parseLessonNumber(lessonId: string): number | null {
 }
 
 /**
- * Resolve lesson number and display word range for an N2 vocabulary lesson id.
- * `lesson-51` → words 501–510.
+ * Resolve lesson number and display word range for a vocabulary lesson id.
+ * `lesson-51` → words 501–510; N3 counts on its own, `n3-lesson-02` → words 11–20.
  */
 export function getVocabularyDisplayRange(
   lessonId: string
 ): VocabularyDisplayRange | null {
-  const lessonNumber = parseLessonNumber(lessonId);
+  const n3 = N3_LESSON_ID_RE.exec(lessonId);
+  const lessonNumber = n3 ? Number(n3[1]) || null : parseLessonNumber(lessonId);
   if (lessonNumber === null) return null;
 
   const firstWordNumber = (lessonNumber - 1) * 10 + 1;

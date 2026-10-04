@@ -29,7 +29,7 @@ export function StyleRegisterShifts({
   onSelect,
 }: StyleRegisterShiftsProps) {
   return (
-    <div>
+    <div className="ss-shifts">
       <p className="ss-shifts-intro">
         The same speaker, different listeners. Gendered Japanese is not a fixed
         property of the person — it moves with the relationship, the setting,

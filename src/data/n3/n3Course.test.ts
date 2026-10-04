@@ -22,6 +22,8 @@ import { grammar, getGrammarItemsForLesson, getGrammarLessonById } from "../gram
 import { getLessonById } from "../lessons";
 import { normalizeGrammarPattern } from "../grammarCourse";
 import { getTocItem, quizIds, tocGroups } from "../toc";
+import { grammarBatchCategorySuffix, grammarBatchRangeLabel } from "../tocGrammarItems";
+import { formatVocabularyLessonHeader, formatVocabularyLessonSubheader } from "../../utils/vocabularyDisplay";
 import { vocabPicture, grammarPicture } from "../../components/Illustration/pictures";
 import { vocabularyN3 } from "./vocabularyN3";
 import { n3Lessons } from "./lessonsN3";
@@ -225,6 +227,20 @@ describe("N3 table of contents and quizzes", () => {
       expect(buildGrammarQuizQuestions(items, item.quizId!).length).toBeGreaterThan(0);
       expect(quizIds).toContain(item.id);
     }
+  });
+});
+
+describe("N3 stage headers", () => {
+  it("numbers N3 vocabulary lessons like N2: Vocabulary Lesson n, Words a–b", () => {
+    expect(formatVocabularyLessonHeader("n3-lesson-02")).toBe("Vocabulary Lesson 2");
+    expect(formatVocabularyLessonSubheader("n3-lesson-02")).toBe("Words 11–20");
+    expect(formatVocabularyLessonSubheader("lesson-06")).toBe("Words 51–60");
+  });
+
+  it("gives N3 grammar lessons a range like N2: Grammar 11–20", () => {
+    expect(grammarBatchRangeLabel("n3-grammar-batch-01")).toBe("1–10");
+    expect(grammarBatchRangeLabel("n3-grammar-batch-02")).toBe("11–20");
+    expect(grammarBatchCategorySuffix("n3-grammar-batch-01")).not.toBe("");
   });
 });
 

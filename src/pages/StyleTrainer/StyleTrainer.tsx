@@ -1,4 +1,5 @@
 import { useHeadScene } from "../../hooks/useHeadScene";
+import HeadStyleButtons from "../../components/TalkingHead/HeadStyleButtons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./style-trainer.css";
 import { registerShifts } from "../../data/registerShifts";
@@ -584,8 +585,24 @@ export default function StyleTrainer() {
     setSelectedId(null);
   }, [mode, stopPlayAll]);
 
+  // Play All: bring each card to the middle of the stage as its reading starts.
+  // A register shift's summary has no card of its own, so fall back to the shift.
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!playingAll || !activePlayId) return;
+    const frame = requestAnimationFrame(() => {
+      const root = rootRef.current;
+      const card =
+        root?.querySelector<HTMLElement>(
+          ".ss-card--playing, .ss-mini--playing, .ss-shift-item--playing"
+        ) ?? root?.querySelector<HTMLElement>(".ss-shift--playing");
+      card?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [playingAll, activePlayId]);
+
   return (
-    <div className="ss-root">
+    <div className="ss-root" ref={rootRef}>
       <header className="ss-header">
         <h1 className="ss-title">Masculine, Feminine &amp; Neutral Japanese</h1>
         <p className="ss-title-jp" lang="ja">
@@ -619,31 +636,34 @@ export default function StyleTrainer() {
         ))}
       </nav>
 
-      {mode !== "quiz" ? (
-        <div className="ss-sticky-actions">
-          <p className="ss-sticky-hint">
-            {selectedId
-              ? "Play All starts from the orange card"
-              : "Tap a card, then Play All"}
-          </p>
-          <div className="ss-filter-actions">
-            <button
-              type="button"
-              className={
-                playingAll ? "ss-btn ss-btn--primary" : "ss-btn ss-btn--play-all"
-              }
-              onClick={playAll}
-            >
-              {playingAll ? "⏹ Stop" : "▶ Play All"}
-            </button>
-            {mode !== "shifts" ? (
-              <button type="button" className="ss-btn" onClick={randomise}>
-                Random expression
+      <div className="ss-sticky-actions">
+        {mode !== "quiz" ? (
+          <>
+            <p className="ss-sticky-hint">
+              {selectedId
+                ? "Play All starts from the orange card"
+                : "Tap a card, then Play All"}
+            </p>
+            <div className="ss-filter-actions">
+              <button
+                type="button"
+                className={
+                  playingAll ? "ss-btn ss-btn--primary" : "ss-btn ss-btn--play-all"
+                }
+                onClick={playAll}
+              >
+                {playingAll ? "⏹ Stop" : "▶ Play All"}
               </button>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+              {mode !== "shifts" ? (
+                <button type="button" className="ss-btn" onClick={randomise}>
+                  Random expression
+                </button>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+        <HeadStyleButtons />
+      </div>
 
       {mode !== "shifts" ? (
         <>

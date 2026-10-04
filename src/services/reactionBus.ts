@@ -6,9 +6,12 @@
  * `<TalkingHead />` decides how to show it. Streak and miss-run tracking lives
  * here so every caller gets consistent milestones without its own counters.
  *
- * Purely visual: nothing here speaks, so it can never collide with the
- * feedback TTS that usually follows an answer.
+ * Nothing here speaks, so it can never collide with the feedback TTS that
+ * usually follows an answer; `reportAnswer` only adds a short answer sound
+ * (see answerSfx), which is over before that speech starts.
  */
+
+import { playAnswerSound } from "./answerSfx";
 
 export type HeadReactionKind =
   | "correct"
@@ -63,6 +66,7 @@ export function emitReaction(kind: HeadReactionKind, count = 0): void {
  * breaks a streak without counting as a miss.
  */
 export function reportAnswer(result: boolean | "almost"): void {
+  playAnswerSound(result);
   if (result === "almost") {
     streak = 0;
     emitReaction("almost");

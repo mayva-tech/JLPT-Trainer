@@ -20,6 +20,13 @@ export function formatGrammarCategorySuffix(categories: string[]): string {
 export function parseGrammarBatchRange(
   lessonId: string
 ): { first: number; last: number } | null {
+  // N3 lessons are numbered (n3-grammar-batch-02 → 11–20), ten patterns each.
+  const n3 = /^n3-grammar-batch-(\d+)$/.exec(lessonId);
+  if (n3) {
+    const first = (Number(n3[1]) - 1) * 10 + 1;
+    const size = getGrammarLessonById(lessonId)?.grammarIds.length ?? 10;
+    return { first, last: first + size - 1 };
+  }
   const match = /^grammar-batch-(\d+)-(\d+)$/.exec(lessonId);
   if (!match) return null;
   return { first: Number(match[1]), last: Number(match[2]) };

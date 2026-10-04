@@ -1342,27 +1342,31 @@
   min-height: 0;
 }
 
+/* Title chip + progress, then the level · category · theme · speed line on
+   its own centred row — a long quiz title must not push the chips off stage. */
 .quiz-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 1.5cqw;
+  row-gap: 0.8cqh;
   width: 100%;
 }
 
 .quiz-header .category-chip {
   margin-bottom: 0;
-  flex: 0 0 auto;
-}
-
-.quiz-header .quiz-progress {
-  flex: 0 0 auto;
+  justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .quiz-header-category.vocabulary-range-label__primary {
-  flex: 1 1 auto;
+  grid-column: 1 / -1;
+  grid-row: 2;
   min-width: 0;
   max-width: none;
-  margin: 0 1.5cqw;
+  margin: 0;
 }
 
 .quiz-split {
@@ -1928,14 +1932,7 @@
   }
 
   .quiz-header {
-    flex-wrap: wrap;
     row-gap: 1cqh;
-  }
-
-  .quiz-header-category.vocabulary-range-label__primary {
-    order: 3;
-    flex-basis: 100%;
-    margin: 0;
   }
 
   .quiz-progress {

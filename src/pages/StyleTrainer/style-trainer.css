@@ -636,9 +636,18 @@
 
 /* ---- cards ---- */
 
+/* One card per row in a centred column, so Play All can bring the card being
+   read to the middle of the stage on its own. */
+.ss-comparisons,
+.ss-browse,
+.ss-shifts {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
 .ss-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -854,7 +863,7 @@
 
 .ss-comparison-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
