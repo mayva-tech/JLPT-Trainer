@@ -27,8 +27,9 @@ import {
 import type { HeadReactionEvent } from "../../services/reactionBus";
 import type { SceneProp } from "../../services/sceneBus";
 import { useStageScene } from "./useStageScene";
-import { useSuitMode } from "./useSuitMode";
-import { suitLookFor } from "./suit";
+import { useHeadCostume } from "./useHeadCostume";
+import { costumeLookFor } from "./costumeLook";
+import { costumeById } from "./costumes";
 import { getHeadStyle, subscribeHeadStyle } from "./headStyleStore";
 import { SceneBackdropArt } from "./backdrops";
 import { CupProp, PhoneProp } from "./props";
@@ -80,10 +81,13 @@ import "./talking-head.css";
  * The mascot sensei (tanuki / neko) is mounted alongside the head so it
  * rides on the same single shell mount. M toggles it from the head.
  *
- * Mecha suit: each head's suit button in the Player bar (A on the head does
- * the speaker) suits that head up in an open-faced armoured suit — the face keeps talking
- * inside a glass visor. A shutter lifts off the face as it goes on. Remembered
- * per head; off by default.
+ * Costumes: each head's hanger button in the Player bar opens a menu of six
+ * original costumes (mecha suit, samurai armour, shinobi, idol stage outfit,
+ * kigurumi, RPG hero), worn over the chosen look while the face keeps
+ * lip-syncing. Mecha reveals with a face shutter, the others out of a poof
+ * cloud, each with its own sound. On the head, A takes the speaker's costume
+ * off / puts the last one back; Shift+A moves to the next. Remembered per
+ * head; off by default.
  */
 
 /**
@@ -684,7 +688,7 @@ function Seat({
   voice: Voice;
   role: SeatRole;
   prop?: SceneProp;
-  /** Just suited up: play the armour drop and face-shutter reveal once. */
+  /** Just put on a costume: play its reveal (shutter or poof) once. */
   suitReveal?: boolean;
   look: HeadLook;
   viseme: Viseme;
@@ -817,7 +821,7 @@ const READING_PITCH_SELECTOR = ".pa-play";
 const DUO_WIDTH_RATIO = 1.9;
 /** Chance the pair splits up even when both would fit together. */
 const SPLIT_CHANCE = 0.35;
-/** Sizes tried, largest first, when no full-size spot clears the line being read. */
+/** Sizes tried, largest first, when no full-size spot clears Japanese and the line being read. */
 const FIT_SCALES = [0.75, 0.6, 0.45] as const;
 
 function boxAt(pos: HeadPos, w: number, h: number): Box {
@@ -878,22 +882,34 @@ function insidePanel(box: Box, panel: Box): boolean {
   );
 }
 
+/** Kana, kanji (incl. 々〆), half-width katakana and the long-vowel mark. */
+const JAPANESE_RUN = /[\u3005\u3006\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]+/gu;
+/** One word's pitch drawing (line + kana) — Japanese, though the line is SVG. */
+const PITCH_FIGURE_SELECTOR = ".pa-figure";
+
+type Obstacles = {
+  /** Every visible text line plus the fixed control bars (soft: least overlap). */
+  all: Box[];
+  /** Japanese characters and pitch drawings — never covered at any time. */
+  japanese: Box[];
+};
+
 /** Visible text line boxes inside the panel, plus the fixed control bars. */
-function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
-  const out: Box[] = [];
-  const pad = (r: DOMRect | Box): Box => ({
-    left: r.left - AVOID_PAD,
-    top: r.top - AVOID_PAD,
-    right: r.right + AVOID_PAD,
-    bottom: r.bottom + AVOID_PAD,
-  });
+function collectObstacles(panelEl: HTMLElement, panel: Box): Obstacles {
+  const all: Box[] = [];
+  const japanese: Box[] = [];
+  const keep = (r: DOMRect | Box, into: Box[]) => {
+    if (r.right - r.left < 1 || r.bottom - r.top < 1 || !boxesIntersect(r, panel)) return;
+    into.push(padBox(r));
+  };
 
   const walker = document.createTreeWalker(panelEl, NodeFilter.SHOW_TEXT);
   const range = document.createRange();
   const visibleCache = new Map<Element, boolean>();
   let node: Node | null;
   while ((node = walker.nextNode())) {
-    if (!node.textContent?.trim()) continue;
+    const text = node.textContent ?? "";
+    if (!text.trim()) continue;
     const parent = node.parentElement;
     if (!parent) continue;
     let visible = visibleCache.get(parent);
@@ -904,12 +920,30 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
     }
     if (!visible) continue;
     range.selectNodeContents(node);
-    for (const r of range.getClientRects()) {
-      if (r.width < 1 || r.height < 1) continue;
-      if (!boxesIntersect(r, panel)) continue;
-      out.push(pad(r));
+    for (const r of range.getClientRects?.() ?? []) keep(r, all);
+    // Only the Japanese runs of mixed text, so an English line quoting one
+    // word doesn't wall off the whole line.
+    for (const m of text.matchAll(JAPANESE_RUN)) {
+      range.setStart(node, m.index);
+      range.setEnd(node, m.index + m[0].length);
+      for (const r of range.getClientRects?.() ?? []) keep(r, japanese);
     }
   }
+
+  panelEl.querySelectorAll(PITCH_FIGURE_SELECTOR).forEach((el) => {
+    const r = el.getBoundingClientRect();
+    keep(r, all);
+    keep(r, japanese);
+  });
+  // Typed answers and placeholders aren't text nodes.
+  panelEl.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea").forEach((el) => {
+    const text = `${el.value} ${el.placeholder}`;
+    if (!text.trim()) return;
+    const r = el.getBoundingClientRect();
+    keep(r, all);
+    JAPANESE_RUN.lastIndex = 0;
+    if (JAPANESE_RUN.test(text)) keep(r, japanese);
+  });
 
   document
     .querySelectorAll<HTMLElement>(
@@ -917,9 +951,9 @@ function collectObstacles(panelEl: HTMLElement, panel: Box): Box[] {
     )
     .forEach((bar) => {
       const r = bar.getBoundingClientRect();
-      if (r.width > 0 && r.height > 0) out.push(pad(r));
+      if (r.width > 0 && r.height > 0) all.push(padBox(r));
     });
-  return out;
+  return { all, japanese };
 }
 
 /**
@@ -1034,9 +1068,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { duo, toggleDuo } = useDuoMode(lang, speaking);
   const { scene, toggleScenes } = useStageScene();
   const { lookFor: chosenLook, cycleLook } = useHeadLook();
-  const { suit, revealing, toggleSuit } = useSuitMode();
-  const lookFor = (voice: Voice) =>
-    suit[voice] ? suitLookFor(voice, chosenLook(voice)) : chosenLook(voice);
+  const { costume, revealing, toggle: toggleCostume, cycle: cycleCostume } = useHeadCostume();
+  const lookFor = (voice: Voice) => {
+    const worn = costumeById(costume[voice]);
+    return worn ? costumeLookFor(worn, voice, chosenLook(voice)) : chosenLook(voice);
+  };
   /** Name of a look just switched to — shown briefly under the head. */
   const [lookToast, setLookToast] = useState<string | null>(null);
   const toastTimer = useRef<number | null>(null);
@@ -1063,11 +1099,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const canSplit = duo && !scene;
   const canSplitRef = useRef(canSplit);
   canSplitRef.current = canSplit;
-  /** Scale while shrunk into a gap beside the line being read (1 = full size). */
+  /** Scale while shrunk into a gap clear of Japanese / the line being read (1 = full size). */
   const [fit, setFit] = useState(1);
   const fitRef = useRef(fit);
   fitRef.current = fit;
-  /** Faded out: no spot at any size keeps the line being read uncovered. */
+  /** Faded out: no spot at any size keeps Japanese and the line being read uncovered. */
   const [yielding, setYielding] = useState(false);
   const speakingRef = useRef(speaking);
   speakingRef.current = speaking;
@@ -1087,9 +1123,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       const h = rect.height / fitRef.current;
       if (w < 1 || h < 1) return;
 
-      const obstacles = collectObstacles(panel.el, panel.box);
-      const priority = collectPriorityObstacles(panel.box);
-      const all = priority.length ? [...obstacles, ...priority] : obstacles;
+      const { all: obstacles, japanese } = collectObstacles(panel.el, panel.box);
+      const reading = collectPriorityObstacles(panel.box);
+      /** Never covered when any spot allows: the line being read and all Japanese. */
+      const priority = reading.length || japanese.length ? [...reading, ...japanese] : reading;
+      const all = reading.length ? [...obstacles, ...reading] : obstacles;
       const fits = (p: HeadPos, bw: number, bh: number, extra?: Box) => {
         const b = boxAt(p, bw, bh);
         return (
@@ -1106,86 +1144,96 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         return;
       }
 
-      // The line being read must stay uncovered — any visible text when the
-      // speech has no karaoke marks. When not even one full-size head has
-      // room beside it (a sentence filling a narrow stage), shrink the pair
-      // into a gap, and as a last resort fade out until there is.
-      const guarded = priority.length ? priority : speakingRef.current ? obstacles : [];
-      if (guarded.length) {
-        const coversPriority = (p: HeadPos, bw: number, bh: number) => {
-          const b = boxAt(p, bw, bh);
-          return guarded.some((o) => boxesIntersect(b, o));
-        };
-        const prefer = current ?? posRef.current ?? defaultHeadPos(w, h);
-        const unitW = apart ? w : canSplitRef.current ? w / DUO_WIDTH_RATIO : w;
-        const unit = findClearSpot(panel.box, unitW, h, obstacles, prefer, priority);
-        if (!unit || coversPriority(unit, unitW, h)) {
-          const fullW = apart ? w * DUO_WIDTH_RATIO : w;
-          if (apart) setSplit(null);
-          for (const s of FIT_SCALES) {
-            const spot = findClearSpot(panel.box, fullW * s, h * s, obstacles, prefer, priority);
-            if (spot && !coversPriority(spot, fullW * s, h * s)) {
-              setFit(s);
-              setYielding(false);
-              if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
-              return;
+      // Japanese text and the line being read must stay uncovered — any
+      // visible text while speech has no karaoke marks. Other text only
+      // costs overlap. A full-size layout is used only when it keeps these
+      // clear; otherwise the pair shrinks into a gap, and as a last resort
+      // fades out until there is room.
+      const guarded = reading.length
+        ? priority
+        : speakingRef.current
+          ? obstacles
+          : japanese;
+      const covers = (p: HeadPos, bw: number, bh: number) => {
+        const b = boxAt(p, bw, bh);
+        return guarded.some((o) => boxesIntersect(b, o));
+      };
+
+      const placeFullSize = (): boolean => {
+        // Split: the root holds Nanami alone (w = one head), Andrew sits apart.
+        // Both heads are checked every tick, so one can't hide behind the other.
+        if (apart) {
+          const pairW = w * DUO_WIDTH_RATIO;
+          const home = posRef.current ?? defaultHeadPos(pairW, h);
+          if (fits(home, pairW, h)) {
+            setSplit(null);
+            setAutoPos(null);
+            return true;
+          }
+          let ja = current ?? home;
+          const enBox = padBox(boxAt(apart.en, w, h));
+          if (!fits(ja, w, h, enBox)) {
+            const spot = findClearSpot(panel.box, w, h, [...obstacles, enBox], ja, priority, Math.random);
+            if (!spot || covers(spot, w, h)) return false;
+            ja = spot;
+            setAutoPos(spot);
+          }
+          const jaBox = padBox(boxAt(ja, w, h));
+          if (!fits(apart.en, w, h, jaBox)) {
+            const spot = findClearSpot(panel.box, w, h, [...obstacles, jaBox], apart.en, priority, Math.random);
+            if (!spot || covers(spot, w, h)) return false;
+            setSplit({ en: spot });
+          }
+          return true;
+        }
+
+        const home = posRef.current ?? defaultHeadPos(w, h);
+        if (fits(home, w, h)) {
+          if (current) setAutoPos(null);
+          return true;
+        }
+        if (current && fits(current, w, h)) return true;
+
+        const spot = findClearSpot(panel.box, w, h, obstacles, home, priority, Math.random);
+        const pairFits = Boolean(spot && fits(spot, w, h));
+        // Stuck, or now and then for variety: seat the two heads apart.
+        if (canSplitRef.current && (!pairFits || Math.random() < SPLIT_CHANCE)) {
+          const sw = w / DUO_WIDTH_RATIO;
+          const ja = findClearSpot(panel.box, sw, h, obstacles, home, priority, Math.random);
+          if (ja && fits(ja, sw, h)) {
+            const jaBox = padBox(boxAt(ja, sw, h));
+            const en = findClearSpot(panel.box, sw, h, [...obstacles, jaBox], home, priority, Math.random);
+            if (en && fits(en, sw, h, jaBox)) {
+              setAutoPos(ja);
+              setSplit({ en });
+              return true;
             }
           }
-          setYielding(true);
-          return;
         }
-      }
-      if (fitRef.current !== 1) setFit(1);
-      setYielding(false);
+        if (!spot || covers(spot, w, h)) return false;
+        if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
+        return true;
+      };
 
-      // Split: the root holds Nanami alone (w = one head), Andrew sits apart.
-      if (apart) {
-        const pairW = w * DUO_WIDTH_RATIO;
-        const home = posRef.current ?? defaultHeadPos(pairW, h);
-        if (fits(home, pairW, h)) {
-          setSplit(null);
-          setAutoPos(null);
-          return;
-        }
-        const ja = current ?? home;
-        const jaBox = padBox(boxAt(ja, w, h));
-        const enBox = padBox(boxAt(apart.en, w, h));
-        if (!fits(ja, w, h, enBox)) {
-          const spot = findClearSpot(panel.box, w, h, [...obstacles, enBox], ja, priority, Math.random);
-          if (spot) setAutoPos(spot);
-        } else if (!fits(apart.en, w, h, jaBox)) {
-          const spot = findClearSpot(panel.box, w, h, [...obstacles, jaBox], apart.en, priority, Math.random);
-          if (spot) setSplit({ en: spot });
-        }
+      if (placeFullSize()) {
+        if (fitRef.current !== 1) setFit(1);
+        setYielding(false);
         return;
       }
 
-      const home = posRef.current ?? defaultHeadPos(w, h);
-      if (fits(home, w, h)) {
-        if (current) setAutoPos(null);
-        return;
-      }
-      if (current && fits(current, w, h)) return;
-
-      const spot = findClearSpot(panel.box, w, h, obstacles, home, priority, Math.random);
-      const pairFits = Boolean(spot && fits(spot, w, h));
-      // Stuck, or now and then for variety: seat the two heads apart.
-      if (canSplitRef.current && (!pairFits || Math.random() < SPLIT_CHANCE)) {
-        const sw = w / DUO_WIDTH_RATIO;
-        const ja = findClearSpot(panel.box, sw, h, obstacles, home, priority, Math.random);
-        if (ja && fits(ja, sw, h)) {
-          const jaBox = padBox(boxAt(ja, sw, h));
-          const en = findClearSpot(panel.box, sw, h, [...obstacles, jaBox], home, priority, Math.random);
-          if (en && fits(en, sw, h, jaBox)) {
-            setAutoPos(ja);
-            setSplit({ en });
-            return;
-          }
+      const prefer = current ?? posRef.current ?? defaultHeadPos(w, h);
+      const fullW = apart ? w * DUO_WIDTH_RATIO : w;
+      if (apart) setSplit(null);
+      for (const s of FIT_SCALES) {
+        const spot = findClearSpot(panel.box, fullW * s, h * s, obstacles, prefer, priority);
+        if (spot && !covers(spot, fullW * s, h * s)) {
+          setFit(s);
+          setYielding(false);
+          if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
+          return;
         }
       }
-      if (spot && (spot.x !== current?.x || spot.y !== current?.y)) {
-        setAutoPos(spot);
-      }
+      setYielding(true);
     };
 
     tick();
@@ -1210,7 +1258,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     };
   }, [enabled, shownLang]);
 
-  // Look and suit changes come from the Player bar or the keyboard; name the
+  // Look and costume changes come from the Player bar or the keyboard; name the
   // change under the head (and whose it was, in duo). Only changes made while
   // mounted — not one left over from before the head appeared.
   const styleChange = useSyncExternalStore(subscribeHeadStyle, () => getHeadStyle().change);
@@ -1294,7 +1342,9 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   };
 
   const switchLook = (step: number) => cycleLook(shownLang, step);
-  const flipSuit = () => toggleSuit(shownLang);
+  /** A: costume off / last one back on · Shift+A: next costume. */
+  const changeCostume = (next: boolean) =>
+    next ? cycleCostume(shownLang, 1) : toggleCostume(shownLang);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "m" || e.key === "M") {
@@ -1316,7 +1366,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
     }
     if (e.key === "a" || e.key === "A") {
       e.preventDefault();
-      flipSuit();
+      changeCostume(e.shiftKey);
       return;
     }
     if (e.key === "r" || e.key === "R") {
@@ -1408,8 +1458,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       aria-hidden={yielding || undefined}
       role="group"
       tabIndex={0}
-      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move; Enter changes the speaker's look, A toggles the speaker's mecha suit, R reactions, D duo, B scenes, M sensei`}
-      title="Drag to move · Enter: the speaker's next look (Shift: previous) · A: the speaker's mecha suit · R: reactions · D: duo · B: scenes · M: sensei"
+      aria-label={`${duo ? "Nanami and Andrew" : shownLang === "ja" ? "Nanami" : "Andrew"} talking head (${look.label}) — drag to move; Enter changes the speaker's look, A toggles the speaker's costume (Shift+A: next costume), R reactions, D duo, B scenes, M sensei`}
+      title="Drag to move · Enter: the speaker's next look (Shift: previous) · A: the speaker's costume on/off (Shift: next costume) · R: reactions · D: duo · B: scenes · M: sensei"
       aria-grabbed={dragging}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
@@ -1432,7 +1482,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
             toward={toward?.[voice]}
             splitAt={apart && voice === "en" ? apart.en : undefined}
             prop={scene?.prop}
-            suitReveal={suit[voice] && revealing[voice]}
+            suitReveal={Boolean(costume[voice]) && revealing[voice]}
           />
         ))}
       </div>

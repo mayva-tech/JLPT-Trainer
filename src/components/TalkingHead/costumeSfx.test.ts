@@ -17,6 +17,9 @@ function fakeAudio() {
       gain: param(),
       frequency: param(),
       Q: param(),
+      threshold: param(),
+      knee: param(),
+      ratio: param(),
       type: "",
       buffer: null as unknown,
     };
@@ -45,25 +48,42 @@ afterEach(() => {
   vi.resetModules();
 });
 
-describe("suit sound effects", () => {
+describe("costume sound effects", () => {
   it("are silent no-ops without Web Audio", async () => {
     vi.stubGlobal("AudioContext", undefined);
-    const { playSuitOn, playSuitOff } = await import("./suitSfx");
-    expect(() => playSuitOn()).not.toThrow();
-    expect(() => playSuitOff()).not.toThrow();
+    const { playCostumeOn, playCostumeOff } = await import("./costumeSfx");
+    expect(() => playCostumeOn("mecha")).not.toThrow();
+    expect(() => playCostumeOff("samurai")).not.toThrow();
   });
 
-  it("schedules whir, clicks, clunk and hiss for suiting up and down", async () => {
+  it("every costume has its own on sound", async () => {
     const { log, FakeCtx } = fakeAudio();
     vi.stubGlobal("AudioContext", FakeCtx);
-    const { playSuitOn, playSuitOff } = await import("./suitSfx");
-    playSuitOn();
-    const on = log.splice(0);
-    expect(on).toContain("comp");
-    expect(on.filter((k) => k === "osc").length).toBeGreaterThanOrEqual(3); // servo + clunk + ring
-    expect(on.filter((k) => k === "noise").length).toBe(4 + 1 + 1); // ratchets, thud, hiss
-    playSuitOff();
-    expect(log.filter((k) => k === "noise").length).toBe(3 + 1 + 1);
+    const { playCostumeOn } = await import("./costumeSfx");
+    const { COSTUMES } = await import("./costumes");
+    const shapes = new Set<string>();
+    for (const c of COSTUMES) {
+      playCostumeOn(c.id);
+      const nodes = log.splice(0);
+      expect(nodes.length, c.id).toBeGreaterThan(4);
+      shapes.add(nodes.join(","));
+    }
+    expect(shapes.size).toBe(COSTUMES.length);
+    playCostumeOn("unknown");
+    expect(log).toEqual([]);
+  });
+
+  it("the mecha suit has its own off sound; the others share a poof", async () => {
+    const { log, FakeCtx } = fakeAudio();
+    vi.stubGlobal("AudioContext", FakeCtx);
+    const { playCostumeOff } = await import("./costumeSfx");
+    playCostumeOff("mecha");
+    const mecha = log.splice(0).join(",");
+    playCostumeOff("samurai");
+    const samurai = log.splice(0).join(",");
+    playCostumeOff("idol");
+    expect(log.join(",")).toBe(samurai);
+    expect(mecha).not.toBe(samurai);
   });
 
   it("never throws if the audio graph fails", async () => {
@@ -75,7 +95,7 @@ describe("suit sound effects", () => {
       }
     }
     vi.stubGlobal("AudioContext", Broken);
-    const { playSuitOn } = await import("./suitSfx");
-    expect(() => playSuitOn()).not.toThrow();
+    const { playCostumeOn } = await import("./costumeSfx");
+    expect(() => playCostumeOn("hero")).not.toThrow();
   });
 });

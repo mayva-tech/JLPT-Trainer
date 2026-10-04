@@ -1,4 +1,5 @@
-import type { LookLayerProps } from "./looks";
+import type { LookLayerProps } from "../looks";
+import { ANDREW_FIT, NANAMI_FIT, type CostumeFit as SuitFit } from "./fit";
 
 /**
  * Mecha suit artwork — an original piloted-armour outfit both heads can wear.
@@ -14,21 +15,6 @@ import type { LookLayerProps } from "./looks";
  * suit is switched on), so remounts during nods and reactions never replay it.
  */
 
-interface SuitFit {
-  /** Top of the face. */
-  top: number;
-  /** Half the face width. */
-  halfW: number;
-  /** Ear centre height — the comm pods sit here. */
-  earY: number;
-  /** Bottom edge of the crown plate at the centre (stays above the brows). */
-  crown: number;
-  /** Where the neck meets the collar ring. */
-  neck: number;
-  /** Bottom of the chin. */
-  chin: number;
-}
-
 interface SuitPalette {
   shell: string;
   shellShade: string;
@@ -37,8 +23,6 @@ interface SuitPalette {
   dark: string;
 }
 
-const NANAMI_FIT: SuitFit = { top: 25, halfW: 25, earY: 56, crown: 34, neck: 81, chin: 83 };
-const ANDREW_FIT: SuitFit = { top: 22, halfW: 21, earY: 56, crown: 34, neck: 92, chin: 90 };
 
 const NANAMI_PALETTE: SuitPalette = {
   shell: "#e8ecef",
@@ -234,11 +218,11 @@ function SuitLayers({ layer, f, p }: LookLayerProps & { f: SuitFit; p: SuitPalet
 }
 
 /** Nanami's suit, as a look's Layers component. */
-export function NanamiSuit({ layer }: LookLayerProps) {
+export function NanamiMecha({ layer }: LookLayerProps) {
   return <SuitLayers layer={layer} f={NANAMI_FIT} p={NANAMI_PALETTE} />;
 }
 
 /** Andrew's suit, as a look's Layers component. */
-export function AndrewSuit({ layer }: LookLayerProps) {
+export function AndrewMecha({ layer }: LookLayerProps) {
   return <SuitLayers layer={layer} f={ANDREW_FIT} p={ANDREW_PALETTE} />;
 }

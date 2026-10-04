@@ -1,17 +1,19 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import {
   getSenseiSettings,
   setSenseiSettings,
   subscribeToSenseiSettings,
 } from "../../services/senseiBus";
 import { SENSEI_NAMES } from "../Sensei/senseiTips";
+import { CostumePicker } from "./CostumePicker";
 import type { Voice } from "./duo";
 import {
+  costumeOf,
   cycleHeadLook,
   getHeadStyle,
   lookOf,
   subscribeHeadStyle,
-  toggleHeadSuit,
+  wearHeadCostume,
 } from "./headStyleStore";
 import "./talking-head.css";
 
@@ -64,17 +66,21 @@ function SenseiButtons() {
 }
 
 /**
- * Separate look and mecha-suit buttons for Nanami and Andrew, plus the Sensei
+ * Separate look and costume (hanger menu) buttons for Nanami and Andrew, plus the Sensei
  * mascot's, for the Player's control bar. Shift-click a look button for the
  * previous look.
  */
 export default function HeadStyleButtons() {
-  const { lookIds, suit } = useSyncExternalStore(subscribeHeadStyle, getHeadStyle);
+  const { lookIds, costume } = useSyncExternalStore(subscribeHeadStyle, getHeadStyle);
+  /** Whose costume menu is open, if any. */
+  const [picking, setPicking] = useState<Voice | null>(null);
+  const closePicker = useCallback(() => setPicking(null), []);
   return (
     <span className="head-style-bar">
       {PEOPLE.map(({ voice, name }) => {
         const look = lookOf(voice, lookIds).label;
-        const suited = suit[voice];
+        const worn = costumeOf(voice, costume);
+        const open = picking === voice;
         return (
           <span key={voice} className="head-style-group" role="group" aria-label={`${name}'s look`}>
             <span className="head-style-name" aria-hidden="true">
@@ -94,19 +100,31 @@ export default function HeadStyleButtons() {
             </button>
             <button
               type="button"
-              className={suited ? "head-style-btn head-style-btn--on" : "head-style-btn"}
+              className={worn ? "head-style-btn head-style-btn--on" : "head-style-btn"}
               tabIndex={-1}
-              aria-pressed={suited}
-              aria-label={suited ? `Take off ${name}'s mecha suit` : `Put ${name} in the mecha suit`}
-              title={`${name}: mecha suit ${suited ? "on" : "off"}`}
-              onClick={() => toggleHeadSuit(voice)}
+              data-costume-opener=""
+              aria-haspopup="true"
+              aria-expanded={open}
+              aria-label={worn ? `${name}'s costume: ${worn.label}. Change costume` : `Choose a costume for ${name}`}
+              title={`${name}: ${worn ? worn.label : "normal clothes"} · costumes`}
+              onClick={() => setPicking(open ? null : voice)}
             >
-              <svg viewBox="0 0 16 16" aria-hidden="true" className="head-style-icon head-style-icon--suit">
-                <path d="M2.5 10.5 Q2.5 2.5 8 2.5 Q13.5 2.5 13.5 10.5 L13.5 13 L2.5 13 Z" />
-                <path d="M4.5 8 Q8 6.2 11.5 8 L11.5 11 L4.5 11 Z" className="head-style-visor" />
-                <path d="M3 6 L1.2 2" />
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="head-style-icon head-style-icon--hanger">
+                <path d="M8 5.2 Q8 3.8 9.2 3.5 Q10.4 3.2 10.4 2.2 Q10.2 1 9 1.1 Q8 1.2 7.9 2.1" />
+                <path d="M8 5.2 L1.5 10.8 Q1 11.6 1.9 11.8 L14.1 11.8 Q15 11.6 14.5 10.8 Z" />
               </svg>
             </button>
+            {open && (
+              <CostumePicker
+                current={worn}
+                label={`${name}'s costume`}
+                onPick={(id) => {
+                  setPicking(null);
+                  wearHeadCostume(voice, id);
+                }}
+                onClose={closePicker}
+              />
+            )}
           </span>
         );
       })}
