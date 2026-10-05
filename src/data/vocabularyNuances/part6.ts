@@ -167,7 +167,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "日曜日に uses に for a specific day, while 日曜日は would contrast it with other days.",
   },
   5287: {
-    word: "Happy birthday is お誕生日おめでとう, adding お for politeness.",
+    word: "Forms ask for 生年月日, date of birth, rather than 誕生日; お誕生日 adds warmth when congratulating.",
     phrase: "When talking to others, your own mother is 母, so 母の誕生日 is the correct polite form.",
     sentence: "誕生日に gives the occasion; a birthday present is 誕生日プレゼント, and a party is 誕生日会.",
   },
@@ -182,7 +182,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "公園の桜 hints at お花見, when crowds gather under park cherry trees in spring.",
   },
   5290: {
-    word: "館 means building or hall, also seen in 図書館 and 美術館.",
+    word: "映画を見に行く is the natural way to say go to the movies; 映画館で見る contrasts with watching at home.",
     phrase: "駅前の映画館 is natural; many cinemas today are シネコン, multiplexes inside malls.",
   },
   5291: {
@@ -234,7 +234,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "職場まで通う is the standard commute phrase; 通勤 is the formal noun.",
   },
   5302: {
-    word: "事務所 is also used for firms and agencies, as in 法律事務所.",
+    word: "事務所 suggests a working office for a firm or agency; 芸能事務所 manages entertainers, and headquarters is 本社.",
     phrase: "会社の事務所 is the physical office; オフィス is a common loanword alternative.",
     sentence: "移転 is a formal word for relocating a business.",
   },
@@ -385,7 +385,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "珍しい動物 means rare animals; officially endangered species are 絶滅危惧種.",
   },
   5334: {
-    word: "花, flower, has the same reading はな as 鼻, nose.",
+    word: "花を持たせる means letting someone else take the credit; 花見 is cherry blossom viewing.",
     phrase: "黄色い is one of few color い-adjectives; colors like 緑 or 紫 need の instead.",
     sentence: "花が咲く is the set verb; the opposite is 花が散る, when the petals fall.",
   },
@@ -437,6 +437,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "医師 is the formal word for doctor; patients usually address one as 先生.",
   },
   5347: {
+    word: "医療 sounds institutional, so it fits news and policy rather than your own clinic visit; key pairs are 医療機関 and 医療ミス.",
     phrase: "地域医療 is a policy term; 医療 is the system of care, while 治療 is treatment of a patient.",
     sentence: "医療体制 is a common news compound; related terms include 医療費, medical expenses.",
   },
@@ -509,6 +510,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "郵便で送る can also be said with the single formal verb 郵送する.",
   },
   5363: {
+    word: "誕生 suits celebrations and launches, as in 新政権の誕生 or 誕生祝い; saying 私は東京で誕生した sounds odd, use 生まれた.",
     phrase: "誕生 is formal; for babies, 生まれる is the everyday verb.",
     sentence: "誕生 here means the launch of something new, not a literal birth.",
   },
@@ -670,6 +672,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "Xのは無理です is a direct but polite way to say something is not feasible.",
   },
   5402: {
+    word: "十分 often works as an adverb, as in 十分気をつけて; もう十分です politely declines more food or help.",
     sentence: "あれば十分 is a set pattern meaning if you have this much, it is enough.",
   },
   5403: {
@@ -754,7 +757,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "によって here means depending on, so it differs by person.",
   },
   5423: {
-    word: "いろいろ can be written 色々 in kanji.",
+    word: "いろいろ is warm and conversational; いろいろありがとう thanks someone for many things at once. さまざま sounds more written.",
     phrase: "いろいろ takes な or の before nouns, and いろいろと works as an adverb.",
   },
   5424: {
@@ -762,12 +765,12 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "様々な意見が出る is a standard phrase for a meeting with many views.",
   },
   5425: {
-    word: "たいてい describes habits and is written 大抵 in kanji.",
+    word: "たいてい describes habits but leaves room for exceptions, unlike いつも; ほとんど is about quantity, not frequency.",
     phrase: "たいていの場合 is a slightly formal way of saying usually; casually, たいてい alone does the job.",
     sentence: "ごろ attaches to times to mean approximately.",
   },
   5426: {
-    word: "だいたい is written 大体 in kanji.",
+    word: "だいたい is casual and very common in speech; writing prefers 約 or おおよそ. Unlike ほとんど, it stresses rough accuracy.",
     phrase: "だいたい同じ means roughly equal; だいたい also opens complaints, as in だいたい君は.",
     sentence: "十分 here is read じゅっぷん, ten minutes, not じゅうぶん.",
   },
@@ -869,7 +872,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "記憶に残る means to remain in memory, a common set phrase.",
   },
   5450: {
-    word: "思い出 is a noun; the related verb is 思い出す, to recall.",
+    word: "思い出 is usually warm; いい思い出になる means something will become a fond memory. Neutral recall is 記憶.",
     phrase: "旅 sounds more literary than 旅行, and 旅の思い出 is common on souvenirs and photo albums.",
     sentence: "よみがえる means to come back to life, used for memories returning.",
   },
@@ -947,7 +950,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "地球の環境を守る is common in essays; the noun form is 環境保護.",
   },
   5467: {
-    word: "作業 appears on signs like 作業中, work in progress.",
+    word: "作業 sounds hands-on or routine, as in 作業着 or 単純作業; creative or professional work is 仕事.",
     sentence: "作業を終える is natural; 作業 fits routine hands-on tasks like sorting materials.",
   },
   5468: {
@@ -978,7 +981,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "希望する職業 is formal; on forms, 職業 is the field for your occupation.",
   },
   5474: {
-    word: "製品 often appears in compounds like 電気製品 and 新製品.",
+    word: "製品 stresses manufacturing, so makers use it, while shops talk about 商品; 製品化 means turning an idea into a product.",
   },
   5475: {
     word: "品物 refers to physical goods; in shops, 商品 is more common.",
@@ -1049,6 +1052,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "向け means aimed at, as in for beginners.",
   },
   5490: {
+    word: "ネットワーク also means a web of people, as in 人とのネットワークを広げる; 人脈 is the more native word for personal connections.",
     phrase: "通信ネットワーク is technical; ネット is short for network but usually means the internet.",
     sentence: "に接続する uses に for the thing you connect to.",
   },

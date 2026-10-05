@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { OnomatopoeiaItem, OnomatopoeiaPart } from "../types/onomatopoeia";
 import type { SpeechHighlight } from "../services/speechService";
 import { getOnomatopoeiaCategory } from "../data/onomatopoeia";
@@ -16,6 +16,70 @@ type Props = {
   enHighlight?: SpeechHighlight | null;
   showFurigana?: boolean;
 };
+
+const MIN_FIT = 0.45;
+const NAV_GAP_PX = 8;
+
+/**
+ * Scale the card's type (via --ono-fit, not CSS zoom, so the talking head and
+ * karaoke still read true rects) down until every line sits on the stage and
+ * above the fixed control bar.
+ */
+function useOnoFit(
+  ref: RefObject<HTMLDivElement | null>,
+  itemId: OnomatopoeiaItem["id"],
+  showFurigana: boolean
+) {
+  useLayoutEffect(() => {
+    const safe = ref.current;
+    if (!safe) return;
+    const stage = safe.closest<HTMLElement>(".stage") ?? safe;
+
+    const apply = (fit: number) => {
+      if (fit === 1) safe.style.removeProperty("--ono-fit");
+      else safe.style.setProperty("--ono-fit", fit.toFixed(3));
+      void safe.offsetHeight;
+    };
+    // The card may use the stage below the safe area (the talking heads move
+    // off Japanese text on their own), but never the area under the nav bar.
+    const fits = () => {
+      const navTop =
+        document.querySelector<HTMLElement>(".nav-bar")?.getBoundingClientRect().top ??
+        Infinity;
+      const floor = Math.min(stage.getBoundingClientRect().bottom, navTop) - NAV_GAP_PX;
+      const last = safe.lastElementChild?.getBoundingClientRect().bottom ?? 0;
+      return last <= floor && safe.scrollWidth <= safe.clientWidth + 1;
+    };
+    const fit = () => {
+      apply(1);
+      if (fits()) return;
+      let lo = MIN_FIT;
+      let hi = 1;
+      for (let i = 0; i < 10; i++) {
+        const mid = (lo + hi) / 2;
+        apply(mid);
+        if (fits()) lo = mid;
+        else hi = mid;
+      }
+      apply(lo);
+    };
+
+    fit();
+    let frame = 0;
+    const refit = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(fit);
+    };
+    const resize = new ResizeObserver(refit);
+    resize.observe(stage);
+    void document.fonts?.ready.then(refit);
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      safe.style.removeProperty("--ono-fit");
+    };
+  }, [ref, itemId, showFurigana]);
+}
 
 function partClass(
   base: string,
@@ -41,8 +105,11 @@ export function OnomatopoeiaCard({
   }, [activePart]);
   const replay = () => setPlays((n) => n + 1);
 
+  const safeRef = useRef<HTMLDivElement>(null);
+  useOnoFit(safeRef, item.id, showFurigana);
+
   return (
-    <div className="safe-area ono-safe card-fade">
+    <div ref={safeRef} className="safe-area ono-safe card-fade">
       <div className="ono-meta">
         <span className="ono-level">{item.jlptLevel}</span>
         {category ? (

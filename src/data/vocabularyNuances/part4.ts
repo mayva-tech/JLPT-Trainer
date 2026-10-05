@@ -282,7 +282,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "予定 means a plan or schedule, not a reservation, which is 予約.",
   },
   4819: {
-    word: "先週 is last week; the week before last is 先々週.",
+    word: "In casual speech, この前 often replaces 先週 when the exact timing is vague.",
   },
   4820: {
     word: "来週 is next week; the week after next is 再来週, read さらいしゅう.",
@@ -365,7 +365,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "毎日 works with の before a noun, as in 毎日の運動, or alone as an adverb.",
   },
   4839: {
-    word: "毎週 is every week; 毎週末 means every weekend.",
+    word: "毎週 is neutral for habits; 週に一度, or casual 週一, stresses frequency instead.",
     phrase: "In business, a regularly scheduled meeting is often called 定例会議.",
   },
   4840: {
@@ -373,7 +373,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "一日 here is read ついたち, the first day of a month.",
   },
   4841: {
-    word: "Both まいとし and まいねん are standard readings of 毎年.",
+    word: "まいとし is the usual spoken reading, while まいねん sounds slightly formal; 例年 means in a typical year, as in weather news.",
   },
   4842: {
     word: "一 is いち, but ひと with native counters like 一つ and 一人.",
@@ -449,12 +449,12 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "次は私の番です is the set way to say it is my turn next.",
   },
   4860: {
-    word: "前 means both in front of and before in time.",
+    word: "前 also means previous, as in 前の会社 for a former employer or 前の彼女 for an ex.",
     phrase: "駅前 is the compact set form of 駅の前, often used as a place name.",
     sentence: "前 after a time span means ago: 三年前.",
   },
   4861: {
-    word: "後 is read あと here, but also のち and ご, as in 午後.",
+    word: "後で is the casual later; in business say 後ほど. 後にする means putting something off until later.",
     phrase: "仕事の後 can also take で or に: 仕事の後で and 仕事の後に are both natural.",
   },
   4862: {
@@ -497,7 +497,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "西側 means the west side; stations often label exits like 西口 for the west exit.",
   },
   4871: {
-    word: "南 is みなみ alone but なん in compounds like 南極.",
+    word: "南口 is a station's south exit, and 南向き, facing south, is a selling point for sunny apartments.",
     phrase: "南の島 suggests a tropical island paradise, not just any island to the south.",
   },
   4872: {
@@ -588,7 +588,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "いつ asks when; いつか means someday, and いつでも means anytime.",
   },
   4892: {
-    word: "どう asks how; its polite form is いかが.",
+    word: "どう also makes casual offers, as in コーヒーはどう; with staff or superiors, いかがですか sounds far more polite.",
     phrase: "どうやって is more common than どう for asking the method of doing something.",
     sentence: "はどうですか asks for an impression, like how is it going.",
   },
@@ -620,7 +620,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "Before a negative feeling, どうも means somehow or for some reason, as in どうも調子が悪い.",
   },
   4899: {
-    word: "する is irregular: します, した, して.",
+    word: "する turns countless nouns into verbs, even loanwords like コピーする; humbly it becomes いたす, and respectfully なさる.",
     phrase: "Many nouns combine with する like 仕事をする, as in 勉強する and 掃除する.",
     sentence: "運動をします and 運動します are both fine; を can be dropped.",
   },
@@ -637,11 +637,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "一日 here is read いちにち, meaning all day, not ついたち.",
   },
   4903: {
-    word: "行く has an irregular て form: 行って, not 行いて.",
+    word: "Heading to the listener, Japanese says 今行きます where English says I'm coming; the humble form is 参ります.",
     phrase: "へ stresses direction and に the destination; both work with 行く.",
   },
   4904: {
-    word: "来る is irregular: 来ます is きます and 来ない is こない.",
+    word: "来る is movement toward the speaker's side, also used for seasons, as in 春が来る; respectfully it becomes いらっしゃる.",
     phrase: "来る is movement toward the speaker, so 友達が来る means coming to where you are.",
     sentence: "遊びに来る uses a verb stem plus に to show the purpose of coming.",
   },
@@ -919,7 +919,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "早い is for time or earliness; fast speed is 速い.",
   },
   4974: {
-    word: "遅い means both late and slow.",
+    word: "Context decides between late and slow: 来るのが遅い is late, 足が遅い is slow. Being behind schedule is the verb 遅れる.",
     sentence: "遅くなってすみません is a set apology for being late or slow to respond.",
   },
   4975: {
@@ -1008,7 +1008,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "止まる is intransitive; to stop something is 止める, and to stay overnight is 泊まる.",
   },
   4999: {
-    word: "見せる is to show; 見る is to see.",
+    word: "見せてください is the natural way to ask to see something; showing someone around a place is 案内する, not 見せる.",
     phrase: "を marks the thing shown; に marks the person you show it to.",
   },
   5000: {

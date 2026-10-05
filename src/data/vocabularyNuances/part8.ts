@@ -421,7 +421,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "会場にはお越しください is typical event wording asking guests to arrive by a set time.",
   },
   5845: {
-    word: "電子 appears in compounds like 電子マネー, 電子書籍, and 電子レンジ.",
+    word: "電子 marks digital versions of everyday things, as in 電子書籍, 電子マネー, or 電子決済.",
     phrase: "電子部品 are electronic parts; 電子 also forms 電子レンジ, a microwave oven.",
     sentence: "電子メール is the formal name for email; in speech メール is normal.",
   },
@@ -463,7 +463,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "常に意識してください is typical of safety notices and instructions.",
   },
   5854: {
-    word: "著作 is formal; it also appears in 著作権, copyright.",
+    word: "著作 is for books and scholarly works; everyday speech just says 本 or 作品.",
     phrase: "代表的な著作 means an author's best-known work; 代表作 is the shorter form.",
   },
   5855: {
@@ -554,7 +554,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "テニスクラブ is usually a private club; school clubs are more often called 部, like テニス部.",
   },
   5875: {
-    word: "タイトル also means a championship title in sports.",
+    word: "タイトル is common for books, songs, and videos; an email subject line is 件名. In sports, タイトルを取る means winning a title.",
     phrase: "本のタイトル is common; the native word 題名 is more formal.",
   },
   5876: {
@@ -638,7 +638,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "付いている here means comes with, as for set meals.",
   },
   5894: {
-    word: "さまざま is often written 様々 with the repetition mark.",
+    word: "さまざま is a bit more written than いろいろ and suits essays and speeches; it stresses diversity.",
     phrase: "さまざまな is slightly more formal than いろいろな.",
     sentence: "さまざまな年代 suits formal writing; いろいろな年代 sounds more conversational.",
   },
@@ -690,7 +690,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "合意に至った is formal written style; in speech 合意できた is more natural.",
   },
   5906: {
-    word: "多数 is the opposite of 少数, as in 多数決 for majority vote.",
+    word: "多数 sounds formal and statistical; in speech, たくさん. 多数決, majority vote, is a common way groups decide.",
     phrase: "多数の応募 is formal; in speech たくさんの応募 is more natural.",
     sentence: "多数の人が賛成した is formal; 過半数 is the precise word for more than half.",
   },
@@ -783,7 +783,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "...のが、この通りの魅力だ is a common way to describe what makes a place attractive.",
   },
   5928: {
-    word: "反応 is also the word for a chemical reaction.",
+    word: "反応がない can mean someone is unresponsive or a post got no reaction; 反応が薄い means a lukewarm response.",
     phrase: "素早い反応 describes a quick reflex or reply; 反応が早い is the predicate form.",
     sentence: "Xに対する反応 is common in marketing and news; 反応がいい means a good response.",
   },

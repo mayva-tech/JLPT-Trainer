@@ -180,7 +180,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "事業を始める suits companies and governments; an individual starting a shop would say 店を始める.",
   },
   5540: {
-    word: "固定 appears in compounds like 固定電話, a landline phone.",
+    word: "固定 also means fixed and unchanging, as in 固定観念, a stereotype, and 固定給, a fixed salary.",
     phrase: "固定する takes を for the item and に for where it is attached.",
     sentence: "家具を壁に固定する is standard earthquake-safety wording in Japan.",
   },
@@ -288,7 +288,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "学生の代表として is the standard way to say speaking on behalf of a group.",
   },
   5564: {
-    word: "ネット can also mean a physical net, as in sports.",
+    word: "ネット is casual for the internet; ネットで買う means buying online, and ネットで話題 means trending online.",
     phrase: "ネット is short for インターネット and is the everyday term.",
     sentence: "ネットの情報 is everyday speech; formal writing prefers インターネット上の情報.",
   },
@@ -350,7 +350,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "Data or results often act as the subject of 示す, as in 数字が示している.",
   },
   5578: {
-    word: "専門家 is an expert, and 専門学校 is a vocational school.",
+    word: "専門外です politely says it is outside my field and declines giving an opinion; 専門用語 means jargon.",
     phrase: "専門の知識 is often compressed to 専門知識.",
     sentence: "専門に研究する means to make something your main field; ご専門は asks about someone's field.",
   },
@@ -363,7 +363,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "全く分からなかった is a slightly more formal alternative to 全然分からなかった.",
   },
   5581: {
-    word: "組織 can also mean body tissue in biology.",
+    word: "組織 suggests a structured body with rules; 組織的 means systematic, often in 組織的な犯罪. A loose circle of people is グループ.",
     phrase: "国際組織 is close to 国際機関, the usual term for bodies like the UN.",
   },
   5582: {
@@ -372,7 +372,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "行動する contrasts with just thinking; 行動力 means the drive to take action.",
   },
   5583: {
-    word: "After a number 年間 marks a span of years, as in 三年間.",
+    word: "年間 is common in plans and statistics, as in 年間行事 or 年間パス, an annual pass.",
     phrase: "年間の often shortens into compounds like 年間収入 or simply 年収.",
     sentence: "年間 before a number means per year.",
   },
@@ -394,7 +394,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "通りに after a verb means exactly as, here as written on the map.",
   },
   5588: {
-    word: "生産 contrasts with 消費, consumption.",
+    word: "生産 is the economic view of making goods, often with 国内, 大量, or 生産量; making something yourself is just 作る.",
     phrase: "生産 is for goods and crops in bulk; for making a single dish use 作る.",
   },
   5589: {
@@ -416,7 +416,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "迷ったけれど shows hesitation before settling on the expected choice.",
   },
   5593: {
-    word: "ビジネス appears in compounds like ビジネスマン and ビジネスホテル.",
+    word: "ビジネス sounds modern and commercial; ビジネスライク means coolly businesslike, and 商売 sounds more traditional.",
     phrase: "ビジネス means commercial business; 事業 is a more formal equivalent.",
   },
   5594: {
@@ -454,7 +454,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "含まれています is passive, the natural way to say something is included.",
   },
   5601: {
-    word: "一部の before a noun means some, as in 一部の人.",
+    word: "一部 softens claims, as in 一部の人 rather than everyone; it also counts copies, as in 資料を一部ください.",
     phrase: "一部 follows a noun with の: 文章の一部.",
     sentence: "道路の一部 is typical news wording for partial closures; 一部通行止め is the compact form.",
   },
@@ -483,7 +483,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "結局 followed by a negative result stresses that all the effort led nowhere.",
   },
   5607: {
-    word: "消費税 is consumption tax, and 消費者 is a consumer.",
+    word: "消費 is economic language; daily speech prefers 使う. 消費者 is the consumer, and 消費期限 is the eat-by date.",
     phrase: "電力を消費する is formal; in speech 電気を使う is more common.",
     sentence: "しか消費しない stresses how little is used; 消費電力 is the spec-sheet term.",
   },
@@ -740,7 +740,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "全国で放送される is passive, typical of TV schedules and announcements.",
   },
   5664: {
-    word: "違い is the noun of 違う; a mistake is 間違い.",
+    word: "違いが分かる praises someone with discerning taste, as in 違いが分かる人; a mistake is 間違い, not 違い.",
     phrase: "表現の違い is common in language study, and 違いがある means there is a difference.",
     sentence: "伝え方に違いがある is a natural pattern: に marks the area where the difference lies.",
   },
@@ -760,7 +760,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "一般に公開される is standard wording for opening a facility to the public.",
   },
   5668: {
-    word: "登場人物 means the characters in a story.",
+    word: "登場 suits dramatic entrances, new products, and characters, as in 新商品が登場 in ads; for ordinary arrivals, 来る is enough.",
     phrase: "番組に登場する uses に for where someone appears.",
     sentence: "登場する suits appearances in media or stories; 出る is the casual equivalent.",
   },
@@ -833,7 +833,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "の許す限り means as far as something allows, and お答えします is humble.",
   },
   5684: {
-    word: "番組 is a broadcast program; 番組表 is the TV schedule.",
+    word: "番組 is for TV and radio; online videos are 動画. Appearing on a show is 番組に出る.",
     phrase: "料理番組 is a cooking show; 番組 is used for broadcasts, while software is プログラム.",
     sentence: "楽しみにしている番組 is a natural way to talk about a favorite show.",
   },
@@ -842,7 +842,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "今度会ったとき points to an unspecified next meeting, a common casual promise.",
   },
   5686: {
-    word: "処理 is also data processing, as in データ処理.",
+    word: "処理 sounds procedural, fitting paperwork, data, and waste; for handling a person's complaint, 対応 is more natural.",
     phrase: "ごみを処理する means disposal; everyday speech says ごみを捨てる.",
     sentence: "場合があります softens the statement to it may sometimes happen.",
   },
@@ -887,7 +887,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "言葉を信じる means trusting what someone said; 信用する is trusting their reliability.",
   },
   5696: {
-    word: "週間 also appears in 週間予報, a weekly forecast.",
+    word: "週間 also names campaign weeks, as in 交通安全週間 or 読書週間.",
     phrase: "週間 counts a span of weeks; a specific week uses 週, as in 来週.",
     sentence: "約三週間で uses で for the time needed to finish.",
   },
@@ -928,7 +928,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "と同時に after a verb means while also doing something else.",
   },
   5705: {
-    word: "詳細 alone means details, as in 詳細はこちら on websites.",
+    word: "詳細 is common in written notices like 詳細は後日 or 詳細はこちら; in speech, 詳しいこと sounds more natural.",
     phrase: "詳細な is formal; in speech 詳しい is more common.",
     sentence: "日程の詳細 is typical business-mail wording; 後ほど is a polite way to say later.",
   },
@@ -950,7 +950,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "将来は sets up a personal goal; 将来の夢 is a classic school essay topic.",
   },
   5710: {
-    word: "通信 appears in 通信費, the cost of phone and data service.",
+    word: "通信 sounds technical; in speech people say 電波 or ネット. 通信制限 means data throttling on phone plans.",
     phrase: "通信技術 is formal technical vocabulary.",
     sentence: "通信が不安定 describes a weak connection; everyday speech says 電波が悪い.",
   },
@@ -982,7 +982,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "とにかく結論から is a common business request to skip details and get to the point.",
   },
   5717: {
-    word: "最高 also means highest, as in 最高気温.",
+    word: "最高 can be sarcastic, as in 最高だね after a mishap, and its casual opposite is 最悪. In data it simply means highest.",
     phrase: "最高の means the very best, and 最高 alone is a casual exclamation.",
     sentence: "過去最高 means an all-time high.",
   },
@@ -995,7 +995,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "営業は…で終了します is standard store announcement wording.",
   },
   5720: {
-    word: "出版社 is a publishing company.",
+    word: "出版 is the industry word; in speech people say 本を出す. Self-publishing is 自費出版.",
     phrase: "出版する is for books and magazines; music or games are 発売される.",
   },
   5721: {
@@ -1004,7 +1004,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "正しい情報を確認する is common disaster-safety advice against rumors.",
   },
   5722: {
-    word: "プロ is short for プロフェッショナル; the opposite is アマ.",
+    word: "さすがプロ praises skill that matches expectations, and プロ並み means professional level, often said of amateurs.",
     phrase: "料理のプロ means an expert, not necessarily someone paid for it.",
     sentence: "プロに任せる is a set phrase for leaving a job to experts.",
   },
@@ -1068,7 +1068,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "辞書で調べる is the standard phrase for looking up words; で marks the tool.",
   },
   5737: {
-    word: "思い can mean a feeling, a wish, or a thought.",
+    word: "思い carries emotional weight, often a wish or longing; 思いをする means going through something, as in 嫌な思いをする.",
     phrase: "強い思い means a strong feeling or determination.",
     sentence: "思いを込める is a set phrase for putting feelings into a work or gift.",
   },

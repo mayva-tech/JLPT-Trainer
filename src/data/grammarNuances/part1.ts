@@ -128,7 +128,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5032: {
     pattern: "ようだ bases a judgment on the speaker's own observation; in speech みたいだ is more common.",
-    sentence: "見ると gives the visual evidence that ようだ relies on.",
+    sentence: "Looking at the sky gives direct evidence for ようだ; 降りそうだ would stress that rain looks imminent.",
   },
   5033: {
     pattern: "とのことだ relays a message or report and is more formal than そうだ; common in business emails when passing on what someone said.",
@@ -148,7 +148,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5037: {
     pattern: "と言われている presents a widely held view without naming a source and is common in written explanations.",
-    sentence: "昔から with ている shows the view has held for a long time.",
+    sentence: "昔から with ている shows a long-held view; と言われている keeps the claim impersonal, which suits guidebooks and textbooks.",
   },
   5038: {
     pattern: "気味 marks a slight, unwelcome state or tendency, as in 風邪気味 or 疲れ気味; がち instead stresses that something happens often.",
@@ -240,7 +240,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5060: {
     pattern: "をはじめ names the most representative item first, then broadens to a larger group.",
-    sentence: "全国の主要都市 is the wider group that Tokyo leads.",
+    sentence: "Tokyo is the natural lead example; putting a minor town first with をはじめ would sound odd.",
   },
   5061: {
     pattern: "上に adds a second point in the same direction, both good or both bad; mixing a merit with a drawback sounds unnatural.",
@@ -267,8 +267,8 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
     sentence: "Children are an unlikely group to know the title, so まで implies the movie is extremely well known.",
   },
   5067: {
-    pattern: "をはじめとして is a slightly more formal version of をはじめ.",
-    sentence: "全員 is the whole group, led by the section chief.",
+    pattern: "をはじめとして is a stiffer をはじめ, common in speeches and official lists; it always heads a wider group, never a lone item.",
+    sentence: "課長 heads the list as the most notable person, implying that if even the boss stayed late, everyone did.",
   },
   5068: {
     pattern: "のみならず is formal and written; in speech だけでなく is more common.",
@@ -291,15 +291,15 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
     sentence: "Spring arriving and days lengthening both change gradually and together, exactly what につれて links.",
   },
   5073: {
-    pattern: "ていく shows change moving forward from now or away from the speaker.",
-    sentence: "だろう makes this a prediction about the future.",
+    pattern: "ていく shows change moving forward from now; てくる shows change up to now, so 増えてきた looks back while 増えていく looks ahead.",
+    sentence: "これからも with ていく projects the change into the future; 変わってきた would describe change up to now.",
   },
   5074: {
     pattern: "てくる shows change that has built up to the present or has begun to appear.",
     sentence: "The rise is felt up to now, so てきた shows a change the speaker has noticed approaching the present.",
   },
   5075: {
-    pattern: "ようになる marks a gradual change in ability or habit, not a sudden event.",
+    pattern: "ようになる marks a gradual change in ability or habit; ようにする is a conscious effort, and できるようになった celebrates progress.",
     sentence: "ようやく stresses the long effort before success.",
   },
   5076: {
@@ -423,7 +423,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
     sentence: "The common assumption that expensive means good is challenged, with 必ずしも as the typical partner.",
   },
   5106: {
-    pattern: "に相違ない is a formal, written version of に違いない.",
+    pattern: "に相違ない is a stiff, written に違いない found in essays and detective prose; in conversation it sounds theatrical.",
     sentence: "Handwriting is solid evidence, which suits the formal, confident tone of に相違ない.",
   },
   5107: {
@@ -460,7 +460,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5115: {
     pattern: "てはならない is a firm prohibition typical of rules, laws, and moral statements; more formal than てはいけない.",
-    sentence: "どんな理由があっても makes the ban absolute.",
+    sentence: "どんな理由があっても makes the ban absolute; てはならない suits moral rules like this better than casual てはいけない.",
   },
   5116: {
     pattern: "ないではいられない is slightly more spoken than ずにはいられない, with the same meaning.",
@@ -496,7 +496,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5124: {
     pattern: "をもって is formal and also marks a cutoff point, as in 本日をもって.",
-    sentence: "いたします is humble, typical of official announcements.",
+    sentence: "本日をもって marks the end date, a fixed phrase on closing notices; in speech, 今日で says the same thing.",
   },
   5125: {
     pattern: "によると names a source and usually ends with らしい, そうだ, or ということだ.",

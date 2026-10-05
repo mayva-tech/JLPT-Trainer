@@ -313,7 +313,8 @@
 }
 
 /* Cards with a nuance note: LessonNuance also scales the --lesson-* type sizes to fit. */
-.safe-area--nuance-fit .furigana-wrap .jp-wrap-line {
+.safe-area--nuance-fit .furigana-wrap .jp-wrap-line,
+.ono-safe .furigana-wrap .jp-wrap-line {
   row-gap: 0.2em;
 }
 
@@ -2332,10 +2333,42 @@
 }
 
 /* ─── オノマトペ practice card ──────────────────────────────── */
+/* OnomatopoeiaCard shrinks --ono-fit below 1 when the card would overflow. */
 .ono-safe {
+  --ono-fit: 1;
+  --ono-level: 2.1cqw;
+  --ono-category: 2.5cqw;
+  --ono-word: 9.8cqw;
+  --ono-meaning: 3.9cqw;
+  --ono-collocation: 3.2cqw;
+  --ono-nuance: 2.7cqw;
+  --ono-example-jp: 5cqw;
+  --ono-example-en: 3.1cqw;
   justify-content: flex-start;
   padding-top: 1cqh;
   gap: 1.2cqh;
+}
+
+@media (max-width: 700px) and (orientation: portrait) {
+  .ono-safe {
+    --ono-level: 3.6cqw;
+    --ono-category: 4.2cqw;
+    --ono-word: 15cqw;
+    --ono-meaning: 6.2cqw;
+    --ono-collocation: 5.2cqw;
+    --ono-nuance: 4.6cqw;
+    --ono-example-jp: 7.6cqw;
+    --ono-example-en: 5.2cqw;
+    gap: 1.6cqh;
+  }
+
+  .ono-safe .ono-nuance {
+    max-width: 96%;
+  }
+
+  .ono-safe .ono-example {
+    width: 100%;
+  }
 }
 
 .ono-meta {
@@ -2347,7 +2380,7 @@
 
 .ono-level {
   font-family: var(--font-en);
-  font-size: 1.8cqw;
+  font-size: calc(var(--ono-level) * var(--ono-fit));
   font-weight: 700;
   letter-spacing: 0.06em;
   padding: 0.3cqh 1.1cqw;
@@ -2358,7 +2391,7 @@
 
 .ono-category {
   font-family: var(--font-jp);
-  font-size: 2cqw;
+  font-size: calc(var(--ono-category) * var(--ono-fit));
   color: var(--text-soft);
 }
 
@@ -2383,7 +2416,7 @@
 
 .ono-jp {
   font-family: var(--font-jp);
-  font-size: 7.2cqw;
+  font-size: calc(var(--ono-word) * var(--ono-fit));
   font-weight: 700;
   line-height: 1.2;
   color: var(--text);
@@ -2395,7 +2428,7 @@
 
 .ono-meaning {
   font-family: var(--font-en);
-  font-size: 2.8cqw;
+  font-size: calc(var(--ono-meaning) * var(--ono-fit));
   font-weight: 600;
   color: var(--text-softer);
   text-align: center;
@@ -2403,7 +2436,7 @@
 
 .ono-collocation {
   font-family: var(--font-jp);
-  font-size: 2.4cqw;
+  font-size: calc(var(--ono-collocation) * var(--ono-fit));
   color: var(--accent);
   text-align: center;
   padding: 0.4cqh 1.2cqw;
@@ -2412,7 +2445,7 @@
 
 .ono-nuance {
   font-family: var(--font-en);
-  font-size: 2cqw;
+  font-size: calc(var(--ono-nuance) * var(--ono-fit));
   line-height: 1.4;
   color: var(--text-soft);
   text-align: center;
@@ -2436,7 +2469,7 @@
 
 .ono-example-jp {
   font-family: var(--font-jp);
-  font-size: 3.4cqw;
+  font-size: calc(var(--ono-example-jp) * var(--ono-fit));
   font-weight: 700;
   line-height: 1.45;
   color: var(--text);
@@ -2444,7 +2477,7 @@
 
 .ono-example-en {
   font-family: var(--font-en);
-  font-size: 2.2cqw;
+  font-size: calc(var(--ono-example-en) * var(--ono-fit));
   color: var(--text);
   margin-top: 0.8cqh;
 }

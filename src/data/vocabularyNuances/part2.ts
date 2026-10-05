@@ -429,7 +429,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "検査装置 shows 装置 in a technical compound, like 安全装置 or 冷却装置.",
   },
   4345: {
-    word: "仮想 means virtual, as in 仮想通貨 for cryptocurrency.",
+    word: "拡張現実 is augmented reality, the companion term; in speech both are usually just VR and AR.",
     phrase: "仮想現実 is the formal term; in conversation most people just say VR.",
     sentence: "体験 fits well because you try VR firsthand, so 仮想現実を体験する is the set phrase.",
   },
@@ -603,7 +603,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "積極的に発言する is typical workplace praise for speaking up.",
   },
   4386: {
-    word: "共有 also means joint ownership, as in 共有財産.",
+    word: "共有 is everyday office vocabulary, as in 画面共有 or ファイルを共有する; unlike 分ける, nothing is divided and everyone has access.",
     phrase: "情報を共有する is standard business language, often shortened to the noun 情報共有.",
     sentence: "チーム全体で共有する uses で for the group that shares it.",
   },
@@ -624,7 +624,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "事前の means advance or prior and is very common in work emails, as in 事前の準備.",
   },
   4391: {
-    word: "寄付 is also written 寄附 in official contexts.",
+    word: "寄付 is giving money or goods to a cause; donating blood is 献血, and ふるさと納税 is a popular tax-linked form.",
     phrase: "The recipient takes に, as in 団体に寄付する; you can also drop を and say 寄付する.",
     sentence: "被災地への寄付 is a very common pattern after disasters in Japan.",
   },
@@ -668,7 +668,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "高齢の is a neutral, respectful description; お年寄り is a softer spoken word.",
   },
   4402: {
-    word: "The noun form 衰え is common, as in 体力の衰え.",
+    word: "衰える is gradual and often tied to ageing, as in 体力 or 記憶力; a sudden drop is 落ちる or 下がる.",
     phrase: "衰える describes gradual decline in strength, memory, or power over time.",
   },
   4403: {
@@ -726,7 +726,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "立てる here means formally appointing someone to a role, as in 仲人を立てる.",
   },
   4417: {
-    word: "状 means a letter or document, as in 招待状 or 年賀状.",
+    word: "Wedding 招待状 come with a reply postcard, the 返信はがき, and replying quickly is basic manners.",
     phrase: "送る is the everyday verb; businesses may write 招待状を発送する or お送りする.",
   },
   4418: {
@@ -737,7 +737,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "予約する is the standard verb for booking; 押さえる is also used for securing a venue.",
   },
   4420: {
-    word: "The noun お祝い is very common, as in お祝いを渡す.",
+    word: "祝う fits happy milestones like 合格, 結婚, or 誕生日; remembering sad anniversaries uses 追悼. お祝い is also a congratulatory gift.",
     phrase: "祝う takes を for what you celebrate, as in 結婚を祝う or 誕生日を祝う.",
     sentence: "心から祝う is a natural pairing; お祝いする is a softer, very common alternative.",
   },
@@ -755,7 +755,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "棚卸しを行う is formal; in conversation 棚卸しをする is common.",
   },
   4424: {
-    word: "在庫 is stock on hand, and 在庫切れ means out of stock.",
+    word: "Staff say 在庫を確認してまいります when checking stock; online shops show 在庫あり for available items.",
     phrase: "在庫確認 is standard shop language for checking whether an item is available.",
   },
   4425: {
@@ -871,7 +871,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "葬式 is everyday; 葬儀 is more formal, and お通夜 is the wake the night before.",
   },
   4452: {
-    word: "喪 means mourning, as in 喪中 for the mourning period.",
+    word: "With 喪服, shiny or bright accessories are avoided; a single strand of pearls is the classic exception.",
     phrase: "Black formal wear for mourning is also called ブラックフォーマル.",
   },
   4453: {
@@ -888,7 +888,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "相場 means the going rate, so 香典の相場 is the customary amount to give.",
   },
   4456: {
-    word: "火葬 is cremation; burial is 土葬, which is rare in Japan.",
+    word: "Nearly all funerals in Japan end in 火葬, held at a 火葬場, the crematorium.",
     phrase: "火葬にする means choosing cremation; the passive 火葬される is also common.",
   },
   4457: {
@@ -954,7 +954,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "睡眠の質 is a common health phrase, and 睡眠不足 means lack of sleep.",
   },
   4472: {
-    word: "不眠症 is the medical term for chronic insomnia.",
+    word: "不眠 is formal or medical; in speech people say 眠れない. 不眠不休 describes working without sleep or rest.",
     phrase: "悩む takes に for an ongoing problem, suggesting long-term suffering rather than one bad night.",
   },
   4473: {
@@ -1000,7 +1000,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "交流会 is a mixer where people meet and talk, held for business, community, or international groups.",
   },
   4484: {
-    word: "繋がり is often written in kana as つながり.",
+    word: "つながり sounds warm and personal; ties between organizations are 関係 or 連携. 人とのつながり is a favorite theme in speeches.",
     phrase: "大切にする means to value or treasure something, used for people, things, and time.",
   },
   4485: {

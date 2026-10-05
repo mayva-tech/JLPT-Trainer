@@ -360,7 +360,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5465: {
     pattern: "と確信する expresses inner conviction, while 断言する describes stating it openly.",
-    sentence: "ている shows an ongoing state of conviction.",
+    sentence: "ている shows a settled conviction; 確信した would mark the moment of becoming sure.",
   },
   5466: {
     pattern: "と見て間違いない draws a confident inference from evidence and is common in analysis and news.",
@@ -460,7 +460,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5490: {
     pattern: "定着する implies something new has become normal and widely accepted.",
-    sentence: "すっかり emphasizes that the change is complete.",
+    sentence: "すっかり shows the change is complete; 定着した is often said of habits or trends that were once new.",
   },
   5491: {
     pattern: "と言えよう is a written, cautious conclusion typical of essays; in speech と言えるでしょう is more usual.",

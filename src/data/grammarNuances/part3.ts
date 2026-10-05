@@ -228,7 +228,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5307: {
     pattern: "べく is literary and generally does not end a sentence; する becomes すべく.",
-    sentence: "日々 is a formal word for every day, suiting べく.",
+    sentence: "With すべく and 日々, the sentence sounds like a pledge or a company statement rather than casual talk.",
   },
   5308: {
     pattern: "というものだ states a general truth or the speaker's firm opinion about the nature of something.",
@@ -448,7 +448,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5362: {
     pattern: "べく努める is formal and common in official statements of effort or commitment.",
-    sentence: "The ている form shows the effort is ongoing.",
+    sentence: "ている shows ongoing effort; this is company or government wording, rarely heard in casual speech.",
   },
   5363: {
     pattern: "ことを目指す sets a long-term goal and is neutral enough for business speech.",

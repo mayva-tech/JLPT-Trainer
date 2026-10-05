@@ -247,7 +247,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "減少傾向にある is report and news wording; in speech, 減ってきている is more natural.",
   },
   4555: {
-    word: "仮 means temporary or provisional, as in 仮説 and 仮に.",
+    word: "仮説 is academic; in casual talk people float ideas with 仮に or もしかしたら.",
     phrase: "仮説 takes 立てる, and testing it afterward is 仮説を検証する.",
     sentence: "仮説を立てて実験を行う is the classic research flow; a disproven hypothesis is said to be 覆される.",
   },
@@ -614,7 +614,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "利用が拡大する is typical energy-news wording for something being adopted more widely.",
   },
   4635: {
-    word: "系 means system, as in 生態系 and 太陽系.",
+    word: "生態系 is news and textbook vocabulary; people say 生態系が崩れる when invasive species or development upset nature.",
     phrase: "生態系を守る and 生態系を壊す are the usual pairings in environmental talk.",
   },
   4636: {
@@ -699,7 +699,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "閉じ込められた人を救出する is typical rescue wording for someone trapped.",
   },
   4654: {
-    word: "救急車 is an ambulance; 救急 means emergency, as in 救急病院.",
+    word: "救急車で運ばれる means being rushed to hospital; 救急搬送 is the news term.",
     phrase: "In Japan, 救急車を呼ぶ means dialing one-one-nine, the same number as the fire service.",
   },
   4655: {
@@ -827,7 +827,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "高い技術 is the natural collocation; skill is described as 高い, not 強い or 大きい.",
   },
   4682: {
-    word: "開発 also means developing land, as in 都市開発.",
+    word: "開発 suggests a long, planned effort by companies or labs, as in 開発チーム; 都市開発 can sound negative in environmental debates.",
     phrase: "開発する is for products and technology; developing people is 育成.",
     sentence: "薬を開発する is natural, and 開発中 means still under development.",
   },
@@ -1101,7 +1101,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "結論に達する is formal, while 結論が出る is everyday; 長い議論の末 fits long meetings.",
   },
   4741: {
-    word: "生じる is also written 生ずる in very formal writing.",
+    word: "生じる suits reports and often pairs with 誤差, 疑問, or 損害; in conversation it sounds stiff and analytical.",
     phrase: "問題が生じる is formal; 起きる is more everyday for problems arising.",
     sentence: "遅れによって問題が生じる is formal cause-and-effect wording typical of reports.",
   },

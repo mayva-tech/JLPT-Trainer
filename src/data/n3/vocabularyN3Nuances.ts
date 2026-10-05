@@ -422,4 +422,650 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "劇場 is a theater for plays; a movie theater is 映画館.",
     phrase: "駅前の means in front of the station, a common location in Japanese towns.",
   },
+  7101: {
+    word: "湿気 is moisture in the air or in a room; the weather term for humidity is 湿度.",
+    phrase: "湿気が多い describes muggy air; the opposite is 乾燥している.",
+    sentence: "ひどい here means severe, a common way to complain about weather.",
+  },
+  7102: {
+    word: "泉 is a natural spring; a hot spring is 温泉, which shares the same kanji.",
+    phrase: "きれいな describes clear water as well as pretty things.",
+  },
+  7103: {
+    word: "岩 is a large rock; a small stone is 石.",
+    phrase: "大きな is the pre-noun form of 大きい, common before nouns like 岩.",
+  },
+  7104: {
+    word: "稲 is the rice plant in the field; harvested grain is 米, and cooked rice is ご飯.",
+    phrase: "刈る means to cut plants, used for rice, grass and hair.",
+    sentence: "田んぼ is a rice paddy, a common sight in the Japanese countryside.",
+  },
+  7105: {
+    word: "巣 is a nest or den; a beehive is 蜂の巣, and a spider web is くもの巣.",
+    phrase: "鳥の巣 is a bird's nest; to build one is 巣を作る.",
+    sentence: "Swallows nesting under the eaves are seen as a sign of good luck in Japan.",
+  },
+  7106: {
+    word: "酸素 is oxygen; 素 means element, as in 水素 for hydrogen.",
+    phrase: "足りない means not enough; 酸素が足りない is also used figuratively for a stuffy room.",
+  },
+  7107: {
+    word: "石油 is crude oil or kerosene; cooking oil is just 油.",
+    phrase: "石油の値段 affects gasoline and heating prices, a frequent news topic.",
+    sentence: "ほとんど means almost all; 輸入 is import and 輸出 is export.",
+  },
+  7108: {
+    word: "生物 read せいぶつ is a living thing or biology class; read なまもの it means raw food.",
+    phrase: "海の生物 covers fish, shellfish and any creature living in the sea.",
+  },
+  7109: {
+    word: "人工 means made by people; the opposite is 自然, natural.",
+    phrase: "人工の池 can also be said 人工池; 人工知能 means artificial intelligence.",
+  },
+  7110: {
+    word: "衛星 is a satellite, natural or artificial; a man-made one is 人工衛星.",
+    phrase: "気象衛星 are the weather satellites behind TV forecasts.",
+  },
+  7111: {
+    word: "性格 is personality; 性質 is more about the nature or properties of things.",
+    phrase: "明るい性格 is a cheerful personality, a common compliment.",
+    sentence: "全然違う means completely different, a casual but very common phrase.",
+  },
+  7112: {
+    word: "真剣 means fully serious; it literally refers to a real sword, not a practice one.",
+    phrase: "真剣な顔 is a serious look; 真剣に before a verb means seriously.",
+  },
+  7113: {
+    word: "意地悪 means mean or spiteful; a mean person is 意地悪な人.",
+    phrase: "意地悪な質問 is a tricky question meant to trip someone up.",
+    sentence: "意地悪をする means to be mean to someone, often used with children.",
+  },
+  7114: {
+    word: "親しい means close, as in friends or relationships; it is more formal than 仲がいい.",
+    phrase: "親しい友達 is a close friend; 親友 is the closest kind.",
+  },
+  7115: {
+    word: "羨ましい means envious in a light way; strong jealousy is 嫉妬.",
+    phrase: "羨ましい生活 is a life others would envy.",
+    sentence: "なんて here shows surprise, like you get to do that?",
+  },
+  7116: {
+    word: "飽きる means to get tired of something from too much of it.",
+    phrase: "Use に with 飽きる for the thing you are tired of.",
+  },
+  7117: {
+    word: "諦める means to give up on something you wanted; quitting an activity is やめる.",
+    phrase: "夢を諦める is a common phrase in stories about growing up.",
+    sentence: "諦めないで is a gentle way to say don't give up.",
+  },
+  7118: {
+    word: "慌てる means to panic or hurry in a flustered way.",
+    phrase: "慌てて before a verb means doing it in a rush.",
+  },
+  7119: {
+    word: "失望 is deep disappointment; everyday disappointment is がっかり.",
+    phrase: "結果に失望する uses に for the cause of the disappointment.",
+  },
+  7120: {
+    word: "いらいら describes being irritated or impatient; it is a mimetic word.",
+    phrase: "いらいらする is the usual verb form; it is often written in katakana as イライラ.",
+  },
+  7121: {
+    word: "失業 is losing your job or being unemployed; the jobless rate is 失業率.",
+    phrase: "失業の不安 is the worry of losing one's job.",
+    sentence: "倒産 means a company going bankrupt.",
+  },
+  7122: {
+    word: "支給 is when a company or government provides money or items to people.",
+    phrase: "交通費 is travel expenses, which many Japanese companies pay for commuting.",
+  },
+  7123: {
+    word: "請求 is a demand for payment; the bill itself is 請求書.",
+    phrase: "請求の書類 are billing documents from a company.",
+  },
+  7124: {
+    word: "署名 is a signature; in daily life people often use a personal seal called はんこ instead.",
+    phrase: "署名を集める means collecting signatures, as for a petition.",
+  },
+  7125: {
+    word: "証明 is proof; an official certificate is 証明書.",
+    phrase: "身分の証明 is proof of identity, often a driver's license or residence card.",
+  },
+  7126: {
+    word: "依頼 is a formal request for work or help; お願い is the everyday version.",
+    phrase: "仕事の依頼 is a job request, common in business emails.",
+    sentence: "依頼された is passive, meaning we were asked to do the work.",
+  },
+  7127: {
+    word: "委員 is a member of a committee; the committee itself is 委員会.",
+    phrase: "学級委員 is the class representative chosen in Japanese schools.",
+  },
+  7128: {
+    word: "首相 is the prime minister; the official title is 内閣総理大臣.",
+    phrase: "首相の発言 means remarks by the prime minister, common in news.",
+  },
+  7129: {
+    word: "首都 is a capital city; Tokyo and its area are often called 首都圏.",
+    phrase: "日本の首都 is Tokyo, though it is not written in any law.",
+  },
+  7130: {
+    word: "商売 is running a business or trade, often a small shop.",
+    phrase: "商売を始める is to start a business; doing well is 商売繁盛.",
+  },
+  7131: {
+    word: "居間 is the living room in a traditional home; modern homes often say リビング.",
+    phrase: "くつろぐ means to relax and feel at ease.",
+  },
+  7132: {
+    word: "書斎 is a private study for reading and writing.",
+    phrase: "父の書斎 is a classic image of a quiet room full of books.",
+  },
+  7133: {
+    word: "芝生 is a lawn; 芝 alone is the grass itself.",
+    phrase: "芝生に座る is a common picnic phrase in parks.",
+    sentence: "This exact sign is common in Japanese parks, where some lawns are off limits.",
+  },
+  7134: {
+    word: "明かり is light from a lamp or window; daylight is 光 or 日光.",
+    phrase: "部屋の明かり is the light in a room; to turn it on is 明かりをつける.",
+  },
+  7135: {
+    word: "板 is a flat board; a blackboard is 黒板, using the same kanji.",
+    phrase: "木の板 is a wooden board; a metal plate is 鉄板.",
+    sentence: "二枚 uses the counter 枚 for flat things like boards and paper.",
+  },
+  7136: {
+    word: "穴 is a hole; 穴場 means a hidden gem of a place.",
+    phrase: "靴下の穴 is a hole in a sock; 穴が開く means a hole forms.",
+  },
+  7137: {
+    word: "泡 is foam or bubbles; soap bubbles for play are シャボン玉.",
+    phrase: "石けん is soap; 石けんの泡 is the lather.",
+  },
+  7138: {
+    word: "インク is ink for pens and printers; ink for calligraphy is 墨.",
+    phrase: "切れる means to run out, as in インクが切れる or 電池が切れる.",
+  },
+  7139: {
+    word: "スイッチ is a switch; to turn something on is スイッチを入れる.",
+    phrase: "To switch off, say スイッチを切る.",
+  },
+  7140: {
+    word: "衣服 is a formal word for clothing; in conversation say 服.",
+    phrase: "整理 means sorting and organizing, as in 衣服の整理.",
+    sentence: "衣替え is the custom of swapping summer and winter clothes.",
+  },
+  7141: {
+    word: "冷める is for something hot cooling down; for chilling something use 冷える or 冷やす.",
+    phrase: "料理が冷める is the food getting cold; 熱が冷める also means enthusiasm fading.",
+    sentence: "冷めないうちに means while it is still hot.",
+  },
+  7142: {
+    word: "温める is to warm something up; 暖める is used for rooms and air.",
+    phrase: "牛乳を温める is a typical bedtime comfort.",
+  },
+  7143: {
+    word: "預ける is to leave something in someone's care; the receiver uses 預かる.",
+    phrase: "荷物を預ける is to check bags, at a hotel, station locker or airport.",
+  },
+  7144: {
+    word: "受け取る is to receive something handed to you; もらう is more casual.",
+    phrase: "荷物を受け取る is to pick up a package or delivery.",
+    sentence: "Many Japanese convenience stores let you pick up online orders.",
+  },
+  7145: {
+    word: "動かす is to move something; 動く is for something moving by itself.",
+    phrase: "机を動かす is to move a desk; 心を動かす means to move someone emotionally.",
+  },
+  7146: {
+    word: "疑う is to doubt or suspect; the noun is 疑い.",
+    phrase: "目を疑う means you cannot believe your eyes.",
+  },
+  7147: {
+    word: "埋める is to bury, or to fill in a gap or blank space.",
+    phrase: "穴を埋める is filling a hole, and also covering a gap or loss.",
+  },
+  7148: {
+    word: "奪う is to take something away by force; 盗む is to steal secretly.",
+    phrase: "命を奪う is a serious phrase used in news about disasters and accidents.",
+  },
+  7149: {
+    word: "救う is to rescue or save; 助ける is the everyday word for help.",
+    phrase: "命を救う is to save a life; a lifesaver is 命の恩人.",
+  },
+  7150: {
+    word: "沈む is to sink; it is also used for the sun setting and moods falling.",
+    phrase: "船が沈む is a ship sinking; floating is 浮く.",
+    sentence: "気分が沈む means feeling low or depressed.",
+  },
+  7151: {
+    word: "筋肉 is muscle; sore muscles after exercise are 筋肉痛.",
+    phrase: "筋肉をつける means to build muscle; losing it is 筋肉が落ちる.",
+  },
+  7152: {
+    word: "血液 is the formal word for blood; in daily speech people say 血.",
+    phrase: "血液の検査 is a blood test, usually shortened to 血液検査.",
+    sentence: "健康診断 is the yearly health checkup most Japanese workers take.",
+  },
+  7153: {
+    word: "呼吸 is breathing; 息 is a single breath.",
+    phrase: "深い呼吸 is a deep breath; 深呼吸 is the set word for taking one.",
+  },
+  7154: {
+    word: "腰 is the lower back and hip area; back pain there is 腰痛.",
+    phrase: "腰が痛い is one of the most common complaints in Japan.",
+    sentence: "痛める means to injure a body part, as in 腰を痛める.",
+  },
+  7155: {
+    word: "傷 is a cut, wound or scratch on skin or objects; 怪我 is the injury as an event.",
+    phrase: "小さな傷 can be on skin or on something like a car or phone.",
+    sentence: "傷がつく means to get scratched, often used for objects.",
+  },
+  7156: {
+    word: "かゆい means itchy; scratching is かく.",
+    phrase: "背中がかゆい uses が for the place that itches.",
+  },
+  7157: {
+    word: "臭い means bad-smelling; a pleasant smell is いい匂い or 香り.",
+    phrase: "臭い before a noun describes what smells bad.",
+  },
+  7158: {
+    word: "嗅ぐ is to sniff on purpose; noticing a smell is 匂いがする.",
+    phrase: "香り is a pleasant scent, used for flowers, coffee and perfume.",
+  },
+  7159: {
+    word: "苦しい means painful or hard to bear, for the body or for a situation.",
+    phrase: "息が苦しい is used when it is hard to breathe.",
+  },
+  7160: {
+    word: "疲れ is tiredness as a noun; the verb is 疲れる.",
+    phrase: "疲れが取れる means fatigue goes away; 取る here means to remove.",
+    sentence: "Hot springs are a classic way to relax and recover in Japan.",
+  },
+  7161: {
+    word: "科目 is a school subject; a required subject is 必修科目.",
+    phrase: "得意な科目 is your best subject; the weak one is 苦手な科目.",
+  },
+  7162: {
+    word: "学者 is a scholar or researcher; 者 after a word often means a person.",
+    phrase: "有名な学者 is a well-known expert, often seen on TV news.",
+  },
+  7163: {
+    word: "学問 is learning as an activity or field; 勉強 is the everyday word for studying.",
+    phrase: "学問の自由 is academic freedom, protected by the constitution.",
+  },
+  7164: {
+    word: "教授 is a professor; an associate professor is 准教授.",
+    phrase: "大学の教授 is used for full professors; students call them 先生.",
+    sentence: "教わる means to be taught, the opposite side of 教える.",
+  },
+  7165: {
+    word: "黒板 is a blackboard; a whiteboard is ホワイトボード.",
+    phrase: "黒板を消す means to erase the board, often a job for students on duty.",
+  },
+  7166: {
+    word: "論文 is an academic paper; 卒論 is the short form for a graduation thesis.",
+    phrase: "卒業論文 is required at many Japanese universities.",
+  },
+  7167: {
+    word: "留学 is studying abroad; an international student is 留学生.",
+    phrase: "留学の経験 is often mentioned in job interviews.",
+    sentence: "つもりです shows a plan you intend to carry out.",
+  },
+  7168: {
+    word: "寮 is a dormitory for students or company employees.",
+    phrase: "学生の寮 is also called 学生寮.",
+  },
+  7169: {
+    word: "化学 is chemistry; it sounds the same as 科学, science, so people sometimes say ばけがく.",
+    phrase: "実験 is an experiment, done in labs and science classes.",
+  },
+  7170: {
+    word: "哲学 is philosophy; it is also used for a personal philosophy, like 人生の哲学.",
+    phrase: "哲学の本 can be academic or a popular book on how to live.",
+  },
+  7171: {
+    word: "金額 is a sum of money; 値段 is the price of goods.",
+    phrase: "大きな金額 is a large sum, often in news about money.",
+    sentence: "請求書 is a bill or invoice listing the amount owed.",
+  },
+  7172: {
+    word: "財産 is property or a fortune; it is also used for anything valuable, like health.",
+    phrase: "親の財産 is often discussed in the context of inheritance.",
+  },
+  7173: {
+    word: "稼ぐ means to earn money by working; 儲ける is to make a profit.",
+    phrase: "お金を稼ぐ is the everyday phrase for earning money.",
+    sentence: "学費 means school fees or tuition.",
+  },
+  7174: {
+    word: "雇う is to hire someone; being hired is 雇われる.",
+    phrase: "人を雇う is used by shops and companies hiring staff.",
+  },
+  7175: {
+    word: "辞める is to quit a job or position; stopping a habit is やめる in kana.",
+    phrase: "会社を辞める is the usual phrase for leaving a company.",
+  },
+  7176: {
+    word: "後輩 is someone junior to you at school or work; a senior is 先輩.",
+    phrase: "会社の後輩 is a junior colleague, often someone you look after.",
+  },
+  7177: {
+    word: "監督 is a director in film, a manager in sports, or a supervisor at work.",
+    phrase: "映画の監督 is a film director.",
+    sentence: "交代 means swapping one person for another, like a substitution.",
+  },
+  7178: {
+    word: "議員 is an elected member of an assembly; Diet members are 国会議員.",
+    phrase: "国会議員 are members of Japan's national parliament.",
+    sentence: "Politicians often speak in front of busy stations before elections.",
+  },
+  7179: {
+    word: "名刺 is a business card; exchanging them politely is an important business custom.",
+    phrase: "名刺を交換する is the set phrase for swapping business cards.",
+  },
+  7180: {
+    word: "休暇 is a formal word for leave or vacation; paid leave is 有給休暇.",
+    phrase: "夏の休暇 is summer vacation; in conversation people often say 夏休み.",
+    sentence: "実家 is the home where your parents live.",
+  },
+  7181: {
+    word: "天候 is weather over a period, a formal word; daily weather is 天気.",
+    phrase: "悪い天候 is often heard in travel announcements.",
+  },
+  7182: {
+    word: "予報 is a forecast; the weather forecast is 天気予報.",
+    phrase: "予報が当たる means the forecast turns out right; wrong is 外れる.",
+    sentence: "らしい here passes on what the forecast says.",
+  },
+  7183: {
+    word: "夜明け is dawn, the moment night ends; 明け方 is the early morning hours.",
+    phrase: "夜明けの空 slowly turns from dark blue to orange.",
+  },
+  7184: {
+    word: "地平線 is the horizon over land; over the sea it is 水平線.",
+    phrase: "向こう means the far side, as in 地平線の向こう.",
+  },
+  7185: {
+    word: "故郷 is read こきょう or, more warmly, ふるさと, meaning one's hometown.",
+    phrase: "故郷の味 is the taste of home cooking from where you grew up.",
+    sentence: "Many people travel home for New Year's, so trains and roads get crowded.",
+  },
+  7186: {
+    word: "岸 is a shore or bank; the far bank is 向こう岸.",
+    phrase: "川の岸 is also called 川岸.",
+  },
+  7187: {
+    word: "谷 is a valley; the opposite landform is 山.",
+    phrase: "深い谷 is a deep valley, often crossed by a bridge.",
+  },
+  7188: {
+    word: "宿 is any place to stay, often a traditional inn; a hotel is ホテル.",
+    phrase: "宿を予約する is to book a place to stay.",
+  },
+  7189: {
+    word: "休憩 is a short break; a longer rest is 休み.",
+    phrase: "休憩を取る is to take a break; a break room is 休憩室.",
+  },
+  7190: {
+    word: "混雑 is formal for crowding, used in announcements; in speech say 混む.",
+    phrase: "駅の混雑 is common during rush hour and holidays.",
+  },
+  7191: {
+    word: "隠す is to hide something; hiding yourself is 隠れる.",
+    phrase: "本当の気持ちを隠す is to hide how you really feel.",
+  },
+  7192: {
+    word: "抱える means to hold in your arms, and also to have problems or debts.",
+    phrase: "問題を抱える is a common way to say someone has problems.",
+  },
+  7193: {
+    word: "囲む is to surround; being surrounded is 囲まれる.",
+    phrase: "テーブルを囲む means sitting around a table together.",
+  },
+  7194: {
+    word: "重ねる is to stack things or to repeat something many times.",
+    phrase: "皿を重ねる is stacking plates; 年を重ねる means getting older.",
+  },
+  7195: {
+    word: "こぼす is to spill; when liquid spills by itself use こぼれる.",
+    phrase: "お茶をこぼす is a small everyday accident.",
+    sentence: "てしまった adds that spilling was an accident.",
+  },
+  7196: {
+    word: "転ぶ is to fall over; falling from a height is 落ちる.",
+    phrase: "道で転ぶ is tripping on the road or sidewalk.",
+  },
+  7197: {
+    word: "誘う is to invite someone casually; a formal invitation is 招待する.",
+    phrase: "食事に誘う uses に for the event you invite someone to.",
+    sentence: "飲み会 is a drinking party, often with coworkers.",
+  },
+  7198: {
+    word: "断る is to refuse or decline; Japanese often refuse indirectly to stay polite.",
+    phrase: "誘いを断る is declining an invitation; ちょっと is a soft way to start.",
+  },
+  7199: {
+    word: "叫ぶ is to shout or scream; calling someone's name is 呼ぶ.",
+    phrase: "大声で叫ぶ means shouting loudly; 大声 is a loud voice.",
+  },
+  7200: {
+    word: "黙る is to stop talking or stay silent; 黙って can mean without saying anything.",
+    phrase: "急に黙る is suddenly falling silent, often from surprise or anger.",
+  },
+  7201: {
+    word: "恐ろしい is stronger than 怖い and sounds a little formal or literary.",
+    phrase: "恐ろしい事件 is common in news about serious crimes.",
+  },
+  7202: {
+    word: "悔しい is frustration at losing or failing when you tried hard; 残念 is plain disappointment.",
+    phrase: "悔しい思い is the bitter feeling after a defeat.",
+    sentence: "一点差 means a one-point margin.",
+  },
+  7203: {
+    word: "がっかり is the everyday word for being let down; 失望 is the formal version.",
+    phrase: "結果にがっかりする uses に for what disappointed you.",
+  },
+  7204: {
+    word: "感心 is being impressed by someone's effort or behavior; 関心 is interest.",
+    phrase: "感心な子ども is a child who behaves admirably.",
+  },
+  7205: {
+    word: "興奮 is excitement or agitation; it can be happy or angry.",
+    phrase: "興奮した声 is a raised, excited voice.",
+  },
+  7206: {
+    word: "恐怖 is strong fear as a noun; the everyday adjective is 怖い.",
+    phrase: "恐怖を感じる is a formal way to say you felt afraid.",
+  },
+  7207: {
+    word: "怒り is anger as a noun; the verb is 怒る.",
+    phrase: "抑える means to hold down or control, as in 怒りを抑える.",
+    sentence: "こみ上げる means a feeling welling up from inside.",
+  },
+  7208: {
+    word: "勇気 is courage; a brave person is 勇気のある人.",
+    phrase: "勇気を出す is the set phrase for working up courage.",
+  },
+  7209: {
+    word: "尊敬 is deep respect; respectful language is 尊敬語.",
+    phrase: "尊敬する先輩 is a senior you look up to.",
+  },
+  7210: {
+    word: "苦労 is hardship or effort through difficulty; ご苦労様 thanks someone for their work.",
+    phrase: "苦労が多い describes a hard life or job.",
+    sentence: "苦労して育てる is a common phrase about raising children through hard times.",
+  },
+  7211: {
+    word: "貝 is shellfish or a shell; clams are あさり and scallops are ほたて.",
+    phrase: "貝を拾う is a classic beach activity.",
+  },
+  7212: {
+    word: "芽 is a sprout or bud; it also means early signs, as in 才能の芽.",
+    phrase: "芽が出る is a sprout coming up; it also means starting to succeed.",
+  },
+  7213: {
+    word: "翼 is a wing of a bird or plane; it is a common image of freedom in songs.",
+    phrase: "鳥の翼 is a bird's wings; spreading them is 翼を広げる.",
+  },
+  7214: {
+    word: "象 is an elephant; the same kanji in 印象 means image or impression.",
+    phrase: "象の鼻 is an elephant's trunk; 鼻 also means nose.",
+    sentence: "餌をあげる means to feed an animal.",
+  },
+  7215: {
+    word: "氷 is ice; shaved ice dessert is かき氷.",
+    phrase: "氷を入れる is adding ice to a drink.",
+  },
+  7216: {
+    word: "煙 is smoke; cigarette smoke is also 煙, and no smoking signs say 禁煙.",
+    phrase: "黒い煙 is black smoke, often a sign of fire.",
+    sentence: "煙突 is a chimney.",
+  },
+  7217: {
+    word: "桜 is the cherry tree and its blossoms, Japan's symbol of spring.",
+    phrase: "桜の花 is the blossom itself; viewing them is お花見.",
+  },
+  7218: {
+    word: "豆 is beans; it also appears in names like 豆腐 and 枝豆.",
+    phrase: "煮る is to simmer food in liquid.",
+    sentence: "At Setsubun in February, people throw roasted beans to drive away bad luck.",
+  },
+  7219: {
+    word: "砂漠 is a desert; 砂 means sand.",
+    phrase: "広い砂漠 is a vast desert; Japan's famous dunes are 砂丘.",
+  },
+  7220: {
+    word: "湾 is a bay or gulf; a harbor is 港.",
+    phrase: "東京湾 is Tokyo Bay, home to many ports and bridges.",
+  },
+  7221: {
+    word: "火災 is a fire as a disaster, used in news and on signs; in conversation say 火事.",
+    phrase: "火災の原因 is the cause of a fire, often reported in the news.",
+  },
+  7222: {
+    word: "警告 is a formal warning; a weather warning is 警報.",
+    phrase: "警告を受ける is to receive a warning.",
+  },
+  7223: {
+    word: "刑事 is a police detective; it also means criminal, as in 刑事事件.",
+    phrase: "ベテランの刑事 is a typical TV drama character.",
+    sentence: "現場 is the scene where something happened.",
+  },
+  7224: {
+    word: "罪 is a crime or sin; a criminal is 犯罪者.",
+    phrase: "罪を犯す is the set phrase for committing a crime.",
+  },
+  7225: {
+    word: "停電 is a power outage; 停 means stop and 電 means electricity.",
+    phrase: "突然の停電 is a sudden blackout, common during storms.",
+  },
+  7226: {
+    word: "宣伝 is promoting something, like ads; an advertisement itself is 広告.",
+    phrase: "商品の宣伝 is promoting a product.",
+  },
+  7227: {
+    word: "予防 is prevention; a vaccine is 予防接種.",
+    phrase: "病気の予防 is disease prevention.",
+    sentence: "手洗い is hand washing, a common health message in Japan.",
+  },
+  7228: {
+    word: "禁煙 means no smoking, or quitting smoking; smoking areas are 喫煙所.",
+    phrase: "禁煙の席 is a non-smoking seat in a restaurant.",
+  },
+  7229: {
+    word: "差別 is unfair discrimination; 区別 is neutral distinction.",
+    phrase: "差別をなくす is to eliminate discrimination.",
+  },
+  7230: {
+    word: "国境 is a national border; Japan has no land borders.",
+    phrase: "国境を越える is crossing a border; 越える means to go over.",
+  },
+  7231: {
+    word: "賢い means clever or wise, for people and animals; 頭がいい is the casual phrase.",
+    phrase: "賢い選択 is a wise choice.",
+  },
+  7232: {
+    word: "大人しい means quiet and well-behaved, often for children, pets or personalities.",
+    phrase: "大人しい性格 is a calm, quiet character.",
+    sentence: "鳴く is used for animal sounds, like a cat meowing.",
+  },
+  7233: {
+    word: "器用 means good with your hands; clumsy is 不器用.",
+    phrase: "器用な手 is skillful hands; 手先が器用 means dexterous.",
+  },
+  7234: {
+    word: "優秀 means excellent, often for students and staff.",
+    phrase: "優秀な学生 is a top student.",
+    sentence: "成績 means grades or results.",
+  },
+  7235: {
+    word: "才能 is natural talent; effort is 努力.",
+    phrase: "音楽の才能 is a talent for music.",
+  },
+  7236: {
+    word: "有能 means capable at work; the opposite is 無能.",
+    phrase: "有能な社員 is a capable employee.",
+  },
+  7237: {
+    word: "利口 means smart or sensible; it is often used for children and animals.",
+    phrase: "利口な子 is a bright child.",
+  },
+  7238: {
+    word: "けち means stingy with money; it can sound rude when said to someone.",
+    phrase: "けちな人 is a stingy person.",
+    sentence: "おごる means to treat someone to food or drinks.",
+  },
+  7239: {
+    word: "わがまま means selfish or demanding.",
+    phrase: "わがままな子ども is a spoiled child.",
+    sentence: "わがままを言う means to make selfish demands.",
+  },
+  7240: {
+    word: "陽気 means cheerful and lively; it can also describe the weather.",
+    phrase: "陽気な音楽 is upbeat music.",
+  },
+  7241: {
+    word: "乾かす is to dry something; when it dries by itself use 乾く.",
+    phrase: "髪を乾かす is to dry your hair.",
+  },
+  7242: {
+    word: "茹でる is to boil food in water; boiling the water itself is 沸かす.",
+    phrase: "卵を茹でる is to boil eggs; a boiled egg is ゆで卵.",
+  },
+  7243: {
+    word: "炊く is used only for cooking rice; other cooking is 作る or 煮る.",
+    phrase: "ご飯を炊く is the everyday phrase; rice cookers are 炊飯器.",
+    sentence: "ておく shows doing it in advance.",
+  },
+  7244: {
+    word: "割る is to break or split something; it also means to divide in math.",
+    phrase: "卵を割る is cracking an egg.",
+    sentence: "When something breaks by itself, use 割れる.",
+  },
+  7245: {
+    word: "燃やす is to burn something; when it burns by itself use 燃える.",
+    phrase: "ごみを燃やす is burning trash; burnable trash is 燃えるごみ.",
+  },
+  7246: {
+    word: "積もる is for snow or dust piling up; piling things on purpose is 積む.",
+    phrase: "雪が積もる is snow building up on the ground.",
+  },
+  7247: {
+    word: "溶ける is for melting or dissolving; 解ける is for problems being solved.",
+    phrase: "氷が溶ける is ice melting.",
+  },
+  7248: {
+    word: "掴む is to grab firmly; it also means to grasp a chance or meaning.",
+    phrase: "腕を掴む is grabbing someone's arm.",
+    sentence: "手すり is a handrail.",
+  },
+  7249: {
+    word: "叩く is to hit or knock; tapping lightly is also 叩く.",
+    phrase: "ドアを叩く is knocking on the door; knocking politely is ノックする.",
+  },
+  7250: {
+    word: "揃える is to arrange things neatly or to collect a full set.",
+    phrase: "靴を揃える is lining up shoes at the entrance, an important Japanese manner.",
+  },
 };

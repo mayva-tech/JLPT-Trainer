@@ -251,7 +251,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "The verb is 振り込む; beware 振り込め詐欺, a common phone scam demanding transfers.",
   },
   4063: {
-    word: "手数料 is a service charge, and 手数料無料 means no fee.",
+    word: "手数料がかかる and 手数料無料 are key phrases at banks and ATMs, where convenience store machines often charge one.",
     phrase: "手数料 is a charge for handling a service, like bank transfer or cancellation fees.",
     sentence: "かかる is the verb for costs being incurred, used for both money and time.",
   },
@@ -292,7 +292,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "Recipes list ingredients under the heading 材料, and the word also means building materials.",
   },
   4072: {
-    word: "冷凍食品 is frozen food, and thawing it is 解凍.",
+    word: "冷凍 is everyday kitchen vocabulary; the freezer is 冷凍庫, and freezing leftovers is 冷凍しておく.",
   },
   4073: {
     word: "沸騰 is also used figuratively for surging popularity or debate, as in 人気が沸騰する.",
@@ -330,7 +330,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "講義 is a university lecture; a school lesson is 授業.",
   },
   4082: {
-    word: "単位 also means a unit of measurement, as in 長さの単位.",
+    word: "単位を落とす, failing a course, is a classic student worry; outside school, 単位 means a unit of measurement.",
     sentence: "単位が足りない is the worry of students short of credits to graduate.",
   },
   4083: {
@@ -545,7 +545,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "省エネ is energy saving in general; 節電 is specifically cutting electricity use.",
   },
   4134: {
-    word: "A リサイクルショップ is a secondhand store selling used goods.",
+    word: "Reprocessing materials is リサイクル, reusing items as they are is リユース; a リサイクルショップ actually sells secondhand goods.",
   },
   4135: {
     word: "廃棄 is formal and official; in daily life people say 捨てる.",
@@ -648,7 +648,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "採血を受ける is having your blood drawn; the test run on it is usually called 血液検査.",
   },
   4158: {
-    word: "手術 is surgery; the surgeon performing it is the 執刀医.",
+    word: "手術 sounds serious; minor treatments are often 処置. 手術中 lights mark an operating room in use.",
   },
   4159: {
     word: "回復 also applies to the economy or trust, as in 景気の回復.",
@@ -656,7 +656,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "順調に回復する is the set phrase for recovering well after surgery or illness.",
   },
   4160: {
-    word: "通院中 means currently receiving outpatient treatment.",
+    word: "通院 implies repeated visits, so 通院中 means you are still under treatment; medical forms ask about 通院歴.",
     phrase: "通院 means going regularly as an outpatient; staying in hospital is 入院.",
   },
   4161: {
@@ -729,7 +729,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "切る is the everyday verb for turning off notifications or power.",
   },
   4177: {
-    word: "設定 also means the setting or premise of a story.",
+    word: "設定を変える and 設定画面 are everyday tech phrases; for stories, 設定 means the premise or world.",
     phrase: "設定を確認する is standard device talk; changing settings is 設定を変更する.",
     sentence: "Default settings are 初期設定, and restoring them is 初期化.",
   },
@@ -742,7 +742,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "Phone plans measure data in gigabytes, casually called ギガ.",
   },
   4180: {
-    word: "Official Japanese writes ウイルス, not ウィルス, for virus.",
+    word: "ウイルス covers both computer and medical viruses, so context matters; the usual verbs are 対策を取る and 対策を講じる.",
     phrase: "対策 means countermeasures, as in 熱中症対策 or 防犯対策.",
     sentence: "欠かせない means indispensable and often pairs with 対策 in advice articles.",
   },
@@ -776,7 +776,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "自己記録を更新する means to beat your personal best.",
   },
   4188: {
-    word: "A cheer squad is an 応援団, and a fight song is an 応援歌.",
+    word: "応援しています is a warm message to friends or performers; 応援に行く can also mean going to help out.",
     phrase: "応援する works for sports teams and also for supporting people in general.",
   },
   4189: {
@@ -784,7 +784,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "行う is formal for doing; in speech say 練習試合をする.",
   },
   4190: {
-    word: "引き分け comes from 引き分ける; a win is 勝ち and a loss is 負け.",
+    word: "引き分けに持ち込む means fighting back to force a draw; in debates, a stalemate is 平行線.",
     phrase: "引き分けになる means to end in a draw; 引き分けに終わる is also common.",
   },
   4191: {
@@ -853,7 +853,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "薄味に仕上げる means to finish with light seasoning; the opposite is 濃い味.",
   },
   4207: {
-    word: "お好み焼き literally means grilled the way you like it.",
+    word: "好みのタイプ means your type in romance; 好み also covers food and style, as in 好みが分かれる, opinions differ.",
     phrase: "好み is personal taste, and 好みがうるさい means being picky.",
     sentence: "お好みで means to your liking, a common phrase on menus.",
   },
@@ -862,18 +862,18 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "偏食を直す is common in parenting talk; 好き嫌いをなくす says the same casually.",
   },
   4209: {
-    word: "会計 also means accounting, as in 会計士, an accountant.",
+    word: "会計は別々で asks for separate checks, and 割り勘 means splitting evenly; 会計 is also accounting, as in 会計士.",
     sentence: "会計を済ませる is a set pairing for settling the bill.",
   },
   4210: {
     word: "割り勘 is short for 割り前勘定; to pay separately at the register, say 別々でお願いします.",
   },
   4211: {
-    word: "料 marks fees, as in 手数料 or 使用料.",
+    word: "保険料が高い is a common household complaint, and on payslips the deduction appears as 社会保険料.",
     phrase: "保険料 is the premium you pay; 保険金 is the money paid out to you.",
   },
   4212: {
-    word: "書 marks documents, as in 申込書 and 領収書.",
+    word: "Japanese 契約書 are often stamped with a 印鑑 rather than only signed; the fine print people warn you about is the 但し書き.",
     phrase: "サインする is common, but formal Japanese contracts often need 署名 and a 印鑑 stamp.",
   },
   4213: {
@@ -887,7 +887,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "争う means to dispute, and filing a lawsuit is 裁判を起こす.",
   },
   4216: {
-    word: "士 marks licensed professions, as in 税理士 or 会計士.",
+    word: "Lawyers are addressed as 先生, like doctors; hiring one is 弁護士に頼む, and the fees are 弁護士費用.",
     phrase: "弁護士に相談する uses に for the expert you ask.",
   },
   4217: {
@@ -938,7 +938,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "仲 is the relationship between people; 仲間 means friends or companions.",
   },
   4230: {
-    word: "円満解決 means an amicable settlement.",
+    word: "円満 often softens news of a split, as in 円満離婚 or 円満解決, signaling no hard feelings; it sounds more formal than 仲がいい.",
     sentence: "円満に works adverbially, meaning without conflict.",
   },
   4231: {
@@ -963,7 +963,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "腐食 is corrosion of metal; food going bad is 腐る.",
   },
   4236: {
-    word: "補修工事 is patching work on roads or buildings.",
+    word: "補修 is patching part of a surface, like roads or walls; a larger renovation is 改修, and 補修工事中 signs are common.",
   },
   4237: {
     word: "業者 is a business hired for a job; people often add さん, as in 業者さん.",
@@ -982,7 +982,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "点検 is a routine check of equipment; a medical checkup is 健康診断.",
   },
   4241: {
-    word: "The press crowd at a scene is called 報道陣.",
+    word: "報道によると, according to reports, is a common news opener; 報道 is the media as an institution, while ニュース is the content.",
     phrase: "報道する is formal; in everyday speech say ニュースで伝える.",
   },
   4242: {
@@ -991,7 +991,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     sentence: "載る means to appear in print, as in 新聞に載る.",
   },
   4243: {
-    word: "The reporting team sent out to cover a story is a 取材班.",
+    word: "取材 also covers writers researching on site; 取材お断り signs mean no press allowed.",
   },
   4244: {
     word: "The editorial department of a magazine or paper is the 編集部.",
@@ -1014,11 +1014,11 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "虚偽 is legal and formal; in daily speech say うそ.",
   },
   4249: {
-    word: "視聴 means watching and listening, so a viewer is 視聴者.",
+    word: "視聴率 is TV language; online, people talk about 再生回数. 視聴率が取れる means a show reliably draws viewers.",
     phrase: "視聴率 is described as 高い or 低い, not 多い or 少ない.",
   },
   4250: {
-    word: "A streamer is a 配信者, and a live broadcast is 生配信.",
+    word: "配信 now mainly means streaming, as in 配信サービス or 生配信; traditional broadcasting is 放送.",
     phrase: "配信 covers streaming and delivery of digital content; ライブ配信 is live streaming.",
   },
 };
