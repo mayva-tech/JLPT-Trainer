@@ -1068,4 +1068,216 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "揃える is to arrange things neatly or to collect a full set.",
     phrase: "靴を揃える is lining up shoes at the entrance, an important Japanese manner.",
   },
+  7251: {
+    word: "横断 is crossing from one side to the other, mostly used for roads.",
+    phrase: "道路を横断する is formal; in speech say 道を渡る.",
+    sentence: "A crosswalk is 横断歩道.",
+  },
+  7252: {
+    word: "停留所 is a bus or tram stop; in speech people often say バス停.",
+    phrase: "バスの停留所 is the full form of バス停.",
+  },
+  7253: {
+    word: "航空 is aviation, used in compounds like 航空会社 and 航空券.",
+    phrase: "航空会社 is an airline; a plane ticket is 航空券.",
+  },
+  7254: {
+    word: "定期 means regular or fixed; on its own it is short for a commuter pass, 定期券.",
+    phrase: "定期の点検 is a regular inspection of machines or buildings.",
+  },
+  7255: {
+    word: "通過 is passing through without stopping, used for trains, exams and bills.",
+    phrase: "駅を通過する is a train passing a station without stopping.",
+    sentence: "Express trains in Japan skip many small stations.",
+  },
+  7256: {
+    word: "鉄道 is railway in general; a single line is 線, like 山手線.",
+    phrase: "鉄道の旅 is a train journey; train fans are 鉄道ファン.",
+  },
+  7257: {
+    word: "旅 sounds more literary than 旅行; it often suggests a long or personal journey.",
+    phrase: "一人旅 is traveling alone, popular with young people.",
+  },
+  7258: {
+    word: "見送り is seeing someone off; 見送る is the verb.",
+    phrase: "空港での見送り is seeing someone off at the airport.",
+  },
+  7259: {
+    word: "迎え is meeting or picking someone up; 迎える is the verb.",
+    phrase: "迎えに行く is to go pick someone up.",
+  },
+  7260: {
+    word: "列車 is a train, often long-distance; 電車 is an electric commuter train.",
+    phrase: "夜行列車 is an overnight train.",
+    sentence: "予定通り means as scheduled.",
+  },
+  7261: {
+    word: "胃 is the stomach as an organ; お腹 is the belly area.",
+    phrase: "胃が痛い is a stomachache; 腹痛 is a general bellyache.",
+  },
+  7262: {
+    word: "息 is breath; 呼吸 is breathing as a process.",
+    phrase: "息を吸う is breathing in; breathing out is 息を吐く.",
+    sentence: "息が切れる means to get out of breath.",
+  },
+  7263: {
+    word: "汗 is sweat; a sweaty person is 汗っかき.",
+    phrase: "汗をかく uses かく; sweat is not 出す in this phrase.",
+  },
+  7264: {
+    word: "肌 is skin, especially its look and feel; 皮膚 is the medical word.",
+    phrase: "肌が弱い means sensitive skin.",
+  },
+  7265: {
+    word: "膝 is the knee; a lap is also 膝, as in 膝の上.",
+    phrase: "膝を曲げる is bending your knees; straightening them is 伸ばす.",
+    sentence: "すりむく means to scrape skin.",
+  },
+  7266: {
+    word: "骨 is bone; it also means effort, as in 骨が折れる, to be hard work.",
+    phrase: "魚の骨 is a fish bone; careful eaters remove them with chopsticks.",
+  },
+  7267: {
+    word: "心臓 is the heart as an organ; 心 is the heart as feelings.",
+    phrase: "心臓の音 is the heartbeat.",
+    sentence: "どきどき describes a pounding heart.",
+  },
+  7268: {
+    word: "身長 is a person's height; for buildings use 高さ.",
+    phrase: "身長が伸びる means to grow taller.",
+  },
+  7269: {
+    word: "体重 is body weight; for objects use 重さ.",
+    phrase: "体重を量る uses 量る for weighing.",
+  },
+  7270: {
+    word: "居眠り is nodding off while sitting; deep sleep is 熟睡.",
+    phrase: "授業中の居眠り is dozing in class, a classic school scene.",
+  },
+  7271: {
+    word: "物理 is physics; physical as in body is 身体的.",
+    phrase: "物理の法則 is a law of physics.",
+  },
+  7272: {
+    word: "物質 is matter or a substance in science; material for making things is 材料.",
+    phrase: "危険な物質 is a hazardous substance.",
+  },
+  7273: {
+    word: "金属 is metal in general; iron is 鉄 and gold is 金.",
+    phrase: "金属の部品 is a metal part.",
+    sentence: "Security checks ask you to take out metal objects.",
+  },
+  7274: {
+    word: "爆発 is an explosion; it is also used for sudden bursts, like 人気が爆発する.",
+    phrase: "ガスの爆発 is a gas explosion.",
+  },
+  7275: {
+    word: "発射 is launching or firing; for rockets the everyday word is 打ち上げ.",
+    phrase: "ロケットの発射 is a rocket launch.",
+  },
+  7276: {
+    word: "酸性 means acidic; the opposite is アルカリ性.",
+    phrase: "酸性の雨 is usually shortened to 酸性雨.",
+  },
+  7277: {
+    word: "温度 is temperature of things or rooms; air temperature outside is 気温.",
+    phrase: "部屋の温度 is the room temperature; 室温 is the short form.",
+  },
+  7278: {
+    word: "気体 is a gas; liquid is 液体 and solid is 固体.",
+    phrase: "目に見えない means invisible.",
+    sentence: "熱する means to heat something.",
+  },
+  7279: {
+    word: "ロケット is a rocket; Japan's space agency is called JAXA.",
+    phrase: "打ち上げる is to launch a rocket or set off fireworks.",
+  },
+  7280: {
+    word: "エンジン is an engine; starting it is エンジンをかける.",
+    phrase: "車のエンジン is a car engine.",
+    sentence: "かかりにくい means hard to start.",
+  },
+  7281: {
+    word: "俳優 is an actor, sometimes used for any gender.",
+    phrase: "人気の俳優 is a popular actor.",
+  },
+  7282: {
+    word: "女優 is an actress; the lead role is 主役.",
+    phrase: "主演の女優 is the lead actress.",
+  },
+  7283: {
+    word: "歌手 is a professional singer; 手 after a word often means a person who does it.",
+    phrase: "有名な歌手 is a famous singer.",
+  },
+  7284: {
+    word: "楽器 is a musical instrument; playing one uses 弾く for strings and keys.",
+    phrase: "楽器を弾く is to play an instrument; wind instruments use 吹く.",
+  },
+  7285: {
+    word: "演技 is acting or performing, also in sports like figure skating.",
+    phrase: "上手な演技 is a skillful performance.",
+  },
+  7286: {
+    word: "観客 is an audience or spectators; a TV audience is 視聴者.",
+    phrase: "満員の観客 is a packed audience.",
+  },
+  7287: {
+    word: "拍手 is applause; clapping your hands is 手を叩く.",
+    phrase: "大きな拍手 is loud applause; 拍手が起きる means applause breaks out.",
+  },
+  7288: {
+    word: "画家 is a painter; 家 after a field means a professional.",
+    phrase: "有名な画家 is a famous painter.",
+  },
+  7289: {
+    word: "作家 is a writer or author, especially of novels.",
+    phrase: "好きな作家 is a favorite author.",
+  },
+  7290: {
+    word: "博物館 is a museum of history or science; an art museum is 美術館.",
+    phrase: "科学の博物館 is a science museum.",
+    sentence: "恐竜 means dinosaur.",
+  },
+  7291: {
+    word: "握る is to grip or hold tightly; it also means shaping sushi rice.",
+    phrase: "手を握る is holding someone's hand.",
+  },
+  7292: {
+    word: "抜く is to pull out; it also means to skip, as in 昼ご飯を抜く.",
+    phrase: "歯を抜く is pulling a tooth at the dentist.",
+  },
+  7293: {
+    word: "伸ばす is to stretch or extend; it also means growing hair or improving skills.",
+    phrase: "髪を伸ばす is growing your hair long.",
+  },
+  7294: {
+    word: "眺める is to gaze at a view for a while; 見る is just to look.",
+    phrase: "景色を眺める is looking out at the scenery.",
+  },
+  7295: {
+    word: "悩む is to worry or agonize over a decision or problem.",
+    phrase: "進路 is one's future path, like further study or a job.",
+  },
+  7296: {
+    word: "怠ける is to be lazy or neglect work; a lazy person is 怠け者.",
+    phrase: "仕事を怠ける is slacking off at work.",
+  },
+  7297: {
+    word: "震える is to shake or tremble from cold, fear or nerves.",
+    phrase: "寒さで震える is shivering from the cold.",
+  },
+  7298: {
+    word: "吠える is barking or roaring; a cat meowing is 鳴く.",
+    phrase: "犬が吠える is a dog barking; the sound is ワンワン.",
+  },
+  7299: {
+    word: "微笑む is to smile gently; laughing out loud is 笑う.",
+    phrase: "優しく微笑む is to smile kindly.",
+    sentence: "言わずに means without saying.",
+  },
+  7300: {
+    word: "任せる is to leave a task to someone you trust.",
+    phrase: "仕事を任せる is entrusting someone with work.",
+    sentence: "私に任せて is a confident way to say leave it to me.",
+  },
 };

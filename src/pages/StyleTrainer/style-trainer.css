@@ -32,18 +32,18 @@
   --ss-en: "Segoe UI", system-ui, -apple-system, sans-serif;
 
   /* Card typography — bump together for readability */
-  --ss-jp-head: 36px;
-  --ss-jp-body: 25px;
-  --ss-jp-read: 17px;
-  --ss-romaji: 21px;
-  --ss-en-body: 21px;
-  --ss-en-small: 16px;
-  --ss-mini-jp: 30px;
-  --ss-mini-body: 22px;
-  --ss-mini-read: 16px;
-  --ss-mini-en: 19px;
-  --ss-compare-title: 20px;
-  --ss-compare-gloss: 15px;
+  --ss-jp-head: 44px;
+  --ss-jp-body: 30px;
+  --ss-jp-read: 19px;
+  --ss-romaji: 25px;
+  --ss-en-body: 25px;
+  --ss-en-small: 19px;
+  --ss-mini-jp: 36px;
+  --ss-mini-body: 27px;
+  --ss-mini-read: 18px;
+  --ss-mini-en: 23px;
+  --ss-compare-title: 24px;
+  --ss-compare-gloss: 18px;
 
   max-width: 940px;
   margin: 0 auto;
@@ -323,9 +323,9 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 12px;
-  margin: 0 0 12px;
-  padding: 10px 12px;
+  gap: 6px 10px;
+  margin: 0 0 8px;
+  padding: 5px 8px;
   background: rgba(18, 26, 38, 0.92);
   border: 1px solid var(--ss-line);
   border-radius: 10px;
@@ -333,11 +333,8 @@
   backdrop-filter: blur(8px);
 }
 
-.ss-sticky-hint {
-  margin: 0;
-  font-size: 12px;
-  color: var(--ss-ink-soft);
-  max-width: 28ch;
+.ss-sticky-actions .ss-btn {
+  padding: 5px 12px;
 }
 
 .ss-card--playing,
@@ -648,7 +645,8 @@
 .ss-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  /* Half a viewport keeps neighbours off-stage while the playing card is centred. */
+  gap: 50vh;
 }
 
 .ss-card {

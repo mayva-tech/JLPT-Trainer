@@ -315,7 +315,7 @@ export default function SenseiMascot() {
   const bubble = tip && (
     <div
       key={tip.id}
-      className="sensei-bubble"
+      className={speaking ? "sensei-bubble sensei-bubble--speaking" : "sensei-bubble"}
       role="status"
       aria-live="polite"
       onMouseEnter={() => setHover(true)}

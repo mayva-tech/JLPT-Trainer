@@ -1,6 +1,6 @@
-Pitch accent coverage: 2260/2371 (95.3%)
-By source: kanjium 2153, kanjium-reading 104, kanjium-kana 3
-Sample phrases: 1908/2225 (85.8%)
+Pitch accent coverage: 2310/2421 (95.4%)
+By source: kanjium 2203, kanjium-reading 104, kanjium-kana 3
+Sample phrases: 1953/2275 (85.8%)
 
 Missing (111) — add to overrides.tsv if you can verify them:
   賞味期限|しょうみきげん	(src/data/vocabulary.ts)
@@ -115,7 +115,7 @@ Missing (111) — add to overrides.tsv if you can verify them:
   つくづく|つくづく	(src/data/onomatopoeia.ts)
   のびのび|のびのび	(src/data/onomatopoeia.ts)
 
-Phrases without a line (317):
+Phrases without a line (322):
   20パーセント割引|にじゅうぱーせんとわりびき
   賞味期限の表示|しょうみきげんのひょうじ
   消費期限が近い|しょうひきげんがちかい
@@ -433,3 +433,8 @@ Phrases without a line (317):
   興奮した声|こうふんしたこえ
   差別をなくす|さべつをなくす
   ごみを燃やす|ごみをもやす
+  航空会社|こうくうがいしゃ
+  汗をかく|あせをかく
+  ガスの爆発|がすのばくはつ
+  目に見えない気体|めにみえないきたい
+  優しく微笑む|やさしくほほえむ

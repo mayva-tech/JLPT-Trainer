@@ -56,4 +56,9 @@ export const n3Lessons: Lesson[] = [
   n3Lesson(23, "Safety & Society", "Safety • Society", "Society & Public Affairs", "Safety & Society"),
   n3Lesson(24, "Personality & Ability", "Personality • Ability", "Daily Life", "Personality & Ability"),
   n3Lesson(25, "Actions & Changes", "Actions • Changes", "Daily Life", "Actions & Changes"),
+  n3Lesson(26, "Trains & Journeys", "Trains • Journeys", "Daily Life", "Trains & Journeys"),
+  n3Lesson(27, "Body & Health", "Body • Health", "Daily Life", "Body & Health"),
+  n3Lesson(28, "Science & Technology", "Science • Technology", "Technology & Science", "Science & Technology"),
+  n3Lesson(29, "Arts & Entertainment", "Arts • Entertainment", "Daily Life", "Arts & Entertainment"),
+  n3Lesson(30, "Common Verbs", "Common Verbs", "Daily Life", "Common Verbs"),
 ];

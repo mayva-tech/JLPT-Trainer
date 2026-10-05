@@ -819,10 +819,16 @@ type Box = { left: number; top: number; right: number; bottom: number };
 const AVOID_PAD = 6;
 const AVOID_INTERVAL_MS = 350;
 const AVOID_GRID_STEP = 12;
-const PRIORITY_SELECTOR = ".lesson-nuance--active";
+/**
+ * Panels being read without karaoke marks. Naming them limits what the head
+ * must keep clear to these plus Japanese, instead of every line on the page.
+ */
+const PRIORITY_SELECTOR =
+  ".lesson-nuance--active, .ss-card--playing, .ss-mini--playing, .ss-shift-item--playing";
 /** Karaoke marks inside the line being read; their whole line block is kept uncovered. */
 const READING_MARK_SELECTOR = ".speech-active, .speech-spoken";
 const READING_BLOCK_SELECTOR = ".jp-wrap, .speech-line";
+const SENSEI_SPEAKING_SELECTOR = ".sensei-bubble--speaking";
 /** The pitch line drawing itself along with the spoken word or phrase. */
 const READING_PITCH_SELECTOR = ".pa-play";
 /** Duo root width over a single head's (228/120, 164/85 on phones). */
@@ -1121,6 +1127,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
 
     const tick = () => {
       if (dragRef.current) return;
+      // The mascot reading its tip is not lesson text: keep the heads' size and spot.
+      if (document.querySelector(SENSEI_SPEAKING_SELECTOR)) return;
       const el = rootRef.current;
       if (!el) return;
       const panel = findAvoidPanel();

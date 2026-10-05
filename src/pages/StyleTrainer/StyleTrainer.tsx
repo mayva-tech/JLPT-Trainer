@@ -637,13 +637,9 @@ export default function StyleTrainer() {
       </nav>
 
       <div className="ss-sticky-actions">
+        <HeadStyleButtons />
         {mode !== "quiz" ? (
           <>
-            <p className="ss-sticky-hint">
-              {selectedId
-                ? "Play All starts from the orange card"
-                : "Tap a card, then Play All"}
-            </p>
             <div className="ss-filter-actions">
               <button
                 type="button"
@@ -662,7 +658,6 @@ export default function StyleTrainer() {
             </div>
           </>
         ) : null}
-        <HeadStyleButtons />
       </div>
 
       {mode !== "shifts" ? (
