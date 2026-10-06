@@ -1,4 +1,5 @@
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { getWordLevel } from "../utils/wordLevel";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { FitScale } from "./FitScale";
 import { StageCategoryLine } from "./VocabularyRangeLabel";
@@ -68,7 +69,11 @@ export function QuizQuestionCard({
             className="vocabulary-range-label__primary quiz-header-category"
             category={isGrammarItem ? question.item.subcategory : question.item.category}
             theme={isGrammarItem ? undefined : question.item.subcategory}
-            level={question.item.jlpt}
+            level={
+              isGrammarItem
+                ? question.item.jlpt
+                : (getWordLevel(question.item.id) ?? question.item.jlpt)
+            }
             speed={speedLabel}
           />
           <div className="quiz-progress">

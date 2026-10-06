@@ -1,5 +1,6 @@
 import type { Lesson } from "../types/lesson";
 import { lessons } from "../data/lessons";
+import { getPlaylistWordRange } from "../data/playlists";
 
 export type VocabularyDisplayRange = {
   lessonNumber: number;
@@ -34,6 +35,8 @@ export function parseLessonNumber(lessonId: string): number | null {
 export function getVocabularyDisplayRange(
   lessonId: string
 ): VocabularyDisplayRange | null {
+  const playlist = getPlaylistWordRange(lessonId);
+  if (playlist) return playlist;
   const n3 = N3_LESSON_ID_RE.exec(lessonId);
   const lessonNumber = n3 ? Number(n3[1]) || null : parseLessonNumber(lessonId);
   if (lessonNumber === null) return null;

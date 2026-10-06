@@ -1,6 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { speechService } from "./services/speechService";
 import TalkingHead from "./components/TalkingHead/TalkingHead";
+import { StageAmbience } from "./components/StageAmbience/StageAmbience";
+import { useAmbienceSetting } from "./components/StageAmbience/useAmbienceSetting";
+import type { AmbienceTheme } from "./components/StageAmbience/themes";
 import type { OpenTrainer, TrainerView } from "./navigation";
 
 /**
@@ -34,6 +37,26 @@ const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
   style: StyleTrainer,
 };
 
+/** The Player picks a theme per item itself; every other mode has one fixed theme. */
+const VIEW_AMBIENCE: Record<Exclude<AppView, "player">, AmbienceTheme> = {
+  game: "torii",
+  konbini: "neon",
+  trip: "shinkansen",
+  relations: "karesansui",
+  phone: "machiya",
+  style: "washitsu",
+};
+
+function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT" ||
+    target.isContentEditable
+  );
+}
+
 function TrainerFallback() {
   return <div className="app-loading">読み込み中…</div>;
 }
@@ -41,6 +64,9 @@ function TrainerFallback() {
 export default function App() {
   const [view, setView] = useState<AppView>("player");
   const ActiveTrainer = view === "game" ? null : VIEW_COMPONENTS[view];
+  const [showAmbience, toggleAmbience] = useAmbienceSetting();
+  const ambienceTheme =
+    view !== "player" && showAmbience ? VIEW_AMBIENCE[view] : null;
 
   // Switching views now unmounts the previous trainer, which would otherwise
   // leave its audio playing with no controls left on screen to stop it.
@@ -48,16 +74,39 @@ export default function App() {
     return () => speechService.stop();
   }, [view]);
 
+  // The Player handles H itself (next to its 背景 button).
+  useEffect(() => {
+    if (view === "player") return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "h" && event.key !== "H") return;
+      if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (isTypingTarget(event.target)) return;
+      event.preventDefault();
+      toggleAmbience();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [view, toggleAmbience]);
+
   const openTrainer: OpenTrainer = (target) => {
     setView(target ?? "player");
   };
 
   return (
     <div
-      className={
-        view === "player" ? "app-shell" : "app-shell app-shell--scroll"
-      }
+      className={[
+        "app-shell",
+        view === "player" ? "" : "app-shell--scroll",
+        ambienceTheme ? "app-shell--amb" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
+      {view !== "player" ? (
+        <div className="app-amb" aria-hidden="true">
+          <StageAmbience theme={ambienceTheme} />
+        </div>
+      ) : null}
       <nav className="app-nav" aria-label="App views">
         <button
           type="button"

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getVocabularyLessonIdForQuiz } from "./quizVocabLesson";
 import { getLessonById } from "../data/lessons";
-import { quizIds, getTocItem } from "../data/toc";
 
 describe("getVocabularyLessonIdForQuiz", () => {
   it("maps first, middle, and final word quizzes to lessons", () => {
@@ -24,19 +23,15 @@ describe("getVocabularyLessonIdForQuiz", () => {
   });
 
   it("covers all 200 vocabulary quizzes with 10 ids each", () => {
-    const vocabQuizIds = quizIds.filter((id) =>
-      /^quiz-vocab-\d+-\d+$/.test(id)
-    );
-    expect(vocabQuizIds).toHaveLength(200);
+    // The mixed-level N2 course is no longer in the TOC (level playlists replace it),
+    // but its lessons and quiz ids still resolve for the mixed / final quiz pools.
+    const vocabQuizIds = Array.from({ length: 200 }, (_, i) => `quiz-vocab-${i * 10 + 1}-${i * 10 + 10}`);
 
     for (const id of vocabQuizIds) {
       const lessonId = getVocabularyLessonIdForQuiz(id);
       expect(lessonId).toBeTruthy();
       const lesson = getLessonById(lessonId!);
       expect(lesson?.vocabularyIds).toHaveLength(10);
-      const toc = getTocItem(id);
-      expect(toc?.kind).toBe("quiz");
-      expect(toc?.quizId).toBe(id);
     }
 
     expect(getLessonById("lesson-01")!.vocabularyIds).toEqual(
@@ -75,10 +70,7 @@ describe("getVocabularyLessonIdForQuiz", () => {
   });
 
   it("covers all 3 curated N1 vocabulary quizzes", () => {
-    const n1VocabQuizIds = quizIds.filter((id) =>
-      /^quiz-vocab-n1-\d+$/.test(id)
-    );
-    expect(n1VocabQuizIds).toHaveLength(3);
+    const n1VocabQuizIds = ["quiz-vocab-n1-01", "quiz-vocab-n1-02", "quiz-vocab-n1-03"];
 
     const expectedItemCounts: Record<string, number> = {
       "quiz-vocab-n1-01": 8,
@@ -91,9 +83,6 @@ describe("getVocabularyLessonIdForQuiz", () => {
       expect(lessonId).toBeTruthy();
       const lesson = getLessonById(lessonId!);
       expect(lesson?.vocabularyIds).toHaveLength(expectedItemCounts[id]);
-      const toc = getTocItem(id);
-      expect(toc?.kind).toBe("quiz");
-      expect(toc?.quizId).toBe(id);
     }
 
     expect(getVocabularyLessonIdForQuiz("quiz-vocab-n1-01")).toBe(

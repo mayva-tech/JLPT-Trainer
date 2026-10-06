@@ -65,8 +65,8 @@ describe("buildEnglishSpeakText", () => {
   });
 
   it('speaks "strange; odd" under 変 as two clear words with a pause', () => {
-    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, odd");
-    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge, funny");
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... odd");
+    expect(buildEnglishSpeakText("strange; funny")).toBe("straynge ... funny");
     expect(buildEnglishSpeakText("Strange")).toBe("Straynge");
     expect(buildEnglishSpeakText("odd")).toBe("odd");
   });
@@ -76,10 +76,10 @@ describe("buildEnglishSpeakText", () => {
       buildEnglishSpeakText(
         "on the occasion of; at the time of (formal)"
       )
-    ).toBe("on the occasion of, at the time of");
+    ).toBe("on the occasion of ... at the time of");
     expect(
       buildEnglishSpeakText("must be; certainly (strong inference)")
-    ).toBe("must be, certainly");
+    ).toBe("must be ... certainly");
     expect(buildEnglishSpeakText("word (note) and more (also)")).toBe(
       "word and more"
     );
@@ -94,12 +94,12 @@ describe("buildEnglishSpeakText", () => {
   });
 
   it("pauses after semicolons instead of rushing the next clause", () => {
-    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge, odd");
+    expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... odd");
     expect(
       buildEnglishSpeakText(
         "it sounds too soft; many women use 私 in every situation"
       )
-    ).toBe("it sounds too soft, many women use watashi in every situation");
+    ).toBe("it sounds too soft ... many women use watashi in every situation");
   });
 
   it("pauses after em dash / en dash instead of rushing the next clause", () => {

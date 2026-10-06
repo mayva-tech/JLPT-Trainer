@@ -3,10 +3,12 @@ import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
 import { formatLessonIdFromNumber } from "./vocabularyDisplay";
 import { N3_VOCAB_LESSON_COUNT } from "../config/vocabularyCourseN3";
 import { formatN3LessonId } from "../data/n3/lessonsN3";
+import { getPlaylistLessonById } from "../data/playlists";
 
 const VOCAB_QUIZ_ID_RE = /^quiz-vocab-(\d+)-(\d+)$/;
 const N1_VOCAB_QUIZ_ID_RE = /^quiz-vocab-n1-(\d+)$/;
 const N3_VOCAB_QUIZ_ID_RE = /^quiz-vocab-n3-(\d+)$/;
+const PLAYLIST_VOCAB_QUIZ_ID_RE = /^quiz-vocab-pl-(n[1-5])-(\d+)$/;
 const MAX_VOCAB_LESSON = N2_VOCAB_LESSON_COUNT;
 const MAX_N1_VOCAB_LESSON = 3;
 
@@ -42,6 +44,13 @@ export function getVocabularyLessonIdForQuiz(
     const n = Number(n3Match[1]);
     if (!Number.isInteger(n) || n < 1 || n > N3_VOCAB_LESSON_COUNT) return null;
     return formatN3LessonId(n);
+  }
+
+  // `quiz-vocab-pl-n5-03` → `pl-n5-03` (level playlists).
+  const pl = PLAYLIST_VOCAB_QUIZ_ID_RE.exec(quizTocId);
+  if (pl) {
+    const id = `pl-${pl[1]}-${pl[2]}`;
+    return getPlaylistLessonById(id) ? id : null;
   }
 
   const match = VOCAB_QUIZ_ID_RE.exec(quizTocId);

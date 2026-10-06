@@ -115,7 +115,7 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       "it sounds too soft; many women use it"
     );
     const soft = steps.find((s) => s.text === "soft;");
-    expect(soft?.spokenText).toMatch(/,\s*$/);
+    expect(soft?.spokenText).toMatch(/\.\.\.\s*$/);
     expect(soft?.speakGapAfter).toBeFalsy();
     const withSemi = estimateUnitDurationMs(
       soft!,
@@ -126,9 +126,9 @@ describe("buildEnglishSpokenKaraokeSteps", () => {
       { start: 0, end: 4, text: "soft", kind: "word", spokenText: "soft" },
       "en"
     );
-    // Semicolon is spoken as a comma beat — never the full 200ms EN chain.
-    expect(withSemi).toBeGreaterThanOrEqual(plainSoft);
-    expect(withSemi - plainSoft).toBeLessThan(150);
+    // Semicolon is spoken "...": a brief, real pause on the karaoke timeline too.
+    expect(withSemi - plainSoft).toBeGreaterThan(100);
+    expect(withSemi - plainSoft).toBeLessThan(400);
   });
 
   it("pauses after em dash on the karaoke timeline", () => {

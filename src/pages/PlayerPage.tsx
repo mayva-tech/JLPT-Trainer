@@ -1,7 +1,8 @@
 import { reportAnswer } from "../services/reactionBus";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { getLessonById } from "../data/lessons";
 import { getVocabularyByIds, vocabulary } from "../data/vocabulary";
+import { getWordLevel } from "../utils/wordLevel";
 import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar";
 import type { GrammarItem } from "../types/grammar";
 import {
@@ -36,6 +37,16 @@ import { RegisterSplitCard } from "../components/RegisterSplitCard";
 import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
 import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
 import { usePictureSetting } from "../components/Illustration/usePictureSetting";
+import { StageAmbience } from "../components/StageAmbience/StageAmbience";
+import { useAmbienceSetting } from "../components/StageAmbience/useAmbienceSetting";
+import {
+  ambienceForGrammar,
+  ambienceForOnomatopoeia,
+  ambienceForVocab,
+  ambienceGlyphs,
+  ambienceThemeInfo,
+  type AmbienceTheme,
+} from "../components/StageAmbience/themes";
 import { QuizCard } from "../components/QuizCard";
 import { GrammarCategoryCard } from "../components/GrammarCategoryCard";
 import { GrammarPatternCard } from "../components/GrammarPatternCard";
@@ -182,11 +193,13 @@ function buildQuizQuestions(
   if (vocabLessonId) {
     const lesson = getLessonById(vocabLessonId);
     if (!lesson) return [];
-    const quizLevel = vocabLessonId.startsWith("n1-")
-      ? "N1"
-      : vocabLessonId.startsWith("n3-")
-        ? "N3"
-        : "N2";
+    const quizLevel = vocabLessonId.startsWith("pl-")
+      ? "ANY"
+      : vocabLessonId.startsWith("n1-")
+        ? "N1"
+        : vocabLessonId.startsWith("n3-")
+          ? "N3"
+          : "N2";
     const items = getVocabularyItemsForQuiz({ lesson, quizLevel });
     return buildVocabularyQuizQuestions(items, quizTocId ?? vocabLessonId);
   }
@@ -251,6 +264,7 @@ export function PlayerPage() {
         : "Normal";
   const [showFurigana, setShowFurigana] = useState(true);
   const [showPictures, togglePictures] = usePictureSetting();
+  const [showAmbience, toggleAmbience] = useAmbienceSetting();
   const [autoState, setAutoState] = useState<AutoState>("off");
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
@@ -1949,6 +1963,13 @@ export function PlayerPage() {
         return;
       }
 
+      if (event.key === "h" || event.key === "H") {
+        if (event.repeat) return;
+        event.preventDefault();
+        toggleAmbience();
+        return;
+      }
+
       if (screen === "quiz") {
         if (event.key === "ArrowLeft") {
           event.preventDefault();
@@ -2077,6 +2098,28 @@ export function PlayerPage() {
   const tocItem = activeTocId ? getTocItem(activeTocId) : undefined;
   const item = items[itemIndex];
   const step = STEPS[stepIndex] as StepName;
+  const ambienceVocab = screen === "lesson" ? item ?? null : null;
+  const ambienceGrammar =
+    screen === "grammar"
+      ? grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null
+      : null;
+  const ambienceOno =
+    screen === "onomatopoeia" ? onoItems[onoIndex] ?? onoItems[0] ?? null : null;
+  const ambienceQuiz = screen === "quiz" ? quizDeck[quizIndex]?.item ?? null : null;
+  const ambienceTheme: AmbienceTheme | null = useMemo(() => {
+    if (!showAmbience) return null;
+    if (ambienceVocab) return ambienceForVocab(ambienceVocab);
+    if (ambienceGrammar) return ambienceForGrammar(ambienceGrammar);
+    if (ambienceOno) return ambienceForOnomatopoeia(ambienceOno);
+    if (ambienceQuiz) return ambienceForVocab(ambienceQuiz);
+    return null;
+  }, [showAmbience, ambienceVocab, ambienceGrammar, ambienceOno, ambienceQuiz]);
+  const ambienceKanji = ambienceGlyphs(
+    ambienceVocab?.word ??
+      ambienceGrammar?.pattern ??
+      ambienceOno?.japanese ??
+      ambienceQuiz?.word
+  );
   const gItemForControls =
     grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
   const quizItemForControls = quizDeck[quizIndex] ?? null;
@@ -2598,9 +2641,19 @@ export function PlayerPage() {
             <VocabularyRangeLabel
               lessonId={lessonId}
               kind="lesson"
-              level={step !== "category" ? item?.jlpt : undefined}
+              level={
+                step !== "category" && item
+                  ? (getWordLevel(item.id) ?? item.jlpt)
+                  : undefined
+              }
               speed={step !== "category" ? speechRateLabel : undefined}
-              category={step !== "category" ? item?.category : undefined}
+              category={
+                step !== "category"
+                  ? lessonId.startsWith("pl-")
+                    ? lesson.category
+                    : item?.category
+                  : undefined
+              }
               theme={
                 step !== "category"
                   ? lesson.subtitle?.trim() || item?.subcategory
@@ -2666,6 +2719,7 @@ export function PlayerPage() {
         }
       >
         <div className="stage" ref={stageRef}>
+          <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} />
           {renderStage()}
         </div>
       </div>
@@ -3732,6 +3786,20 @@ export function PlayerPage() {
               onClick={togglePictures}
             >
               絵 {showPictures ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={showAmbience ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={
+                ambienceTheme
+                  ? `Toggle theme background (H) — now: ${ambienceThemeInfo(ambienceTheme).ja} ${ambienceThemeInfo(ambienceTheme).en}`
+                  : "Toggle theme background (H)"
+              }
+              aria-pressed={showAmbience}
+              onClick={toggleAmbience}
+            >
+              背景 {showAmbience ? "ON" : "OFF"}
             </button>
             <button
               type="button"

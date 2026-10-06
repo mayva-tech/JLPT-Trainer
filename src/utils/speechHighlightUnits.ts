@@ -1029,11 +1029,8 @@ export function buildEnglishSpokenKaraokeSteps(text: string): HighlightUnit[] {
       continue;
     }
 
-    // Semicolon → comma: "..." made the voice hold far longer than a `;` beat.
-    if (/;/.test(raw) && !/[—–]/.test(raw) && !/\.\.\./.test(spoken)) {
-      spoken = `${spoken.replace(/[;,.]+$/u, "")},`;
-    } else if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
-      // Mdash clause breaks stay "..." — the ellipsis carries the pause.
+    if (/[;—–]/.test(raw) && !/\.\.\./.test(spoken)) {
+      // Semicolon / mdash breaks are spoken "..." — the ellipsis carries the pause.
       spoken = `${spoken.replace(/[,.—–]+$/u, "")} ...`;
     }
 
@@ -1411,12 +1408,7 @@ function estimateUnitPauseWeight(
   }
   // "/" / semicolon / mdash ellipsis — longer gap; do not also add raw `;` pause
   if (/\.\.\./.test(spokenForPunct) || /\//.test(text)) {
-    if (lang === "en" && /[;；]/.test(spokenForPunct)) {
-      // Semicolon rewritten to "..." — use the shorter semicolon breath.
-      punctPause += EN_SEMICOLON_PAUSE;
-    } else {
-      punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
-    }
+    punctPause += lang === "en" ? EN_ELLIPSIS_PAUSE : SLASH_PAUSE;
   }
   // Other phrase separators (only when not already an ellipsis pause)
   if (/[;；]/.test(spokenForPunct) && !/\.\.\./.test(spokenForPunct)) {

@@ -282,8 +282,9 @@ function rewriteParentheticalNotes(text: string): string {
 function normalizeSpeakCommas(text: string): string {
   return text
     .replace(/\s+,/g, ",")
-    // Semicolon = light beat; "..." made Andrew hold far longer than a `;`.
-    .replace(/\s*;\s*/g, ", ")
+    // Semicolon = "..." — the only in-utterance break Andrew reliably pauses
+    // on. He runs straight through ",", and "I. me" reads as an initial.
+    .replace(/\s*;\s*/g, " ... ")
     // Em/en dash = same breath pause when kept in a single utterance.
     .replace(/\s*[—–]\s*/g, " ... ")
     // Do not split thousand separators (1,000 → "one, zero zero zero").

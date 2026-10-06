@@ -10,7 +10,7 @@ type Props = {
   weakWordsCount?: number;
 };
 
-type TocPage = 1 | 2 | 3 | 4 | 5;
+type TocPage = 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
  * Left column on page 1: intro/ending/glossary, then interview lists
@@ -26,35 +26,34 @@ const COMPACT_COLUMN_ORDER = [
 
 const COMPACT_COLUMN_IDS = new Set<string>(COMPACT_COLUMN_ORDER);
 
-/** Curated N1 browsing lenses — shown on TOC page 2. */
-const N1_GROUP_IDS = new Set(["vocabulary-n1", "grammar-n1", "quiz-vocab-n1"]);
+/**
+ * TOC pages by JLPT level (the YouTube playlists), then practice pages.
+ * Page 1 also holds the compact column and any group not placed elsewhere.
+ */
+const PAGES: readonly { page: TocPage; label: string; groupIds: readonly string[] }[] = [
+  { page: 1, label: "N5–N4", groupIds: ["playlist-lessons-n5", "playlist-quizzes-n5", "playlist-lessons-n4", "playlist-quizzes-n4"] },
+  { page: 2, label: "N3", groupIds: ["playlist-lessons-n3", "playlist-quizzes-n3", "grammar-n3", "quiz-grammar-n3"] },
+  { page: 3, label: "N2", groupIds: ["playlist-lessons-n2", "playlist-quizzes-n2", "grammar", "quiz-grammar"] },
+  { page: 4, label: "N1", groupIds: ["playlist-lessons-n1", "playlist-quizzes-n1", "grammar-n1"] },
+  { page: 5, label: "Register", groupIds: ["register"] },
+  { page: 6, label: "オノマトペ", groupIds: ["onomatopoeia"] },
+];
 
-/** N3 course (vocabulary, grammar, quizzes) — TOC page 5. */
-const N3_GROUP_IDS = new Set([
-  "vocabulary-n3",
-  "grammar-n3",
-  "quiz-vocab-n3",
-  "quiz-grammar-n3",
-]);
+const PAGE_OF_GROUP = new Map<string, TocPage>(
+  PAGES.flatMap((p) => p.groupIds.map((id) => [id, p.page] as const))
+);
 
-/** Casual ⇄ Formal register practice — TOC page 3. */
-const REGISTER_GROUP_IDS = new Set(["register"]);
-
-/** オノマトペ corpus — TOC page 4. */
-const ONOMATOPOEIA_GROUP_IDS = new Set(["onomatopoeia"]);
+function groupsForPage(page: TocPage): TocGroup[] {
+  const ids = PAGES.find((p) => p.page === page)?.groupIds ?? [];
+  return ids
+    .map((id) => tocGroups.find((g) => g.id === id))
+    .filter((g): g is TocGroup => Boolean(g));
+}
 
 function pageForSelectedId(selectedId: TocItemId | null): TocPage {
   if (!selectedId) return 1;
-  for (const group of tocGroups) {
-    if (group.items.some((item) => item.id === selectedId)) {
-      if (N1_GROUP_IDS.has(group.id)) return 2;
-      if (REGISTER_GROUP_IDS.has(group.id)) return 3;
-      if (ONOMATOPOEIA_GROUP_IDS.has(group.id)) return 4;
-      if (N3_GROUP_IDS.has(group.id)) return 5;
-      return 1;
-    }
-  }
-  return 1;
+  const group = tocGroups.find((g) => g.items.some((item) => item.id === selectedId));
+  return (group && PAGE_OF_GROUP.get(group.id)) ?? 1;
 }
 
 function tocItemLabel(item: TocItem, weakWordsCount: number): string {
@@ -114,20 +113,10 @@ export function TableOfContents({
   const compactGroups = COMPACT_COLUMN_ORDER.map((id) =>
     tocGroups.find((g) => g.id === id)
   ).filter((g): g is TocGroup => Boolean(g));
-  const page1MainGroups = tocGroups.filter(
-    (g) =>
-      !COMPACT_COLUMN_IDS.has(g.id) &&
-      !N1_GROUP_IDS.has(g.id) &&
-      !REGISTER_GROUP_IDS.has(g.id) &&
-      !ONOMATOPOEIA_GROUP_IDS.has(g.id) &&
-      !N3_GROUP_IDS.has(g.id)
-  );
-  const page2Groups = tocGroups.filter((g) => N1_GROUP_IDS.has(g.id));
-  const page3Groups = tocGroups.filter((g) => REGISTER_GROUP_IDS.has(g.id));
-  const page5Groups = tocGroups.filter((g) => N3_GROUP_IDS.has(g.id));
-  const page4Groups = tocGroups.filter((g) =>
-    ONOMATOPOEIA_GROUP_IDS.has(g.id)
-  );
+  const page1MainGroups = [
+    ...groupsForPage(1),
+    ...tocGroups.filter((g) => !COMPACT_COLUMN_IDS.has(g.id) && !PAGE_OF_GROUP.has(g.id)),
+  ];
 
   return (
     <div className="safe-area toc-safe">
@@ -137,61 +126,18 @@ export function TableOfContents({
         <p className="toc-subtitle">Select a section for recording</p>
 
         <div className="toc-page-nav" role="tablist" aria-label="TOC pages">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={page === 1}
-            className={
-              page === 1 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
-            }
-            onClick={() => setPage(1)}
-          >
-            Page 1 · N2
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={page === 2}
-            className={
-              page === 2 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
-            }
-            onClick={() => setPage(2)}
-          >
-            Page 2 · N1
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={page === 3}
-            className={
-              page === 3 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
-            }
-            onClick={() => setPage(3)}
-          >
-            Page 3 · Register
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={page === 4}
-            className={
-              page === 4 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
-            }
-            onClick={() => setPage(4)}
-          >
-            Page 4 · オノマトペ
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={page === 5}
-            className={
-              page === 5 ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"
-            }
-            onClick={() => setPage(5)}
-          >
-            Page 5 · N3
-          </button>
+          {PAGES.map((p) => (
+            <button
+              key={p.page}
+              type="button"
+              role="tab"
+              aria-selected={page === p.page}
+              className={page === p.page ? "toc-page-btn toc-page-btn--active" : "toc-page-btn"}
+              onClick={() => setPage(p.page)}
+            >
+              Page {p.page} · {p.label}
+            </button>
+          ))}
         </div>
 
         {page === 1 ? (
@@ -219,51 +165,9 @@ export function TableOfContents({
           </div>
         ) : null}
 
-        {page === 2 ? (
-          <div className="toc-groups toc-groups--page2">
-            {page2Groups.map((group) => (
-              <TocGroupSection
-                key={group.id}
-                group={group}
-                selectedId={selectedId}
-                onSelect={onSelect}
-                weakWordsCount={weakWordsCount}
-              />
-            ))}
-          </div>
-        ) : null}
-
-        {page === 5 ? (
-          <div className="toc-groups toc-groups--page2">
-            {page5Groups.map((group) => (
-              <TocGroupSection
-                key={group.id}
-                group={group}
-                selectedId={selectedId}
-                onSelect={onSelect}
-                weakWordsCount={weakWordsCount}
-              />
-            ))}
-          </div>
-        ) : null}
-
-        {page === 3 ? (
-          <div className="toc-groups toc-groups--page3">
-            {page3Groups.map((group) => (
-              <TocGroupSection
-                key={group.id}
-                group={group}
-                selectedId={selectedId}
-                onSelect={onSelect}
-                weakWordsCount={weakWordsCount}
-              />
-            ))}
-          </div>
-        ) : null}
-
-        {page === 4 ? (
-          <div className="toc-groups toc-groups--page3">
-            {page4Groups.map((group) => (
+        {page !== 1 ? (
+          <div className={page >= 5 ? "toc-groups toc-groups--page3" : "toc-groups toc-groups--page2"}>
+            {groupsForPage(page).map((group) => (
               <TocGroupSection
                 key={group.id}
                 group={group}

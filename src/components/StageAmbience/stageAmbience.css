@@ -1,0 +1,1486 @@
+/* ─── Stage ambience: quiet themed backgrounds ─────────────────────
+   Everything here is deliberately faint. The art lives at the edges and
+   along the bottom; a scrim keeps the centre (where the Japanese and
+   English text sits) calm. Nothing here may raise contrast under text. */
+
+.stage {
+  /* Own stacking context, so the ambience (z-index -1) paints above the
+     stage band but below every card, label and chip. */
+  isolation: isolate;
+}
+
+/* Non-Player modes: one fixed backdrop behind the scrolling page. At -1 it
+   paints above the body's stage band (drawn on the canvas) and below all
+   page content, so no mode needs its own stacking changes. */
+.app-amb {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Each mode's root repaints the stage band opaquely; let the backdrop through. */
+.app-shell--amb > .app-view > * {
+  background: transparent;
+}
+
+.amb {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.amb-layer {
+  position: absolute;
+  inset: 0;
+  animation: ambIn 0.9s ease both;
+}
+
+.amb-layer--leaving {
+  animation: ambOut 0.9s ease both;
+}
+
+@keyframes ambIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ambOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.amb-wash,
+.amb-art,
+.amb-particles,
+.amb-scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.amb-art {
+  width: 100%;
+  height: 100%;
+}
+
+.amb-wash {
+  background: var(--amb-wash, none);
+}
+
+/* Calm centre: darkens toward the stage tone behind the cards. */
+.amb-scrim {
+  background: radial-gradient(
+    ellipse 52% 48% at 50% 52%,
+    rgba(22, 30, 44, 0.58) 0%,
+    rgba(22, 30, 44, 0.34) 55%,
+    rgba(22, 30, 44, 0) 100%
+  );
+}
+
+/* ─── Particles ─────────────────────────────────────────────── */
+
+.amb-p {
+  position: absolute;
+  top: -6%;
+  display: block;
+  width: var(--s);
+  height: var(--s);
+  opacity: var(--o);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.amb-p.fall {
+  animation-name: ambFall;
+}
+.amb-p.fall-fast {
+  animation-name: ambRain;
+}
+.amb-p.rise {
+  animation-name: ambRise;
+  top: auto;
+  bottom: -6%;
+}
+.amb-p.twinkle {
+  animation-name: ambTwinkle;
+  animation-timing-function: ease-in-out;
+  opacity: 0;
+}
+
+@keyframes ambFall {
+  from {
+    transform: translate3d(0, -8cqh, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(calc(var(--sway) * -0.6), 55cqh, 0)
+      rotate(calc(var(--spin) * 0.5));
+  }
+  to {
+    transform: translate3d(var(--sway), 118cqh, 0) rotate(var(--spin));
+  }
+}
+
+@keyframes ambRain {
+  from {
+    transform: translate3d(0, -12cqh, 0);
+  }
+  to {
+    transform: translate3d(0, 120cqh, 0);
+  }
+}
+
+@keyframes ambRise {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(var(--sway), -55cqh, 0);
+  }
+  to {
+    transform: translate3d(0, -118cqh, 0);
+  }
+}
+
+@keyframes ambTwinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: var(--o);
+    transform: scale(1);
+  }
+}
+
+/* ─── 1. Spring ─────────────────────────────────────────────── */
+
+.amb-layer--spring {
+  --amb-wash:
+    radial-gradient(
+      60% 55% at 12% 0%,
+      rgba(240, 160, 190, 0.14),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 50% at 95% 100%,
+      rgba(240, 170, 195, 0.08),
+      transparent 70%
+    );
+}
+.amb-layer--spring .amb-stroke-branch {
+  stroke: rgba(205, 165, 175, 0.15);
+}
+.amb-layer--spring .amb-fill-soft {
+  fill: rgba(246, 186, 206, 0.22);
+}
+.amb-layer--spring .amb-fill-core {
+  fill: rgba(255, 228, 236, 0.28);
+}
+.amb-layer--spring .amb-fill-ground {
+  fill: rgba(246, 186, 206, 0.05);
+}
+.amb-p--petal {
+  height: calc(var(--s) * 0.7);
+  border-radius: 80% 0 80% 0;
+  background: rgb(246, 190, 208);
+}
+
+/* ─── 2. Summer fireworks ───────────────────────────────────── */
+
+.amb-layer--summer {
+  --amb-wash:
+    radial-gradient(
+      70% 60% at 50% 0%,
+      rgba(120, 90, 190, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      80% 40% at 50% 100%,
+      rgba(232, 165, 75, 0.1),
+      transparent 70%
+    );
+}
+.amb-burst {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambBurst 9s ease-out infinite;
+  stroke: currentColor;
+  fill: currentColor;
+}
+.amb-burst.amb-tone-gold {
+  color: rgb(240, 200, 120);
+}
+.amb-burst.amb-tone-rose {
+  color: rgb(240, 160, 180);
+}
+.amb-burst.amb-tone-teal {
+  color: rgb(140, 210, 220);
+}
+
+@keyframes ambBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  10% {
+    opacity: 0.34;
+  }
+  40% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+.amb-layer--summer .amb-fill-shadow {
+  fill: rgba(8, 12, 20, 0.45);
+}
+.amb-layer--summer .amb-stroke-line {
+  stroke: rgba(240, 192, 120, 0.1);
+  stroke-width: 2;
+}
+.amb-layer--summer .amb-fill-glow {
+  fill: rgba(240, 170, 90, 0.08);
+}
+.amb-layer--summer .amb-fill-lamp {
+  fill: rgba(245, 180, 100, 0.36);
+}
+.amb-lantern {
+  animation: ambFlicker 3.2s ease-in-out infinite;
+}
+
+@keyframes ambFlicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ─── 3. Autumn ─────────────────────────────────────────────── */
+
+.amb-layer--autumn {
+  --amb-wash:
+    radial-gradient(
+      60% 55% at 90% 0%,
+      rgba(214, 120, 60, 0.15),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 0% 100%,
+      rgba(200, 110, 60, 0.1),
+      transparent 70%
+    );
+}
+.amb-layer--autumn .amb-stroke-branch {
+  stroke: rgba(185, 135, 105, 0.15);
+}
+.amb-layer--autumn .amb-tone-rust {
+  fill: rgba(214, 104, 66, 0.26);
+}
+.amb-layer--autumn .amb-tone-amber {
+  fill: rgba(230, 160, 78, 0.24);
+}
+.amb-layer--autumn .amb-fill-ground {
+  fill: rgba(200, 110, 60, 0.07);
+}
+.amb-p--leaf {
+  clip-path: polygon(
+    50% 0,
+    60% 27.5%,
+    80% 17.5%,
+    72.5% 40%,
+    97.5% 42.5%,
+    77.5% 57.5%,
+    85% 75%,
+    60% 67.5%,
+    52.5% 95%,
+    47.5% 95%,
+    40% 67.5%,
+    15% 75%,
+    22.5% 57.5%,
+    2.5% 42.5%,
+    27.5% 40%,
+    20% 17.5%,
+    40% 27.5%
+  );
+  background: rgb(214, 110, 70);
+}
+.amb-p--leaf:nth-child(even) {
+  background: rgb(228, 162, 80);
+}
+
+/* ─── 4. Winter ─────────────────────────────────────────────── */
+
+.amb-layer--winter {
+  --amb-wash: radial-gradient(
+    70% 55% at 50% 0%,
+    rgba(150, 190, 235, 0.14),
+    transparent 72%
+  );
+}
+.amb-layer--winter .amb-fill-far {
+  fill: rgba(215, 230, 245, 0.055);
+}
+.amb-layer--winter .amb-fill-near {
+  fill: rgba(225, 236, 248, 0.08);
+}
+.amb-p--snow {
+  border-radius: 50%;
+  background: rgb(238, 244, 251);
+}
+
+/* ─── 5. Rain ───────────────────────────────────────────────── */
+
+.amb-layer--rain {
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(100, 130, 165, 0.14),
+    transparent 62%
+  );
+}
+.amb-particles--slant {
+  inset: -10%;
+  transform: rotate(10deg);
+}
+.amb-p--drop {
+  width: 1.5px;
+  height: 6cqh;
+  background: linear-gradient(180deg, transparent, rgb(190, 215, 240));
+}
+.amb-layer--rain .amb-fill-leafy {
+  fill: rgba(90, 140, 120, 0.08);
+}
+.amb-layer--rain .amb-tone-indigo {
+  fill: rgba(120, 140, 220, 0.16);
+}
+.amb-layer--rain .amb-tone-violet {
+  fill: rgba(170, 140, 215, 0.15);
+}
+.amb-ripple {
+  stroke: rgba(180, 205, 230, 0.3);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambRipple 4.2s ease-out infinite;
+}
+
+@keyframes ambRipple {
+  from {
+    opacity: 0.6;
+    transform: scale(0.25);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+/* ─── 6. Outer space ────────────────────────────────────────── */
+
+.amb-layer--space {
+  --amb-wash:
+    radial-gradient(
+      60% 60% at 15% 88%,
+      rgba(130, 90, 210, 0.13),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 50% at 86% 8%,
+      rgba(80, 150, 200, 0.1),
+      transparent 70%
+    ),
+    linear-gradient(rgba(10, 12, 30, 0.3), rgba(10, 12, 30, 0.3));
+}
+.amb-layer--space .amb-fill-star {
+  fill: rgb(232, 236, 255);
+}
+.amb-nebula {
+  position: absolute;
+  left: 2%;
+  bottom: 4%;
+  width: 42cqw;
+  height: 28cqh;
+  background: radial-gradient(
+    closest-side,
+    rgba(150, 110, 220, 0.12),
+    transparent
+  );
+  animation: ambDrift 40s ease-in-out infinite alternate;
+}
+.amb-planet {
+  position: absolute;
+  right: 3cqw;
+  bottom: -9cqw;
+  width: 20cqw;
+  height: 20cqw;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    rgba(186, 170, 240, 0.24),
+    rgba(110, 96, 180, 0.13) 55%,
+    rgba(60, 56, 120, 0.05) 70%,
+    transparent 71%
+  );
+}
+.amb-planet::after {
+  content: "";
+  position: absolute;
+  left: -28%;
+  right: -28%;
+  top: 41%;
+  height: 18%;
+  border: 0.18cqw solid rgba(205, 195, 245, 0.16);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+.amb-p--twinkle {
+  background: rgb(240, 242, 255);
+  clip-path: polygon(
+    50% 0,
+    58% 42%,
+    100% 50%,
+    58% 58%,
+    50% 100%,
+    42% 58%,
+    0 50%,
+    42% 42%
+  );
+}
+.amb-shooting {
+  position: absolute;
+  top: 14%;
+  left: 62%;
+  width: 12cqw;
+  height: 1.5px;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(230, 235, 255, 0.55), transparent);
+  animation: ambShoot 14s linear infinite;
+  animation-delay: -6s;
+}
+
+@keyframes ambShoot {
+  0%,
+  86% {
+    opacity: 0;
+    transform: rotate(-18deg) translateX(0);
+  }
+  88% {
+    opacity: 0.5;
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: rotate(-18deg) translateX(-22cqw);
+  }
+}
+
+@keyframes ambDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(4cqw, -2cqh, 0);
+  }
+}
+
+/* ─── 7. Ocean ──────────────────────────────────────────────── */
+
+.amb-layer--ocean {
+  --amb-wash:
+    radial-gradient(
+      80% 60% at 50% 100%,
+      rgba(60, 150, 170, 0.14),
+      transparent 72%
+    ),
+    radial-gradient(
+      60% 50% at 80% 0%,
+      rgba(90, 160, 190, 0.08),
+      transparent 70%
+    );
+}
+.amb-wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+  animation: ambWave linear infinite;
+}
+.amb-wave svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.amb-wave--far {
+  animation-duration: 70s;
+}
+.amb-wave--far path {
+  fill: rgba(120, 200, 215, 0.05);
+}
+.amb-wave--mid {
+  animation-duration: 52s;
+  animation-direction: reverse;
+}
+.amb-wave--mid path {
+  fill: rgba(120, 200, 215, 0.07);
+}
+.amb-wave--near {
+  animation-duration: 38s;
+}
+.amb-wave--near path {
+  fill: rgba(120, 200, 215, 0.1);
+}
+
+@keyframes ambWave {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.amb-p--bubble {
+  border-radius: 50%;
+  border: 1.5px solid rgb(170, 225, 235);
+}
+
+/* ─── 8. City at night ──────────────────────────────────────── */
+
+.amb-layer--city {
+  --amb-wash:
+    radial-gradient(
+      70% 50% at 50% 100%,
+      rgba(232, 165, 75, 0.08),
+      transparent 72%
+    ),
+    radial-gradient(
+      60% 60% at 90% 0%,
+      rgba(110, 110, 200, 0.1),
+      transparent 70%
+    );
+}
+.amb-layer--city .amb-fill-building {
+  fill: rgba(140, 160, 210, 0.075);
+}
+.amb-layer--city .amb-fill-window {
+  fill: rgba(240, 192, 120, 0.24);
+}
+.amb-layer--city .amb-stroke-tower {
+  stroke: rgba(230, 140, 110, 0.15);
+}
+.amb-layer--city .amb-fill-moon {
+  fill: rgba(240, 236, 220, 0.13);
+}
+.amb-layer--city .amb-fill-halo {
+  fill: rgba(240, 236, 220, 0.035);
+}
+.amb-window--blink {
+  animation: ambBlink 9s steps(1, end) infinite;
+}
+
+@keyframes ambBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.2;
+  }
+  70% {
+    opacity: 1;
+  }
+}
+
+.amb-train {
+  position: absolute;
+  left: 0;
+  bottom: 2.6%;
+  display: flex;
+  gap: 0.35cqw;
+  animation: ambTrain 24s linear infinite;
+  animation-delay: -4s;
+}
+.amb-train span {
+  display: block;
+  width: 1.5cqw;
+  height: 0.7cqw;
+  border-radius: 0.15cqw;
+  background: rgba(240, 200, 130, 0.2);
+}
+
+@keyframes ambTrain {
+  0% {
+    transform: translate3d(-32cqw, 0, 0);
+  }
+  55%,
+  100% {
+    transform: translate3d(104cqw, 0, 0);
+  }
+}
+
+/* ─── 9. Mountains and forest ───────────────────────────────── */
+
+.amb-layer--mountains {
+  --amb-wash:
+    radial-gradient(
+      70% 60% at 50% 0%,
+      rgba(110, 170, 150, 0.12),
+      transparent 72%
+    ),
+    radial-gradient(
+      60% 40% at 50% 100%,
+      rgba(80, 140, 110, 0.1),
+      transparent 70%
+    );
+}
+.amb-layer--mountains .amb-fill-far {
+  fill: rgba(170, 205, 195, 0.05);
+}
+.amb-layer--mountains .amb-fill-cap {
+  fill: rgba(236, 242, 246, 0.09);
+}
+.amb-layer--mountains .amb-fill-mid {
+  fill: rgba(120, 170, 150, 0.065);
+}
+.amb-layer--mountains .amb-fill-near {
+  fill: rgba(80, 135, 110, 0.1);
+}
+.amb-birds {
+  stroke: rgba(220, 230, 225, 0.2);
+  animation: ambBirds 46s linear infinite;
+  animation-delay: -12s;
+}
+
+@keyframes ambBirds {
+  from {
+    transform: translate(-420px, 40px);
+  }
+  to {
+    transform: translate(1700px, -60px);
+  }
+}
+
+.amb-mist {
+  position: absolute;
+  left: -30%;
+  width: 160%;
+  bottom: 16%;
+  height: 16cqh;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(220, 235, 230, 0.07),
+    transparent 70%
+  );
+  animation: ambMist 36s ease-in-out infinite alternate;
+}
+
+@keyframes ambMist {
+  from {
+    transform: translate3d(-8%, 0, 0);
+  }
+  to {
+    transform: translate3d(8%, 0, 0);
+  }
+}
+
+/* ─── 10. Washi paper and ink ───────────────────────────────── */
+
+.amb-layer--washi {
+  --amb-wash:
+    radial-gradient(
+      70% 70% at 50% 50%,
+      rgba(232, 200, 150, 0.06),
+      transparent 72%
+    ),
+    linear-gradient(180deg, rgba(232, 200, 150, 0.04), transparent 50%);
+}
+.amb-pattern {
+  position: absolute;
+  width: 36cqw;
+  height: 36cqw;
+  opacity: 0.11;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cg fill='none' stroke='%23f0c078' stroke-width='1.4'%3E%3Ccircle cx='0' cy='0' r='24'/%3E%3Ccircle cx='48' cy='0' r='24'/%3E%3Ccircle cx='0' cy='48' r='24'/%3E%3Ccircle cx='48' cy='48' r='24'/%3E%3Ccircle cx='24' cy='24' r='24'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 3.4cqw 3.4cqw;
+}
+.amb-pattern--tl {
+  left: 0;
+  top: 0;
+  -webkit-mask-image: radial-gradient(circle at 0 0, #000 0%, transparent 68%);
+  mask-image: radial-gradient(circle at 0 0, #000 0%, transparent 68%);
+}
+.amb-pattern--br {
+  right: 0;
+  bottom: 0;
+  -webkit-mask-image: radial-gradient(
+    circle at 100% 100%,
+    #000 0%,
+    transparent 68%
+  );
+  mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 68%);
+}
+.amb-enso {
+  stroke: rgba(243, 240, 232, 0.09);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambEnso 30s ease-in-out infinite alternate;
+}
+.amb-layer--washi .amb-fill-ink {
+  fill: rgba(243, 240, 232, 0.08);
+}
+
+@keyframes ambEnso {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+
+/* ═══ Japan scenes ═══════════════════════════════════════════════
+   Each scene sets three tints as "r g b" triplets; the utility classes
+   below apply them at fixed, faint strengths. */
+
+.amb-layer {
+  --a: 240 192 120;
+  --b: 220 230 240;
+  --c: 232 120 90;
+}
+
+.amb-layer .fa1 {
+  fill: rgb(var(--a) / 0.05);
+}
+.amb-layer .fa2 {
+  fill: rgb(var(--a) / 0.08);
+}
+.amb-layer .fa3 {
+  fill: rgb(var(--a) / 0.13);
+}
+.amb-layer .fa4 {
+  fill: rgb(var(--a) / 0.22);
+}
+.amb-layer .sa1 {
+  stroke: rgb(var(--a) / 0.06);
+}
+.amb-layer .sa2 {
+  stroke: rgb(var(--a) / 0.11);
+}
+.amb-layer .sa3 {
+  stroke: rgb(var(--a) / 0.17);
+}
+.amb-layer .sa4 {
+  stroke: rgb(var(--a) / 0.27);
+}
+.amb-layer .fb1 {
+  fill: rgb(var(--b) / 0.05);
+}
+.amb-layer .fb2 {
+  fill: rgb(var(--b) / 0.08);
+}
+.amb-layer .fb3 {
+  fill: rgb(var(--b) / 0.13);
+}
+.amb-layer .fb4 {
+  fill: rgb(var(--b) / 0.22);
+}
+.amb-layer .sb1 {
+  stroke: rgb(var(--b) / 0.06);
+}
+.amb-layer .sb2 {
+  stroke: rgb(var(--b) / 0.11);
+}
+.amb-layer .sb3 {
+  stroke: rgb(var(--b) / 0.17);
+}
+.amb-layer .sb4 {
+  stroke: rgb(var(--b) / 0.27);
+}
+.amb-layer .fc1 {
+  fill: rgb(var(--c) / 0.05);
+}
+.amb-layer .fc2 {
+  fill: rgb(var(--c) / 0.08);
+}
+.amb-layer .fc3 {
+  fill: rgb(var(--c) / 0.13);
+}
+.amb-layer .fc4 {
+  fill: rgb(var(--c) / 0.22);
+}
+.amb-layer .sc1 {
+  stroke: rgb(var(--c) / 0.06);
+}
+.amb-layer .sc2 {
+  stroke: rgb(var(--c) / 0.11);
+}
+.amb-layer .sc3 {
+  stroke: rgb(var(--c) / 0.17);
+}
+.amb-layer .sc4 {
+  stroke: rgb(var(--c) / 0.27);
+}
+.amb-layer .fd {
+  fill: rgb(6 10 18 / 0.42);
+}
+
+/* Kanji written into the scenery. */
+.amb-glyph {
+  font-family: var(
+    --font-jp,
+    "Noto Sans JP",
+    "Hiragino Sans",
+    "Yu Gothic",
+    sans-serif
+  );
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.amb-layer .gink {
+  fill: rgb(28 18 14 / 0.6);
+}
+.amb-layer .glit {
+  fill: rgb(243 240 232 / 0.32);
+}
+.amb-layer .ga {
+  fill: rgb(var(--a) / 0.34);
+}
+.amb-layer .gb {
+  fill: rgb(var(--b) / 0.34);
+}
+.amb-layer .gc {
+  fill: rgb(var(--c) / 0.34);
+}
+
+/* ─── Palettes and washes ─────────────────────────────────────── */
+
+.amb-layer--fuji {
+  --a: 214 96 76;
+  --b: 240 236 230;
+  --c: 246 170 96;
+  --amb-wash:
+    radial-gradient(
+      70% 60% at 82% 70%,
+      rgba(246, 150, 90, 0.13),
+      transparent 70%
+    ),
+    linear-gradient(180deg, rgba(90, 80, 140, 0.08), transparent 55%);
+}
+.amb-layer--torii {
+  --a: 220 220 210;
+  --b: 220 210 190;
+  --c: 226 92 60;
+  --amb-wash:
+    radial-gradient(
+      40% 80% at 0% 50%,
+      rgba(226, 92, 60, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 80% at 100% 50%,
+      rgba(226, 92, 60, 0.12),
+      transparent 70%
+    );
+}
+.amb-layer--torii .pillar {
+  fill: rgb(var(--c));
+}
+.amb-layer--torii .pillar-foot {
+  fill: rgb(10 12 18 / 0.9);
+}
+.amb-layer--seaTorii {
+  --a: 150 180 200;
+  --b: 140 200 220;
+  --c: 226 92 60;
+  --amb-wash:
+    linear-gradient(180deg, rgba(240, 170, 120, 0.07), transparent 60%),
+    radial-gradient(
+      70% 40% at 85% 100%,
+      rgba(90, 160, 190, 0.12),
+      transparent 70%
+    );
+}
+.amb-layer--pagoda {
+  --a: 200 170 150;
+  --b: 150 120 170;
+  --c: 240 192 120;
+  --amb-wash:
+    radial-gradient(
+      60% 70% at 10% 60%,
+      rgba(200, 150, 130, 0.12),
+      transparent 70%
+    ),
+    linear-gradient(180deg, rgba(150, 110, 160, 0.06), transparent 50%);
+}
+.amb-layer--castle {
+  --a: 150 160 190;
+  --b: 225 228 236;
+  --c: 240 192 120;
+  --amb-wash:
+    radial-gradient(
+      60% 70% at 88% 50%,
+      rgba(200, 210, 240, 0.09),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 50% at 10% 80%,
+      rgba(110, 160, 130, 0.08),
+      transparent 70%
+    );
+}
+.amb-layer--castle .fb3 {
+  fill: rgb(110 160 130 / 0.12);
+}
+.amb-layer--machiya {
+  --a: 170 130 100;
+  --b: 200 170 140;
+  --c: 236 110 70;
+  --amb-wash: radial-gradient(
+    80% 50% at 50% 100%,
+    rgba(236, 140, 80, 0.1),
+    transparent 72%
+  );
+}
+.amb-layer--onsen {
+  --a: 150 150 160;
+  --b: 150 210 220;
+  --c: 236 120 100;
+  --amb-wash: radial-gradient(
+    80% 50% at 50% 100%,
+    rgba(150, 210, 220, 0.1),
+    transparent 72%
+  );
+}
+.amb-layer--karesansui {
+  --a: 170 170 160;
+  --b: 228 222 206;
+  --c: 120 160 110;
+  --amb-wash: linear-gradient(0deg, rgba(228, 222, 206, 0.06), transparent 40%);
+}
+.amb-layer--bamboo {
+  --a: 200 220 160;
+  --b: 130 190 130;
+  --c: 240 220 150;
+  --amb-wash:
+    radial-gradient(
+      40% 90% at 0% 50%,
+      rgba(110, 170, 110, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 90% at 100% 50%,
+      rgba(110, 170, 110, 0.12),
+      transparent 70%
+    );
+}
+.amb-layer--shinkansen {
+  --a: 150 170 200;
+  --b: 236 240 246;
+  --c: 70 120 220;
+  --amb-wash:
+    linear-gradient(0deg, rgba(150, 180, 230, 0.08), transparent 40%),
+    radial-gradient(
+      40% 40% at 15% 85%,
+      rgba(240, 170, 120, 0.07),
+      transparent 70%
+    );
+}
+.amb-layer--tanabata {
+  --a: 240 210 110;
+  --b: 130 190 160;
+  --c: 236 130 170;
+  --amb-wash:
+    radial-gradient(
+      60% 60% at 80% 15%,
+      rgba(130, 120, 220, 0.12),
+      transparent 70%
+    ),
+    linear-gradient(rgba(10, 12, 30, 0.2), rgba(10, 12, 30, 0.2));
+}
+.amb-layer--tanabata .amb-fill-star-soft {
+  fill: rgb(232 236 255 / 0.35);
+}
+.amb-layer--tanabata .fb3 {
+  fill: rgb(130 190 220 / 0.16);
+}
+.amb-layer--koi {
+  --a: 240 200 120;
+  --b: 120 190 150;
+  --c: 236 110 70;
+  --amb-wash:
+    radial-gradient(
+      90% 90% at 50% 50%,
+      rgba(40, 110, 110, 0.1),
+      transparent 75%
+    ),
+    linear-gradient(rgba(20, 60, 70, 0.12), rgba(20, 60, 70, 0.12));
+}
+.amb-layer--koi .fb3 {
+  fill: rgb(240 236 230 / 0.22);
+}
+.amb-layer--yatai {
+  --a: 170 120 90;
+  --b: 236 230 220;
+  --c: 60 70 140;
+  --amb-wash: radial-gradient(
+    50% 60% at 18% 80%,
+    rgba(240, 170, 90, 0.12),
+    transparent 70%
+  );
+}
+.amb-layer--yatai .fc3 {
+  fill: rgb(70 80 160 / 0.32);
+}
+.amb-layer--yatai .fc1,
+.amb-layer--machiya .fc1 {
+  fill: rgb(240 140 70 / 0.06);
+}
+.amb-layer--yatai .fc4,
+.amb-layer--machiya .fc4 {
+  fill: rgb(240 140 80 / 0.3);
+}
+.amb-layer--yatai .sc3,
+.amb-layer--machiya .sc3 {
+  stroke: rgb(120 50 30 / 0.4);
+}
+.amb-layer--washitsu {
+  --a: 200 170 120;
+  --b: 236 220 190;
+  --c: 246 210 150;
+  --amb-wash:
+    radial-gradient(
+      40% 90% at 0% 50%,
+      rgba(246, 210, 150, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 90% at 100% 50%,
+      rgba(246, 210, 150, 0.1),
+      transparent 70%
+    );
+}
+.amb-layer--washitsu .fc3 {
+  fill: rgb(120 150 100 / 0.22);
+}
+.amb-layer--tanbo {
+  --a: 140 180 120;
+  --b: 150 200 230;
+  --c: 226 90 60;
+  --amb-wash:
+    linear-gradient(180deg, rgba(240, 180, 120, 0.06), transparent 50%),
+    radial-gradient(
+      80% 50% at 50% 100%,
+      rgba(120, 180, 140, 0.1),
+      transparent 72%
+    );
+}
+.amb-layer--gassho {
+  --a: 150 120 90;
+  --b: 236 242 248;
+  --c: 246 190 110;
+  --amb-wash: radial-gradient(
+    70% 55% at 50% 0%,
+    rgba(150, 190, 235, 0.12),
+    transparent 72%
+  );
+}
+.amb-layer--gassho .fc4 {
+  fill: rgb(246 190 110 / 0.34);
+}
+.amb-layer--neon {
+  --a: 246 190 90;
+  --b: 90 220 230;
+  --c: 246 100 170;
+  --amb-wash:
+    radial-gradient(
+      30% 70% at 8% 40%,
+      rgba(246, 100, 170, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      30% 70% at 92% 40%,
+      rgba(90, 220, 230, 0.09),
+      transparent 70%
+    );
+}
+.amb-layer--koinobori {
+  --a: 90 110 170;
+  --b: 236 240 246;
+  --c: 230 90 80;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(110, 160, 230, 0.12),
+    transparent 60%
+  );
+}
+.amb-layer--tsukimi {
+  --a: 170 160 140;
+  --b: 246 236 200;
+  --c: 240 192 120;
+  --amb-wash:
+    radial-gradient(
+      40% 50% at 86% 30%,
+      rgba(246, 236, 200, 0.08),
+      transparent 70%
+    ),
+    linear-gradient(rgba(10, 12, 30, 0.18), rgba(10, 12, 30, 0.18));
+}
+.amb-layer--ukiyoe {
+  --a: 236 224 196;
+  --b: 70 110 170;
+  --c: 226 110 80;
+  --amb-wash:
+    linear-gradient(rgba(236, 220, 190, 0.05), rgba(236, 220, 190, 0.05)),
+    radial-gradient(
+      60% 50% at 15% 95%,
+      rgba(70, 110, 170, 0.14),
+      transparent 70%
+    );
+}
+.amb-layer--ukiyoe .fb3 {
+  fill: rgb(70 110 170 / 0.2);
+}
+.amb-layer--ukiyoe .fa3 {
+  fill: rgb(236 224 196 / 0.2);
+}
+
+/* ─── Motion ──────────────────────────────────────────────────── */
+
+.amb-p.rise-slow {
+  animation-name: ambSteam;
+  top: auto;
+  bottom: -10%;
+}
+.amb-p--steam {
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(240, 244, 248, 0.14),
+    transparent
+  );
+}
+
+@keyframes ambSteam {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: var(--o);
+  }
+  100% {
+    transform: translate3d(var(--sway), -60cqh, 0) scale(1.4);
+    opacity: 0;
+  }
+}
+
+.amb-steam-line {
+  animation: ambWisp 4.5s ease-in-out infinite;
+}
+.amb-steam-line:nth-child(2) {
+  animation-delay: -1.5s;
+}
+.amb-steam-line:nth-child(3) {
+  animation-delay: -3s;
+}
+
+@keyframes ambWisp {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
+
+.amb-cloud {
+  animation: ambCloud 30s ease-in-out infinite alternate;
+}
+
+@keyframes ambCloud {
+  from {
+    transform: translateX(-24px);
+  }
+  to {
+    transform: translateX(24px);
+  }
+}
+
+.amb-shimmer {
+  animation: ambShimmer 5s ease-in-out infinite;
+}
+
+@keyframes ambShimmer {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(10px);
+  }
+}
+
+.amb-sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSway 9s ease-in-out infinite alternate;
+}
+
+@keyframes ambSway {
+  from {
+    transform: rotate(-0.7deg);
+  }
+  to {
+    transform: rotate(0.7deg);
+  }
+}
+
+/* Lanterns swing from their string (local point 0,-70). */
+.amb-sway-soft {
+  transform-origin: 0 -70px;
+  animation: ambSwaySoft 6s ease-in-out infinite alternate;
+}
+
+@keyframes ambSwaySoft {
+  from {
+    transform: rotate(-2deg);
+  }
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+.amb-strip,
+.amb-noren {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambStrip 5s ease-in-out infinite alternate;
+}
+
+@keyframes ambStrip {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+.amb-flutter {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+  animation: ambFlutter 3.6s ease-in-out infinite;
+}
+
+@keyframes ambFlutter {
+  0%,
+  100% {
+    transform: skewY(0deg) scaleY(1);
+  }
+  25% {
+    transform: skewY(2.5deg) scaleY(0.94);
+  }
+  75% {
+    transform: skewY(-2.5deg) scaleY(1.04);
+  }
+}
+
+.amb-pinwheel g {
+  animation: ambSpin 6s linear infinite;
+}
+
+@keyframes ambSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.amb-flicker {
+  animation: ambNeon 7s steps(1, end) infinite;
+}
+
+@keyframes ambNeon {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.35;
+  }
+  64% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 0.5;
+  }
+  68% {
+    opacity: 1;
+  }
+}
+
+.amb-puddle {
+  animation: ambShimmer 6s ease-in-out infinite;
+}
+
+.amb-bob {
+  animation: ambBob 7s ease-in-out infinite alternate;
+}
+
+@keyframes ambBob {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(6px);
+  }
+}
+
+.amb-beam {
+  position: absolute;
+  top: -20%;
+  width: 14cqw;
+  height: 140%;
+  background: linear-gradient(
+    180deg,
+    rgba(240, 240, 200, 0.05),
+    transparent 80%
+  );
+  transform: rotate(18deg);
+  animation: ambBeam 14s ease-in-out infinite alternate;
+}
+.amb-beam--1 {
+  left: 28%;
+}
+.amb-beam--2 {
+  left: 58%;
+  width: 9cqw;
+  animation-delay: -7s;
+}
+
+@keyframes ambBeam {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.amb-p--bamboo-leaf {
+  height: calc(var(--s) * 0.22);
+  border-radius: 100% 0;
+  background: rgb(150, 200, 140);
+}
+
+.amb-bullet {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% * (104 / 900));
+  width: 62cqw;
+  height: 3.6cqw;
+  animation: ambBullet 16s linear infinite;
+  animation-delay: -3s;
+}
+.amb-bullet svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes ambBullet {
+  0% {
+    transform: translate3d(-66cqw, 0, 0);
+  }
+  32%,
+  100% {
+    transform: translate3d(104cqw, 0, 0);
+  }
+}
+
+.amb-tombo {
+  animation: ambTombo 24s ease-in-out infinite;
+}
+.amb-tombo--0 {
+  --x0: 260px;
+  --y0: 560px;
+  --x1: 520px;
+  --y1: 500px;
+}
+.amb-tombo--1 {
+  --x0: 1220px;
+  --y0: 520px;
+  --x1: 1440px;
+  --y1: 600px;
+  animation-delay: -8s;
+}
+.amb-tombo--2 {
+  --x0: 120px;
+  --y0: 380px;
+  --x1: 300px;
+  --y1: 300px;
+  animation-delay: -16s;
+}
+
+@keyframes ambTombo {
+  0%,
+  100% {
+    transform: translate(var(--x0), var(--y0)) rotate(-10deg);
+  }
+  45% {
+    transform: translate(var(--x1), var(--y1)) rotate(8deg);
+  }
+  55% {
+    transform: translate(var(--x1), var(--y1)) rotate(8deg);
+  }
+}
+
+/* ─── Motion off for people who ask for it ──────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .amb *,
+  .amb-layer {
+    animation: none !important;
+  }
+  .amb-layer--leaving {
+    opacity: 0;
+  }
+  .amb-p.fall,
+  .amb-p.fall-fast,
+  .amb-p.rise,
+  .amb-p.rise-slow,
+  .amb-bullet {
+    display: none;
+  }
+  .amb-p.twinkle {
+    opacity: var(--o);
+  }
+}

@@ -1,6 +1,7 @@
 ﻿import type { Lesson } from "../types/lesson";
 import { core2000Lessons } from "./lessonsCore2000";
 import { n3Lessons } from "./n3/lessonsN3";
+import { getPlaylistLessonById } from "./playlists";
 
 /** Vocabulary ids for one lesson: 4001–4010, 4011–4020, … */
 function idRange(start: number): number[] {
@@ -722,5 +723,9 @@ export const lessons: Lesson[] = [
 
 /** Any vocabulary lesson by id — N2 / Core 2000 / N1 (`lessons`) or N3 (`n3-lesson-*`). */
 export function getLessonById(id: string): Lesson | undefined {
-  return lessons.find((l) => l.id === id) ?? n3Lessons.find((l) => l.id === id);
+  return (
+    lessons.find((l) => l.id === id) ??
+    n3Lessons.find((l) => l.id === id) ??
+    getPlaylistLessonById(id)
+  );
 }

@@ -1,16 +1,12 @@
 /** Table of Contents for video production navigation. */
 
-import { buildN2VocabularyLessonTocItems, buildN2VocabularyQuizTocItems } from "./tocVocabularyItems";
 import { buildN2GrammarLessonTocItems, buildN2GrammarQuizTocItems } from "./tocGrammarItems";
-import { N2_VOCAB_LESSON_COUNT } from "../config/vocabularyCourse";
-import { formatN2VocabularyTocQuizId } from "../utils/vocabularyDisplay";
 import { registerSections } from "./registerPairs";
 import {
   buildN3GrammarLessonTocItems,
   buildN3GrammarQuizTocItems,
-  buildN3VocabularyLessonTocItems,
-  buildN3VocabularyQuizTocItems,
 } from "./n3/tocN3Items";
+import { buildPlaylistTocGroups } from "./playlistToc";
 import {
   ONOMATOPOEIA_LEVELS,
   onomatopoeiaCountByLevel,
@@ -23,6 +19,8 @@ export type TocItemId =
   | "word-n1-02"
   | "word-n1-03"
   | `word-n3-${string}`
+  | `word-pl-${string}`
+  | `quiz-vocab-pl-${string}`
   | `grammar-f${number}-${number}`
   | "n1-grammar-01"
   | "n1-grammar-02"
@@ -130,35 +128,20 @@ export const tocGroups: TocGroup[] = [
   {
     id: "introduction",
     title: "1. Introduction",
-    items: [{ id: "intro-hook", label: "Intro Hook", kind: "intro" }],
-  },
-  {
-    id: "vocabulary",
-    title: "2. N2 Vocabulary Lessons",
-    items: buildN2VocabularyLessonTocItems(),
-  },
-  {
-    id: "vocabulary-n1",
-    title: "2b. N1 Vocabulary Lessons (curated)",
     items: [
-      { id: "word-n1-01", label: "N1 Vocabulary 1: Legal, Financial & Administrative", kind: "word", lessonId: "n1-lesson-01" },
-      { id: "word-n1-02", label: "N1 Vocabulary 2: Formal Ceremonies & Mourning", kind: "word", lessonId: "n1-lesson-02" },
-      { id: "word-n1-03", label: "N1 Vocabulary 3: Specialized Register", kind: "word", lessonId: "n1-lesson-03" },
+      { id: "intro-hook", label: "Intro Hook", kind: "intro" },
+      { id: "quiz-pre-comment", label: "Pre Quiz Comment", kind: "quiz-pre" },
     ],
   },
-  {
-    id: "vocabulary-n3",
-    title: "2c. N3 Vocabulary Lessons",
-    items: buildN3VocabularyLessonTocItems(),
-  },
+  ...buildPlaylistTocGroups(),
   {
     id: "grammar",
-    title: "3. N2 Grammar Lessons",
+    title: "N2 Grammar Lessons",
     items: buildN2GrammarLessonTocItems(),
   },
   {
     id: "grammar-n1",
-    title: "3b. N1 Grammar Lessons (curated)",
+    title: "N1 Grammar Lessons (curated)",
     items: [
       { id: "n1-grammar-01", label: "N1 Grammar 1: 〜とはいえ", kind: "grammar", lessonId: "n1-grammar-lesson-171" },
       { id: "n1-grammar-02", label: "N1 Grammar 2: 〜てみせる", kind: "grammar", lessonId: "n1-grammar-lesson-172" },
@@ -173,38 +156,12 @@ export const tocGroups: TocGroup[] = [
   },
   {
     id: "grammar-n3",
-    title: "3c. N3 Grammar Lessons",
+    title: "N3 Grammar Lessons",
     items: buildN3GrammarLessonTocItems(),
   },
   {
-    id: "quiz-word",
-    title: "4. N2 Word Quizzes",
-    items: [
-      {
-        id: "quiz-pre-comment",
-        label: "Pre Quiz Comment",
-        kind: "quiz-pre",
-      },
-      ...buildN2VocabularyQuizTocItems(),
-    ],
-  },
-  {
-    id: "quiz-vocab-n1",
-    title: "4b. N1 Word Quizzes (curated)",
-    items: [
-      { id: "quiz-vocab-n1-01", label: "N1 Word Quiz 1: Legal, Financial & Administrative", kind: "quiz", quizId: "quiz-vocab-n1-01" },
-      { id: "quiz-vocab-n1-02", label: "N1 Word Quiz 2: Formal Ceremonies & Mourning", kind: "quiz", quizId: "quiz-vocab-n1-02" },
-      { id: "quiz-vocab-n1-03", label: "N1 Word Quiz 3: Specialized Register", kind: "quiz", quizId: "quiz-vocab-n1-03" },
-    ],
-  },
-  {
-    id: "quiz-vocab-n3",
-    title: "4c. N3 Word Quizzes",
-    items: buildN3VocabularyQuizTocItems(),
-  },
-  {
     id: "quiz-grammar",
-    title: "5. N2 Grammar Quizzes",
+    title: "N2 Grammar Quizzes & Review",
     items: [
       ...buildN2GrammarQuizTocItems(),
       {
@@ -228,7 +185,7 @@ export const tocGroups: TocGroup[] = [
   },
   {
     id: "quiz-grammar-n3",
-    title: "5c. N3 Grammar Quizzes",
+    title: "N3 Grammar Quizzes",
     items: buildN3GrammarQuizTocItems(),
   },
   {
@@ -499,24 +456,21 @@ export function findTocItemByLessonId(lessonId: string): TocItem | undefined {
   return undefined;
 }
 
+/** Lesson entries offered to Video Flow: level vocabulary lessons and every grammar lesson. */
 export const lessonGroupIds: TocItemId[] = tocGroups
   .filter((group) =>
-    group.id === "vocabulary" ||
-    group.id === "vocabulary-n1" ||
-    group.id === "vocabulary-n3" ||
+    group.id.startsWith("playlist-lessons-") ||
     group.id === "grammar" ||
     group.id === "grammar-n1" ||
     group.id === "grammar-n3"
   )
   .flatMap((group) => group.items.map((item) => item.id));
 
+/** Quiz entries offered to Video Flow: level word quizzes, then grammar quizzes. */
 export const quizIds: TocItemId[] = [
-  ...Array.from({ length: N2_VOCAB_LESSON_COUNT }, (_, index) =>
-    formatN2VocabularyTocQuizId(index + 1) as TocItemId
-  ),
-  "quiz-vocab-n1-01",
-  "quiz-vocab-n1-02",
-  "quiz-vocab-n1-03",
+  ...tocGroups
+    .filter((group) => group.id.startsWith("playlist-quizzes-"))
+    .flatMap((group) => group.items.map((item) => item.id)),
   "quiz-grammar-1-10",
   "quiz-grammar-11-20",
   "quiz-grammar-21-30",
@@ -533,7 +487,6 @@ export const quizIds: TocItemId[] = [
   "quiz-grammar-131-140",
   "quiz-grammar-141-150",
   "quiz-grammar-151-152",
-  ...buildN3VocabularyQuizTocItems().map((item) => item.id),
   ...buildN3GrammarQuizTocItems().map((item) => item.id),
   "quiz-mixed",
   "quiz-final",

@@ -11,7 +11,8 @@ import { N2_VOCAB_ITEMS_PER_LESSON } from "../config/vocabularyCourse";
 import { lessons } from "../data/lessons";
 import { getVocabularyByIds } from "../data/vocabulary";
 
-export type VocabularyQuizLevel = "N1" | "N2" | "N3";
+/** "ANY" = level playlists: every word in the lesson, whatever its course tag. */
+export type VocabularyQuizLevel = "N1" | "N2" | "N3" | "ANY";
 
 const FULL_TYPE_ORDER: VocabularyQuizQuestionType[] = Array.from(
   { length: 10 },
@@ -61,6 +62,9 @@ export function getVocabularyItemsForQuiz(options: {
   quizLevel: VocabularyQuizLevel;
 }): VocabularyItem[] {
   const items = getVocabularyByIds(options.lesson.vocabularyIds);
+  if (options.quizLevel === "ANY") {
+    return items;
+  }
   if (options.quizLevel === "N1") {
     return items.filter((item) => item.jlpt === "N1");
   }

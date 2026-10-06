@@ -25,6 +25,8 @@ import { getTocItem, quizIds, tocGroups } from "../toc";
 import { grammarBatchCategorySuffix, grammarBatchRangeLabel } from "../tocGrammarItems";
 import { formatVocabularyLessonHeader, formatVocabularyLessonSubheader } from "../../utils/vocabularyDisplay";
 import { vocabPicture, grammarPicture } from "../../components/Illustration/pictures";
+import { playlistLessonsForLevel } from "../playlists";
+import { getWordLevel } from "../../utils/wordLevel";
 import { vocabularyN3 } from "./vocabularyN3";
 import { n3Lessons } from "./lessonsN3";
 import { grammarN3, n3GrammarLessons, n3GrammarNuances } from "./grammarN3";
@@ -198,24 +200,23 @@ describe("N3 grammar course", () => {
 });
 
 describe("N3 table of contents and quizzes", () => {
-  it("adds N3 lesson and quiz sections that open the right lessons", () => {
+  it("shows N3 grammar in the TOC and every N3 course word in an N3 level lesson", () => {
     const group = (id: string) => tocGroups.find((g) => g.id === id)!;
-    expect(group("vocabulary-n3").items).toHaveLength(n3Lessons.length);
     expect(group("grammar-n3").items).toHaveLength(n3GrammarLessons.length);
-    for (const item of group("vocabulary-n3").items) expect(getLessonById(item.lessonId!)).toBeDefined();
     for (const item of group("grammar-n3").items) expect(getGrammarLessonById(item.lessonId!)).toBeDefined();
+    const inN3Lessons = new Set(playlistLessonsForLevel("N3").flatMap((l) => l.vocabularyIds));
+    const n3Words = vocabularyN3.filter((v) => getWordLevel(v.id) === "N3");
+    for (const v of n3Words) expect(inN3Lessons.has(v.id), `${v.id} ${v.word}`).toBe(true);
   });
 
-  it("builds every N3 word quiz from that lesson's N3 words", () => {
-    for (const item of tocGroups.find((g) => g.id === "quiz-vocab-n3")!.items) {
-      const lessonId = getVocabularyLessonIdForQuiz(item.quizId!);
-      const lesson = lessonId ? getLessonById(lessonId) : undefined;
-      expect(lesson, item.id).toBeDefined();
-      const words = getVocabularyItemsForQuiz({ lesson: lesson!, quizLevel: "N3" });
+  it("still builds every N3 course word quiz from its lesson", () => {
+    for (const lesson of n3Lessons) {
+      const quizId = `quiz-vocab-n3-${lesson.id.slice(-2)}`;
+      expect(getVocabularyLessonIdForQuiz(quizId as never)).toBe(lesson.id);
+      const words = getVocabularyItemsForQuiz({ lesson, quizLevel: "N3" });
       expect(words).toHaveLength(10);
-      expect(buildVocabularyQuizQuestions(words, item.quizId!).length).toBeGreaterThan(0);
-      expect(quizIds).toContain(item.id);
-      expect(getTocItem(item.id)?.kind).toBe("quiz");
+      expect(buildVocabularyQuizQuestions(words, quizId).length).toBeGreaterThan(0);
+      expect(getTocItem(quizId as never)).toBeUndefined();
     }
   });
 

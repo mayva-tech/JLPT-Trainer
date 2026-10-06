@@ -1,0 +1,134 @@
+# Theme families for the level lessons, in teaching order (easy, concrete topics first).
+# Every vocabulary subcategory must be listed; the generator stops on an unknown one.
+# subcategory|family
+People|People & Family
+Family|People & Family
+Family & Relationships|People & Family
+People & Relationships|People & Family
+Childcare|People & Family
+Pregnancy & Childbirth|People & Family
+Aging & Elder Care|People & Family
+Weddings & Ceremonies|People & Family
+Funerals & Bereavement|People & Family
+Conflict & Relationships|People & Family
+Numbers|Numbers, Time & Position
+Time|Numbers, Time & Position
+Position|Numbers, Time & Position
+Demonstratives|Numbers, Time & Position
+Questions|Numbers, Time & Position
+Time Management|Numbers, Time & Position
+Home|Home & Daily Life
+Home & Chores|Home & Daily Life
+Apartment|Home & Daily Life
+Rooms & Household Items|Home & Daily Life
+Home Appliances|Home & Daily Life
+Housing Maintenance|Home & Daily Life
+Real Estate|Home & Daily Life
+Daily Routine|Home & Daily Life
+Sleep & Rest|Home & Daily Life
+Daily Vocabulary|Home & Daily Life
+Food|Food & Cooking
+Food & Cooking|Food & Cooking
+Cooking|Food & Cooking
+Dining Out|Food & Cooking
+Kitchen Equipment|Food & Cooking
+Shopping|Shopping & Money
+Money|Shopping & Money
+Money & Shopping|Shopping & Money
+Personal Finance|Shopping & Money
+Banking & Investment|Shopping & Money
+Retail & Customer Service|Shopping & Money
+Postal Services|Shopping & Money
+Places|Places, Travel & Transport
+Places & Weather|Places, Travel & Transport
+Town & Travel|Places, Travel & Transport
+Travel|Places, Travel & Transport
+Transportation|Places, Travel & Transport
+Traffic & Driving|Places, Travel & Transport
+Trains & Journeys|Places, Travel & Transport
+Public Facilities|Places, Travel & Transport
+Community|Places, Travel & Transport
+Nature|Nature & Weather
+Weather|Nature & Weather
+Weather & Climate|Nature & Weather
+Nature & Animals|Nature & Weather
+Nature & Seasons|Nature & Weather
+Environment|Nature & Weather
+Environment & Sustainability|Nature & Weather
+Emergency Preparedness|Nature & Weather
+Body|Health & Body
+Body & Senses|Health & Body
+Health|Health & Body
+Health & Body|Health & Body
+Body & Health|Health & Body
+Medicine|Health & Body
+Fitness & Gym|Health & Body
+Hobbies & Free Time|Hobbies, Culture & Manners
+Sports|Hobbies, Culture & Manners
+Art & Culture|Hobbies, Culture & Manners
+Arts & Entertainment|Hobbies, Culture & Manners
+Fashion|Hobbies, Culture & Manners
+Clothing|Hobbies, Culture & Manners
+Etiquette|Hobbies, Culture & Manners
+Etiquette & Consideration|Hobbies, Culture & Manners
+Volunteering & Charity|Hobbies, Culture & Manners
+School|School & Language
+School & Learning|School & Language
+Language Learning|School & Language
+Academic Reading|School & Language
+Communication|School & Language
+Work|Work & Business
+Work & Money|Work & Business
+Work & School|Work & Business
+Business Basics|Work & Business
+Office & Meetings|Work & Business
+Job Hunting|Work & Business
+Employment Conditions|Work & Business
+Networking|Work & Business
+Workplace Communication|Work & Business
+Quality & Manufacturing|Work & Business
+Economy & Business|Work & Business
+Emotions|Feelings & Character
+Emotions & Attitudes|Feelings & Character
+Feelings & Moods|Feelings & Character
+Character & Feelings|Feelings & Character
+Personality & Ability|Feelings & Character
+Personality & Character|Feelings & Character
+Common Verbs|Everyday Verbs
+Daily Actions|Everyday Verbs
+Everyday Actions|Everyday Verbs
+Everyday Verbs|Everyday Verbs
+Actions & Changes|Everyday Verbs
+Giving & Receiving|Everyday Verbs
+Adjectives|Describing Words
+Common Adjectives|Describing Words
+Na-Adjectives|Describing Words
+Society|Society & News
+Society & Public Life|Society & News
+Safety & Society|Society & News
+Public Life|Society & News
+Media|Society & News
+Media & News|Society & News
+News & Media|Society & News
+Government & Politics|Society & News
+Crime & Public Safety|Society & News
+Rules & Compliance|Society & News
+Insurance & Legal|Society & News
+Accidents & Insurance|Society & News
+Science & Tech|Science & Technology
+Science & Technology|Science & Technology
+Technology|Science & Technology
+Innovation & AI|Science & Technology
+Digital Security & Privacy|Science & Technology
+Research & Data|Science & Technology
+Earth & Science|Science & Technology
+Abstract|Ideas & Opinions
+Abstract Concepts|Ideas & Opinions
+Abstract Verbs|Ideas & Opinions
+Causes & Consequences|Ideas & Opinions
+Changes & Trends|Ideas & Opinions
+Decisions & Problem Solving|Ideas & Opinions
+Evaluation & Comparison|Ideas & Opinions
+Opinions & Arguments|Ideas & Opinions
+Possibility & Prediction|Ideas & Opinions
+N2 Reading|Ideas & Opinions

@@ -7,12 +7,10 @@ import {
 } from "../config/vocabularyCourse";
 import { lessons } from "../data/lessons";
 import { vocabulary } from "../data/vocabulary";
-import { getTocItem, quizIds } from "../data/toc";
 import { getVocabularyLessonIdForQuiz } from "../utils/quizVocabLesson";
 import {
   formatLessonIdFromNumber,
   formatN2VocabularyTocQuizId,
-  formatN2VocabularyTocWordId,
   getVocabularyDisplayRange,
 } from "../utils/vocabularyDisplay";
 
@@ -59,19 +57,9 @@ describe("Core 2000 vocabulary course", () => {
 
       const quizId = formatN2VocabularyTocQuizId(n);
       expect(getVocabularyLessonIdForQuiz(quizId)).toBe(lessonId);
-      expect(getTocItem(quizId as never)?.kind).toBe("quiz");
-      expect(getTocItem(formatN2VocabularyTocWordId(n) as never)?.kind).toBe(
-        "word"
-      );
     }
   });
 
-  it("includes quiz-vocab entries for all 200 lessons in quizIds", () => {
-    const vocabQuizIds = quizIds.filter((id) =>
-      /^quiz-vocab-\d+-\d+$/.test(id)
-    );
-    expect(vocabQuizIds).toHaveLength(200);
-  });
 
   it("requires non-empty core fields on every vocabulary item", () => {
     for (const v of vocabulary) {

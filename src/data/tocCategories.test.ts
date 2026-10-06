@@ -6,7 +6,6 @@ import {
   grammarBatchCategorySuffix,
 } from "../data/tocGrammarItems";
 import { tocGroups } from "../data/toc";
-import { formatN2VocabularyTocLessonLabel } from "../utils/vocabularyDisplay";
 
 describe("formatGrammarCategorySuffix", () => {
   it("keeps short lists intact and trims longer ones without a +N count", () => {
@@ -41,9 +40,10 @@ describe("grammar TOC categories", () => {
     for (const item of grammarQuizzes.items) {
       expect(item.label).not.toMatch(/Families/i);
     }
-    const vocab = tocGroups.find((g) => g.id === "vocabulary")!;
-    expect(vocab.items[0]?.label).toBe(formatN2VocabularyTocLessonLabel(1));
-    expect(vocab.items[0]?.label).toContain("Shopping");
+    // Vocabulary is organised by real level now (the mixed-level N2 group is gone).
+    expect(tocGroups.some((g) => g.id === "vocabulary")).toBe(false);
+    const n5 = tocGroups.find((g) => g.id === "playlist-lessons-n5")!;
+    expect(n5.items[0]?.label).toMatch(/^N5 Vocabulary Lesson 1 \| Words 1–\d+ · People & Family/);
     const reference = tocGroups.find((g) => g.id === "reference")!;
     expect(reference.items.some((item) => item.id === "glossary")).toBe(true);
     expect(reference.items).toContainEqual({

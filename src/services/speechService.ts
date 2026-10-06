@@ -515,12 +515,21 @@ function runUtterance(
       (isJa && reading.length > 0) ||
       (karaokeUnits != null && karaokeUnits.length > 0));
 
+  // Only cancel when something is really still playing. Online voices report
+  // `end` while the last syllable is still sounding, so cancelling before
+  // every chained clause / JP→EN handoff clipped the end of each line.
+  const interrupting =
+    (activePlayback !== null && !activePlayback.settled) ||
+    pendingAsideCallbacks !== null;
+
   // New generation invalidates any in-flight karaoke / start callbacks.
   playbackGeneration += 1;
   const playbackId = playbackGeneration;
   clearPlaybackHandles();
   settleActiveAsCancelled();
-  window.speechSynthesis.cancel();
+  if (interrupting || window.speechSynthesis.pending) {
+    window.speechSynthesis.cancel();
+  }
 
   const utter = new SpeechSynthesisUtterance(audioText);
   activeUtterance = utter;

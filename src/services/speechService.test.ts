@@ -267,6 +267,23 @@ describe("speechService playback generation", () => {
     expect(highlights).toEqual([0]);
   });
 
+  it("does not cancel when the previous utterance already ended (keeps its audio tail)", async () => {
+    const { spoken, synth } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    speechService.speakEnglish("Hello world", {});
+    spoken[0]!.onstart?.();
+    spoken[0]!.onend?.();
+    synth.cancel.mockClear();
+
+    speechService.speakEnglish("Next line", {});
+    expect(synth.cancel).not.toHaveBeenCalled();
+    expect(spoken).toHaveLength(2);
+
+    speechService.speakEnglish("Interrupt", {});
+    expect(synth.cancel).toHaveBeenCalledTimes(1);
+  });
+
   it("cancellation does not advance a callback-chained next clip", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");
@@ -827,13 +844,13 @@ describe("speechService karaoke timeline", () => {
     expect(cancelled).toBe(true);
   });
 
-  it("keeps a short gloss list in one utterance with a comma beat at ;", async () => {
+  it("keeps a short gloss list in one utterance with an ellipsis pause at ;", async () => {
     const { spoken } = installSpeechMock();
     const { speechService } = await import("./speechService");
 
     speechService.speakEnglish("really; super", {});
     expect(spoken).toHaveLength(1);
-    expect(spoken[0]!.text).toMatch(/^really, super$/i);
+    expect(spoken[0]!.text).toMatch(/^really \.\.\. super$/i);
   });
 
   it("uses a shorter pause after semicolon than the general EN chain", async () => {
