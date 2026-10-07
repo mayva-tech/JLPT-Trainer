@@ -78,8 +78,15 @@ function chooseSpotForTip(): Spot | null {
   return pickSpot(cands, obstacles) ?? cands.find((s) => s.edge === "bottom") ?? null;
 }
 
+/** Clear of text and still inside the current stage (a view switch can move the stage). */
 function stillClear(spot: Spot): boolean {
-  return spotIsClear(spot, collectObstacles(findStageBox().el));
+  const { el, box } = findStageBox();
+  const inside =
+    spot.x >= box.left - 1 &&
+    spot.y >= box.top - 1 &&
+    spot.x + spot.w <= box.right + 1 &&
+    spot.y + spot.h <= box.bottom + 1;
+  return inside && spotIsClear(spot, collectObstacles(el));
 }
 
 function speakAsync(

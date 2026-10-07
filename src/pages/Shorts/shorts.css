@@ -1,0 +1,745 @@
+/* ═══ Shorts studio ═════════════════════════════════════════════════
+   The stage is a 9:16 container: every size inside is in cqw / cqh so it
+   looks identical in the preview, in clean mode and rotated for OBS.
+   Content keeps clear of YouTube's Shorts UI: the right-hand button
+   column and the bottom caption band (see .sh-safe). */
+
+.sh-studio {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  gap: 20px;
+  height: calc(100vh - 56px);
+  padding: 12px 18px;
+  box-sizing: border-box;
+  color: #f3f0e8;
+  font-family: var(--font-en);
+}
+
+.sh-empty {
+  display: grid;
+  place-items: center;
+}
+
+/* ─── Control panel ─────────────────────────────────────────── */
+
+.sh-panel {
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sh-panel-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #f0c078;
+}
+
+.sh-panel-title span {
+  font-family: var(--font-jp);
+  font-size: 0.9rem;
+  color: rgba(243, 240, 232, 0.6);
+  margin-left: 6px;
+}
+
+.sh-levels,
+.sh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sh-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f3f0e8;
+  cursor: pointer;
+}
+
+.sh-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sh-btn--on,
+.sh-btn--primary {
+  background: #f0c078;
+  border-color: #f0c078;
+  color: #1d2638;
+  font-weight: 700;
+}
+
+.sh-btn--small {
+  padding: 2px 10px;
+  font-size: 0.75rem;
+}
+
+.sh-btn kbd {
+  font-family: inherit;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.sh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: rgba(243, 240, 232, 0.7);
+}
+
+.sh-field select,
+.sh-field input,
+.sh-meta textarea {
+  font: inherit;
+  font-size: 0.85rem;
+  color: #f3f0e8;
+  background: rgba(10, 14, 22, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.sh-words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.sh-word-btn {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f3f0e8;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.sh-word-btn--on {
+  border-color: #f0c078;
+  background: rgba(240, 192, 120, 0.12);
+}
+
+.sh-word-btn-ja {
+  font-family: var(--font-jp);
+  font-size: 1rem;
+}
+
+.sh-word-btn-en {
+  font-size: 0.72rem;
+  color: rgba(243, 240, 232, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sh-options {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+}
+
+.sh-options label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sh-options .sh-field {
+  align-items: stretch;
+}
+
+.sh-meta h3 {
+  margin: 4px 0 6px;
+  font-size: 0.95rem;
+  color: #f0c078;
+}
+
+.sh-meta-row {
+  margin-bottom: 8px;
+}
+
+.sh-meta-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: rgba(243, 240, 232, 0.7);
+  margin-bottom: 3px;
+}
+
+.sh-meta-head > span:first-child {
+  flex: 1;
+}
+
+.sh-meta-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.sh-meta textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-size: 0.78rem;
+}
+
+.sh-copied {
+  font-size: 0.78rem;
+  color: #9fe0b0;
+}
+
+.sh-hint {
+  font-size: 0.72rem;
+  color: rgba(243, 240, 232, 0.5);
+  margin: 0;
+}
+
+.sh-preview-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.sh-preview {
+  height: 100%;
+  max-height: calc(100vh - 80px);
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Clean modes for recording ─────────────────────────────── */
+
+.sh-clean {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  overflow: hidden;
+  cursor: none;
+}
+
+/* Absolutely centred: a grid would grow to the stage's unrotated height. */
+.sh-clean-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  aspect-ratio: 9 / 16;
+}
+
+.sh-clean--fit .sh-clean-stage {
+  height: min(100vh, calc(100vw * 16 / 9));
+  transform: translate(-50%, -50%);
+}
+
+/* 1080×1920 stage turned on its side to fill a 1920×1080 screen at 1:1
+   pixels. In OBS: Transform → Rotate 90° CW, then fit to a 1080×1920 canvas. */
+.sh-clean--rotated .sh-clean-stage {
+  width: min(100vh, calc(100vw * 9 / 16));
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.sh-preview > .sh-stage,
+.sh-clean-stage > .sh-stage {
+  width: 100%;
+  height: 100%;
+}
+
+/* ═══ The 9:16 stage ═══════════════════════════════════════════════ */
+
+.sh-stage {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  container-type: size;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, #33435c 0%, #222d42 42%, #141c2a 100%);
+  color: #f3f0e8;
+  font-family: var(--font-en);
+  text-align: center;
+}
+
+/* Backdrop: the 16:9 scene seen through the 9:16 window, panning across. */
+.sh-amb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100cqh * 16 / 9);
+  z-index: 0;
+  isolation: isolate;
+  transform: translateX(-12%);
+}
+
+.sh-amb--pan {
+  animation: shPan var(--sh-pan, 30s) cubic-bezier(0.45, 0, 0.55, 1) forwards;
+}
+
+@keyframes shPan {
+  from { transform: translateX(-4%); }
+  to { transform: translateX(calc(-100% + 100cqw + 4%)); }
+}
+
+.sh-amb-frame {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  isolation: isolate;
+}
+
+.sh-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 62% 40% at 45% 46%, rgba(20, 28, 42, 0.62), rgba(20, 28, 42, 0.2) 70%, transparent 100%),
+    linear-gradient(0deg, rgba(8, 12, 20, 0.6) 0%, transparent 26%),
+    linear-gradient(180deg, rgba(8, 12, 20, 0.35) 0%, transparent 14%);
+}
+
+/* ─── Top band ─────────────────────────────────────────────── */
+
+.sh-top {
+  position: absolute;
+  z-index: 2;
+  top: 5.5cqh;
+  left: 6cqw;
+  right: 6cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3cqh;
+}
+
+.sh-progress {
+  width: 100%;
+  height: 0.7cqw;
+  border-radius: 1cqw;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.sh-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f0c078, #f59a6a);
+  transform-origin: 0 50%;
+  transition: transform 0.7s ease;
+}
+
+.sh-chips {
+  display: flex;
+  gap: 2cqw;
+}
+
+.sh-chip {
+  font-size: 3.4cqw;
+  font-weight: 700;
+  padding: 0.7cqw 2.6cqw;
+  border-radius: 10cqw;
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.25cqw solid rgba(255, 255, 255, 0.16);
+  letter-spacing: 0.04em;
+}
+
+.sh-chip--level {
+  background: #f0c078;
+  color: #1d2638;
+  border-color: #f0c078;
+}
+
+.sh-series {
+  font-size: 3.1cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(243, 240, 232, 0.66);
+}
+
+/* ─── Content column (inside the YouTube-safe area) ──────────── */
+
+.sh-col {
+  position: absolute;
+  z-index: 2;
+  left: 6cqw;
+  right: 16cqw;
+  top: 17cqh;
+  bottom: 23cqh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8cqh;
+}
+
+.sh-hook {
+  display: none;
+}
+
+.sh-hook--on {
+  display: block;
+  animation: shPop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.sh-hook-en {
+  font-size: 7cqw;
+  font-weight: 800;
+  line-height: 1.1;
+  text-shadow: 0 0.5cqw 2cqw rgba(0, 0, 0, 0.5);
+}
+
+.sh-hook-ja {
+  margin-top: 1cqh;
+  font-family: var(--font-jp);
+  font-size: 4.6cqw;
+  color: #f0c078;
+}
+
+.sh-picture {
+  display: none;
+}
+
+.sh-picture--on {
+  display: block;
+  animation: shPop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.sh-picture .sh-picture-art {
+  width: 20cqw;
+  height: 20cqw;
+  font-size: 15cqw;
+  line-height: 1;
+}
+
+.sh-picture .sh-picture-art svg,
+.sh-picture .sh-picture-art img {
+  width: 100%;
+  height: 100%;
+}
+
+.sh-word {
+  font-family: var(--font-jp);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fbf8f0;
+  text-shadow: 0 0.5cqw 2.4cqw rgba(0, 0, 0, 0.5);
+  transition: filter 0.45s ease;
+}
+
+/* Countdown: the kanji shows clearly (only the reading is held back). */
+.sh-word--hook {
+  animation: shPop 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.sh-word--pop {
+  animation: shPop 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.sh-word rt {
+  font-size: 0.32em;
+  color: #f0c078;
+  font-weight: 600;
+}
+
+.sh-count {
+  position: relative;
+  width: 20cqw;
+  height: 20cqw;
+}
+
+.sh-count::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 0.9cqw solid rgba(255, 255, 255, 0.14);
+  border-top-color: #f0c078;
+  animation: shSpin 1s linear 3;
+}
+
+.sh-count span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11cqw;
+  font-weight: 800;
+  color: #f0c078;
+  animation: shTick 1s ease both;
+}
+
+.sh-count span:nth-child(2) { animation-delay: 1s; }
+.sh-count span:nth-child(3) { animation-delay: 2s; }
+
+.sh-pitch {
+  font-size: 6.4cqw;
+  font-weight: 700;
+}
+
+.sh-meaning {
+  opacity: 0;
+  transform: translateY(2cqh);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.sh-meaning--on {
+  opacity: 1;
+  transform: none;
+}
+
+.sh-meaning-text {
+  font-size: 6.4cqw;
+  font-weight: 800;
+  color: #f0c078;
+  line-height: 1.2;
+}
+
+.sh-sentence {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3cqw 3.6cqw;
+  border-radius: 3cqw;
+  background: rgba(12, 18, 30, 0.6);
+  border: 0.3cqw solid rgba(255, 255, 255, 0.1);
+  animation: shRise 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+}
+
+.sh-sentence--shadow {
+  border-color: #f0c078;
+  box-shadow: 0 0 4cqw rgba(240, 192, 120, 0.25);
+}
+
+.sh-turn {
+  font-size: 4.4cqw;
+  font-weight: 800;
+  color: #f0c078;
+  margin-bottom: 1.2cqh;
+  animation: shPulse 1.1s ease-in-out infinite;
+}
+
+.sh-sentence-ja {
+  font-family: var(--font-jp);
+  font-size: 5.2cqw;
+  line-height: 1.5;
+}
+
+/* Each phrase stays on one line; lines break only between phrases. */
+.sh-phrase {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.sh-piece.speech-active {
+  color: #f0c078;
+  text-shadow: 0 0 2cqw rgba(240, 192, 120, 0.45);
+}
+
+.sh-sentence-en {
+  display: block;
+  margin-top: 1cqh;
+  font-size: 3.9cqw;
+  color: rgba(243, 240, 232, 0.78);
+  line-height: 1.35;
+}
+
+.sh-repeat {
+  margin-top: 1.6cqh;
+  height: 1cqw;
+  border-radius: 1cqw;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.sh-repeat span {
+  display: block;
+  height: 100%;
+  background: #f0c078;
+  transform-origin: 0 50%;
+  animation: shDrain linear both;
+}
+
+/* Outro: clear the stage for the call to action. */
+.sh-stage[data-phase="outro"] :is(.sh-picture, .sh-pitch, .sh-sentence),
+.sh-stage[data-phase="done"] :is(.sh-picture, .sh-pitch, .sh-sentence) {
+  display: none;
+}
+
+.sh-outro {
+  width: 100%;
+  animation: shPop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.sh-outro-prompt {
+  font-size: 5cqw;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.sh-outro-prompt span {
+  color: #f0c078;
+  font-family: var(--font-jp);
+}
+
+.sh-outro-follow {
+  margin-top: 1.2cqh;
+  font-size: 3.8cqw;
+  color: rgba(243, 240, 232, 0.75);
+}
+
+.sh-next {
+  margin-top: 2cqh;
+  font-size: 3.6cqw;
+  color: rgba(243, 240, 232, 0.6);
+}
+
+.sh-next-word {
+  display: inline-block;
+  margin-left: 1.5cqw;
+  font-family: var(--font-jp);
+  font-size: 6cqw;
+  font-weight: 800;
+  color: #fbf8f0;
+  filter: blur(0.55cqw);
+}
+
+/* ─── YouTube safe zones (preview only) and the batch blackout ──── */
+
+.sh-safe > div {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  border: 0.35cqw dashed rgba(255, 120, 120, 0.7);
+  background: rgba(255, 90, 90, 0.08);
+  color: rgba(255, 170, 170, 0.9);
+  font-size: 2.6cqw;
+  display: grid;
+  place-items: center;
+}
+
+.sh-safe-right {
+  right: 0;
+  width: 15cqw;
+  top: 42cqh;
+  bottom: 21cqh;
+  writing-mode: vertical-rl;
+}
+
+.sh-safe-bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 21cqh;
+}
+
+.sh-black {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.sh-stage--blackout .sh-black {
+  opacity: 1;
+}
+
+/* ─── Keyframes ────────────────────────────────────────────── */
+
+@keyframes shPop {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes shRise {
+  from { opacity: 0; transform: translateY(3cqh); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes shTick {
+  0% { opacity: 0; transform: scale(1.7); }
+  18% { opacity: 1; transform: scale(1); }
+  82% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.7); }
+}
+
+@keyframes shSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shDrain {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@keyframes shPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* Clean (fit) mode: the heads and mascot stay in the recorded frame, above
+   the black backing. Rotated mode turns the frame 90°, which the upright
+   heads can't follow, so they sit that one out. */
+body:has(.sh-clean--fit) :is(.th-root, .th-seat--split, .sensei) {
+  z-index: 1001;
+}
+
+body:has(.sh-clean--rotated) :is(.th-root, .th-seat--split, .sensei, .sensei-tab) {
+  display: none;
+}
+
+/* Narrow windows: the side-by-side grid leaves the preview no width, so
+   stack it above the panel and let the page scroll. */
+@media (max-width: 760px) {
+  .sh-studio {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: auto;
+    padding: 8px 10px;
+  }
+
+  .sh-preview-wrap {
+    order: -1;
+  }
+
+  .sh-preview {
+    height: min(78vh, calc((100vw - 20px) * 16 / 9));
+  }
+
+  .sh-panel {
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-amb--pan,
+  .sh-word--pop,
+  .sh-hook--on,
+  .sh-picture--on,
+  .sh-sentence,
+  .sh-outro,
+  .sh-turn,
+  .sh-count::before {
+    animation: none;
+  }
+}

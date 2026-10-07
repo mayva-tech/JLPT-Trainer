@@ -1,7 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { speechService } from "./services/speechService";
 import TalkingHead from "./components/TalkingHead/TalkingHead";
+import HeadStyleButtons from "./components/TalkingHead/HeadStyleButtons";
 import { StageAmbience } from "./components/StageAmbience/StageAmbience";
+import { AmbiencePan } from "./components/StageAmbience/AmbiencePan";
 import { useAmbienceSetting } from "./components/StageAmbience/useAmbienceSetting";
 import type { AmbienceTheme } from "./components/StageAmbience/themes";
 import type { OpenTrainer, TrainerView } from "./navigation";
@@ -25,8 +27,19 @@ const RelationTrainer = lazy(
 const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
 const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
 const GameMode = lazy(() => import("./pages/GameMode/GameMode"));
+const ShortsStudio = lazy(() => import("./pages/Shorts/ShortsStudio"));
 
-type AppView = TrainerView | "game";
+type AppView = TrainerView | "game" | "shorts";
+
+/** `?view=shorts` opens the Shorts studio directly (handy as a bookmark). */
+function initialView(): AppView {
+  try {
+    const v = new URLSearchParams(globalThis.location?.search ?? "").get("view");
+    return v === "shorts" ? "shorts" : "player";
+  } catch {
+    return "player";
+  }
+}
 
 const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
   player: PlayerPage,
@@ -37,10 +50,13 @@ const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
   style: StyleTrainer,
 };
 
-/** The Player picks a theme per item itself; every other mode has one fixed theme. */
-const VIEW_AMBIENCE: Record<Exclude<AppView, "player">, AmbienceTheme> = {
+/**
+ * The Player and Shorts pick a theme per item themselves; every other mode
+ * has one fixed theme.
+ */
+const VIEW_AMBIENCE: Record<Exclude<AppView, "player" | "shorts">, AmbienceTheme> = {
   game: "torii",
-  konbini: "neon",
+  konbini: "konbini",
   trip: "shinkansen",
   relations: "karesansui",
   phone: "machiya",
@@ -62,11 +78,14 @@ function TrainerFallback() {
 }
 
 export default function App() {
-  const [view, setView] = useState<AppView>("player");
-  const ActiveTrainer = view === "game" ? null : VIEW_COMPONENTS[view];
+  const [view, setView] = useState<AppView>(initialView);
+  const ActiveTrainer =
+    view === "game" || view === "shorts" ? null : VIEW_COMPONENTS[view];
   const [showAmbience, toggleAmbience] = useAmbienceSetting();
   const ambienceTheme =
-    view !== "player" && showAmbience ? VIEW_AMBIENCE[view] : null;
+    view !== "player" && view !== "shorts" && showAmbience
+      ? VIEW_AMBIENCE[view]
+      : null;
 
   // Switching views now unmounts the previous trainer, which would otherwise
   // leave its audio playing with no controls left on screen to stop it.
@@ -104,9 +123,10 @@ export default function App() {
     >
       {view !== "player" ? (
         <div className="app-amb" aria-hidden="true">
-          <StageAmbience theme={ambienceTheme} />
+          <StageAmbience theme={ambienceTheme} panButtons={false} />
         </div>
       ) : null}
+      {view !== "player" && ambienceTheme ? <AmbiencePan fixed /> : null}
       <nav className="app-nav" aria-label="App views">
         <button
           type="button"
@@ -211,6 +231,26 @@ export default function App() {
             話し方
           </span>
         </button>
+        <button
+          type="button"
+          className={
+            view === "shorts"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Shorts — one word per vertical video"
+          onClick={() => setView("shorts")}
+        >
+          <span className="app-nav-en">Shorts</span>
+          <span className="app-nav-jp" lang="ja">
+            ショート
+          </span>
+        </button>
+        {view === "shorts" ? (
+          <span className="app-nav-heads">
+            <HeadStyleButtons />
+          </span>
+        ) : null}
       </nav>
 
       <div
@@ -221,6 +261,8 @@ export default function App() {
         <Suspense fallback={<TrainerFallback />}>
           {view === "game" ? (
             <GameMode onOpenTrainer={openTrainer} />
+          ) : view === "shorts" ? (
+            <ShortsStudio />
           ) : ActiveTrainer ? (
             <ActiveTrainer />
           ) : null}

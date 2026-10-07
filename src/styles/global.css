@@ -122,6 +122,12 @@ body {
   opacity: 0.95;
 }
 
+.app-nav-heads {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
 @media (max-width: 700px) and (orientation: portrait) {
   .app-nav {
     gap: 5px;

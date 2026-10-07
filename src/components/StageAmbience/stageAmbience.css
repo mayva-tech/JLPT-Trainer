@@ -61,16 +61,87 @@
 }
 
 .amb-wash,
-.amb-art,
+.amb-art-frame,
 .amb-particles,
 .amb-scrim {
   position: absolute;
   inset: 0;
 }
 
+/* The scene keeps its 16:9 shape (covering the stage) instead of being
+   centre-cropped; --amb-pan (0 left … 1 right) picks which part shows
+   when the stage is narrower than the scene. */
+.amb-art-frame {
+  container-type: size;
+  overflow: hidden;
+}
+
 .amb-art {
-  width: 100%;
-  height: 100%;
+  --amb-w: max(100cqw, calc(100cqh * 16 / 9));
+  --amb-h: max(100cqh, calc(100cqw * 9 / 16));
+  position: absolute;
+  width: var(--amb-w);
+  height: var(--amb-h);
+  left: calc((100cqw - var(--amb-w)) * var(--amb-pan, 0.5));
+  top: calc((100cqh - var(--amb-h)) / 2);
+  transition: left 0.2s linear;
+}
+
+.amb-pan {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.amb-pan[hidden] {
+  display: none;
+}
+
+.amb-pan:hover,
+.amb-pan:focus-within {
+  opacity: 1;
+}
+
+.amb-pan--fixed {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  z-index: 40;
+}
+
+.amb-pan-btn {
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(236, 240, 248, 0.9);
+  background: rgba(20, 26, 38, 0.55);
+  border: 1px solid rgba(236, 240, 248, 0.22);
+  border-radius: 6px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.amb-pan-btn:hover:not(:disabled) {
+  border-color: rgba(236, 240, 248, 0.55);
+}
+
+.amb-pan-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb-art {
+    transition: none;
+  }
 }
 
 .amb-wash {
@@ -1463,7 +1534,1307 @@
   }
 }
 
+/* ═══ People scenes ══════════════════════════════════════════════
+   Figures are drawn solid in --p and faded as one group (no darker
+   joints where limbs overlap). Props inside a figure use solid tints. */
+
+.amb-layer {
+  --p: 214 222 236;
+}
+.amb-person {
+  opacity: 0.2;
+}
+.amb-person--far {
+  opacity: 0.12;
+}
+.amb-layer .pp {
+  fill: rgb(var(--p));
+  stroke: none;
+}
+.amb-layer .ppl {
+  fill: none;
+  stroke: rgb(var(--p));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.amb-layer .ppa {
+  fill: rgb(var(--a));
+}
+.amb-layer .ppb {
+  fill: rgb(var(--b));
+}
+.amb-layer .ppc {
+  fill: rgb(var(--c));
+}
+.amb-layer .gchalk {
+  fill: rgb(240 244 236 / 0.32);
+}
+.amb-layer .amb-fill-star-soft {
+  fill: rgb(232 236 255 / 0.35);
+}
+
+.amb-layer--hanami {
+  --a: 240 236 230;
+  --b: 246 186 206;
+  --c: 90 130 210;
+  --p: 236 214 220;
+  --amb-wash: radial-gradient(
+    60% 60% at 10% 30%,
+    rgba(240, 170, 195, 0.13),
+    transparent 70%
+  );
+}
+.amb-layer--bonOdori {
+  --a: 200 160 120;
+  --b: 240 220 200;
+  --c: 240 150 80;
+  --p: 230 214 236;
+  --amb-wash:
+    radial-gradient(
+      80% 50% at 50% 100%,
+      rgba(240, 160, 90, 0.11),
+      transparent 72%
+    ),
+    linear-gradient(rgba(16, 12, 36, 0.18), rgba(16, 12, 36, 0.18));
+}
+.amb-layer--rushHour {
+  --a: 160 170 190;
+  --b: 210 220 236;
+  --c: 240 200 90;
+  --p: 200 210 228;
+  --amb-wash: linear-gradient(0deg, rgba(200, 210, 230, 0.07), transparent 45%);
+}
+.amb-layer--shodo {
+  --a: 170 150 120;
+  --b: 240 232 214;
+  --c: 200 60 50;
+  --p: 222 214 200;
+  --amb-wash: radial-gradient(
+    70% 50% at 30% 100%,
+    rgba(240, 220, 180, 0.08),
+    transparent 72%
+  );
+}
+.amb-layer--shodo .amb-ink {
+  fill: rgb(28 18 14 / 0.42);
+}
+.amb-layer--shodo .fb3 {
+  fill: rgb(240 232 214 / 0.2);
+}
+.amb-layer--sado {
+  --a: 170 140 110;
+  --b: 230 222 200;
+  --c: 120 170 100;
+  --p: 220 210 196;
+  --amb-wash: radial-gradient(
+    80% 60% at 50% 100%,
+    rgba(220, 200, 150, 0.08),
+    transparent 72%
+  );
+}
+.amb-layer--sado .fb3 {
+  fill: rgb(240 232 214 / 0.18);
+}
+.amb-layer--sumo {
+  --a: 200 170 110;
+  --b: 230 220 200;
+  --c: 210 80 70;
+  --p: 228 214 200;
+  --amb-wash:
+    radial-gradient(
+      70% 40% at 50% 100%,
+      rgba(220, 190, 130, 0.12),
+      transparent 72%
+    ),
+    radial-gradient(
+      40% 40% at 50% 0%,
+      rgba(240, 230, 200, 0.06),
+      transparent 70%
+    );
+}
+.amb-layer--mikoshi {
+  --a: 220 170 80;
+  --b: 240 230 210;
+  --c: 220 70 60;
+  --p: 232 218 206;
+  --amb-wash: radial-gradient(
+    60% 60% at 20% 70%,
+    rgba(230, 170, 80, 0.12),
+    transparent 70%
+  );
+}
+.amb-layer--trainWindow {
+  --a: 150 190 150;
+  --b: 200 220 240;
+  --c: 240 192 120;
+  --p: 190 200 220;
+  --amb-wash:
+    linear-gradient(180deg, rgba(150, 200, 240, 0.1), transparent 55%),
+    radial-gradient(
+      80% 30% at 50% 75%,
+      rgba(140, 190, 130, 0.08),
+      transparent 72%
+    );
+}
+.amb-layer--konbini {
+  --a: 170 180 200;
+  --b: 236 244 250;
+  --c: 90 200 160;
+  --p: 210 220 236;
+  --amb-wash: radial-gradient(
+    40% 60% at 88% 78%,
+    rgba(220, 240, 250, 0.12),
+    transparent 70%
+  );
+}
+.amb-layer--konbini .fb1 {
+  fill: rgb(236 244 250 / 0.09);
+}
+.amb-layer--jihanki {
+  --a: 240 200 100;
+  --b: 220 236 250;
+  --c: 240 110 90;
+  --p: 200 210 230;
+  --amb-wash:
+    radial-gradient(
+      40% 50% at 16% 80%,
+      rgba(220, 236, 250, 0.1),
+      transparent 70%
+    ),
+    linear-gradient(rgba(8, 10, 26, 0.24), rgba(8, 10, 26, 0.24));
+}
+.amb-layer--jihanki .fb1 {
+  fill: rgb(220 236 250 / 0.1);
+}
+.amb-p--moth {
+  border-radius: 50%;
+  background: rgb(250, 246, 220);
+}
+.amb-layer--scramble {
+  --a: 240 200 110;
+  --b: 140 190 230;
+  --c: 230 100 110;
+  --p: 200 212 230;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(100, 130, 165, 0.13),
+    transparent 62%
+  );
+}
+.amb-layer--kendo {
+  --a: 180 150 110;
+  --b: 236 228 210;
+  --c: 120 140 200;
+  --p: 150 170 220;
+  --amb-wash: radial-gradient(
+    80% 50% at 50% 100%,
+    rgba(210, 180, 130, 0.09),
+    transparent 72%
+  );
+}
+.amb-layer--kendo .amb-person {
+  opacity: 0.24;
+}
+.amb-layer--classroom {
+  --a: 180 160 130;
+  --b: 200 220 236;
+  --c: 120 170 130;
+  --p: 210 214 226;
+  --amb-wash: radial-gradient(
+    40% 60% at 88% 40%,
+    rgba(120, 170, 130, 0.1),
+    transparent 70%
+  );
+}
+.amb-layer--classroom .fc1 {
+  fill: rgb(60 110 80 / 0.22);
+}
+.amb-layer--classroom .fc2 {
+  fill: rgb(246 186 206 / 0.12);
+}
+.amb-layer--fishing {
+  --a: 140 170 130;
+  --b: 140 200 220;
+  --c: 226 90 60;
+  --p: 200 214 210;
+  --amb-wash:
+    radial-gradient(
+      80% 40% at 50% 100%,
+      rgba(90, 160, 180, 0.12),
+      transparent 72%
+    ),
+    linear-gradient(180deg, rgba(240, 190, 140, 0.05), transparent 50%);
+}
+.amb-layer--kaitenSushi {
+  --a: 240 210 120;
+  --b: 240 236 230;
+  --c: 220 90 80;
+  --p: 220 216 210;
+  --amb-wash: radial-gradient(
+    80% 40% at 50% 100%,
+    rgba(230, 200, 150, 0.1),
+    transparent 72%
+  );
+}
+.amb-layer--kaitenSushi .fa2 {
+  fill: rgb(200 160 110 / 0.1);
+}
+.amb-layer--kamakura {
+  --a: 160 170 200;
+  --b: 236 242 250;
+  --c: 246 170 90;
+  --p: 220 200 190;
+  --amb-wash:
+    radial-gradient(
+      70% 55% at 50% 0%,
+      rgba(120, 150, 220, 0.12),
+      transparent 72%
+    ),
+    linear-gradient(rgba(10, 14, 34, 0.2), rgba(10, 14, 34, 0.2));
+}
+.amb-layer--kamakura .fc2 {
+  fill: rgb(246 170 90 / 0.2);
+}
+.amb-layer--kamakura .amb-person {
+  opacity: 0.32;
+}
+.amb-layer--kingyo {
+  --a: 200 150 110;
+  --b: 140 200 240;
+  --c: 246 120 60;
+  --p: 230 214 220;
+  --amb-wash: radial-gradient(
+    60% 50% at 20% 85%,
+    rgba(140, 200, 240, 0.1),
+    transparent 70%
+  );
+}
+.amb-layer--kingyo .fb3 {
+  fill: rgb(140 200 240 / 0.12);
+}
+.amb-layer--radioTaiso {
+  --a: 150 180 130;
+  --b: 130 190 140;
+  --c: 246 190 110;
+  --p: 222 226 214;
+  --amb-wash:
+    radial-gradient(
+      60% 60% at 86% 30%,
+      rgba(246, 190, 120, 0.12),
+      transparent 70%
+    ),
+    linear-gradient(180deg, rgba(150, 190, 240, 0.06), transparent 50%);
+}
+.amb-layer--meishi {
+  --a: 160 170 196;
+  --b: 240 240 236;
+  --c: 210 90 90;
+  --p: 196 206 226;
+  --amb-wash: radial-gradient(
+    40% 70% at 90% 40%,
+    rgba(160, 190, 240, 0.08),
+    transparent 70%
+  );
+}
+.amb-layer--meishi .fc2 {
+  fill: rgb(170 210 250 / 0.14);
+}
+.amb-layer--engawa {
+  --a: 180 140 100;
+  --b: 230 222 200;
+  --c: 120 130 230;
+  --p: 222 212 200;
+  --amb-wash:
+    linear-gradient(180deg, rgba(140, 190, 240, 0.08), transparent 50%),
+    radial-gradient(
+      60% 40% at 20% 95%,
+      rgba(220, 180, 120, 0.1),
+      transparent 70%
+    );
+}
+.amb-layer--engawa .fb3 {
+  fill: rgb(200 230 250 / 0.2);
+}
+
+/* ─── People motion ────────────────────────────────────────── */
+
+.amb-dance-bob {
+  animation: ambBobUp 2s ease-in-out infinite;
+}
+
+@keyframes ambBobUp {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.amb-bounce {
+  animation: ambBounce 1.4s ease-in-out infinite;
+}
+
+@keyframes ambBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-14px);
+  }
+}
+
+.amb-rock {
+  animation: ambRock 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes ambRock {
+  from {
+    transform: translateX(-4px);
+  }
+  to {
+    transform: translateX(4px);
+  }
+}
+
+.amb-commuter {
+  animation: ambCommuter 20s linear infinite;
+  animation-delay: -6s;
+}
+
+@keyframes ambCommuter {
+  0% {
+    transform: translateX(0);
+  }
+  45%,
+  100% {
+    transform: translateX(3000px);
+  }
+}
+
+.amb-hurry {
+  animation: ambHurry 22s linear infinite;
+  animation-delay: -9s;
+}
+
+@keyframes ambHurry {
+  0% {
+    transform: translateX(-80px);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(380px);
+    opacity: 1;
+  }
+  34%,
+  100% {
+    transform: translateX(420px);
+    opacity: 0;
+  }
+}
+
+.amb-cross-r,
+.amb-cross-l {
+  animation: ambCrossR 44s linear infinite;
+}
+.amb-cross-l {
+  animation-name: ambCrossL;
+}
+
+@keyframes ambCrossR {
+  from {
+    transform: translateX(-120px);
+  }
+  to {
+    transform: translateX(1720px);
+  }
+}
+
+@keyframes ambCrossL {
+  from {
+    transform: translateX(1720px);
+  }
+  to {
+    transform: translateX(-120px);
+  }
+}
+
+.amb-scroll-fast {
+  animation: ambScroll 7s linear infinite;
+}
+
+@keyframes ambScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1600px);
+  }
+}
+
+.amb-train-sway {
+  animation: ambTrainSway 3.4s ease-in-out infinite;
+}
+
+@keyframes ambTrainSway {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(3px, 2px);
+  }
+}
+
+.amb-strap,
+.amb-sway-soft-tassel {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambStrip 3s ease-in-out infinite alternate;
+}
+
+.amb-cat-tail {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
+  animation: ambStrip 2.6s ease-in-out infinite alternate;
+}
+
+.amb-float {
+  animation: ambFloat 3.4s ease-in-out infinite;
+}
+
+@keyframes ambFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+.amb-belt {
+  animation: ambBelt 26s linear infinite;
+}
+
+@keyframes ambBelt {
+  from {
+    transform: translateX(-1600px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.amb-candle {
+  animation: ambFlicker 2.2s ease-in-out infinite;
+}
+
+.amb-ink {
+  animation: ambInk 9s ease-in-out infinite;
+}
+
+@keyframes ambInk {
+  0%,
+  8% {
+    opacity: 0;
+  }
+  24%,
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* ─── Motion off for people who ask for it ──────────────────── */
+
+/* ═══ Motion scenes — each with its own palette ════════════════════
+   The sky (--amb-wash) carries the palette: dark at the top so the header
+   stays readable, colour toward the horizon. */
+
+.amb-layer--cycling {
+  --a: 120 70 90;
+  --b: 120 170 200;
+  --c: 250 150 110;
+  --p: 240 210 220;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(70, 30, 80, 0.45) 0%,
+    rgba(150, 60, 90, 0.28) 45%,
+    rgba(245, 140, 100, 0.3) 82%
+  );
+}
+.amb-layer--kite {
+  --a: 120 150 120;
+  --b: 230 240 250;
+  --c: 230 80 70;
+  --p: 220 230 245;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(25, 70, 140, 0.5) 0%,
+    rgba(80, 150, 210, 0.25) 70%,
+    rgba(200, 230, 250, 0.15) 100%
+  );
+}
+.amb-layer--enoden {
+  --a: 240 230 200;
+  --b: 60 170 180;
+  --c: 70 160 100;
+  --p: 230 220 230;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 40, 110, 0.45) 0%,
+    rgba(200, 90, 110, 0.25) 55%,
+    rgba(250, 160, 120, 0.25) 72%,
+    rgba(40, 140, 160, 0.3) 100%
+  );
+}
+.amb-layer--toro {
+  --a: 60 50 90;
+  --b: 70 80 160;
+  --c: 250 180 90;
+  --p: 210 200 230;
+  --amb-wash:
+    linear-gradient(180deg, rgba(15, 15, 60, 0.55), rgba(30, 30, 90, 0.4)),
+    radial-gradient(
+      80% 40% at 50% 100%,
+      rgba(250, 170, 80, 0.14),
+      transparent 70%
+    );
+}
+.amb-layer--hotaru {
+  --a: 40 90 50;
+  --b: 200 230 160;
+  --c: 220 255 140;
+  --p: 200 230 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(5, 30, 20, 0.55),
+    rgba(20, 60, 35, 0.45)
+  );
+}
+.amb-layer--kanransha {
+  --a: 110 80 170;
+  --b: 90 220 230;
+  --c: 250 90 180;
+  --p: 220 200 240;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(40, 10, 70, 0.55) 0%,
+    rgba(110, 30, 110, 0.35) 60%,
+    rgba(250, 90, 170, 0.2) 100%
+  );
+}
+.amb-layer--aquarium {
+  --a: 20 80 110;
+  --b: 140 230 250;
+  --c: 250 160 200;
+  --p: 170 220 240;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(0, 70, 100, 0.55),
+    rgba(0, 30, 60, 0.6)
+  );
+}
+.amb-layer--surf {
+  --a: 230 210 160;
+  --b: 90 210 220;
+  --c: 250 120 90;
+  --p: 240 235 220;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(20, 80, 130, 0.45) 0%,
+    rgba(40, 150, 180, 0.3) 60%,
+    rgba(80, 200, 200, 0.25) 100%
+  );
+}
+.amb-layer--balloon {
+  --a: 120 100 150;
+  --b: 120 200 220;
+  --c: 250 140 110;
+  --p: 240 220 230;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(80, 60, 140, 0.45) 0%,
+    rgba(220, 130, 150, 0.28) 55%,
+    rgba(250, 190, 130, 0.3) 100%
+  );
+}
+.amb-layer--ekiden {
+  --a: 90 150 110;
+  --b: 240 240 240;
+  --c: 220 60 60;
+  --p: 220 235 240;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(10, 80, 60, 0.48) 0%,
+    rgba(40, 140, 100, 0.26) 60%,
+    rgba(150, 200, 120, 0.2) 100%
+  );
+}
+.amb-layer--undokai {
+  --a: 210 180 120;
+  --b: 80 160 230;
+  --c: 240 90 90;
+  --p: 230 225 210;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(100, 70, 10, 0.48) 0%,
+    rgba(190, 150, 40, 0.26) 60%,
+    rgba(240, 210, 120, 0.2) 100%
+  );
+}
+.amb-layer--laundry {
+  --a: 200 180 150;
+  --b: 245 245 240;
+  --c: 250 130 110;
+  --p: 230 225 215;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(50, 70, 100, 0.48) 0%,
+    rgba(150, 170, 190, 0.2) 60%,
+    rgba(240, 230, 140, 0.22) 100%
+  );
+}
+.amb-layer--demae {
+  --a: 130 70 60;
+  --b: 240 200 150;
+  --c: 220 60 50;
+  --p: 240 210 190;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(80, 30, 40, 0.5) 0%,
+    rgba(170, 80, 60, 0.3) 55%,
+    rgba(250, 180, 110, 0.25) 100%
+  );
+}
+.amb-layer--deer {
+  --a: 120 90 50;
+  --b: 220 190 140;
+  --c: 230 120 50;
+  --p: 230 210 180;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(80, 50, 20, 0.45) 0%,
+    rgba(170, 110, 40, 0.28) 60%,
+    rgba(230, 170, 80, 0.22) 100%
+  );
+}
+.amb-layer--unkai {
+  --a: 90 80 140;
+  --b: 245 220 230;
+  --c: 250 170 140;
+  --p: 230 220 240;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 50, 130, 0.5) 0%,
+    rgba(180, 110, 170, 0.3) 55%,
+    rgba(250, 170, 170, 0.28) 100%
+  );
+}
+.amb-layer--camping {
+  --a: 50 40 70;
+  --b: 220 210 250;
+  --c: 250 150 70;
+  --p: 220 200 220;
+  --amb-wash:
+    linear-gradient(180deg, rgba(40, 20, 80, 0.55), rgba(70, 30, 100, 0.4)),
+    radial-gradient(
+      40% 40% at 20% 92%,
+      rgba(250, 140, 60, 0.18),
+      transparent 70%
+    );
+}
+.amb-layer--ski {
+  --a: 60 90 120;
+  --b: 230 240 250;
+  --c: 250 120 90;
+  --p: 220 230 245;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 80, 160, 0.45) 0%,
+    rgba(120, 180, 230, 0.25) 60%,
+    rgba(220, 235, 250, 0.2) 100%
+  );
+}
+.amb-layer--dogWalk {
+  --a: 80 140 110;
+  --b: 130 200 160;
+  --c: 250 200 120;
+  --p: 225 235 225;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 110, 110, 0.4) 0%,
+    rgba(100, 190, 170, 0.22) 60%,
+    rgba(170, 220, 150, 0.2) 100%
+  );
+}
+.amb-layer--manekineko {
+  --a: 250 200 90;
+  --b: 250 245 235;
+  --c: 220 50 50;
+  --p: 250 235 220;
+  --amb-wash:
+    linear-gradient(180deg, rgba(110, 15, 25, 0.55), rgba(150, 30, 30, 0.35)),
+    radial-gradient(
+      50% 50% at 50% 100%,
+      rgba(250, 200, 90, 0.14),
+      transparent 70%
+    );
+}
+.amb-layer--rainbow {
+  --a: 70 120 130;
+  --b: 120 200 210;
+  --c: 160 210 240;
+  --p: 250 215 80;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 110, 130, 0.45) 0%,
+    rgba(90, 170, 180, 0.22) 60%,
+    rgba(200, 230, 220, 0.18) 100%
+  );
+}
+
+.amb-layer--demae .fc3 {
+  fill: rgb(220 60 50 / 0.3);
+}
+.amb-layer--demae .fb3 {
+  fill: rgb(240 200 150 / 0.24);
+}
+.amb-layer--ski .amb-person {
+  opacity: 0.3;
+}
+.amb-layer--ski .fa3 {
+  fill: rgb(60 90 120 / 0.3);
+}
+.amb-layer--enoden .amb-blink {
+  fill: rgb(240 80 70 / 0.55);
+}
+.amb-layer--kite .fc3 {
+  fill: rgb(230 80 70 / 0.24);
+}
+.amb-layer--manekineko .fb3 {
+  fill: rgb(250 245 235 / 0.24);
+}
+.amb-layer--manekineko .fa4 {
+  fill: rgb(250 200 90 / 0.36);
+}
+.amb-layer--rainbow .amb-person {
+  opacity: 0.32;
+}
+.amb-layer--toro .fc3 {
+  fill: rgb(250 180 90 / 0.3);
+}
+.amb-layer--toro .fc1 {
+  fill: rgb(250 170 80 / 0.08);
+}
+
+/* ─── Travel across the stage ─────────────────────────────── */
+
+.amb-ride {
+  animation: ambRide linear infinite;
+}
+.amb-ride--back {
+  animation-name: ambRideBack;
+}
+
+@keyframes ambRide {
+  from {
+    transform: translateX(-260px);
+  }
+  to {
+    transform: translateX(1860px);
+  }
+}
+
+@keyframes ambRideBack {
+  from {
+    transform: translateX(1860px);
+  }
+  to {
+    transform: translateX(-260px);
+  }
+}
+
+/* Passes once, then waits off-stage (trains, boats, scooters). */
+.amb-pass {
+  animation: ambPass linear infinite;
+}
+.amb-pass--slow {
+  animation-name: ambPassFull;
+}
+.amb-pass--back {
+  animation-name: ambPassBack;
+}
+
+@keyframes ambPass {
+  0% {
+    transform: translateX(-900px);
+  }
+  50%,
+  100% {
+    transform: translateX(1750px);
+  }
+}
+
+@keyframes ambPassFull {
+  from {
+    transform: translateX(-900px);
+  }
+  to {
+    transform: translateX(1750px);
+  }
+}
+
+@keyframes ambPassBack {
+  from {
+    transform: translateX(1750px);
+  }
+  to {
+    transform: translateX(-200px);
+  }
+}
+
+.amb-drift {
+  animation: ambDrift2 linear infinite;
+}
+
+@keyframes ambDrift2 {
+  from {
+    transform: translateX(-200px);
+  }
+  to {
+    transform: translateX(1800px);
+  }
+}
+
+.amb-bobble {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambBobble 2.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambBobble {
+  from {
+    transform: translateY(0) rotate(-2deg);
+  }
+  to {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+/* ─── Kites ───────────────────────────────────────────────── */
+
+.amb-kite {
+  animation: ambKite ease-in-out infinite alternate;
+}
+
+@keyframes ambKite {
+  from {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+.amb-kite-wobble {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambWobble 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes ambWobble {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+
+.amb-tail {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambTail 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes ambTail {
+  from {
+    transform: skewX(-10deg);
+  }
+  to {
+    transform: skewX(10deg);
+  }
+}
+
+/* ─── Lights ──────────────────────────────────────────────── */
+
+.amb-blink {
+  animation: ambBlinkOn 1s steps(1, end) infinite;
+}
+.amb-blink--alt {
+  animation-delay: -0.5s;
+}
+
+@keyframes ambBlinkOn {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
+.amb-hue {
+  animation: ambHue 14s linear infinite;
+}
+
+@keyframes ambHue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.amb-glow {
+  animation: ambGlow 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes ambGlow {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.amb-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambFlame 0.42s ease-in-out infinite alternate;
+}
+
+.amb-flame--b {
+  animation-duration: 0.57s;
+}
+
+@keyframes ambFlame {
+  from {
+    transform: scale(1, 1);
+    opacity: 0.85;
+  }
+  to {
+    transform: scale(0.88, 1.22);
+    opacity: 1;
+  }
+}
+
+/* ─── Particles ───────────────────────────────────────────── */
+
+.amb-p.firefly {
+  animation-name: ambFirefly;
+  animation-timing-function: ease-in-out;
+}
+
+.amb-p--firefly {
+  border-radius: 50%;
+  background: rgb(220, 255, 140);
+  box-shadow: 0 0 1.2cqw 0.3cqw rgba(200, 255, 120, 0.7);
+}
+
+@keyframes ambFirefly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  20% {
+    opacity: var(--o);
+  }
+  40% {
+    opacity: 0.08;
+    transform: translate(calc(var(--sway) * 0.5), -3cqh);
+  }
+  60% {
+    opacity: var(--o);
+  }
+  85% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--sway), -7cqh);
+  }
+}
+
+.amb-p.spark {
+  animation-name: ambSpark;
+  animation-timing-function: ease-out;
+}
+
+.amb-p--spark {
+  border-radius: 50%;
+  background: rgb(255, 190, 110);
+}
+
+@keyframes ambSpark {
+  from {
+    opacity: var(--o);
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--sway), -24cqh);
+  }
+}
+
+/* ─── Water and sky ───────────────────────────────────────── */
+
+.amb-ray {
+  position: absolute;
+  top: -20%;
+  width: 12cqw;
+  height: 140%;
+  background: linear-gradient(
+    180deg,
+    rgba(160, 240, 255, 0.07),
+    transparent 75%
+  );
+  transform: rotate(14deg);
+  animation: ambBeam 10s ease-in-out infinite alternate;
+}
+
+.amb-ray--1 {
+  left: 22%;
+}
+.amb-ray--2 {
+  left: 64%;
+  width: 8cqw;
+  animation-delay: -5s;
+}
+
+.amb-jelly-drift {
+  animation: ambJellyDrift ease-in-out infinite alternate;
+}
+
+@keyframes ambJellyDrift {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(-40px);
+  }
+}
+
+.amb-jelly {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambJelly 2.4s ease-in-out infinite;
+}
+
+@keyframes ambJelly {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.08, 0.9);
+  }
+}
+
+.amb-tentacles {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambTail 2.4s ease-in-out infinite alternate;
+}
+
+.amb-wave-roll {
+  animation: ambWaveRoll 6s ease-in-out infinite alternate;
+}
+
+@keyframes ambWaveRoll {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(30px, 8px);
+  }
+}
+
+.amb-surfer {
+  animation: ambSurfer 9s ease-in-out infinite;
+}
+
+@keyframes ambSurfer {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  40% {
+    transform: translate(170px, -24px) rotate(-3deg);
+  }
+  70% {
+    transform: translate(90px, 14px) rotate(3deg);
+  }
+}
+
+.amb-rise-balloon {
+  animation: ambBalloon linear infinite;
+}
+
+@keyframes ambBalloon {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, -620px);
+  }
+  100% {
+    transform: translate(0, -1250px);
+  }
+}
+
+.amb-band {
+  animation: ambBand ease-in-out infinite alternate;
+}
+.amb-band--back {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes ambBand {
+  from {
+    transform: translateX(-120px);
+  }
+  to {
+    transform: translateX(120px);
+  }
+}
+
+.amb-sunrise {
+  animation: ambSunrise 40s ease-in-out infinite alternate;
+}
+
+@keyframes ambSunrise {
+  from {
+    transform: translateY(90px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ─── Small lives ─────────────────────────────────────────── */
+
+.amb-tug {
+  animation: ambTug 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes ambTug {
+  from {
+    transform: translateX(-10px);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
+
+.amb-toss {
+  animation: ambToss 2.7s ease-out infinite;
+}
+
+@keyframes ambToss {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(40px, -300px);
+    opacity: 1;
+  }
+  60%,
+  100% {
+    transform: translate(50px, -280px);
+    opacity: 0;
+  }
+}
+
+.amb-peck {
+  transform-box: fill-box;
+  transform-origin: 30% 100%;
+  animation: ambPeck 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambPeck {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(18deg);
+  }
+}
+
+.amb-jump {
+  animation: ambJump 1.4s cubic-bezier(0.3, 0, 0.6, 1) infinite;
+}
+
+@keyframes ambJump {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(0.96);
+  }
+  50% {
+    transform: translateY(-80px) scaleY(1.02);
+  }
+}
+
+.amb-splash {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSplash 1.4s ease-out infinite;
+}
+
+@keyframes ambSplash {
+  0% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  15%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.amb-drip {
+  animation: ambDrip 1.8s ease-in infinite;
+}
+
+@keyframes ambDrip {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(140px);
+    opacity: 0;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .amb *,
@@ -1477,7 +2848,11 @@
   .amb-p.fall-fast,
   .amb-p.rise,
   .amb-p.rise-slow,
-  .amb-bullet {
+  .amb-p.firefly,
+  .amb-p.spark,
+  .amb-bullet,
+  .amb-commuter,
+  .amb-hurry {
     display: none;
   }
   .amb-p.twinkle {

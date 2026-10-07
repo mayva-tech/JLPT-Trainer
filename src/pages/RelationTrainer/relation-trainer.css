@@ -120,7 +120,7 @@
   max-width: none;
   min-height: 0;
   margin: 0;
-  padding: 20px 14px 10px;
+  padding: 8px 14px 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -295,9 +295,10 @@
 }
 
 .rt-root--study .rt-playbtn {
-  padding: 12px 22px;
-  font-size: 16px;
-  min-width: 140px;
+  padding: 4px 12px;
+  font-size: 13px;
+  min-width: 84px;
+  border-radius: 6px;
 }
 
 .rt-playbtn:hover {
@@ -529,6 +530,10 @@
 
 .rt-card,
 .rt-study-card {
+  /* Own stacking context: the stage ambience (z-index -1) paints over the
+     card gradient but under every word, chip and button. */
+  position: relative;
+  isolation: isolate;
   padding: 12px 13px;
   background: var(--rt-card);
   border: 1px solid var(--rt-line);
@@ -1090,8 +1095,8 @@
   grid-template-areas:
     "panel panel"
     "prev next";
-  column-gap: 16px;
-  row-gap: 10px;
+  column-gap: 12px;
+  row-gap: 4px;
   align-items: stretch;
 }
 
@@ -1136,10 +1141,15 @@
 }
 
 .rt-root--study .rt-navbtn {
-  width: 64px;
-  height: 44px;
+  width: 44px;
+  height: 24px;
   align-self: center;
-  border-radius: 12px;
+  border-radius: 6px;
+}
+
+.rt-root--study .rt-navbtn svg {
+  width: 18px;
+  height: 18px;
 }
 
 .rt-navbtn:hover {
@@ -1154,7 +1164,7 @@
 }
 
 .rt-root--study .rt-study-count {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -1173,8 +1183,8 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   flex: none;
-  margin-bottom: 12px;
-  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-top: 0;
 }
 
 .rt-root--study .rt-card-head .rt-playrow {

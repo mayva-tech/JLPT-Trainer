@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AmbienceTheme } from "./themes";
 import { AmbienceArt } from "./art";
+import { AmbiencePan } from "./AmbiencePan";
 import "./stageAmbience.css";
 
 /** How long the old background takes to fade out (matches the CSS). */
@@ -22,10 +23,13 @@ interface Layer {
 export function StageAmbience({
   theme,
   glyphs = "",
+  panButtons = true,
 }: {
   theme: AmbienceTheme | null;
   /** Kanji of the word on screen, written into signs, strips and lanterns. */
   glyphs?: string;
+  /** ‹ › buttons in the parent's corner for sliding a cropped scene. */
+  panButtons?: boolean;
 }) {
   const nextKey = useRef(1);
   const [layers, setLayers] = useState<Layer[]>(() =>
@@ -55,6 +59,8 @@ export function StageAmbience({
   if (layers.length === 0) return null;
 
   return (
+    <>
+    {panButtons && <AmbiencePan />}
     <div className="amb" aria-hidden="true">
       {layers.map((layer) => (
         <div
@@ -72,5 +78,6 @@ export function StageAmbience({
       ))}
       <div className="amb-scrim" />
     </div>
+    </>
   );
 }

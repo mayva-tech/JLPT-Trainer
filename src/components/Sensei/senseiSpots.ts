@@ -86,11 +86,14 @@ export function pickSpot(cands: Spot[], obstacles: Box[], rng: () => number = Ma
   return list[Math.floor(rng() * list.length)];
 }
 
-/** The area the mascot lives in: the Player stage, else the visible trainer view, else the window. */
+/**
+ * The area the mascot lives in: the Player stage or the Shorts frame, else
+ * the visible trainer view, else the window.
+ */
 export function findStageBox(): { el: HTMLElement | null; box: Box } {
   const viewRight = document.documentElement.clientWidth || window.innerWidth;
   const viewBottom = document.documentElement.clientHeight || window.innerHeight;
-  const stage = document.querySelector<HTMLElement>(".stage");
+  const stage = document.querySelector<HTMLElement>(".stage, .sh-stage");
   const el =
     stage && stage.getBoundingClientRect().width > 0
       ? stage

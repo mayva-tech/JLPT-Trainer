@@ -6,12 +6,14 @@ const VIEW = "0 0 1600 900";
 
 export function Art({ children }: { children: ReactNode }) {
   return (
-    <svg
-      className="amb-art"
-      viewBox={VIEW}
-      preserveAspectRatio="xMidYMid slice"
-    >
-      {children}
-    </svg>
+    <div className="amb-art-frame">
+      <svg
+        className="amb-art"
+        viewBox={VIEW}
+        preserveAspectRatio="xMidYMid slice"
+      >
+        {children}
+      </svg>
+    </div>
   );
 }

@@ -852,9 +852,9 @@ function overlapArea(a: Box, b: Box): number {
   return w > 0 && h > 0 ? w * h : 0;
 }
 
-/** The panel the head must stay inside: the Player stage, else the trainer view. */
+/** The panel the head must stay inside: the Player stage or Shorts frame, else the trainer view. */
 function findAvoidPanel(): { el: HTMLElement; box: Box } | null {
-  const stage = document.querySelector<HTMLElement>(".stage");
+  const stage = document.querySelector<HTMLElement>(".stage, .sh-stage");
   const el =
     stage && stage.getBoundingClientRect().width > 0
       ? stage

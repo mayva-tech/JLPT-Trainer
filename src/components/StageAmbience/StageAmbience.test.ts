@@ -42,7 +42,7 @@ function word(
 
 describe("theme resolver — words pick their theme", () => {
   const cases: [string, string, AmbienceTheme][] = [
-    ["花見", "cherry blossom viewing", "spring"],
+    ["桜", "cherry blossoms", "spring"],
     ["花火", "fireworks", "summer"],
     ["紅葉", "autumn leaves", "autumn"],
     ["雪", "snow", "winter"],
@@ -86,6 +86,98 @@ describe("theme resolver — words pick their theme", () => {
       expect(ambienceForVocab(word(w, m))).toBe(theme);
     });
   }
+
+  const motionCases: [string, string, AmbienceTheme][] = [
+    ["自転車", "bicycle", "cycling"],
+    ["凧", "kite", "kite"],
+    ["踏切", "railroad crossing", "enoden"],
+    ["灯籠", "lantern", "toro"],
+    ["蛍", "firefly", "hotaru"],
+    ["観覧車", "Ferris wheel", "kanransha"],
+    ["水族館", "aquarium", "aquarium"],
+    ["サーフィン", "surfing", "surf"],
+    ["風船", "balloon", "balloon"],
+    ["駅伝", "long-distance relay", "ekiden"],
+    ["運動会", "sports day", "undokai"],
+    ["洗濯", "laundry; washing", "laundry"],
+    ["出前", "food delivery", "demae"],
+    ["鹿", "deer", "deer"],
+    ["雲海", "sea of clouds", "unkai"],
+    ["テント", "tent", "camping"],
+    ["スキー", "skiing", "ski"],
+    ["犬", "dog", "dogWalk"],
+    ["招き猫", "beckoning cat", "manekineko"],
+    ["虹", "rainbow", "rainbow"],
+  ];
+  for (const [w, m, theme] of motionCases) {
+    it(`${w} → ${theme}`, () => {
+      expect(ambienceForVocab(word(w, m))).toBe(theme);
+    });
+  }
+
+  it("a category shared by several scenes spreads its words across them", () => {
+    const seen = new Set<AmbienceTheme>();
+    for (let id = 1; id <= 40; id++) {
+      seen.add(
+        ambienceForVocab({
+          id,
+          word: "〜",
+          meaning: "",
+          subcategory: "Daily Vocabulary",
+        }),
+      );
+    }
+    expect(seen.size).toBeGreaterThanOrEqual(3);
+    // …and each word keeps its own scene.
+    const one = {
+      id: 7,
+      word: "〜",
+      meaning: "",
+      subcategory: "Daily Vocabulary",
+    };
+    expect(ambienceForVocab(one)).toBe(ambienceForVocab(one));
+  });
+
+  const peopleCases: [string, string, AmbienceTheme][] = [
+    ["花見", "cherry blossom viewing", "hanami"],
+    ["盆踊り", "Bon festival dance", "bonOdori"],
+    ["通勤", "commuting", "rushHour"],
+    ["書道", "calligraphy", "shodo"],
+    ["抹茶", "powdered green tea", "sado"],
+    ["相撲", "sumo wrestling", "sumo"],
+    ["神輿", "portable shrine", "mikoshi"],
+    ["車窓", "view from a train window", "trainWindow"],
+    ["コンビニ", "convenience store", "konbini"],
+    ["自販機", "vending machine", "jihanki"],
+    ["交差点", "intersection", "scramble"],
+    ["剣道", "kendo", "kendo"],
+    ["黒板", "blackboard", "classroom"],
+    ["釣り", "fishing", "fishing"],
+    ["寿司", "sushi", "kaitenSushi"],
+    ["雪だるま", "snowman", "kamakura"],
+    ["金魚", "goldfish", "kingyo"],
+    ["体操", "exercises", "radioTaiso"],
+    ["名刺", "business card", "meishi"],
+    ["縁側", "veranda", "engawa"],
+  ];
+  for (const [w, m, theme] of peopleCases) {
+    it(`${w} → ${theme}`, () => {
+      expect(ambienceForVocab(word(w, m))).toBe(theme);
+    });
+  }
+
+  it("look-alike kanji stay with their own scene", () => {
+    // 協力 is cooperation (合掌造り), not 力 strength (相撲); 期待 is not 待つ.
+    expect(ambienceForVocab(word("協力", "cooperation"))).toBe("gassho");
+    expect(
+      scoreAmbience({
+        id: 1,
+        primary: ["期待", ""],
+        categories: [],
+        context: [],
+      }).fishing,
+    ).toBe(0);
+  });
 
   it("運 (luck) is a shrine word, but 運転 (driving) is not", () => {
     expect(
@@ -178,8 +270,8 @@ describe("theme resolver — words pick their theme", () => {
       pattern: "〜にもかかわらず",
       meaning: "despite",
       subcategory: "Concession & Contrast",
-      sentence: "大雨にもかかわらず、試合は行われた。",
-      sentenceMeaning: "Despite the heavy rain, the match was held.",
+      sentence: "雨にもかかわらず、傘を持たずに出かけた。",
+      sentenceMeaning: "Despite the rain, he went out without an umbrella.",
     };
     expect(ambienceForGrammar(g)).toBe("rain");
   });
@@ -198,18 +290,18 @@ describe("theme resolver — whole corpus", () => {
     for (const t of themes) expect(ALL).toContain(t);
   });
 
-  it("uses all thirty themes", () => {
-    expect(AMBIENCE_THEMES).toHaveLength(30);
-    expect(new Set(themes).size).toBe(30);
+  it("uses all seventy themes", () => {
+    expect(AMBIENCE_THEMES).toHaveLength(70);
+    expect(new Set(themes).size).toBe(70);
   });
 
   it("keeps variety — no theme takes over the corpus", () => {
     const counts = new Map<AmbienceTheme, number>();
     for (const t of themes) counts.set(t, (counts.get(t) ?? 0) + 1);
-    for (const [, n] of counts) expect(n / themes.length).toBeLessThan(0.2);
+    for (const [, n] of counts) expect(n / themes.length).toBeLessThan(0.1);
   });
 
-  it("varies inside a lesson — 10-word vocabulary lessons average 3+ scenes", () => {
+  it("varies inside a lesson — 10-word vocabulary lessons average 3.8+ scenes", () => {
     let distinct = 0;
     let lessons = 0;
     for (let i = 0; i < vocabulary.length; i += 10) {
@@ -217,7 +309,7 @@ describe("theme resolver — whole corpus", () => {
       distinct += new Set(vocabulary.slice(i, i + 10).map(ambienceForVocab))
         .size;
     }
-    expect(distinct / lessons).toBeGreaterThanOrEqual(3);
+    expect(distinct / lessons).toBeGreaterThanOrEqual(3.8);
   });
 });
 

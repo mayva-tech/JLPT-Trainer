@@ -1803,6 +1803,52 @@
   }
 }
 
+/* Narrow desktop windows: compact controls so the wrapped rows stay inside
+   the solid band under the stage instead of spilling over it. */
+@media (max-width: 1280px) {
+  .nav-bar {
+    bottom: 6px;
+    gap: 4px;
+    row-gap: 4px;
+    max-width: 98vw;
+  }
+
+  .nav-bar button,
+  .nav-bar .btn-secondary,
+  .nav-bar .toc-nav-btn {
+    font-size: 11px;
+    line-height: 1.2;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .nav-bar .rate-btn,
+  .nav-bar .furi-btn,
+  .nav-bar .auto-btn,
+  .nav-bar .register-btn,
+  .nav-bar .quiz-auto-btn {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+  }
+
+  .nav-bar .rate-group {
+    gap: 3px;
+    margin: 0;
+  }
+
+  .nav-bar .head-style-btn {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nav-bar .head-style-group {
+    padding: 0 1px 0 5px;
+  }
+}
+
 /* Phone-width portrait: one full-height stage (no 16:9 letterbox) with larger
    item text, and a compact control bar so the item stays the focus. */
 @media (max-width: 700px) and (orientation: portrait) {
@@ -1985,20 +2031,22 @@
     left: 0;
     right: 0;
     transform: none;
-    bottom: 6px;
-    gap: 5px;
-    row-gap: 5px;
+    bottom: 4px;
+    gap: 4px;
+    row-gap: 3px;
     width: auto;
     max-width: none;
-    padding: 0 6px;
+    padding: 0 4px;
   }
 
   .nav-bar button,
   .nav-bar .toc-nav-btn,
   .nav-bar .btn-secondary {
-    font-size: 11px;
-    padding: 5px 10px;
-    border-radius: 7px;
+    font-size: 10px;
+    line-height: 1.2;
+    padding: 3px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
   }
 
   .rate-btn,
@@ -2011,18 +2059,33 @@
   .nav-bar .auto-btn,
   .nav-bar .register-btn,
   .nav-bar .quiz-auto-btn {
-    font-size: 11px !important;
-    padding: 5px 9px !important;
-    border-radius: 7px !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 3px 7px !important;
+    border-radius: 6px !important;
   }
 
-  .auto-btn {
+  .auto-btn,
+  .quiz-auto-btn {
     min-width: 0;
   }
 
   .rate-group {
-    gap: 4px;
+    gap: 3px;
     margin: 0;
+  }
+
+  .nav-bar .head-style-bar {
+    gap: 3px;
+  }
+
+  .nav-bar .head-style-group {
+    padding: 0 1px 0 5px;
+  }
+
+  .nav-bar .head-style-btn {
+    width: 18px;
+    height: 18px;
   }
 
   /* Same action as the Table of Contents button beside it. */
@@ -2038,28 +2101,29 @@
 
   /* Quiz controls: a slim strip just above the TOC button, not a floating box. */
   .production-panel--compact {
-    bottom: 40px;
+    bottom: 28px;
     width: 100vw;
     border-radius: 0;
     border-left: 0;
     border-right: 0;
-    padding: 5px 6px;
+    padding: 3px 4px;
     box-shadow: none;
   }
 
   .production-panel--compact .production-actions {
     justify-content: center;
-    gap: 5px;
+    gap: 3px;
   }
 
   .production-panel--compact .production-actions button {
-    font-size: 11px;
-    padding: 5px 9px;
-    border-radius: 7px;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 3px 7px !important;
+    border-radius: 6px !important;
   }
 
   .app-view:has(.production-panel--compact) .stage-wrapper--with-panel {
-    --portrait-nav-clear: 128px;
+    --portrait-nav-clear: 80px;
   }
 
   .quiz-header .category-chip {

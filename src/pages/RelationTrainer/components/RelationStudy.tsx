@@ -18,6 +18,13 @@ import { RelationExampleBlock } from "./RelationExampleBlock";
 import { RelationPair } from "./RelationPair";
 import { RelationTypeBanner } from "./RelationTypeBanner";
 import { RelationWord } from "./RelationWord";
+import { StageAmbience } from "../../../components/StageAmbience/StageAmbience";
+import { useAmbienceSetting } from "../../../components/StageAmbience/useAmbienceSetting";
+import {
+  ambienceGlyphs,
+  resolveAmbience,
+  type AmbienceTheme,
+} from "../../../components/StageAmbience/themes";
 
 interface Props {
   relations: readonly WordRelation[];
@@ -87,6 +94,25 @@ export function RelationStudy({ relations }: Props) {
   );
 
   const relation = deck[index] ?? null;
+
+  const [showAmbience] = useAmbienceSetting();
+  const ambienceTheme: AmbienceTheme | null = useMemo(() => {
+    if (!showAmbience || !relation) return null;
+    return resolveAmbience({
+      id: `r${relation.id}`,
+      primary: [
+        relation.word1.japanese,
+        relation.word1.meaning,
+        relation.word2.japanese,
+        relation.word2.meaning,
+      ],
+      categories: relation.tags,
+      context: [relation.example?.japanese, relation.example?.english],
+    });
+  }, [showAmbience, relation]);
+  const ambienceKanji = relation
+    ? ambienceGlyphs(relation.word1.japanese + relation.word2.japanese)
+    : "";
 
   const backRef = useRef<HTMLDivElement>(null);
 
@@ -210,6 +236,7 @@ export function RelationStudy({ relations }: Props) {
 
   return (
     <div className="rt-study-card">
+      <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} />
       <div className="rt-card-head">
         <div className="rt-playrow">
           <button
