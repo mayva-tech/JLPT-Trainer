@@ -39,6 +39,10 @@ import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
 import { usePictureSetting } from "../components/Illustration/usePictureSetting";
 import { StageAmbience } from "../components/StageAmbience/StageAmbience";
 import { useAmbienceSetting } from "../components/StageAmbience/useAmbienceSetting";
+import { ReadHook, ReadHookBanner } from "../components/Retention/ReadHook";
+import { PauseAnswerCard } from "../components/Retention/PauseAnswerCard";
+import { useRetentionSettings } from "../components/Retention/useRetentionSettings";
+import type { CheckCard } from "../components/Retention/retentionQuiz";
 import {
   ambienceForGrammar,
   ambienceForOnomatopoeia,
@@ -81,6 +85,8 @@ import {
 import { autoModeTiming } from "../config/autoModeTiming";
 import {
   autoModeRunner,
+  type CheckPhase,
+  type ReadHookState,
   type AutoModeUi,
 } from "../services/autoModeRunner";
 import {
@@ -265,6 +271,11 @@ export function PlayerPage() {
   const [showFurigana, setShowFurigana] = useState(true);
   const [showPictures, togglePictures] = usePictureSetting();
   const [showAmbience, toggleAmbience] = useAmbienceSetting();
+  const [retention, toggleRetention] = useRetentionSettings();
+  const retentionRef = useRef(retention);
+  retentionRef.current = retention;
+  const [readHook, setReadHook] = useState<ReadHookState | null>(null);
+  const [checkView, setCheckView] = useState<{ card: CheckCard; phase: CheckPhase } | null>(null);
   const [autoState, setAutoState] = useState<AutoState>("off");
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
@@ -849,6 +860,9 @@ export function PlayerPage() {
       setSpeechLang,
       setSpeechStatus,
       setHighlight,
+      getRetention: () => retentionRef.current,
+      setReadHook,
+      setCheck: (card, phase = "ask") => setCheckView(card ? { card, phase } : null),
     };
   }
 
@@ -2223,6 +2237,15 @@ export function PlayerPage() {
 
   function renderStep() {
     if (!item) return null;
+    if (checkView) {
+      return (
+        <PauseAnswerCard
+          card={checkView.card}
+          phase={checkView.phase}
+          thinkMs={autoModeTiming.checkThinkMs}
+        />
+      );
+    }
     switch (step) {
       case "category":
         return (
@@ -2233,15 +2256,18 @@ export function PlayerPage() {
         );
       case "word":
         return (
-          <WordCard
-            item={item}
-            jaHighlight={jaLessonHighlight}
-            enHighlight={enLessonHighlight}
-            nuanceHighlight={nuanceLessonHighlight}
-            nuanceActive={speechLang === "nuance"}
-            showFurigana={showFurigana}
-            showPicture={showPictures}
-          />
+          <ReadHook active={readHook != null}>
+            <WordCard
+              item={item}
+              jaHighlight={jaLessonHighlight}
+              enHighlight={readHook ? null : enLessonHighlight}
+              nuanceHighlight={nuanceLessonHighlight}
+              nuanceActive={speechLang === "nuance"}
+              showFurigana={showFurigana}
+              showPicture={showPictures}
+              overlay={readHook ? <ReadHookBanner ms={readHook.ms} runKey={readHook.key} /> : null}
+            />
+          </ReadHook>
         );
       case "phrase":
         return (
@@ -3800,6 +3826,26 @@ export function PlayerPage() {
               onClick={toggleAmbience}
             >
               背景 {showAmbience ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={retention.hook ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={'"Can you read this?" — blur and countdown before each word (Auto Mode)'}
+              aria-pressed={retention.hook}
+              onClick={() => toggleRetention("hook")}
+            >
+              読 Hook {retention.hook ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={retention.check ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={`"Pause & answer" question every ${autoModeTiming.checkEvery} words (Auto Mode)`}
+              aria-pressed={retention.check}
+              onClick={() => toggleRetention("check")}
+            >
+              ⏸ Quiz {retention.check ? "ON" : "OFF"}
             </button>
             <button
               type="button"

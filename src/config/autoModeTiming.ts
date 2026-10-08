@@ -14,6 +14,14 @@ export const autoModeTiming = {
   /** Cap so very long lines don't stall the lesson forever. */
   shadowingPauseMax: 12000,
   betweenItemsPause: 1800,
+  /** "Can you read this?" countdown before each word (blurred word on screen). */
+  readHookMs: 2500,
+  /** "Pause & answer" — a checkpoint after every this many words. */
+  checkEvery: 5,
+  /** Thinking time on a checkpoint question (the countdown ring). */
+  checkThinkMs: 5000,
+  /** Hold on the revealed answer before the lesson continues. */
+  checkRevealHold: 1500,
 } as const;
 
 /** ms per mora at rate 1 — matches the karaoke model in speechHighlightUnits. */

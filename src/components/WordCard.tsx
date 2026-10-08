@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { VocabularyItem } from "../types/vocabulary";
 import type { SpeechHighlight } from "../services/speechService";
 import { HighlightedEnglish } from "./HighlightedEnglish";
@@ -17,6 +18,8 @@ type Props = {
   showFurigana?: boolean;
   /** Small animated picture of the word above it (player "絵" setting). */
   showPicture?: boolean;
+  /** Drawn just above the word, without moving the layout (e.g. the read hook). */
+  overlay?: ReactNode;
 };
 
 export function WordCard({
@@ -27,6 +30,7 @@ export function WordCard({
   nuanceActive = false,
   showFurigana = true,
   showPicture = false,
+  overlay = null,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -40,6 +44,7 @@ export function WordCard({
           showFurigana={showFurigana}
         />
         <JlptLevelBadge level={item.jlpt} />
+        {overlay}
       </div>
       <PitchAccentLine
         word={item.word}

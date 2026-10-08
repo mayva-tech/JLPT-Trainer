@@ -11,6 +11,17 @@ import {
 } from "./speechService";
 import { speakNuance } from "./nuancePlayback";
 import { vocabStepNuance } from "../utils/lessonNuance";
+import {
+  buildCheckCard,
+  checkQuestion,
+  checkpointIndices,
+  firstSense,
+  type CheckCard,
+} from "../components/Retention/retentionQuiz";
+
+/** Countdown shown on the "Can you read this?" hook; ms 0 = banner only. */
+export type ReadHookState = { ms: number; key: number };
+export type CheckPhase = "ask" | "think" | "reveal";
 
 export type AutoModeUi = {
   setItemIndex: (index: number) => void;
@@ -22,6 +33,10 @@ export type AutoModeUi = {
   setSpeechLang: (lang: "ja" | "en" | "nuance" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setHighlight: (h: SpeechHighlight | null) => void;
+  /** Retention features; omitted = both off (grammar, older callers). */
+  getRetention?: () => { hook: boolean; check: boolean };
+  setReadHook?: (state: ReadHookState | null) => void;
+  setCheck?: (card: CheckCard | null, phase?: CheckPhase) => void;
 };
 
 type Section = "word" | "phrase" | "sentence";
@@ -36,6 +51,9 @@ export class AutoModeRunner {
   private speaking = false;
   private pauseTimers = new Set<number>();
   private pauseWake: (() => void) | null = null;
+  private hookKey = 0;
+  /** UI of the running session, so a hard abort can clear the hook / card. */
+  private ui: AutoModeUi | null = null;
 
   isActive(): boolean {
     return this.session > 0 && !this.softStop;
@@ -56,6 +74,9 @@ export class AutoModeRunner {
     this.speaking = false;
     this.clearPauses();
     speechService.stop();
+    this.ui?.setReadHook?.(null);
+    this.ui?.setCheck?.(null);
+    this.ui = null;
   }
 
   /**
@@ -71,10 +92,12 @@ export class AutoModeRunner {
     this.abort();
     this.softStop = false;
     const sid = ++this.session;
+    this.ui = ui;
     onState("on");
 
     const from = Math.max(0, Math.min(startItemIndex, items.length - 1));
     let completedAll = true;
+    const checkpoints = checkpointIndices(items.length, T.checkEvery);
 
     try {
       for (let i = from; i < items.length; i++) {
@@ -89,6 +112,14 @@ export class AutoModeRunner {
         if (i === 0) {
           ui.setStep("category");
           await this.pause(T.categoryPause, sid);
+          if (!this.shouldContinue(sid)) {
+            completedAll = false;
+            break;
+          }
+        }
+
+        if (ui.getRetention?.().hook) {
+          await this.runReadHook(sid, ui, i === from);
           if (!this.shouldContinue(sid)) {
             completedAll = false;
             break;
@@ -119,6 +150,14 @@ export class AutoModeRunner {
           break;
         }
 
+        if (ui.getRetention?.().check && checkpoints.includes(i)) {
+          await this.runCheck(sid, ui, items, i, checkpoints);
+          if (!this.shouldContinue(sid)) {
+            completedAll = false;
+            break;
+          }
+        }
+
         if (i < items.length - 1) {
           await this.pause(T.betweenItemsPause, sid);
         }
@@ -130,6 +169,8 @@ export class AutoModeRunner {
         ui.setSpeechStatus("idle");
         ui.setSpeechLang(null);
         ui.setHighlight(null);
+        ui.setReadHook?.(null);
+        ui.setCheck?.(null);
         onState("off");
       }
     }
@@ -396,6 +437,67 @@ export class AutoModeRunner {
         },
       });
     });
+  }
+
+  /**
+   * "Can you read this?" — the word blurred with a countdown before it is
+   * spoken. The line is said aloud on the first word only; after that the
+   * banner and ring carry it, so ten words don't repeat the same sentence.
+   */
+  private async runReadHook(sid: number, ui: AutoModeUi, speak: boolean): Promise<void> {
+    ui.setStep("word");
+    ui.setShowFurigana(false);
+    if (speak) {
+      ui.setReadHook?.({ ms: 0, key: ++this.hookKey });
+      const rate = resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), SPEECH_RATE_NORMAL);
+      await this.speakEnglish(ui, "Can you read this?", rate, sid);
+      if (!this.shouldContinue(sid)) return;
+    }
+    ui.setReadHook?.({ ms: T.readHookMs, key: ++this.hookKey });
+    await this.pause(T.readHookMs, sid);
+    ui.setReadHook?.(null);
+  }
+
+  /**
+   * "Pause & answer" — a three-choice question about one of the words since
+   * the previous checkpoint: ask (spoken) → think (countdown) → reveal.
+   */
+  private async runCheck(
+    sid: number,
+    ui: AutoModeUi,
+    items: readonly VocabularyItem[],
+    index: number,
+    checkpoints: readonly number[]
+  ): Promise<void> {
+    const n = checkpoints.indexOf(index);
+    const windowStart = n > 0 ? checkpoints[n - 1]! + 1 : 0;
+    const card = buildCheckCard(items.slice(windowStart, index + 1), items, n + 1);
+    if (!card) return;
+    const rate = resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), SPEECH_RATE_NORMAL);
+
+    await this.pause(T.shortPause, sid);
+    if (!this.shouldContinue(sid)) return;
+    ui.setCheck?.(card, "ask");
+    await this.speakEnglish(ui, `Pause and answer! ${checkQuestion(card)}`, rate, sid);
+    if (!this.shouldContinue(sid)) return;
+    // Saying a meaning question's word aloud doesn't give the answer away;
+    // saying a reading question's word would.
+    if (card.kind === "meaning") {
+      await this.speakJapanese(ui, card.item.word, rate, sid, card.item.reading);
+      if (!this.shouldContinue(sid)) return;
+    }
+
+    ui.setCheck?.(card, "think");
+    await this.pause(T.checkThinkMs, sid);
+    if (!this.shouldContinue(sid)) return;
+
+    ui.setCheck?.(card, "reveal");
+    await this.speakJapanese(ui, card.item.word, rate, sid, card.item.reading);
+    if (!this.shouldContinue(sid)) return;
+    await this.speakEnglish(ui, firstSense(card.item.meaning), rate, sid);
+    if (!this.shouldContinue(sid)) return;
+    await this.pause(T.checkRevealHold, sid);
+    ui.setCheck?.(null);
   }
 
   private async runShadowingAndReview(

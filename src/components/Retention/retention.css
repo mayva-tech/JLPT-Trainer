@@ -1,0 +1,232 @@
+/* ─── Retention: "Can you read this?" and "Pause & answer" ─────────
+   Sized in cqw/cqh of the 16:9 stage, like the lesson cards. */
+
+/* Hook: blur the word, hide what would give it away. */
+.ret-hook {
+  display: contents;
+}
+
+/* The word stays sharp (that is the test); everything that would give the
+   reading or meaning away keeps its space but is hidden. */
+.ret-hook--on :is(.word-meaning, .pa--card, .lesson-nuance, .lesson-picture, .jlpt-level-badge) {
+  visibility: hidden;
+}
+
+.ret-hook--on .word-main {
+  animation: rtBreathe 1.6s ease-in-out infinite;
+}
+
+.ret-hook--on .word-headline {
+  position: relative;
+}
+
+/* Anchored just above the word: no layout shift when it goes away. */
+.ret-hook-banner {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 2.6cqh;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  white-space: nowrap;
+  animation: rtBannerIn 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes rtBannerIn {
+  from { opacity: 0; transform: translateX(-50%) scale(0.88); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+@keyframes rtBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.ret-hook-en {
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 3.6cqw;
+  color: var(--text);
+}
+
+.ret-hook-ja {
+  font-family: var(--font-jp);
+  font-size: 2.6cqw;
+  color: var(--accent, #f0c078);
+}
+
+/* Countdown ring: a conic sweep that empties over `animation-duration`. */
+.ret-ring {
+  --rt-p: 100%;
+  width: 3.4cqw;
+  height: 3.4cqw;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent, #f0c078) var(--rt-p), rgba(255, 255, 255, 0.12) 0);
+  -webkit-mask: radial-gradient(circle, transparent 56%, #000 58%);
+  mask: radial-gradient(circle, transparent 56%, #000 58%);
+  animation-name: rtDrain;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+.ret-ring--small {
+  width: 2.2cqw;
+  height: 2.2cqw;
+}
+
+@property --rt-p {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@keyframes rtDrain {
+  from { --rt-p: 100%; }
+  to { --rt-p: 0%; }
+}
+
+/* Pause & answer card */
+.ret-check {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: rtPop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.ret-check-tag {
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 2cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1d2638;
+  background: var(--accent, #f0c078);
+  padding: 0.6cqh 1.6cqw;
+  border-radius: 10cqw;
+}
+
+.ret-check-question {
+  font-family: var(--font-en);
+  font-size: 3cqw;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 2.4cqh;
+}
+
+.ret-check-word {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  font-size: 8cqw;
+  line-height: 1.25;
+  color: var(--text);
+  margin-top: 1.2cqh;
+}
+
+.ret-check-word rt {
+  font-size: 0.32em;
+  color: var(--accent, #f0c078);
+}
+
+.ret-options {
+  list-style: none;
+  margin: 2.6cqh 0 0;
+  padding: 0;
+  display: flex;
+  gap: 1.6cqw;
+}
+
+.ret-option {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  min-width: 18cqw;
+  max-width: 28cqw;
+  padding: 1.4cqh 1.6cqw;
+  border-radius: 1.4cqw;
+  background: rgba(12, 18, 30, 0.6);
+  border: 0.22cqw solid rgba(255, 255, 255, 0.14);
+  transition: opacity 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.ret-option-label {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.8cqw;
+  height: 2.8cqw;
+  border-radius: 50%;
+  font-family: var(--font-en);
+  font-weight: 800;
+  font-size: 1.7cqw;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+
+.ret-option-text {
+  font-size: 2.3cqw;
+  color: var(--text);
+  line-height: 1.25;
+  text-align: left;
+}
+
+.ret-option[lang="ja"] .ret-option-text {
+  font-family: var(--font-jp);
+}
+
+.ret-option--correct {
+  border-color: #7fd49a;
+  transform: scale(1.05);
+  box-shadow: 0 0 2.4cqw rgba(127, 212, 154, 0.3);
+}
+
+.ret-option--correct .ret-option-label {
+  background: #7fd49a;
+  color: #12301d;
+}
+
+.ret-option--wrong {
+  opacity: 0.35;
+}
+
+.ret-option-tick {
+  font-size: 2.2cqw;
+  color: #7fd49a;
+  font-weight: 800;
+}
+
+.ret-check-think,
+.ret-check-answer {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  margin-top: 3cqh;
+  font-family: var(--font-en);
+  font-size: 2cqw;
+  color: var(--text-softer);
+}
+
+.ret-check-answer {
+  font-size: 2.4cqw;
+  color: var(--text);
+  animation: rtPop 0.4s ease both;
+}
+
+.ret-check-answer [lang="ja"] {
+  font-family: var(--font-jp);
+}
+
+@keyframes rtPop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ret-hook-banner,
+  .ret-hook--on .word-main,
+  .ret-check,
+  .ret-check-answer {
+    animation: none;
+  }
+}
