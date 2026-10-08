@@ -450,6 +450,36 @@
   animation: shPop 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
 }
 
+.sh-word--brush {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.06em;
+}
+
+.sh-reading {
+  font-size: 0.3em;
+  font-weight: 600;
+  color: #f0c078;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transform: translateY(0.2em);
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.sh-reading--on {
+  opacity: 1;
+  transform: none;
+}
+
+/* KanjiVG glyphs fill ~80% of their box: scale up to match typed kanji,
+   with a heavier brush for a phone screen. */
+.sh-strokes {
+  color: #fbf8f0;
+  font-size: 1.24em;
+  --ks-weight: 8.8;
+}
+
 .sh-word--pop {
   animation: shPop 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
 }

@@ -15,7 +15,8 @@ import {
   reached,
   repeatGapMs,
 } from "./shortScript";
-import { buildShortMeta, firstSense } from "./shortsMeta";
+import { KANJIVG_CREDIT, buildShortMeta, firstSense } from "./shortsMeta";
+import { loadKanjiStrokes } from "../../components/KanjiStrokes/loadStrokes";
 import { phraseChunks } from "./phraseBreaks";
 import { ShortStage, type ShortStageProps } from "./ShortStage";
 import { useShortPlayer } from "./useShortPlayer";
@@ -83,6 +84,14 @@ describe("Short script", () => {
     expect(steps[steps.length - 1]).toMatchObject({ kind: "wait", phase: "outro" });
   });
 
+  it("adds a draw beat for the stroke-order writing when asked", () => {
+    const s = buildShortScript(sample, { drawMs: 900 });
+    expect(s[3]).toMatchObject({ kind: "wait", phase: "draw", ms: 1200 });
+    expect(s[4]).toMatchObject({ kind: "say", phase: "reveal" });
+    expect(buildShortScript(sample).some((x) => x.phase === "draw")).toBe(false);
+    expect(estimateShortSeconds(sample, { drawMs: 3000 })).toBeGreaterThan(estimateShortSeconds(sample));
+  });
+
   it("falls back to shadowing the word when there is no sentence", () => {
     const s = buildShortScript({ ...sample, sentence: "", sentenceReading: "", sentenceMeaning: "" });
     expect(s.some((x) => x.phase === "example")).toBe(false);
@@ -147,6 +156,12 @@ describe("Short upload text", () => {
     expect(meta.description).toContain("JLPT N5 Vocabulary #1 | People & Family 1");
     expect(meta.description).toContain("#learnjapanese");
     expect(meta.pinnedComment).toContain("「人」");
+    expect(meta.description).not.toContain("KanjiVG");
+  });
+
+  it("credits KanjiVG when the Short animates strokes", () => {
+    const ctx = { level: "N5" as const, wordNumber: 3, lessonNumber: 1, lessonTheme: "People" };
+    expect(buildShortMeta(sample, ctx, { strokeCredit: true }).description).toContain(KANJIVG_CREDIT);
   });
 });
 
@@ -221,6 +236,28 @@ function stage(over: Partial<ShortStageProps> = {}) {
   };
   act(() => root.render(createElement(ShortStage, props)));
 }
+
+describe("<ShortStage /> brush mode", () => {
+  beforeEach(async () => {
+    await loadKanjiStrokes();
+  });
+
+  it("hook keeps the clear typed word; draw writes it stroke by stroke", () => {
+    stage({ phase: "hook", brush: true });
+    expect(host.querySelector(".sh-word--hook")).not.toBeNull();
+    expect(host.querySelector(".ks")).toBeNull();
+    stage({ phase: "draw", brush: true, runKey: 1 });
+    expect(host.querySelector(".sh-word--hook")).toBeNull();
+    expect(host.querySelector(".ks--draw .ks-ink path")).not.toBeNull();
+    expect(host.querySelector(".sh-reading--on")).toBeNull();
+  });
+
+  it("reveal shows the finished word with its reading above", () => {
+    stage({ phase: "reveal", brush: true, runKey: 1 });
+    expect(host.querySelector(".ks--done")).not.toBeNull();
+    expect(host.querySelector(".sh-reading--on")?.textContent).toBe("ひと");
+  });
+});
 
 describe("<ShortStage />", () => {
   it("hook: clear word, no furigana, hook line and countdown", () => {

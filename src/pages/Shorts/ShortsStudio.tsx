@@ -13,6 +13,8 @@ import { ShortStage } from "./ShortStage";
 import { buildShortScript, estimateShortSeconds } from "./shortScript";
 import { buildShortMeta, firstSense } from "./shortsMeta";
 import { useShortPlayer } from "./useShortPlayer";
+import { kanjiStrokesIfLoaded, loadKanjiStrokes } from "../../components/KanjiStrokes/loadStrokes";
+import { hasStrokes, planStrokes, type StrokeData } from "../../components/KanjiStrokes/strokePlan";
 import "./shorts.css";
 
 /**
@@ -37,6 +39,8 @@ interface Settings {
   pan: boolean;
   autoNext: boolean;
   safeZones: boolean;
+  /** Stroke-order writing of the word before it is revealed. */
+  brush: boolean;
 }
 
 const DEFAULTS: Settings = {
@@ -47,6 +51,7 @@ const DEFAULTS: Settings = {
   pan: true,
   autoNext: false,
   safeZones: true,
+  brush: true,
 };
 
 function loadSettings(): Settings {
@@ -87,6 +92,21 @@ export default function ShortsStudio() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showAmbience] = useAmbienceSetting();
   const pendingPlay = useRef(false);
+  const [strokeData, setStrokeData] = useState<StrokeData | null>(kanjiStrokesIfLoaded);
+  const [runKey, setRunKey] = useState(0);
+
+  // Load the stroke data up front so the first Short draws without a gap.
+  useEffect(() => {
+    if (strokeData) return;
+    let alive = true;
+    loadKanjiStrokes().then(
+      (d) => alive && setStrokeData(d),
+      () => undefined
+    );
+    return () => {
+      alive = false;
+    };
+  }, [strokeData]);
 
   const update = useCallback((patch: Partial<Settings>) => {
     setSettings((prev) => ({ ...prev, ...patch }));
@@ -115,8 +135,10 @@ export default function ShortsStudio() {
   const range = lesson ? getPlaylistWordRange(lesson.id) : null;
   const wordNumber = (range?.firstWordNumber ?? 1) + index;
 
-  const steps = useMemo(() => (item ? buildShortScript(item) : []), [item]);
-  const panSeconds = useMemo(() => (item ? estimateShortSeconds(item) : 30), [item]);
+  const brush = Boolean(settings.brush && item && strokeData && hasStrokes(item.word, strokeData));
+  const drawMs = brush && item && strokeData ? planStrokes(item.word, strokeData).totalMs : 0;
+  const steps = useMemo(() => (item ? buildShortScript(item, { drawMs }) : []), [item, drawMs]);
+  const panSeconds = useMemo(() => (item ? estimateShortSeconds(item, { drawMs }) : 30), [item, drawMs]);
 
   const onDone = useCallback(() => {
     if (!settings.autoNext || index >= words.length - 1) return;
@@ -129,7 +151,12 @@ export default function ShortsStudio() {
   }, [settings.autoNext, index, words.length, update]);
 
   const player = useShortPlayer(steps, onDone);
-  const { play, stop } = player;
+  const { stop } = player;
+  const playShort = player.play;
+  const play = useCallback(() => {
+    setRunKey((k) => k + 1);
+    playShort();
+  }, [playShort]);
 
   // Auto-next: start the next Short once its script is in place.
   useEffect(() => {
@@ -182,14 +209,18 @@ export default function ShortsStudio() {
   const meta = useMemo(
     () =>
       item && lesson && range
-        ? buildShortMeta(item, {
-            level: settings.level,
-            wordNumber,
-            lessonNumber: range.lessonNumber,
-            lessonTheme: lesson.subtitle,
-          })
+        ? buildShortMeta(
+            item,
+            {
+              level: settings.level,
+              wordNumber,
+              lessonNumber: range.lessonNumber,
+              lessonTheme: lesson.subtitle,
+            },
+            { strokeCredit: brush }
+          )
         : null,
-    [item, lesson, range, settings.level, wordNumber]
+    [item, lesson, range, settings.level, wordNumber, brush]
   );
 
   const copy = async (label: string, text: string) => {
@@ -218,6 +249,8 @@ export default function ShortsStudio() {
       panSeconds={panSeconds}
       showSafeZones={clean === "off" && settings.safeZones}
       blackout={blackout}
+      brush={brush}
+      runKey={runKey}
     />
   );
 
@@ -323,6 +356,10 @@ export default function ShortsStudio() {
           <label>
             <input type="checkbox" checked={settings.pan} onChange={(e) => update({ pan: e.target.checked })} />
             Camera pan across the backdrop
+          </label>
+          <label>
+            <input type="checkbox" checked={settings.brush} onChange={(e) => update({ brush: e.target.checked })} />
+            Brush-stroke reveal (stroke order)
           </label>
           <label>
             <input

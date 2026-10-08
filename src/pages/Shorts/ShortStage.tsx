@@ -14,6 +14,7 @@ import {
 import type { JlptLevel } from "../../types/level";
 import { hookLineFor, phaseProgress, reached, type ShortPhase } from "./shortScript";
 import { ShortSentence } from "./ShortSentence";
+import { KanjiStrokes } from "../../components/KanjiStrokes/KanjiStrokes";
 
 export interface ShortStageProps {
   item: VocabularyItem;
@@ -35,6 +36,10 @@ export interface ShortStageProps {
   showSafeZones?: boolean;
   /** Fade to black between batch Shorts. */
   blackout?: boolean;
+  /** Write the word in stroke order (draw phase) instead of popping it in. */
+  brush?: boolean;
+  /** Changes on every play, so a replay redraws the strokes. */
+  runKey?: number;
 }
 
 /** Word size: big for short words, shrinking so long words stay on one line. */
@@ -94,19 +99,33 @@ export function ShortStage(props: ShortStageProps) {
           <Illustration picture={vocabPicture(item.id)} className="sh-picture-art" />
         </div>
 
-        <div
-          className={`sh-word${hook ? " sh-word--hook" : " sh-word--pop"}`}
-          style={{ fontSize: wordSize(item.word) }}
-          lang="ja"
-        >
-          <FuriganaWrapText
-            surface={item.word}
-            reading={item.reading}
-            className="sh-word-text"
-            highlight={phase === "reveal" ? ja : null}
-            showFurigana={!hook}
-          />
-        </div>
+        {props.brush && !hook ? (
+          <div className="sh-word sh-word--brush" style={{ fontSize: wordSize(item.word) }} lang="ja">
+            <div className={`sh-reading${reached(phase, "reveal") ? " sh-reading--on" : ""}`}>
+              {item.reading}
+            </div>
+            <KanjiStrokes
+              word={item.word}
+              state={phase === "draw" ? "draw" : "done"}
+              runKey={props.runKey}
+              className="sh-strokes"
+            />
+          </div>
+        ) : (
+          <div
+            className={`sh-word${hook ? " sh-word--hook" : " sh-word--pop"}`}
+            style={{ fontSize: wordSize(item.word) }}
+            lang="ja"
+          >
+            <FuriganaWrapText
+              surface={item.word}
+              reading={item.reading}
+              className="sh-word-text"
+              highlight={phase === "reveal" ? ja : null}
+              showFurigana={!hook}
+            />
+          </div>
+        )}
 
         {cue?.kind === "countdown" && (
           <div className="sh-count" key={cue.key} aria-hidden="true">

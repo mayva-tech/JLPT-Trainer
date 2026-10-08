@@ -1,0 +1,98 @@
+/* ─── Stroke-order writing ───────────────────────────────────────
+   Each kanji is a 1em SVG on KanjiVG's 109-unit grid. Strokes use
+   pathLength="1", so one dash animation draws any stroke at any size. */
+
+.ks {
+  display: inline-flex;
+  align-items: flex-end;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ks-char {
+  width: 1em;
+  height: 1em;
+  overflow: visible;
+  filter: drop-shadow(0 0.03em 0.08em rgba(0, 0, 0, 0.45));
+}
+
+.ks-char path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ks-weight, 7);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ks-ghost path {
+  stroke: currentColor;
+  opacity: 0.12;
+  stroke-width: calc(var(--ks-weight, 7) * 0.85);
+}
+
+.ks-ink path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.ks-text {
+  display: inline-block;
+  font-family: var(--font-jp);
+  font-size: 0.86em;
+  line-height: 1.1;
+  margin: 0 0.02em;
+  opacity: 0;
+}
+
+/* blank: the ghost waits, nothing inked */
+.ks--blank .ks-ghost path {
+  opacity: 0.06;
+}
+
+.ks--blank .ks-text--static {
+  opacity: 0;
+}
+
+/* draw: strokes ink in order, kana fade in their turn */
+.ks--draw .ks-ink path {
+  animation: ksInk ease-in-out both;
+}
+
+.ks--draw .ks-text {
+  animation: ksText 0.22s ease both;
+}
+
+/* done: the finished word */
+.ks--done .ks-ink path {
+  stroke-dashoffset: 0;
+}
+
+.ks--done .ks-ghost {
+  display: none;
+}
+
+.ks--done .ks-text,
+.ks-text--static {
+  opacity: 1;
+}
+
+@keyframes ksInk {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ksText {
+  from { opacity: 0; transform: translateY(0.08em); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ks--draw .ks-ink path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .ks--draw .ks-text {
+    animation: none;
+    opacity: 1;
+  }
+}

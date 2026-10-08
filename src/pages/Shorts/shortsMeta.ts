@@ -15,6 +15,9 @@ export interface ShortContext {
   lessonTheme: string;
 }
 
+/** Required credit when a Short animates KanjiVG strokes (CC BY-SA 3.0). */
+export const KANJIVG_CREDIT = "Stroke order: KanjiVG (kanjivg.tagaini.net), CC BY-SA 3.0";
+
 export interface ShortMeta {
   title: string;
   description: string;
@@ -42,7 +45,11 @@ export function shortHashtags(level: JlptLevel): string[] {
   ];
 }
 
-export function buildShortMeta(item: VocabularyItem, ctx: ShortContext): ShortMeta {
+export function buildShortMeta(
+  item: VocabularyItem,
+  ctx: ShortContext,
+  options: { strokeCredit?: boolean } = {}
+): ShortMeta {
   const sense = firstSense(item.meaning);
   const tail = ` | JLPT ${ctx.level} #${ctx.wordNumber} #shorts`;
   let head = `${item.word} (${item.reading}) = "${sense}"`;
@@ -68,9 +75,10 @@ export function buildShortMeta(item: VocabularyItem, ctx: ShortContext): ShortMe
     `Full lesson: JLPT ${ctx.level} Vocabulary #${ctx.lessonNumber} | ${ctx.lessonTheme}`,
     "",
     "💬 Make your own sentence with this word in the comments!",
-    "",
-    hashtags.join(" ")
+    ""
   );
+  if (options.strokeCredit) lines.push(KANJIVG_CREDIT, "");
+  lines.push(hashtags.join(" "));
 
   return {
     title,

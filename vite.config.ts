@@ -14,5 +14,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     include: ["src/**/*.test.ts"],
+    // Whole-corpus checks run several seconds each when every file runs in parallel.
+    testTimeout: 30_000,
   },
 });

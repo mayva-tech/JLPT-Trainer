@@ -4,6 +4,7 @@ import type { VocabularyItem } from "../../types/vocabulary";
  * The beat sheet of one vertical Short (one word, ~25–35 s, hands-free).
  *
  *   hook     an opener ("Can you read this?" …) — word without furigana, 3-2-1 countdown
+ *   draw     the word writes itself in stroke order (when it has kanji)
  *   reveal   furigana + pitch line, the word spoken
  *   meaning  English meaning spoken
  *   example  example sentence (karaoke), then its translation
@@ -13,10 +14,20 @@ import type { VocabularyItem } from "../../types/vocabulary";
  * Pure data so the order and timing can be tested without a browser.
  */
 
-export type ShortPhase = "idle" | "hook" | "reveal" | "meaning" | "example" | "shadow" | "outro" | "done";
+export type ShortPhase =
+  | "idle"
+  | "hook"
+  | "draw"
+  | "reveal"
+  | "meaning"
+  | "example"
+  | "shadow"
+  | "outro"
+  | "done";
 
 export const SHORT_PHASES: readonly ShortPhase[] = [
   "hook",
+  "draw",
   "reveal",
   "meaning",
   "example",
@@ -82,16 +93,30 @@ export function repeatGapMs(sentence: string): number {
   return Math.max(2500, Math.min(6000, 1200 + chars * 170));
 }
 
-export function buildShortScript(item: VocabularyItem): ShortStep[] {
+/** Pause after the last stroke before the word is spoken. */
+export const DRAW_SETTLE_MS = 300;
+
+export interface ShortOptions {
+  /** Stroke-order writing time (0 = no draw beat, e.g. kana-only words). */
+  drawMs?: number;
+}
+
+export function buildShortScript(item: VocabularyItem, options: ShortOptions = {}): ShortStep[] {
+  const drawMs = Math.max(0, Math.round(options.drawMs ?? 0));
   const steps: ShortStep[] = [
     { kind: "say", phase: "hook", lang: "en", text: hookLineFor(item).en },
     { kind: "say", phase: "hook", lang: "ja", text: hookLineFor(item).ja },
     { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
+  ];
+  if (drawMs > 0) {
+    steps.push({ kind: "wait", phase: "draw", ms: drawMs + DRAW_SETTLE_MS });
+  }
+  steps.push(
     { kind: "say", phase: "reveal", lang: "ja", text: item.word, reading: item.reading },
     { kind: "wait", phase: "reveal", ms: 350 },
     { kind: "say", phase: "meaning", lang: "en", text: item.meaning },
-    { kind: "wait", phase: "meaning", ms: 450 },
-  ];
+    { kind: "wait", phase: "meaning", ms: 450 }
+  );
   if (item.sentence?.trim()) {
     steps.push(
       { kind: "say", phase: "example", lang: "ja", text: item.sentence, reading: item.sentenceReading },
@@ -133,8 +158,8 @@ export function reached(current: ShortPhase, phase: ShortPhase): boolean {
 }
 
 /** Rough length of a Short in seconds, used to time the backdrop pan. */
-export function estimateShortSeconds(item: VocabularyItem): number {
-  const steps = buildShortScript(item);
+export function estimateShortSeconds(item: VocabularyItem, options: ShortOptions = {}): number {
+  const steps = buildShortScript(item, options);
   let ms = 400;
   for (const s of steps) {
     if (s.kind === "wait") ms += s.ms;
