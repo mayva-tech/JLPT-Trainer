@@ -115,6 +115,44 @@ describe("theme resolver — words pick their theme", () => {
     });
   }
 
+  const surpriseCases: [string, string, AmbienceTheme][] = [
+    ["狸", "raccoon dog", "tanuki"],
+    ["狐", "fox", "kitsune"],
+    ["忍者", "ninja", "ninja"],
+    ["宇宙人", "alien", "ufo"],
+    ["鯨", "whale", "whale"],
+    ["時計", "clock", "karakuri"],
+    ["だるま", "daruma doll", "daruma"],
+    ["幽霊", "ghost", "yokai"],
+    ["望遠鏡", "telescope", "stargaze"],
+    ["昆虫", "insect", "beetle"],
+    ["龍", "dragon", "dragon"],
+    ["ラーメン", "ramen", "ramen"],
+    ["ロボット", "robot", "robot"],
+    ["おみくじ", "fortune slip", "omikuji"],
+    ["ひまわり", "sunflower", "himawari"],
+    ["紙芝居", "picture-card show", "kamishibai"],
+    ["強風", "strong wind", "gust"],
+    ["真珠", "pearl", "ama"],
+    ["銀河鉄道", "galactic railroad", "starTrain"],
+    ["競り", "auction", "seri"],
+  ];
+  for (const [w, m, theme] of surpriseCases) {
+    it(`${w} → ${theme}`, () => {
+      expect(ambienceForVocab(word(w, m))).toBe(theme);
+    });
+  }
+
+  it("surprise look-alikes: 怪我 is no yokai, 息子 no diver, 逮捕 no bug hunt, 宇宙人 no space", () => {
+    const score = (w: string) =>
+      scoreAmbience({ id: 1, primary: [w, ""], categories: [], context: [] });
+    expect(score("怪我").yokai).toBe(0);
+    expect(score("息子").ama).toBe(0);
+    expect(score("逮捕").beetle).toBe(0);
+    expect(score("宇宙人").space).toBe(0);
+    expect(score("台風").gust).toBe(0);
+  });
+
   it("look-alikes stay apart: 折り鶴 is origami, 漁港 is the harbor, 雪まつり is the festival", () => {
     expect(ambienceForVocab(word("折り鶴", "paper crane"))).toBe("origami");
     expect(ambienceForVocab(word("漁港", "fishing port"))).toBe("harbor");
@@ -331,9 +369,9 @@ describe("theme resolver — whole corpus", () => {
     for (const t of themes) expect(ALL).toContain(t);
   });
 
-  it("uses all ninety themes", () => {
-    expect(AMBIENCE_THEMES).toHaveLength(90);
-    expect(new Set(themes).size).toBe(90);
+  it("uses all 110 themes", () => {
+    expect(AMBIENCE_THEMES).toHaveLength(110);
+    expect(new Set(themes).size).toBe(110);
   });
 
   it("keeps variety — no theme takes over the corpus", () => {
@@ -342,7 +380,7 @@ describe("theme resolver — whole corpus", () => {
     for (const [, n] of counts) expect(n / themes.length).toBeLessThan(0.1);
   });
 
-  it("varies inside a lesson — 10-word vocabulary lessons average 4.5+ scenes", () => {
+  it("varies inside a lesson — 10-word vocabulary lessons average 4.8+ scenes", () => {
     let distinct = 0;
     let lessons = 0;
     for (let i = 0; i < vocabulary.length; i += 10) {
@@ -350,7 +388,7 @@ describe("theme resolver — whole corpus", () => {
       distinct += new Set(vocabulary.slice(i, i + 10).map(ambienceForVocab))
         .size;
     }
-    expect(distinct / lessons).toBeGreaterThanOrEqual(4.5);
+    expect(distinct / lessons).toBeGreaterThanOrEqual(4.8);
   });
 });
 

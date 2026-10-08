@@ -89,6 +89,30 @@ import {
   Ukai,
   Yukimatsuri,
 } from "./artFestival";
+import {
+  Tanuki,
+  Kitsune,
+  Ninja,
+  Ufo,
+  Whale,
+  Karakuri,
+  Daruma,
+  Yokai,
+  Stargaze,
+  Beetle,
+} from "./artSurprise";
+import {
+  Dragon,
+  Ramen,
+  Robot,
+  Omikuji,
+  Himawari,
+  Kamishibai,
+  Gust,
+  Ama,
+  StarTrain,
+  Seri,
+} from "./artSurprise2";
 import { Art } from "./artKit";
 import { particles, seeded } from "./scenery";
 
@@ -729,6 +753,26 @@ const ART: Record<AmbienceTheme, (props: SceneProps) => ReactNode> = {
   harbor: Harbor,
   yukimatsuri: Yukimatsuri,
   origami: Origami,
+  tanuki: Tanuki,
+  kitsune: Kitsune,
+  ninja: Ninja,
+  ufo: Ufo,
+  whale: Whale,
+  karakuri: Karakuri,
+  daruma: Daruma,
+  yokai: Yokai,
+  stargaze: Stargaze,
+  beetle: Beetle,
+  dragon: Dragon,
+  ramen: Ramen,
+  robot: Robot,
+  omikuji: Omikuji,
+  himawari: Himawari,
+  kamishibai: Kamishibai,
+  gust: Gust,
+  ama: Ama,
+  starTrain: StarTrain,
+  seri: Seri,
 };
 
 /**

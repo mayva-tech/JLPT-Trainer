@@ -3330,6 +3330,2196 @@
   }
 }
 
+/* ═══ Surprise scenes — 20 more palettes ═══════════════════════ */
+.amb-layer--tanuki {
+  --a: 130 180 100;
+  --b: 245 185 90;
+  --c: 205 125 75;
+  --p: 225 210 175;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(18, 38, 24, 0.55) 0%,
+    rgba(60, 80, 40, 0.25) 55%,
+    rgba(200, 140, 60, 0.18) 100%
+  );
+}
+.amb-layer--kitsune {
+  --a: 120 235 210;
+  --b: 250 175 100;
+  --c: 235 90 60;
+  --p: 250 225 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(20, 50, 70, 0.5) 0%,
+    rgba(200, 110, 70, 0.25) 55%,
+    rgba(250, 170, 100, 0.2) 100%
+  );
+}
+.amb-layer--ninja {
+  --a: 190 130 210;
+  --b: 225 228 240;
+  --c: 250 235 190;
+  --p: 215 200 235;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 14, 50, 0.6) 0%,
+    rgba(80, 40, 100, 0.3) 55%,
+    rgba(120, 70, 140, 0.18) 100%
+  );
+}
+.amb-layer--ufo {
+  --a: 175 135 255;
+  --b: 195 250 120;
+  --c: 235 210 150;
+  --p: 215 205 245;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(24, 10, 60, 0.6) 0%,
+    rgba(70, 40, 140, 0.28) 55%,
+    rgba(120, 170, 60, 0.16) 100%
+  );
+}
+.amb-layer--whale {
+  --a: 70 185 195;
+  --b: 250 150 125;
+  --c: 225 235 245;
+  --p: 205 232 238;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(8, 50, 70, 0.5) 0%,
+    rgba(250, 140, 110, 0.22) 55%,
+    rgba(20, 90, 110, 0.3) 100%
+  );
+}
+.amb-layer--karakuri {
+  --a: 228 188 95;
+  --b: 100 192 172;
+  --c: 172 182 208;
+  --p: 232 222 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(20, 50, 56, 0.5) 0%,
+    rgba(60, 100, 90, 0.24) 55%,
+    rgba(170, 140, 70, 0.16) 100%
+  );
+}
+.amb-layer--daruma {
+  --a: 238 75 55;
+  --b: 248 205 90;
+  --c: 250 240 222;
+  --p: 244 222 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(80, 14, 10, 0.55) 0%,
+    rgba(170, 50, 30, 0.25) 55%,
+    rgba(240, 190, 80, 0.16) 100%
+  );
+}
+.amb-layer--yokai {
+  --a: 160 112 230;
+  --b: 255 138 70;
+  --c: 236 230 215;
+  --p: 205 188 238;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(26, 10, 48, 0.62) 0%,
+    rgba(60, 24, 90, 0.3) 55%,
+    rgba(200, 80, 40, 0.2) 100%
+  );
+}
+.amb-layer--stargaze {
+  --a: 205 218 255;
+  --b: 246 182 156;
+  --c: 188 168 242;
+  --p: 222 212 242;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(8, 12, 40, 0.62) 0%,
+    rgba(30, 30, 80, 0.3) 55%,
+    rgba(220, 140, 130, 0.2) 100%
+  );
+}
+.amb-layer--beetle {
+  --a: 178 228 92;
+  --b: 168 118 72;
+  --c: 152 216 236;
+  --p: 228 238 202;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(18, 48, 18, 0.55) 0%,
+    rgba(70, 110, 40, 0.22) 55%,
+    rgba(170, 220, 120, 0.14) 100%
+  );
+}
+.amb-layer--dragon {
+  --a: 92 208 162;
+  --b: 178 188 204;
+  --c: 252 240 150;
+  --p: 205 232 218;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(18, 30, 34, 0.62) 0%,
+    rgba(50, 80, 80, 0.3) 55%,
+    rgba(90, 130, 110, 0.2) 100%
+  );
+}
+.amb-layer--ramen {
+  --a: 246 228 190;
+  --b: 228 72 46;
+  --c: 96 146 104;
+  --p: 246 232 212;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 30, 14, 0.55) 0%,
+    rgba(150, 80, 40, 0.24) 55%,
+    rgba(240, 200, 140, 0.16) 100%
+  );
+}
+.amb-layer--robot {
+  --a: 252 212 60;
+  --b: 162 172 188;
+  --c: 92 228 252;
+  --p: 222 228 238;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(20, 26, 36, 0.6) 0%,
+    rgba(60, 70, 90, 0.28) 55%,
+    rgba(200, 170, 50, 0.14) 100%
+  );
+}
+.amb-layer--omikuji {
+  --a: 208 102 152;
+  --b: 246 212 112;
+  --c: 246 246 252;
+  --p: 242 218 232;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 16, 44, 0.58) 0%,
+    rgba(140, 60, 100, 0.26) 55%,
+    rgba(230, 190, 110, 0.16) 100%
+  );
+}
+.amb-layer--himawari {
+  --a: 252 208 60;
+  --b: 74 124 228;
+  --c: 124 184 92;
+  --p: 242 232 204;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(18, 40, 110, 0.55) 0%,
+    rgba(60, 110, 200, 0.22) 55%,
+    rgba(230, 190, 70, 0.18) 100%
+  );
+}
+.amb-layer--kamishibai {
+  --a: 212 172 122;
+  --b: 82 172 172;
+  --c: 218 92 76;
+  --p: 238 222 198;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 36, 24, 0.55) 0%,
+    rgba(150, 100, 60, 0.24) 55%,
+    rgba(90, 150, 140, 0.16) 100%
+  );
+}
+.amb-layer--gust {
+  --a: 82 158 168;
+  --b: 228 188 72;
+  --c: 232 240 242;
+  --p: 218 232 232;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(14, 40, 48, 0.6) 0%,
+    rgba(50, 100, 108, 0.26) 55%,
+    rgba(200, 170, 70, 0.14) 100%
+  );
+}
+.amb-layer--ama {
+  --a: 82 208 228;
+  --b: 242 240 252;
+  --c: 252 152 172;
+  --p: 222 242 248;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(70, 170, 200, 0.22) 0%,
+    rgba(20, 80, 120, 0.3) 55%,
+    rgba(6, 30, 60, 0.5) 100%
+  );
+}
+.amb-layer--starTrain {
+  --a: 122 162 255;
+  --b: 252 216 122;
+  --c: 162 242 216;
+  --p: 222 226 252;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(6, 14, 50, 0.64) 0%,
+    rgba(20, 40, 110, 0.3) 55%,
+    rgba(60, 50, 110, 0.2) 100%
+  );
+}
+.amb-layer--seri {
+  --a: 178 222 246;
+  --b: 228 82 88;
+  --c: 168 178 194;
+  --p: 228 236 246;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(14, 30, 46, 0.58) 0%,
+    rgba(60, 100, 130, 0.26) 55%,
+    rgba(170, 210, 230, 0.14) 100%
+  );
+}
+
+/* ─── Surprise scenes: motion ─────────────────────────────────────
+   Surprise layers rest at opacity 0 and only show inside their window,
+   so they stay hidden when animation is off (reduced motion). */
+
+.amb-s-bold,
+.amb-s-boldfig .amb-person {
+  opacity: 0.3;
+}
+
+/* Generic window toggles: on = only during the surprise, off = all but. */
+.amb-s-on {
+  opacity: 0;
+  animation: ambSOn 24s step-end infinite;
+}
+.amb-s-off {
+  animation: ambSOff 24s step-end infinite;
+}
+
+@keyframes ambSOn {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 1;
+  }
+  47%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ambSOff {
+  0% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+  47%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.amb-s-jump {
+  animation: ambSJump 0.6s ease-out infinite alternate;
+}
+
+@keyframes ambSJump {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-24px);
+  }
+}
+
+.amb-s-puff,
+.amb-s-puff-late,
+.amb-s-ink {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSPuff 24s ease-out infinite;
+}
+.amb-s-puff-late {
+  animation-name: ambSPuffLate;
+}
+.amb-s-ink {
+  animation-name: ambSInk;
+}
+
+@keyframes ambSPuff {
+  0%,
+  41.5% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  42.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  46% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  55.5% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  56.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes ambSPuffLate {
+  0%,
+  42.5% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  43.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  47%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes ambSInk {
+  0%,
+  75.5% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  77% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  84%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+.amb-s-burst {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSBurst 22s ease-out infinite;
+}
+
+@keyframes ambSBurst {
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  52% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  56%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.amb-s-show {
+  opacity: 0;
+  animation: ambSShow 26s ease-in-out infinite;
+}
+
+@keyframes ambSShow {
+  0%,
+  33% {
+    opacity: 0;
+  }
+  36%,
+  56% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.amb-s-clack {
+  transform-origin: 0 0;
+  animation: ambSClack 0.6s ease-out infinite;
+}
+
+@keyframes ambSClack {
+  from {
+    opacity: 1;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.amb-s-hop {
+  animation: ambSHop 0.8s cubic-bezier(0.3, 0, 0.7, 1) infinite;
+}
+
+@keyframes ambSHop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+}
+
+.amb-s-trot {
+  animation: ambSTrot 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes ambSTrot {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+.amb-s-buzz {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSBuzz 0.08s linear infinite alternate;
+}
+
+@keyframes ambSBuzz {
+  from {
+    transform: scale(1, 1);
+  }
+  to {
+    transform: scale(0.8, 0.88);
+  }
+}
+
+.amb-s-flap {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSFlap 0.28s ease-in-out infinite alternate;
+}
+
+@keyframes ambSFlap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.25);
+  }
+}
+
+.amb-s-leafy {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSLeafy 5s ease-in-out infinite alternate;
+}
+
+@keyframes ambSLeafy {
+  from {
+    transform: translateX(-6px) rotate(-1deg);
+  }
+  to {
+    transform: translateX(6px) rotate(1deg);
+  }
+}
+
+.amb-s-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSBlink 4s ease-in-out infinite;
+}
+
+@keyframes ambSBlink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* 1. Tanuki — pops up, turns into a teakettle, turns back. */
+.amb-s-tanuki {
+  opacity: 0;
+  animation: ambSTanuki 24s ease-out infinite;
+}
+
+@keyframes ambSTanuki {
+  0%,
+  26% {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+  30%,
+  42% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  42.5%,
+  56% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  56.5%,
+  62% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+}
+
+.amb-s-kettle {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSKettle 24s ease-in-out infinite;
+}
+
+@keyframes ambSKettle {
+  0%,
+  42% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  43% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  45% {
+    transform: scale(1) rotate(0);
+  }
+  48% {
+    transform: rotate(-6deg);
+  }
+  51% {
+    transform: rotate(6deg);
+  }
+  54% {
+    transform: rotate(-4deg);
+  }
+  56% {
+    opacity: 1;
+    transform: rotate(0);
+  }
+  56.5%,
+  100% {
+    opacity: 0;
+    transform: rotate(0);
+  }
+}
+
+/* 2. Kitsune — the procession, and foxfire lighting up in a chain. */
+.amb-s-procession {
+  animation: ambSProcession 80s linear infinite;
+}
+
+@keyframes ambSProcession {
+  from {
+    transform: translateX(-600px);
+  }
+  to {
+    transform: translateX(1800px);
+  }
+}
+
+.amb-s-foxfire {
+  opacity: 0;
+  animation: ambSFoxfire 26s ease-in-out infinite;
+}
+
+@keyframes ambSFoxfire {
+  0%,
+  31% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  34% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(-14px);
+  }
+  56%,
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* 3. Ninja — shuriken, a leap across the moon, a drop on a rope. */
+.amb-s-shuriken {
+  opacity: 0;
+  animation: ambSShuriken 8s linear infinite;
+}
+
+@keyframes ambSShuriken {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  2% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  14%,
+  70% {
+    opacity: 1;
+    transform: translateX(936px);
+  }
+  76%,
+  100% {
+    opacity: 0;
+    transform: translateX(936px);
+  }
+}
+
+.amb-s-leap {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSLeap 20s linear infinite;
+}
+
+@keyframes ambSLeap {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0);
+  }
+  31% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  34% {
+    transform: translate(50px, -320px) rotate(120deg);
+  }
+  37% {
+    transform: translate(120px, -470px) rotate(240deg);
+  }
+  40% {
+    transform: translate(180px, -320px) rotate(360deg);
+  }
+  43% {
+    opacity: 1;
+    transform: translate(210px, 30px) rotate(360deg);
+  }
+  44%,
+  100% {
+    opacity: 0;
+    transform: translate(210px, 30px) rotate(360deg);
+  }
+}
+
+.amb-s-rope {
+  opacity: 0;
+  animation: ambSRope 20s ease-out infinite;
+}
+
+@keyframes ambSRope {
+  0%,
+  62% {
+    opacity: 0;
+    transform: translateY(-560px);
+  }
+  63% {
+    opacity: 1;
+    transform: translateY(-560px);
+  }
+  65% {
+    transform: translateY(0);
+  }
+  66.5% {
+    transform: translateY(-24px);
+  }
+  68%,
+  78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  81% {
+    opacity: 1;
+    transform: translateY(-560px);
+  }
+  82%,
+  100% {
+    opacity: 0;
+    transform: translateY(-560px);
+  }
+}
+
+/* 4. UFO — shooting stars; the saucer takes the scarecrow's hat. */
+.amb-s-meteor {
+  opacity: 0;
+  animation: ambSMeteor 7s ease-in infinite;
+}
+
+@keyframes ambSMeteor {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  2% {
+    opacity: 1;
+  }
+  11%,
+  100% {
+    opacity: 0;
+    transform: translate(-260px, 141px);
+  }
+}
+
+.amb-s-ufo {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSUfo 26s ease-in-out infinite;
+}
+
+@keyframes ambSUfo {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translate(-600px, -320px) scale(0.4);
+  }
+  33% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  38% {
+    transform: translate(0, -12px) scale(1);
+  }
+  43% {
+    transform: translate(0, 0) scale(1);
+  }
+  48% {
+    transform: translate(0, -12px) scale(1);
+  }
+  52% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  56% {
+    opacity: 1;
+    transform: translate(1300px, -420px) scale(0.3);
+  }
+  57%,
+  100% {
+    opacity: 0;
+    transform: translate(1300px, -420px) scale(0.3);
+  }
+}
+
+.amb-s-beam {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSBeam 26s ease-in-out infinite;
+}
+
+@keyframes ambSBeam {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  36%,
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  52%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+.amb-s-hat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSHat 26s ease-in-out infinite;
+}
+
+@keyframes ambSHat {
+  0%,
+  36% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0) scale(1);
+  }
+  49% {
+    opacity: 1;
+    transform: translate(0, -320px) rotate(200deg) scale(0.4);
+  }
+  50%,
+  92% {
+    opacity: 0;
+    transform: translate(0, -40px) rotate(0) scale(1);
+  }
+  97%,
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0) scale(1);
+  }
+}
+
+/* 5. Whale — waves, a surfacing back and spout, the tail, dolphins. */
+.amb-s-wave {
+  animation: ambSWave 7s linear infinite;
+}
+
+@keyframes ambSWave {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100px);
+  }
+}
+
+.amb-s-whaleback {
+  opacity: 0;
+  animation: ambSWhaleBack 28s ease-in-out infinite;
+}
+
+@keyframes ambSWhaleBack {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  32%,
+  42% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  46%,
+  100% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+
+.amb-s-spout {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSSpout 28s ease-out infinite;
+}
+
+@keyframes ambSSpout {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scaleY(0.1);
+  }
+  35% {
+    opacity: 1;
+    transform: scaleY(1.1);
+  }
+  38% {
+    opacity: 0.8;
+    transform: scaleY(1);
+  }
+  41%,
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+
+.amb-s-fluke {
+  opacity: 0;
+  animation: ambSFluke 28s ease-in-out infinite;
+}
+
+@keyframes ambSFluke {
+  0%,
+  45% {
+    opacity: 0;
+    transform: translateY(90px);
+  }
+  49% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  54% {
+    transform: translateY(-8px);
+  }
+  58% {
+    opacity: 1;
+    transform: translateY(90px);
+  }
+  59%,
+  100% {
+    opacity: 0;
+    transform: translateY(90px);
+  }
+}
+
+.amb-s-dolphin {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSDolphin 28s linear infinite;
+}
+
+@keyframes ambSDolphin {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translate(0, 20px) rotate(-40deg);
+  }
+  69% {
+    opacity: 1;
+    transform: translate(0, 20px) rotate(-40deg);
+  }
+  72% {
+    transform: translate(90px, -100px) rotate(0);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(180px, 20px) rotate(40deg);
+  }
+  76%,
+  100% {
+    opacity: 0;
+    transform: translate(180px, 20px) rotate(40deg);
+  }
+}
+
+/* 6. Karakuri clock — bell, doors, doll parade, pigeons take off. */
+.amb-s-bell {
+  animation: ambSBell 30s linear infinite;
+}
+
+@keyframes ambSBell {
+  0%,
+  30% {
+    transform: rotate(0);
+  }
+  31% {
+    transform: rotate(18deg);
+  }
+  32% {
+    transform: rotate(-18deg);
+  }
+  33% {
+    transform: rotate(16deg);
+  }
+  34% {
+    transform: rotate(-16deg);
+  }
+  35% {
+    transform: rotate(14deg);
+  }
+  36% {
+    transform: rotate(-14deg);
+  }
+  37% {
+    transform: rotate(10deg);
+  }
+  38% {
+    transform: rotate(-8deg);
+  }
+  39% {
+    transform: rotate(4deg);
+  }
+  40%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.amb-s-ring {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSRing 30s ease-out infinite;
+}
+
+@keyframes ambSRing {
+  0%,
+  30% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  31% {
+    opacity: 1;
+    transform: scale(0.6);
+  }
+  34% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+  35% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  36% {
+    opacity: 1;
+    transform: scale(0.6);
+  }
+  39%,
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+.amb-s-door {
+  transform-box: fill-box;
+  animation: ambSDoor 30s ease-in-out infinite;
+}
+.amb-s-door--l {
+  transform-origin: 0 50%;
+}
+.amb-s-door--r {
+  transform-origin: 100% 50%;
+}
+
+@keyframes ambSDoor {
+  0%,
+  30% {
+    transform: scaleX(1);
+  }
+  33%,
+  52% {
+    transform: scaleX(0.08);
+  }
+  55%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.amb-s-dolls {
+  opacity: 0;
+  animation: ambSDolls 30s ease-in-out infinite;
+}
+
+@keyframes ambSDolls {
+  0%,
+  32% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  35%,
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  53%,
+  100% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+}
+
+.amb-s-bow {
+  transform-origin: 0 0;
+  animation: ambSBow 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambSBow {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
+}
+
+.amb-s-pigeons {
+  animation: ambSPigeons 30s ease-in infinite;
+}
+
+@keyframes ambSPigeons {
+  0%,
+  31% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  40% {
+    opacity: 0;
+    transform: translate(260px, -560px);
+  }
+  41%,
+  90% {
+    opacity: 0;
+    transform: translate(0, -40px);
+  }
+  96%,
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.amb-s-peck {
+  transform-box: fill-box;
+  transform-origin: 30% 100%;
+  animation: ambSPeck 1.4s ease-in-out infinite;
+}
+
+@keyframes ambSPeck {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0);
+  }
+  75% {
+    transform: rotate(22deg);
+  }
+}
+
+/* 7. Daruma — wobbling rows; the big one falls over and rights itself. */
+.amb-s-wobble {
+  transform-origin: 0 0;
+  animation: ambSWobble 3s ease-in-out infinite alternate;
+}
+
+@keyframes ambSWobble {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+.amb-s-okiagari {
+  transform-origin: 0 0;
+  animation: ambSOkiagari 22s ease-in-out infinite;
+}
+
+@keyframes ambSOkiagari {
+  0%,
+  30% {
+    transform: rotate(0);
+  }
+  32% {
+    transform: rotate(-80deg);
+  }
+  35% {
+    transform: rotate(36deg);
+  }
+  38% {
+    transform: rotate(-22deg);
+  }
+  41% {
+    transform: rotate(12deg);
+  }
+  44% {
+    transform: rotate(-6deg);
+  }
+  47% {
+    transform: rotate(3deg);
+  }
+  49%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.amb-s-eye {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSEye 22s ease-out infinite;
+}
+
+@keyframes ambSEye {
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  52% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  54%,
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  96%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* 8. Yokai — willow, hopping umbrella, the lantern wakes, a peeking boy. */
+.amb-s-willow {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambSWillow 6s ease-in-out infinite alternate;
+}
+
+@keyframes ambSWillow {
+  from {
+    transform: rotate(-2deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+.amb-s-hopx {
+  animation: ambSHopX 16s linear infinite;
+}
+
+@keyframes ambSHopX {
+  from {
+    transform: translateX(1750px);
+  }
+  to {
+    transform: translateX(-200px);
+  }
+}
+
+.amb-s-lantern-eye {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSLanternEye 24s ease-in-out infinite;
+}
+
+@keyframes ambSLanternEye {
+  0%,
+  30% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  32% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  33% {
+    transform: scaleY(0.1);
+  }
+  34%,
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  52%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+.amb-s-tongue {
+  opacity: 0;
+  transform-origin: 0 0;
+  animation: ambSTongue 24s ease-in-out infinite;
+}
+
+@keyframes ambSTongue {
+  0%,
+  33% {
+    opacity: 0;
+    transform: scaleY(0) rotate(0);
+  }
+  36% {
+    opacity: 1;
+    transform: scaleY(1) rotate(0);
+  }
+  40% {
+    transform: scaleY(1) rotate(12deg);
+  }
+  44% {
+    transform: scaleY(1) rotate(-12deg);
+  }
+  48% {
+    opacity: 1;
+    transform: scaleY(1) rotate(0);
+  }
+  51%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0) rotate(0);
+  }
+}
+
+.amb-s-peekside {
+  opacity: 0;
+  animation: ambSPeekSide 24s ease-in-out infinite;
+}
+
+@keyframes ambSPeekSide {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  71%,
+  80% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  83%,
+  100% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+}
+
+/* 9. Stargazing — constellations draw themselves; a meteor shower. */
+.amb-s-draw {
+  animation: ambSDraw 14s ease-in-out infinite;
+}
+
+@keyframes ambSDraw {
+  0% {
+    stroke-dashoffset: 600;
+  }
+  40%,
+  80% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 600;
+  }
+}
+
+.amb-s-slit {
+  animation: ambSSlit 12s ease-in-out infinite alternate;
+}
+
+@keyframes ambSSlit {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+
+.amb-layer .amb-s-shower line {
+  stroke: rgb(255 236 228 / 0.5);
+}
+.amb-layer .amb-s-shower circle {
+  fill: rgb(255 244 236 / 0.6);
+}
+.amb-s-shower {
+  opacity: 0;
+  animation: ambSShower 24s ease-in infinite;
+}
+
+@keyframes ambSShower {
+  0%,
+  31% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  31.5% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  36%,
+  100% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+}
+
+/* 10. Bug hunting — darting dragonflies, a beetle fly-past, a peek. */
+.amb-s-dart {
+  animation: ambSDart 6s ease-out infinite;
+}
+
+@keyframes ambSDart {
+  0%,
+  20% {
+    transform: translate(0, 0);
+  }
+  25%,
+  45% {
+    transform: translate(-120px, -40px);
+  }
+  50%,
+  70% {
+    transform: translate(-60px, 30px);
+  }
+  75%,
+  95% {
+    transform: translate(40px, -10px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.amb-s-beetle {
+  opacity: 0;
+  animation: ambSBeetle 24s linear infinite;
+}
+
+@keyframes ambSBeetle {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translate(1700px, 60px);
+  }
+  31% {
+    opacity: 1;
+    transform: translate(1680px, 70px);
+  }
+  35% {
+    transform: translate(1400px, 180px);
+  }
+  39% {
+    transform: translate(1310px, 360px);
+  }
+  43% {
+    transform: translate(1400px, 470px);
+  }
+  46%,
+  56% {
+    opacity: 1;
+    transform: translate(1475px, 530px);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: translate(1475px, 530px);
+  }
+}
+
+.amb-s-peek-late {
+  opacity: 0;
+  animation: ambSPeekLate 24s ease-in-out infinite;
+}
+
+@keyframes ambSPeekLate {
+  0%,
+  70% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  73%,
+  82% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  85%,
+  100% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+
+/* 11. Dragon — it swims across; thunder; it looks down from the corner. */
+.amb-s-dragon {
+  animation: ambSDragon 40s linear infinite;
+}
+
+@keyframes ambSDragon {
+  from {
+    transform: translateX(-260px);
+  }
+  to {
+    transform: translateX(2560px);
+  }
+}
+
+.amb-s-flash {
+  opacity: 0;
+  animation: ambSFlash 22s linear infinite;
+}
+
+@keyframes ambSFlash {
+  0%,
+  35% {
+    opacity: 0;
+  }
+  35.5% {
+    opacity: 1;
+  }
+  36.5% {
+    opacity: 0.15;
+  }
+  37% {
+    opacity: 1;
+  }
+  39%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.amb-s-dragonpeek {
+  opacity: 0;
+  animation: ambSDragonPeek 22s ease-in-out infinite;
+}
+
+@keyframes ambSDragonPeek {
+  0%,
+  37% {
+    opacity: 0;
+    transform: translateX(-260px);
+  }
+  40% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  46% {
+    transform: translateX(-20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  54%,
+  100% {
+    opacity: 0;
+    transform: translateX(-260px);
+  }
+}
+
+/* 12. Ramen — the noodle toss and a flying naruto. */
+.amb-s-noodle {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSNoodle 20s ease-in-out infinite;
+}
+
+@keyframes ambSNoodle {
+  0%,
+  33% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  36% {
+    opacity: 1;
+    transform: translate(30px, -150px) scale(1) rotate(0);
+  }
+  40% {
+    transform: translate(60px, -220px) scale(1) rotate(10deg);
+  }
+  44% {
+    transform: translate(80px, -60px) scale(0.9) rotate(-6deg);
+  }
+  46% {
+    opacity: 1;
+    transform: translate(80px, 0) scale(0.6) rotate(0);
+  }
+  47%,
+  100% {
+    opacity: 0;
+    transform: translate(80px, 0) scale(0.6) rotate(0);
+  }
+}
+
+.amb-s-naruto {
+  opacity: 0;
+  animation: ambSNaruto 20s linear infinite;
+}
+
+@keyframes ambSNaruto {
+  0%,
+  52% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  53% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  56% {
+    transform: translate(300px, -30px);
+  }
+  59% {
+    transform: translate(600px, 0);
+  }
+  62% {
+    transform: translate(900px, -30px);
+  }
+  65% {
+    opacity: 1;
+    transform: translate(1210px, -10px);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: translate(1210px, -10px);
+  }
+}
+
+/* 13. Robot factory — belt, a box that opens, a robot waving hello. */
+.amb-s-belt {
+  animation: ambSBelt 1.2s linear infinite;
+}
+
+@keyframes ambSBelt {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.amb-s-popbot {
+  opacity: 0;
+  animation: ambSPopBot 24s ease-out infinite;
+}
+
+@keyframes ambSPopBot {
+  0%,
+  33% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  36%,
+  46% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  49%,
+  100% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+
+.amb-s-lid {
+  transform-origin: 0 0;
+  animation: ambSLid 24s ease-in-out infinite;
+}
+
+@keyframes ambSLid {
+  0%,
+  31% {
+    transform: rotate(0);
+  }
+  33%,
+  48% {
+    transform: rotate(-120deg);
+  }
+  50%,
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* 14. Omikuji — the slip flies out and opens: 大吉. */
+.amb-s-slipfly {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSSlipFly 22s ease-out infinite;
+}
+
+@keyframes ambSSlipFly {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3) rotate(0);
+  }
+  41% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.3) rotate(0);
+  }
+  48%,
+  62% {
+    opacity: 1;
+    transform: translate(20px, -420px) scale(1) rotate(720deg);
+  }
+  68% {
+    opacity: 0.6;
+    transform: translate(-10px, -300px) scale(1) rotate(740deg);
+  }
+  72%,
+  100% {
+    opacity: 0;
+    transform: translate(20px, -220px) scale(1) rotate(700deg);
+  }
+}
+
+.amb-s-slipopen {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSSlipOpen 22s ease-out infinite;
+}
+
+@keyframes ambSSlipOpen {
+  0%,
+  47% {
+    transform: scaleX(0.15);
+  }
+  50%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* 15. Sunflowers — the field sways in a wave; a gust takes a straw hat. */
+.amb-s-sunsway {
+  transform-origin: 0 0;
+  animation: ambSSunSway 3.4s ease-in-out infinite alternate;
+}
+
+@keyframes ambSSunSway {
+  from {
+    transform: rotate(-2deg);
+  }
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+.amb-s-gust {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSGust 22s ease-in-out infinite;
+}
+
+@keyframes ambSGust {
+  0%,
+  33% {
+    transform: skewX(0);
+  }
+  36% {
+    transform: skewX(-9deg);
+  }
+  41% {
+    transform: skewX(-6deg);
+  }
+  44% {
+    transform: skewX(-9deg);
+  }
+  48%,
+  100% {
+    transform: skewX(0);
+  }
+}
+
+.amb-s-windlines {
+  opacity: 0;
+  animation: ambSWindLines 22s linear infinite;
+}
+
+@keyframes ambSWindLines {
+  0%,
+  33% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+  36% {
+    opacity: 1;
+  }
+  46% {
+    opacity: 1;
+    transform: translateX(400px);
+  }
+  49%,
+  100% {
+    opacity: 0;
+    transform: translateX(600px);
+  }
+}
+
+.amb-s-hatfly {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSHatFly 22s linear infinite;
+}
+
+@keyframes ambSHatFly {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  38% {
+    transform: translate(-40px, -300px) rotate(160deg);
+  }
+  41% {
+    transform: translate(140px, -640px) rotate(320deg);
+  }
+  44% {
+    transform: translate(640px, -680px) rotate(480deg);
+  }
+  47% {
+    transform: translate(1140px, -650px) rotate(620deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(1490px, -500px) rotate(720deg);
+  }
+  51%,
+  100% {
+    opacity: 0;
+    transform: translate(1490px, -500px) rotate(720deg);
+  }
+}
+
+/* 16. Kamishibai — picture cards take turns. */
+.amb-s-panel {
+  opacity: 0;
+  animation: ambSPanel 18s ease-in-out infinite;
+}
+
+@keyframes ambSPanel {
+  0% {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  4%,
+  30% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  34%,
+  100% {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+/* 17. Windy day — bending trees, streaks, a banner, a tumbling box. */
+.amb-s-bend {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSBend 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambSBend {
+  from {
+    transform: translateX(4px) skewX(-4deg);
+  }
+  to {
+    transform: translateX(14px) skewX(-12deg);
+  }
+}
+
+.amb-s-streak {
+  opacity: 0;
+  animation: ambSStreak 2.4s linear infinite;
+}
+
+@keyframes ambSStreak {
+  0% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+  30%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(500px);
+  }
+}
+
+.amb-s-banner {
+  transform-origin: 0 0;
+  animation: ambSBanner 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes ambSBanner {
+  from {
+    transform: scaleX(1) skewY(0);
+  }
+  to {
+    transform: scaleX(0.82) skewY(7deg);
+  }
+}
+
+.amb-s-shake {
+  transform-origin: 0 0;
+  animation: ambSShake 0.2s ease-in-out infinite alternate;
+}
+
+@keyframes ambSShake {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+.amb-s-tumble {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSTumble 22s linear infinite;
+}
+
+@keyframes ambSTumble {
+  0%,
+  52% {
+    opacity: 0;
+    transform: translate(-100px, 0) rotate(0);
+  }
+  53% {
+    opacity: 1;
+    transform: translate(-60px, 0) rotate(20deg);
+  }
+  56% {
+    transform: translate(400px, -30px) rotate(180deg);
+  }
+  59% {
+    transform: translate(800px, 0) rotate(360deg);
+  }
+  62% {
+    transform: translate(1200px, -30px) rotate(540deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translate(1700px, 0) rotate(720deg);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: translate(1700px, 0) rotate(720deg);
+  }
+}
+
+.amb-p.blow {
+  animation-name: ambBlow;
+  animation-timing-function: linear;
+}
+
+@keyframes ambBlow {
+  0% {
+    opacity: 0;
+    transform: translate3d(-40cqw, 0, 0) rotate(0deg);
+  }
+  15%,
+  85% {
+    opacity: var(--o);
+  }
+  50% {
+    transform: translate3d(0, var(--sway), 0) rotate(calc(var(--spin) * 0.5));
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(40cqw, calc(var(--sway) * -1), 0) rotate(var(--spin));
+  }
+}
+
+/* 18. Ama — kelp, the dive, a manta, an octopus. */
+.amb-s-kelp {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSKelp 5s ease-in-out infinite alternate;
+}
+
+@keyframes ambSKelp {
+  from {
+    transform: skewX(-5deg);
+  }
+  to {
+    transform: skewX(5deg);
+  }
+}
+
+.amb-s-dive {
+  animation: ambSDive 20s ease-in-out infinite;
+}
+
+@keyframes ambSDive {
+  0% {
+    transform: translateY(0);
+  }
+  35%,
+  55% {
+    transform: translateY(560px);
+  }
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.amb-s-diveturn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambSDiveTurn 20s ease-in-out infinite;
+}
+
+@keyframes ambSDiveTurn {
+  0%,
+  34% {
+    transform: rotate(180deg);
+  }
+  40%,
+  88% {
+    transform: rotate(360deg);
+  }
+  96%,
+  100% {
+    transform: rotate(540deg);
+  }
+}
+
+.amb-s-manta {
+  opacity: 0;
+  animation: ambSManta 26s linear infinite;
+}
+
+@keyframes ambSManta {
+  0%,
+  32% {
+    opacity: 0;
+    transform: translateX(1800px);
+  }
+  33% {
+    opacity: 1;
+    transform: translateX(1760px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-200px);
+  }
+  51%,
+  100% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+}
+
+.amb-s-mantaflap {
+  transform-origin: 0 0;
+  animation: ambSMantaFlap 2s ease-in-out infinite alternate;
+}
+
+@keyframes ambSMantaFlap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.55);
+  }
+}
+
+.amb-s-octopus {
+  opacity: 0;
+  animation: ambSOctopus 26s ease-in-out infinite;
+}
+
+@keyframes ambSOctopus {
+  0%,
+  68% {
+    opacity: 0;
+    transform: translate(0, 30px);
+  }
+  71%,
+  76% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(140px, -40px);
+  }
+  82%,
+  100% {
+    opacity: 0;
+    transform: translate(200px, -50px);
+  }
+}
+
+/* 19. Night train — lamp flicker, puffs of smoke. */
+.amb-s-flicker {
+  animation: ambSFlicker 5s linear infinite;
+}
+
+@keyframes ambSFlicker {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.3;
+  }
+  42%,
+  70% {
+    opacity: 1;
+  }
+  71% {
+    opacity: 0.4;
+  }
+  73%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.amb-s-smoke {
+  transform-origin: 0 0;
+  animation: ambSSmoke 0.9s ease-out infinite;
+}
+
+@keyframes ambSSmoke {
+  from {
+    opacity: 0.9;
+    transform: translate(0, 0) scale(0.4);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50px, -70px) scale(1.6);
+  }
+}
+
+/* 20. Tuna auction — the market cat makes off with a fish. */
+.amb-s-catdash {
+  opacity: 0;
+  animation: ambSCatDash 20s linear infinite;
+}
+
+@keyframes ambSCatDash {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+  35% {
+    opacity: 1;
+    transform: translateX(-160px);
+  }
+  45% {
+    opacity: 1;
+    transform: translateX(1750px);
+  }
+  46%,
+  100% {
+    opacity: 0;
+    transform: translateX(1750px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .amb *,
   .amb-layer {
@@ -3344,6 +5534,7 @@
   .amb-p.rise-slow,
   .amb-p.firefly,
   .amb-p.spark,
+  .amb-p.blow,
   .amb-bullet,
   .amb-commuter,
   .amb-hurry {
