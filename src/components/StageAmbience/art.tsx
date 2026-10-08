@@ -67,6 +67,28 @@ import {
   Undokai,
   Unkai,
 } from "./artMotion";
+import {
+  Chabatake,
+  Fujidana,
+  Furin,
+  Gacha,
+  Harbor,
+  Harvest,
+  Kabuki,
+  Kissaten,
+  Library,
+  Mochitsuki,
+  Origami,
+  Playground,
+  Shishimai,
+  Shogi,
+  SnowMonkey,
+  Taiko,
+  Takoyaki,
+  Tsurumai,
+  Ukai,
+  Yukimatsuri,
+} from "./artFestival";
 import { Art } from "./artKit";
 import { particles, seeded } from "./scenery";
 
@@ -687,6 +709,26 @@ const ART: Record<AmbienceTheme, (props: SceneProps) => ReactNode> = {
   dogWalk: DogWalk,
   manekineko: ManekiNeko,
   rainbow: Rainbow,
+  mochitsuki: Mochitsuki,
+  shishimai: Shishimai,
+  ukai: Ukai,
+  snowMonkey: SnowMonkey,
+  tsurumai: Tsurumai,
+  fujidana: Fujidana,
+  chabatake: Chabatake,
+  furin: Furin,
+  kabuki: Kabuki,
+  taiko: Taiko,
+  takoyaki: Takoyaki,
+  gacha: Gacha,
+  shogi: Shogi,
+  library: Library,
+  kissaten: Kissaten,
+  playground: Playground,
+  harvest: Harvest,
+  harbor: Harbor,
+  yukimatsuri: Yukimatsuri,
+  origami: Origami,
 };
 
 /**

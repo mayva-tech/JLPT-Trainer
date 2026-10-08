@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Art } from "./artKit";
 import { Figure } from "./figure";
-import { particles, seeded } from "./scenery";
+import { particles, pick, rock, seeded, spin, still } from "./scenery";
 import type { SceneProps } from "./artJapan";
 
 /*
@@ -14,76 +14,8 @@ import type { SceneProps } from "./artJapan";
  * word's kanji.
  */
 
-function still(): boolean {
-  try {
-    return (
-      globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
-      false
-    );
-  } catch {
-    return false;
-  }
-}
-
-/** SMIL rotation around (cx, cy); nothing under reduced motion. */
-function spin(cx: number, cy: number, dur: number, reverse = false): ReactNode {
-  if (still()) return null;
-  return (
-    <animateTransform
-      attributeName="transform"
-      type="rotate"
-      values={
-        reverse
-          ? `360 ${cx} ${cy};0 ${cx} ${cy}`
-          : `0 ${cx} ${cy};360 ${cx} ${cy}`
-      }
-      dur={`${dur}s`}
-      repeatCount="indefinite"
-    />
-  );
-}
-
-/** SMIL rock between two angles around (cx, cy). */
-function rock(
-  cx: number,
-  cy: number,
-  a: number,
-  b: number,
-  dur: number,
-  begin = 0,
-): ReactNode {
-  if (still()) return null;
-  return (
-    <animateTransform
-      attributeName="transform"
-      type="rotate"
-      values={`${a} ${cx} ${cy};${b} ${cx} ${cy};${a} ${cx} ${cy}`}
-      dur={`${dur}s`}
-      begin={`${begin}s`}
-      repeatCount="indefinite"
-      calcMode="spline"
-      keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
-    />
-  );
-}
-
-/** The word's kanji first, then stock characters. */
-function pick(
-  glyphs: string | undefined,
-  stock: string,
-  count: number,
-): string[] {
-  const chars = [...(glyphs ?? "")];
-  const fill = [...stock];
-  return Array.from(
-    { length: count },
-    (_, i) =>
-      chars[i % Math.max(1, chars.length)] ?? fill[i % fill.length] ?? "",
-  );
-}
-
 /** A moving group: CSS class drives the travel, style sets timing. */
-function Mover({
+export function Mover({
   cls,
   dur,
   delay = 0,
@@ -147,7 +79,7 @@ function pedalFrames(hip: P2, bb: P2, phase: number, n = 12): string {
   return frames.join(";");
 }
 
-function Wheel({
+export function Wheel({
   cx,
   cy,
   r,

@@ -2836,6 +2836,500 @@
   }
 }
 
+/* ═══ Festival and craft scenes — 20 more palettes ═════════════════ */
+.amb-layer--mochitsuki {
+  --a: 200 160 120;
+  --b: 250 245 240;
+  --c: 220 50 60;
+  --p: 245 225 225;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(120, 20, 40, 0.5) 0%,
+    rgba(190, 70, 80, 0.25) 55%,
+    rgba(250, 230, 220, 0.2) 100%
+  );
+}
+.amb-layer--shishimai {
+  --a: 30 140 110;
+  --b: 245 240 230;
+  --c: 220 60 50;
+  --p: 220 240 230;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(5, 60, 50, 0.55) 0%,
+    rgba(20, 120, 100, 0.28) 60%,
+    rgba(90, 180, 150, 0.2) 100%
+  );
+}
+.amb-layer--ukai {
+  --a: 40 40 50;
+  --b: 60 70 90;
+  --c: 250 140 50;
+  --p: 200 190 180;
+  --amb-wash:
+    linear-gradient(180deg, rgba(0, 0, 5, 0.6), rgba(10, 10, 20, 0.5)),
+    radial-gradient(
+      60% 40% at 50% 95%,
+      rgba(250, 120, 40, 0.16),
+      transparent 70%
+    );
+}
+.amb-layer--snowMonkey {
+  --a: 150 110 90;
+  --b: 230 235 245;
+  --c: 240 140 140;
+  --p: 230 225 225;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(40, 55, 75, 0.5) 0%,
+    rgba(110, 130, 150, 0.25) 60%,
+    rgba(240, 200, 170, 0.22) 100%
+  );
+}
+.amb-layer--tsurumai {
+  --a: 60 60 70;
+  --b: 245 248 252;
+  --c: 220 40 50;
+  --p: 235 240 248;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(50, 70, 100, 0.45) 0%,
+    rgba(160, 180, 200, 0.22) 60%,
+    rgba(235, 240, 248, 0.22) 100%
+  );
+}
+.amb-layer--fujidana {
+  --a: 110 90 70;
+  --b: 190 160 240;
+  --c: 150 110 220;
+  --p: 230 220 245;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 30, 100, 0.5) 0%,
+    rgba(140, 100, 200, 0.28) 60%,
+    rgba(200, 170, 240, 0.2) 100%
+  );
+}
+.amb-layer--chabatake {
+  --a: 120 170 60;
+  --b: 230 240 220;
+  --c: 250 220 120;
+  --p: 230 240 220;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(40, 70, 15, 0.5) 0%,
+    rgba(110, 160, 50, 0.25) 60%,
+    rgba(190, 220, 120, 0.2) 100%
+  );
+}
+.amb-layer--furin {
+  --a: 120 90 70;
+  --b: 220 250 245;
+  --c: 250 150 170;
+  --p: 220 245 240;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(10, 80, 80, 0.5) 0%,
+    rgba(60, 170, 160, 0.25) 60%,
+    rgba(160, 230, 210, 0.2) 100%
+  );
+}
+.amb-layer--kabuki {
+  --a: 120 80 50;
+  --b: 40 120 80;
+  --c: 230 120 50;
+  --p: 240 220 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(10, 5, 5, 0.55) 0%,
+    rgba(60, 20, 10, 0.35) 70%,
+    rgba(140, 70, 30, 0.2) 100%
+  );
+}
+.amb-layer--taiko {
+  --a: 110 60 40;
+  --b: 245 230 200;
+  --c: 250 200 80;
+  --p: 245 225 210;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(60, 5, 10, 0.58) 0%,
+    rgba(120, 20, 30, 0.32) 60%,
+    rgba(180, 60, 40, 0.2) 100%
+  );
+}
+.amb-layer--takoyaki {
+  --a: 120 80 50;
+  --b: 250 240 220;
+  --c: 230 130 50;
+  --p: 245 230 215;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(110, 40, 10, 0.5) 0%,
+    rgba(220, 110, 40, 0.26) 60%,
+    rgba(250, 180, 90, 0.2) 100%
+  );
+}
+.amb-layer--gacha {
+  --a: 120 100 140;
+  --b: 240 230 250;
+  --c: 250 120 180;
+  --p: 245 230 245;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(100, 25, 80, 0.5) 0%,
+    rgba(220, 110, 180, 0.24) 60%,
+    rgba(150, 230, 200, 0.2) 100%
+  );
+}
+.amb-layer--shogi {
+  --a: 210 160 80;
+  --b: 250 235 200;
+  --c: 200 120 60;
+  --p: 240 225 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(70, 40, 15, 0.55) 0%,
+    rgba(160, 110, 50, 0.28) 60%,
+    rgba(220, 180, 110, 0.2) 100%
+  );
+}
+.amb-layer--library {
+  --a: 120 80 50;
+  --b: 240 225 190;
+  --c: 170 60 50;
+  --p: 235 220 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(40, 22, 15, 0.58) 0%,
+    rgba(90, 55, 35, 0.32) 60%,
+    rgba(220, 190, 140, 0.18) 100%
+  );
+}
+.amb-layer--kissaten {
+  --a: 110 100 40;
+  --b: 240 225 180;
+  --c: 220 120 40;
+  --p: 240 230 200;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(45, 50, 15, 0.55) 0%,
+    rgba(140, 130, 40, 0.28) 60%,
+    rgba(220, 170, 60, 0.22) 100%
+  );
+}
+.amb-layer--playground {
+  --a: 110 140 90;
+  --b: 250 240 180;
+  --c: 240 110 80;
+  --p: 240 240 220;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(40, 90, 70, 0.45) 0%,
+    rgba(120, 170, 120, 0.24) 60%,
+    rgba(240, 230, 130, 0.2) 100%
+  );
+}
+.amb-layer--harvest {
+  --a: 120 90 40;
+  --b: 240 230 200;
+  --c: 240 190 70;
+  --p: 240 230 210;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 70, 140, 0.45) 0%,
+    rgba(120, 160, 190, 0.2) 50%,
+    rgba(240, 190, 70, 0.3) 100%
+  );
+}
+.amb-layer--harbor {
+  --a: 70 80 90;
+  --b: 210 220 230;
+  --c: 250 130 50;
+  --p: 220 225 230;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(30, 40, 50, 0.55) 0%,
+    rgba(90, 110, 125, 0.28) 60%,
+    rgba(160, 180, 190, 0.2) 100%
+  );
+}
+.amb-layer--yukimatsuri {
+  --a: 120 110 160;
+  --b: 210 210 250;
+  --c: 250 200 120;
+  --p: 230 230 250;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(50, 40, 100, 0.5) 0%,
+    rgba(150, 140, 220, 0.25) 60%,
+    rgba(220, 215, 250, 0.2) 100%
+  );
+}
+.amb-layer--origami {
+  --a: 200 150 120;
+  --b: 250 220 225;
+  --c: 240 120 140;
+  --p: 250 230 235;
+  --amb-wash: linear-gradient(
+    180deg,
+    rgba(100, 35, 60, 0.5) 0%,
+    rgba(210, 120, 140, 0.25) 60%,
+    rgba(250, 200, 200, 0.2) 100%
+  );
+}
+.amb-layer--ukai .fc1 {
+  fill: rgb(250 140 50 / 0.14);
+}
+.amb-layer--ukai .fc2 {
+  fill: rgb(250 140 50 / 0.2);
+}
+.amb-layer--ukai .fc4 {
+  fill: rgb(250 160 60 / 0.55);
+}
+.amb-layer--fujidana .fb3 {
+  fill: rgb(190 160 240 / 0.28);
+}
+.amb-layer--fujidana .fc3 {
+  fill: rgb(150 110 220 / 0.3);
+}
+.amb-layer .pp-ink {
+  fill: rgb(170 170 180 / 0.3);
+}
+.amb-layer .sd {
+  stroke: rgb(10 10 15 / 0.45);
+}
+.amb-layer--ukai .amb-person {
+  opacity: 0.26;
+}
+.amb-layer--shogi .fb3 {
+  fill: rgb(250 235 200 / 0.24);
+}
+.amb-layer--gacha .fa4,
+.amb-layer--gacha .fb4,
+.amb-layer--gacha .fc4 {
+  fill-opacity: 1;
+}
+
+.amb-curtain {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: ambCurtain 6s ease-in-out infinite alternate;
+}
+
+@keyframes ambCurtain {
+  from {
+    transform: skewX(-1.5deg);
+  }
+  to {
+    transform: skewX(1.5deg);
+  }
+}
+
+/* Squashes as the mallet lands (mallet cycle 1.2 s, lands at 50%). */
+.amb-squash {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambSquash 1.2s ease-out infinite;
+}
+
+@keyframes ambSquash {
+  0%,
+  44% {
+    transform: scale(1, 1);
+  }
+  52% {
+    transform: scale(1.18, 0.7);
+  }
+  70%,
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.amb-lion-body {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  animation: ambLionBody 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambLionBody {
+  from {
+    transform: skewY(-3deg);
+  }
+  to {
+    transform: skewY(3deg) translateY(-6px);
+  }
+}
+
+.amb-lion-head {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ambLionHead 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes ambLionHead {
+  from {
+    transform: rotate(-6deg) translateY(0);
+  }
+  to {
+    transform: rotate(7deg) translateY(-14px);
+  }
+}
+
+.amb-dive {
+  animation: ambDive 4s ease-in-out infinite;
+}
+
+@keyframes ambDive {
+  0%,
+  40% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50%,
+  70% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.amb-crane-hop {
+  animation: ambCraneHop 3.2s ease-in-out infinite;
+}
+
+@keyframes ambCraneHop {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-40px);
+  }
+}
+
+.amb-chime {
+  animation: ambChime 2.6s ease-in-out infinite;
+}
+
+@keyframes ambChime {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  30% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-3deg);
+  }
+}
+
+.amb-spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    26% 70% at 74% 72%,
+    rgba(255, 230, 180, 0.12),
+    transparent 70%
+  );
+  animation: ambSpot 9s ease-in-out infinite alternate;
+}
+
+@keyframes ambSpot {
+  from {
+    transform: translateX(-4%);
+  }
+  to {
+    transform: translateX(4%);
+  }
+}
+
+.amb-wave-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ambRing ease-out infinite;
+}
+
+@keyframes ambRing {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.amb-capsule {
+  animation: ambCapsule 3s ease-in infinite;
+}
+
+@keyframes ambCapsule {
+  0% {
+    transform: translateY(-24px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(30px);
+  }
+  40% {
+    transform: translateY(16px);
+  }
+  50%,
+  80% {
+    transform: translateY(30px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+
+.amb-shogi-move {
+  animation: ambShogi 8s ease-in-out infinite;
+}
+
+@keyframes ambShogi {
+  0%,
+  30% {
+    transform: translateY(0);
+  }
+  42%,
+  86% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.amb-bubble-up {
+  animation: ambBubbleUp 1.5s ease-in infinite;
+}
+
+@keyframes ambBubbleUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-70px);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .amb *,
   .amb-layer {

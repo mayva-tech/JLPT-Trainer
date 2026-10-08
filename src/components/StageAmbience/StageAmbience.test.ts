@@ -87,6 +87,47 @@ describe("theme resolver — words pick their theme", () => {
     });
   }
 
+  const festivalCases: [string, string, AmbienceTheme][] = [
+    ["餅", "rice cake", "mochitsuki"],
+    ["獅子舞", "lion dance", "shishimai"],
+    ["鵜飼", "cormorant fishing", "ukai"],
+    ["猿", "monkey", "snowMonkey"],
+    ["鶴", "crane", "tsurumai"],
+    ["藤", "wisteria", "fujidana"],
+    ["茶畑", "tea field", "chabatake"],
+    ["風鈴", "wind chime", "furin"],
+    ["歌舞伎", "kabuki", "kabuki"],
+    ["太鼓", "drum", "taiko"],
+    ["たこ焼き", "octopus balls", "takoyaki"],
+    ["おもちゃ", "toy", "gacha"],
+    ["将棋", "shogi", "shogi"],
+    ["図書館", "library", "library"],
+    ["喫茶店", "coffee shop", "kissaten"],
+    ["ブランコ", "swing", "playground"],
+    ["稲刈り", "rice harvest", "harvest"],
+    ["漁港", "fishing harbor", "harbor"],
+    ["雪まつり", "snow festival", "yukimatsuri"],
+    ["折り紙", "origami", "origami"],
+  ];
+  for (const [w, m, theme] of festivalCases) {
+    it(`${w} → ${theme}`, () => {
+      expect(ambienceForVocab(word(w, m))).toBe(theme);
+    });
+  }
+
+  it("look-alikes stay apart: 折り鶴 is origami, 漁港 is the harbor, 雪まつり is the festival", () => {
+    expect(ambienceForVocab(word("折り鶴", "paper crane"))).toBe("origami");
+    expect(ambienceForVocab(word("漁港", "fishing port"))).toBe("harbor");
+    expect(
+      scoreAmbience({
+        id: 1,
+        primary: ["雪まつり", ""],
+        categories: [],
+        context: [],
+      }).winter,
+    ).toBe(0);
+  });
+
   const motionCases: [string, string, AmbienceTheme][] = [
     ["自転車", "bicycle", "cycling"],
     ["凧", "kite", "kite"],
@@ -205,9 +246,9 @@ describe("theme resolver — words pick their theme", () => {
     ).toBe("machiya");
     expect(
       ambienceForVocab(
-        word("検討", "consideration", { subcategory: "Science & Tech" }),
+        word("検討", "consideration", { subcategory: "Sleep & Rest" }),
       ),
-    ).toBe("space");
+    ).toBe("tsukimi");
   });
 
   it("does not misread look-alike kanji", () => {
@@ -290,9 +331,9 @@ describe("theme resolver — whole corpus", () => {
     for (const t of themes) expect(ALL).toContain(t);
   });
 
-  it("uses all seventy themes", () => {
-    expect(AMBIENCE_THEMES).toHaveLength(70);
-    expect(new Set(themes).size).toBe(70);
+  it("uses all ninety themes", () => {
+    expect(AMBIENCE_THEMES).toHaveLength(90);
+    expect(new Set(themes).size).toBe(90);
   });
 
   it("keeps variety — no theme takes over the corpus", () => {
@@ -301,7 +342,7 @@ describe("theme resolver — whole corpus", () => {
     for (const [, n] of counts) expect(n / themes.length).toBeLessThan(0.1);
   });
 
-  it("varies inside a lesson — 10-word vocabulary lessons average 3.8+ scenes", () => {
+  it("varies inside a lesson — 10-word vocabulary lessons average 4.5+ scenes", () => {
     let distinct = 0;
     let lessons = 0;
     for (let i = 0; i < vocabulary.length; i += 10) {
@@ -309,7 +350,7 @@ describe("theme resolver — whole corpus", () => {
       distinct += new Set(vocabulary.slice(i, i + 10).map(ambienceForVocab))
         .size;
     }
-    expect(distinct / lessons).toBeGreaterThanOrEqual(3.8);
+    expect(distinct / lessons).toBeGreaterThanOrEqual(4.5);
   });
 });
 

@@ -88,7 +88,28 @@ export type AmbienceTheme =
   | "ski"
   | "dogWalk"
   | "manekineko"
-  | "rainbow";
+  | "rainbow"
+  // Festival and craft scenes
+  | "mochitsuki"
+  | "shishimai"
+  | "ukai"
+  | "snowMonkey"
+  | "tsurumai"
+  | "fujidana"
+  | "chabatake"
+  | "furin"
+  | "kabuki"
+  | "taiko"
+  | "takoyaki"
+  | "gacha"
+  | "shogi"
+  | "library"
+  | "kissaten"
+  | "playground"
+  | "harvest"
+  | "harbor"
+  | "yukimatsuri"
+  | "origami";
 
 export interface AmbienceThemeInfo {
   id: AmbienceTheme;
@@ -169,6 +190,26 @@ export const AMBIENCE_THEMES: readonly AmbienceThemeInfo[] = [
   { id: "dogWalk", ja: "犬の散歩", en: "Dog walk in the park" },
   { id: "manekineko", ja: "招き猫", en: "Lucky cats" },
   { id: "rainbow", ja: "雨上がり", en: "After the rain" },
+  { id: "mochitsuki", ja: "餅つき", en: "Mochi pounding" },
+  { id: "shishimai", ja: "獅子舞", en: "Lion dance" },
+  { id: "ukai", ja: "鵜飼", en: "Cormorant fishing" },
+  { id: "snowMonkey", ja: "雪猿の湯", en: "Snow monkeys" },
+  { id: "tsurumai", ja: "丹頂鶴の舞", en: "Dancing cranes" },
+  { id: "fujidana", ja: "藤棚", en: "Wisteria trellis" },
+  { id: "chabatake", ja: "茶畑", en: "Tea fields" },
+  { id: "furin", ja: "風鈴市", en: "Wind chimes" },
+  { id: "kabuki", ja: "歌舞伎", en: "Kabuki stage" },
+  { id: "taiko", ja: "和太鼓", en: "Taiko drummers" },
+  { id: "takoyaki", ja: "たこ焼き", en: "Takoyaki stall" },
+  { id: "gacha", ja: "ガチャガチャ", en: "Capsule toys" },
+  { id: "shogi", ja: "将棋", en: "Shogi match" },
+  { id: "library", ja: "図書館", en: "Library" },
+  { id: "kissaten", ja: "喫茶店", en: "Retro coffee shop" },
+  { id: "playground", ja: "公園の遊具", en: "Playground" },
+  { id: "harvest", ja: "稲刈り", en: "Rice harvest" },
+  { id: "harbor", ja: "漁港", en: "Fishing harbor" },
+  { id: "yukimatsuri", ja: "雪まつり", en: "Snow festival" },
+  { id: "origami", ja: "折り鶴", en: "Paper cranes" },
 ];
 
 const THEME_ORDER: readonly AmbienceTheme[] = AMBIENCE_THEMES.map((t) => t.id);
@@ -213,6 +254,16 @@ export const NEUTRAL_THEMES: readonly AmbienceTheme[] = [
   "dogWalk",
   "rainbow",
   "laundry",
+  "fujidana",
+  "chabatake",
+  "furin",
+  "tsurumai",
+  "harbor",
+  "library",
+  "kissaten",
+  "origami",
+  "yukimatsuri",
+  "playground",
 ];
 
 export function ambienceThemeInfo(id: AmbienceTheme): AmbienceThemeInfo {
@@ -345,7 +396,15 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "blanket*",
       "scarf",
     ],
-    jaExclude: ["かき氷", "雪国", "雪だるま", "雪合戦", "雪遊び"],
+    jaExclude: [
+      "かき氷",
+      "雪国",
+      "雪だるま",
+      "雪合戦",
+      "雪遊び",
+      "雪まつり",
+      "雪祭",
+    ],
     categories: ["Clothing", "Home Appliances"],
   },
   rain: {
@@ -433,7 +492,7 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
     categories: ["Friends & Social Life", "Relationships"],
   },
   bonOdori: {
-    ja: ["盆", "踊", "帰省", "先祖", "太鼓", "浴衣"],
+    ja: ["盆", "踊", "帰省", "先祖", "浴衣"],
     en: [
       "dance*",
       "dancing",
@@ -441,7 +500,6 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "obon",
       "ancestor*",
       "homecoming",
-      "drum*",
       "yukata",
     ],
     jaExclude: ["盆栽"],
@@ -487,7 +545,7 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "grace*",
       "elegan*",
     ],
-    jaExclude: ["茶色", "喫茶"],
+    jaExclude: ["茶色", "喫茶", "茶畑", "茶摘み", "新茶"],
     categories: ["Etiquette", "Etiquette & Consideration"],
   },
   sumo: {
@@ -1256,13 +1314,12 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
     ],
   },
   tanbo: {
-    ja: ["田んぼ", "田舎", "米", "稲", "農", "収穫", "畑", "村", "野菜"],
+    ja: ["田んぼ", "田舎", "米", "稲", "農", "畑", "村", "野菜"],
     en: [
       "rice",
       "paddy",
       "paddies",
       "farm*",
-      "harvest*",
       "crop*",
       "agricultur*",
       "countryside",
@@ -1270,6 +1327,7 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "vegetable*",
       "rural",
     ],
+    jaExclude: ["稲刈り"],
     categories: ["Environment", "Environment & Sustainability"],
   },
   gassho: {
@@ -1511,8 +1569,6 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "beach*",
       "coast*",
       "port",
-      "harbor*",
-      "harbour*",
       "ship*",
       "boat*",
       "island*",
@@ -1523,7 +1579,7 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "abroad",
       "voyage*",
     ],
-    jaExclude: ["海辺", "雲海"],
+    jaExclude: ["海辺", "雲海", "漁港"],
     categories: [],
   },
   city: {
@@ -1627,7 +1683,6 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "学ぶ",
       "留学",
       "読書",
-      "図書",
       "本屋",
       "書く",
       "書類",
@@ -1661,7 +1716,6 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "document*",
       "opinion*",
       "argument*",
-      "library",
       "knowledge",
       "honorific*",
     ],
@@ -1977,6 +2031,345 @@ const RULES: Record<AmbienceTheme, ThemeRule> = {
       "Condition & Cause",
     ],
   },
+  mochitsuki: {
+    ja: ["餅", "杵", "臼", "お正月", "新年", "お祝い", "祝"],
+    en: ["mochi", "rice cake*", "pound*", "new year*"],
+    categories: [
+      "Daily Actions",
+      "Common Verbs",
+      "Family",
+      "Food & Cooking",
+      "Social Convention & Custom",
+      "Degree & Limit",
+      "Volition & Effort",
+    ],
+  },
+  shishimai: {
+    ja: ["獅子", "魔除", "厄", "舞"],
+    en: ["lion*", "bite*", "biting", "bit", "ward off"],
+    jaExclude: ["お見舞", "見舞"],
+    categories: [
+      "Arts & Entertainment",
+      "Art & Culture",
+      "Social Convention & Custom",
+    ],
+  },
+  ukai: {
+    ja: ["鵜", "篝火", "漁師", "漁", "松明", "長良"],
+    en: ["cormorant*", "torch*", "fisherm*", "flame*", "blaze*"],
+    jaExclude: ["漁港", "漁船"],
+    categories: ["Travel", "Inference & Speculation", "Tradition"],
+  },
+  snowMonkey: {
+    ja: ["猿", "サル", "露天", "地獄谷", "温まる", "温め"],
+    en: ["monkey*", "ape", "apes", "warm", "warmer", "warmth", "warming"],
+    categories: ["Nature", "Health", "State & Condition", "Weather & Climate"],
+  },
+  tsurumai: {
+    ja: ["鶴", "丹頂", "北海道", "優雅", "舞う", "羽"],
+    en: ["crane", "cranes", "wing*", "feather*", "hokkaido", "graceful"],
+    jaExclude: ["折り鶴", "千羽"],
+    categories: ["Nature", "Abstract Concepts", "Nature & Animals"],
+  },
+  fujidana: {
+    ja: ["藤", "紫", "棚", "蜂", "咲き誇", "垂れ"],
+    en: [
+      "wisteria",
+      "purple",
+      "violet",
+      "bee",
+      "bees",
+      "trellis",
+      "hang",
+      "hangs",
+      "hanging",
+      "hung",
+    ],
+    jaExclude: ["紫外線", "本棚"],
+    categories: ["Nature", "Adjectives", "Emotions"],
+  },
+  chabatake: {
+    ja: ["茶畑", "茶摘み", "新茶", "静岡", "緑茶", "摘む", "摘ん"],
+    en: [
+      "tea field*",
+      "green tea",
+      "pick",
+      "picks",
+      "picking",
+      "picked",
+      "tea leaves",
+    ],
+    categories: [
+      "Food",
+      "Environment",
+      "Adjectives",
+      "Environment & Sustainability",
+    ],
+  },
+  furin: {
+    ja: ["風鈴", "涼しい", "涼", "鈴", "音色", "ガラス", "そよ風", "響"],
+    en: [
+      "chime*",
+      "breeze*",
+      "glass*",
+      "cool",
+      "cooler",
+      "coolness",
+      "sound",
+      "sounds",
+    ],
+    categories: [
+      "Common Adjectives",
+      "Emotions",
+      "Weather",
+      "Concession & Resignation",
+    ],
+  },
+  kabuki: {
+    ja: ["歌舞伎", "舞台", "役者", "芝居", "劇", "演じ", "演技", "幕", "拍手"],
+    en: [
+      "kabuki",
+      "stage",
+      "stages",
+      "actor*",
+      "actress*",
+      "theater*",
+      "theatre*",
+      "perform*",
+      "curtain*",
+      "drama*",
+      "applau*",
+    ],
+    categories: [
+      "Media",
+      "Arts & Entertainment",
+      "Appearance & Impression",
+      "Abstract Concepts",
+    ],
+  },
+  taiko: {
+    ja: ["太鼓", "叩", "リズム", "鼓動", "打つ"],
+    en: [
+      "drum*",
+      "beat",
+      "beats",
+      "beating",
+      "rhythm*",
+      "taiko",
+      "hit",
+      "hits",
+      "hitting",
+      "strike*",
+      "struck",
+    ],
+    categories: [
+      "Public Life",
+      "Time",
+      "Emphasis & Insistence",
+      "Necessity & Obligation",
+    ],
+  },
+  takoyaki: {
+    ja: ["たこ焼き", "蛸", "タコ", "焼く", "焼き", "大阪", "関西", "ソース"],
+    en: [
+      "takoyaki",
+      "octopus",
+      "grill*",
+      "bake*",
+      "baking",
+      "osaka",
+      "kansai",
+      "sauce*",
+      "fry",
+      "fried",
+    ],
+    jaExclude: ["日焼"],
+    categories: [
+      "Daily Vocabulary",
+      "Daily Actions",
+      "Food & Cooking",
+      "Cooking",
+      "Dining Out",
+    ],
+  },
+  gacha: {
+    ja: [
+      "ガチャ",
+      "カプセル",
+      "おもちゃ",
+      "駄菓子",
+      "玩具",
+      "当たり",
+      "くじ",
+      "景品",
+    ],
+    en: [
+      "capsule*",
+      "toy",
+      "toys",
+      "candy",
+      "candies",
+      "sweets",
+      "prize*",
+      "lottery",
+      "random*",
+    ],
+    categories: [
+      "Daily Vocabulary",
+      "Hobbies & Free Time",
+      "Science & Tech",
+      "Possibility & Prediction",
+    ],
+  },
+  shogi: {
+    ja: ["将棋", "駒", "盤", "対局", "戦略", "囲碁", "碁", "一手", "勝負"],
+    en: [
+      "shogi",
+      "chess",
+      "strateg*",
+      "tactic*",
+      "opponent*",
+      "piece",
+      "pieces",
+      "move",
+      "moves",
+      "moved",
+    ],
+    categories: [
+      "Position",
+      "Business Basics",
+      "Hobbies & Free Time",
+      "Judgement & Evaluation",
+      "Comparison & Contrast",
+      "Inference & Speculation",
+    ],
+  },
+  library: {
+    ja: [
+      "図書館",
+      "図書",
+      "本棚",
+      "司書",
+      "借り",
+      "返却",
+      "辞書",
+      "小説",
+      "物語",
+      "文学",
+      "調べ",
+    ],
+    en: [
+      "library",
+      "librar*",
+      "novel*",
+      "story",
+      "stories",
+      "dictionar*",
+      "borrow*",
+      "literature",
+    ],
+    jaExclude: ["借金"],
+    categories: [
+      "N2 Reading",
+      "Media",
+      "Reason & Grounds",
+      "Language Learning",
+      "Academic Reading",
+    ],
+  },
+  kissaten: {
+    ja: ["喫茶", "コーヒー", "珈琲", "カフェ", "紅茶", "休憩", "待ち合わせ"],
+    en: ["coffee", "cafe*", "café", "latte", "espresso", "tea break"],
+    categories: [
+      "N2 Reading",
+      "Time",
+      "Hobbies & Free Time",
+      "Habitual Actions & Recurring Patterns",
+      "Advice & Recommendation",
+    ],
+  },
+  playground: {
+    ja: [
+      "ブランコ",
+      "滑り台",
+      "シーソー",
+      "砂場",
+      "遊具",
+      "公園",
+      "遊ぶ",
+      "遊ん",
+    ],
+    en: [
+      "playground*",
+      "swing",
+      "swings",
+      "swinging",
+      "seesaw*",
+      "sandbox*",
+      "jungle gym",
+    ],
+    categories: [
+      "Common Adjectives",
+      "Common Verbs",
+      "Family",
+      "Position",
+      "Childcare",
+    ],
+  },
+  harvest: {
+    ja: ["稲刈り", "収穫", "案山子", "かかし", "豊作", "刈", "実り"],
+    en: ["harvest*", "scarecrow*", "reap*", "grain*", "wheat", "sickle*"],
+    categories: [
+      "Work",
+      "Environment",
+      "Result & Consequence",
+      "Expectation & Result",
+    ],
+  },
+  harbor: {
+    ja: [
+      "漁港",
+      "漁船",
+      "港町",
+      "魚市場",
+      "出港",
+      "船乗り",
+      "貿易",
+      "輸出",
+      "輸入",
+    ],
+    en: [
+      "harbor*",
+      "harbour*",
+      "fishing boat*",
+      "trade",
+      "trading",
+      "export*",
+      "import*",
+      "cargo",
+      "sailor*",
+      "fishing port*",
+    ],
+    categories: ["Work", "Business Basics", "Economy & Business", "Travel"],
+  },
+  yukimatsuri: {
+    ja: ["雪まつり", "雪祭", "氷像", "札幌", "彫刻", "像", "イルミネーション"],
+    en: ["sculpt*", "statue*", "illuminat*", "sapporo", "snow festival"],
+    jaExclude: ["想像", "映像", "画像", "現像", "銅像以外"],
+    categories: ["Public Life", "Travel", "Society & Public Life"],
+  },
+  origami: {
+    ja: ["折り紙", "折り鶴", "折る", "折っ", "千羽", "紙"],
+    en: ["origami", "fold", "folds", "folding", "folded", "paper", "papers"],
+    jaExclude: ["手紙"],
+    categories: [
+      "Abstract Concepts",
+      "Emotions",
+      "Purpose & Intention",
+      "Similarity & Equivalence",
+      "Common Adjectives",
+    ],
+  },
 };
 
 /** Text of an item, split by how strongly each part speaks for a theme. */
@@ -2183,6 +2576,8 @@ export const GLYPH_THEMES: ReadonlySet<AmbienceTheme> = new Set<AmbienceTheme>([
   "kite",
   "toro",
   "manekineko",
+  "shogi",
+  "library",
 ]);
 
 const KANJI = /[\u3400-\u4dbf\u4e00-\u9fff々]/u;
