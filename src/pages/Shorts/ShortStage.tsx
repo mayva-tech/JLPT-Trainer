@@ -113,7 +113,7 @@ export function ShortStage(props: ShortStageProps) {
           </div>
         ) : (
           <div
-            className={`sh-word${hook ? " sh-word--hook" : " sh-word--pop"}`}
+            className={`sh-word${hook ? " sh-word--hook" : " sh-word--pop"}${props.brush ? " sh-word--ink" : ""}`}
             style={{ fontSize: wordSize(item.word) }}
             lang="ja"
           >

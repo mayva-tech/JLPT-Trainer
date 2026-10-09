@@ -450,6 +450,16 @@
   animation: shPop 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
 }
 
+/* Brush mode: the typed word matches the brush strokes — a light
+   textbook-script face (kyokasho-tai) at regular weight, so the countdown kanji and the written kanji look
+   like the same hand. */
+.sh-word--ink,
+.sh-word--brush {
+  font-family: "Klee One", "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "Yu Mincho",
+    "YuMincho", serif;
+  font-weight: 400;
+}
+
 .sh-word--brush {
   display: flex;
   flex-direction: column;
@@ -472,12 +482,11 @@
   transform: none;
 }
 
-/* KanjiVG glyphs fill ~80% of their box: scale up to match typed kanji,
-   with a heavier brush for a phone screen. */
+/* KanjiVG glyphs fill ~80% of their box: scale up to match typed kanji.
+   The brush width is set per kanji (lighter for busy ones). */
 .sh-strokes {
   color: #fbf8f0;
   font-size: 1.24em;
-  --ks-weight: 8.8;
 }
 
 .sh-word--pop {
