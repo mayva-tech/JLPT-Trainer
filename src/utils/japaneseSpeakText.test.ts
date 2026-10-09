@@ -31,6 +31,26 @@ describe("buildJapaneseSpeakText", () => {
     expect(buildJapaneseSpeakText("x", "たべては いけない")).toBe("たべてわ いけない");
   });
 
+  it("says は inside a word as 'ha' (katakana), never the particle 'wa'", () => {
+    expect(buildJapaneseSpeakText("秋は山の葉が赤くなります。", "あきは やまの はが あかくなります")).toBe(
+      "あきは、 やまの ハが あかくなります"
+    );
+    expect(buildJapaneseSpeakText("葉", "は")).toBe("ハ");
+    expect(buildJapaneseSpeakText("歯を抜く", "は を ぬく")).toBe("ハ を ぬく");
+    expect(buildJapaneseSpeakText("葉書", "はがき")).toBe("ハがき");
+    // Longer readings are never taken for the particle; they stay as they are.
+    expect(buildJapaneseSpeakText("父は今電話で話しています", "ちちは いまでんわで はなしています")).toBe(
+      "ちちは、 いまでんわで はなしています"
+    );
+  });
+
+  it("keeps the particle は that is written in kana", () => {
+    expect(buildJapaneseSpeakText("トイレはどこですか", "トイレ はどこですか")).toBe("といれ はどこですか");
+    expect(buildJapaneseSpeakText("今日は波が高い", "きょう は なみが たかい")).toBe(
+      "きょう わ、 なみが たかい"
+    );
+  });
+
   it("does not pause after 母 (はは) or 庭 (にわ)", () => {
     expect(buildJapaneseSpeakText("x", "はは が きた")).toBe("はは が きた");
     expect(buildJapaneseSpeakText("x", "ちいさな にわ")).toBe("ちいさな にわ");
@@ -267,6 +287,11 @@ describe("buildJapaneseSpeakText", () => {
   });
 });
 
+/** Spoken text contains a word は (葉, 歯) sent as katakana ハ. */
+function hasWordHa(spoken: string): boolean {
+  return spoken.includes("ハ");
+}
+
 describe("TTS particle audit (all lesson readings)", () => {
   type Case = { id: number; kind: string; surface: string; reading: string };
 
@@ -306,6 +331,17 @@ describe("TTS particle audit (all lesson readings)", () => {
     });
   }
 
+  it("speaks ハ only for a kanji read は (葉, 歯…), never for a particle", () => {
+    const failures: string[] = [];
+    for (const c of cases) {
+      const spoken = buildJapaneseSpeakText(c.surface, c.reading);
+      const ha = [...spoken].filter((ch) => ch === "ハ").length;
+      const kanji = [...c.surface].filter((ch) => /[葉歯羽刃晴貼剥張履恥果端]/u.test(ch)).length;
+      if (ha > kanji) failures.push(`${c.kind}#${c.id}: ${c.surface} → ${spoken}`);
+    }
+    expect(failures).toEqual([]);
+  });
+
   it("rewrites every punct-bounded particle は token to わ", () => {
     const failures: string[] = [];
     for (const c of cases) {
@@ -319,6 +355,7 @@ describe("TTS particle audit (all lesson readings)", () => {
       if (!sawParticle) continue;
 
       const spoken = buildJapaneseSpeakText(c.surface, c.reading);
+      if (hasWordHa(spoken)) continue;
       if (!spoken.includes("わ")) {
         failures.push(`${c.kind}#${c.id}: ${c.reading} → ${spoken}`);
       }
@@ -330,6 +367,8 @@ describe("TTS particle audit (all lesson readings)", () => {
     const failures: string[] = [];
     for (const c of cases) {
       const spoken = buildJapaneseSpeakText(c.surface, c.reading);
+      // A word は (葉, 歯) needs the surface, which per-token rewriting lacks.
+      if (hasWordHa(spoken)) continue;
       const tokens = c.reading
         .trim()
         .split(/\s+/)
@@ -463,6 +502,7 @@ describe("TTS particle audit (all lesson readings)", () => {
       );
       if (!hasLoneHa) continue;
       const spoken = buildJapaneseSpeakText(c.surface, c.reading);
+      if (hasWordHa(spoken)) continue;
       const spokenToks = spoken.split(/\s+/);
       const waIdx = spokenToks.findIndex(
         (t) => t.replace(/[、。！？．，!?,]+/g, "") === "わ"

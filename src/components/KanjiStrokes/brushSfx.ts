@@ -13,7 +13,7 @@ export interface BrushSoundStroke {
   duration: number;
 }
 
-const MASTER_VOLUME = 0.32;
+const MASTER_VOLUME = 0.07;
 const NOISE_SECONDS = 2;
 
 let ctx: AudioContext | null = null;
@@ -57,16 +57,16 @@ function swish(c: AudioContext, out: AudioNode, t: number, seconds: number): Aud
 
   const band = c.createBiquadFilter();
   band.type = "bandpass";
-  band.Q.value = 0.9;
-  band.frequency.setValueAtTime(1500, t);
-  band.frequency.linearRampToValueAtTime(2900, t + dur);
+  band.Q.value = 0.7;
+  band.frequency.setValueAtTime(900, t);
+  band.frequency.linearRampToValueAtTime(1800, t + dur);
 
   const g = c.createGain();
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(0.9, t + 0.012);
-  g.gain.exponentialRampToValueAtTime(0.5, t + Math.min(0.06, dur * 0.4));
-  g.gain.setValueAtTime(0.5, t + dur * 0.7);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.04);
+  g.gain.exponentialRampToValueAtTime(0.6, t + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.45, t + Math.min(0.08, dur * 0.4));
+  g.gain.setValueAtTime(0.45, t + dur * 0.7);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.08);
 
   src.connect(band);
   band.connect(g);

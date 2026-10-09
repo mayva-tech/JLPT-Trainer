@@ -1,3 +1,5 @@
+import { alignFurigana } from "./alignFurigana";
+
 /**
  * Particle kana that TTS misreads when spoken as a kana-only string.
  * Display / karaoke keep the surface characters; only the audio string changes.
@@ -639,6 +641,52 @@ export function appendPhraseParticleSpeakPause(
   return `${core}、${punct}`;
 }
 
+/** Stand-in for a は that belongs to a word, so no particle rule rewrites it. */
+const WORD_HA = "\uE000";
+const KANA_CHAR_RE = /[ぁ-ゖァ-ヺー]/u;
+
+function toHiragana(ch: string): string {
+  const code = ch.codePointAt(0)!;
+  return code >= 0x30a1 && code <= 0x30f6 ? String.fromCodePoint(code - 0x60) : ch;
+}
+
+/**
+ * Mark a kanji read as the single mora は (葉, 歯; 葉書 はがき) so it is
+ * spoken "ha". In a kana-only string it looks exactly like the particle, and
+ * the voice says "wa" (やまの はが → "wa ga"). Longer readings (はる, はなし)
+ * are never mistaken, and particle は is written in kana on the surface, so
+ * neither is marked. When the reading does not line up with the surface,
+ * nothing is marked.
+ */
+function markWordHa(surface: string, tokens: string[]): string[] {
+  if (!tokens.some((t) => t.includes("は"))) return tokens;
+  const kana: string[] = [];
+  const wordHa: boolean[] = [];
+  for (const seg of alignFurigana(surface, tokens.join(" "))) {
+    for (const ch of seg.reading ?? seg.text) {
+      if (!KANA_CHAR_RE.test(ch)) continue;
+      kana.push(toHiragana(ch));
+      wordHa.push(seg.reading === "は");
+    }
+  }
+  let k = 0;
+  const out: string[] = [];
+  for (const tok of tokens) {
+    let s = "";
+    for (const ch of tok) {
+      if (!KANA_CHAR_RE.test(ch)) {
+        s += ch;
+        continue;
+      }
+      if (kana[k] !== toHiragana(ch)) return tokens;
+      s += ch === "は" && wordHa[k] ? WORD_HA : ch;
+      k++;
+    }
+    out.push(s);
+  }
+  return k === kana.length ? out : tokens;
+}
+
 /**
  * Build the string sent to speech synthesis.
  * Uses the lesson reading so ambiguous kanji (間→ま, not あいだ) pronounce correctly.
@@ -656,15 +704,14 @@ export function buildJapaneseSpeakText(
   // word (きじわらいげつ → sounds like "haraigetsu" / "warai…").
   // After は/が/を/に, insert 、 so the voice pauses before the next phrase
   // (except を/に bound patterns and を/が + governing predicates).
-  const tokens = reading
-    .split(/\s+/)
-    .filter(Boolean)
+  const tokens = markWordHa(surface, reading.split(/\s+/).filter(Boolean))
     .map(speakReadingToken)
     .map(appendWaveDashSpeakPause);
   const spoken = tokens
     .map((tok, i) => appendPhraseParticleSpeakPause(tok, tokens[i + 1]))
     .join(" ")
-    .trim();
+    .trim()
+    .replaceAll(WORD_HA, "ハ");
 
   return splitDigitsForTTS(normalizePlaceholderCircles(spoken)) || splitDigitsForTTS(normalizePlaceholderCircles(appendWaveDashSpeakPause(surface)));
 }
