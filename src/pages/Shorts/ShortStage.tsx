@@ -49,6 +49,19 @@ function wordSize(word: string): string {
   return `${Math.min(17, 70 / n).toFixed(2)}cqw`;
 }
 
+/** The outro question with its 「word」 unbracketed, whole, and starting line two. */
+function OutroPrompt({ text }: { text: string }) {
+  const m = /^(.*?)\s*「(.+?)」\s*(.*)$/u.exec(text);
+  if (!m) return <>{text}</>;
+  return (
+    <>
+      {m[1]}
+      <br />
+      <span className="sh-outro-word">{m[2]}</span> {m[3]}
+    </>
+  );
+}
+
 export function ShortStage(props: ShortStageProps) {
   const { item, cue, highlight, activeLang } = props;
   // The loop beat (and the finished state) show the opening frame again, so
@@ -184,7 +197,7 @@ export function ShortStage(props: ShortStageProps) {
         {reached(phase, "outro") && (
           <div className="sh-outro">
             <div className="sh-outro-prompt" lang="ja">
-              💬 {angle.bait}
+              💬 <OutroPrompt text={angle.bait} />
             </div>
             {angle.choices && (
               <div className="sh-choices" lang="ja">

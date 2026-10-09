@@ -2,6 +2,7 @@ import { FuriganaWrapText } from "../../../components/FuriganaWrapText";
 import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import type { SpeechHighlight } from "../../../services/speechService";
 import type { RelatedWord } from "../../../types/wordRelation";
+import { BrushWord } from "../../../components/KanjiStrokes/BrushWord";
 
 interface Props {
   word: RelatedWord;
@@ -9,6 +10,8 @@ interface Props {
   activeJp?: boolean;
   activeEn?: boolean;
   highlight?: SpeechHighlight | null;
+  /** Write the word with the brush (Synonyms "筆" setting). */
+  brush?: { state: "draw" | "done"; runKey: number | string; delayMs?: number } | null;
 }
 
 export function RelationWord({
@@ -17,6 +20,7 @@ export function RelationWord({
   activeJp = false,
   activeEn = false,
   highlight = null,
+  brush = null,
 }: Props) {
   const jpHighlight = activeJp ? highlight : null;
   const enHighlight = activeEn ? highlight : null;
@@ -24,16 +28,28 @@ export function RelationWord({
   return (
     <div className={small ? "rt-word rt-word--small" : "rt-word"}>
       <div className="rt-word-head">
-        <FuriganaWrapText
-          surface={word.japanese}
-          reading={word.reading}
-          className={
-            activeJp ? "rt-word-jp rt-word-jp--active" : "rt-word-jp"
-          }
-          highlight={jpHighlight}
-          showFurigana
-          reserveReadingSpace
-        />
+        {brush ? (
+          <BrushWord
+            word={word.japanese}
+            reading={word.reading}
+            state={brush.state}
+            runKey={brush.runKey}
+            delayMs={brush.delayMs}
+            speaking={activeJp}
+            className={activeJp ? "rt-word-jp rt-word-jp--active rt-word-brush" : "rt-word-jp rt-word-brush"}
+          />
+        ) : (
+          <FuriganaWrapText
+            surface={word.japanese}
+            reading={word.reading}
+            className={
+              activeJp ? "rt-word-jp rt-word-jp--active" : "rt-word-jp"
+            }
+            highlight={jpHighlight}
+            showFurigana
+            reserveReadingSpace
+          />
+        )}
       </div>
       <div
         className={

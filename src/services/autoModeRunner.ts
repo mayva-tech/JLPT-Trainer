@@ -21,6 +21,11 @@ import {
 
 /** Countdown shown on the "Can you read this?" hook; ms 0 = banner only. */
 export type ReadHookState = { ms: number; key: number };
+/** The word being written with the brush (key restarts the drawing). */
+export type BrushDrawState = { key: number };
+
+/** Pause after the last brush stroke before the word is spoken. */
+export const BRUSH_SETTLE_MS = 300;
 export type CheckPhase = "ask" | "think" | "reveal";
 
 export type AutoModeUi = {
@@ -37,6 +42,9 @@ export type AutoModeUi = {
   getRetention?: () => { hook: boolean; check: boolean };
   setReadHook?: (state: ReadHookState | null) => void;
   setCheck?: (card: CheckCard | null, phase?: CheckPhase) => void;
+  /** Brush writing time for a word (0 = no brush beat: setting off, kana only, data not loaded). */
+  getBrushDrawMs?: (item: VocabularyItem) => number;
+  setBrushDraw?: (state: BrushDrawState | null) => void;
 };
 
 type Section = "word" | "phrase" | "sentence";
@@ -76,6 +84,7 @@ export class AutoModeRunner {
     speechService.stop();
     this.ui?.setReadHook?.(null);
     this.ui?.setCheck?.(null);
+    this.ui?.setBrushDraw?.(null);
     this.ui = null;
   }
 
@@ -120,6 +129,15 @@ export class AutoModeRunner {
 
         if (ui.getRetention?.().hook) {
           await this.runReadHook(sid, ui, i === from);
+          if (!this.shouldContinue(sid)) {
+            completedAll = false;
+            break;
+          }
+        }
+
+        const drawMs = ui.getBrushDrawMs?.(item) ?? 0;
+        if (drawMs > 0) {
+          await this.runBrushDraw(sid, ui, drawMs);
           if (!this.shouldContinue(sid)) {
             completedAll = false;
             break;
@@ -171,6 +189,7 @@ export class AutoModeRunner {
         ui.setHighlight(null);
         ui.setReadHook?.(null);
         ui.setCheck?.(null);
+        ui.setBrushDraw?.(null);
         onState("off");
       }
     }
@@ -456,6 +475,18 @@ export class AutoModeRunner {
     ui.setReadHook?.({ ms: T.readHookMs, key: ++this.hookKey });
     await this.pause(T.readHookMs, sid);
     ui.setReadHook?.(null);
+  }
+
+  /**
+   * The word writes itself with the brush, stroke by stroke, before it is
+   * spoken (reading hidden until the voice reads it).
+   */
+  private async runBrushDraw(sid: number, ui: AutoModeUi, drawMs: number): Promise<void> {
+    ui.setStep("word");
+    ui.setShowFurigana(false);
+    ui.setBrushDraw?.({ key: ++this.hookKey });
+    await this.pause(drawMs + BRUSH_SETTLE_MS, sid);
+    ui.setBrushDraw?.(null);
   }
 
   /**

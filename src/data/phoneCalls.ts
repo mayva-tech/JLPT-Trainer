@@ -760,7 +760,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "三日前から歯が痛くて、右の奥です。",
-        reading: "みっかまえからはがいたくて、みぎのおくです。",
+        reading: "みっかまえからは がいたくて、みぎのおくです。",
         english: "My tooth has hurt for three days, at the back on the right.",
       },
       {
@@ -2073,7 +2073,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "A",
         japanese: "本日中には復旧する見込みです。",
-        reading: "ほんじつちゅうにはふっきゅうするみこみです。",
+        reading: "ほんじつちゅうには ふっきゅうするみこみです。",
         english: "It should be restored within today.",
       },
       {
@@ -2672,7 +2672,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "終電には間に合いますか。",
-        reading: "しゅうでんにはまにあいますか。",
+        reading: "しゅうでんには まにあいますか。",
         english: "Will I still make the last train?",
       },
       {
@@ -2709,7 +2709,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       },
       {
         japanese: "終電には間に合いますか。",
-        reading: "しゅうでんにはまにあいますか。",
+        reading: "しゅうでんには まにあいますか。",
         english: "Will I make the last train?",
         note: "間に合う means to be in time. The single most useful verb during a delay.",
       },
@@ -3295,7 +3295,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "かしこまりました。それでは失礼いたします。",
-        reading: "かしこまりました。それではしつれいいたします。",
+        reading: "かしこまりました。それでは しつれいいたします。",
         english: "Certainly. Thank you, goodbye.",
       },
     ],
@@ -3386,7 +3386,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "A",
         japanese: "来週の月曜、十時からはいかがでしょうか。",
-        reading: "らいしゅうのげつよう、じゅうじからはいかがでしょうか。",
+        reading: "らいしゅうのげつよう、じゅうじからは いかがでしょうか。",
         english: "How about next Monday from ten?",
       },
       {
@@ -3525,13 +3525,13 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "金曜日の午前中には必ずお届けいたします。",
-        reading: "きんようびのごぜんちゅうにはかならずおとどけいたします。",
+        reading: "きんようびのごぜんちゅうには かならずおとどけいたします。",
         english: "We will deliver without fail by Friday morning.",
       },
       {
         speaker: "A",
         japanese: "わかりました。次回からは早めにご連絡ください。",
-        reading: "わかりました。じかいからははやめにごれんらくください。",
+        reading: "わかりました。じかいからは はやめにごれんらくください。",
         english: "Understood. Please let us know sooner next time.",
       },
       {
@@ -4118,7 +4118,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "今朝七時ごろです。昨夜十時までは確かにありました。",
-        reading: "けさしちじごろです。さくやじゅうじまではたしかにありました。",
+        reading: "けさしちじごろです。さくやじゅうじまでは たしかにありました。",
         english: "Around seven this morning. It was definitely there until ten last night.",
       },
       {
@@ -4155,7 +4155,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       },
       {
         japanese: "昨夜十時までは確かにありました。",
-        reading: "さくやじゅうじまではたしかにありました。",
+        reading: "さくやじゅうじまでは たしかにありました。",
         english: "It was definitely there until ten last night.",
         note: "Narrowing the time window is the most useful thing you can give the police.",
       },
@@ -4566,7 +4566,7 @@ export const phoneScenarios: readonly PhoneScenario[] = [
       {
         speaker: "B",
         japanese: "追跡番号では配達済みとなっているのですが、荷物が届いておりません。",
-        reading: "ついせきばんごうでははいたつずみとなっているのですが、にもつがとどいておりません。",
+        reading: "ついせきばんごうでは はいたつずみとなっているのですが、にもつがとどいておりません。",
         english: "The tracking says delivered, but the parcel hasn't arrived.",
       },
       {

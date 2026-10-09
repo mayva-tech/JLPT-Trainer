@@ -2234,7 +2234,7 @@ export const styleExpressions: readonly StyleExpression[] = [
     warning: "Said flatly it can mean \"not my problem\", which is colder than the English.",
     example: {
       japanese: "その人は知らない。",
-      reading: "そのひとはしらない。",
+      reading: "そのひとは しらない。",
       english: "I don't know that person.",
     },
     alternative: "知らん",
@@ -2305,7 +2305,7 @@ export const styleExpressions: readonly StyleExpression[] = [
     naturalness: "very-common",
     example: {
       japanese: "一人ではできない。",
-      reading: "ひとりではできない。",
+      reading: "ひとりでは できない。",
       english: "I can't do it alone.",
     },
     alternative: "できねえ",
@@ -4340,7 +4340,7 @@ export const styleExpressions: readonly StyleExpression[] = [
     warning: "Old downtown Tokyo. In modern speech it reads as either a period drama or a character trope.",
     example: {
       japanese: "あたいには関係ないよ。",
-      reading: "あたいにはかんけいないよ。",
+      reading: "あたいには かんけいないよ。",
       english: "That's nothing to do with me.",
     },
     alternative: "あたし",

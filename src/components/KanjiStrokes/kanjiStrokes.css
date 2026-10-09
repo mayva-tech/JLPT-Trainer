@@ -116,3 +116,49 @@
     opacity: 1;
   }
 }
+
+/* ─── BrushWord: a target word in the Player / Synonyms ───────────── */
+
+.kbw {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.04em;
+  line-height: 1;
+}
+
+.kbw-reading {
+  font-family: "Klee One", "UD デジタル 教科書体 N-R", "UD Digi Kyokasho N-R", "Yu Mincho",
+    "YuMincho", serif;
+  font-weight: 400;
+  font-size: 0.36em;
+  letter-spacing: 0.06em;
+  color: var(--accent-soft, #f0c078);
+  transition: opacity 0.3s ease;
+}
+
+.kbw-reading--hidden {
+  opacity: 0;
+}
+
+/* KanjiVG glyphs fill ~80% of their box and leave margins: scale up and
+   pull the boxes together so the word matches typed kanji in size and
+   spacing. */
+.kbw-strokes {
+  font-size: 1.3em;
+}
+
+.kbw .ks-char + .ks-char,
+.kbw .ks-char + .ks-text,
+.kbw .ks-text + .ks-char {
+  margin-left: -0.1em;
+}
+
+.kbw-strokes .ks-text {
+  margin-bottom: 0.08em;
+}
+
+.kbw--speaking .kbw-strokes {
+  color: var(--accent-soft, #f0c078);
+  transition: color 0.2s ease;
+}

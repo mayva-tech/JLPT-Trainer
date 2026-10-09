@@ -8,6 +8,7 @@ import { JlptLevelBadge } from "./JlptLevelBadge";
 import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
 import { Illustration } from "./Illustration/Illustration";
 import { vocabPicture } from "./Illustration/pictures";
+import { BrushWord } from "./KanjiStrokes/BrushWord";
 
 type Props = {
   item: VocabularyItem;
@@ -20,6 +21,8 @@ type Props = {
   showPicture?: boolean;
   /** Drawn just above the word, without moving the layout (e.g. the read hook). */
   overlay?: ReactNode;
+  /** Write the word with the brush in stroke order (Player "筆" setting). */
+  brush?: { state: "draw" | "done"; runKey: number | string } | null;
 };
 
 export function WordCard({
@@ -31,18 +34,31 @@ export function WordCard({
   showFurigana = true,
   showPicture = false,
   overlay = null,
+  brush = null,
 }: Props) {
   return (
     <div className="safe-area card-fade">
       {showPicture && <Illustration picture={vocabPicture(item.id)} className="lesson-picture" />}
       <div className="word-headline">
-        <FuriganaWrapText
-          surface={item.word}
-          reading={item.reading}
-          className="word-main"
-          highlight={jaHighlight}
-          showFurigana={showFurigana}
-        />
+        {brush ? (
+          <BrushWord
+            word={item.word}
+            reading={item.reading}
+            showReading={showFurigana}
+            state={brush.state}
+            runKey={brush.runKey}
+            speaking={jaHighlight != null}
+            className="word-main word-brush"
+          />
+        ) : (
+          <FuriganaWrapText
+            surface={item.word}
+            reading={item.reading}
+            className="word-main"
+            highlight={jaHighlight}
+            showFurigana={showFurigana}
+          />
+        )}
         <JlptLevelBadge level={item.jlpt} />
         {overlay}
       </div>

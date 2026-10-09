@@ -1,6 +1,14 @@
 import { act, createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const sfx = vi.hoisted(() => ({ cancel: vi.fn(), play: vi.fn() }));
+vi.mock("./brushSfx", () => ({
+  playBrushStrokes: (...args: unknown[]) => {
+    sfx.play(...args);
+    return sfx.cancel;
+  },
+}));
 import { vocabulary } from "../../data/vocabulary";
 import { vocabularyN3 } from "../../data/n3/vocabularyN3";
 import { KANJI_STROKES, KANJIVG_VERSION } from "./kanjiStrokes.data";
@@ -8,6 +16,10 @@ import { hasStrokes, planStrokes } from "./strokePlan";
 import { brushProfile, brushShape, brushWidth, strokeLength, strokePoints } from "./brushGeometry";
 import { KanjiStrokes } from "./KanjiStrokes";
 import { loadKanjiStrokes } from "./loadStrokes";
+import { BrushWord } from "./BrushWord";
+import { WordCard } from "../WordCard";
+import { RelationWord } from "../../pages/RelationTrainer/components/RelationWord";
+import { useBrushSetting } from "./useBrushSetting";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -197,3 +209,113 @@ describe("<KanjiStrokes />", () => {
     expect(host.querySelector(".ks-ghost")).toBeNull();
   });
 });
+
+describe("brush stroke sound", () => {
+  const onScreen = () =>
+    vi
+      .spyOn(HTMLElement.prototype, "getClientRects")
+      .mockReturnValue([{}] as unknown as DOMRectList);
+  beforeEach(() => {
+    sfx.play.mockClear();
+    sfx.cancel.mockClear();
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it("plays one swish per stroke, timed like the ink, after any delay", () => {
+    onScreen();
+    act(() => root.render(createElement(KanjiStrokes, { word: "友達", state: "draw", delayMs: 400 })));
+    expect(sfx.play).toHaveBeenCalledTimes(1);
+    const [strokes, offset] = sfx.play.mock.calls[0]! as [{ delay: number; duration: number }[], number];
+    expect(strokes).toHaveLength(16);
+    expect(offset).toBe(400);
+    const reveals = [...host.querySelectorAll<SVGPathElement>(".ks-reveal")];
+    strokes.forEach((s, i) => {
+      expect(s.delay + 400).toBe(parseFloat(reveals[i]!.style.animationDelay));
+      expect(s.duration).toBe(parseFloat(reveals[i]!.style.animationDuration));
+    });
+  });
+
+  it("is silent when finished, blank, or not on screen", () => {
+    act(() => root.render(createElement(KanjiStrokes, { word: "人", state: "draw" })));
+    expect(sfx.play).not.toHaveBeenCalled();
+    onScreen();
+    for (const state of ["blank", "done"] as const) {
+      act(() => root.render(createElement(KanjiStrokes, { word: "人", state })));
+    }
+    expect(sfx.play).not.toHaveBeenCalled();
+  });
+
+  it("replays on a new run and stops the old swishes", () => {
+    onScreen();
+    act(() => root.render(createElement(KanjiStrokes, { word: "人", state: "draw", runKey: 1 })));
+    act(() => root.render(createElement(KanjiStrokes, { word: "人", state: "draw", runKey: 2 })));
+    expect(sfx.play).toHaveBeenCalledTimes(2);
+    expect(sfx.cancel).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("<BrushWord /> in the Player and Synonyms", () => {
+  const item = vocabulary.find((v) => v.word === "友達")!;
+  // jsdom has no ResizeObserver (the word card's auto-fit uses one).
+  (globalThis as { ResizeObserver?: unknown }).ResizeObserver ??= class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+
+  it("Player word card writes the word with the brush, reading above", () => {
+    act(() =>
+      root.render(createElement(WordCard, { item, brush: { state: "draw", runKey: 1 } }))
+    );
+    expect(host.querySelector(".word-main.kbw")).not.toBeNull();
+    expect(host.querySelectorAll(".ks-reveal")).toHaveLength(16);
+    expect(host.querySelector(".kbw-reading")?.textContent).toBe(item.reading.replace(/\s+/g, ""));
+    expect(host.querySelector(".furigana-wrap")).toBeNull();
+  });
+
+  it("without brush the card keeps its furigana word", () => {
+    act(() => root.render(createElement(WordCard, { item })));
+    expect(host.querySelector(".kbw")).toBeNull();
+    expect(host.querySelector(".word-main")).not.toBeNull();
+  });
+
+  it("hides the reading (keeping its space) while furigana is off, and lights up while spoken", () => {
+    act(() =>
+      root.render(
+        createElement(BrushWord, { word: "友達", reading: "ともだち", showReading: false, state: "done", runKey: 1, speaking: true })
+      )
+    );
+    expect(host.querySelector(".kbw-reading--hidden")).not.toBeNull();
+    expect(host.querySelector(".kbw--speaking")).not.toBeNull();
+  });
+
+  it("Synonyms: the second word starts after the first", () => {
+    const word = { japanese: "友達", reading: "ともだち", meaning: "friend", partOfSpeech: "noun" };
+    act(() =>
+      root.render(
+        createElement(RelationWord, {
+          word: word as never,
+          brush: { state: "draw", runKey: "r1", delayMs: 1500 },
+        })
+      )
+    );
+    expect(host.querySelector(".rt-word-jp.kbw")).not.toBeNull();
+    const first = host.querySelector<SVGPathElement>(".ks-reveal")!;
+    expect(parseFloat(first.style.animationDelay)).toBeGreaterThanOrEqual(1500);
+  });
+
+  it("the 筆 setting is on by default and remembered", () => {
+    localStorage.removeItem("jlpt-trainer:brush-strokes:v1");
+    let api: ReturnType<typeof useBrushSetting> | null = null;
+    function Probe() {
+      api = useBrushSetting();
+      return null;
+    }
+    act(() => root.render(createElement(Probe)));
+    expect(api![0]).toBe(true);
+    act(() => api![1]());
+    expect(api![0]).toBe(false);
+    expect(localStorage.getItem("jlpt-trainer:brush-strokes:v1")).toBe("off");
+  });
+});
+

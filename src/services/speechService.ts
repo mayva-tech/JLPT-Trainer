@@ -92,6 +92,8 @@ export type SpeakEnglishOptions = {
 
 export const SPEECH_RATE_NORMAL = 0.80;
 export const SPEECH_RATE_SLOW = 0.68;
+/** Nanami's actual rate when Slow is asked for; Andrew keeps SPEECH_RATE_SLOW. */
+export const SPEECH_RATE_SLOW_JA = 0.6;
 /** Chapter 5 "natural" — slightly faster than RPG default, still clear. */
 export const SPEECH_RATE_NATURAL = 0.92;
 /** Chapter 5 "fast" — modest bump only (accessibility). UI label: 1.25×. */
@@ -102,6 +104,13 @@ export const SPEECH_RATE_SHADOWING = 0.85;
 export const SPEECH_RATE_INTERVIEW_EN = 1.05;
 /** Nanami rate for N3 JP+EN mix interview (raised from 0.85). */
 export const SPEECH_RATE_INTERVIEW_MIX = 0.88;
+
+/** Rate handed to the voice: Slow is slower still for Nanami. */
+export function voiceRate(lang: "ja" | "en", rate: number): number {
+  return lang === "ja" && Math.abs(rate - SPEECH_RATE_SLOW) < 0.001
+    ? SPEECH_RATE_SLOW_JA
+    : rate;
+}
 
 /** True when the UI rate is the 1.25× fast preset. */
 export function isFastSpeechRate(rate: number): boolean {
@@ -505,6 +514,7 @@ function runUtterance(
   const audioText = (speakText ?? text).trim() || text;
   const reading = spacedReading?.trim() || "";
   const isJa = lang.startsWith("ja");
+  rate = voiceRate(isJa ? "ja" : "en", rate);
   // Browser boundary indices refer to audioText. For Japanese with an explicit
   // reading (even when it equals the surface, e.g. 〜ことになっている), use the
   // spoken-kana fallback timeline — Nanami word boundaries routinely skip いる /
@@ -667,8 +677,8 @@ function runUtterance(
   // Andrew/Nanami neural rates are nonlinear near SPEECH_RATE_NORMAL —
   // don't stretch karaoke as if 0.80 were a true 20% slowdown.
   // Shared floor 0.88 at normal (and faster) rates.
-  // At SPEECH_RATE_SLOW (0.75× UI → 0.68), use the real rate so karaoke
-  // does not keep racing ahead at ~0.88 while the voice is at 0.68.
+  // At Slow (0.75× UI → 0.68 Andrew / 0.6 Nanami), use the real rate so
+  // karaoke does not keep racing ahead at ~0.88 while the voice is slower.
   const rateDivisor = karaokeRateDivisor(unitLang, rate);
 
   const plannedStart: number[] = [];

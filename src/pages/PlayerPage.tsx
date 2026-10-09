@@ -37,6 +37,9 @@ import { RegisterSplitCard } from "../components/RegisterSplitCard";
 import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
 import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
 import { usePictureSetting } from "../components/Illustration/usePictureSetting";
+import { useBrushSetting } from "../components/KanjiStrokes/useBrushSetting";
+import { useKanjiStrokeData } from "../components/KanjiStrokes/loadStrokes";
+import { hasStrokes, planStrokes } from "../components/KanjiStrokes/strokePlan";
 import { StageAmbience } from "../components/StageAmbience/StageAmbience";
 import { useAmbienceSetting } from "../components/StageAmbience/useAmbienceSetting";
 import { ReadHook, ReadHookBanner } from "../components/Retention/ReadHook";
@@ -87,6 +90,7 @@ import {
   autoModeRunner,
   type CheckPhase,
   type ReadHookState,
+  type BrushDrawState,
   type AutoModeUi,
 } from "../services/autoModeRunner";
 import {
@@ -275,6 +279,14 @@ export function PlayerPage() {
   const retentionRef = useRef(retention);
   retentionRef.current = retention;
   const [readHook, setReadHook] = useState<ReadHookState | null>(null);
+  // Brush stroke order for the target word (筆). The stroke data is loaded
+  // only while the setting is on.
+  const [brushOn, toggleBrush] = useBrushSetting();
+  const strokeData = useKanjiStrokeData(brushOn);
+  const brushRef = useRef({ on: brushOn, data: strokeData });
+  brushRef.current = { on: brushOn, data: strokeData };
+  const [brushDraw, setBrushDraw] = useState<BrushDrawState | null>(null);
+  const lastBrushKey = useRef(0);
   const [checkView, setCheckView] = useState<{ card: CheckCard; phase: CheckPhase } | null>(null);
   const [autoState, setAutoState] = useState<AutoState>("off");
 
@@ -863,6 +875,14 @@ export function PlayerPage() {
       getRetention: () => retentionRef.current,
       setReadHook,
       setCheck: (card, phase = "ask") => setCheckView(card ? { card, phase } : null),
+      getBrushDrawMs: (it) => {
+        const { on, data } = brushRef.current;
+        return on && data && hasStrokes(it.word, data) ? planStrokes(it.word, data).totalMs : 0;
+      },
+      setBrushDraw: (state) => {
+        if (state) lastBrushKey.current = state.key;
+        setBrushDraw(state);
+      },
     };
   }
 
@@ -2090,6 +2110,12 @@ export function PlayerPage() {
           event.preventDefault();
           togglePictures();
           break;
+        case "k":
+        case "K":
+          if (event.repeat) break;
+          event.preventDefault();
+          toggleBrush();
+          break;
         case "a":
         case "A":
           if (event.repeat) break;
@@ -2235,6 +2261,19 @@ export function PlayerPage() {
     );
   }
 
+  /**
+   * Brush writing for the word step: in Auto Mode the runner's draw beat
+   * starts it (finished word otherwise); browsing by hand, it draws each
+   * time the word step is shown.
+   */
+  function wordBrush(it: NonNullable<typeof item>): { state: "draw" | "done"; runKey: string | number } | null {
+    if (!brushOn || !strokeData || !hasStrokes(it.word, strokeData)) return null;
+    if (autoState !== "off") {
+      return { state: brushDraw ? "draw" : "done", runKey: brushDraw?.key ?? lastBrushKey.current };
+    }
+    return { state: "draw", runKey: `m-${it.id}` };
+  }
+
   function renderStep() {
     if (!item) return null;
     if (checkView) {
@@ -2266,6 +2305,7 @@ export function PlayerPage() {
               showFurigana={showFurigana}
               showPicture={showPictures}
               overlay={readHook ? <ReadHookBanner ms={readHook.ms} runKey={readHook.key} /> : null}
+              brush={wordBrush(item)}
             />
           </ReadHook>
         );
@@ -3812,6 +3852,16 @@ export function PlayerPage() {
               onClick={togglePictures}
             >
               絵 {showPictures ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={brushOn ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title="Write the word with the brush in stroke order (K)"
+              aria-pressed={brushOn}
+              onClick={toggleBrush}
+            >
+              筆 {brushOn ? "ON" : "OFF"}
             </button>
             <button
               type="button"

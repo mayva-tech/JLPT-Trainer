@@ -1,8 +1,9 @@
-import { useEffect, useId, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useId, useMemo, useRef, type CSSProperties } from "react";
 import "@fontsource/klee-one/400.css";
-import { kanjiStrokesIfLoaded, loadKanjiStrokes } from "./loadStrokes";
-import { planStrokes, type PlanOptions, type StrokeData } from "./strokePlan";
+import { useKanjiStrokeData } from "./loadStrokes";
+import { planStrokes, type PlanOptions } from "./strokePlan";
 import { brushShape, brushWidth } from "./brushGeometry";
+import { playBrushStrokes } from "./brushSfx";
 import "./kanjiStrokes.css";
 
 /**
@@ -26,6 +27,7 @@ export function KanjiStrokes({
   runKey = 0,
   ghost = true,
   weight = 1,
+  delayMs = 0,
   className = "",
   timing,
 }: {
@@ -36,22 +38,13 @@ export function KanjiStrokes({
   ghost?: boolean;
   /** Brush width multiplier (1 = default). */
   weight?: number;
+  /** Wait this long before the first stroke (e.g. the second word of a pair). */
+  delayMs?: number;
   className?: string;
   timing?: PlanOptions;
 }) {
-  const [data, setData] = useState<StrokeData | null>(kanjiStrokesIfLoaded);
+  const data = useKanjiStrokeData();
   const uid = `ks${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
-  useEffect(() => {
-    if (data) return;
-    let alive = true;
-    loadKanjiStrokes().then(
-      (d) => alive && setData(d),
-      () => undefined
-    );
-    return () => {
-      alive = false;
-    };
-  }, [data]);
 
   const plan = useMemo(() => (data ? planStrokes(word, data, timing) : null), [word, data, timing]);
   const shapes = useMemo(
@@ -64,6 +57,17 @@ export function KanjiStrokes({
     [plan, weight]
   );
 
+  const rootRef = useRef<HTMLSpanElement>(null);
+  // One brush swish per stroke, in step with the ink. Only for a word that is
+  // on screen, so a hidden view or off-screen preview stays silent.
+  useEffect(() => {
+    if (state !== "draw" || !plan) return;
+    const el = rootRef.current;
+    if (!el || el.getClientRects().length === 0 || el.closest(".app-view--hidden")) return;
+    const strokes = plan.chars.flatMap((c) => (c.kind === "kanji" ? c.strokes : []));
+    return playBrushStrokes(strokes, delayMs);
+  }, [plan, state, runKey, delayMs]);
+
   if (!plan) {
     return (
       <span className={`ks ks--${state} ${className}`.trim()} aria-label={word}>
@@ -74,6 +78,7 @@ export function KanjiStrokes({
 
   return (
     <span
+      ref={rootRef}
       key={`${word}-${runKey}`}
       className={`ks ks--${state} ${className}`.trim()}
       role="img"
@@ -86,7 +91,7 @@ export function KanjiStrokes({
               key={i}
               className="ks-text"
               aria-hidden="true"
-              style={{ animationDelay: `${c.start}ms` }}
+              style={{ animationDelay: `${c.start + delayMs}ms` }}
             >
               {c.ch}
             </span>
@@ -113,7 +118,7 @@ export function KanjiStrokes({
                     strokeWidth={(charShapes[k]?.maxWidth ?? 6) * 1.6 + 2}
                     style={
                       {
-                        animationDelay: `${s.delay}ms`,
+                        animationDelay: `${s.delay + delayMs}ms`,
                         animationDuration: `${s.duration}ms`,
                       } as CSSProperties
                     }

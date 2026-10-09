@@ -675,6 +675,16 @@
   line-height: 1.25;
 }
 
+/* Bold kanji smear at this size; regular weight keeps every stroke clear. */
+.sh-outro-word {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-jp);
+  font-weight: 400;
+  font-size: 1.15em;
+  color: #f0c078;
+}
+
 .sh-choices {
   display: flex;
   justify-content: center;

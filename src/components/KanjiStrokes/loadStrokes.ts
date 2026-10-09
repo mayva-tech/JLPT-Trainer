@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { StrokeData } from "./strokePlan";
 
 /**
@@ -19,4 +20,24 @@ export function loadKanjiStrokes(): Promise<StrokeData> {
 /** Already-loaded data, or null (no loading started). */
 export function kanjiStrokesIfLoaded(): StrokeData | null {
   return cache;
+}
+
+/**
+ * The stroke data, loading it on first use. `enabled: false` never starts
+ * the download (e.g. while the brush setting is off).
+ */
+export function useKanjiStrokeData(enabled = true): StrokeData | null {
+  const [data, setData] = useState<StrokeData | null>(kanjiStrokesIfLoaded);
+  useEffect(() => {
+    if (data || !enabled) return;
+    let alive = true;
+    loadKanjiStrokes().then(
+      (d) => alive && setData(d),
+      () => undefined
+    );
+    return () => {
+      alive = false;
+    };
+  }, [data, enabled]);
+  return data;
 }

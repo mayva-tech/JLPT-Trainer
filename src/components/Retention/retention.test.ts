@@ -272,6 +272,43 @@ describe("Auto Mode with retention", () => {
     expect(log.filter((l) => !l.endsWith(":off"))).toEqual([]);
   });
 
+  it("writes each word with the brush after the hook, before the word is spoken", async () => {
+    const spoken = installSpeech();
+    const { autoModeRunner, BRUSH_SETTLE_MS } = await import("../../services/autoModeRunner");
+    const { ui, log } = mockUi({ hook: true, check: false });
+    const brushLog: { state: string; spokenSoFar: string[] }[] = [];
+    ui.getBrushDrawMs = () => 1200;
+    ui.setBrushDraw = vi.fn((st) => {
+      log.push(st ? "brush:on" : "brush:off");
+      brushLog.push({ state: st ? "on" : "off", spokenSoFar: spoken.map((u) => u.text) });
+    });
+    let finished = false;
+    const run = autoModeRunner.start(lesson, 0, ui, vi.fn()).then(() => (finished = true));
+    await runLesson(spoken, () => finished);
+    await run;
+    // One brush beat per word, each right after that word's hook.
+    expect(log.filter((l) => l === "brush:on")).toHaveLength(lesson.length);
+    const firstOn = log.indexOf("brush:on");
+    expect(log.slice(0, firstOn)).toContain("hook:2500");
+    // The first word is not spoken until its brush has finished.
+    const first = brushLog.find((b) => b.state === "off")!;
+    expect(first.spokenSoFar).not.toContain(lesson[0]!.reading);
+    expect(BRUSH_SETTLE_MS).toBeGreaterThan(0);
+  });
+
+  it("skips the brush beat when there is nothing to draw", async () => {
+    const spoken = installSpeech();
+    const { autoModeRunner } = await import("../../services/autoModeRunner");
+    const { ui } = mockUi({ hook: false, check: false });
+    ui.getBrushDrawMs = () => 0;
+    ui.setBrushDraw = vi.fn();
+    let finished = false;
+    const run = autoModeRunner.start(lesson, 0, ui, vi.fn()).then(() => (finished = true));
+    await runLesson(spoken, () => finished);
+    await run;
+    expect(ui.setBrushDraw).not.toHaveBeenCalledWith(expect.objectContaining({ key: expect.any(Number) }));
+  });
+
   it("stopping mid-question clears the card", async () => {
     const spoken = installSpeech();
     const { autoModeRunner } = await import("../../services/autoModeRunner");

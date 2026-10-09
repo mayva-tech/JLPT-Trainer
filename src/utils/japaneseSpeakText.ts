@@ -570,6 +570,31 @@ export function shouldKeepNiTight(next: string): boolean {
 }
 
 /**
+ * Endings that complete a topic は into one predicate (ではない, にはいかない,
+ * てはいけない, とはかぎらない…), so no pause may fall before them.
+ */
+const TOPIC_BOUND_NEXT_RE =
+  /^(?:ない|なく|なかっ|なけれ|あり(?:ま|え)|ある(?:まい|$)|いけ|なら|だめ|いか(?:な|ず|ん)|いられ|すま|おか(?:な|ず)|あたら|およば|かぎら|いえ|いう|いっても)/u;
+
+/**
+ * Token ending in topic は: a noun + は (ちちは, しゅうまつは) or a compound
+ * already rewritten to わ (には→にわ, では→でわ, からは→からわ, までは→までわ).
+ */
+function endsWithTopicWa(core: string): boolean {
+  if (core.length < 2) return false;
+  if (/は$/u.test(core)) return core !== "はは";
+  return /(?:に|で|と|え|から|まで|より)わ$/u.test(core);
+}
+
+function keepTopicTight(next: string): boolean {
+  const core = next
+    .replace(/^[〜～]+/u, "")
+    .replace(/[、。！？．，!?,]+$/u, "")
+    .trim();
+  return !core || isFollowingParticle(next) || TOPIC_BOUND_NEXT_RE.test(core);
+}
+
+/**
  * Append a phrase comma after spoken phrase particles so Nanami pauses before
  * the next word (筆跡は→彼, 日本語を→本格的に, 本格的に→勉強).
  * Listing や (スマートフォンやタブレット) also pauses so loanwords stay
@@ -583,6 +608,11 @@ export function appendPhraseParticleSpeakPause(
 ): string {
   const punct = token.match(/[、。！？．，!?,]+$/u)?.[0] ?? "";
   const core = punct ? token.slice(0, -punct.length) : token;
+  // 手紙には→いくら, 父は→庭で: the topic is its own phrase.
+  if (endsWithTopicWa(core)) {
+    if (punct || !nextToken || keepTopicTight(nextToken)) return token;
+    return `${core}、`;
+  }
   if (
     core !== "わ" &&
     core !== "は" &&

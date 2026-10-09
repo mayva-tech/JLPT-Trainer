@@ -16,6 +16,9 @@ const WORD_OVERRIDES: Readonly<Record<string, string>> = {
   // Andrew raises "bag" toward "beyg"; the doubled g keeps a flat /bæg/.
   bag: "bagg",
   bags: "baggz",
+  // /sʌn/; isolated "son" comes out as "sohn".
+  son: "sun",
+  sons: "suns",
 };
 
 function applyCase(match: string, spoken: string): string {

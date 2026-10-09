@@ -12,6 +12,30 @@ import { vocabulary } from "../data/vocabulary";
 import { grammar } from "../data/grammar";
 
 describe("buildJapaneseSpeakText", () => {
+  it("pauses after topic は on a noun or particle compound", () => {
+    expect(
+      buildJapaneseSpeakText("x", "かいがいへ おくる てがみには いくらの きってが ひつようですか。")
+    ).toBe("かいがいえ おくる てがみにわ、 いくらの きってが ひつようですか。");
+    expect(buildJapaneseSpeakText("x", "ちちは にわで さかなを やいています。")).toBe(
+      "ちちは、 にわで さかなを やいています。"
+    );
+    expect(buildJapaneseSpeakText("x", "ここでは たばこを すえません")).toBe(
+      "ここでわ、 たばこを すえません"
+    );
+    expect(buildJapaneseSpeakText("x", "じかいからは はやめに")).toBe("じかいからは、 はやめに");
+  });
+
+  it("keeps topic は tight with a bound ending (ではない, にはいかない, てはいけない)", () => {
+    expect(buildJapaneseSpeakText("x", "わけでは ない")).toBe("わけでわ ない");
+    expect(buildJapaneseSpeakText("x", "わけには いかない")).toBe("わけにわ いかない");
+    expect(buildJapaneseSpeakText("x", "たべては いけない")).toBe("たべてわ いけない");
+  });
+
+  it("does not pause after 母 (はは) or 庭 (にわ)", () => {
+    expect(buildJapaneseSpeakText("x", "はは が きた")).toBe("はは が きた");
+    expect(buildJapaneseSpeakText("x", "ちいさな にわ")).toBe("ちいさな にわ");
+  });
+
   it("keeps が tight when a predicate is split before small っ", () => {
     expect(shouldKeepGaTight("あがっ")).toBe(true);
     expect(shouldKeepGaTight("上がっ")).toBe(true);

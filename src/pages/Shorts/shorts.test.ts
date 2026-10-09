@@ -369,7 +369,9 @@ describe("<ShortStage />", () => {
 
   it("outro: comment prompt with the word and the next word teased", () => {
     stage({ phase: "outro" });
-    expect(host.querySelector(".sh-outro-prompt")?.textContent).toContain("「人」");
+    const prompt = host.querySelector(".sh-outro-prompt");
+    expect(prompt?.textContent).not.toMatch(/[「」]/u);
+    expect(prompt?.querySelector("br + .sh-outro-word")?.textContent).toBe("人");
     expect(host.querySelector(".sh-next-word")?.textContent).toBe("男");
   });
 

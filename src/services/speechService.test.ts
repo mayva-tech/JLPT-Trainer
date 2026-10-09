@@ -521,6 +521,17 @@ describe("speechService karaoke timeline", () => {
     expect(spanNormal).toBeGreaterThan(spanFull);
   });
 
+  it("Slow is 0.6 for Nanami and stays 0.68 for Andrew", async () => {
+    const { voiceRate, karaokeRateDivisor, SPEECH_RATE_SLOW, SPEECH_RATE_NORMAL } = await import(
+      "./speechService"
+    );
+    expect(voiceRate("ja", SPEECH_RATE_SLOW)).toBe(0.6);
+    expect(voiceRate("en", SPEECH_RATE_SLOW)).toBe(0.68);
+    expect(voiceRate("ja", SPEECH_RATE_NORMAL)).toBe(SPEECH_RATE_NORMAL);
+    // Karaoke follows the voice's real slow rate.
+    expect(karaokeRateDivisor("ja", 0.6)).toBe(0.6);
+  });
+
   it("JA karaoke at slow rate stretches longer than at normal (tracks 0.75× voice)", async () => {
     const {
       karaokeRateDivisor,

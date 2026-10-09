@@ -64,6 +64,15 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("baggage")).toBe("baggage");
   });
 
+  it('speaks "son" as "sun", not "sohn"', () => {
+    expect(buildEnglishSpeakText("son")).toBe("sun");
+    expect(buildEnglishSpeakText("only son")).toBe("only sun");
+    expect(buildEnglishSpeakText("My son won't eat.")).toBe("My sun won't eat.");
+    expect(buildEnglishSpeakText("two sons")).toBe("two suns");
+    expect(buildEnglishSpeakText("season")).toBe("season");
+    expect(buildEnglishSpeakText("grandson")).toBe("grandson");
+  });
+
   it('speaks "strange; odd" under 変 as two clear words with a pause', () => {
     expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... odd");
     expect(buildEnglishSpeakText("strange; funny")).toBe("straynge ... funny");

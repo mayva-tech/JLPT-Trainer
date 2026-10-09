@@ -19,6 +19,9 @@ import { RelationPair } from "./RelationPair";
 import { RelationTypeBanner } from "./RelationTypeBanner";
 import { RelationWord } from "./RelationWord";
 import { StageAmbience } from "../../../components/StageAmbience/StageAmbience";
+import { useBrushSetting } from "../../../components/KanjiStrokes/useBrushSetting";
+import { useKanjiStrokeData } from "../../../components/KanjiStrokes/loadStrokes";
+import { hasStrokes, planStrokes } from "../../../components/KanjiStrokes/strokePlan";
 import { useAmbienceSetting } from "../../../components/StageAmbience/useAmbienceSetting";
 import {
   ambienceGlyphs,
@@ -64,6 +67,11 @@ export function RelationStudy({ relations }: Props) {
   const [playingAll, setPlayingAll] = useState(false);
   const [playPart, setPlayPart] = useState<RelationPlayPart | null>(null);
   const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
+  // Brush stroke order (筆): both words write themselves, one after the
+  // other, each time a card is shown or played.
+  const [brushOn, toggleBrush] = useBrushSetting();
+  const strokeData = useKanjiStrokeData(brushOn);
+  const [brushRun, setBrushRun] = useState(0);
 
   const stopAuto = useCallback(() => {
     playSessionRef.current += 1;
@@ -150,6 +158,7 @@ export function RelationStudy({ relations }: Props) {
     }
     speechService.stop();
     const session = ++playSessionRef.current;
+    setBrushRun((k) => k + 1);
     setPlayingAll(false);
     setPlayingCard(true);
     setHighlight(null);
@@ -193,6 +202,7 @@ export function RelationStudy({ relations }: Props) {
         return;
       }
       setIndex(cardIndex);
+      setBrushRun((k) => k + 1);
       setPlayPart(null);
       setHighlight(null);
       window.setTimeout(() => {
@@ -234,6 +244,21 @@ export function RelationStudy({ relations }: Props) {
 
   const typeLabel = WORD_RELATION_TYPE_LABELS[relation.type];
 
+  const brushData = brushOn ? strokeData : null;
+  const brush1 =
+    brushData && hasStrokes(relation.word1.japanese, brushData)
+      ? { state: "draw" as const, runKey: `${relation.id}-${brushRun}` }
+      : null;
+  const brush2 =
+    brushData && hasStrokes(relation.word2.japanese, brushData)
+      ? {
+          state: "draw" as const,
+          runKey: `${relation.id}-${brushRun}`,
+          // The second word starts when the first is finished.
+          delayMs: brush1 ? planStrokes(relation.word1.japanese, brushData).totalMs + 250 : 0,
+        }
+      : null;
+
   return (
     <div className="rt-study-card">
       <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} />
@@ -254,6 +279,15 @@ export function RelationStudy({ relations }: Props) {
             onClick={playAll}
           >
             {playingAll ? "■ Stop All" : "▶ Play All"}
+          </button>
+          <button
+            type="button"
+            className={`rt-playbtn${brushOn ? " rt-playbtn--active" : ""}`}
+            title="Write both words with the brush in stroke order"
+            aria-pressed={brushOn}
+            onClick={toggleBrush}
+          >
+            筆 {brushOn ? "ON" : "OFF"}
           </button>
         </div>
         <span className="rt-study-count">
@@ -280,6 +314,7 @@ export function RelationStudy({ relations }: Props) {
                 activeJp={playPart === "word1-jp"}
                 activeEn={playPart === "word1-en"}
                 highlight={highlight}
+                brush={brush1}
               />
               <span className="rt-symbol" aria-hidden="true">
                 {typeLabel.symbol}
@@ -289,6 +324,7 @@ export function RelationStudy({ relations }: Props) {
                 activeJp={playPart === "word2-jp"}
                 activeEn={playPart === "word2-en"}
                 highlight={highlight}
+                brush={brush2}
               />
             </RelationPair>
             {relation.nuance ? (
