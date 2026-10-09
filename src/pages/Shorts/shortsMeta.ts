@@ -1,5 +1,6 @@
 import type { VocabularyItem } from "../../types/vocabulary";
 import type { JlptLevel } from "../../types/level";
+import { shortAngle, type ShortAngleKind } from "./shortAngle";
 
 /**
  * Upload text for one Short: title, description, hashtags, and a comment
@@ -19,6 +20,10 @@ export interface ShortContext {
 export const KANJIVG_CREDIT = "Stroke order: KanjiVG (kanjivg.tagaini.net), CC BY-SA 3.0";
 
 export interface ShortMeta {
+  /** Hook type of this Short (trap / twin / math / read), for analytics. */
+  hookType: ShortAngleKind;
+  /** Readable hook name ("Kanji math"). */
+  hookLabel: string;
   title: string;
   description: string;
   hashtags: string[];
@@ -51,8 +56,12 @@ export function buildShortMeta(
   options: { strokeCredit?: boolean } = {}
 ): ShortMeta {
   const sense = firstSense(item.meaning);
+  const angle = shortAngle(item);
   const tail = ` | JLPT ${ctx.level} #${ctx.wordNumber} #shorts`;
+  const fits = (h: string | null): h is string => Boolean(h) && [...h!].length + tail.length <= TITLE_MAX;
   let head = `${item.word} (${item.reading}) = "${sense}"`;
+  if (fits(angle.titleHead)) head = angle.titleHead;
+  else if (fits(angle.titleHeadShort)) head = angle.titleHeadShort;
   if ([...head].length + tail.length > TITLE_MAX) {
     head = `${item.word} = "${sense}"`;
   }
@@ -63,10 +72,9 @@ export function buildShortMeta(
   const title = head + tail;
 
   const hashtags = shortHashtags(ctx.level);
-  const lines = [
-    `${item.word}【${item.reading}】— ${item.meaning}`,
-    "",
-  ];
+  const lines: string[] = [];
+  if (angle.descLine) lines.push(angle.descLine, "");
+  lines.push(`${item.word}【${item.reading}】— ${item.meaning}`, "");
   if (item.sentence?.trim()) {
     lines.push(`📝 ${item.sentence}`, `   ${item.sentenceMeaning}`, "");
   }
@@ -74,16 +82,18 @@ export function buildShortMeta(
     `JLPT ${ctx.level} vocabulary · word #${ctx.wordNumber}`,
     `Full lesson: JLPT ${ctx.level} Vocabulary #${ctx.lessonNumber} | ${ctx.lessonTheme}`,
     "",
-    "💬 Make your own sentence with this word in the comments!",
+    `💬 ${angle.bait}`,
     ""
   );
   if (options.strokeCredit) lines.push(KANJIVG_CREDIT, "");
   lines.push(hashtags.join(" "));
 
   return {
+    hookType: angle.kind,
+    hookLabel: angle.label,
     title,
     description: lines.join("\n"),
     hashtags,
-    pinnedComment: `✍️ Your turn: write a sentence with 「${item.word}」 below 👇`,
+    pinnedComment: angle.pinnedComment,
   };
 }

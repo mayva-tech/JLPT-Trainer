@@ -12,6 +12,7 @@ import { useAmbienceSetting } from "../../components/StageAmbience/useAmbienceSe
 import { ShortStage } from "./ShortStage";
 import { buildShortScript, estimateShortSeconds } from "./shortScript";
 import { buildShortMeta, firstSense } from "./shortsMeta";
+import { shortAngle } from "./shortAngle";
 import { useShortPlayer } from "./useShortPlayer";
 import { kanjiStrokesIfLoaded, loadKanjiStrokes } from "../../components/KanjiStrokes/loadStrokes";
 import { hasStrokes, planStrokes, type StrokeData } from "../../components/KanjiStrokes/strokePlan";
@@ -331,7 +332,12 @@ export default function ShortsStudio() {
                 <span className="sh-word-btn-ja" lang="ja">
                   {w.word}
                 </span>
-                <span className="sh-word-btn-en">{firstSense(w.meaning)}</span>
+                <span className="sh-word-btn-en">
+                  {firstSense(w.meaning)}
+                  {shortAngle(w).kind !== "read" && (
+                    <span className={`sh-hook-dot sh-hook-tag--${shortAngle(w).kind}`} title={shortAngle(w).label} />
+                  )}
+                </span>
               </button>
             </li>
           ))}
@@ -390,7 +396,12 @@ export default function ShortsStudio() {
 
         {meta && (
           <section className="sh-meta" aria-label="Upload text">
-            <h3>Upload text</h3>
+            <h3>
+              Upload text
+              <span className={`sh-hook-tag sh-hook-tag--${meta.hookType}`} title="Hook type — compare retention per type in YouTube Analytics">
+                Hook: {meta.hookLabel}
+              </span>
+            </h3>
             {(
               [
                 ["Title", meta.title],

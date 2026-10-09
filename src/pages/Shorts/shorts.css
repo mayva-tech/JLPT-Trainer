@@ -176,6 +176,39 @@
   margin-bottom: 8px;
 }
 
+/* Hook type of the Short (also in the description, for analytics). */
+.sh-hook-tag {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1a2332;
+  background: #c9d1de;
+  vertical-align: middle;
+}
+
+.sh-hook-tag--trap {
+  background: #f08a7a;
+}
+
+.sh-hook-tag--twin {
+  background: #9fd3f0;
+}
+
+.sh-hook-tag--math {
+  background: #b9e08a;
+}
+
+.sh-hook-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
 .sh-meta-head {
   display: flex;
   align-items: center;
@@ -287,16 +320,28 @@
   width: calc(100cqh * 16 / 9);
   z-index: 0;
   isolation: isolate;
-  transform: translateX(-12%);
+  /* Same as the pan's start and end, so the opening frame, the loop frame
+     and the finished frame all show the backdrop in the same place. */
+  transform: translateX(-4%);
 }
 
 .sh-amb--pan {
   animation: shPan var(--sh-pan, 30s) cubic-bezier(0.45, 0, 0.55, 1) forwards;
 }
 
+/* At the loop point the backdrop is home (if the voice ran faster than the
+   estimate, it settles there under the fade). */
+.sh-stage--loop .sh-amb--pan,
+.sh-stage[data-phase="done"] .sh-amb--pan {
+  animation: none;
+}
+
+/* Out and back: the backdrop ends where it started, so the last frame of
+   the Short matches the first (seamless auto-replay). */
 @keyframes shPan {
-  from { transform: translateX(-4%); }
-  to { transform: translateX(calc(-100% + 100cqw + 4%)); }
+  0%,
+  100% { transform: translateX(-4%); }
+  50% { transform: translateX(calc(-100% + 100cqw + 4%)); }
 }
 
 .sh-amb-frame {
@@ -424,10 +469,7 @@
 }
 
 .sh-picture .sh-picture-art {
-  width: 20cqw;
-  height: 20cqw;
-  font-size: 15cqw;
-  line-height: 1;
+  --pic-size: 22cqw;
 }
 
 .sh-picture .sh-picture-art svg,
@@ -577,7 +619,7 @@
 
 .sh-sentence-ja {
   font-family: var(--font-jp);
-  font-size: 5.2cqw;
+  font-size: 6.4cqw;
   line-height: 1.5;
 }
 
@@ -633,9 +675,47 @@
   line-height: 1.25;
 }
 
-.sh-outro-prompt span {
-  color: #f0c078;
+.sh-choices {
+  display: flex;
+  justify-content: center;
+  gap: 4cqw;
+  margin-top: 1.6cqh;
+}
+
+.sh-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6cqw;
+  padding: 0.8cqh 3cqw;
+  border-radius: 2cqw;
+  background: rgba(16, 22, 34, 0.55);
+  border: 0.3cqw solid rgba(240, 192, 120, 0.6);
   font-family: var(--font-jp);
+  font-size: 7cqw;
+  font-weight: 700;
+}
+
+.sh-choice b {
+  display: inline-grid;
+  place-items: center;
+  width: 6cqw;
+  height: 6cqw;
+  border-radius: 50%;
+  background: #f0c078;
+  color: #1a2332;
+  font-family: var(--font-en);
+  font-size: 4cqw;
+}
+
+/* Loop point: the opening frame fades back in. */
+.sh-stage--loop .sh-col,
+.sh-stage--loop .sh-top {
+  animation: shLoopIn 0.7s ease both;
+}
+
+@keyframes shLoopIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .sh-outro-follow {
@@ -777,6 +857,8 @@ body:has(.sh-clean--rotated) :is(.th-root, .th-seat--split, .sensei, .sensei-tab
   .sh-picture--on,
   .sh-sentence,
   .sh-outro,
+  .sh-stage--loop .sh-col,
+  .sh-stage--loop .sh-top,
   .sh-turn,
   .sh-count::before {
     animation: none;

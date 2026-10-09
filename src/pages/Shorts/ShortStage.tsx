@@ -12,7 +12,8 @@ import {
   ambienceGlyphs,
 } from "../../components/StageAmbience/themes";
 import type { JlptLevel } from "../../types/level";
-import { hookLineFor, phaseProgress, reached, type ShortPhase } from "./shortScript";
+import { phaseProgress, reached, type ShortPhase } from "./shortScript";
+import { shortAngle } from "./shortAngle";
 import { ShortSentence } from "./ShortSentence";
 import { KanjiStrokes } from "../../components/KanjiStrokes/KanjiStrokes";
 
@@ -49,25 +50,32 @@ function wordSize(word: string): string {
 }
 
 export function ShortStage(props: ShortStageProps) {
-  const { item, phase, cue, highlight, activeLang } = props;
+  const { item, cue, highlight, activeLang } = props;
+  // The loop beat (and the finished state) show the opening frame again, so
+  // the last frame of the Short is its first frame and a replay is seamless.
+  const looping = props.phase === "loop" || props.phase === "done";
+  const phase: ShortPhase = looping ? "idle" : props.phase;
+  const angle = shortAngle(item);
   const theme = ambienceForVocab(item);
   const glyphs = ambienceGlyphs(item.word);
   const hook = phase === "hook" || phase === "idle";
-  const hookLine = hookLineFor(item);
+  const hookLine = angle.hook;
   const ja = activeLang === "ja" ? highlight : null;
   const en = activeLang === "en" ? highlight : null;
   const sentenceShown = Boolean(item.sentence?.trim()) && reached(phase, "example");
 
   return (
     <div
-      className={`sh-stage${props.blackout ? " sh-stage--blackout" : ""}`}
-      data-phase={phase}
+      className={`sh-stage${props.blackout ? " sh-stage--blackout" : ""}${props.phase === "loop" ? " sh-stage--loop" : ""}`}
+      data-phase={props.phase}
+      data-angle={angle.kind}
       data-theme={props.ambience ? theme : "none"}
     >
       {props.ambience && (
         <div
-          className={`sh-amb${props.pan && phase !== "idle" ? " sh-amb--pan" : ""}`}
-          style={{ "--sh-pan": `${props.panSeconds}s` } as CSSProperties}
+          className={`sh-amb${props.pan && props.phase !== "idle" ? " sh-amb--pan" : ""}`}
+          // Finish the out-and-back pan a little before the loop beat.
+          style={{ "--sh-pan": `${(props.panSeconds * 0.85).toFixed(1)}s` } as CSSProperties}
         >
           <div className="sh-amb-frame">
             <StageAmbience theme={theme} glyphs={glyphs} panButtons={false} />
@@ -175,9 +183,19 @@ export function ShortStage(props: ShortStageProps) {
 
         {reached(phase, "outro") && (
           <div className="sh-outro">
-            <div className="sh-outro-prompt">
-              💬 Make a sentence with <span lang="ja">「{item.word}」</span>
+            <div className="sh-outro-prompt" lang="ja">
+              💬 {angle.bait}
             </div>
+            {angle.choices && (
+              <div className="sh-choices" lang="ja">
+                {angle.choices.map((w, i) => (
+                  <span key={w} className="sh-choice">
+                    <b>{i + 1}</b>
+                    {w}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="sh-outro-follow">Follow for a new word every day</div>
             {props.next && (
               <div className="sh-next">

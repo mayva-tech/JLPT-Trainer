@@ -1,4 +1,5 @@
 import type { VocabularyItem } from "../../types/vocabulary";
+import { shortAngle } from "./shortAngle";
 
 /**
  * The beat sheet of one vertical Short (one word, ~25–35 s, hands-free).
@@ -9,7 +10,9 @@ import type { VocabularyItem } from "../../types/vocabulary";
  *   meaning  English meaning spoken
  *   example  example sentence (karaoke), then its translation
  *   shadow   "Your turn!" — sentence again slowly, then a silent gap to repeat
- *   outro    comment prompt + next word teased
+ *   outro    comment bait for the hook type (spoken) + next word teased
+ *   loop     the stage fades back to its opening frame, so the end of the
+ *            Short matches its start and an auto-replay looks seamless
  *
  * Pure data so the order and timing can be tested without a browser.
  */
@@ -23,6 +26,7 @@ export type ShortPhase =
   | "example"
   | "shadow"
   | "outro"
+  | "loop"
   | "done";
 
 export const SHORT_PHASES: readonly ShortPhase[] = [
@@ -52,40 +56,12 @@ export type ShortStep =
       cue?: "countdown" | "repeat";
     };
 
-export interface HookLine {
-  /** Spoken by Andrew and shown big. */
-  en: string;
-  /** Spoken by Nanami right after, shown small under it. */
-  ja: string;
-}
-
-/** Openers rotated across Shorts so a batch doesn't repeat the same line. */
-export const HOOK_LINES: readonly HookLine[] = [
-  { en: "Can you read this?", ja: "読めますか？" },
-  { en: "Do you know this word?", ja: "この言葉、知ってる？" },
-  { en: "How do you read this?", ja: "どう読む？" },
-  { en: "Read it before the timer ends!", ja: "時間内に読めるかな？" },
-  { en: "What's the reading?", ja: "読み方は？" },
-  { en: "Think you know this one?", ja: "わかるかな？" },
-  { en: "Try reading this out loud!", ja: "声に出して読んでみて！" },
-  { en: "Quick quiz — read this!", ja: "クイズ！これ、読める？" },
-  { en: "Have you seen this word?", ja: "見たことある？" },
-  { en: "Ready? Read this one!", ja: "準備はいい？" },
-  { en: "Bet you can read this!", ja: "きっと読めるはず！" },
-  { en: "Guess the reading!", ja: "読みを当ててみて！" },
-];
-
-/**
- * The opener for a word. Keyed by id, so consecutive words in a lesson get
- * different lines and a re-take of the same word keeps its line.
- */
-export function hookLineFor(item: Pick<VocabularyItem, "id">): HookLine {
-  const n = HOOK_LINES.length;
-  return HOOK_LINES[((Math.trunc(item.id) % n) + n) % n];
-}
+export { HOOK_LINES, hookLineFor, type HookLine } from "./shortAngle";
 
 export const COUNTDOWN_MS = 3000;
-export const OUTRO_MS = 3800;
+export const OUTRO_MS = 2600;
+/** Hold on the opening frame at the very end (the loop point). */
+export const LOOP_MS = 1500;
 
 /** Silent time to repeat the sentence: roughly its spoken length, 2.5–6 s. */
 export function repeatGapMs(sentence: string): number {
@@ -103,9 +79,10 @@ export interface ShortOptions {
 
 export function buildShortScript(item: VocabularyItem, options: ShortOptions = {}): ShortStep[] {
   const drawMs = Math.max(0, Math.round(options.drawMs ?? 0));
+  const angle = shortAngle(item);
   const steps: ShortStep[] = [
-    { kind: "say", phase: "hook", lang: "en", text: hookLineFor(item).en },
-    { kind: "say", phase: "hook", lang: "ja", text: hookLineFor(item).ja },
+    { kind: "say", phase: "hook", lang: "en", text: angle.hook.en },
+    { kind: "say", phase: "hook", lang: "ja", text: angle.hook.ja },
     { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
   ];
   if (drawMs > 0) {
@@ -138,13 +115,18 @@ export function buildShortScript(item: VocabularyItem, options: ShortOptions = {
       { kind: "wait", phase: "shadow", ms: 2500, cue: "repeat" }
     );
   }
-  steps.push({ kind: "wait", phase: "outro", ms: OUTRO_MS });
+  steps.push(
+    { kind: "say", phase: "outro", lang: "en", text: angle.baitSpoken },
+    { kind: "wait", phase: "outro", ms: OUTRO_MS },
+    { kind: "wait", phase: "loop", ms: LOOP_MS }
+  );
   return steps;
 }
 
 /** 0..1 position of a phase in the Short, for the top progress bar. */
 export function phaseProgress(phase: ShortPhase): number {
-  if (phase === "idle") return 0;
+  // The loop frame is the opening frame again: empty bar.
+  if (phase === "idle" || phase === "loop") return 0;
   if (phase === "done") return 1;
   const i = SHORT_PHASES.indexOf(phase);
   return (i + 1) / SHORT_PHASES.length;
@@ -153,7 +135,7 @@ export function phaseProgress(phase: ShortPhase): number {
 /** Phase order helper: has the Short reached `phase` yet? */
 export function reached(current: ShortPhase, phase: ShortPhase): boolean {
   if (current === "done") return true;
-  if (current === "idle") return false;
+  if (current === "idle" || current === "loop") return false;
   return SHORT_PHASES.indexOf(current) >= SHORT_PHASES.indexOf(phase);
 }
 

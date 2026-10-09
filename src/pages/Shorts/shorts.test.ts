@@ -14,8 +14,11 @@ import {
   phaseProgress,
   reached,
   repeatGapMs,
+  LOOP_MS,
 } from "./shortScript";
 import { KANJIVG_CREDIT, buildShortMeta, firstSense } from "./shortsMeta";
+import { isReadingTrap, naiveReading, shortAngle, ANGLE_LABELS } from "./shortAngle";
+import { vocabularyN3 } from "../../data/n3/vocabularyN3";
 import { loadKanjiStrokes } from "../../components/KanjiStrokes/loadStrokes";
 import { phraseChunks } from "./phraseBreaks";
 import { ShortStage, type ShortStageProps } from "./ShortStage";
@@ -78,10 +81,16 @@ describe("Short script", () => {
     expect(shadow[1]).toMatchObject({ kind: "wait", cue: "repeat" });
   });
 
-  it("keeps the phases in order and ends on the outro", () => {
-    const order = steps.map((s) => SHORT_PHASES.indexOf(s.phase));
+  it("keeps the phases in order: outro asks its question, then loops back", () => {
+    const phases = [...SHORT_PHASES, "loop"];
+    const order = steps.map((s) => phases.indexOf(s.phase));
     for (let i = 1; i < order.length; i++) expect(order[i]).toBeGreaterThanOrEqual(order[i - 1]!);
-    expect(steps[steps.length - 1]).toMatchObject({ kind: "wait", phase: "outro" });
+    expect(steps.find((s) => s.phase === "outro")).toMatchObject({
+      kind: "say",
+      lang: "en",
+      text: shortAngle(sample).baitSpoken,
+    });
+    expect(steps[steps.length - 1]).toMatchObject({ kind: "wait", phase: "loop", ms: LOOP_MS });
   });
 
   it("adds a draw beat for the stroke-order writing when asked", () => {
@@ -162,6 +171,66 @@ describe("Short upload text", () => {
   it("credits KanjiVG when the Short animates strokes", () => {
     const ctx = { level: "N5" as const, wordNumber: 3, lessonNumber: 1, lessonTheme: "People" };
     expect(buildShortMeta(sample, ctx, { strokeCredit: true }).description).toContain(KANJIVG_CREDIT);
+  });
+});
+
+/* ── Hook types ───────────────────────────────────────────────── */
+
+describe("Short hook type (angle)", () => {
+  const all = [...vocabulary, ...vocabularyN3];
+  const find = (w: string) => all.find((v) => v.word === w)!;
+
+  it("reading trap: 土産, 大人, 仲人 don't read the way their kanji do", () => {
+    for (const w of ["土産", "大人", "仲人", "眼鏡"]) {
+      expect(shortAngle(find(w)).kind, w).toBe("trap");
+    }
+    const souvenir = shortAngle(find("土産"));
+    expect(souvenir.descLine).toContain("みやげ");
+    expect(souvenir.descLine).toContain(`not ${naiveReading("土産")}`);
+  });
+
+  it("sound changes (っ, rendaku) are not traps: 出張, 割引, 窓口", () => {
+    for (const w of ["出張", "割引", "窓口", "発表"]) {
+      expect(isReadingTrap(find(w)), w).toBe(false);
+    }
+  });
+
+  it("sound-alike twin: 洗濯 and 選択 quiz each other", () => {
+    const a = shortAngle(find("洗濯"));
+    expect(a.kind).toBe("twin");
+    expect([...a.choices!].sort()).toEqual(["洗濯", "選択"].sort());
+    expect(a.bait).toMatch(/Comment 1 or 2/);
+    expect(a.pinnedComment).toContain("選択");
+  });
+
+  it("kanji math: the two meanings add up (家賃 = house + fare)", () => {
+    const rent = shortAngle(find("家賃"));
+    expect(rent.kind).toBe("math");
+    expect(rent.hook.en).toBe('"house" + "fare" = ?');
+  });
+
+  it("every word gets an angle, every type is used, and the classic opener stays common", () => {
+    const counts = { trap: 0, twin: 0, math: 0, read: 0 };
+    for (const v of all) {
+      const a = shortAngle(v);
+      counts[a.kind]++;
+      expect(a.hook.en.trim()).not.toBe("");
+      expect(a.bait.trim()).not.toBe("");
+      expect(a.baitSpoken).not.toMatch(/[✅❌「」]/u);
+      expect(a.label).toBe(ANGLE_LABELS[a.kind]);
+    }
+    for (const n of Object.values(counts)) expect(n).toBeGreaterThan(20);
+    expect(counts.read / all.length).toBeGreaterThan(0.5);
+  });
+
+  it("puts the hook type in the studio meta, the title and the first description line", () => {
+    const ctx = { level: "N5" as const, wordNumber: 9, lessonNumber: 1, lessonTheme: "Theme" };
+    const meta = buildShortMeta(find("土産"), ctx);
+    expect(meta.hookType).toBe("trap");
+    expect(meta.hookLabel).toBe("Reading trap");
+    expect(meta.title.startsWith("Most learners misread this!")).toBe(true);
+    expect(meta.description.split("\n")[0]).toContain("Reading trap");
+    expect(meta.description).toContain("Comment ✅ or ❌");
   });
 });
 
@@ -304,6 +373,27 @@ describe("<ShortStage />", () => {
     expect(host.querySelector(".sh-next-word")?.textContent).toBe("男");
   });
 
+  it("loop: fades back to the opening frame (hook line, no furigana, empty bar)", () => {
+    stage({ phase: "idle" });
+    const opening = host.querySelector(".sh-col")?.innerHTML;
+    stage({ phase: "loop" });
+    expect(host.querySelector(".sh-stage--loop")).not.toBeNull();
+    expect(host.querySelector(".sh-col")?.innerHTML).toBe(opening);
+    expect(host.querySelector(".sh-outro")).toBeNull();
+    expect(host.querySelector("rt")).toBeNull();
+    stage({ phase: "done" });
+    expect(host.querySelector(".sh-col")?.innerHTML).toBe(opening);
+  });
+
+  it("twin outro: numbered choices to comment", () => {
+    const twin = [...vocabulary, ...vocabularyN3].find((v) => v.word === "洗濯")!;
+    stage({ phase: "outro", item: twin });
+    const choices = [...host.querySelectorAll(".sh-choice")].map((c) => c.textContent);
+    expect(choices).toHaveLength(2);
+    expect(choices.join(" ")).toContain("1");
+    expect(choices.join(" ")).toContain("選択");
+  });
+
   it("shows the word's backdrop, and safe zones only when asked", () => {
     stage({ phase: "reveal" });
     expect(host.querySelector(".sh-stage")?.getAttribute("data-theme")).not.toBe("none");
@@ -343,7 +433,7 @@ describe("useShortPlayer", () => {
     expect(onDone).toHaveBeenCalledTimes(1);
     // jsdom has no voices, so speech "ends" instantly and React may batch a
     // short phase away; the order must still only move forward.
-    const order = ["idle", ...SHORT_PHASES, "done"];
+    const order = ["idle", ...SHORT_PHASES, "loop", "done"];
     expect(phases[0]).toBe("idle");
     expect(phases[phases.length - 1]).toBe("done");
     for (const must of ["hook", "shadow", "outro"]) expect(phases).toContain(must);

@@ -1,24 +1,23 @@
 /* ─── Word / grammar pictures ─────────────────────────────────── */
 
+/* Unframed: the picture stands on the stage by itself. */
 .pic-tile {
+  --pic-size: 12cqw;
   flex: 0 0 auto;
-  width: var(--pic-size, 8.5cqw);
-  height: var(--pic-size, 8.5cqw);
+  width: var(--pic-size);
+  height: var(--pic-size);
   display: grid;
   place-items: center;
-  border-radius: 22%;
-  background: var(--accent-chip, rgba(127, 127, 127, 0.12));
-  border: 1px solid var(--line, rgba(127, 127, 127, 0.25));
-  overflow: hidden;
+  filter: drop-shadow(0 0.4cqw 1.2cqw rgba(0, 0, 0, 0.35));
 }
 
 .lesson-picture {
-  margin-bottom: 1.6cqh;
+  margin-bottom: 1.2cqh;
 }
 
 .pic-motion {
-  width: 78%;
-  height: 78%;
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
   transform-origin: 50% 70%;
@@ -26,7 +25,7 @@
 
 .pic-emoji {
   font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
-  font-size: calc(var(--pic-size, 8.5cqw) * 0.58);
+  font-size: calc(var(--pic-size) * 0.78);
   line-height: 1;
 }
 
