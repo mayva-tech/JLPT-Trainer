@@ -11,6 +11,8 @@ import {
 } from "./everydayData";
 import { OVERLAP_IDS } from "./everydayQuiz";
 import { PHOTO_CREDITS } from "./data.generated";
+import { AMBIENCE_THEMES } from "../../components/StageAmbience/themes";
+import { speechNuance } from "./everydayData";
 
 const KANJI = "\\u4E00-\\u9FAF\\u3400-\\u4DBF\\u3005\\u3006\\u30F6";
 const RUBY = new RegExp(`([${KANJI}]+)\\(([^()]+)\\)`, "g");
@@ -137,6 +139,35 @@ describe("Everyday Japanese corpus", () => {
     }
     for (const jp of ["つり革", "手すり", "優先席", "改札口", "券売機", "ホーム", "車両", "網棚"]) {
       expect(EVERYDAY_WORDS.some((w) => plainJapanese(w) === jp), jp).toBe(true);
+    }
+  });
+
+  it("gives every location a real stage ambience", () => {
+    const themes = new Set(AMBIENCE_THEMES.map((t) => t.id));
+    for (const c of EVERYDAY_CATEGORIES) expect(themes.has(c.ambience), `${c.id}: ${c.ambience}`).toBe(true);
+  });
+
+  it("puts furigana on every kanji in the nuance notes", () => {
+    for (const w of EVERYDAY_WORDS) {
+      if (!w.nuance) continue;
+      const rest = w.nuance.replace(RUBY, "");
+      expect(BARE_KANJI.test(rest), `${w.id}: ${w.nuance}`).toBe(false);
+      expect(rest.includes("(") && /[\u3041-\u3096]\)/.test(rest), `${w.id}: stray reading in ${w.nuance}`).toBe(false);
+    }
+  });
+
+  it("speaks nuance furigana words from their reading, numbers included once", () => {
+    expect(speechNuance(wordById("door")!)).toContain("と is the older word");
+    expect(speechNuance(wordById("tatami")!)).toContain("a ろくじょう room");
+    expect(speechNuance(wordById("platform")!)).toContain("Platform 3 = さんばんせん");
+    expect(speechNuance(wordById("lawn")!)).toContain("しばふにはいらないでください");
+    expect(speechNuance(wordById("curb")!)).toBe("Also read ふちいし");
+    expect(speechNuance(wordById("chopsticks")!)).toBe("Usually おはし Same sound as はし (bridge) with different pitch.");
+    expect(speechNuance(wordById("ceiling")!)).toBeNull();
+    for (const w of EVERYDAY_WORDS) {
+      const spoken = speechNuance(w);
+      // No furigana left for the voice to read twice.
+      if (spoken) expect(new RegExp(RUBY.source).test(spoken), `${w.id}: ${spoken}`).toBe(false);
     }
   });
 });

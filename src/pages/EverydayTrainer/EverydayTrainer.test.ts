@@ -98,4 +98,18 @@ describe("Everyday Japanese page", () => {
   it("disables Quick Review until a word has been met", () => {
     expect(button("Quick Review")?.disabled).toBe(true);
   });
+
+  it("draws the location's own stage ambience, with no paper frame behind the picture", () => {
+    expect(host.querySelector(".app-amb .amb-layer")?.getAttribute("data-theme")).toBe("scramble");
+    click(button("Inside Train"));
+    expect(host.querySelector(".app-amb .amb-layer:not(.amb-layer--leaving)")?.getAttribute("data-theme")).toBe("trainWindow");
+  });
+
+  it("keeps the talking heads off the picture and the Japanese word", () => {
+    click(button("Inside Train"));
+    expect(host.querySelector(".ev-card-picture .ev-pic")?.hasAttribute("data-head-avoid")).toBe(true);
+    expect(host.querySelector(".ev-card .ev-jp")?.hasAttribute("data-head-avoid")).toBe(true);
+    click(button("Picture Quiz"));
+    expect(host.querySelector(".ev-quiz-picture .ev-pic")?.hasAttribute("data-head-avoid")).toBe(true);
+  });
 });

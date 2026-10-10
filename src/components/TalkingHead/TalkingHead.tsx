@@ -899,10 +899,11 @@ function insidePanel(box: Box, panel: Box): boolean {
 /** Kana, kanji (incl. 々〆), half-width katakana and the long-vowel mark. */
 const JAPANESE_RUN = /[\u3005\u3006\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]+/gu;
 /**
- * Japanese drawn as SVG rather than text: one word's pitch drawing (line +
- * kana) and each stroke-order kanji.
+ * Never covered, like Japanese text: Japanese drawn as SVG (one word's pitch
+ * drawing, each stroke-order kanji) and anything a page marks with
+ * `data-head-avoid` — e.g. the object picture on an Everyday Japanese card.
  */
-const PITCH_FIGURE_SELECTOR = ".pa-figure, .ks-char";
+const PITCH_FIGURE_SELECTOR = ".pa-figure, .ks-char, [data-head-avoid]";
 
 type Obstacles = {
   /** Every visible text line plus the fixed control bars (soft: least overlap). */

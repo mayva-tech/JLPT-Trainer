@@ -1,5 +1,6 @@
 import type { JlptLevel } from "../../types/level";
 import type { SceneBackdrop } from "../../services/sceneBus";
+import type { AmbienceTheme } from "../../components/StageAmbience/themes";
 
 /**
  * Everyday Japanese (身の回りの日本語) — visual vocabulary by location.
@@ -18,6 +19,8 @@ export interface EverydayCategory {
   coverWordId: string;
   /** Talking-head backdrop while this category is open. */
   backdrop: SceneBackdrop;
+  /** Stage ambience drawn behind this location's cards. */
+  ambience: AmbienceTheme;
 }
 
 /**

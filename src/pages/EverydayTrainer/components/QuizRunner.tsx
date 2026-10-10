@@ -149,7 +149,7 @@ export function QuizRunner({
 
       {q.kind === "picture" ? (
         <div className="ev-quiz-picture">
-          <EverydayPicture word={q.target} />
+          <EverydayPicture word={q.target} avoidHead />
         </div>
       ) : null}
       {q.kind === "meaning" ? <p className="ev-quiz-meaning">{q.target.english}</p> : null}
@@ -163,7 +163,7 @@ export function QuizRunner({
         <div className="ev-opts ev-opts--pictures">
           {q.options.map((w, i) => (
             <button key={w.id} type="button" className={`ev-opt ev-opt--pic${optionState(i)}`} onClick={() => choose(i)}>
-              <EverydayPicture word={w} />
+              <EverydayPicture word={w} avoidHead />
               {answered ? (
                 <span className="ev-opt-label" lang="ja">
                   {plainJapanese(w)}
@@ -199,7 +199,11 @@ export function QuizRunner({
             </strong>{" "}
             — {wordRomaji(q.target)} · {q.target.english}
           </p>
-          {q.target.nuance ? <p className="ev-nuance">{q.target.nuance}</p> : null}
+          {q.target.nuance ? (
+            <p className="ev-nuance">
+              <Furigana text={q.target.nuance} />
+            </p>
+          ) : null}
           <button type="button" className="ev-btn ev-btn--primary" onClick={next} autoFocus>
             {qi + 1 === questions.length ? "See results" : "Next"}
           </button>

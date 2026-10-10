@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
 import "./everyday-trainer.css";
+import { AmbiencePan } from "../../components/StageAmbience/AmbiencePan";
+import { StageAmbience } from "../../components/StageAmbience/StageAmbience";
+import { useAmbienceSetting } from "../../components/StageAmbience/useAmbienceSetting";
+import { ambienceGlyphs, type AmbienceTheme } from "../../components/StageAmbience/themes";
 import { useHeadScene } from "../../hooks/useHeadScene";
 import { Furigana } from "../../lib/japanese/furigana";
 import { EverydayPicture } from "./EverydayPicture";
@@ -9,6 +13,7 @@ import {
   EVERYDAY_WORDS,
   categoryById,
   hasPicture,
+  plainJapanese,
   searchWords,
   wordById,
   wordRomaji,
@@ -52,6 +57,9 @@ const MODE_TABS: { id: CategoryMode; label: string }[] = [
 
 const ALL_IDS = new Set(EVERYDAY_WORDS.map((w) => w.id));
 
+/** Behind the location grid and the mixed rounds. */
+const HOME_AMBIENCE: AmbienceTheme = "scramble";
+
 export default function EverydayTrainer() {
   const progressApi = useEverydayProgress();
   const { progress } = progressApi;
@@ -63,6 +71,15 @@ export default function EverydayTrainer() {
   const category = screen.name === "category" ? categoryById(screen.categoryId) ?? null : null;
   useHeadScene({ backdrop: category?.backdrop ?? "street" });
 
+  // Each location brings its own stage ambience; in Explore the card's kanji
+  // are written into the scene's signs and lanterns (never in a quiz — that
+  // would show the answer).
+  const [showAmbience] = useAmbienceSetting();
+  const [shownWord, setShownWord] = useState<EverydayWord | null>(null);
+  const exploring = screen.name === "category" && screen.mode === "explore";
+  const ambience = category?.ambience ?? HOME_AMBIENCE;
+  const glyphs = exploring && shownWord ? ambienceGlyphs(plainJapanese(shownWord)) : "";
+
   const open = (next: Screen) => {
     speech.stop();
     setScreen(next);
@@ -72,6 +89,14 @@ export default function EverydayTrainer() {
 
   return (
     <div className="ev-root">
+      {showAmbience ? (
+        <>
+          <div className="app-amb" aria-hidden="true">
+            <StageAmbience theme={ambience} glyphs={glyphs} panButtons={false} />
+          </div>
+          <AmbiencePan fixed />
+        </>
+      ) : null}
       {screen.name === "home" ? (
         <Home
           progressApi={progressApi}
@@ -124,6 +149,7 @@ export default function EverydayTrainer() {
             speech={speech}
             restart={() => openCategory(category.id, screen.mode, screen.wordId)}
             back={() => open({ name: "home" })}
+            onShowWord={setShownWord}
           />
         </>
       ) : null}
@@ -401,6 +427,7 @@ function CategoryScreen({
   speech,
   restart,
   back,
+  onShowWord,
 }: {
   category: EverydayCategory;
   mode: CategoryMode;
@@ -410,6 +437,7 @@ function CategoryScreen({
   speech: ReturnType<typeof useEverydaySpeech>;
   restart: () => void;
   back: () => void;
+  onShowWord: (word: EverydayWord | null) => void;
 }) {
   const all = wordsInCategory(category.id);
   const picturesOnly = progressApi.progress.prefs.picturesOnly;
@@ -423,6 +451,7 @@ function CategoryScreen({
         initialWordId={wordId ?? (progressApi.progress.resume?.categoryId === category.id ? progressApi.progress.resume.wordId : null)}
         progressApi={progressApi}
         speech={speech}
+        onShowWord={onShowWord}
       />
     );
   }

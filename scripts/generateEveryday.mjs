@@ -116,13 +116,15 @@ function loadLevels() {
 /* ---- categories ---- */
 
 const categories = rows("categories.tsv").map(({ where, parts }) => {
-  if (parts.length !== 5) fail(where, `expected 5 fields, got ${parts.length}`);
-  const [id, english, japanese, cover, backdrop] = parts;
+  if (parts.length !== 6) fail(where, `expected 6 fields, got ${parts.length}`);
+  const [id, english, japanese, cover, backdrop, ambience] = parts;
   if (!ID_RE.test(id)) fail(where, `bad id "${id}"`);
   if (!english || !japanese) fail(where, "missing name");
   if (BARE_KANJI.test(japanese.replace(RUBY_RE, ""))) fail(where, `missing furigana in ${japanese}`);
   if (!BACKDROPS.has(backdrop)) fail(where, `unknown backdrop "${backdrop}"`);
-  return { where, id, english, japanese, cover, backdrop };
+  // The theme id itself is checked against AMBIENCE_THEMES by everyday.corpus.test.ts.
+  if (!/^[a-zA-Z]+$/.test(ambience ?? "")) fail(where, `bad ambience "${ambience}"`);
+  return { where, id, english, japanese, cover, backdrop, ambience };
 });
 const categoryIds = new Set();
 for (const c of categories) {
@@ -180,6 +182,12 @@ const words = rows("words.tsv").map(({ where, parts }) => {
     }
   }
 
+  if (nuance) {
+    const rest = nuance.replace(RUBY_RE, "");
+    if (BARE_KANJI.test(rest)) fail(where, `nuance has kanji without furigana: ${nuance}`);
+    if (nuance.length > 140) fail(where, "nuance is longer than one short line (140 chars)");
+  }
+
   const categoryList = cats.split(",").map((s) => s.trim()).filter(Boolean);
   if (categoryList.length === 0) fail(where, "at least one category is required");
   for (const c of categoryList) if (!categoryIds.has(c)) fail(where, `unknown category "${c}"`);
@@ -218,7 +226,7 @@ for (const c of categories) {
 const json = (value) => JSON.stringify(value);
 const categoryLines = categories.map(
   (c) =>
-    `  { id: ${json(c.id)}, english: ${json(c.english)}, japanese: ${json(c.japanese)}, coverWordId: ${json(c.cover)}, backdrop: ${json(c.backdrop)} },`,
+    `  { id: ${json(c.id)}, english: ${json(c.english)}, japanese: ${json(c.japanese)}, coverWordId: ${json(c.cover)}, backdrop: ${json(c.backdrop)}, ambience: ${json(c.ambience)} },`,
 );
 const wordLines = words.map(
   (w) =>

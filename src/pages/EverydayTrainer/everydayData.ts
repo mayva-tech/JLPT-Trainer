@@ -71,6 +71,28 @@ export function speechEnglish(word: EverydayWord): string {
   return word.english.replace(/\s*\([^)]*\)/g, "").trim();
 }
 
+const KANJI_RUN = "\\u4E00-\\u9FAF\\u3400-\\u4DBF\\u3005\\u3006\\u30F6";
+/** Optional leading digits + kanji run + (reading): 6畳(ろくじょう), 戸(と). */
+const NUANCE_RUBY = new RegExp(`\\d*[${KANJI_RUN}]+\\(([^()]+)\\)`, "g");
+
+/**
+ * Nuance text for the voices. Words with furigana are spoken from their
+ * reading, so 戸(と) is said と (not こ), and 6畳(ろくじょう) is said once —
+ * the reading already includes the number.
+ */
+export function speechNuance(word: EverydayWord): string | null {
+  if (!word.nuance) return null;
+  return (
+    word.nuance
+      .replace(NUANCE_RUBY, "$1")
+      // Punctuation right after Japanese would become a lone English run
+      // ("." in Andrew's voice); the voice switch already pauses there.
+      .replace(new RegExp(`([\\u3040-\\u30FF${KANJI_RUN}])[.,;:!?]+(?=\\s|$)`, "g"), "$1")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+}
+
 /** Alt text for the picture. */
 export function pictureAlt(word: EverydayWord): string {
   return `Picture: ${word.english}`;

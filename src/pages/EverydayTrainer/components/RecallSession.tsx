@@ -90,7 +90,7 @@ export function RecallSession({
       </div>
       <p className="ev-prompt">Say it in Japanese, then check.</p>
       <div className="ev-quiz-picture">
-        <EverydayPicture word={word} />
+        <EverydayPicture word={word} avoidHead />
       </div>
 
       {revealed ? (

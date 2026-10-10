@@ -156,3 +156,26 @@ describe("TalkingHead never covers Japanese text", () => {
     expect(intersects(box, jaWord)).toBe(false);
   });
 });
+
+describe("TalkingHead and data-head-avoid", () => {
+  it("never covers an element marked data-head-avoid (e.g. a flashcard picture)", () => {
+    // A picture right where the head parks by default (bottom-right corner).
+    const pic = { x: VIEW.w - 400, y: VIEW.h - 300, w: 380, h: 280 };
+    const el = document.createElement("div");
+    el.setAttribute("data-head-avoid", "");
+    stage.appendChild(el);
+    const base = Element.prototype.getBoundingClientRect;
+    patch(Element.prototype, "getBoundingClientRect", function (this: Element) {
+      if (this === el) return rect(pic.x, pic.y, pic.w, pic.h);
+      return base.call(this);
+    });
+    spokeJapanese();
+    const box = headBox();
+    expect(box.el.classList.contains("th-root--yield")).toBe(false);
+    // The default parking spot (bottom-right) is inside the picture, so the head must have moved.
+    expect(Number.isFinite(box.left) && Number.isFinite(box.top)).toBe(true);
+    const covers =
+      box.left < pic.x + pic.w && box.right > pic.x && box.top < pic.y + pic.h && box.bottom > pic.y;
+    expect(covers).toBe(false);
+  });
+});

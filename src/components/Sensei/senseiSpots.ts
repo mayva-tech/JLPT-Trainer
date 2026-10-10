@@ -135,7 +135,8 @@ export function collectObstacles(root: HTMLElement | null): Box[] {
     }
   }
   document
-    .querySelectorAll<HTMLElement>(".nav-bar, .production-panel, .th-root, .th-seat--split")
+    // [data-head-avoid]: pictures a page asks the heads (and the mascot) to keep clear of.
+    .querySelectorAll<HTMLElement>(".nav-bar, .production-panel, .th-root, .th-seat--split, [data-head-avoid]")
     .forEach((el) => {
       const r = el.getBoundingClientRect();
       if (r.width > 0 && r.height > 0) out.push(padded(r));

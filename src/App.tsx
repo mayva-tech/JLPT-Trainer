@@ -55,12 +55,12 @@ const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
 };
 
 /**
- * The Player and Shorts pick a theme per item themselves; every other mode
- * has one fixed theme.
+ * The Player, Shorts and Everyday pick a theme per item / location
+ * themselves; every other mode has one fixed theme.
  */
-const VIEW_AMBIENCE: Record<Exclude<AppView, "player" | "shorts">, AmbienceTheme> = {
+type OwnAmbienceView = "player" | "shorts" | "everyday";
+const VIEW_AMBIENCE: Record<Exclude<AppView, OwnAmbienceView>, AmbienceTheme> = {
   game: "torii",
-  everyday: "scramble",
   konbini: "konbini",
   trip: "shinkansen",
   relations: "karesansui",
@@ -90,7 +90,7 @@ export default function App() {
       : VIEW_COMPONENTS[view];
   const [showAmbience, toggleAmbience] = useAmbienceSetting();
   const ambienceTheme =
-    view !== "player" && view !== "shorts" && showAmbience
+    view !== "player" && view !== "shorts" && view !== "everyday" && showAmbience
       ? VIEW_AMBIENCE[view]
       : null;
 

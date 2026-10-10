@@ -1,11 +1,13 @@
 /* Everyday Japanese (身の回りの日本語) — visual vocabulary by location.
-   Uses the app tokens from styles/global.css (--card, --accent, --line…).
-   Pictures sit on a warm light "paper" frame so the line drawings and
-   emoji read clearly on the dark stage. All rules are scoped under .ev-root. */
+   Uses the app tokens from styles/global.css (--accent, --line…).
+   The location's stage ambience shows through: pictures float on it with no
+   frame, and text sits on translucent "glass" panels. All rules are scoped
+   under .ev-root. */
 
 .ev-root {
-  --ev-paper: #f3eee4;
-  --ev-paper-edge: #e2d9c8;
+  --ev-glass: rgba(20, 28, 42, 0.62);
+  --ev-glass-soft: rgba(20, 28, 42, 0.42);
+  --ev-glass-line: rgba(255, 255, 255, 0.14);
   --ev-radius: 18px;
   --ev-radius-sm: 12px;
 
@@ -135,7 +137,9 @@
 }
 
 .ev-stats div {
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: 1px solid var(--line);
   border-radius: var(--ev-radius-sm);
   padding: 8px 4px;
@@ -188,7 +192,7 @@
   width: 46px;
   height: 46px;
   border-radius: 10px;
-  background: var(--ev-paper);
+  background: transparent;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -201,7 +205,7 @@
   padding: 0 12px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--bg-soft);
+  background: var(--ev-glass-soft);
   color: var(--text-softer);
   margin-bottom: 12px;
 }
@@ -240,7 +244,9 @@
   padding: 6px 10px 6px 6px;
   border-radius: var(--ev-radius-sm);
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .ev-results-jp {
@@ -313,7 +319,9 @@
   padding: 8px 8px 10px;
   border-radius: var(--ev-radius);
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   text-align: left;
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
@@ -327,7 +335,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: var(--ev-radius-sm);
-  background: var(--ev-paper);
+  background: transparent;
   display: grid;
   place-items: center;
   margin-bottom: 6px;
@@ -360,7 +368,7 @@
   width: 100%;
   height: 4px;
   border-radius: 2px;
-  background: var(--bg-soft);
+  background: var(--ev-glass-soft);
   overflow: hidden;
   margin-top: 4px;
 }
@@ -434,7 +442,7 @@
   gap: 4px;
   padding: 4px;
   border-radius: 999px;
-  background: var(--bg-soft);
+  background: var(--ev-glass-soft);
   border: 1px solid var(--line);
   margin-bottom: 14px;
 }
@@ -480,13 +488,20 @@
   touch-action: pan-y;
 }
 
+/* The card has no frame: the picture stands on the stage ambience, and only
+   the words and buttons sit on one glass panel underneath it. */
 .ev-card {
-  border-radius: var(--ev-radius);
-  background: var(--card);
-  border: 1px solid var(--line);
-  overflow: hidden;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   animation: ev-in 0.22s ease;
+}
+
+.ev-card-panel {
+  border-radius: var(--ev-radius);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid var(--ev-glass-line);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
 @keyframes ev-in {
@@ -502,8 +517,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   border: 0;
-  background: var(--ev-paper);
-  border-bottom: 1px solid var(--ev-paper-edge);
+  background: transparent;
 }
 
 .ev-card-picture .ev-pic--svg {
@@ -518,6 +532,8 @@
 .ev-pic {
   display: block;
   line-height: 1;
+  /* A thin light rim and a soft shadow lift the picture off any scene. */
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.75)) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5));
 }
 
 .ev-pic--photo {
@@ -625,9 +641,27 @@
 .ev-nuance {
   margin-top: 8px;
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-softer);
+  line-height: 1.9;
+  color: var(--text-soft);
   max-width: 34em;
+}
+
+.ev-nuance--btn {
+  border: 0;
+  background: transparent;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.ev-nuance--btn:hover {
+  color: var(--text);
+}
+
+.ev-nuance rt {
+  font-size: 0.62em;
 }
 
 .ev-reveal {
@@ -665,7 +699,7 @@
   padding: 6px 4px;
   border-radius: var(--ev-radius-sm);
   border: 1px solid var(--line);
-  background: var(--bg-soft);
+  background: var(--ev-glass-soft);
   font-size: 13px;
 }
 
@@ -700,7 +734,9 @@
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .ev-nav .ev-btn {
@@ -718,7 +754,9 @@
   padding: 8px 16px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   font-size: 14px;
   font-weight: 600;
 }
@@ -821,7 +859,7 @@
   place-items: center;
   aspect-ratio: 16 / 10;
   border-radius: var(--ev-radius);
-  background: var(--ev-paper);
+  background: transparent;
   margin-bottom: 14px;
 }
 
@@ -840,7 +878,9 @@
   font-weight: 700;
   padding: 24px 12px;
   border-radius: var(--ev-radius);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: 1px solid var(--line);
   margin-bottom: 14px;
 }
@@ -866,7 +906,9 @@
   padding: 8px;
   border-radius: var(--ev-radius-sm);
   border: 1.5px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
 }
 
@@ -891,7 +933,7 @@
 .ev-opt--pic .ev-pic {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: var(--ev-paper);
+  background: transparent;
   display: grid;
   place-items: center;
 }
@@ -928,7 +970,9 @@
   margin-top: 14px;
   padding: 14px;
   border-radius: var(--ev-radius);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: 1px solid var(--line);
   text-align: center;
   display: flex;
@@ -989,7 +1033,9 @@
   padding: 6px 10px 6px 6px;
   border-radius: var(--ev-radius-sm);
   border: 1px solid var(--line);
-  background: var(--card);
+  background: var(--ev-glass);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .ev-missed-pic .ev-pic--svg,

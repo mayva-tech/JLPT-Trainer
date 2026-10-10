@@ -20,12 +20,15 @@ export function ExploreDeck({
   initialWordId,
   progressApi,
   speech,
+  onShowWord,
 }: {
   category: EverydayCategory;
   words: readonly EverydayWord[];
   initialWordId: string | null;
   progressApi: EverydayProgressApi;
   speech: EverydaySpeech;
+  /** The card now on screen (the page writes its kanji into the ambience). */
+  onShowWord?: (word: EverydayWord | null) => void;
 }) {
   const { progress, toggleKnown, toggleFavorite, markExplored, setResume, updatePrefs } = progressApi;
   const { order, imageOnly, picturesOnly } = progress.prefs;
@@ -40,10 +43,13 @@ export function ExploreDeck({
 
   // Opening a card counts as exploring it, and is where the page resumes.
   useEffect(() => {
+    onShowWord?.(word ?? null);
     if (!word) return;
     markExplored(word.id);
     setResume(category.id, word.id);
-  }, [word, category.id, markExplored, setResume]);
+  }, [word, category.id, markExplored, setResume, onShowWord]);
+
+  useEffect(() => () => onShowWord?.(null), [onShowWord]);
 
   const stopAuto = () => {
     speech.stop();
@@ -96,6 +102,7 @@ export function ExploreDeck({
             speech.wait(autoModeTiming.betweenItemsPause, session, () => step(i + 1));
           },
           session,
+          true,
         );
       });
     };
@@ -155,6 +162,11 @@ export function ExploreDeck({
             setAutoPlaying(false);
             speech.say(word, lang);
           }}
+          nuanceActive={speech.nuanceFor === word.id}
+          onSayNuance={() => {
+            setAutoPlaying(false);
+            speech.sayNuance(word);
+          }}
           known={progress.known.includes(word.id)}
           favorite={progress.favorites.includes(word.id)}
           onToggleKnown={() => toggleKnown(word.id)}
@@ -172,7 +184,7 @@ export function ExploreDeck({
           onClick={() => {
             setAutoPlaying(false);
             setRevealed(true);
-            speech.playSequence(word, order);
+            speech.playSequence(word, order, undefined, undefined, true);
           }}
         >
           <IconPlay /> Play
