@@ -1,0 +1,5 @@
+# Attribution for photo:<file> pictures in words.tsv.
+# file|author|license|source URL
+# The file lives in public/everyday/<file> (served as-is, never bundled into JS).
+# Only add photos you may redistribute (e.g. CC BY / CC BY-SA / CC0 from Wikimedia
+# Commons, or your own shots) and keep the credit exactly as the source requires.

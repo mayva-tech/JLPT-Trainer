@@ -1,0 +1,25 @@
+# Everyday Japanese (身の回りの日本語) — location categories.
+# id|english|japanese (furigana notation)|cover word id|head backdrop
+#
+# Order here is the order on the category grid. A new location is one new row
+# here plus its words in words.tsv — no code changes.
+# cover: id of a word in words.tsv that HAS a picture (used as the thumbnail).
+# backdrop: one of the talking-head SceneBackdrop values in src/services/sceneBus.ts.
+home|At Home|家(いえ)の中(なか)|shoji|home
+apartment|Apartment|マンション・アパート|parcel-locker|home
+kitchen|Kitchen|台所(だいどころ)|rice-cooker|home
+bathroom|Bathroom|浴室(よくしつ)・トイレ|bathtub|home
+living|Living Room|リビング|kotatsu|home
+bedroom|Bedroom|寝室(しんしつ)|bed|home
+street|Street|道路(どうろ)・街中(まちなか)|utility-pole|street
+park|Park|公園(こうえん)|swing|street
+station|Train Station|駅(えき)|ticket-gate|station
+train|Inside Train|電車(でんしゃ)の中(なか)|hand-strap|station
+airport|Airport|空港(くうこう)|airplane|station
+supermarket|Supermarket|スーパー|shopping-basket|counter
+konbini|Convenience Store|コンビニ|onigiri|konbini
+restaurant|Restaurant|レストラン|noren|restaurant
+office|Office|オフィス|printer|office
+hospital|Hospital|病院(びょういん)|ambulance|clinic
+school|School|学校(がっこう)|randoseru|office
+mall|Shopping Mall|ショッピングモール|escalator|counter

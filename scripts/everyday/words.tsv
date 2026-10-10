@@ -1,0 +1,433 @@
+# Everyday Japanese (身の回りの日本語) — vocabulary.
+# id|japanese|reading|english|part of speech|picture|categories|nuance|romaji override
+#
+# japanese  Furigana notation: each kanji run is followed by its kana in (),
+#           e.g. 改札口(かいさつぐち), 買(か)い物(もの)かご. Katakana needs none.
+# reading   The whole word in kana (katakana stays katakana). Spaces mark word
+#           breaks for the romaji only. Must equal the furigana spelled out.
+# picture   One emoji (Unicode 13 or older, so Windows 10 draws it), or
+#           svg:<id> for a hand-drawn picture (src/pages/EverydayTrainer/art),
+#           or photo:<file> for a photo in public/everyday/ (needs a row in
+#           credits.tsv). Leave EMPTY when no verified picture exists yet —
+#           never a stand-in. A picture may be used by one word only.
+# categories Comma list of category ids. One word = one record, even when it
+#           appears in several places (エレベーター is in five categories).
+# nuance    One short line, or empty.
+# romaji    Leave empty: romaji is derived from the reading (Hepburn, macrons
+#           for long vowels). Fill only when the derived form would mislead.
+#
+# JLPT level is NOT written here. The generator looks each word up in
+# scripts/levels/jlptWordLevels.tsv and writes "unclassified" when it is not
+# on the list — never a guessed level.
+
+# ---- At Home 家の中 ----
+door|ドア|ドア|Door|noun|🚪|home,train|A hinged or sliding door; 戸(と) is the older word, still used for sliding doors.|
+window|窓(まど)|まど|Window|noun|🪟|home,train||
+ceiling|天井(てんじょう)|てんじょう|Ceiling|noun||home||
+floor|床(ゆか)|ゆか|Floor|noun||home|The floor surface. "Second floor" of a building is 2階(にかい), not 床.|
+wall|壁(かべ)|かべ|Wall|noun||home||
+stairs|階段(かいだん)|かいだん|Stairs|noun|svg:stairs|home,apartment,station||
+genkan|玄関(げんかん)|げんかん|Entryway (genkan)|noun||home,apartment|The sunken entry where shoes come off before stepping up into the home.|
+shoe-cabinet|下駄箱(げたばこ)|げたばこ|Shoe cabinet|noun||home,school|Still called 下駄箱 though nobody keeps geta in it; 靴箱(くつばこ) also common. At school it means the shoe lockers.|
+hallway|廊下(ろうか)|ろうか|Hallway, corridor|noun||home,school,hospital|廊下を走らない — "no running in the hallway" is a classic school rule.|
+light-switch|スイッチ|スイッチ|Light switch|noun|svg:light-switch|home|Japanese switches are often wide rocker plates.|
+outlet|コンセント|コンセント|Power outlet|noun|svg:outlet|home,office|Japanese-English; "outlet" is not used. Plugs here have two flat pins.|
+room-light|電気(でんき)|でんき|The lights (room light)|noun||home,living|電気をつける / 消す — the everyday way to say turn the lights on / off.|
+light-bulb|電球(でんきゅう)|でんきゅう|Light bulb|noun|💡|home|電球が切れた — the bulb has burned out.|
+tatami|畳(たたみ)|たたみ|Tatami mat|noun|svg:tatami|home|Rooms are measured in tatami: a 6畳(ろくじょう) room is about 10 m².|
+shoji|障子(しょうじ)|しょうじ|Paper sliding screen|noun|svg:shoji|home|Wooden lattice covered with paper; lets light in through the window side.|
+fusuma|襖(ふすま)|ふすま|Sliding room divider|noun||home|Opaque sliding panels between rooms and on 押し入れ closets.|
+key|鍵(かぎ)|かぎ|Key; lock|noun|🔑|home,apartment|Means both key and lock: 鍵をかける = to lock.|
+trash-can|ゴミ箱(ばこ)|ゴミばこ|Trash can|noun|🗑️|home,kitchen,park,konbini|Public bins are rare in Japan; at konbini they are split by type.|
+clock|時計(とけい)|とけい|Clock; watch|noun|🕰️|home,living|Covers both wall clocks and wristwatches (腕時計(うでどけい)).|
+air-conditioner|エアコン|エアコン|Air conditioner|noun|svg:air-conditioner|home,living,bedroom,office|Japanese units heat as well as cool. Remote mode 冷房 = cooling, 暖房 = heating.|
+umbrella-stand|傘立(かさた)て|かさたて|Umbrella stand|noun|svg:umbrella-stand|home,konbini,office|Found at shop and office entrances; some have locks.|
+breaker|ブレーカー|ブレーカー|Circuit breaker|noun||home|ブレーカーが落ちる — the breaker trips (common with Japan's low amperage contracts).|
+fire-alarm|火災報知器(かさいほうちき)|かさい ほうちき|Fire alarm|noun||home,school,office|The everyday word; the home smoke detector is formally 住宅用火災警報器.|
+storm-shutter|雨戸(あまど)|あまど|Storm shutter|noun||home|Sliding shutters closed at night or before a typhoon.|
+oshiire|押(お)し入(い)れ|おしいれ|Futon closet|noun||home,bedroom|Deep closet with a middle shelf, made for storing futons. Western closets are クローゼット.|
+
+# ---- Apartment マンション・アパート ----
+elevator|エレベーター|エレベーター|Elevator|noun|🛗|apartment,station,airport,office,hospital,mall||
+mailbox|郵便受(ゆうびんう)け|ゆうびんうけ|Mailbox (at home)|noun|📫|apartment|The box you receive mail in. The red street box you post in is ポスト.|
+parcel-locker|宅配(たくはい)ボックス|たくはい ボックス|Parcel locker|noun|svg:parcel-locker|apartment|Lockers in the lobby where couriers leave packages when nobody is home.|
+intercom|インターホン|インターホン|Intercom|noun|svg:intercom|apartment|Japanese-English; most have a camera screen inside.|
+auto-lock|オートロック|オートロック|Auto-lock entrance|noun||apartment|A lobby door only residents can open; visitors call from the panel.|
+balcony|ベランダ|ベランダ|Balcony|noun||apartment|The usual word for an apartment balcony; バルコニー is used in listings.|
+insect-screen|網戸(あみど)|あみど|Insect screen|noun|svg:insect-screen|apartment|A sliding mesh window that keeps mosquitoes out in summer.|
+vent-fan|換気扇(かんきせん)|かんきせん|Ventilation fan|noun|svg:ventfan|apartment,kitchen,bathroom||
+water-heater|給湯器(きゅうとうき)|きゅうとうき|Water heater|noun||apartment|Usually a gas unit outside the door or on the balcony, run from a panel in the kitchen.|
+building-manager|管理人(かんりにん)|かんりにん|Building manager|noun||apartment||
+landlord|大家(おおや)さん|おおやさん|Landlord|noun||apartment|Almost always said with さん.|ōya-san
+laundry-pole|物干(ものほ)し竿(ざお)|ものほしざお|Laundry pole|noun|svg:laundry-pole|apartment|The pole on the balcony for hanging laundry to dry.|
+garbage-point|ゴミ置(お)き場(ば)|ゴミ おきば|Garbage collection point|noun||apartment,street|Put bags out only on the right day for each type of garbage.|
+notice-board|掲示板(けいじばん)|けいじばん|Notice board|noun|svg:notice-board|apartment,school,office|Also used for online message boards.|
+emergency-exit|非常口(ひじょうぐち)|ひじょうぐち|Emergency exit|noun|svg:emergency-exit|apartment,airport,office,hospital,school,mall|The green running-figure sign was designed in Japan.|
+fire-extinguisher|消火器(しょうかき)|しょうかき|Fire extinguisher|noun|🧯|apartment,office,school||
+bicycle-parking|駐輪場(ちゅうりんじょう)|ちゅうりんじょう|Bicycle parking|noun||apartment,station,supermarket|Bikes left outside marked areas can be removed by the city.|
+parking-lot|駐車場(ちゅうしゃじょう)|ちゅうしゃじょう|Parking lot|noun|🅿️|apartment,supermarket,hospital,mall||
+spare-key|合鍵(あいかぎ)|あいかぎ|Spare key|noun||apartment||
+floor-plan|間取(まど)り|まどり|Floor plan|noun||apartment|Written like 2LDK: two rooms plus living, dining and kitchen.|
+nameplate|表札(ひょうさつ)|ひょうさつ|Door nameplate|noun||apartment|Many people now leave it blank for privacy.|
+
+# ---- Kitchen 台所 ----
+sink|流(なが)し|ながし|Kitchen sink|noun||kitchen|シンク is also common.|
+faucet|蛇口(じゃぐち)|じゃぐち|Faucet, tap|noun|svg:faucet|kitchen,bathroom,park|蛇口をひねる — turn the tap.|
+stove|コンロ|コンロ|Stove burner, cooktop|noun|svg:gas-stove|kitchen|ガスコンロ or IHコンロ. ストーブ means a room heater in Japanese, not a cooker.|
+fridge|冷蔵庫(れいぞうこ)|れいぞうこ|Refrigerator|noun|svg:fridge|kitchen||
+freezer|冷凍庫(れいとうこ)|れいとうこ|Freezer|noun||kitchen||
+microwave|電子(でんし)レンジ|でんし レンジ|Microwave oven|noun|svg:microwave|kitchen,konbini|Often just レンジ. Casual verb: チンする — to microwave.|
+rice-cooker|炊飯器(すいはんき)|すいはんき|Rice cooker|noun|svg:ricecooker|kitchen||
+kettle|やかん|やかん|Kettle (stovetop)|noun||kitchen|An electric one is 電気ケトル.|
+pot|鍋(なべ)|なべ|Pot, saucepan|noun|svg:pot|kitchen|Also the name for hot-pot dishes cooked at the table.|
+frying-pan|フライパン|フライパン|Frying pan|noun|🍳|kitchen||
+kitchen-knife|包丁(ほうちょう)|ほうちょう|Kitchen knife|noun|🔪|kitchen|The 🔪 emoji's official name is "hocho".|
+cutting-board|まな板(いた)|まないた|Cutting board|noun|svg:cutting-board|kitchen||
+ladle|お玉(たま)|おたま|Ladle|noun|svg:ladle|kitchen|Short for お玉杓子(おたまじゃくし), which also means "tadpole".|
+cooking-chopsticks|菜箸(さいばし)|さいばし|Cooking chopsticks|noun||kitchen|Long chopsticks for cooking and serving, not for eating.|
+dish-cabinet|食器棚(しょっきだな)|しょっきだな|Dish cabinet|noun||kitchen||
+drying-rack|水切(みずき)りかご|みずきりかご|Dish drying rack|noun||kitchen||
+sink-corner|三角(さんかく)コーナー|さんかく コーナー|Sink-corner strainer|noun||kitchen|A triangular basket in the sink corner for food scraps.|
+sponge|スポンジ|スポンジ|Sponge|noun|🧽|kitchen||
+plastic-wrap|ラップ|ラップ|Plastic wrap|noun||kitchen|Cling film. ラップする = to cover with wrap.|
+fish-grill|魚焼(さかなや)きグリル|さかなやき グリル|Fish grill|noun||kitchen|The narrow grill drawer under most Japanese gas stoves.|
+food-waste|生(なま)ゴミ|なまゴミ|Food waste|noun||kitchen|Kitchen scraps; collected with burnable garbage in most towns.|
+
+# ---- Bathroom 浴室・トイレ ----
+bathtub|浴槽(よくそう)|よくそう|Bathtub|noun|🛁|bathroom|In speech often お風呂 or 湯船(ゆぶね). Wash before getting in.|
+shower|シャワー|シャワー|Shower|noun|🚿|bathroom||
+bath-drain|排水口(はいすいこう)|はいすいこう|Drain (sink, bath)|noun||bathroom|The drain hole. Same reading as 排水溝, a drainage channel.|
+washbasin|洗面台(せんめんだい)|せんめんだい|Washbasin, vanity|noun||bathroom|The room around it is the 洗面所.|
+mirror|鏡(かがみ)|かがみ|Mirror|noun|🪞|bathroom,mall||
+toilet|トイレ|トイレ|Toilet, restroom|noun|🚽|bathroom,park,station,konbini|Means both the room and the fixture. お手洗い is politer.|
+toilet-bowl|便器(べんき)|べんき|Toilet bowl|noun||bathroom|The fixture itself, used in cleaning and repairs.|
+bidet-seat|温水洗浄便座(おんすいせんじょうべんざ)|おんすい せんじょう べんざ|Bidet toilet seat|noun||bathroom|Usually called by the brand name ウォシュレット.|
+toilet-paper|トイレットペーパー|トイレットペーパー|Toilet paper|noun|🧻|bathroom||
+toothbrush|歯(は)ブラシ|は ブラシ|Toothbrush|noun|🪥|bathroom||
+toothpaste|歯磨(はみが)き粉(こ)|はみがきこ|Toothpaste|noun||bathroom||
+towel|タオル|タオル|Towel|noun||bathroom|A bath towel is バスタオル.|
+soap|石鹸(せっけん)|せっけん|Soap|noun|🧼|bathroom||
+shampoo|シャンプー|シャンプー|Shampoo|noun||bathroom|Conditioner is リンス or コンディショナー.|
+wash-bowl|洗面器(せんめんき)|せんめんき|Bath bowl|noun|svg:wash-bowl|bathroom|The small basin for scooping water over yourself in a Japanese bath.|
+bath-stool|風呂椅子(ふろいす)|ふろいす|Bath stool|noun|svg:bath-stool|bathroom|You sit on it to wash, before getting into the tub.|
+reheat|追(お)い焚(だ)き|おいだき|Bath reheat (button)|noun||bathroom|The panel button that warms the bath water back up.|
+changing-area|脱衣所(だついじょ)|だついじょ|Changing area (by the bath)|noun||bathroom|In most homes it doubles as the laundry and washbasin area.|
+washing-machine|洗濯機(せんたくき)|せんたくき|Washing machine|noun|svg:washer|bathroom||
+hair-dryer|ドライヤー|ドライヤー|Hair dryer|noun||bathroom||
+mold|カビ|カビ|Mold|noun||bathroom|Usually written in katakana. カビ取り = mold remover.|
+
+# ---- Living Room リビング ----
+sofa|ソファー|ソファー|Sofa|noun|🛋️|living|Also written ソファ.|
+remote|リモコン|リモコン|Remote control|noun|svg:remote|living|From "remote control".|
+curtain|カーテン|カーテン|Curtain|noun||living,bedroom||
+tv|テレビ|テレビ|Television|noun|📺|living||
+coffee-table|ローテーブル|ローテーブル|Coffee table, low table|noun||living|An older-style low table is ちゃぶ台(だい).|
+kotatsu|こたつ|こたつ|Kotatsu (heated table)|noun|svg:kotatsu|living|A low table with a heater underneath and a quilt over it.|
+zabuton|座布団(ざぶとん)|ざぶとん|Floor cushion|noun|svg:zabuton|living||
+legless-chair|座椅子(ざいす)|ざいす|Legless chair|noun||living|A chair with a back but no legs, for sitting on the floor.|
+carpet|カーペット|カーペット|Carpet|noun||living|A small one is ラグ.|
+bookshelf|本棚(ほんだな)|ほんだな|Bookshelf|noun||living||
+houseplant|観葉植物(かんようしょくぶつ)|かんよう しょくぶつ|Houseplant|noun|🪴|living,office||
+humidifier|加湿器(かしつき)|かしつき|Humidifier|noun||living,bedroom|Common in dry Japanese winters.|
+electric-fan|扇風機(せんぷうき)|せんぷうき|Electric fan|noun|svg:electric-fan|living||
+space-heater|ストーブ|ストーブ|Space heater|noun|svg:heater|living|A room heater (often kerosene), not a kitchen stove.|
+vacuum|掃除機(そうじき)|そうじき|Vacuum cleaner|noun|svg:vacuum|living|掃除機をかける — to vacuum.|
+newspaper|新聞(しんぶん)|しんぶん|Newspaper|noun|📰|living||
+tissues|ティッシュ|ティッシュ|Tissues|noun||living,bedroom|Short for ティッシュペーパー. Free packs are handed out on the street.|
+floor-heating|床暖房(ゆかだんぼう)|ゆかだんぼう|Underfloor heating|noun||living||
+air-purifier|空気清浄機(くうきせいじょうき)|くうき せいじょうき|Air purifier|noun||living||
+
+# ---- Bedroom 寝室 ----
+pillow|枕(まくら)|まくら|Pillow|noun||bedroom||
+blanket|毛布(もうふ)|もうふ|Blanket|noun||bedroom||
+comforter|掛(か)け布団(ぶとん)|かけぶとん|Comforter, duvet|noun||bedroom|The top quilt of a futon set.|
+futon-mattress|敷布団(しきぶとん)|しきぶとん|Futon mattress|noun||bedroom|The mattress laid on the floor. Also written 敷き布団.|
+futon|布団(ふとん)|ふとん|Futon (bedding)|noun||bedroom|The whole bedding set. 布団を敷く = lay it out; 布団を干す = air it in the sun.|
+mattress|マットレス|マットレス|Mattress|noun||bedroom||
+bed|ベッド|ベッド|Bed|noun|🛏️|bedroom,hospital||
+bed-sheet|シーツ|シーツ|Bed sheet|noun||bedroom|Also used for a single sheet.|
+alarm-clock|目覚(めざ)まし時計(どけい)|めざまし どけい|Alarm clock|noun|⏰|bedroom|時計 becomes どけい here. Often just 目覚まし.|
+closet|クローゼット|クローゼット|Closet, wardrobe|noun||bedroom||
+hanger|ハンガー|ハンガー|Clothes hanger|noun|svg:hanger|bedroom||
+chest-of-drawers|タンス|タンス|Chest of drawers|noun||bedroom|Also written 箪笥. A drawer is 引き出し(ひきだし).|
+pajamas|パジャマ|パジャマ|Pajamas|noun||bedroom||
+desk-lamp|電気(でんき)スタンド|でんき スタンド|Desk lamp|noun||bedroom,office|Japanese-English: "stand" here means a lamp.|
+hot-water-bottle|湯(ゆ)たんぽ|ゆたんぽ|Hot-water bottle|noun||bedroom||
+body-pillow|抱(だ)き枕(まくら)|だきまくら|Body pillow|noun||bedroom||
+blackout-curtain|遮光(しゃこう)カーテン|しゃこう カーテン|Blackout curtain|noun||bedroom||
+
+# ---- Street 道路・街中 ----
+curb|縁石(えんせき)|えんせき|Curb|noun||street|Also read ふちいし.|
+guardrail|ガードレール|ガードレール|Guardrail|noun|svg:guardrail|street||
+pothole|道路(どうろ)の穴(あな)|どうろ の あな|Pothole|noun||street|There is no common one-word term; ポットホール is technical. Also 道路の陥没 for a sunken road.|
+manhole|マンホール|マンホール|Manhole|noun|svg:manhole|street|Many towns put local designs on their covers.|
+drainage-channel|排水溝(はいすいこう)|はいすいこう|Drainage channel, gutter|noun||street|A drain channel. Same reading as 排水口, the drain hole in a sink.|
+crosswalk|横断歩道(おうだんほどう)|おうだん ほどう|Pedestrian crossing|noun|svg:crosswalk|street||
+overpass|歩道橋(ほどうきょう)|ほどうきょう|Pedestrian overpass|noun||street||
+utility-pole|電柱(でんちゅう)|でんちゅう|Utility pole|noun|svg:utility-pole|street|Most Japanese power lines still run overhead on these.|
+power-line|電線(でんせん)|でんせん|Power line|noun||street||
+traffic-light|信号(しんごう)|しんごう|Traffic light|noun|🚥|street|Japanese call the green light 青(あお), "blue".|
+sidewalk|歩道(ほどう)|ほどう|Sidewalk|noun||street||
+roadway|車道(しゃどう)|しゃどう|Roadway (for cars)|noun||street||
+intersection|交差点(こうさてん)|こうさてん|Intersection|noun||street||
+tactile-paving|点字(てんじ)ブロック|てんじ ブロック|Tactile paving|noun|svg:tactile-paving|street,station|Yellow raised tiles that guide blind pedestrians. Don't stand or park bikes on them.|
+curve-mirror|カーブミラー|カーブミラー|Convex traffic mirror|noun|svg:curve-mirror|street|Round mirrors at blind corners; everywhere in Japanese side streets.|
+vending-machine|自動販売機(じどうはんばいき)|じどう はんばいき|Vending machine|noun|svg:vending-machine|street,park,station,office,hospital|Usually shortened to 自販機(じはんき).|
+bus-stop|バス停(てい)|バス てい|Bus stop|noun|🚏|street||
+streetlight|街灯(がいとう)|がいとう|Streetlight|noun|svg:streetlight|street,park||
+railroad-crossing|踏切(ふみきり)|ふみきり|Railroad crossing|noun|svg:railroad-crossing|street|Stop before crossing, even when the barrier is up.|
+traffic-cone|カラーコーン|カラーコーン|Traffic cone|noun|svg:traffic-cone|street|Japanese-English (originally a brand name); パイロン is also used.|
+under-construction|工事中(こうじちゅう)|こうじちゅう|Under construction|noun|🚧|street||
+postbox|ポスト|ポスト|Postbox|noun|📮|street,konbini|The red box you post letters in. Your box at home is 郵便受け.|
+police-box|交番(こうばん)|こうばん|Police box|noun||street|A small neighborhood police post — the place to ask for directions or report lost items.|
+fire-hydrant|消火栓(しょうかせん)|しょうかせん|Fire hydrant|noun||street|Often underground in Japan, under a marked cover.|
+alley|路地(ろじ)|ろじ|Alley, side lane|noun||street||
+
+# ---- Park 公園 ----
+bench|ベンチ|ベンチ|Bench|noun|svg:bench|park,station,mall||
+swing|ブランコ|ブランコ|Swing|noun|svg:swing|park||
+slide|滑(すべ)り台(だい)|すべりだい|Slide|noun|svg:slide|park||
+sandbox|砂場(すなば)|すなば|Sandbox|noun||park||
+iron-bar|鉄棒(てつぼう)|てつぼう|Horizontal bar|noun|svg:iron-bar|park,school|The low bars every Japanese child practices flips on.|
+jungle-gym|ジャングルジム|ジャングルジム|Jungle gym|noun||park||
+seesaw|シーソー|シーソー|Seesaw|noun|svg:seesaw|park||
+fountain|噴水(ふんすい)|ふんすい|Fountain|noun|⛲|park,mall||
+drinking-fountain|水飲(みずの)み場(ば)|みずのみば|Drinking fountain|noun||park,school||
+pond|池(いけ)|いけ|Pond|noun||park||
+lawn|芝生(しばふ)|しばふ|Lawn, grass|noun||park|Sign: 芝生に入らないでください — keep off the grass.|
+flower-bed|花壇(かだん)|かだん|Flower bed|noun||park,school||
+playground-equipment|遊具(ゆうぐ)|ゆうぐ|Playground equipment|noun||park||
+gazebo|東屋(あずまや)|あずまや|Gazebo, rest shelter|noun||park||
+kiosk|売店(ばいてん)|ばいてん|Kiosk, snack stand|noun||park,station,hospital||
+cherry-tree|桜(さくら)|さくら|Cherry blossom|noun|🌸|park|The tree and its flowers. Viewing them is お花見(はなみ).|
+fallen-leaves|落(お)ち葉(ば)|おちば|Fallen leaves|noun|🍂|park||
+walking-path|散歩道(さんぽみち)|さんぽみち|Walking path|noun||park||
+no-entry|立入禁止(たちいりきんし)|たちいり きんし|No entry|noun||park,street|A sign phrase. Also written 立ち入り禁止.|
+pigeon|鳩(はと)|はと|Pigeon, dove|noun|🕊️|park|One word covers both pigeons and doves.|
+
+# ---- Train Station 駅 ----
+ticket-gate|改札口(かいさつぐち)|かいさつぐち|Ticket gate|noun|svg:ticket-gate|station|Often just 改札. Tap your IC card on the reader.|
+platform|ホーム|ホーム|Platform|noun||station|Short for プラットホーム. Platform 3 = 3番線(さんばんせん).|
+ticket-machine|券売機(けんばいき)|けんばいき|Ticket machine|noun|svg:ticket-machine|station||
+ticket|切符(きっぷ)|きっぷ|Ticket|noun|🎫|station|A train or bus ticket. Event tickets are usually チケット.|
+ic-card|ICカード|アイシー カード|IC transit card|noun||station|Suica, PASMO, ICOCA and others; also work in konbini.|ai shī kādo
+fare-adjustment|精算機(せいさんき)|せいさんき|Fare adjustment machine|noun||station|Pay the difference here before the gate if your fare was too low.|
+timetable|時刻表(じこくひょう)|じこくひょう|Timetable|noun||station||
+departure-board|電光掲示板(でんこうけいじばん)|でんこう けいじばん|Electronic departure board|noun||station,airport|Any LED information board; at stations it shows the next trains.|
+station-staff|駅員(えきいん)|えきいん|Station staff|noun||station||
+yellow-line|黄色(きいろ)い線(せん)|きいろい せん|Yellow safety line|noun||station|From the announcement 黄色い線の内側までお下がりください.|
+platform-door|ホームドア|ホームドア|Platform screen door|noun||station|Japanese-English.|
+escalator|エスカレーター|エスカレーター|Escalator|noun|svg:escalator|station,airport,mall|Tokyo stands on the left, Osaka on the right.|
+coin-locker|コインロッカー|コインロッカー|Coin locker|noun|svg:coin-locker|station|Japanese-English. Many now take IC cards instead of coins.|
+transfer|乗(の)り換(か)え|のりかえ|Transfer (change trains)|noun||station|Signs: 乗り換え / 乗換. Verb: 乗り換える.|
+exit|出口(でぐち)|でぐち|Exit|noun||station,mall|Big stations name exits by direction: 東口, 西口.|
+entrance|入口(いりぐち)|いりぐち|Entrance|noun||station,supermarket,mall|Also written 入り口.|
+waiting-room|待合室(まちあいしつ)|まちあいしつ|Waiting room|noun||station,hospital||
+route-map|路線図(ろせんず)|ろせんず|Route map|noun||station||
+commuter-pass|定期券(ていきけん)|ていきけん|Commuter pass|noun||station|Often just 定期. Many employers pay for it.|
+midori-window|みどりの窓口(まどぐち)|みどり の まどぐち|JR ticket office|noun||station|JR's staffed ticket counter, named for its green sign.|
+
+# ---- Inside Train 電車の中 ----
+hand-strap|つり革(かわ)|つりかわ|Hand strap|noun|svg:hand-strap|train|The hanging straps standing passengers hold. Also written 吊り革.|
+handrail|手(て)すり|てすり|Handrail|noun||train,station,hospital|Also the grab poles in trains and the rail on escalators and stairs.|
+priority-seat|優先席(ゆうせんせき)|ゆうせんせき|Priority seat|noun||train|For elderly, pregnant, injured and disabled passengers.|
+luggage-rack|網棚(あみだな)|あみだな|Overhead luggage rack|noun|svg:luggage-rack|train|Literally "net shelf"; many are metal bars now.|
+train-car|車両(しゃりょう)|しゃりょう|Train car|noun|🚃|train|Car number: 3号車(さんごうしゃ).|
+seat|座席(ざせき)|ざせき|Seat|noun||train,airport|Casual speech often just says 席(せき).|
+onboard-announcement|車内(しゃない)アナウンス|しゃない アナウンス|Onboard announcement|noun||train||
+women-only-car|女性専用車両(じょせいせんようしゃりょう)|じょせい せんよう しゃりょう|Women-only car|noun||train|Runs mainly at rush hour; marked in pink on the platform.|
+emergency-button|非常(ひじょう)ボタン|ひじょう ボタン|Emergency button|noun||train|Press to talk to the crew; the formal name is 非常通報装置.|
+conductor|車掌(しゃしょう)|しゃしょう|Conductor|noun||train||
+train-driver|運転士(うんてんし)|うんてんし|Train driver|noun||train||
+hanging-ad|中吊(なかづ)り広告(こうこく)|なかづり こうこく|Hanging ad|noun||train|Posters hung from the ceiling along the middle of the car.|
+mild-ac-car|弱冷房車(じゃくれいぼうしゃ)|じゃくれいぼうしゃ|Mild air-conditioning car|noun||train|A car kept slightly warmer, for people who feel cold.|
+rapid-train|快速(かいそく)|かいそく|Rapid train|noun||train,station|Skips some stations but is usually free (no extra ticket).|
+local-train|各駅停車(かくえきていしゃ)|かくえき ていしゃ|Local train (all stops)|noun||train,station|Also 各停(かくてい) or 普通(ふつう).|
+express|急行(きゅうこう)|きゅうこう|Express train|noun||train,station||
+packed-train|満員電車(まんいんでんしゃ)|まんいん でんしゃ|Packed train|noun||train||
+mind-your-step|足元(あしもと)|あしもと|Underfoot, your step|noun||train,station|足元にご注意ください — please mind your step.|
+passenger|乗客(じょうきゃく)|じょうきゃく|Passenger|noun||train,airport||
+
+# ---- Airport 空港 ----
+boarding-gate|搭乗口(とうじょうぐち)|とうじょうぐち|Boarding gate|noun||airport|Also 搭乗ゲート.|
+baggage-claim|手荷物受取所(てにもつうけとりじょ)|てにもつ うけとりじょ|Baggage claim|noun||airport||
+security-check|保安検査(ほあんけんさ)|ほあん けんさ|Security check|noun||airport|The area itself is 保安検査場.|
+departure-lobby|出発(しゅっぱつ)ロビー|しゅっぱつ ロビー|Departure lobby|noun||airport||
+arrival-lobby|到着(とうちゃく)ロビー|とうちゃく ロビー|Arrival lobby|noun||airport||
+boarding-pass|搭乗券(とうじょうけん)|とうじょうけん|Boarding pass|noun||airport||
+passport|パスポート|パスポート|Passport|noun||airport|Formally 旅券(りょけん).|
+immigration|出国審査(しゅっこくしんさ)|しゅっこく しんさ|Departure immigration|noun|🛂|airport|Arriving, it is 入国審査(にゅうこくしんさ).|
+customs|税関(ぜいかん)|ぜいかん|Customs|noun|🛃|airport||
+hand-luggage|手荷物(てにもつ)|てにもつ|Hand luggage|noun||airport|Carry-on is 機内持ち込み手荷物.|
+checked-baggage|預(あず)け荷物(にもつ)|あずけにもつ|Checked baggage|noun||airport||
+suitcase|スーツケース|スーツケース|Suitcase|noun|🧳|airport||
+cart|カート|カート|Cart (shopping, luggage)|noun|🛒|airport,supermarket|One word for both shopping carts and luggage carts.|
+currency-exchange|両替所(りょうがえじょ)|りょうがえじょ|Currency exchange|noun|💱|airport||
+duty-free|免税店(めんぜいてん)|めんぜいてん|Duty-free shop|noun||airport,mall||
+checkin-counter|チェックインカウンター|チェックイン カウンター|Check-in counter|noun||airport||
+checkin-kiosk|自動(じどう)チェックイン機(き)|じどう チェックインき|Self check-in kiosk|noun||airport||
+in-flight|機内(きない)|きない|On board the plane|noun||airport|機内食(きないしょく) = in-flight meal.|
+runway|滑走路(かっそうろ)|かっそうろ|Runway|noun||airport||
+observation-deck|展望(てんぼう)デッキ|てんぼう デッキ|Observation deck|noun||airport||
+moving-walkway|動(うご)く歩道(ほどう)|うごく ほどう|Moving walkway|noun||airport|Literally "moving sidewalk".|
+information-desk|案内所(あんないじょ)|あんないじょ|Information desk|noun||airport,station,mall|Also インフォメーション.|
+airplane|飛行機(ひこうき)|ひこうき|Airplane|noun|✈️|airport||
+
+# ---- Supermarket スーパー ----
+shopping-basket|買(か)い物(もの)かご|かいもの かご|Shopping basket|noun|svg:shopping-basket|supermarket,konbini|Often just かご.|
+register|レジ|レジ|Checkout, register|noun||supermarket,konbini,restaurant,mall|Means both the till and the checkout counter.|
+shelf|棚(たな)|たな|Shelf|noun||supermarket,konbini||
+meat-section|精肉(せいにく)コーナー|せいにく コーナー|Meat section|noun||supermarket||
+fish-section|鮮魚(せんぎょ)コーナー|せんぎょ コーナー|Fresh fish section|noun||supermarket||
+vegetable-section|野菜売(やさいう)り場(ば)|やさい うりば|Vegetable section|noun||supermarket|売り場 means "sales floor / section".|
+deli|惣菜(そうざい)|そうざい|Ready-made dishes|noun||supermarket|Often お惣菜. Cooked side dishes sold by weight or pack.|
+discount-sticker|値引(ねび)きシール|ねびき シール|Discount sticker|noun||supermarket|Evening markdown stickers like 2割引 or 半額.|
+half-price|半額(はんがく)|はんがく|Half price|noun||supermarket||
+special-sale|特売(とくばい)|とくばい|Special sale|noun||supermarket||
+plastic-bag|レジ袋(ぶくろ)|レジ ぶくろ|Plastic shopping bag|noun||supermarket,konbini|Not free since 2020 — you'll be asked 袋はご利用ですか?|
+eco-bag|エコバッグ|エコバッグ|Reusable shopping bag|noun||supermarket,konbini|Also マイバッグ.|
+free-sample|試食(ししょく)|ししょく|Free food sample|noun||supermarket||
+best-before|賞味期限(しょうみきげん)|しょうみ きげん|Best-before date|noun||supermarket,konbini|Quality date. Compare 消費期限, the safety date.|
+use-by|消費期限(しょうひきげん)|しょうひ きげん|Use-by date|noun||supermarket,konbini|Safety date for food that spoils quickly.|
+self-checkout|セルフレジ|セルフレジ|Self-checkout|noun||supermarket,konbini||
+points-card|ポイントカード|ポイントカード|Points card|noun||supermarket,konbini,mall|ポイントカードはお持ちですか? — do you have a points card?|
+frozen-food|冷凍食品(れいとうしょくひん)|れいとう しょくひん|Frozen food|noun||supermarket||
+bagging-counter|サッカー台(だい)|サッカー だい|Bagging counter|noun||supermarket|The counter where you pack your own bags after paying.|
+sales-floor|売(う)り場(ば)|うりば|Sales floor, section|noun||supermarket,mall|おもちゃ売り場 = toy section.|
+out-of-stock|品切(しなぎ)れ|しなぎれ|Out of stock|noun||supermarket,konbini||
+
+# ---- Convenience Store コンビニ ----
+receipt|レシート|レシート|Receipt|noun|🧾|konbini,supermarket|An official receipt for expenses is 領収書.|
+official-receipt|領収書(りょうしゅうしょ)|りょうしゅうしょ|Official receipt|noun||konbini,restaurant,office|Ask for it with 領収書をください.|
+atm|ATM|エーティーエム|ATM|noun|🏧|konbini,mall||ē tī emu
+copy-machine|コピー機(き)|コピーき|Copy machine|noun||konbini,office|Konbini machines also print photos and documents.|
+onigiri|おにぎり|おにぎり|Rice ball|noun|🍙|konbini|Pull tabs 1, 2, 3 in order to unwrap it.|
+bento|弁当(べんとう)|べんとう|Boxed meal|noun|🍱|konbini|Usually お弁当.|
+heat-it-up|温(あたた)めますか|あたためますか|Shall I heat it up?|phrase||konbini|Asked when you buy a bento. Reply お願いします or 大丈夫です.|
+disposable-chopsticks|割(わ)り箸(ばし)|わりばし|Disposable chopsticks|noun||konbini,restaurant|Split them apart before use.|
+magazine-rack|雑誌(ざっし)コーナー|ざっし コーナー|Magazine rack|noun||konbini||
+parcel-service|宅配便(たくはいびん)|たくはいびん|Parcel delivery service|noun||konbini|You can send and pick up parcels at the counter.|
+meat-bun|肉(にく)まん|にくまん|Steamed meat bun|noun||konbini|Kept warm in a steamer by the register in winter.|
+hot-snacks|ホットスナック|ホットスナック|Hot snacks|noun||konbini|Fried chicken and the like, sold from the counter case.|
+oden|おでん|おでん|Oden|noun|🍢|konbini|Simmered winter dish sold by the piece.|
+clerk|店員(てんいん)|てんいん|Shop clerk|noun||konbini,supermarket,restaurant,mall|Call one with すみません.|
+new-product|新商品(しんしょうひん)|しんしょうひん|New product|noun||konbini||
+age-check|年齢確認(ねんれいかくにん)|ねんれい かくにん|Age verification|noun||konbini|Touch the screen button when buying alcohol or tobacco.|
+stamp|切手(きって)|きって|Postage stamp|noun||konbini||
+
+# ---- Restaurant レストラン ----
+menu|メニュー|メニュー|Menu|noun||restaurant||
+tray|お盆(ぼん)|おぼん|Tray|noun||restaurant|Also トレー. お盆 is also the summer Obon holiday.|
+chopsticks|箸(はし)|はし|Chopsticks|noun|🥢|restaurant|Usually お箸. Same sound as 橋 (bridge) with different pitch.|
+chopstick-rest|箸置(はしお)き|はしおき|Chopstick rest|noun||restaurant||
+oshibori|おしぼり|おしぼり|Wet hand towel|noun||restaurant|Served before the meal — for hands, not the face.|
+small-plate|取(と)り皿(ざら)|とりざら|Small sharing plate|noun||restaurant|Ask for them with 取り皿をください.|
+rice-bowl|茶碗(ちゃわん)|ちゃわん|Rice bowl|noun||restaurant|Despite 茶 (tea), it is the bowl for rice.|
+teacup|湯呑(ゆの)み|ゆのみ|Teacup (no handle)|noun|🍵|restaurant||
+meal-ticket-machine|食券機(しょっけんき)|しょっけんき|Meal ticket machine|noun||restaurant|Buy a ticket first and hand it to staff — common at ramen shops.|
+call-button|呼(よ)び出(だ)しボタン|よびだし ボタン|Call button|noun||restaurant|Press it to call staff at family restaurants.|
+glass-of-water|お冷(ひや)|おひや|Glass of water|noun||restaurant|Restaurant word for the free cold water.|
+bill-slip|伝票(でんぴょう)|でんぴょう|Bill slip|noun||restaurant|Take it to the register to pay.|
+payment|会計(かいけい)|かいけい|Bill, payment counter|noun||restaurant,hospital|お会計お願いします — the bill, please. Hospitals label the window 会計.|
+counter-seat|カウンター席(せき)|カウンター せき|Counter seat|noun||restaurant||
+zashiki|座敷(ざしき)|ざしき|Tatami seating area|noun||restaurant|Take your shoes off before stepping up.|
+private-room|個室(こしつ)|こしつ|Private room|noun||restaurant||
+food-sample|食品(しょくひん)サンプル|しょくひん サンプル|Plastic food display|noun||restaurant|Realistic replica dishes in the front window.|
+noren|暖簾(のれん)|のれん|Shop curtain (noren)|noun|svg:noren|restaurant|Hung out when the shop is open, taken in when it closes.|
+toothpick|爪楊枝(つまようじ)|つまようじ|Toothpick|noun||restaurant|Often just ようじ.|
+drink-bar|ドリンクバー|ドリンクバー|Drink bar|noun||restaurant|Self-serve drinks at family restaurants.|
+soy-sauce-dispenser|醤油差(しょうゆさ)し|しょうゆさし|Soy sauce dispenser|noun||restaurant||
+set-meal|定食(ていしょく)|ていしょく|Set meal|noun||restaurant|Main dish with rice, miso soup and pickles.|
+large-serving|大盛(おおも)り|おおもり|Large serving|noun||restaurant|Often free at ramen and rice-bowl shops.|
+
+# ---- Office オフィス ----
+desk|机(つくえ)|つくえ|Desk|noun||office,school||
+chair|椅子(いす)|いす|Chair|noun|🪑|office,school||
+printer|プリンター|プリンター|Printer|noun|🖨️|office||
+meeting-room|会議室(かいぎしつ)|かいぎしつ|Meeting room|noun||office||
+whiteboard|ホワイトボード|ホワイトボード|Whiteboard|noun||office||
+documents|書類(しょるい)|しょるい|Documents, paperwork|noun||office||
+file-folder|ファイル|ファイル|File folder|noun|📁|office|Both the paper folder and a computer file.|
+stapler|ホッチキス|ホッチキス|Stapler|noun||office|From a brand name; ステープラー in catalogues.|
+paper-clip|クリップ|クリップ|Paper clip|noun|📎|office||
+scissors|はさみ|はさみ|Scissors|noun|✂️|office,school||
+business-card|名刺(めいし)|めいし|Business card|noun||office|Offer and receive it with both hands.|
+employee-id|社員証(しゃいんしょう)|しゃいんしょう|Employee ID card|noun||office||
+reception|受付(うけつけ)|うけつけ|Reception|noun||office,hospital||
+kitchenette|給湯室(きゅうとうしつ)|きゅうとうしつ|Office kitchenette|noun||office|The small room with hot water for tea.|
+smoking-area|喫煙所(きつえんじょ)|きつえんじょ|Smoking area|noun||office,mall|Smoking on most streets is banned outside these.|
+shredder|シュレッダー|シュレッダー|Paper shredder|noun||office||
+extension|内線(ないせん)|ないせん|Phone extension|noun||office|内線123番 — extension 123.|
+telephone|電話(でんわ)|でんわ|Telephone|noun|☎️|office||
+computer|パソコン|パソコン|Computer, PC|noun|💻|office|From "personal computer". A laptop is ノートパソコン.|
+hanko|判子(はんこ)|はんこ|Personal seal (hanko)|noun||office|Also 印鑑(いんかん). Usually written はんこ.|
+sticky-note|付箋(ふせん)|ふせん|Sticky note|noun||office||
+time-card|タイムカード|タイムカード|Time card|noun||office||
+cardboard|段(だん)ボール|だん ボール|Cardboard box|noun|📦|office|Literally "corrugated board"; used for the boxes too.|
+
+# ---- Hospital 病院 ----
+exam-room|診察室(しんさつしつ)|しんさつしつ|Examination room|noun||hospital||
+insurance-card|保険証(ほけんしょう)|ほけんしょう|Health insurance card|noun||hospital|Show it at reception on every visit.|
+patient-card|診察券(しんさつけん)|しんさつけん|Patient registration card|noun||hospital|Each hospital or clinic issues its own.|
+questionnaire|問診票(もんしんひょう)|もんしんひょう|Medical questionnaire|noun||hospital|Filled in at reception before you see the doctor.|
+prescription|処方箋(しょほうせん)|しょほうせん|Prescription|noun||hospital|Take it to a pharmacy (調剤薬局) to get the medicine.|
+pharmacy|薬局(やっきょく)|やっきょく|Pharmacy|noun||hospital||
+medicine|薬(くすり)|くすり|Medicine|noun|💊|hospital|You "drink" it: 薬を飲む.|
+thermometer|体温計(たいおんけい)|たいおんけい|Thermometer (body)|noun|svg:thermometer|hospital|Held under the arm in Japan.|
+injection|注射(ちゅうしゃ)|ちゅうしゃ|Injection, shot|noun|💉|hospital||
+wheelchair|車椅子(くるまいす)|くるまいす|Wheelchair|noun|🦽|hospital,airport||
+ambulance|救急車(きゅうきゅうしゃ)|きゅうきゅうしゃ|Ambulance|noun|🚑|hospital|Call 119.|
+iv-drip|点滴(てんてき)|てんてき|IV drip|noun||hospital||
+hospital-room|病室(びょうしつ)|びょうしつ|Hospital room, ward|noun||hospital||
+nurse-call|ナースコール|ナースコール|Nurse call button|noun||hospital||
+nurse|看護師(かんごし)|かんごし|Nurse|noun||hospital||
+number-ticket|番号札(ばんごうふだ)|ばんごうふだ|Number ticket|noun||hospital|Wait until your number is called or shown.|
+bp-monitor|血圧計(けつあつけい)|けつあつけい|Blood pressure monitor|noun||hospital||
+face-mask|マスク|マスク|Face mask|noun||hospital||
+sanitizer|消毒液(しょうどくえき)|しょうどくえき|Hand sanitizer|noun||hospital,konbini,mall||
+crutches|松葉杖(まつばづえ)|まつばづえ|Crutches|noun||hospital|Literally "pine-needle cane", from the shape.|
+internal-medicine|内科(ないか)|ないか|Internal medicine|noun||hospital|Where you go with a cold or fever.|
+outpatient|外来(がいらい)|がいらい|Outpatient department|noun||hospital||
+
+# ---- School 学校 ----
+blackboard|黒板(こくばん)|こくばん|Blackboard|noun|svg:blackboard|school|Usually green, still called 黒板.|
+board-eraser|黒板消(こくばんけ)し|こくばんけし|Blackboard eraser|noun||school||
+chalk|チョーク|チョーク|Chalk|noun||school||
+locker|ロッカー|ロッカー|Locker|noun||school,office||
+indoor-shoes|上履(うわば)き|うわばき|Indoor shoes|noun||school|Pupils change into them at the shoe lockers.|
+classroom|教室(きょうしつ)|きょうしつ|Classroom|noun||school|Also a class or lessons: 料理教室 = cooking class.|
+staff-room|職員室(しょくいんしつ)|しょくいんしつ|Teachers' staff room|noun||school||
+nurses-office|保健室(ほけんしつ)|ほけんしつ|School nurse's office|noun||school||
+gym|体育館(たいいくかん)|たいいくかん|Gymnasium|noun||school|Also used as an evacuation shelter.|
+schoolyard|校庭(こうてい)|こうてい|Schoolyard|noun||school||
+school-library|図書室(としょしつ)|としょしつ|School library|noun||school|A public library is 図書館.|
+class-timetable|時間割(じかんわり)|じかんわり|Class timetable|noun||school||
+textbook|教科書(きょうかしょ)|きょうかしょ|Textbook|noun||school||
+notebook|ノート|ノート|Notebook|noun|📓|school|A laptop is ノートパソコン.|
+pencil|鉛筆(えんぴつ)|えんぴつ|Pencil|noun|✏️|school||
+eraser|消(け)しゴム|けしゴム|Eraser|noun||school||
+randoseru|ランドセル|ランドセル|Elementary school backpack|noun|svg:randoseru|school|From the Dutch ransel. Bought once for all six years.|
+school-lunch|給食(きゅうしょく)|きゅうしょく|School lunch|noun||school|Pupils serve it themselves in class.|
+chime|チャイム|チャイム|School chime|noun|🔔|school|Also a doorbell.|
+class-duty|日直(にっちょく)|にっちょく|Daily class duty|noun||school||
+ruler|定規(じょうぎ)|じょうぎ|Ruler|noun|📏|school,office||
+pencil-case|筆箱(ふでばこ)|ふでばこ|Pencil case|noun||school||
+pool|プール|プール|Swimming pool|noun||school||
+
+# ---- Shopping Mall ショッピングモール ----
+floor-guide|フロアガイド|フロアガイド|Floor directory|noun||mall|Also 館内案内図 or 案内板.|
+fitting-room|試着室(しちゃくしつ)|しちゃくしつ|Fitting room|noun||mall|Take your shoes off before stepping in.|
+food-court|フードコート|フードコート|Food court|noun||mall||
+lost-child-center|迷子(まいご)センター|まいご センター|Lost child center|noun||mall||
+nursing-room|授乳室(じゅにゅうしつ)|じゅにゅうしつ|Nursing room|noun||mall,airport|Baby room for feeding and changing; also ベビールーム.|
+stroller|ベビーカー|ベビーカー|Baby stroller|noun||mall|Japanese-English; "baby car".|
+accessible-toilet|多目的(たもくてき)トイレ|たもくてき トイレ|Accessible restroom|noun||mall,station|Newer signs say だれでもトイレ.|
+paper-bag|紙袋(かみぶくろ)|かみぶくろ|Paper shopping bag|noun|🛍️|mall||
+specialty-store|専門店(せんもんてん)|せんもんてん|Specialty store|noun||mall||
+sale|セール|セール|Sale|noun||mall||
+lucky-bag|福袋(ふくぶくろ)|ふくぶくろ|Lucky bag|noun||mall|Sealed mystery bags sold at New Year.|
+atrium|吹(ふ)き抜(ぬ)け|ふきぬけ|Atrium|noun||mall|An open space through several floors.|
+cinema|映画館(えいがかん)|えいがかん|Movie theater|noun||mall||
+arcade|ゲームセンター|ゲームセンター|Arcade|noun||mall|Usually ゲーセン for short.|
+business-hours|営業時間(えいぎょうじかん)|えいぎょう じかん|Business hours|noun||mall,restaurant||
+gift-wrapping|包装(ほうそう)|ほうそう|Gift wrapping|noun||mall|Also ラッピング. プレゼント用ですか? — is it a gift?|

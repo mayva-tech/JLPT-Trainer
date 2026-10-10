@@ -28,14 +28,18 @@ const PhoneTrainer = lazy(() => import("./pages/PhoneTrainer/PhoneTrainer"));
 const StyleTrainer = lazy(() => import("./pages/StyleTrainer/StyleTrainer"));
 const GameMode = lazy(() => import("./pages/GameMode/GameMode"));
 const ShortsStudio = lazy(() => import("./pages/Shorts/ShortsStudio"));
+const EverydayTrainer = lazy(
+  () => import("./pages/EverydayTrainer/EverydayTrainer")
+);
 
-type AppView = TrainerView | "game" | "shorts";
+type AppView = TrainerView | "game" | "shorts" | "everyday";
 
-/** `?view=shorts` opens the Shorts studio directly (handy as a bookmark). */
+/** `?view=shorts` / `?view=everyday` open that page directly (handy as a bookmark). */
 function initialView(): AppView {
   try {
     const v = new URLSearchParams(globalThis.location?.search ?? "").get("view");
-    return v === "shorts" ? "shorts" : "player";
+    if (v === "shorts" || v === "everyday") return v;
+    return "player";
   } catch {
     return "player";
   }
@@ -56,6 +60,7 @@ const VIEW_COMPONENTS: Record<TrainerView, React.ComponentType> = {
  */
 const VIEW_AMBIENCE: Record<Exclude<AppView, "player" | "shorts">, AmbienceTheme> = {
   game: "torii",
+  everyday: "scramble",
   konbini: "konbini",
   trip: "shinkansen",
   relations: "karesansui",
@@ -80,7 +85,9 @@ function TrainerFallback() {
 export default function App() {
   const [view, setView] = useState<AppView>(initialView);
   const ActiveTrainer =
-    view === "game" || view === "shorts" ? null : VIEW_COMPONENTS[view];
+    view === "game" || view === "shorts" || view === "everyday"
+      ? null
+      : VIEW_COMPONENTS[view];
   const [showAmbience, toggleAmbience] = useAmbienceSetting();
   const ambienceTheme =
     view !== "player" && view !== "shorts" && showAmbience
@@ -189,6 +196,21 @@ export default function App() {
         <button
           type="button"
           className={
+            view === "everyday"
+              ? "app-nav-btn app-nav-btn--active"
+              : "app-nav-btn"
+          }
+          title="Everyday Japanese — 身の回りの日本語"
+          onClick={() => setView("everyday")}
+        >
+          <span className="app-nav-en">Everyday</span>
+          <span className="app-nav-jp" lang="ja">
+            身の回り
+          </span>
+        </button>
+        <button
+          type="button"
+          className={
             view === "relations"
               ? "app-nav-btn app-nav-btn--active"
               : "app-nav-btn"
@@ -263,6 +285,8 @@ export default function App() {
             <GameMode onOpenTrainer={openTrainer} />
           ) : view === "shorts" ? (
             <ShortsStudio />
+          ) : view === "everyday" ? (
+            <EverydayTrainer />
           ) : ActiveTrainer ? (
             <ActiveTrainer />
           ) : null}
