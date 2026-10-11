@@ -500,7 +500,34 @@ function expandSpokenClockTimes(text: string): string {
   );
 }
 
-export function buildEnglishSpeakText(text: string): string {
+const LATIN_ACCENTED_RE = /[À-ÖØ-öø-ÿĀ-ſ]/g;
+const NOT_LATIN_LETTER = "(?![A-Za-zÀ-ÖØ-öø-ÿĀ-ſ])";
+const NO_LATIN_BEFORE = "(?<![A-Za-zÀ-ÖØ-öø-ÿĀ-ſ])";
+
+/** Accented loanwords whose plain spelling would read as a different word. */
+const ACCENTED_OVERRIDES: ReadonlyArray<[RegExp, string]> = [
+  // Without the accents "resume" is the verb /rɪˈzuːm/.
+  [new RegExp(`${NO_LATIN_BEFORE}r(?:ésum[ée]|esumé)s${NOT_LATIN_LETTER}`, "gi"), "rezoomayz"],
+  [new RegExp(`${NO_LATIN_BEFORE}r(?:ésum[ée]|esumé)${NOT_LATIN_LETTER}`, "gi"), "rezoomay"],
+];
+
+/**
+ * Accents (café, résumé, Arigatō) tip Edge's multilingual voices into
+ * French or Spanish for the whole line; English spelling keeps Andrew
+ * English. Precomposed letters map one-to-one, so lengths are unchanged.
+ */
+function plainLatinForEnglish(text: string): string {
+  let out = text;
+  for (const [re, spoken] of ACCENTED_OVERRIDES) {
+    out = out.replace(re, (match) => applyCase(match, spoken));
+  }
+  return out.replace(LATIN_ACCENTED_RE, (ch) =>
+    ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  );
+}
+
+export function buildEnglishSpeakText(raw: string): string {
+  const text = plainLatinForEnglish(raw);
   let out = expandTitleAbbreviations(
     expandMountAbbreviation(
       appendSlashSpeakPause(

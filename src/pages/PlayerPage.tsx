@@ -19,6 +19,7 @@ import { WordCard } from "../components/WordCard";
 import { PhraseCard } from "../components/PhraseCard";
 import { speakNuance } from "../services/nuancePlayback";
 import { useStageHeaderClearance } from "../hooks/useStageHeaderClearance";
+import { useFoldedBar, useWheelSideScroll } from "../hooks/useFoldedBar";
 import { grammarStepNuance, vocabStepNuance } from "../utils/lessonNuance";
 import { SentenceCard } from "../components/SentenceCard";
 import { ShadowingCard } from "../components/ShadowingCard";
@@ -282,6 +283,9 @@ export function PlayerPage() {
   // Brush stroke order for the target word (筆). The stroke data is loaded
   // only while the setting is on.
   const [brushOn, toggleBrush] = useBrushSetting();
+  const [controlsOpen, toggleControls] = useFoldedBar("jlpt-trainer:player-controls:v1");
+  const controlsRef = useRef<HTMLDivElement>(null);
+  useWheelSideScroll(controlsRef, controlsOpen);
   const strokeData = useKanjiStrokeData(brushOn);
   const brushRef = useRef({ on: brushOn, data: strokeData });
   brushRef.current = { on: brushOn, data: strokeData };
@@ -3442,7 +3446,10 @@ export function PlayerPage() {
         </div>
       ) : null}
 
-      <div className="nav-bar">
+      <div
+        ref={controlsRef}
+        className={controlsOpen ? "nav-bar nav-bar--open" : "nav-bar nav-bar--folded"}
+      >
         <button
           type="button"
           className={
@@ -3919,6 +3926,17 @@ export function PlayerPage() {
         ) : null}
 
         {screen !== "toc" && screen !== "flow-setup" ? <HeadStyleButtons /> : null}
+        <button
+          type="button"
+          className="fold-toggle"
+          tabIndex={-1}
+          aria-expanded={controlsOpen}
+          title={controlsOpen ? "Hide the controls" : "Show the controls"}
+          aria-label={controlsOpen ? "Hide the controls" : "Show the controls"}
+          onClick={toggleControls}
+        >
+          {controlsOpen ? "▸" : "◂"}
+        </button>
       </div>
     </>
   );

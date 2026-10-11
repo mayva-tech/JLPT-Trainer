@@ -73,6 +73,20 @@ describe("buildEnglishSpeakText", () => {
     expect(buildEnglishSpeakText("grandson")).toBe("grandson");
   });
 
+  it("drops Latin accents so the line is not read as French or Spanish", () => {
+    expect(buildEnglishSpeakText("Café")).toBe("Cafe");
+    expect(buildEnglishSpeakText("a fiancé")).toBe("a fiance");
+    expect(buildEnglishSpeakText("Arigatō")).toBe("Arigato");
+    expect(buildEnglishSpeakText("a rude attitude")).toBe("a rude attitude");
+  });
+
+  it('says "résumé" as the noun, not the verb "resume"', () => {
+    expect(buildEnglishSpeakText("Send your résumé.")).toBe("Send your rezoomay.");
+    expect(buildEnglishSpeakText("two résumés")).toBe("two rezoomayz");
+    expect(buildEnglishSpeakText("Résumé")).toBe("Rezoomay");
+    expect(buildEnglishSpeakText("resume the meeting")).toBe("resume the meeting");
+  });
+
   it('speaks "strange; odd" under 変 as two clear words with a pause', () => {
     expect(buildEnglishSpeakText("strange; odd")).toBe("straynge ... odd");
     expect(buildEnglishSpeakText("strange; funny")).toBe("straynge ... funny");

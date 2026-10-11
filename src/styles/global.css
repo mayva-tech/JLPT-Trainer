@@ -69,16 +69,74 @@ body {
   overflow: auto;
 }
 
+/* Folded to a corner arrow so the stage gets the full height; opens as one
+   scrollable row anchored at the top right. */
 .app-nav {
-  flex: 0 0 auto;
+  position: fixed;
+  top: 4px;
+  right: 4px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  gap: 6px;
   align-items: center;
-  padding: 6px 10px;
-  background: #15202e;
-  border-bottom: 1px solid var(--line);
-  z-index: 20;
+  max-width: calc(100vw - 8px);
+  z-index: 40;
+}
+
+.app-nav--open {
+  padding: 3px;
+  background: rgba(21, 32, 46, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.app-nav-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-soft) transparent;
+}
+
+.app-nav-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.app-nav-row::-webkit-scrollbar-thumb {
+  background: var(--accent-soft);
+  border-radius: 2px;
+}
+
+.app-nav-row > * {
+  flex: 0 0 auto;
+}
+
+.fold-toggle {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  border: 1px solid var(--accent-soft);
+  border-radius: 50%;
+  background: rgba(21, 32, 46, 0.82);
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.fold-toggle:hover {
+  opacity: 1;
+  border-color: var(--accent);
 }
 
 .app-nav-btn {
@@ -129,9 +187,9 @@ body {
 }
 
 @media (max-width: 700px) and (orientation: portrait) {
-  .app-nav {
+  .app-nav,
+  .app-nav-row {
     gap: 5px;
-    padding: 5px 6px;
   }
 
   .app-nav-btn {

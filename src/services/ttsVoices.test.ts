@@ -105,6 +105,24 @@ describe("ttsVoices Japanese Nanami policy", () => {
     expect(getTtsVoiceName("en", voices)).not.toMatch(/Nanami/i);
   });
 
+  it("prefers the English-only Andrew over AndrewMultilingual", () => {
+    const voices = [
+      voice("Microsoft AndrewMultilingual Online (Natural) - English (United States)", "en-US"),
+      voice("Microsoft Andrew Online (Natural) - English (United States)", "en-US"),
+    ];
+    expect(resolveEnglishVoice(voices)?.name).toBe(
+      "Microsoft Andrew Online (Natural) - English (United States)"
+    );
+  });
+
+  it("still uses AndrewMultilingual when it is the only Andrew", () => {
+    const voices = [
+      voice("Microsoft AndrewMultilingual Online (Natural) - English (United States)", "en-US"),
+      voice("Google US English", "en-US"),
+    ];
+    expect(resolveEnglishVoice(voices)?.name).toMatch(/AndrewMultilingual/);
+  });
+
   it("documents Nanami identity hints used by the resolver", () => {
     expect(JAPANESE_TTS_VOICE_HINTS.join(" ")).toMatch(/Nanami/);
     expect(JAPANESE_TTS_LANG).toBe("ja-JP");

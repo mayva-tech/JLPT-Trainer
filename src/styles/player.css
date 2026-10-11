@@ -1,6 +1,6 @@
 /* ─── 16:9 scaling stage ───────────────────────────────────── */
 .stage-wrapper {
-  height: calc(100vh - 72px - 41px);
+  height: calc(100vh - var(--controls-clear, 72px));
   width: 100vw;
   display: flex;
   align-items: center;
@@ -10,14 +10,14 @@
 }
 
 .stage-wrapper--with-panel {
-  height: calc(100vh - 260px - 41px);
+  height: calc(100vh - 260px);
   align-items: flex-start;
   padding-top: 10px;
 }
 
 .stage-wrapper--interview {
   /* Keep full stage above the fixed interview panel + nav bar */
-  height: calc(100vh - 300px - 41px);
+  height: calc(100vh - 300px);
 }
 
 .stage {
@@ -786,6 +786,41 @@
 
 .glossary-section {
   margin-bottom: 1.6cqh;
+}
+
+.glossary-block-title {
+  margin: 0 0 1cqh;
+  font-family: var(--font-en);
+  font-size: 1.7cqw;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.glossary-static {
+  opacity: 0.75;
+}
+
+.glossary-note {
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+.glossary-rel {
+  width: 3cqw;
+  text-align: center;
+  font-size: 1.8cqw;
+  color: var(--accent, var(--text));
+}
+
+.glossary-block[hidden] {
+  display: none;
+}
+
+.glossary-empty {
+  font-family: var(--font-en);
+  font-size: 1.5cqw;
+  color: var(--muted, var(--text));
+  opacity: 0.8;
 }
 
 .glossary-count {
@@ -1780,11 +1815,11 @@
 /* Keep stage readable above production chrome on typical Windows desktops */
 @media (max-height: 900px) {
   .stage-wrapper--with-panel {
-    height: calc(100vh - 240px - 41px);
+    height: calc(100vh - 240px);
   }
 
   .stage-wrapper--interview {
-    height: calc(100vh - 270px - 41px);
+    height: calc(100vh - 270px);
   }
 
   .production-panel {
@@ -2544,5 +2579,221 @@
   font-size: calc(var(--ono-example-en) * var(--ono-fit));
   color: var(--text);
   margin-top: 0.8cqh;
+}
+
+/* ─── Foldable control bar ───────────────────────────────────
+   Folded: only the arrow in the bottom-right corner, and the stage takes the
+   freed height. Open: one scrollable row anchored at the bottom right, with
+   the arrow pinned at its right end. */
+.app-view:has(.nav-bar--folded) {
+  --controls-clear: 0px;
+  --portrait-nav-clear: 0px;
+}
+
+.app-view:has(.nav-bar--open) {
+  --controls-clear: 40px;
+  --portrait-nav-clear: 34px;
+}
+
+.nav-bar.nav-bar--folded,
+.nav-bar.nav-bar--open {
+  left: auto;
+  right: 4px;
+  bottom: 4px;
+  transform: none;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  width: max-content;
+  max-width: calc(100vw - 8px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-soft) transparent;
+  z-index: 30;
+}
+
+.nav-bar.nav-bar--open::-webkit-scrollbar {
+  height: 4px;
+}
+
+.nav-bar.nav-bar--open::-webkit-scrollbar-thumb {
+  background: var(--accent-soft);
+  border-radius: 2px;
+}
+
+/* Leaves the bottom-left corner to the Sensei leaf button. */
+.nav-bar.nav-bar--open {
+  max-width: calc(100vw - 52px);
+  padding: 3px;
+  background: rgba(21, 32, 46, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.nav-bar.nav-bar--open > * {
+  flex: 0 0 auto;
+}
+
+.nav-bar.nav-bar--folded {
+  padding: 0;
+}
+
+/* Clears the mode-bar arrow in the top-right corner. */
+@media (max-width: 700px) and (orientation: portrait) {
+  .stage .progress-label {
+    right: max(5%, 40px);
+  }
+}
+
+.nav-bar.nav-bar--folded > :not(.fold-toggle) {
+  display: none;
+}
+
+.nav-bar .fold-toggle,
+.nav-bar .fold-toggle:hover {
+  position: sticky;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 13px;
+  border: 1px solid var(--accent-soft);
+  border-radius: 50%;
+  background: rgba(21, 32, 46, 0.92);
+  color: var(--accent);
+  filter: none;
+}
+
+/* ─── Small landscape window ─────────────────────────────────
+   Text is sized in stage widths, so a shrunken window shrinks the English
+   until it is hard to read. Below ~1200px of stage, English lines grow ~30%.
+   (Phone portrait has its own, larger sizes above.) */
+@container (max-width: 1200px) and (orientation: landscape) {
+  .stage > * {
+    --lesson-en-word: 5.1cqw;
+    --lesson-en-line: 4.1cqw;
+  }
+
+  .stage .ono-safe {
+    --ono-meaning: 5cqw;
+    --ono-collocation: 4.1cqw;
+    --ono-nuance: 3.5cqw;
+    --ono-example-en: 4cqw;
+  }
+
+  .stage .lesson-nuance-label {
+    font-size: 2cqw;
+  }
+
+  .stage .lesson-nuance-body {
+    font-size: 3cqw;
+  }
+
+  .stage .category-chip {
+    font-size: 3.6cqw;
+  }
+
+  .stage .progress-label,
+  .stage .lesson-label {
+    font-size: 2.8cqw;
+  }
+
+  .stage .vocabulary-range-label__primary {
+    font-size: 2.5cqw;
+  }
+
+  .stage .vocabulary-range-label__secondary {
+    font-size: 2cqw;
+  }
+
+  .stage .shadowing-cue {
+    font-size: 3.9cqw;
+  }
+
+  .stage .hook-line--en {
+    font-size: 4.1cqw;
+  }
+
+  .stage .quiz-prompt,
+  .stage .quiz-word-en-prompt {
+    font-size: 3.1cqw;
+  }
+
+  .stage .quiz-choice {
+    font-size: 4.1cqw;
+  }
+
+  .stage .quiz-reveal-meaning,
+  .stage .quiz-progress {
+    font-size: 2.6cqw;
+  }
+
+  .stage .quiz-example-meaning {
+    font-size: 3.4cqw;
+  }
+
+  .stage .register-meaning {
+    font-size: 3.6cqw;
+  }
+
+  .stage .register-meaning-text {
+    font-size: calc(3.6cqw * var(--fit-scale, 1));
+  }
+
+  .stage .register-label,
+  .stage .register-romaji,
+  .stage .register-note {
+    font-size: 2.2cqw;
+  }
+
+  .stage .register-hidden-cue {
+    font-size: 2.3cqw;
+  }
+
+  .stage .interview-romaji {
+    font-size: 2cqw;
+  }
+
+  .stage .interview-english-label {
+    font-size: 1.5cqw;
+  }
+
+  /* Pause & answer / "Can you read this?" (retention hooks) */
+  .stage .ret-check-tag {
+    font-size: 2.5cqw;
+  }
+
+  .stage .ret-check-question {
+    font-size: 3.9cqw;
+  }
+
+  .stage .ret-option-label {
+    font-size: 2.2cqw;
+  }
+
+  .stage .ret-option-text {
+    font-size: 3.2cqw;
+  }
+
+  .stage .ret-option-tick {
+    font-size: 2.9cqw;
+  }
+
+  .stage .ret-check-think {
+    font-size: 2.6cqw;
+  }
+
+  .stage .ret-check-answer {
+    font-size: 3.1cqw;
+  }
+
+  .stage .ret-hook-en {
+    font-size: 4.5cqw;
+  }
+
+  .stage .ret-hook-ja {
+    font-size: 3.2cqw;
+  }
 }
 

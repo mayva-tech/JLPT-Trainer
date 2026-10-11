@@ -71,6 +71,10 @@ function isAndrewVoice(v: SpeechSynthesisVoice): boolean {
   return /andrew/i.test(voiceName(v));
 }
 
+function isMultilingualVoice(v: SpeechSynthesisVoice): boolean {
+  return /multilingual/i.test(voiceName(v));
+}
+
 function isNeuralLike(v: SpeechSynthesisVoice): boolean {
   const n = voiceName(v);
   return /online|natural|neural/i.test(n);
@@ -137,7 +141,10 @@ export function resolveEnglishVoice(
   if (andrew.length > 0) {
     return (
       [...andrew].sort((a, b) => {
+        // AndrewMultilingual guesses the language per line, so short
+        // glosses like "a rude attitude" come out in French.
         const score = (v: SpeechSynthesisVoice) =>
+          (isMultilingualVoice(v) ? 0 : 4) +
           (isNeuralLike(v) ? 2 : 0) +
           (isMicrosoftVoice(v) ? 1 : 0) +
           (/en-us/i.test(v.lang) || /United States/i.test(voiceName(v))
@@ -151,7 +158,9 @@ export function resolveEnglishVoice(
   const microsoftNeural = en.filter(
     (v) => isMicrosoftVoice(v) && isNeuralLike(v)
   );
-  if (microsoftNeural.length > 0) return microsoftNeural[0] ?? null;
+  if (microsoftNeural.length > 0) {
+    return microsoftNeural.find((v) => !isMultilingualVoice(v)) ?? microsoftNeural[0] ?? null;
+  }
 
   const us = en.filter(
     (v) =>

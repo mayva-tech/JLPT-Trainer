@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { speechService } from "./services/speechService";
 import TalkingHead from "./components/TalkingHead/TalkingHead";
 import HeadStyleButtons from "./components/TalkingHead/HeadStyleButtons";
 import { StageAmbience } from "./components/StageAmbience/StageAmbience";
 import { AmbiencePan } from "./components/StageAmbience/AmbiencePan";
 import { useAmbienceSetting } from "./components/StageAmbience/useAmbienceSetting";
+import { useFoldedBar, useWheelSideScroll } from "./hooks/useFoldedBar";
 import type { AmbienceTheme } from "./components/StageAmbience/themes";
 import type { OpenTrainer, TrainerView } from "./navigation";
 
@@ -68,6 +69,18 @@ const VIEW_AMBIENCE: Record<Exclude<AppView, OwnAmbienceView>, AmbienceTheme> = 
   style: "washitsu",
 };
 
+const NAV_ITEMS: readonly { view: AppView; en: string; ja: string; title: string }[] = [
+  { view: "player", en: "Player", ja: "プレイヤー", title: "Player — プレイヤー" },
+  { view: "game", en: "Pera Pera Quest", ja: "ペラペラ", title: "ペラペラクエスト — Pera Pera Quest" },
+  { view: "konbini", en: "Konbini", ja: "コンビニ", title: "Konbini Trainer — コンビニ" },
+  { view: "trip", en: "Trip", ja: "旅", title: "Trip Trainer — 旅" },
+  { view: "everyday", en: "Everyday", ja: "身の回り", title: "Everyday Japanese — 身の回りの日本語" },
+  { view: "relations", en: "Synonyms", ja: "類義", title: "Synonyms & Antonyms — 類義語・反対語" },
+  { view: "phone", en: "Phone", ja: "電話", title: "Phone Conversation Scripts — 電話会話" },
+  { view: "style", en: "Speech", ja: "話し方", title: "Masculine, Feminine & Neutral Japanese — 話し方" },
+  { view: "shorts", en: "Shorts", ja: "ショート", title: "Shorts — one word per vertical video" },
+];
+
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   return (
@@ -89,6 +102,9 @@ export default function App() {
       ? null
       : VIEW_COMPONENTS[view];
   const [showAmbience, toggleAmbience] = useAmbienceSetting();
+  const [navOpen, toggleNav] = useFoldedBar("jlpt-trainer:mode-bar:v1");
+  const navRowRef = useRef<HTMLSpanElement>(null);
+  useWheelSideScroll(navRowRef, navOpen);
   const ambienceTheme =
     view !== "player" && view !== "shorts" && view !== "everyday" && showAmbience
       ? VIEW_AMBIENCE[view]
@@ -134,145 +150,47 @@ export default function App() {
         </div>
       ) : null}
       {view !== "player" && ambienceTheme ? <AmbiencePan fixed /> : null}
-      <nav className="app-nav" aria-label="App views">
-        <button
-          type="button"
-          className={
-            view === "player"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Player — プレイヤー"
-          onClick={() => setView("player")}
-        >
-          <span className="app-nav-en">Player</span>
-          <span className="app-nav-jp" lang="ja">
-            プレイヤー
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "game"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="ペラペラクエスト — Pera Pera Quest"
-          onClick={() => setView("game")}
-        >
-          <span className="app-nav-en">Pera Pera Quest</span>
-          <span className="app-nav-jp" lang="ja">
-            ペラペラ
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "konbini"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Konbini Trainer — コンビニ"
-          onClick={() => setView("konbini")}
-        >
-          <span className="app-nav-en">Konbini</span>
-          <span className="app-nav-jp" lang="ja">
-            コンビニ
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "trip" ? "app-nav-btn app-nav-btn--active" : "app-nav-btn"
-          }
-          title="Trip Trainer — 旅"
-          onClick={() => setView("trip")}
-        >
-          <span className="app-nav-en">Trip</span>
-          <span className="app-nav-jp" lang="ja">
-            旅
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "everyday"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Everyday Japanese — 身の回りの日本語"
-          onClick={() => setView("everyday")}
-        >
-          <span className="app-nav-en">Everyday</span>
-          <span className="app-nav-jp" lang="ja">
-            身の回り
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "relations"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Synonyms & Antonyms — 類義語・反対語"
-          onClick={() => setView("relations")}
-        >
-          <span className="app-nav-en">Synonyms</span>
-          <span className="app-nav-jp" lang="ja">
-            類義
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "phone"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Phone Conversation Scripts — 電話会話"
-          onClick={() => setView("phone")}
-        >
-          <span className="app-nav-en">Phone</span>
-          <span className="app-nav-jp" lang="ja">
-            電話
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "style"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Masculine, Feminine & Neutral Japanese — 話し方"
-          onClick={() => setView("style")}
-        >
-          <span className="app-nav-en">Speech</span>
-          <span className="app-nav-jp" lang="ja">
-            話し方
-          </span>
-        </button>
-        <button
-          type="button"
-          className={
-            view === "shorts"
-              ? "app-nav-btn app-nav-btn--active"
-              : "app-nav-btn"
-          }
-          title="Shorts — one word per vertical video"
-          onClick={() => setView("shorts")}
-        >
-          <span className="app-nav-en">Shorts</span>
-          <span className="app-nav-jp" lang="ja">
-            ショート
-          </span>
-        </button>
-        {view === "shorts" ? (
-          <span className="app-nav-heads">
-            <HeadStyleButtons />
+      <nav
+        className={navOpen ? "app-nav app-nav--open" : "app-nav app-nav--folded"}
+        aria-label="App views"
+      >
+        {navOpen ? (
+          <span className="app-nav-row" ref={navRowRef}>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.view}
+                type="button"
+                className={
+                  view === item.view
+                    ? "app-nav-btn app-nav-btn--active"
+                    : "app-nav-btn"
+                }
+                title={item.title}
+                onClick={() => setView(item.view)}
+              >
+                <span className="app-nav-en">{item.en}</span>
+                <span className="app-nav-jp" lang="ja">
+                  {item.ja}
+                </span>
+              </button>
+            ))}
+            {view !== "player" ? (
+              <span className="app-nav-heads">
+                <HeadStyleButtons />
+              </span>
+            ) : null}
           </span>
         ) : null}
+        <button
+          type="button"
+          className="fold-toggle"
+          aria-expanded={navOpen}
+          title={navOpen ? "Hide the mode buttons" : "Show the mode buttons"}
+          aria-label={navOpen ? "Hide the mode buttons" : "Show the mode buttons"}
+          onClick={toggleNav}
+        >
+          {navOpen ? "▸" : "◂"}
+        </button>
       </nav>
 
       <div
