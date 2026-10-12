@@ -4,7 +4,7 @@ import {
   type SpeechHighlight,
 } from "../../services/speechService";
 import type { WordRelation } from "../../types/wordRelation";
-import { splitNuanceForSpeech } from "../../utils/nuanceSpeech";
+import { locateNuanceSegments } from "../../utils/nuanceSpeech";
 
 export type RelationPlayPart =
   | "word1-jp"
@@ -97,19 +97,11 @@ export function playRelationSequence(
   };
 
   const speakNuance = (nuance: string, onEnd: () => void) => {
-    const segments = splitNuanceForSpeech(nuance);
-    if (segments.length === 0) {
+    const located = locateNuanceSegments(nuance);
+    if (located.length === 0) {
       onEnd();
       return;
     }
-
-    let cursor = 0;
-    const located = segments.map((segment) => {
-      const start = nuance.indexOf(segment.text, cursor);
-      const resolved = start >= 0 ? start : cursor;
-      cursor = resolved + segment.text.length;
-      return { ...segment, start: resolved };
-    });
 
     const run = (index: number) => {
       if (!isAlive()) return;
@@ -135,7 +127,11 @@ export function playRelationSequence(
       };
       const mapBoundary = (h: SpeechHighlight) => {
         if (!isAlive()) return;
-        onHighlight({ start: h.start + offset, end: h.end + offset });
+        onHighlight(
+          segment.reread
+            ? { start: segment.start, end: segment.end }
+            : { start: h.start + offset, end: h.end + offset }
+        );
       };
 
       if (segment.lang === "ja") {

@@ -339,6 +339,7 @@ export function RelationStudy({ relations }: Props) {
                 <HighlightedEnglish
                   text={relation.nuance}
                   className="rt-nuance-body"
+                  readingGlosses
                   highlight={playPart === "nuance" ? highlight : null}
                 />
               </div>

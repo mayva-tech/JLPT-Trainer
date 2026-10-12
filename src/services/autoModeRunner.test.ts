@@ -228,4 +228,100 @@ describe("autoModeRunner abort while speaking", () => {
     autoModeRunner.abort();
     await started;
   });
+
+  it("shows the meaning only when Andrew reads it, after the Japanese", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+
+    const shownAt: (boolean | number)[] = [];
+    const ui = mockUi();
+    ui.setMeaningShown = vi.fn((shown: boolean) => {
+      shownAt.push(shown, spoken.length);
+    });
+    const started = autoModeRunner.start([sampleItem], 0, ui, vi.fn());
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+
+    // Hidden while Nanami says the word.
+    expect(spoken[0]!.text).toBe("ざいこ");
+    expect(ui.setMeaningShown).toHaveBeenLastCalledWith(false);
+    spoken[0]!.onstart?.();
+    spoken[0]!.onend?.();
+    await vi.advanceTimersByTimeAsync(autoModeTiming.shortPause);
+
+    // Shown just before the English is spoken.
+    expect(ui.setMeaningShown).toHaveBeenLastCalledWith(true);
+    expect(shownAt.slice(-2)).toEqual([true, 1]);
+    expect(spoken[1]!.text).toBe("stock");
+
+    autoModeRunner.abort();
+    await started;
+  });
+
+  it("shows the nuance only after the slow pass with furigana", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+
+    const shownAt: [boolean, number][] = [];
+    const ui = mockUi();
+    ui.setNuanceShown = vi.fn((shown: boolean) => {
+      shownAt.push([shown, spoken.length]);
+    });
+    const started = autoModeRunner.start([sampleItem], 0, ui, vi.fn());
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+
+    const finish = async (index: number, pause: number) => {
+      spoken[index]!.onstart?.();
+      spoken[index]!.onend?.();
+      await vi.advanceTimersByTimeAsync(pause);
+    };
+    await finish(0, autoModeTiming.shortPause);
+    await finish(1, autoModeTiming.normalPause);
+    expect(spoken[2]!.text).toBe("ざいこ");
+    expect(ui.setNuanceShown).toHaveBeenLastCalledWith(false);
+
+    await finish(2, 0);
+    expect(shownAt.at(-1)).toEqual([true, 3]);
+
+    autoModeRunner.abort();
+    await started;
+  });
+
+  it("fades the finished item out before the next one comes in", async () => {
+    const { spoken } = installSpeechMock();
+    const { autoModeRunner } = await import("./autoModeRunner");
+    const { autoModeTiming } = await import("../config/autoModeTiming");
+
+    const events: string[] = [];
+    const ui = mockUi();
+    ui.setItemLeaving = vi.fn((leaving: boolean) => {
+      events.push(leaving ? "out" : "in");
+    });
+    ui.setItemIndex = vi.fn((i: number) => {
+      events.push(`item ${i}`);
+    });
+    const second = { ...sampleItem, id: 4002 };
+    const started = autoModeRunner.start([sampleItem, second], 0, ui, vi.fn());
+    await vi.advanceTimersByTimeAsync(autoModeTiming.categoryPause);
+
+    let next = 0;
+    for (let tick = 0; tick < 200 && !events.includes("item 1"); tick++) {
+      const u = spoken[next];
+      if (u) {
+        next += 1;
+        u.onstart?.();
+        u.onend?.();
+      }
+      await vi.advanceTimersByTimeAsync(autoModeTiming.normalPause);
+    }
+
+    const out = events.lastIndexOf("out");
+    expect(out).toBeGreaterThan(-1);
+    expect(events.indexOf("item 1")).toBeGreaterThan(out);
+    expect(events.slice(events.indexOf("item 1"))).toContain("in");
+
+    autoModeRunner.abort();
+    await started;
+  });
 });

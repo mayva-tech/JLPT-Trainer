@@ -6,6 +6,8 @@ type Props = {
   note?: string;
   active?: boolean;
   highlight?: SpeechHighlight | null;
+  /** Kept hidden (space reserved) until the card's English meaning comes in. */
+  pending?: boolean;
 };
 
 const FIT_CLASS = "safe-area--nuance-fit";
@@ -19,7 +21,7 @@ const SIZE_VARS = [
 ] as const;
 
 /** Amber Nuance box under a lesson card; renders nothing when there is no note. */
-export function LessonNuance({ note, active = false, highlight = null }: Props) {
+export function LessonNuance({ note, active = false, highlight = null, pending = false }: Props) {
   const text = note?.trim();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -103,7 +105,13 @@ export function LessonNuance({ note, active = false, highlight = null }: Props) 
   return (
     <div
       ref={ref}
-      className={active ? "lesson-nuance lesson-nuance--active" : "lesson-nuance"}
+      className={[
+        "lesson-nuance meaning-reveal",
+        active ? "lesson-nuance--active" : "",
+        pending ? "meaning-reveal--hidden" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <span className="lesson-nuance-label">Nuance</span>
       <HighlightedEnglish
@@ -111,6 +119,7 @@ export function LessonNuance({ note, active = false, highlight = null }: Props) 
         className="lesson-nuance-body"
         highlight={active ? highlight : null}
         jpWordBreaks
+        readingGlosses
       />
     </div>
   );

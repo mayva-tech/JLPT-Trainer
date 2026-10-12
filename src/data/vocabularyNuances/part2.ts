@@ -26,8 +26,8 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4256: {
     word: "経験 is experience built up over time; trying an activity once is usually 体験.",
-    phrase: "実務経験 is a set term in job ads for hands-on work experience, as in 実務経験三年以上.",
-    sentence: "Job ads often say 未経験者歓迎 for positions open to people without 経験.",
+    phrase: "経験 is experience; 経験がある means you have done something before.",
+    sentence: "〜た経験がある is the usual way to say you have done something before.",
   },
   4257: {
     word: "資格 is a qualification or eligibility; 免許 is a legal license like driving, and 検定 is a skills test.",
@@ -49,12 +49,10 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4261: {
     word: "郵便局 also handles banking and insurance in Japan, so people go there for ゆうちょ accounts too.",
-    phrase: "寄る means dropping in on the way somewhere, so 郵便局に寄る implies a quick side stop.",
-    sentence: "Parcels sent from the post office usually go as ゆうパック, its own parcel service.",
+    phrase: "郵便局 is the post office; letters go in the red post box, ポスト.",
   },
   4262: {
     word: "荷物 covers both luggage you carry and parcels you send; carry-on baggage is 手荷物.",
-    sentence: "重い荷物 is natural; for a lot of bulky baggage people also say 大荷物.",
   },
   4263: {
     word: "届く also means to reach, as in 手が届く, or 声が届く for a voice carrying.",
@@ -83,7 +81,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4268: {
     word: "受取人 is whoever receives mail or money; for insurance it is the beneficiary, 保険金の受取人.",
     phrase: "てもらう frames the signing as done for you; in Japan a 印鑑 stamp is often accepted instead of a signature.",
-    sentence: "受取人不在 is the delivery term for when nobody is home to receive a package.",
+    sentence: "Delivery slips call this 受取人不在, with nobody home to receive it.",
   },
   4269: {
     word: "再 means again, as in 再配達, 再開, and 再発行; 再配達 is usually free in Japan.",
@@ -157,7 +155,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4285: {
     word: "申請 goes with 書 for forms, as in 申請書, and 申請が通る means the application is approved.",
-    sentence: "補助金の申請 is typical; official notices often pair 申請 with 期限 or 受付期間.",
+    sentence: "Official notices often pair 申請 with 期限 or 受付期間.",
   },
   4286: {
     word: "交付 is mainly for official documents like licenses and certificates; everyday issuing is 発行.",
@@ -174,26 +172,25 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4289: {
     word: "図書館 is a public library; a school's library is often 図書室, and a bookstore is 本屋.",
     phrase: "You 借りる books from the library, while the library 貸す them to you.",
+    sentence: "借りる means to borrow; to lend something to someone is 貸す.",
   },
   4290: {
     word: "公共施設 covers places like libraries, community centers, and sports halls run by local government.",
     phrase: "利用する is the standard verb for facilities; 使う sounds more like handling an object.",
-    sentence: "充実している means well provided or full, a common positive description of facilities.",
   },
   4291: {
     word: "展覧会 is mainly for art; a trade show or product exhibition is usually 展示会.",
     phrase: "展覧会を見に行く is also common and stresses going to see it.",
-    sentence: "展覧会 pairs with 開催する; posters often say 開催中 or 開催期間.",
   },
   4292: {
     word: "作品 is a creative work; a company's manufactured product is 製品 or 商品.",
-    phrase: "展示する is the verb for putting items on display in an exhibition or shop window.",
+    phrase: "作品 is a piece of creative work, such as a painting, story or film.",
     sentence: "作品 covers books, films, songs, and artworks alike, so 彼の作品 fits any kind of creator.",
   },
   4293: {
     word: "創作 stresses originality; 作成 is making documents and 制作 is producing art or programs.",
     phrase: "創作活動 is a set phrase covering writing, painting, and other creative pursuits.",
-    sentence: "創作に打ち込む is natural; 創作 suggests personal artistic work rather than commercial production.",
+    sentence: "創作 suggests personal artistic work rather than commercial production.",
   },
   4294: {
     word: "芸術 is art in a broad, lofty sense; 美術 is visual art like painting, and アート sounds casual.",
@@ -205,8 +202,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4296: {
     word: "絵画 is formal and refers to painting as an art form; in speech people just say 絵.",
-    phrase: "鑑賞する means appreciating art thoughtfully, more formal than just 見る.",
-    sentence: "じっくり鑑賞する is a natural pairing for taking your time over paintings.",
+    phrase: "絵画 is the formal word for painting as an art; in daily talk people say 絵.",
   },
   4297: {
     word: "陶芸 is the craft of making pottery; the finished pieces are 陶器, and porcelain is 磁器.",
@@ -279,7 +275,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4312: {
     word: "備蓄 is stockpiling for emergencies; 貯蓄 is saving money, and 在庫 is stock for sale.",
     phrase: "備蓄する implies storing supplies for emergencies, more deliberate than just 買い置きする.",
-    sentence: "災害に備えて is a set phrase for preparing against disasters.",
+    sentence: "〜に備えて is a set phrase for preparing against something.",
   },
   4313: {
     word: "緊急 stresses urgency; 非常 is used for emergency equipment, as in 非常口.",
@@ -356,7 +352,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4329: {
     word: "体幹 is the trunk of the body without the limbs; 体幹が強い is praise for an athlete's stability.",
-    phrase: "体幹を鍛える is common fitness talk; the workout itself is called 体幹トレーニング.",
+    phrase: "Core training is called 体幹トレーニング.",
   },
   4330: {
     word: "効果 is an effect; 効き目 is used for medicine working, and 結果 is simply an outcome.",
@@ -373,8 +369,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4333: {
     word: "刃物 covers all bladed tools; a kitchen knife is 包丁.",
-    phrase: "研ぐ means to sharpen a blade, and it is also the verb for washing rice, 米を研ぐ.",
-    sentence: "刃物の扱い is typical safety wording; 刃物 also appears in crime news for knives used as weapons.",
+    phrase: "刃物 covers knives, scissors, and other edged tools.",
   },
   4334: {
     word: "炊飯器 have timers, so 予約する is used for setting one to cook rice later.",
@@ -383,12 +378,10 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4335: {
     word: "解凍 is thawing; the opposite is 冷凍, and letting food thaw without heat is 自然解凍.",
     phrase: "解凍 is also used for unzipping computer files, as the opposite of 圧縮.",
-    sentence: "Microwaves have a 解凍 setting, so 電子レンジで解凍する is very common.",
   },
   4336: {
     word: "圧力鍋 is valued for cutting cooking time, especially for 煮物 and stews.",
     phrase: "調理する is formal cooking vocabulary; in speech 圧力鍋で作る is more common.",
-    sentence: "煮込み時間 is simmering time, which is exactly what 圧力鍋 are praised for shortening.",
   },
   4337: {
     word: "計量 is measuring amounts; 測定 is technical measurement, and はかる is the everyday verb.",
@@ -425,13 +418,11 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4344: {
     word: "装置 is a device or system built for a purpose; 機械 is a machine, and 器具 a hand tool.",
-    phrase: "導入する means introducing new equipment or systems into an organization.",
-    sentence: "検査装置 shows 装置 in a technical compound, like 安全装置 or 冷却装置.",
+    phrase: "装置 appears in technical compounds like 安全装置.",
   },
   4345: {
     word: "拡張現実 is augmented reality, the companion term; in speech both are usually just VR and AR.",
     phrase: "仮想現実 is the formal term; in conversation most people just say VR.",
-    sentence: "体験 fits well because you try VR firsthand, so 仮想現実を体験する is the set phrase.",
   },
   4346: {
     word: "先端 is literally the tip, as in ペンの先端; figuratively it means the forefront.",
@@ -592,7 +583,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4383: {
     word: "欠席 is missing a meeting or class; missing work is 欠勤.",
-    sentence: "体調不良のため欠席 is standard wording in absence notices; 体調不良 is a polite, vague reason.",
+    sentence: "欠席する takes を for what you miss; the opposite is 出席する.",
   },
   4384: {
     word: "議題 is a topic formally on the agenda; 話題 is any topic of conversation.",
@@ -610,7 +601,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4387: {
     word: "進行 also means progress of a disease or project, as in 病気の進行.",
     phrase: "The person who runs a meeting's flow is called the 進行役.",
-    sentence: "進行を務める pairs 務める with the role; 勤める is working at a company.",
+    sentence: "進行 here means running a meeting; the person doing it is the 司会.",
   },
   4388: {
     word: "司会 is the role of MC or chair; the person is also called 司会者.",
@@ -621,7 +612,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4390: {
     word: "資料共有 is a business compound; in full sentences 資料を共有する is more common.",
-    phrase: "事前の means advance or prior and is very common in work emails, as in 事前の準備.",
+    phrase: "In work emails, 事前に資料を共有します is a common line.",
   },
   4391: {
     word: "寄付 is giving money or goods to a cause; donating blood is 献血, and ふるさと納税 is a popular tax-linked form.",
@@ -658,7 +649,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4399: {
     word: "施設 often refers to care homes in everyday talk, as in 施設に入る.",
-    phrase: "福祉施設 covers care homes and facilities for children or people with disabilities.",
+    phrase: "施設訪問 often means visiting care homes or children's homes as volunteers.",
   },
   4400: {
     word: "無償 also means unpaid, as in 無償の愛; its opposite is 有償.",
@@ -815,7 +806,6 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4438: {
     word: "上達 is skill improvement; 向上 is broader improvement, like quality or level.",
-    sentence: "上達を実感する is a common phrase for really feeling your progress.",
   },
   4439: {
     word: "語彙 is a formal word for vocabulary as a whole; individual words are 単語.",
@@ -933,11 +923,10 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4467: {
     word: "故障 is formal; the everyday verb is 壊れる, and signs saying 故障中 mean out of order.",
-    sentence: "業者を呼ぶ is calling in a service company or contractor to fix something.",
   },
   4468: {
     word: "保証 means warranty or guarantee; 保障 means protection, as in 社会保障.",
-    phrase: "保管する means keeping something safely for later, often documents or valuables.",
+    phrase: "保証書 is the warranty card; keep it with the receipt, since both are usually needed for free repairs.",
     sentence: "保証書 and the receipt are usually both needed for free repairs under warranty.",
   },
   4469: {
@@ -964,7 +953,7 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4474: {
     word: "寝室 is common in listings and formal talk; in daily speech people often say 寝る部屋.",
-    phrase: "整える means putting in good order, such as adjusting lighting, bedding, or temperature.",
+    phrase: "寝室 is the standard word for bedroom; children's rooms are called 子供部屋.",
   },
   4475: {
     word: "目覚める is more literary than 起きる and can also mean awakening to something.",
@@ -1017,11 +1006,9 @@ export const vocabNuances2: Readonly<Record<number, VocabNuanceEntry>> = {
   4488: {
     word: "紹介 covers introducing products and places too, and 自己紹介 is a self introduction.",
     phrase: "紹介する takes に for the person you introduce someone to.",
-    sentence: "の紹介で means through someone's introduction, common for jobs and dating.",
   },
   4489: {
     word: "縁 is connection seen as fate; 縁起 means omens or luck, as in 縁起がいい.",
-    sentence: "偶然の縁 is natural; ご縁があれば is a polite way to say if fate allows.",
   },
   4490: {
     word: "気軽に means casually or without hesitation, as in the shop phrase お気軽にどうぞ.",

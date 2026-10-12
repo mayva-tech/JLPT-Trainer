@@ -144,6 +144,7 @@ export function RelationPairCard({
           <HighlightedEnglish
             text={relation.nuance}
             className="rt-nuance-body"
+            readingGlosses
             highlight={activePart === "nuance" ? activeHighlight : null}
           />
         </div>

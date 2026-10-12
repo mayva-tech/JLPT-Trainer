@@ -151,7 +151,13 @@ export default function App() {
       ) : null}
       {view !== "player" && ambienceTheme ? <AmbiencePan fixed /> : null}
       <nav
-        className={navOpen ? "app-nav app-nav--open" : "app-nav app-nav--folded"}
+        className={[
+          "app-nav",
+          navOpen ? "app-nav--open" : "app-nav--folded",
+          view === "shorts" ? "app-nav--bottom" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-label="App views"
       >
         {navOpen ? (

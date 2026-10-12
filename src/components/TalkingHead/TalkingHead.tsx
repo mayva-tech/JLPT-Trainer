@@ -896,6 +896,155 @@ function insidePanel(box: Box, panel: Box): boolean {
   );
 }
 
+/** Sizes tried in a dock, largest first: bigger whenever no text is in the way. */
+const DOCK_SCALES = [2.4, 2.1, 1.85, 1.65, 1.45, 1.3, 1.15, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.45] as const;
+
+/**
+ * A visible `[data-head-dock]` box: the heads sit in its bottom-right corner
+ * instead of roaming (e.g. beside the word on Visual Discovery's narrow
+ * card), as large as fits without covering text in the dock's container.
+ */
+function findHeadDock(): { zone: Box; text: Box[] } | null {
+  const el = document.querySelector<HTMLElement>("[data-head-dock]");
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  if (r.width < 24 || r.height < 24) return null;
+  const zone = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+  const text: Box[] = [];
+  const walker = document.createTreeWalker(el.parentElement ?? el, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    if (!node.textContent?.trim()) continue;
+    range.selectNodeContents(node);
+    for (const t of range.getClientRects?.() ?? []) {
+      if (t.width >= 1 && t.height >= 1 && boxesIntersect(t, zone)) text.push(padBox(t));
+    }
+  }
+  return { zone, text };
+}
+
+/** Largest bottom-right seat in the dock that stays clear of its text. */
+function dockSeat(dock: { zone: Box; text: Box[] }, w: number, h: number): { spot: HeadPos; scale: number } {
+  const { zone, text } = dock;
+  const fit = Math.min((zone.right - zone.left) / w, (zone.bottom - zone.top) / h);
+  const scales = DOCK_SCALES.filter((s) => s <= fit);
+  const seat = (s: number) => ({ x: Math.round(zone.right - w * s), y: Math.round(zone.bottom - h * s) });
+  for (const s of scales) {
+    const spot = seat(s);
+    if (isClear(boxAt(spot, w * s, h * s), text)) return { spot, scale: s };
+  }
+  const s = scales.at(-1) ?? Math.max(0.3, Math.floor(fit * 100) / 100);
+  return { spot: seat(s), scale: s };
+}
+
+/** Largest size tried beside the word, so the heads never dwarf it. */
+const SEAT_MAX_SCALE = 1.6;
+const SEAT_GRID_STEP = 6;
+
+type HeadSeats = { zone: Box; word: Box; text: Box[] };
+
+/**
+ * A visible `[data-head-seats]` box with a `[data-head-word]` inside: the
+ * heads stay on either side of the word (Nanami on its left, Andrew on its
+ * right) instead of roaming — e.g. the casual line on Register. The box
+ * reaches up to the top of the stage, so the heads can use the open space
+ * above the word at full size.
+ */
+function findHeadSeats(panel: { el: HTMLElement; box: Box }): HeadSeats | null {
+  const el = document.querySelector<HTMLElement>("[data-head-seats]");
+  const wordEl = el?.querySelector<HTMLElement>("[data-head-word]");
+  if (!el || !wordEl) return null;
+  const r = el.getBoundingClientRect();
+  const wr = wordEl.getBoundingClientRect();
+  if (r.width < 24 || r.height < 24 || wr.width < 1) return null;
+  const zone = {
+    left: Math.max(r.left, panel.box.left),
+    top: panel.box.top,
+    right: Math.min(r.right, panel.box.right),
+    bottom: Math.min(r.bottom, panel.box.bottom),
+  };
+  const word = { left: wr.left, top: wr.top, right: wr.right, bottom: wr.bottom };
+  const text: Box[] = [padBox(word)];
+  const walker = document.createTreeWalker(panel.el, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  let node: Node | null;
+  while ((node = walker.nextNode())) {
+    if (!node.textContent?.trim()) continue;
+    range.selectNodeContents(node);
+    for (const t of range.getClientRects?.() ?? []) {
+      if (t.width >= 1 && t.height >= 1 && boxesIntersect(t, zone)) text.push(padBox(t));
+    }
+  }
+  document
+    .querySelectorAll<HTMLElement>(".app-nav-row, .fold-toggle, .nav-bar")
+    .forEach((bar) => {
+      const b = bar.getBoundingClientRect();
+      if (b.width > 0 && b.height > 0 && boxesIntersect(b, zone)) text.push(padBox(b));
+    });
+  return { zone, word, text };
+}
+
+/**
+ * Spot on one side of the word, clear of text: as high up and as close to
+ * the word as possible. Null when nothing that size fits.
+ */
+function seatBeside(seats: HeadSeats, side: "left" | "right", w: number, h: number): HeadPos | null {
+  const { zone, word, text } = seats;
+  const mid = (word.left + word.right) / 2;
+  const left = side === "left" ? zone.left : mid;
+  const right = side === "left" ? mid : zone.right;
+  if (right - left < w || zone.bottom - zone.top < h) return null;
+  const anchor = {
+    x: side === "left" ? word.left - AVOID_PAD - w : word.right + AVOID_PAD,
+    y: zone.top,
+  };
+  let best: HeadPos | null = null;
+  let bestDist = Infinity;
+  for (let y = zone.top; y <= zone.bottom - h; y += SEAT_GRID_STEP) {
+    for (let x = left; x <= right - w; x += SEAT_GRID_STEP) {
+      const d = Math.hypot(x - anchor.x, y - anchor.y);
+      if (d >= bestDist || !isClear(boxAt({ x, y }, w, h), text)) continue;
+      best = { x: Math.round(x), y: Math.round(y) };
+      bestDist = d;
+    }
+  }
+  return best;
+}
+
+/**
+ * Largest size at which every head gets its side of the word: Nanami left,
+ * Andrew right (a lone speaker on their own side; a pair that can't split on
+ * whichever side has room). Falls back to the smallest size by the word.
+ */
+function placeInSeats(
+  seats: HeadSeats,
+  w: number,
+  h: number,
+  voices: { ja: boolean; en: boolean; pair: boolean }
+): { scale: number; ja: HeadPos | null; en: HeadPos | null } {
+  const zoneH = seats.zone.bottom - seats.zone.top;
+  const scales = DOCK_SCALES.filter((s) => s <= SEAT_MAX_SCALE && h * s <= zoneH);
+  for (const s of scales) {
+    if (voices.pair) {
+      const pw = w * DUO_WIDTH_RATIO * s;
+      const spot = seatBeside(seats, "right", pw, h * s) ?? seatBeside(seats, "left", pw, h * s);
+      if (spot) return { scale: s, ja: spot, en: null };
+      continue;
+    }
+    const ja = voices.ja ? seatBeside(seats, "left", w * s, h * s) : null;
+    const en = voices.en ? seatBeside(seats, "right", w * s, h * s) : null;
+    if ((!voices.ja || ja) && (!voices.en || en)) return { scale: s, ja, en };
+  }
+  const s = DOCK_SCALES.at(-1) ?? 0.45;
+  const { word, zone } = seats;
+  const y = Math.round(Math.max(zone.top, (word.top + word.bottom) / 2 - (h * s) / 2));
+  const atLeft = (bw: number) => ({ x: Math.round(Math.max(zone.left, word.left - AVOID_PAD - bw)), y });
+  const atRight = { x: Math.round(Math.min(zone.right - w * s, word.right + AVOID_PAD)), y };
+  if (voices.pair) return { scale: s, ja: atLeft(w * DUO_WIDTH_RATIO * s), en: null };
+  return { scale: s, ja: voices.ja ? atLeft(w * s) : null, en: voices.en ? atRight : null };
+}
+
 /** Kana, kanji (incl. 々〆), half-width katakana and the long-vowel mark. */
 const JAPANESE_RUN = /[\u3005\u3006\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]+/gu;
 /**
@@ -1117,6 +1266,10 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const canSplit = duo && !scene;
   const canSplitRef = useRef(canSplit);
   canSplitRef.current = canSplit;
+  const duoRef = useRef(duo);
+  duoRef.current = duo;
+  const shownLangRef = useRef(shownLang);
+  shownLangRef.current = shownLang;
   /** Scale while shrunk into a gap clear of Japanese / the line being read (1 = full size). */
   const [fit, setFit] = useState(1);
   const fitRef = useRef(fit);
@@ -1142,6 +1295,50 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       const w = rect.width / fitRef.current;
       const h = rect.height / fitRef.current;
       if (w < 1 || h < 1) return;
+
+      // A page can reserve the heads' seat: bottom-right of the dock, shrunk to fit.
+      const dock = findHeadDock();
+      if (dock) {
+        const apart = splitRef.current;
+        if (apart) setSplit(null);
+        const fullW = apart ? w * DUO_WIDTH_RATIO : w;
+        const { spot, scale: s } = dockSeat(dock, fullW, h);
+        if (fitRef.current !== s) setFit(s);
+        setYielding(false);
+        const current = autoPosRef.current;
+        if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
+        return;
+      }
+
+      // A page can seat the heads on either side of its word.
+      const seats = findHeadSeats(panel);
+      if (seats) {
+        const apart = splitRef.current;
+        const duoNow = duoRef.current;
+        // Layout size: unlike the rect, not caught mid-way through a resize animation.
+        const rootW = el.offsetWidth || w;
+        const rootH = el.offsetHeight || h;
+        const one = duoNow && !apart ? rootW / DUO_WIDTH_RATIO : rootW;
+        const pair = duoNow && !canSplitRef.current;
+        const voice = shownLangRef.current;
+        const placed = placeInSeats(seats, one, rootH, {
+          pair,
+          ja: duoNow ? !pair : voice === "ja",
+          en: duoNow ? !pair : voice === "en",
+        });
+        if (fitRef.current !== placed.scale) setFit(placed.scale);
+        setYielding(false);
+        const en = duoNow && !pair ? placed.en : null;
+        if (en) {
+          if (!apart || apart.en.x !== en.x || apart.en.y !== en.y) setSplit({ en });
+        } else if (apart) {
+          setSplit(null);
+        }
+        const spot = placed.ja ?? placed.en;
+        const current = autoPosRef.current;
+        if (spot && (spot.x !== current?.x || spot.y !== current?.y)) setAutoPos(spot);
+        return;
+      }
 
       const { all: obstacles, japanese } = collectObstacles(panel.el, panel.box);
       const reading = collectPriorityObstacles(panel.box);
@@ -1341,6 +1538,14 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const look = lookFor(shownLang);
   const seats: readonly Voice[] = duo ? DUO_ORDER : [shownLang];
   const apart = canSplit && shown ? split : null;
+  /**
+   * Andrew's seat in the root's own units: a scaled root is the fixed seat's
+   * containing block, so the seat is offset from it and scaled with it.
+   */
+  const enSeat =
+    apart && shown && fit !== 1
+      ? { x: (apart.en.x - shown.x) / fit, y: (apart.en.y - shown.y) / fit }
+      : apart?.en;
   /** When apart, each head looks along the real line to the other. */
   let toward: Record<Voice, { x: number; y: number }> | null = null;
   if (apart && shown) {
@@ -1462,7 +1667,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         duo ? "th-root--duo" : "",
         apart ? "th-root--split" : "",
         scene ? "th-root--scene" : "",
-        fit < 1 ? "th-root--fit" : "",
+        fit !== 1 ? "th-root--fit" : "",
         yielding ? "th-root--yield" : "",
       ]
         .filter(Boolean)
@@ -1503,7 +1708,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
             idleTilt={idleTilt}
             reaction={reaction}
             toward={toward?.[voice]}
-            splitAt={apart && voice === "en" ? apart.en : undefined}
+            splitAt={voice === "en" ? enSeat : undefined}
             prop={scene?.prop}
             suitReveal={Boolean(costume[voice]) && revealing[voice]}
             toast={lookToast?.voice === voice ? lookToast.text : undefined}

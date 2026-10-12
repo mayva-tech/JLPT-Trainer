@@ -1094,3 +1094,53 @@
     transition: none;
   }
 }
+
+/* ---- Visual Discovery entry (the page itself: discovery/discovery.css) ---- */
+
+.ev-discover {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  text-align: left;
+  border-radius: var(--ev-radius);
+  border: 1px solid var(--accent-soft);
+  background: linear-gradient(120deg, rgba(240, 192, 120, 0.2), var(--ev-glass) 55%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ev-discover-icon {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.ev-discover-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ev-discover-text strong {
+  font-size: 16px;
+}
+
+.ev-discover-text strong [lang="ja"] {
+  margin-left: 6px;
+  color: var(--accent-soft);
+  font-size: 14px;
+}
+
+.ev-discover-text small {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.ev-discover-go {
+  font-size: 20px;
+  color: var(--accent);
+}

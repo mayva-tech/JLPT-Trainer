@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import type { RegisterPair } from "../types/register";
-import { splitNuanceForSpeech } from "./nuanceSpeech";
 import { buildRegisterPlaySteps } from "./registerPlayback";
 
 function pair(overrides: Partial<RegisterPair> = {}): RegisterPair {
@@ -19,84 +18,55 @@ function pair(overrides: Partial<RegisterPair> = {}): RegisterPair {
   };
 }
 
+const shape = (steps: ReturnType<typeof buildRegisterPlaySteps>) =>
+  steps.map((s) => [s.part, s.lang, s.pace, s.pauseBefore]);
+
 describe("buildRegisterPlaySteps", () => {
-  it("follows the existing Play order: casual JP+EN, casual JP, formal JP+EN, formal JP, then notes", () => {
+  it("follows the Player's Auto Mode rules and says the English once", () => {
     const steps = buildRegisterPlaySteps(pair());
-    expect(steps.map((step) => [step.part, step.lang, step.text])).toEqual([
-      ["casual", "ja", "誰？"],
-      ["meaning", "en", "Who are you?"],
-      ["casual", "ja", "誰？"],
-      ["formal", "ja", "どちら様ですか？"],
-      ["meaning", "en", "Who are you?"],
-      ["formal", "ja", "どちら様ですか？"],
-      ["note", "en", "Safe default at work."],
+    expect(shape(steps)).toEqual([
+      ["casual", "ja", "normal", "none"],
+      ["meaning", "en", "normal", "short"],
+      ["casual", "ja", "slow", "normal"],
+      ["formal", "ja", "normal", "short"],
+      ["formal", "ja", "slow", "normal"],
+      ["note", "nuance", "normal", "short"],
     ]);
-    expect(steps.filter((step) => step.lang === "ja").every((step) => step.lang === "ja")).toBe(
-      true
-    );
-    expect(steps.find((step) => step.part === "meaning")?.lang).toBe("en");
+    expect(steps.filter((s) => s.lang === "en")).toHaveLength(1);
   });
 
   it("keeps Japanese readings on casual/formal steps", () => {
     const steps = buildRegisterPlaySteps(pair());
-    expect(steps[0]).toMatchObject({
-      part: "casual",
-      lang: "ja",
-      reading: "だれ？",
-    });
-    expect(steps[3]).toMatchObject({
-      part: "formal",
-      lang: "ja",
-      reading: "どちらさまですか？",
-    });
+    expect(steps[0]).toMatchObject({ part: "casual", reading: "だれ？" });
+    expect(steps[3]).toMatchObject({ part: "formal", reading: "どちらさまですか？" });
   });
 
   it("skips empty meaning and empty notes", () => {
-    const steps = buildRegisterPlaySteps(
-      pair({ meaning: "  ", note: "   " })
-    );
-    expect(steps.map((step) => [step.part, step.lang, step.text])).toEqual([
-      ["casual", "ja", "誰？"],
-      ["casual", "ja", "誰？"],
-      ["formal", "ja", "どちら様ですか？"],
-      ["formal", "ja", "どちら様ですか？"],
+    const steps = buildRegisterPlaySteps(pair({ meaning: "  ", note: "   " }));
+    expect(shape(steps)).toEqual([
+      ["casual", "ja", "normal", "none"],
+      ["casual", "ja", "slow", "normal"],
+      ["formal", "ja", "normal", "short"],
+      ["formal", "ja", "slow", "normal"],
     ]);
   });
 
-  it("skips empty casual or formal sides", () => {
+  it("skips empty casual sides without a leading pause", () => {
     const steps = buildRegisterPlaySteps(
-      pair({
-        casual: { text: "  ", reading: "だれ？", romaji: "Dare?" },
-        note: undefined,
-      })
+      pair({ casual: { text: "  ", reading: "だれ？", romaji: "Dare?" }, note: undefined })
     );
-    expect(steps.map((step) => step.part)).toEqual([
-      "meaning",
-      "formal",
-      "meaning",
-      "formal",
+    expect(shape(steps)).toEqual([
+      ["meaning", "en", "normal", "none"],
+      ["formal", "ja", "normal", "short"],
+      ["formal", "ja", "slow", "normal"],
     ]);
   });
 
-  it("splits mixed notes with the existing nuance helper", () => {
+  it("speaks a mixed note as one step so karaoke offsets cover the whole note", () => {
     const note = "誰 to a stranger at the door.";
-    const steps = buildRegisterPlaySteps(pair({ note }));
-    const noteSteps = steps.filter((step) => step.part === "note");
-    expect(noteSteps).toEqual(
-      splitNuanceForSpeech(note).map((segment) => ({
-        part: "note" as const,
-        lang: segment.lang,
-        text: segment.text.trim(),
-      }))
-    );
-    expect(noteSteps.some((step) => step.lang === "ja")).toBe(true);
-    expect(noteSteps.some((step) => step.lang === "en")).toBe(true);
-  });
-
-  it("is deterministic for the same pair", () => {
-    const source = pair();
-    expect(buildRegisterPlaySteps(source)).toEqual(
-      buildRegisterPlaySteps(source)
-    );
+    const noteSteps = buildRegisterPlaySteps(pair({ note })).filter((s) => s.part === "note");
+    expect(noteSteps).toEqual([
+      { part: "note", lang: "nuance", text: note, pace: "normal", pauseBefore: "short" },
+    ]);
   });
 });

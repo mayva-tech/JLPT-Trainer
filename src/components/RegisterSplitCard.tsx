@@ -4,6 +4,9 @@ import type { SpeechHighlight } from "../services/speechService";
 import { FitScale } from "./FitScale";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import type { ReadHookState } from "../services/autoModeRunner";
+import { POLITE_HOOK_EN, POLITE_HOOK_JA } from "../utils/registerRetention";
+import "./Retention/retention.css";
 
 export type RegisterSideName = "casual" | "formal";
 export type RegisterPlayPart = RegisterSideName | "meaning" | "note";
@@ -18,6 +21,15 @@ type Props = {
   showRomaji?: boolean;
   /** Hide the formal column until revealed — turns the card into a drill. */
   formalHidden?: boolean;
+  /** Karaoke offsets into the whole note (mixed JA/EN, Player nuance rule). */
+  noteHighlight?: SpeechHighlight | null;
+  /**
+   * "Can you say it politely?" hook (Play All): the formal side keeps its
+   * space but stays hidden behind the banner and countdown ring.
+   */
+  hook?: ReadHookState | null;
+  /** Note held back while Play runs, until the slow passes with furigana are over. */
+  noteHidden?: boolean;
 };
 
 function countJpWordLines(root: HTMLElement): number {
@@ -36,6 +48,9 @@ function countJpWordLines(root: HTMLElement): number {
 
 function jpColumnOverflows(jp: HTMLElement, maxLines: number): boolean {
   if (countJpWordLines(jp) > maxLines) return true;
+  // Stacked (portrait) columns are short: two lines must also fit the slot.
+  const slot = jp.closest<HTMLElement>(".register-jp-slot");
+  if (slot && jp.scrollHeight > slot.clientHeight + 1) return true;
   const cap = jp.clientWidth;
   for (const word of jp.querySelectorAll<HTMLElement>(".jp-word")) {
     if (word.scrollWidth > cap + 1) return true;
@@ -79,6 +94,9 @@ export function RegisterSplitCard({
   showFurigana = true,
   showRomaji = true,
   formalHidden = false,
+  noteHighlight = null,
+  hook = null,
+  noteHidden = false,
 }: Props) {
   const splitRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +120,13 @@ export function RegisterSplitCard({
   ]);
 
   return (
-    <div className="safe-area register-safe card-fade">
+    <div
+      className={
+        hook
+          ? "safe-area register-safe register-safe--hook card-fade"
+          : "safe-area register-safe card-fade"
+      }
+    >
       <div
         className={
           activeSide === "meaning"
@@ -110,6 +134,7 @@ export function RegisterSplitCard({
             : "register-meaning"
         }
         aria-hidden="true"
+        data-head-avoid
       >
         <FitScale maxLines={1} watch={pair.meaning} minScale={0.68}>
           <HighlightedEnglish
@@ -127,16 +152,21 @@ export function RegisterSplitCard({
               ? "register-col register-col--casual register-col--active"
               : "register-col register-col--casual"
           }
+          data-head-seats
         >
-          <div className="register-label register-label--casual">Casual</div>
+          <div className="register-label register-label--casual" data-head-avoid>
+            Casual
+          </div>
           <div lang="ja" className="register-jp-slot">
-            <FuriganaWrapText
-              surface={pair.casual.text}
-              reading={pair.casual.reading}
-              className="register-jp"
-              highlight={activeSide === "casual" ? jaHighlight : null}
-              showFurigana={showFurigana}
-            />
+            <div className="register-jp-box" data-head-avoid data-head-word>
+              <FuriganaWrapText
+                surface={pair.casual.text}
+                reading={pair.casual.reading}
+                className="register-jp"
+                highlight={activeSide === "casual" ? jaHighlight : null}
+                showFurigana={showFurigana}
+              />
+            </div>
           </div>
           {showRomaji ? (
             <div className="register-romaji" aria-hidden="true">
@@ -153,11 +183,30 @@ export function RegisterSplitCard({
             "register-col--formal",
             activeSide === "formal" ? "register-col--active" : "",
             formalHidden ? "register-col--hidden" : "",
+            hook ? "register-col--hook" : "",
           ]
             .filter(Boolean)
             .join(" ")}
         >
-          <div className="register-label register-label--formal">Formal</div>
+          <div className="register-label register-label--formal" data-head-avoid>
+            Formal
+          </div>
+          {hook ? (
+            <div className="register-hook-banner" aria-live="polite" data-head-avoid>
+              <span className="ret-hook-en">{POLITE_HOOK_EN}</span>
+              <span className="ret-hook-ja" lang="ja">
+                {POLITE_HOOK_JA}
+              </span>
+              {hook.ms > 0 ? (
+                <span
+                  key={hook.key}
+                  className="ret-ring"
+                  style={{ animationDuration: `${hook.ms}ms` }}
+                  aria-hidden="true"
+                />
+              ) : null}
+            </div>
+          ) : null}
           {formalHidden ? (
             <div className="register-hidden-cue">
               Press Reveal to show the formal form
@@ -165,13 +214,15 @@ export function RegisterSplitCard({
           ) : (
             <>
               <div lang="ja" className="register-jp-slot">
-                <FuriganaWrapText
-                  surface={pair.formal.text}
-                  reading={pair.formal.reading}
-                  className="register-jp"
-                  highlight={activeSide === "formal" ? jaHighlight : null}
-                  showFurigana={showFurigana}
-                />
+                <div className="register-jp-box" data-head-avoid>
+                  <FuriganaWrapText
+                    surface={pair.formal.text}
+                    reading={pair.formal.reading}
+                    className="register-jp"
+                    highlight={activeSide === "formal" ? jaHighlight : null}
+                    showFurigana={showFurigana}
+                  />
+                </div>
               </div>
               {showRomaji ? (
                 <div className="register-romaji" aria-hidden="true">
@@ -185,13 +236,22 @@ export function RegisterSplitCard({
 
       {pair.note && !formalHidden ? (
         <div
-          className={
-            activeSide === "note"
-              ? "register-note register-note--active"
-              : "register-note"
-          }
+          className={[
+            "lesson-nuance register-note meaning-reveal",
+            activeSide === "note" ? "lesson-nuance--active" : "",
+            noteHidden ? "meaning-reveal--hidden" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
-          {pair.note}
+          <span className="lesson-nuance-label">Nuance</span>
+          <HighlightedEnglish
+            text={pair.note}
+            className="lesson-nuance-body"
+            highlight={activeSide === "note" ? noteHighlight : null}
+            jpWordBreaks
+            readingGlosses
+          />
         </div>
       ) : null}
     </div>

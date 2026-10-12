@@ -17,7 +17,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5254: {
     word: "You do a sport with する, as in スポーツをする, not with 遊ぶ.",
     phrase: "冬のスポーツ is natural; the loanword ウィンタースポーツ is equally common.",
-    sentence: "スポーツを始める is the natural way to say take up a sport; 運動 is broader exercise, like walking.",
+    sentence: "スポーツをする is the usual pairing; 何か here means any.",
   },
   5255: {
     word: "ゲーム often means video games specifically, and the usual verb is する.",
@@ -31,7 +31,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5257: {
     word: "言葉 covers words and language; a single vocabulary item in study is usually 単語.",
-    sentence: "言葉に励まされる uses に for the source of encouragement, a common pattern with 言葉.",
   },
   5258: {
     word: "例 alone is れい, but the kanji is read たと in 例えば; an example sentence is 例文.",
@@ -64,7 +63,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5264: {
     word: "買い物 covers both shopping and the things bought, as in 買い物袋; grocery shopping is 食料品の買い物.",
     phrase: "買い物 pairs with する or 行く: 買い物をする, 買い物に行く.",
-    sentence: "買い物を済ませる is a common pairing, suggesting shopping done as a chore on the way somewhere.",
   },
   5265: {
     word: "商品 is merchandise for sale; 製品 stresses that something was manufactured.",
@@ -72,8 +70,8 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5266: {
     word: "予定 is a fixed schedule or engagement; 計画 is a more detailed plan you draw up.",
-    phrase: "今後の予定 is businesslike; casually you would say これからの予定.",
-    sentence: "予定を変更する is formal; casually 予定を変える, and a cancelled plan is 予定がなくなる.",
+    phrase: "予定 is a plan or schedule; 予定がある means you already have plans.",
+    sentence: "予定を変える is everyday; 予定を変更する is the formal version.",
   },
   5267: {
     word: "報告 is reporting results to someone responsible; 報道 is news reporting by the media.",
@@ -95,7 +93,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5271: {
     word: "生活 is daily living; 人生 is life as a whole lifetime.",
-    phrase: "都会の生活 contrasts with 田舎の生活, life in the countryside.",
+    phrase: "生活 is daily life and living; 生活費 is the cost of living.",
     sentence: "生活に慣れる uses に for what you get used to; 慣れてきた shows the change still in progress.",
   },
   5272: {
@@ -104,8 +102,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5273: {
     word: "文化 is culture in the social sense; 文化祭 is a school festival, and 異文化 means a different culture.",
-    phrase: "地域の文化 is used for local traditions; 地域 sounds more formal than 地元.",
-    sentence: "日本の文化を学ぶ is standard; 日本文化 without の is the common compound form.",
+    phrase: "文化 is culture; 日本の文化 is also shortened to 日本文化.",
   },
   5274: {
     word: "歴史 often pairs with 古い or 長い, and 歴史的な means historic or historical.",
@@ -128,8 +125,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5278: {
     word: "科学 and 化学, chemistry, are both read かがく; 化学 is sometimes read ばけがく to tell them apart.",
-    phrase: "科学の発展 is formal; 発展 is growth and development, while 進歩 is step-by-step advancement.",
-    sentence: "科学の進歩 is a set phrase; 科学的な means scientific, as in 科学的な根拠.",
+    phrase: "科学 is science; it sounds the same as 化学, chemistry, so people sometimes say ばけがく for chemistry.",
   },
   5279: {
     word: "研究 is academic research; 調査 is an investigation or survey.",
@@ -146,12 +142,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5282: {
     word: "Many shops close on a fixed weekday; a sign saying 水曜定休 means closed on Wednesdays.",
     phrase: "Japanese orders time from large to small, so 水曜日の午後 puts the day first.",
-    sentence: "水曜日に変更された uses に for the new day; 水曜日から would mean starting from Wednesday.",
   },
   5283: {
     word: "木 here is read もく, as in 木材; on its own the kanji is き.",
     phrase: "今週の木曜日 is unambiguous, while 木曜日 alone usually means the coming one.",
-    sentence: "木曜日なら offers a day as an option, a natural way to suggest times when scheduling.",
   },
   5284: {
     word: "金 here is きん, the same reading as gold; 金曜 is the short form used in schedules.",
@@ -163,23 +157,20 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5286: {
     word: "The two 日 characters in 日曜日 are read differently: にち and び.",
-    phrase: "日曜日の予定 is how you ask about Sunday plans: 日曜日の予定はありますか.",
+    phrase: "日曜日の朝 means Sunday morning; の links the day and the time.",
     sentence: "日曜日に uses に for a specific day, while 日曜日は would contrast it with other days.",
   },
   5287: {
     word: "Forms ask for 生年月日, date of birth, rather than 誕生日; お誕生日 adds warmth when congratulating.",
     phrase: "When talking to others, your own mother is 母, so 母の誕生日 is the correct polite form.",
-    sentence: "誕生日に gives the occasion; a birthday present is 誕生日プレゼント, and a party is 誕生日会.",
   },
   5288: {
     word: "番号 is an identifying number, like a phone or seat number; a quantity is 数.",
     phrase: "電話番号 is often shortened in speech to just 番号, as in 番号を教えて.",
-    sentence: "番号が呼ばれる is typical at banks and clinics, where you first take a numbered ticket, 番号札.",
   },
   5289: {
     word: "公園 sounds the same as 講演, lecture, and 公演, performance.",
-    phrase: "近所の公園 is natural; 近くの公園 is equally common.",
-    sentence: "公園の桜 hints at お花見, when crowds gather under park cherry trees in spring.",
+    phrase: "公園 is a park; children's playgrounds are often called 公園 too.",
   },
   5290: {
     word: "映画を見に行く is the natural way to say go to the movies; 映画館で見る contrasts with watching at home.",
@@ -187,11 +178,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5291: {
     word: "喫茶店 often appears as just 喫茶 in shop names, and old-style ones are called 純喫茶.",
-    sentence: "喫茶店で時間をつぶす is a classic use of coffee shops while waiting for an appointment.",
   },
   5292: {
     word: "食堂 can also be a cheap, casual diner, not only a cafeteria.",
-    phrase: "社員食堂 is often shortened to 社食 in casual talk.",
+    phrase: "食堂 is a cafeteria or simple dining hall at a school or company.",
   },
   5293: {
     word: "交番 officers, called おまわりさん, also give directions and handle lost items.",
@@ -200,22 +190,19 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5294: {
     word: "大使館 handles diplomacy; a regional office abroad is a 領事館, consulate.",
     phrase: "Country names attach directly without の, as in 日本大使館 or アメリカ大使館.",
-    sentence: "問い合わせる means to make an inquiry, the standard verb for contacting an office.",
   },
   5295: {
     word: "入口 is also written 入り口; both are いりぐち, and 出入口 means entrance and exit.",
     phrase: "Signs often simply say 入口; for the entrance of a house, 玄関 is the usual word.",
-    sentence: "正面の入口 is the main front entrance; side or back doors are 裏口 or 通用口.",
   },
   5296: {
     word: "Stations label exits by direction, like 北口 and 南口, rather than saying 出口 each time.",
-    phrase: "非常出口 appears on signs, but 非常口 is the more common word for emergency exit.",
-    sentence: "東出口 is usually just 東口 at stations.",
+    phrase: "出口 is an exit; the entrance is 入口.",
+    sentence: "Station exits are named by direction and often shortened, as in 東口 and 西口.",
   },
   5297: {
     word: "建物 is any building; ビル is a multi-story concrete building, and 建築 is architecture or construction.",
     phrase: "古い建物 can sound run-down; 歴史的な建物 conveys historic value.",
-    sentence: "建物の安全性 is a formal pairing; 耐震 is the key term for earthquake resistance.",
   },
   5298: {
     word: "アパート refers to the building; one unit is a 部屋, and residents say アパートに住んでいる.",
@@ -236,7 +223,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5302: {
     word: "事務所 suggests a working office for a firm or agency; 芸能事務所 manages entertainers, and headquarters is 本社.",
     phrase: "会社の事務所 is the physical office; オフィス is a common loanword alternative.",
-    sentence: "移転 is a formal word for relocating a business.",
   },
   5303: {
     word: "朝ご飯 is everyday; 朝食 is formal and 朝飯 is rough and masculine.",
@@ -254,12 +240,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5306: {
     word: "お菓子 covers sweets and snacks; traditional Japanese sweets are 和菓子.",
     phrase: "手作りのお菓子 links with の, though 手作りお菓子 without の is also common.",
-    sentence: "お菓子を分ける is typical in offices, where people share snacks and souvenirs, お土産.",
   },
   5307: {
     word: "食べ物 is everyday; 食品 is used for food products and 食料 for food supplies.",
-    phrase: "温かい with 温 is for pleasantly warm things like food; 暖かい is for weather and rooms.",
-    sentence: "ならでは means unique to, praising something only found in that place.",
+    phrase: "好きな食べ物 means favorite food; 好きな needs な before a noun.",
   },
   5308: {
     word: "飲み物 is everyday; ドリンク appears on menus, and 飲料 is formal, as in 清涼飲料.",
@@ -276,7 +260,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5311: {
     word: "カップ is for hot drinks and measuring, as in 計量カップ; cup noodles are カップ麺.",
-    sentence: "カップに注ぐ uses に for the container; 注ぐ is read そそぐ.",
   },
   5312: {
     word: "皿 is often お皿 in polite speech and becomes ざら in compounds like 小皿.",
@@ -294,13 +277,11 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5315: {
     word: "フォーク is also the spelling of folk, as in フォークソング, so context matters.",
-    phrase: "銀の indicates silver as the material; 銀色の means only silver-colored.",
-    sentence: "子供用 uses 用 to mean for use by, so a fork sized for children.",
+    phrase: "フォーク is a fork; many Japanese restaurants offer them alongside chopsticks.",
   },
   5316: {
     word: "ナイフ is a table or utility knife; a kitchen knife is 包丁, and a box cutter is カッター.",
     phrase: "果物ナイフ is a small paring knife, often used at home to peel fruit.",
-    sentence: "よく切れる literally means cuts well and is the natural way to say a blade is sharp.",
   },
   5317: {
     word: "上着 is read うわぎ; it covers any outer layer, and 上着を脱ぐ is common when going indoors.",
@@ -309,17 +290,16 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5318: {
     word: "セーター is put on with 着る; a button-front knit is usually called a カーディガン.",
-    phrase: "毛糸 is knitting yarn; to specify wool as the material, say ウールのセーター.",
-    sentence: "セーターを編む uses 編む, to knit, the natural verb for handmade knitwear.",
+    phrase: "暖かい is for pleasant warmth, as in warm clothes and weather.",
   },
   5319: {
     word: "ネクタイ is sometimes shortened to タイ, and the no-tie office style is ノーネクタイ.",
     phrase: "A tie is put on with する or 締める, as in ネクタイをする.",
-    sentence: "落ち着いた here describes calm, subdued colors rather than a person.",
+    sentence: "ネクタイをする is the usual way to say wearing a tie.",
   },
   5320: {
     word: "Things go into a pocket with に, as in ポケットに入れる; taking them out is ポケットから出す.",
-    phrase: "内側のポケット is natural, but 内ポケット is the everyday compound.",
+    phrase: "ポケット is a pocket; putting something in it is ポケットに入れる.",
   },
   5321: {
     word: "Buttons are pressed with 押す, while clothing buttons are fastened with 留める or かける.",
@@ -333,8 +313,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5323: {
     word: "Umbrellas are opened and held with 差す, as in 傘を差す.",
-    phrase: "折り畳み傘 is read おりたたみがさ, since 傘 becomes がさ in compounds.",
-    sentence: "傘を忘れる is a common slip; umbrellas are a classic item left behind on trains.",
+    phrase: "傘 is an umbrella; using one in the rain is 傘をさす.",
   },
   5324: {
     word: "箱 is a box of any size; a cardboard box is 段ボール箱 or just 段ボール.",
@@ -348,11 +327,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5326: {
     word: "An envelope is sealed with 封をする, and the reply envelope enclosed with forms is 返信用封筒.",
     phrase: "White envelopes suit formal documents; the plain brown kind is called 茶封筒.",
-    sentence: "封筒に入れて郵送する is the standard phrase for sending documents by post.",
   },
   5327: {
     word: "切手 is a stamp and 切符 is a ticket, an easy pair to mix up.",
-    phrase: "記念切手 are collectible stamps; 記念 also appears in 記念日 and 記念品.",
+    phrase: "切手 is a postage stamp; it goes on a letter with 貼る.",
     sentence: "いくらの切手 asks what value of stamp is needed, the natural way to ask about postage.",
   },
   5328: {
@@ -363,12 +341,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5329: {
     word: "本棚 is the word at home; in libraries the shelves are usually called 書架.",
     phrase: "木の本棚 uses の for material, and 棚 becomes だな after 本.",
-    sentence: "元の本棚に戻す uses に for the destination; 元の means original, where it came from.",
   },
   5330: {
     word: "Dogs are affectionately called ワンちゃん, and a dog bark is ワンワン.",
     phrase: "小さな犬 is natural; 小型犬 is the term for small breeds.",
-    sentence: "尻尾を振る is the set phrase for a dog wagging its tail.",
   },
   5331: {
     word: "Cats meow ニャー, and a cat lover is a 猫好き; 猫舌 describes someone who dislikes hot food.",
@@ -376,13 +352,12 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5332: {
     word: "鳥 is any bird; chicken meat is usually written 鶏肉 but read とりにく.",
-    phrase: "野生の鳥 is usually called 野鳥 in birdwatching contexts.",
+    phrase: "鳥 is a bird; birds singing is 鳥が鳴く.",
     sentence: "鳴く is used for bird and animal calls; people crying is 泣く.",
   },
   5333: {
     word: "Animals are counted with 匹 for small ones and 頭 for large ones.",
-    phrase: "野生動物 is a compound; 野生 alone means wild or living in the wild.",
-    sentence: "珍しい動物 means rare animals; officially endangered species are 絶滅危惧種.",
+    phrase: "動物 is an animal; a zoo is a 動物園.",
   },
   5334: {
     word: "花を持たせる means letting someone else take the credit; 花見 is cherry blossom viewing.",
@@ -392,11 +367,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5335: {
     word: "木 means both tree and wood, and becomes ぎ in compounds like 並木.",
     phrase: "Trees are counted with 本, so one tree is 一本の木.",
-    sentence: "木が倒れる is intransitive; someone cutting a tree down is 木を切る or 切り倒す.",
   },
   5336: {
     word: "草 is grass or weeds; a lawn is 芝生, and in online slang 草 means lol.",
-    sentence: "草が伸びる is the natural verb for grass growing tall; cutting it is 草を刈る.",
+    sentence: "Pulling weeds is 草を取る; cutting grass is 草を刈る.",
   },
   5337: {
     word: "森 is a large natural forest; 林 is smaller, and 森林 is the formal compound.",
@@ -405,7 +379,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5338: {
     word: "季節 is a season; 四季, the four seasons, is often cited as a point of pride in Japan.",
     phrase: "好きな季節は何ですか is a classic small-talk question in Japan.",
-    sentence: "変わり目 is a turning point, and 体調を崩す is the set phrase for getting sick.",
   },
   5339: {
     word: "赤ちゃん is warm and everyday; 赤ん坊 is plainer and 乳児 is formal.",
@@ -439,7 +412,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5347: {
     word: "医療 sounds institutional, so it fits news and policy rather than your own clinic visit; key pairs are 医療機関 and 医療ミス.",
     phrase: "地域医療 is a policy term; 医療 is the system of care, while 治療 is treatment of a patient.",
-    sentence: "医療体制 is a common news compound; related terms include 医療費, medical expenses.",
+    sentence: "医療 appears in compounds like 医療費, medical expenses.",
   },
   5348: {
     word: "退院 takes する; you leave a hospital with を, as in 病院を退院する.",
@@ -447,7 +420,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5349: {
     word: "運転手 is a professional driver; anyone behind the wheel is 運転する人 or ドライバー.",
     phrase: "バスの運転手 is standard; 運転手さん adds politeness when addressing one.",
-    sentence: "発車 is the word for trains and buses departing.",
   },
   5350: {
     word: "チケット is for events and flights; for trains, 切符 is still the usual word.",
@@ -465,7 +437,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5353: {
     word: "Kanji have 音読み, Chinese-derived readings, and 訓読み, native Japanese readings.",
     phrase: "難しい漢字 often get small kana printed above them, called ふりがな or ルビ.",
-    sentence: "漢字を調べる means looking one up; 辞書を引く is the classic phrase for using a dictionary.",
   },
   5354: {
     word: "ひらがな writes grammar endings and native words; it is also written 平仮名.",
@@ -498,12 +469,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5360: {
     word: "社長 works as a title on its own, so staff address the boss as 社長 without さん.",
     phrase: "会社の社長 is natural when describing; employees call their own boss うちの社長.",
-    sentence: "来年度 means the next fiscal year, which starts in April in Japan.",
   },
   5361: {
     word: "Japanese addresses run from large to small: prefecture, city, district, then block numbers.",
     phrase: "新しい住所 comes up after moving, when you file a 住所変更, change of address.",
-    sentence: "記入する is a formal verb for filling in a form.",
   },
   5362: {
     word: "郵便 is the postal system; 郵便物 are items of mail, and a home mailbox is 郵便受け.",
@@ -519,12 +488,11 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5365: {
     word: "In Japan 入学 happens in April, and the entrance ceremony is the 入学式.",
-    sentence: "高校へ入学した uses へ, though 高校に入学する is the more common pattern.",
+    sentence: "The Japanese school year starts in April, so 入学 happens in spring.",
   },
   5366: {
     word: "散歩 is a leisurely walk; 歩く is just walking, and ウォーキング suggests exercise.",
     phrase: "散歩 takes する, and going out for one is 散歩に行く or 散歩に出る.",
-    sentence: "近所を散歩する uses を for the area moved through.",
   },
   5367: {
     word: "登る stresses climbing effort; 上る is going up in general, and 昇る is rising, like the sun.",
@@ -562,7 +530,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5376: {
     word: "引く has many uses, like 辞書を引く for looking up a word and 風邪を引く for catching a cold.",
     phrase: "ドアを引く is the opposite of ドアを押す; doors are often labeled 押 and 引.",
-    sentence: "押さずに is a written-style form of 押さないで, meaning without pushing.",
+    sentence: "Doors are marked 押す for push and 引く for pull.",
   },
   5377: {
     word: "切る is a う-verb despite ending in る, so its て-form is 切って.",
@@ -576,7 +544,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5379: {
     word: "貼る is for gluing or taping; 張る, same reading, is for stretching things like a tent.",
     phrase: "貼る is for sticking flat things like stamps and posters onto a surface.",
-    sentence: "割れ物注意 is the standard label meaning fragile, handle with care.",
   },
   5380: {
     word: "包む also appears in お金を包む, wrapping cash as a gift, for example at weddings.",
@@ -585,11 +552,9 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5381: {
     word: "拾う is the opposite of 落とす for items, and 拾い物 means a lucky find.",
-    sentence: "落ちていた means was lying on the ground, describing a resulting state.",
   },
   5382: {
     word: "Japan has strict sorting rules, so 捨てる often involves ごみの分別.",
-    sentence: "まとめて捨てる means throwing things out together in one go.",
   },
   5383: {
     word: "壊す also means to damage your health, as in お腹を壊す, an upset stomach.",
@@ -622,12 +587,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5390: {
     word: "泣く is for people crying; animal calls use 鳴く.",
     phrase: "大声で泣く uses で for manner; 泣き出す means to burst into tears.",
-    sentence: "思わず泣く is a set pairing meaning to cry in spite of yourself.",
   },
   5391: {
     word: "喜ぶ usually describes visible joy, often others'; for your own feelings, うれしい is more natural.",
     phrase: "心から means from the heart, and 心から喜ぶ is common in speeches and messages.",
-    sentence: "喜んでくれた shows the speaker is grateful that grandmother was pleased.",
   },
   5392: {
     word: "驚く is neutral; 驚かせる means to surprise someone, and 驚くほど means surprisingly.",
@@ -635,11 +598,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5393: {
     word: "困る often voices a polite complaint, as in それは困ります, meaning that is a problem for me.",
-    sentence: "変えられると困る pairs a suffering passive with 困る, a typical way to object politely.",
   },
   5394: {
     word: "残念ですが is a polite cushion before refusing or giving bad news.",
-    phrase: "残念な結果 is a polite, softened way to describe a bad or failed outcome.",
+    phrase: "残念 expresses regret or disappointment; 残念ですね is a common sympathetic reply.",
     sentence: "で here marks the cause, as in 雨で.",
   },
   5395: {
@@ -648,7 +610,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5396: {
     word: "真面目 is praise for diligence, but 真面目すぎる can suggest someone is too rigid.",
-    sentence: "真面目に働く uses the adverb form; 真面目な人 is the form before a noun.",
+    sentence: "真面目な is the form before a noun; as an adverb it becomes 真面目に.",
   },
   5397: {
     word: "正直 also works as a sentence adverb meaning frankly, as in 正直、疲れた.",
@@ -680,7 +642,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5404: {
     word: "太い can describe a body, but 太っている is the usual way to say someone is fat.",
-    sentence: "太い線で囲む is common in instructions; bold text is 太字.",
   },
   5405: {
     word: "厚い also means warm or deep in fixed phrases like 厚い友情 and 手厚い.",
@@ -699,8 +660,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5409: {
     word: "柔らかい is soft to the touch; 軟らかい, same reading, is sometimes used for food or soft materials.",
-    phrase: "柔らかい布 is soft to the touch; 柔らかい also describes gentle light or tone.",
-    sentence: "箸で切れるほど柔らかい is classic praise for tender meat on food shows.",
+    phrase: "柔らかい means soft to the touch; the opposite is 硬い or 固い.",
   },
   5410: {
     word: "固い suits lids, knots, and resolve; 硬い is for hard materials and 堅い for solid or reliable.",
@@ -717,14 +677,13 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5413: {
     word: "うるさい! on its own is a blunt shut up, so it can sound rude.",
-    sentence: "うるさくて聞こえない is a natural complaint; 騒がしい is more descriptive and less emotional.",
   },
   5414: {
     word: "つまらない can hurt feelings; 退屈 is a more neutral word for being bored.",
   },
   5415: {
     word: "おかしい means funny or odd; 面白い is funny in the entertaining sense.",
-    sentence: "合計がおかしい means the total seems off, a common way to flag errors in data.",
+    sentence: "With machines or numbers, おかしい signals that something is wrong.",
   },
   5416: {
     word: "恥ずかしい covers embarrassment and shyness; the noun 恥 appears in 恥をかく.",
@@ -733,7 +692,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5417: {
     word: "珍しい is rare or unusual; 貴重 stresses value rather than rarity.",
     phrase: "珍しい can comment on unusual behavior too, as in 遅刻なんて珍しいね.",
-    sentence: "試食 means tasting a sample, often offered in stores.",
   },
   5418: {
     word: "すばらしい is strong, slightly formal praise; it is also written 素晴らしい.",
@@ -742,7 +700,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5419: {
     word: "一緒 is a noun, so it appears as 一緒に or 一緒だ, as in 同じクラスで一緒だった.",
     phrase: "一緒に works as an adverb; to add a person, use と, as in 彼と一緒に働く.",
-    sentence: "一緒に考える is a soft way to offer cooperation in meetings.",
+    sentence: "一緒に〜ませんか is the friendly way to invite someone.",
   },
   5420: {
     word: "別々 stresses keeping things apart; 別 alone means another or different.",
@@ -750,11 +708,9 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5421: {
     word: "同じ is the same; 同じくらい means about as much, and 同様 is the formal equivalent.",
-    sentence: "偶然 used as an adverb means by chance.",
   },
   5422: {
     word: "違う is a verb, so its polite form is 違います; 違かった is casual slang for 違った.",
-    sentence: "によって here means depending on, so it differs by person.",
   },
   5423: {
     word: "いろいろ is warm and conversational; いろいろありがとう thanks someone for many things at once. さまざま sounds more written.",
@@ -781,11 +737,10 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5428: {
     word: "とうとう can close good or bad outcomes, as in とうとう雨が降ってきた.",
-    sentence: "開通 is used for new roads, bridges, and lines opening to traffic.",
   },
   5429: {
     word: "やっと can also mean barely, as in やっと間に合った, just made it in time.",
-    sentence: "やっと全員が賛成した stresses the long effort needed to reach agreement.",
+    sentence: "やっと stresses relief after a long effort.",
   },
   5430: {
     word: "ついに is common in announcements and ads, as in ついに発売, finally on sale.",
@@ -794,13 +749,13 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5431: {
     word: "しっかり also means eat or rest well, as in しっかり食べてね, often said caringly.",
-    phrase: "しっかり確認する means checking thoroughly; しっかりした人 describes a reliable person.",
+    phrase: "しっかり means properly or firmly; しっかりした人 is a reliable person.",
     sentence: "たか embeds a yes-no question, as in checked whether the windows were closed.",
   },
   5432: {
     word: "はっきり also describes clear sight or sound, as in はっきり見える.",
     phrase: "はっきり答える means answering directly; はっきり言う can sound blunt.",
-    sentence: "はっきり伝える is common advice, since Japanese speakers often soften or hint at requests.",
+    sentence: "はっきり means clearly, so you are easy to hear and understand.",
   },
   5433: {
     word: "ちゃんと is typical of parents and teachers, as in ちゃんと食べなさい.",
@@ -874,7 +829,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5450: {
     word: "思い出 is usually warm; いい思い出になる means something will become a fond memory. Neutral recall is 記憶.",
     phrase: "旅 sounds more literary than 旅行, and 旅の思い出 is common on souvenirs and photo albums.",
-    sentence: "よみがえる means to come back to life, used for memories returning.",
   },
   5451: {
     word: "期待 is used for hopes on others or events; 期待外れ means disappointing.",
@@ -898,11 +852,9 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5455: {
     word: "失敗 is failure at a task; ミス is a small slip, and 間違い is an error.",
     phrase: "小さな失敗 is a small slip; 失敗する takes に for the task, as in 試験に失敗する.",
-    sentence: "失敗から学ぶ is a common motivational phrase, echoing the proverb 失敗は成功のもと.",
   },
   5456: {
     word: "注意 is attention or caution; 気をつける is the everyday verb.",
-    sentence: "足元に注意 is a common warning meaning watch your step.",
   },
   5457: {
     word: "災害 is large-scale disaster; 事故 is an accident, and 被害 is the resulting damage.",
@@ -911,7 +863,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5458: {
     word: "防止 is formal and common on signs, as in 盗難防止.",
-    sentence: "感染防止のため is typical notice wording, giving the purpose of a rule.",
+    sentence: "〜防止のため is typical notice wording, giving the purpose of a rule.",
   },
   5459: {
     word: "ルール is common in daily life; 規則 is the formal word for regulations.",
@@ -921,7 +873,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5460: {
     word: "条件 is a condition or term; 状態, a state, is a common mix-up.",
     phrase: "必要な条件 is a requirement; conditions are met with 満たす.",
-    sentence: "応募条件 is standard job-ad language; 条件付き means conditional.",
   },
   5461: {
     word: "責任 is responsibility; 責任者 is the person in charge, and 無責任 is irresponsible.",
@@ -930,7 +881,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5462: {
     word: "文学 is literature as art; 文学部 is a university faculty of letters.",
     phrase: "日本文学 is literature from Japan; 国文学 is the traditional academic name.",
-    sentence: "近代文学 refers to literature from the Meiji era onward.",
   },
   5463: {
     word: "放送 covers TV, radio, and announcements such as 車内放送 on trains.",
@@ -942,7 +892,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5465: {
     word: "人口 is population; 人口密度 is population density, and 少子高齢化 is a frequent related topic.",
-    sentence: "人口が減る is common news language; the noun form is 人口減少.",
   },
   5466: {
     word: "地球 is the planet; 地球温暖化, global warming, is a frequent exam topic.",
@@ -985,12 +934,11 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5475: {
     word: "品物 refers to physical goods; in shops, 商品 is more common.",
-    phrase: "高価な is a formal word for expensive; 高い is the everyday word.",
-    sentence: "品物が届く is natural for deliveries; 商品 would sound more like a shop's viewpoint.",
+    phrase: "品物 means goods or items, the actual things being bought or sold.",
   },
   5476: {
     word: "販売 is formal selling; 発売 is releasing a new product, and 売る is the everyday verb.",
-    phrase: "限定販売 means sold in limited numbers or for a limited time; 期間限定 means limited-time only.",
+    phrase: "販売 is the formal word for selling; 発売 is the release of a new product.",
     sentence: "販売される is typical in announcements, and 販売中 means currently on sale.",
   },
   5477: {
@@ -1029,7 +977,6 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5485: {
     word: "文章 is read ぶんしょう; 文書, read ぶんしょ, is an official document.",
     phrase: "文章 is a passage or piece of writing; a single sentence is 文.",
-    sentence: "筆者 is the author of a passage, a word common in reading tests.",
   },
   5486: {
     word: "文字 is formal or technical; 字 is everyday, as in 字がきれい.",
@@ -1059,7 +1006,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5491: {
     word: "設計 is technical or structural design; visual design is デザイン.",
     phrase: "建物の設計 is architectural design, and the plan drawing is a 設計図.",
-    sentence: "よう here means so that, stating the purpose of the design.",
+    sentence: "ように here means so that, stating the purpose of the design.",
   },
   5492: {
     word: "ない is the negative of ある; for people and animals, いない is used.",
@@ -1074,7 +1021,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   5494: {
     word: "In some regions and in sports clubs, 自分 is also used to mean I.",
     phrase: "自分の部屋 means one's own room; 自分 refers back to the subject of the sentence.",
-    sentence: "自分で means by oneself, without help.",
+    sentence: "自分で means by yourself, without help.",
   },
   5495: {
     word: "As a main verb, しまう means putting things away where they belong.",
@@ -1090,7 +1037,7 @@ export const vocabNuances6: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5498: {
     word: "Events, surveys, and ceremonies are often described with 行われる in the news.",
-    sentence: "を対象に means targeting or aimed at a group.",
+    sentence: "行う is formal and common in notices; in conversation people just say する.",
   },
   5499: {
     word: "バック also means background or backing; the body part back is 背中.",

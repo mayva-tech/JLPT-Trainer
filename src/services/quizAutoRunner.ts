@@ -1,4 +1,5 @@
 import { quizTiming as T } from "../config/quizTiming";
+import { hookHoldMs, hookSpeech, type HookKind, type ItemHook, type ItemHookState } from "../utils/itemHookSpeech";
 import {
   speechService,
   SPEECH_RATE_NORMAL,
@@ -39,6 +40,9 @@ export type QuizAutoUi = {
   setSpeechStatus: (status: "idle" | "speaking") => void;
   setJaHighlight: (h: SpeechHighlight | null) => void;
   setEnHighlight: (h: SpeechHighlight | null) => void;
+  /** Per-item intro / outro hooks (null = off or none). */
+  getItemHook?: (kind: HookKind, index: number, prevId: string | null) => ItemHook | null;
+  setItemHook?: (state: ItemHookState | null) => void;
 };
 
 function shuffle<T>(list: T[]): T[] {
@@ -59,6 +63,9 @@ export { shuffle };
  * Turning off / abort stops timers and audio; only one loop can run.
  */
 export class QuizAutoRunner {
+  private itemHookKey = 0;
+  private prevIntroHook: string | null = null;
+  private prevOutroHook: string | null = null;
   private session = 0;
   private softStop = false;
   private speaking = false;
@@ -75,7 +82,9 @@ export class QuizAutoRunner {
     this.softStop = true;
     this.speaking = false;
     this.clearPauses();
-    this.answerWaitResolve = null;
+    // Release a pending answer wait too, so an aborted run settles instead of
+    // hanging on a timer that was just cleared.
+    this.wakeAnswerWait();
     speechService.stop();
   }
 
@@ -175,6 +184,8 @@ export class QuizAutoRunner {
     ui.setPhase("asking");
     let completedAll = true;
     const begin = Math.max(0, Math.min(startAt, Math.max(items.length - 1, 0)));
+    this.prevIntroHook = null;
+    this.prevOutroHook = null;
 
     try {
       for (let i = begin; i < items.length; i++) {
@@ -184,6 +195,14 @@ export class QuizAutoRunner {
         }
 
         const question = items[i]!;
+
+        // Intro hook ("First question — ready?", "Halfway there!")
+        await this.runItemHook(sid, ui, "intro", i);
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
+
         const rate = this.rateFor(ui);
 
         ui.setQuizIndex(i);
@@ -244,6 +263,13 @@ export class QuizAutoRunner {
           break;
         }
 
+        // Outro hook ("Got it? Give yourself a point!")
+        await this.runItemHook(sid, ui, "outro", i);
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
+
         if (i < items.length - 1) {
           await this.pause(T.betweenQuestionsPause, sid);
         }
@@ -259,11 +285,29 @@ export class QuizAutoRunner {
         this.clearPauses();
         this.speaking = false;
         this.clearSpeechUi(ui);
+        ui.setItemHook?.(null);
         onState("off");
       }
     }
 
     return sid === this.session && completedAll && !this.softStop;
+  }
+
+  /** Per-item intro / outro hook: card, the line (Andrew or Nanami), a short hold. */
+  private async runItemHook(sid: number, ui: QuizAutoUi, kind: HookKind, index: number): Promise<boolean> {
+    const prev = kind === "intro" ? this.prevIntroHook : this.prevOutroHook;
+    const hook = ui.getItemHook?.(kind, index, prev) ?? null;
+    if (!hook) return false;
+    if (kind === "intro") this.prevIntroHook = hook.id;
+    else this.prevOutroHook = hook.id;
+    ui.setItemHook?.({ hook, key: ++this.itemHookKey });
+    const rate = this.rateFor(ui);
+    const say = hookSpeech(hook);
+    if (say.lang === "ja") await this.speakJapanese(ui, say.text, rate, sid, say.reading);
+    else await this.speakEnglish(ui, say.text, rate, sid);
+    if (this.shouldContinue(sid)) await this.pause(hookHoldMs(hook), sid);
+    ui.setItemHook?.(null);
+    return true;
   }
 
   private shouldContinue(sid: number): boolean {

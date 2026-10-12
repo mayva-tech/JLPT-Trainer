@@ -46,7 +46,7 @@ export function stableHash(value: string): number {
 }
 
 /** Deterministic 0..1 generator (mulberry32). */
-function seeded(seed: number): () => number {
+export function seeded(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -135,7 +135,7 @@ export function buildCheckCard(
   };
 }
 
-function shuffle<T>(list: readonly T[], rand: () => number): T[] {
+export function shuffle<T>(list: readonly T[], rand: () => number): T[] {
   const a = [...list];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));

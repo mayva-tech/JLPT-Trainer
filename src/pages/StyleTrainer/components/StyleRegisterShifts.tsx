@@ -148,6 +148,7 @@ export function StyleRegisterShifts({
                       <HighlightedEnglish
                         text={ctx.note}
                         className="ss-shift-note"
+                        readingGlosses
                         highlight={fieldHighlight(
                           speechTarget,
                           highlight,

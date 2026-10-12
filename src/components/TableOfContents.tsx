@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import type { TocGroup, TocItem, TocItemId } from "../data/toc";
 import { tocGroups } from "../data/toc";
 import { formatWeakWordsTocLabel } from "../utils/weakWordsDiscoverability";
+import { tocItemHasSocial } from "../utils/social/socialSources";
+import "./Social/socialPost.css";
 
 type Props = {
   selectedId: TocItemId | null;
   onSelect: (id: TocItemId) => void;
+  /** Opens the social post panel for an entry (title, caption, hashtags). */
+  onSocial?: (id: TocItemId) => void;
   /** Live weak-item count for runtime Weak Words label only. */
   weakWordsCount?: number;
 };
@@ -67,11 +71,13 @@ function TocGroupSection({
   group,
   selectedId,
   onSelect,
+  onSocial,
   weakWordsCount,
 }: {
   group: TocGroup;
   selectedId: TocItemId | null;
   onSelect: (id: TocItemId) => void;
+  onSocial?: (id: TocItemId) => void;
   weakWordsCount: number;
 }) {
   return (
@@ -80,8 +86,9 @@ function TocGroupSection({
       <ul className="toc-list">
         {group.items.map((item) => {
           const active = item.id === selectedId;
+          const social = onSocial && tocItemHasSocial(item);
           return (
-            <li key={item.id}>
+            <li key={item.id} className={social ? "toc-row" : undefined}>
               <button
                 type="button"
                 className={active ? "toc-item toc-item--active" : "toc-item"}
@@ -89,6 +96,17 @@ function TocGroupSection({
               >
                 {tocItemLabel(item, weakWordsCount)}
               </button>
+              {social ? (
+                <button
+                  type="button"
+                  className="toc-social"
+                  title="Social post: title, description, caption and hashtags"
+                  aria-label={`Social post for ${item.label}`}
+                  onClick={() => onSocial(item.id)}
+                >
+                  📣
+                </button>
+              ) : null}
             </li>
           );
         })}
@@ -100,6 +118,7 @@ function TocGroupSection({
 export function TableOfContents({
   selectedId,
   onSelect,
+  onSocial,
   weakWordsCount = 0,
 }: Props) {
   const [page, setPage] = useState<TocPage>(() =>
@@ -149,6 +168,7 @@ export function TableOfContents({
                   group={group}
                   selectedId={selectedId}
                   onSelect={onSelect}
+                  onSocial={onSocial}
                   weakWordsCount={weakWordsCount}
                 />
               ))}
@@ -159,6 +179,7 @@ export function TableOfContents({
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                onSocial={onSocial}
                 weakWordsCount={weakWordsCount}
               />
             ))}
@@ -173,6 +194,7 @@ export function TableOfContents({
                 group={group}
                 selectedId={selectedId}
                 onSelect={onSelect}
+                onSocial={onSocial}
                 weakWordsCount={weakWordsCount}
               />
             ))}

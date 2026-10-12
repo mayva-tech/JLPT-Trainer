@@ -1,3 +1,4 @@
+import { hookHoldMs, hookSpeech, type HookKind, type ItemHook, type ItemHookState } from "../utils/itemHookSpeech";
 import type { VocabularyItem } from "../types/vocabulary";
 import type { StepName } from "../types/player";
 import { autoModeTiming as T, shadowingPauseFor } from "../config/autoModeTiming";
@@ -44,9 +45,17 @@ export type AutoModeUi = {
   setCheck?: (card: CheckCard | null, phase?: CheckPhase) => void;
   /** Brush writing time for a word (0 = no brush beat: setting off, kana only, data not loaded). */
   getBrushDrawMs?: (item: VocabularyItem) => number;
+  /** Per-item intro / outro hooks (null = off or none). */
+  getItemHook?: (kind: HookKind, index: number, prevId: string | null) => ItemHook | null;
+  setItemHook?: (state: ItemHookState | null) => void;
   setBrushDraw?: (state: BrushDrawState | null) => void;
+  /** English meaning on the card: hidden until the Japanese is written and spoken. */
+  setMeaningShown?: (shown: boolean) => void;
+  /** Nuance note on the card: hidden until the slow pass with furigana is over. */
+  setNuanceShown?: (shown: boolean) => void;
+  /** Fades the finished item out; the next item fades in when its word step starts. */
+  setItemLeaving?: (leaving: boolean) => void;
 };
-
 type Section = "word" | "phrase" | "sentence";
 
 /**
@@ -54,6 +63,10 @@ type Section = "word" | "phrase" | "sentence";
  * Soft-stop waits for the current utterance, then cancels remaining steps/pauses.
  */
 export class AutoModeRunner {
+  private itemHookKey = 0;
+  private prevIntroHook: string | null = null;
+  private prevOutroHook: string | null = null;
+
   private session = 0;
   private softStop = false;
   private speaking = false;
@@ -85,6 +98,10 @@ export class AutoModeRunner {
     this.ui?.setReadHook?.(null);
     this.ui?.setCheck?.(null);
     this.ui?.setBrushDraw?.(null);
+    this.ui?.setItemHook?.(null);
+    this.ui?.setMeaningShown?.(true);
+    this.ui?.setNuanceShown?.(true);
+    this.ui?.setItemLeaving?.(false);
     this.ui = null;
   }
 
@@ -105,6 +122,9 @@ export class AutoModeRunner {
     onState("on");
 
     const from = Math.max(0, Math.min(startItemIndex, items.length - 1));
+    this.prevIntroHook = null;
+    this.prevOutroHook = null;
+    const hookRate = () => resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), SPEECH_RATE_NORMAL);
     let completedAll = true;
     const checkpoints = checkpointIndices(items.length, T.checkEvery);
 
@@ -115,10 +135,13 @@ export class AutoModeRunner {
           break;
         }
         const item = items[i]!;
+        ui.setMeaningShown?.(false);
+        ui.setNuanceShown?.(false);
         ui.setItemIndex(i);
 
         // Category intro — first item of the lesson only (Daily Life • Emotions, …)
         if (i === 0) {
+          ui.setItemLeaving?.(false);
           ui.setStep("category");
           await this.pause(T.categoryPause, sid);
           if (!this.shouldContinue(sid)) {
@@ -127,8 +150,19 @@ export class AutoModeRunner {
           }
         }
 
+        const introPlayed = await this.runItemHook(sid, ui, "intro", i, hookRate());
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
+
+        // The word comes in after the intro hook, on its own.
+        ui.setStep("word");
+        ui.setItemLeaving?.(false);
+
         if (ui.getRetention?.().hook) {
-          await this.runReadHook(sid, ui, i === from);
+          // The intro hook already spoke; the read hook then keeps to its banner and ring.
+          await this.runReadHook(sid, ui, i === from && !introPlayed);
           if (!this.shouldContinue(sid)) {
             completedAll = false;
             break;
@@ -168,6 +202,12 @@ export class AutoModeRunner {
           break;
         }
 
+        await this.runItemHook(sid, ui, "outro", i, hookRate());
+        if (!this.shouldContinue(sid)) {
+          completedAll = false;
+          break;
+        }
+
         if (ui.getRetention?.().check && checkpoints.includes(i)) {
           await this.runCheck(sid, ui, items, i, checkpoints);
           if (!this.shouldContinue(sid)) {
@@ -177,6 +217,7 @@ export class AutoModeRunner {
         }
 
         if (i < items.length - 1) {
+          ui.setItemLeaving?.(true);
           await this.pause(T.betweenItemsPause, sid);
         }
       }
@@ -190,11 +231,36 @@ export class AutoModeRunner {
         ui.setReadHook?.(null);
         ui.setCheck?.(null);
         ui.setBrushDraw?.(null);
+        ui.setItemHook?.(null);
+        ui.setMeaningShown?.(true);
+        ui.setNuanceShown?.(true);
+        ui.setItemLeaving?.(false);
         onState("off");
       }
     }
 
     return sid === this.session && completedAll && !this.softStop;
+  }
+
+
+  /**
+   * Per-item intro / outro hook: the card over the stage, the line in
+   * Andrew's or Nanami's voice, a short hold to read it. Returns true when
+   * one played. The UI decides (setting off → no hook).
+   */
+  private async runItemHook(sid: number, ui: AutoModeUi, kind: HookKind, index: number, rate: number): Promise<boolean> {
+    const prev = kind === "intro" ? this.prevIntroHook : this.prevOutroHook;
+    const hook = ui.getItemHook?.(kind, index, prev) ?? null;
+    if (!hook) return false;
+    if (kind === "intro") this.prevIntroHook = hook.id;
+    else this.prevOutroHook = hook.id;
+    ui.setItemHook?.({ hook, key: ++this.itemHookKey });
+    const say = hookSpeech(hook);
+    if (say.lang === "ja") await this.speakJapanese(ui, say.text, rate, sid, say.reading);
+    else await this.speakEnglish(ui, say.text, rate, sid);
+    if (this.shouldContinue(sid)) await this.pause(hookHoldMs(hook), sid);
+    ui.setItemHook?.(null);
+    return true;
   }
 
   private shouldContinue(sid: number): boolean {
@@ -380,6 +446,8 @@ export class AutoModeRunner {
     section: Section
   ): Promise<void> {
     const { ja, reading, en, step } = this.sectionTexts(item, section);
+    ui.setMeaningShown?.(false);
+    ui.setNuanceShown?.(false);
     ui.setStep(step);
     const rateFor = (scripted: number) =>
       resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), scripted);
@@ -395,7 +463,8 @@ export class AutoModeRunner {
     await this.pause(T.shortPause, sid);
     if (!this.shouldContinue(sid)) return;
 
-    // 3. English, normal
+    // 3. English, normal — the meaning appears as Andrew reads it
+    ui.setMeaningShown?.(true);
     ui.setShowFurigana(false);
     const rate3 = rateFor(SPEECH_RATE_NORMAL);
     ui.setSpeechRate(rate3);
@@ -413,6 +482,8 @@ export class AutoModeRunner {
     await this.speakJapanese(ui, ja, rate5, sid, reading);
     if (!this.shouldContinue(sid)) return;
 
+    // 6. Nuance — the note appears only now, after the furigana pass
+    ui.setNuanceShown?.(true);
     const nuance = vocabStepNuance(step, item);
     if (nuance) {
       await this.pause(T.shortPause, sid);

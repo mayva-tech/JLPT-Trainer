@@ -13,9 +13,11 @@ import {
 } from "../../components/StageAmbience/themes";
 import type { JlptLevel } from "../../types/level";
 import { phaseProgress, reached, type ShortPhase } from "./shortScript";
+import { followLineFor, nextLabelFor } from "./outroVariety";
 import { shortAngle } from "./shortAngle";
 import { ShortSentence } from "./ShortSentence";
 import { KanjiStrokes } from "../../components/KanjiStrokes/KanjiStrokes";
+import { ASK_SHOWN, BAIT_SHOWN, LETTERS, REPLY_BANNER, SENDER, messageFor, type HookStyle, type MessageHook } from "./shortMessage";
 
 export interface ShortStageProps {
   item: VocabularyItem;
@@ -41,6 +43,8 @@ export interface ShortStageProps {
   brush?: boolean;
   /** Changes on every play, so a replay redraws the strokes. */
   runKey?: number;
+  /** Opener style (default classic). */
+  hookStyle?: HookStyle;
 }
 
 /** Word size: big for short words, shrinking so long words stay on one line. */
@@ -57,8 +61,87 @@ function OutroPrompt({ text }: { text: string }) {
     <>
       {m[1]}
       <br />
-      <span className="sh-outro-word">{m[2]}</span> {m[3]}
+      <span className="sh-outro-word">{m[2]}</span>
+      {/^[?!？！、。,.]/.test(m[3] ?? "") ? "" : " "}
+      {m[3]}
     </>
+  );
+}
+
+/**
+ * The message hook's opening frame: Nanami's text with the word marked, the
+ * question, and the A / B quick replies. Shown from the very first (idle)
+ * frame, so the thumbnail and the loop frame already ask the question.
+ */
+function MessageHookPanel({
+  msg,
+  highlight,
+  counting,
+  cueKey,
+}: {
+  msg: MessageHook;
+  highlight: SpeechHighlight | null;
+  counting: boolean;
+  cueKey: number;
+}) {
+  return (
+    <div className="sh-msg">
+      <div className="sh-msg-title">
+        <span className="sh-msg-bell" aria-hidden="true">
+          🔔
+        </span>
+        {msg.opener.replace(/[.!]$/, "")}
+      </div>
+      <div className="sh-chat">
+        <div className="sh-chat-head">
+          <span className="sh-chat-avatar" lang="ja" aria-hidden="true">
+            {SENDER.initial}
+          </span>
+          <span className="sh-chat-name">
+            <span lang="ja">{SENDER.ja}</span> <small>{SENDER.en}</small>
+          </span>
+          <span className="sh-chat-time">now</span>
+        </div>
+        <div className="sh-bubble sh-bubble--in">
+          <ShortSentence
+            surface={msg.text}
+            reading={msg.reading}
+            highlight={highlight}
+            mark={msg.mark}
+            furigana={false}
+            className="sh-bubble-text"
+          />
+        </div>
+        {/* Always laid out (hidden when idle), so the countdown doesn't shift the frame. */}
+        <div className={`sh-bubble sh-bubble--out sh-typing${counting ? " sh-typing--on" : ""}`} aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+        {counting && (
+          <div className="sh-count sh-count--msg" key={cueKey} aria-hidden="true">
+            <span>3</span>
+            <span>2</span>
+            <span>1</span>
+          </div>
+        )}
+      </div>
+      <div className="sh-msg-ask">
+        {ASK_SHOWN.before}
+        <span className="sh-msg-ask-word" lang="ja">
+          「{msg.word}」
+        </span>
+        {ASK_SHOWN.after}
+      </div>
+      <div className="sh-replies">
+        {msg.choices.map((c, i) => (
+          <span key={c} className="sh-reply">
+            <b>{LETTERS[i]}</b>
+            {c}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -69,6 +152,7 @@ export function ShortStage(props: ShortStageProps) {
   const looping = props.phase === "loop" || props.phase === "done";
   const phase: ShortPhase = looping ? "idle" : props.phase;
   const angle = shortAngle(item);
+  const msg = messageFor(item, props.hookStyle);
   const theme = ambienceForVocab(item);
   const glyphs = ambienceGlyphs(item.word);
   const hook = phase === "hook" || phase === "idle";
@@ -81,7 +165,7 @@ export function ShortStage(props: ShortStageProps) {
     <div
       className={`sh-stage${props.blackout ? " sh-stage--blackout" : ""}${props.phase === "loop" ? " sh-stage--loop" : ""}`}
       data-phase={props.phase}
-      data-angle={angle.kind}
+      data-angle={msg ? "message" : angle.kind}
       data-theme={props.ambience ? theme : "none"}
     >
       {props.ambience && (
@@ -109,18 +193,29 @@ export function ShortStage(props: ShortStageProps) {
       </div>
 
       <div className="sh-col">
-        <div className={`sh-hook${hook ? " sh-hook--on" : ""}`}>
-          <div className="sh-hook-en">{hookLine.en}</div>
-          <div className="sh-hook-ja" lang="ja">
-            {hookLine.ja}
+        {msg ? (
+          hook && (
+            <MessageHookPanel
+              msg={msg}
+              highlight={phase === "hook" ? ja : null}
+              counting={cue?.kind === "countdown"}
+              cueKey={cue?.key ?? 0}
+            />
+          )
+        ) : (
+          <div className={`sh-hook${hook ? " sh-hook--on" : ""}`}>
+            <div className="sh-hook-en">{hookLine.en}</div>
+            <div className="sh-hook-ja" lang="ja">
+              {hookLine.ja}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className={`sh-picture${reached(phase, "reveal") ? " sh-picture--on" : ""}`}>
           <Illustration picture={vocabPicture(item.id)} className="sh-picture-art" />
         </div>
 
-        {props.brush && !hook ? (
+        {msg && hook ? null : props.brush && !hook ? (
           <div className="sh-word sh-word--brush" style={{ fontSize: wordSize(item.word) }} lang="ja">
             <div className={`sh-reading${reached(phase, "reveal") ? " sh-reading--on" : ""}`}>
               {item.reading}
@@ -148,7 +243,7 @@ export function ShortStage(props: ShortStageProps) {
           </div>
         )}
 
-        {cue?.kind === "countdown" && (
+        {cue?.kind === "countdown" && !msg && (
           <div className="sh-count" key={cue.key} aria-hidden="true">
             <span>3</span>
             <span>2</span>
@@ -165,6 +260,12 @@ export function ShortStage(props: ShortStageProps) {
           />
         )}
 
+        {msg && reached(phase, "reveal") && !reached(phase, "example") && (
+          <div className="sh-answer">
+            <b>{LETTERS[msg.answer]}</b> ✓ <span>{msg.choices[msg.answer]}</span>
+          </div>
+        )}
+
         <div className={`sh-meaning${reached(phase, "meaning") ? " sh-meaning--on" : ""}`}>
           <HighlightedEnglish
             text={item.meaning}
@@ -174,12 +275,22 @@ export function ShortStage(props: ShortStageProps) {
         </div>
 
         {sentenceShown && (
-          <div className={`sh-sentence${phase === "shadow" ? " sh-sentence--shadow" : ""}`}>
-            {phase === "shadow" && <div className="sh-turn">🗣 Your turn — say it!</div>}
+          <div
+            className={`sh-sentence${phase === "shadow" ? " sh-sentence--shadow" : ""}${
+              msg ? (phase === "shadow" ? " sh-sentence--chat sh-sentence--reply" : " sh-sentence--chat") : ""
+            }`}
+          >
+            {msg && phase !== "shadow" && (
+              <div className="sh-sentence-from">
+                <span lang="ja">{SENDER.ja}</span> {SENDER.en}
+              </div>
+            )}
+            {phase === "shadow" && <div className="sh-turn">{msg ? REPLY_BANNER : "🗣 Your turn — say it!"}</div>}
             <ShortSentence
               surface={item.sentence}
               reading={item.sentenceReading}
               highlight={phase === "example" || phase === "shadow" ? ja : null}
+              mark={msg && phase !== "shadow" ? msg.mark : null}
             />
             <HighlightedEnglish
               text={item.sentenceMeaning}
@@ -197,9 +308,18 @@ export function ShortStage(props: ShortStageProps) {
         {reached(phase, "outro") && (
           <div className="sh-outro">
             <div className="sh-outro-prompt" lang="ja">
-              💬 <OutroPrompt text={angle.bait} />
+              💬 <OutroPrompt text={msg ? BAIT_SHOWN : angle.bait} />
             </div>
-            {angle.choices && (
+            {msg ? (
+              <div className="sh-replies sh-replies--outro">
+                {msg.choices.map((c, i) => (
+                  <span key={c} className={i === msg.answer ? "sh-reply sh-reply--right" : "sh-reply"}>
+                    <b>{LETTERS[i]}</b>
+                    {c}
+                  </span>
+                ))}
+              </div>
+            ) : angle.choices && (
               <div className="sh-choices" lang="ja">
                 {angle.choices.map((w, i) => (
                   <span key={w} className="sh-choice">
@@ -209,10 +329,10 @@ export function ShortStage(props: ShortStageProps) {
                 ))}
               </div>
             )}
-            <div className="sh-outro-follow">Follow for a new word every day</div>
+            <div className="sh-outro-follow">{followLineFor(item)}</div>
             {props.next && (
               <div className="sh-next">
-                Next: <span className="sh-next-word" lang="ja">{props.next.word}</span>
+                {nextLabelFor(item)} <span className="sh-next-word" lang="ja">{props.next.word}</span>
               </div>
             )}
           </div>

@@ -1,0 +1,1371 @@
+/* Visual Discovery (写真で日本語) — scoped under .ev-root, using the Everyday
+   Japanese glass panels and the app tokens (--accent, --good, --bad…).
+   The scene is the main attraction: big, rounded, with everything else
+   in a side column (wide screens), under it, or in a bottom sheet (phones). */
+
+.ev-root.ev-root--wide {
+  max-width: 1200px;
+}
+
+/* ---- headings ---- */
+
+.vd-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.vd-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.vd-title [lang="ja"] {
+  font-size: 19px;
+  color: var(--accent-soft);
+}
+
+.vd-tagline {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-soft);
+}
+
+/* ---- gallery ---- */
+
+.vd-gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 16px;
+}
+
+.vd-scene-open {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  border-radius: var(--ev-radius);
+  border: 1px solid var(--ev-glass-line);
+  background: var(--ev-glass);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.vd-scene-open:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-soft);
+}
+
+.vd-thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: #1b2433;
+}
+
+.vd-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vd-thumb-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--good);
+  color: #0f2418;
+}
+
+.vd-thumb-badge--soft {
+  background: rgba(20, 28, 42, 0.8);
+  color: var(--accent-soft);
+  border: 1px solid var(--accent-soft);
+}
+
+.vd-scene-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+}
+
+.vd-scene-name {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.vd-scene-name [lang="ja"] {
+  font-size: 15px;
+  color: var(--accent-soft);
+  margin-left: 4px;
+}
+
+.vd-scene-blurb {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.vd-scene-stats {
+  font-size: 12.5px;
+  color: var(--text-softer);
+}
+
+.vd-scene-cta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.vd-more {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-softer);
+  text-align: center;
+}
+
+.vd-bar {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.vd-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+/* ---- scene page ---- */
+
+.vd-scene-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.vd-scene-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+
+.vd-scene-title h2 {
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+.vd-scene-title h2 [lang="ja"] {
+  color: var(--accent-soft);
+}
+
+.vd-count {
+  font-size: 14px;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.vd-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.vd-tabs {
+  flex: 1 1 380px;
+  margin: 0;
+  max-width: 520px;
+}
+
+.vd-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vd-tools .ev-btn,
+.vd-audio-settings > summary {
+  min-height: 38px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* Scene left, panel right on wide screens; stacked below that. */
+.vd-stage {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  .vd-stage {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .vd-stage {
+    grid-template-columns: minmax(0, 1fr) 370px;
+  }
+}
+
+@media (min-width: 1000px) {
+
+  .vd-frame {
+    grid-row: span 3;
+  }
+
+  .vd-editor {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- the scene ---- */
+
+.vd-frame {
+  position: relative;
+  width: 100%;
+  max-height: calc(100vh - 200px);
+  min-height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0d131d;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.vd-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vd-frame--zoomed .vd-svg {
+  cursor: grab;
+}
+
+.vd-frame--zoomed .vd-svg:active {
+  cursor: grabbing;
+}
+
+/* Hotspots: invisible until shown, selected or focused. The svg handles
+   pointer input itself (tap vs. pan), so polygons never take the pointer. */
+.vd-hs {
+  fill: transparent;
+  stroke: none;
+  pointer-events: none;
+  outline: none;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.vd-hs--shown {
+  fill: rgba(255, 255, 255, 0.06);
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 1.5px;
+  stroke-dasharray: 6 4;
+}
+
+.vd-hs--found {
+  fill: rgba(92, 184, 138, 0.1);
+  stroke: var(--good);
+  stroke-dasharray: none;
+}
+
+.vd-hs--selected {
+  fill: rgba(240, 192, 120, 0.1);
+  stroke: var(--accent);
+  stroke-width: 3px;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 6px rgba(240, 192, 120, 0.7));
+}
+
+.vd-hs:focus-visible {
+  stroke: #ffffff;
+  stroke-width: 3px;
+  stroke-dasharray: 7 4;
+  fill: rgba(255, 255, 255, 0.12);
+}
+
+.vd-dim,
+.vd-marker,
+.vd-editor-overlay {
+  pointer-events: none;
+}
+
+.vd-dim {
+  fill: rgba(6, 10, 18, 0.42);
+  animation: vdFade 0.25s ease both;
+}
+
+.vd-flash {
+  fill: transparent;
+  stroke-width: 4px;
+  pointer-events: none;
+  animation: vdFlash 1s ease both;
+}
+
+.vd-flash--correct {
+  stroke: var(--good);
+  fill: rgba(92, 184, 138, 0.3);
+}
+
+.vd-flash--wrong {
+  stroke: var(--bad);
+  fill: rgba(229, 83, 75, 0.25);
+}
+
+.vd-flash--hint {
+  stroke: var(--accent);
+  fill: rgba(240, 192, 120, 0.2);
+  animation: vdHint 0.8s ease 3 both;
+}
+
+.vd-flash--new {
+  stroke: #fff7da;
+  fill: rgba(255, 247, 218, 0.22);
+  animation: vdNew 0.9s ease-out both;
+}
+
+@keyframes vdFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes vdFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes vdHint {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+
+@keyframes vdNew {
+  0% { opacity: 0; stroke-width: 10px; }
+  30% { opacity: 1; }
+  100% { opacity: 0; stroke-width: 2px; }
+}
+
+.vd-marker circle {
+  fill: rgba(20, 28, 42, 0.78);
+  stroke: #ffffff;
+}
+
+.vd-marker .vd-marker-dot {
+  fill: #ffffff;
+  stroke: none;
+}
+
+.vd-marker--found circle {
+  stroke: var(--good);
+}
+
+.vd-marker--found path {
+  stroke: var(--good);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Top-left: the corner every scene keeps for scenery (curtain, door, sky). */
+.vd-zoom {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.vd-zoom button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(20, 28, 42, 0.72);
+  font-size: 19px;
+  line-height: 1;
+}
+
+.vd-zoom button:disabled {
+  display: none;
+}
+
+.vd-frame-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: rgba(13, 19, 29, 0.9);
+  color: var(--text-soft);
+}
+
+.vd-hint {
+  padding: 14px 16px;
+  border-radius: var(--ev-radius-sm);
+  background: var(--ev-glass);
+  border: 1px solid var(--ev-glass-line);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.vd-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent) !important;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ---- vocabulary card ---- */
+
+.vd-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: var(--ev-radius);
+  background: var(--ev-glass);
+  border: 1px solid var(--ev-glass-line);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: vdCardIn 0.25s ease both;
+}
+
+@keyframes vdCardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.vd-card-top {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.vd-card-words {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.vd-card-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.vd-card-jp,
+.vd-card-en,
+.vd-nuance-text {
+  border: 0;
+  background: transparent;
+  padding: 0 4px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.vd-card-jp {
+  font-size: clamp(30px, 7vw, 38px);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.vd-card-jp--long {
+  font-size: clamp(22px, 6vw, 26px);
+}
+
+.vd-card-jp--longer {
+  font-size: clamp(18px, 5vw, 21px);
+}
+
+.vd-card-reading {
+  font-size: 15px;
+  color: var(--text-soft);
+  padding: 0 4px;
+}
+
+.vd-card-en {
+  font-size: 19px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.vd-speaking {
+  color: var(--accent) !important;
+  background: var(--accent-chip);
+}
+
+.vd-new {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--accent);
+  color: var(--accent-ink);
+  animation: vdCardIn 0.3s ease both;
+}
+
+.vd-card-audio {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.vd-audio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 50px;
+  padding: 8px 0 6px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--ev-glass-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Close sits in the corner so the words keep the width. */
+.vd-card:has(.vd-card-close) .vd-card-audio {
+  margin-top: 30px;
+}
+
+.vd-card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-soft) !important;
+}
+
+.vd-nuance summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-soft);
+}
+
+.vd-nuance-text {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.vd-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vd-card-actions .ev-toggle {
+  flex: 1 1 130px;
+  padding: 6px 10px;
+}
+
+.vd-next {
+  flex: 1 1 100%;
+  min-height: 40px;
+}
+
+/* ---- quiz ---- */
+
+.vd-quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--ev-radius);
+  background: var(--ev-glass);
+  border: 1px solid var(--ev-glass-line);
+}
+
+.vd-quiz-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.vd-quiz-top .ev-btn {
+  min-height: 34px;
+  padding: 4px 12px;
+  font-size: 12.5px;
+}
+
+.vd-quiz-pos {
+  font-size: 13px;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.vd-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--ev-radius-sm);
+  border: 1px solid var(--accent-soft);
+  background: rgba(240, 192, 120, 0.08);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.vd-prompt--listen {
+  justify-content: center;
+  font-size: 18px;
+}
+
+.vd-prompt-sub {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.vd-start {
+  align-self: flex-start;
+}
+
+.vd-feedback {
+  min-height: 1.6em;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.vd-feedback--correct {
+  color: var(--good);
+  font-weight: 700;
+}
+
+.vd-feedback--wrong {
+  color: var(--bad);
+}
+
+.vd-feedback--skip {
+  color: var(--accent-soft);
+}
+
+.vd-score {
+  font-size: 36px;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.vd-score span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+.vd-quiz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---- guided tour ---- */
+
+.vd-tour {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vd-tour-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vd-tour-controls .ev-btn {
+  min-width: 48px;
+}
+
+.vd-tour-play {
+  flex: 1;
+}
+
+.vd-tour-pos {
+  font-size: 13px;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Play all: the scene show ---- */
+
+.vd-playall {
+  min-height: 38px;
+  padding: 6px 16px;
+}
+
+.vd-show-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.vd-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--ev-glass-soft);
+  font-size: 12.5px;
+  color: var(--text-soft) !important;
+}
+
+.vd-chip--on {
+  border-color: var(--accent);
+  background: var(--accent-chip);
+  color: var(--accent-soft) !important;
+}
+
+.vd-speaker {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vd-script-line--nanami .vd-speaker,
+.vd-caption--nanami .vd-speaker {
+  background: rgba(232, 120, 150, 0.22);
+  color: #f3a6bb;
+}
+
+.vd-script-line--andrew .vd-speaker,
+.vd-caption--andrew .vd-speaker {
+  background: rgba(110, 170, 240, 0.22);
+  color: #9cc6f5;
+}
+
+.vd-line-jp {
+  font-size: 1.15em;
+  font-weight: 700;
+  line-height: 1.9;
+}
+
+.vd-line-sub {
+  display: block;
+  font-size: 0.85em;
+  color: var(--text-soft);
+}
+
+.vd-line-en {
+  font-weight: 600;
+}
+
+/* Caption over the scene: the line being spoken, like subtitles. */
+/* Centred with insets + auto margins (a transform would fight the entry animation). */
+.vd-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4%;
+  margin-inline: auto;
+  width: min(86%, 760px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 18px 12px;
+  border-radius: 14px;
+  background: rgba(12, 18, 30, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  font-size: clamp(14px, 1.7vw, 22px);
+  line-height: 1.5;
+  pointer-events: none;
+  animation: vdCardIn 0.25s ease both;
+}
+
+/* Hook / Pause & answer banner at the top of the scene. */
+.vd-banner {
+  position: absolute;
+  top: 4%;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 12px;
+  max-width: 92%;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(12, 18, 30, 0.86);
+  border: 1px solid var(--accent-soft);
+  pointer-events: none;
+  animation: rtBannerIn2 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes rtBannerIn2 {
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 1; transform: none; }
+}
+
+.vd-banner-en {
+  white-space: nowrap;
+  font-weight: 800;
+  font-size: clamp(15px, 1.9vw, 24px);
+}
+
+.vd-banner-ja {
+  white-space: nowrap;
+  font-size: clamp(13px, 1.5vw, 19px);
+  color: var(--accent);
+}
+
+.vd-banner .ret-ring {
+  flex: none;
+  width: clamp(22px, 2.4vw, 32px);
+  height: clamp(22px, 2.4vw, 32px);
+}
+
+.vd-banner-tag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Side panel parts */
+.vd-script {
+  padding: 14px 16px;
+  border-radius: var(--ev-radius);
+  background: var(--ev-glass);
+  border: 1px solid var(--ev-glass-line);
+}
+
+.vd-script-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 8px;
+}
+
+.vd-script ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vd-script-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.vd-script-line--on {
+  background: var(--accent-chip);
+}
+
+.vd-script-line--next {
+  opacity: 0.35;
+}
+
+.vd-hookcard {
+  align-items: center;
+  text-align: center;
+}
+
+.vd-hookcard-q {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.vd-hookcard p {
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.vd-check {
+  align-items: flex-start;
+}
+
+.vd-check-tag {
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+.vd-check-q {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.vd-check-word {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.vd-check-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vd-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(12, 18, 30, 0.5);
+  font-size: 19px;
+  font-weight: 600;
+  transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.vd-opt-label {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.vd-opt--correct {
+  border-color: var(--good);
+  box-shadow: 0 0 14px rgba(92, 184, 138, 0.3);
+}
+
+.vd-opt--correct .vd-opt-label {
+  background: var(--good);
+  color: #0f2418;
+}
+
+.vd-opt--wrong {
+  opacity: 0.35;
+}
+
+.vd-opt-tick {
+  margin-left: auto;
+  color: var(--good);
+  font-weight: 800;
+}
+
+.vd-check-think,
+.vd-check-answer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.vd-check-answer {
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.vd-recap {
+  list-style: none;
+  margin: 0;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px;
+  border-radius: var(--ev-radius);
+  background: var(--ev-glass);
+  border: 1px solid var(--ev-glass-line);
+}
+
+.vd-recap li {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.vd-recap [lang="ja"] {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.vd-recap small {
+  font-size: 11.5px;
+  color: var(--text-soft);
+}
+
+/* ---- audio settings ---- */
+
+.vd-audio-settings {
+  position: relative;
+}
+
+.vd-audio-settings > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.vd-audio-settings > summary::-webkit-details-marker {
+  display: none;
+}
+
+.vd-audio-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  width: min(300px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--ev-radius-sm);
+  background: rgba(20, 28, 42, 0.96);
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  font-size: 13.5px;
+}
+
+.vd-audio-panel fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vd-audio-panel legend {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-soft);
+  margin-bottom: 4px;
+}
+
+.vd-audio-panel label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  line-height: 1.4;
+}
+
+/* ---- hotspot editor (development) ---- */
+
+.vd-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--ev-radius-sm);
+  border: 1px dashed var(--accent-soft);
+  background: rgba(20, 28, 42, 0.85);
+  font-size: 13px;
+}
+
+.vd-editor-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.vd-editor select,
+.vd-editor input,
+.vd-editor textarea {
+  font: inherit;
+  color: var(--text);
+  background: #0f1622;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.vd-editor textarea {
+  width: 100%;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.vd-editor-problems {
+  color: var(--bad);
+  padding-left: 18px;
+}
+
+.vd-editor-ok {
+  color: var(--good);
+}
+
+.vd-ed-poly {
+  fill: rgba(120, 180, 255, 0.08);
+  stroke: rgba(120, 180, 255, 0.8);
+  stroke-width: 1.5px;
+}
+
+.vd-ed-poly--target {
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+}
+
+.vd-ed-draft {
+  fill: rgba(255, 90, 90, 0.18);
+  stroke: #ff6b6b;
+  stroke-width: 2px;
+}
+
+.vd-ed-point {
+  fill: #ff6b6b;
+}
+
+/* ---- phones: the card is a bottom sheet over the page ---- */
+
+@media (max-width: 700px) {
+  .vd-title {
+    font-size: 22px;
+  }
+
+  .vd-scene-title h2 {
+    font-size: 18px;
+  }
+
+  .vd-frame {
+    border-radius: 12px;
+    max-height: 62vh;
+  }
+
+  .vd-zoom button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vd-stage--card {
+    padding-bottom: 46vh;
+  }
+
+  .vd-stage--card .vd-card {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    z-index: 40;
+    max-height: 46vh;
+    overflow-y: auto;
+    background: rgba(20, 28, 42, 0.96);
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.45);
+    animation: vdSheetIn 0.25s ease both;
+  }
+
+  .vd-audio {
+    width: 58px;
+    padding: 10px 0 8px;
+  }
+
+  .vd-prompt {
+    font-size: 19px;
+  }
+
+  .vd-banner {
+    border-radius: 16px;
+    padding: 6px 12px;
+  }
+
+  .vd-tabs {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
+
+@keyframes vdSheetIn {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vd-caption,
+  .vd-banner,
+  .vd-dim,
+  .vd-flash,
+  .vd-card,
+  .vd-new,
+  .vd-stage--card .vd-card,
+  .vd-scene-open {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .vd-flash {
+    opacity: 1;
+  }
+
+  .vd-flash--new {
+    opacity: 0;
+  }
+}
+
+/* ---- narrow window: a Short-shaped frame for screen recording ---- */
+
+.vd-controls-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin: 0 0 10px auto;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--ev-glass-soft);
+  color: var(--text-soft) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vd-controls-extra {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vd-zoom-slot:empty {
+  display: none;
+}
+
+.vd-zoom--outside {
+  position: static;
+}
+
+.vd-card--compact {
+  justify-content: center;
+  padding: 12px 14px;
+}
+
+.vd-card--compact p {
+  margin: 0;
+}
+
+/*
+ * Show panel on the left; the talking heads keep the lower-right seat. The
+ * dock is the whole panel: the heads grow into it as far as no text is behind them.
+ */
+.vd-show-panel {
+  position: relative;
+  display: grid;
+  min-height: 172px;
+}
+
+.vd-show-panel > :not(.vd-show-dock) {
+  padding-right: 140px;
+}
+
+.vd-show-dock {
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  /* The show's panels sit right under the picture, so every step fills one portrait frame. */
+  .vd-scene-page--narrow .vd-stage--card:has(.vd-tour) {
+    padding-bottom: 0;
+  }
+
+  .vd-scene-page--narrow .vd-stage--card .vd-tour .vd-card {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    animation: vdCardIn 0.25s ease both;
+  }
+}
+
+/* The show is hands-free: zoom buttons step aside for its banner / caption. */
+.vd-frame:has(.vd-banner) .vd-zoom,
+.vd-frame:has(.vd-caption) .vd-zoom {
+  display: none;
+}

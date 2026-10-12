@@ -7,9 +7,13 @@ export interface RetentionSettings {
   hook: boolean;
   /** "Pause & answer" checkpoint every few words in Auto Mode. */
   check: boolean;
+  /** A varied intro line before each word / pattern / quiz question (Auto Mode). */
+  intro: boolean;
+  /** A varied outro line after each one (Auto Mode). */
+  outro: boolean;
 }
 
-const DEFAULTS: RetentionSettings = { hook: true, check: true };
+const DEFAULTS: RetentionSettings = { hook: true, check: true, intro: true, outro: true };
 
 function load(): RetentionSettings {
   try {
@@ -20,7 +24,7 @@ function load(): RetentionSettings {
   }
 }
 
-/** Retention features for lesson videos — both on by default, remembered. */
+/** Retention features for lesson videos — all on by default, remembered. */
 export function useRetentionSettings(): [RetentionSettings, (key: keyof RetentionSettings) => void] {
   const [settings, setSettings] = useState(load);
   const toggle = useCallback((key: keyof RetentionSettings) => {

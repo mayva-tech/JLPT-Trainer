@@ -12,6 +12,8 @@ type Props = {
   enHighlight?: SpeechHighlight | null;
   nuanceHighlight?: SpeechHighlight | null;
   nuanceActive?: boolean;
+  /** Nuance held back until the slow pass with furigana is over. */
+  nuanceHidden?: boolean;
 };
 
 /** ④ Example sentence with furigana and English translation. */
@@ -22,6 +24,7 @@ export function GrammarSentenceCard({
   enHighlight = null,
   nuanceHighlight = null,
   nuanceActive = false,
+  nuanceHidden = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -52,6 +55,7 @@ export function GrammarSentenceCard({
         note={item.sentenceNuance}
         active={nuanceActive}
         highlight={nuanceHighlight}
+        pending={nuanceHidden}
       />
     </div>
   );

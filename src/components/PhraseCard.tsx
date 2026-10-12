@@ -12,6 +12,10 @@ type Props = {
   nuanceHighlight?: SpeechHighlight | null;
   nuanceActive?: boolean;
   showFurigana?: boolean;
+  /** English meaning held back until the Japanese is spoken. */
+  meaningHidden?: boolean;
+  /** Nuance held back until the slow pass with furigana is over. */
+  nuanceHidden?: boolean;
 };
 
 export function PhraseCard({
@@ -21,6 +25,8 @@ export function PhraseCard({
   nuanceHighlight = null,
   nuanceActive = false,
   showFurigana = true,
+  meaningHidden = false,
+  nuanceHidden = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -39,7 +45,10 @@ export function PhraseCard({
         speaking={jaHighlight != null}
         className="pa--card"
       />
-      <div aria-hidden="true">
+      <div
+        aria-hidden="true"
+        className={meaningHidden ? "meaning-reveal meaning-reveal--hidden" : "meaning-reveal"}
+      >
         <HighlightedEnglish
           text={item.phraseMeaning}
           className="phrase-meaning"
@@ -50,6 +59,7 @@ export function PhraseCard({
         note={item.phraseNuance}
         active={nuanceActive}
         highlight={nuanceHighlight}
+        pending={nuanceHidden}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import {
   buildJapaneseSpeakText,
   buildJapaneseSpeakToken,
   appendPhraseParticleSpeakPause,
+  spaceGluedParticleHa,
   shouldKeepGaTight,
   shouldKeepNiTight,
   shouldKeepWoTight,
@@ -280,6 +281,23 @@ describe("buildJapaneseSpeakText", () => {
     );
   });
 
+  it("splits a particle は glued to the next word so it is said 'wa'", () => {
+    expect(
+      buildJapaneseSpeakText(
+        "朝は晴れていましたが、今はかなり曇っています。",
+        "あさは はれていましたが、いまはかなり くもっています。"
+      )
+    ).toBe("あさは、 ハれていましたが、いまは、 かなり くもっています。");
+    expect(buildJapaneseSpeakText("父はいつも六時に起きます。", "ちちはいつも ろくじに おきます")).toBe(
+      "ちちは、 いつも ろくじに おきます"
+    );
+    // は inside a kana word, or after a kanji's okurigana, is left alone.
+    expect(buildJapaneseSpeakText("話しています。", "はなしています。")).toBe("はなしています。");
+    expect(buildJapaneseSpeakText("後は、創作に時間を使う。", "あと は、そうさく に じかん を つかう。")).toBe(
+      "あと わ、そうさく に、 じかん を つかう。"
+    );
+  });
+
   it("pauses after every grammar-slot 〜 (〜ばかりか〜も)", () => {
     expect(
       buildJapaneseSpeakText("〜ばかりか〜も", "〜ばかりか〜も")
@@ -359,6 +377,16 @@ describe("TTS particle audit (all lesson readings)", () => {
       if (!spoken.includes("わ")) {
         failures.push(`${c.kind}#${c.id}: ${c.reading} → ${spoken}`);
       }
+    }
+    expect(failures).toEqual([]);
+  });
+
+  it("spaces every particle は off the next word so karaoke tokens say 'wa'", () => {
+    const failures: string[] = [];
+    for (const c of cases) {
+      const normalized = c.reading.trim().split(/\s+/).filter(Boolean).join(" ");
+      const fixed = spaceGluedParticleHa(c.surface, c.reading);
+      if (fixed !== normalized) failures.push(`${c.kind}#${c.id}: ${c.reading} → ${fixed}`);
     }
     expect(failures).toEqual([]);
   });

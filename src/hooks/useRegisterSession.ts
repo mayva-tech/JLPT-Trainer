@@ -3,23 +3,44 @@ import type {
   RegisterPlayPart,
   RegisterSideName,
 } from "../components/RegisterSplitCard";
+import { checkpointIndices, firstSense } from "../components/Retention/retentionQuiz";
+import { autoModeTiming } from "../config/autoModeTiming";
 import { getRegisterPairsForSection } from "../data/registerPairs";
-import type { RegisterPair } from "../types/register";
+import type { CheckPhase, ReadHookState } from "../services/autoModeRunner";
+import { speakNuance } from "../services/nuancePlayback";
 import {
+  resolveAutoModeSpeechRate,
+  SPEECH_RATE_NORMAL,
+  SPEECH_RATE_SLOW,
   speechService,
   type SpeechHighlight,
 } from "../services/speechService";
+import type { RegisterPair } from "../types/register";
 import { buildRegisterPlaySteps } from "../utils/registerPlayback";
+import {
+  buildRegisterCheckCard,
+  POLITE_HOOK_EN,
+  registerCheckSpoken,
+  type RegisterCheckCard,
+} from "../utils/registerRetention";
+
+export type RegisterSpeechLang = "ja" | "en" | "nuance";
 
 export type UseRegisterSessionOptions = {
   getSpeechRate: () => number;
   setSpeechStatus: (status: "idle" | "speaking" | "paused") => void;
-  setSpeechLang: (lang: "ja" | "en" | null) => void;
+  setSpeechLang: (lang: RegisterSpeechLang | null) => void;
   setHighlight: (highlight: SpeechHighlight | null) => void;
   clearSpeechUi: () => void;
   isRegisterScreen: () => boolean;
   betweenItemsPause: number;
+  /** Player's retention toggles (読 Hook / ⏸ Quiz); both off when omitted. */
+  getRetention?: () => { hook: boolean; check: boolean };
 };
+
+export type RegisterCheckView = { card: RegisterCheckCard; phase: CheckPhase };
+
+const T = autoModeTiming;
 
 export function useRegisterSession({
   getSpeechRate,
@@ -29,6 +50,7 @@ export function useRegisterSession({
   clearSpeechUi,
   isRegisterScreen,
   betweenItemsPause,
+  getRetention,
 }: UseRegisterSessionOptions) {
   const [sectionId, setSectionId] = useState("register-01");
   const pairs = getRegisterPairsForSection(sectionId);
@@ -39,18 +61,30 @@ export function useRegisterSession({
   const [revealed, setRevealed] = useState(false);
   const [playingAll, setPlayingAll] = useState(false);
   const [playingSection, setPlayingSection] = useState(false);
+  /** During Play, the note waits until the slow passes with furigana are over. */
+  const [noteShown, setNoteShown] = useState(true);
+  /** "Can you say it politely?" — formal side hidden with a countdown. */
+  const [hook, setHook] = useState<ReadHookState | null>(null);
+  /** "Pause & answer" checkpoint card. */
+  const [check, setCheck] = useState<RegisterCheckView | null>(null);
   const playSessionRef = useRef(0);
-  const gapTimerRef = useRef<number | null>(null);
+  const timersRef = useRef(new Set<number>());
+  const hookKeyRef = useRef(0);
+
+  function clearTimers() {
+    for (const id of timersRef.current) window.clearTimeout(id);
+    timersRef.current.clear();
+  }
 
   function stop() {
     playSessionRef.current += 1;
-    if (gapTimerRef.current != null) {
-      window.clearTimeout(gapTimerRef.current);
-      gapTimerRef.current = null;
-    }
+    clearTimers();
     setPlayingAll(false);
     setPlayingSection(false);
     setActiveSide(null);
+    setNoteShown(true);
+    setHook(null);
+    setCheck(null);
   }
 
   function open(nextSectionId: string) {
@@ -60,8 +94,111 @@ export function useRegisterSession({
     setRevealed(false);
     setPlayingAll(false);
     setPlayingSection(false);
+    setNoteShown(true);
+    setHook(null);
+    setCheck(null);
+    clearTimers();
     playSessionRef.current += 1;
   }
+
+  /* ── Promise helpers: every one settles, even when cancelled ───── */
+
+  function wait(ms: number, session: number): Promise<void> {
+    return new Promise((resolve) => {
+      if (session !== playSessionRef.current) {
+        resolve();
+        return;
+      }
+      const id = window.setTimeout(() => {
+        timersRef.current.delete(id);
+        resolve();
+      }, ms);
+      timersRef.current.add(id);
+    });
+  }
+
+  /** Auto Mode rate: the scripted pace unless the user picked 1.25×. */
+  function scriptedRate(pace: "normal" | "slow"): number {
+    return resolveAutoModeSpeechRate(
+      getSpeechRate(),
+      pace === "slow" ? SPEECH_RATE_SLOW : SPEECH_RATE_NORMAL
+    );
+  }
+
+  function pauseMs(kind: "none" | "short" | "normal"): number {
+    return kind === "short" ? T.shortPause : kind === "normal" ? T.normalPause : 0;
+  }
+
+  /** Clear the highlight as each line ends so it never lingers into a pause. */
+  function endLine(session: number) {
+    if (session !== playSessionRef.current) return;
+    setHighlight(null);
+    setSpeechLang(null);
+  }
+
+  function say(
+    lang: "ja" | "en",
+    text: string,
+    session: number,
+    reading?: string,
+    rate: number = getSpeechRate()
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const alive = () => session === playSessionRef.current;
+      if (!alive() || !text.trim()) {
+        resolve();
+        return;
+      }
+      setHighlight(null);
+      setSpeechLang(lang);
+      setSpeechStatus("speaking");
+      const done = () => {
+        endLine(session);
+        resolve();
+      };
+      const callbacks = {
+        onStart: () => {
+          if (alive()) setSpeechStatus("speaking");
+        },
+        onBoundary: (h: SpeechHighlight) => {
+          if (alive()) setHighlight(h);
+        },
+        onEnd: done,
+        onError: done,
+      };
+      if (lang === "ja") {
+        speechService.speakJapanese(text, callbacks, rate, reading ? { reading } : undefined);
+      } else {
+        speechService.speakEnglish(text, callbacks, rate);
+      }
+    });
+  }
+
+  /** Mixed JA/EN note — offsets rebased onto the whole note (Player rule). */
+  function sayNote(note: string, session: number, rate: number): Promise<void> {
+    return new Promise((resolve) => {
+      const alive = () => session === playSessionRef.current;
+      if (!alive()) {
+        resolve();
+        return;
+      }
+      setHighlight(null);
+      setSpeechLang("nuance");
+      setSpeechStatus("speaking");
+      speakNuance(note, rate, {
+        isAlive: alive,
+        onHighlight: (h) => {
+          if (alive()) setHighlight(h);
+        },
+        onEnd: () => {
+          endLine(session);
+          resolve();
+        },
+      });
+    });
+  }
+
+  /* ── Manual buttons ─────────────────────────────────────────────── */
 
   function playSide(side: RegisterSideName) {
     const pair = pairs[index] ?? null;
@@ -73,27 +210,13 @@ export function useRegisterSession({
     if (!source.text.trim()) return;
     speechService.stop();
     stop();
+    const session = playSessionRef.current;
     setActiveSide(side);
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakJapanese(
-      source.text,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          clearSpeechUi();
-          setActiveSide(null);
-        },
-        onError: () => {
-          clearSpeechUi();
-          setActiveSide(null);
-        },
-      },
-      getSpeechRate(),
-      { reading: source.reading }
-    );
+    void say("ja", source.text, session, source.reading).then(() => {
+      if (session !== playSessionRef.current) return;
+      clearSpeechUi();
+      setActiveSide(null);
+    });
   }
 
   function playBoth() {
@@ -102,96 +225,123 @@ export function useRegisterSession({
     if (drillMode && !revealed) setRevealed(true);
     speechService.stop();
     stop();
-    setActiveSide("casual");
-    setSpeechLang("ja");
-    setHighlight(null);
-    setSpeechStatus("speaking");
-    speechService.speakJapanese(
-      pair.casual.text,
-      {
-        onStart: () => setSpeechStatus("speaking"),
-        onBoundary: (h) => setHighlight(h),
-        onEnd: () => {
-          setHighlight(null);
-          setActiveSide("formal");
-          speechService.speakJapanese(
-            pair.formal.text,
-            {
-              onBoundary: (h) => setHighlight(h),
-              onEnd: () => {
-                clearSpeechUi();
-                setActiveSide(null);
-              },
-              onError: () => {
-                clearSpeechUi();
-                setActiveSide(null);
-              },
-            },
-            getSpeechRate(),
-            { reading: pair.formal.reading }
-          );
-        },
-        onError: () => {
-          clearSpeechUi();
-          setActiveSide(null);
-        },
-      },
-      getSpeechRate(),
-      { reading: pair.casual.reading }
-    );
+    const session = playSessionRef.current;
+    const alive = () => session === playSessionRef.current;
+    void (async () => {
+      setActiveSide("casual");
+      await say("ja", pair.casual.text, session, pair.casual.reading);
+      if (!alive()) return;
+      setActiveSide("formal");
+      await say("ja", pair.formal.text, session, pair.formal.reading);
+      if (!alive()) return;
+      clearSpeechUi();
+      setActiveSide(null);
+    })();
   }
 
-  function playPairSequence(
+  /* ── Sequenced playback (Play / Play All) ──────────────────────── */
+
+  /**
+   * One pair: casual JP, meaning EN, casual JP slow, [hook], formal JP,
+   * formal JP slow, note — rates and pauses as in the Player's Auto Mode.
+   * The hook only runs in Play All (the recorded video), like the Player's
+   * Auto Mode; `speakHook` says the line aloud (first pair only).
+   */
+  async function playPairSequence(
     pair: RegisterPair,
     session: number,
-    onComplete: () => void
-  ) {
+    hookMode: "off" | "silent" | "spoken"
+  ): Promise<void> {
     const alive = () => session === playSessionRef.current;
-    const finish = () => {
-      if (!alive()) return;
-      onComplete();
-    };
     const steps = buildRegisterPlaySteps(pair);
+    let hooked = hookMode === "off";
+    setNoteShown(false);
 
-    const run = (stepIndex: number) => {
+    for (const step of steps) {
       if (!alive()) return;
-      const step = steps[stepIndex];
-      if (!step) {
-        finish();
-        return;
+      await wait(pauseMs(step.pauseBefore), session);
+      if (!alive()) return;
+      if (!hooked && step.part === "formal") {
+        hooked = true;
+        await runPoliteHook(session, hookMode === "spoken");
+        if (!alive()) return;
       }
-      setHighlight(null);
       setActiveSide(step.part);
-      setSpeechLang(step.lang);
-      const advance = () => run(stepIndex + 1);
-      const includeStart = step.part !== "meaning";
-      const callbacks = {
-        onBoundary: (h: SpeechHighlight) => {
-          if (alive()) setHighlight(h);
-        },
-        onEnd: advance,
-        onError: finish,
-        ...(includeStart
-          ? {
-              onStart: () => {
-                if (alive()) setSpeechStatus("speaking");
-              },
-            }
-          : {}),
-      };
-      if (step.lang === "ja") {
-        speechService.speakJapanese(
-          step.text,
-          callbacks,
-          getSpeechRate(),
-          step.part === "note" ? undefined : { reading: step.reading }
-        );
+      if (step.part === "note") setNoteShown(true);
+      const rate = scriptedRate(step.pace);
+      if (step.lang === "nuance") {
+        await sayNote(step.text, session, rate);
       } else {
-        speechService.speakEnglish(step.text, callbacks, getSpeechRate());
+        await say(step.lang, step.text, session, step.reading, rate);
       }
-    };
+    }
+    if (alive()) setNoteShown(true);
+  }
 
-    run(0);
+  /** "Can you say it politely?" — formal hidden, banner, countdown. */
+  async function runPoliteHook(session: number, speak: boolean): Promise<void> {
+    const alive = () => session === playSessionRef.current;
+    setHighlight(null);
+    setActiveSide(null);
+    if (speak) {
+      setHook({ ms: 0, key: ++hookKeyRef.current });
+      await say("en", POLITE_HOOK_EN, session, undefined, scriptedRate("normal"));
+      if (!alive()) return;
+      setHighlight(null);
+    }
+    setHook({ ms: T.readHookMs, key: ++hookKeyRef.current });
+    await wait(T.readHookMs, session);
+    if (!alive()) return;
+    setHook(null);
+  }
+
+  /** "Pause & answer": ask (spoken) → think (countdown) → reveal. */
+  async function runCheck(
+    sectionPairs: readonly RegisterPair[],
+    pairIndex: number,
+    checkpoints: readonly number[],
+    session: number
+  ): Promise<void> {
+    const alive = () => session === playSessionRef.current;
+    const n = checkpoints.indexOf(pairIndex);
+    const windowStart = n > 0 ? checkpoints[n - 1]! + 1 : 0;
+    const card = buildRegisterCheckCard(
+      sectionPairs.slice(windowStart, pairIndex + 1),
+      sectionPairs,
+      n + 1
+    );
+    if (!card) return;
+
+    const rate = scriptedRate("normal");
+    await wait(T.shortPause, session);
+    if (!alive()) return;
+    setActiveSide(null);
+    setCheck({ card, phase: "ask" });
+    await say("en", registerCheckSpoken(card), session, undefined, rate);
+    if (!alive()) return;
+    // The formal line asked about in a meaning question doesn't give the
+    // answer away; saying it on a polite question would.
+    if (card.kind === "meaning") {
+      await say("ja", card.pair.formal.text, session, card.pair.formal.reading, rate);
+      if (!alive()) return;
+    }
+
+    setCheck({ card, phase: "think" });
+    await wait(T.checkThinkMs, session);
+    if (!alive()) return;
+
+    setCheck({ card, phase: "reveal" });
+    await say("ja", card.pair.formal.text, session, card.pair.formal.reading, rate);
+    if (!alive()) return;
+    // A polite question already said the English line when it asked.
+    if (card.kind === "meaning") {
+      await say("en", firstSense(card.pair.meaning), session, undefined, rate);
+      if (!alive()) return;
+    }
+    clearSpeechUi();
+    await wait(T.checkRevealHold, session);
+    if (!alive()) return;
+    setCheck(null);
   }
 
   function play() {
@@ -199,10 +349,13 @@ export function useRegisterSession({
     if (!pair) return;
     if (drillMode && !revealed) setRevealed(true);
     speechService.stop();
+    clearTimers();
     const session = ++playSessionRef.current;
+    setHook(null);
+    setCheck(null);
     setPlayingSection(false);
     setPlayingAll(true);
-    playPairSequence(pair, session, () => {
+    void playPairSequence(pair, session, "off").then(() => {
       if (session !== playSessionRef.current) return;
       clearSpeechUi();
       setActiveSide(null);
@@ -221,44 +374,50 @@ export function useRegisterSession({
     if (sectionPairs.length === 0) return;
     if (drillMode) setRevealed(true);
     speechService.stop();
+    clearTimers();
     const session = ++playSessionRef.current;
+    const alive = () => session === playSessionRef.current;
+    setHook(null);
+    setCheck(null);
     setPlayingAll(false);
     setPlayingSection(true);
     setIndex(0);
 
-    const run = (pairIndex: number) => {
-      if (session !== playSessionRef.current) return;
-      if (!isRegisterScreen()) {
-        stop();
-        clearSpeechUi();
-        return;
-      }
-      const nextPair = sectionPairs[pairIndex];
-      if (!nextPair) {
-        stop();
-        clearSpeechUi();
-        return;
-      }
-      setIndex(pairIndex);
-      playPairSequence(nextPair, session, () => {
-        if (session !== playSessionRef.current) return;
-        const next = pairIndex + 1;
-        if (next >= sectionPairs.length) {
-          stop();
-          clearSpeechUi();
-          return;
-        }
-        clearSpeechUi();
-        setActiveSide(null);
-        gapTimerRef.current = window.setTimeout(() => {
-          gapTimerRef.current = null;
-          if (session !== playSessionRef.current) return;
-          run(next);
-        }, betweenItemsPause);
-      });
+    const retention = getRetention?.() ?? { hook: false, check: false };
+    const checkpoints = retention.check
+      ? checkpointIndices(sectionPairs.length, T.checkEvery)
+      : [];
+
+    const finish = () => {
+      stop();
+      clearSpeechUi();
     };
 
-    run(0);
+    void (async () => {
+      for (let pairIndex = 0; pairIndex < sectionPairs.length; pairIndex++) {
+        if (!alive()) return;
+        if (!isRegisterScreen()) {
+          finish();
+          return;
+        }
+        const pair = sectionPairs[pairIndex]!;
+        setIndex(pairIndex);
+        const hookMode = !retention.hook ? "off" : pairIndex === 0 ? "spoken" : "silent";
+        await playPairSequence(pair, session, hookMode);
+        if (!alive()) return;
+        clearSpeechUi();
+        setActiveSide(null);
+
+        if (checkpoints.includes(pairIndex)) {
+          await runCheck(sectionPairs, pairIndex, checkpoints, session);
+          if (!alive()) return;
+        }
+        if (pairIndex < sectionPairs.length - 1) {
+          await wait(betweenItemsPause, session);
+        }
+      }
+      if (alive()) finish();
+    })();
   }
 
   function goPrev() {
@@ -303,6 +462,9 @@ export function useRegisterSession({
     revealed,
     playingAll,
     playingSection,
+    noteShown,
+    hook,
+    check,
     open,
     stop,
     playSide,

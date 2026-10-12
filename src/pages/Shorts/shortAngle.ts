@@ -1,7 +1,9 @@
 import type { VocabularyItem } from "../../types/vocabulary";
-import { vocabulary } from "../../data/vocabulary";
+import { getVocabularyById, vocabulary } from "../../data/vocabulary";
 import { vocabularyN3 } from "../../data/n3/vocabularyN3";
 import { KANJI } from "../../data/kanji";
+import { firstSense } from "../../utils/social/socialText";
+import { mathBait, outroChallenge, trapBait } from "./outroVariety";
 
 /**
  * The angle of a Short: what kind of hook it opens with, and everything that
@@ -73,6 +75,8 @@ export interface ShortAngle {
   bait: string;
   /** The same question as Andrew says it (no emoji). */
   baitSpoken: string;
+  /** Which outro challenge this Short ends with, for analytics. */
+  outroId: string;
   /** Numbered answers shown under the question (twin quiz). */
   choices?: readonly string[];
   pinnedComment: string;
@@ -217,11 +221,6 @@ function kanjiSense(ch: string): string | null {
   return m.split(/[;,；]/)[0]!.trim() || null;
 }
 
-function firstSense(meaning: string): string {
-  const first = meaning.split(/[;；]/)[0] ?? meaning;
-  return first.replace(/\s*\([^)]*\)\s*$/, "").trim() || meaning.trim();
-}
-
 /** Two kanji whose meanings add up to something new (家 + 賃 = rent). */
 function kanjiMath(item: VocabularyItem): [string, string] | null {
   const chars = [...item.word];
@@ -240,7 +239,25 @@ const MATH_SHARE = 3; // out of 5
 
 /* ── Angle ────────────────────────────────────────────────────── */
 
+const angleCache = new Map<string, ShortAngle>();
+
+/**
+ * The angle for a word. The outro line is chosen knowing the previous
+ * word's outro (by id, the order Shorts are published in), so two Shorts in
+ * a row never end with the same challenge.
+ */
 export function shortAngle(item: VocabularyItem): ShortAngle {
+  const key = `${item.id}|${item.word}`;
+  const hit = angleCache.get(key);
+  if (hit) return hit;
+  const prev = getVocabularyById(Math.trunc(item.id) - 1);
+  const avoid = prev && prev.id !== item.id ? shortAngle(prev).baitSpoken : null;
+  const angle = buildAngle(item, avoid);
+  angleCache.set(key, angle);
+  return angle;
+}
+
+function buildAngle(item: VocabularyItem, avoid: string | null): ShortAngle {
   const reading = plainReading(item);
   const sense = firstSense(item.meaning);
 
@@ -253,9 +270,8 @@ export function shortAngle(item: VocabularyItem): ShortAngle {
       titleHead: `Most learners misread this! ${item.word} (${reading}) = "${sense}"`,
       titleHeadShort: `Most misread this! ${item.word} = "${sense}"`,
       descLine: `⚠️ Reading trap: ${item.word} is read ${reading} — not ${naive}!`,
-      bait: "Did you read it right? Comment ✅ or ❌!",
-      baitSpoken: "Did you read it right? Tell me in the comments!",
-      pinnedComment: `Be honest — did you read 「${item.word}」 as ${reading} on the first try? ✅ / ❌ 👇`,
+      outroId: "trap",
+      ...trapBait(item, avoid),
     };
   }
 
@@ -272,6 +288,7 @@ export function shortAngle(item: VocabularyItem): ShortAngle {
       titleHead: `${item.word} vs ${twin.word}: same sound (${reading}), different meaning!`,
       titleHeadShort: `${item.word} vs ${twin.word}: same sound!`,
       descLine: `👯 Sound-alike: ${item.word} and ${twin.word} are both read ${reading} — but only one means "${sense}".`,
+      outroId: "twin",
       bait: `Which one means "${twinSense}"? Comment 1 or 2!`,
       baitSpoken: `Which one means ${twinSense}? Comment one or two!`,
       choices: pair,
@@ -290,12 +307,13 @@ export function shortAngle(item: VocabularyItem): ShortAngle {
       titleHead: `"${a}" + "${b}" = ${item.word} (${reading}) "${sense}"`,
       titleHeadShort: `"${a}" + "${b}" = ${item.word} "${sense}"`,
       descLine: `🧮 Kanji math: ${c1} (${a}) + ${c2} (${b}) = ${item.word} (${sense})`,
-      bait: `Name another word with 「${c1}」 in the comments!`,
-      baitSpoken: "Name another word with this kanji in the comments!",
+      outroId: "math",
+      ...mathBait(item, c1!, c2!, avoid),
       pinnedComment: `${c1} + ${c2} = ${item.word} (${sense}). What other word uses 「${c1}」? 👇`,
     };
   }
 
+  const outro = outroChallenge(item, avoid);
   return {
     kind: "read",
     label: ANGLE_LABELS.read,
@@ -303,8 +321,9 @@ export function shortAngle(item: VocabularyItem): ShortAngle {
     titleHead: null,
     titleHeadShort: null,
     descLine: null,
-    bait: `Make a sentence with 「${item.word}」 in the comments!`,
-    baitSpoken: "Make your own sentence in the comments!",
-    pinnedComment: `✍️ Your turn: write a sentence with 「${item.word}」 below 👇`,
+    outroId: outro.id,
+    bait: outro.bait,
+    baitSpoken: outro.baitSpoken,
+    pinnedComment: outro.pinnedComment,
   };
 }

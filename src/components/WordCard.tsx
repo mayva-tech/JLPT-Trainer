@@ -23,6 +23,10 @@ type Props = {
   overlay?: ReactNode;
   /** Write the word with the brush in stroke order (Player "筆" setting). */
   brush?: { state: "draw" | "done"; runKey: number | string } | null;
+  /** English meaning held back until the Japanese is written and spoken. */
+  meaningHidden?: boolean;
+  /** Nuance held back until the slow pass with furigana is over. */
+  nuanceHidden?: boolean;
 };
 
 export function WordCard({
@@ -35,6 +39,8 @@ export function WordCard({
   showPicture = false,
   overlay = null,
   brush = null,
+  meaningHidden = false,
+  nuanceHidden = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -68,7 +74,10 @@ export function WordCard({
         speaking={jaHighlight != null}
         className="pa--card"
       />
-      <div aria-hidden="true">
+      <div
+        aria-hidden="true"
+        className={meaningHidden ? "meaning-reveal meaning-reveal--hidden" : "meaning-reveal"}
+      >
         <HighlightedEnglish
           text={item.meaning}
           className="word-meaning"
@@ -79,6 +88,7 @@ export function WordCard({
         note={item.wordNuance}
         active={nuanceActive}
         highlight={nuanceHighlight}
+        pending={nuanceHidden}
       />
     </div>
   );

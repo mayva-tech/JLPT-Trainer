@@ -1,5 +1,7 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useMemo, type ReactNode } from "react";
 import type { SpeechHighlight } from "../services/speechService";
+import { nuanceFurigana } from "../utils/nuanceFurigana";
+import type { ReadingGloss } from "../utils/readingGloss";
 
 type Props = {
   text: string;
@@ -15,6 +17,12 @@ type Props = {
    * `word-break: keep-all`), never mid-word like 在庫切|れ.
    */
   jpWordBreaks?: boolean;
+  /**
+   * Nuance notes: every kanji gets furigana. A kanji word written with its
+   * reading after it ("方 かた", "者（もの）") shows that reading over the
+   * kanji instead of beside it.
+   */
+  readingGlosses?: boolean;
 };
 
 /**
@@ -35,6 +43,36 @@ function withJapaneseBreaks(text: string): ReactNode {
   ));
 }
 
+/**
+ * One word of the line with its glosses applied: the kanji get the reading as
+ * furigana and the written-out reading after them is left out.
+ */
+function withGlosses(
+  start: number,
+  text: string,
+  glosses: readonly ReadingGloss[],
+  plain: (piece: string) => ReactNode
+): ReactNode {
+  const end = start + text.length;
+  const out: ReactNode[] = [];
+  let at = start;
+  for (const g of glosses) {
+    if (g.end <= start || g.rubyStart >= end) continue;
+    if (g.rubyStart > at) out.push(plain(text.slice(at - start, g.rubyStart - start)));
+    if (g.rubyStart >= at && g.rubyEnd <= end) {
+      out.push(
+        <ruby key={g.rubyStart} className="reading-gloss">
+          {text.slice(g.rubyStart - start, g.rubyEnd - start)}
+          <rt>{g.ruby}</rt>
+        </ruby>
+      );
+    }
+    at = Math.min(end, Math.max(at, g.end));
+  }
+  if (at < end) out.push(plain(text.slice(at - start)));
+  return out.map((node, i) => <Fragment key={i}>{node}</Fragment>);
+}
+
 /** English text with per-word speech highlight (spaces preserved between words). */
 export function HighlightedEnglish({
   text,
@@ -42,12 +80,18 @@ export function HighlightedEnglish({
   highlight,
   inline = false,
   jpWordBreaks = false,
+  readingGlosses = false,
 }: Props) {
+  const glosses = useMemo(() => (readingGlosses ? nuanceFurigana(text) : []), [readingGlosses, text]);
   const parts: { text: string; start: number }[] = [];
   const re = /(\s+|\S+)/g;
   let match: RegExpExecArray | null;
   while ((match = re.exec(text)) !== null) {
-    parts.push({ text: match[0], start: match.index });
+    const start = match.index;
+    const end = start + match[0].length;
+    // The reading (and the space before it) now sits above the kanji.
+    if (glosses.some((g) => start >= g.rubyEnd && end <= g.end)) continue;
+    parts.push({ text: match[0], start });
   }
 
   const Wrapper = inline ? "span" : "div";
@@ -75,7 +119,15 @@ export function HighlightedEnglish({
               className={`speech-char ${isSpace ? "speech-space" : ""} ${state}`.trim()}
             >
               {/* Keep real spaces so lines wrap per word (not mid-word). */}
-              {jpWordBreaks && !isSpace ? withJapaneseBreaks(part.text) : part.text}
+              {isSpace
+                ? part.text
+                : glosses.length
+                  ? withGlosses(start, part.text, glosses, (piece) =>
+                      jpWordBreaks ? withJapaneseBreaks(piece) : piece
+                    )
+                  : jpWordBreaks
+                    ? withJapaneseBreaks(part.text)
+                    : part.text}
             </span>
           );
         })}

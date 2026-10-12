@@ -70,7 +70,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5766: {
     word: "気分 is a temporary mood, while 気持ち is a feeling toward something and 機嫌 is someone's temper.",
     phrase: "楽しい気分 describes a passing mood; 気分がいい and 気分が悪い can also mean feeling well or sick.",
-    sentence: "すっきりした means feeling refreshed or clear-headed, and たら shows what led to it.",
   },
   5767: {
     word: "昭和 ran from nineteen twenty-six to nineteen eighty-nine, followed by 平成 and then 令和.",
@@ -94,7 +93,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5771: {
     word: "数字 means a digit or figure; 数 is the amount or count of things.",
     phrase: "正確な数字 in business usually means exact figures, like sales or statistics.",
-    sentence: "売上の数字 is typical business talk; 数字に強い means good with numbers.",
+    sentence: "表にまとめる means to organize data into a table.",
   },
   5772: {
     word: "自ら is formal and stresses acting on one's own initiative; 自分から is the everyday equivalent.",
@@ -122,7 +121,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5777: {
     word: "年代 can mean a decade, as in 九十年代, or an age bracket of people.",
     phrase: "同じ年代 means roughly the same age range; 同年代 is the compact written form.",
-    sentence: "幅広い年代に is a common phrase in ads and reviews, meaning popular with people of all ages.",
   },
   5778: {
     word: "タイプ often describes kinds of people, as in 彼は真面目なタイプだ.",
@@ -142,10 +140,10 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5782: {
     word: "役割 is a role or function in a system; 役目 is a duty given to a person, and 役 is a part in a play.",
     phrase: "重要な役割 usually pairs with を果たす, to play a role, or を担う, to take on a role.",
+    sentence: "役割がある and 役割を果たす are the usual collocations; avoid 役割をする.",
   },
   5783: {
     word: "きっと expresses a confident guess or encouragement; with requests, きっと来てね sounds like a heartfelt wish.",
-    sentence: "きっと合格できます is typical encouragement; for fixed facts or schedules, きっと sounds odd.",
   },
   5784: {
     word: "ユーザー is used for users of software, services, or products; 利用者 is the formal Japanese equivalent on notices.",
@@ -160,7 +158,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5786: {
     word: "エネルギー covers physical energy and personal vigor; for everyday liveliness, 元気 or パワー sounds more natural.",
     phrase: "自然エネルギー refers to sources like solar and wind; 再生可能エネルギー is the formal term.",
-    sentence: "エネルギーを補給する is refueling the body, often said of snacks before or during exercise.",
   },
   5787: {
     word: "知れる survives mostly in set forms: 気が知れない, 得体の知れない, 数知れない, and お里が知れる.",
@@ -177,7 +174,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5790: {
     word: "高校 is short for 高等学校; a student is a 高校生, and entrance exams are 高校受験.",
-    phrase: "地元の高校 is the school in your home area; 地元 implies where you grew up or live.",
+    phrase: "高校 is short for 高等学校; Japanese high school usually runs for three years.",
   },
   5791: {
     word: "合わせる is transitive: you make things fit; 合う is intransitive, so 色が合う but 色を合わせる.",
@@ -255,7 +252,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5807: {
     word: "警察 is the police as an organization; an officer is 警察官, or casually おまわりさん.",
     phrase: "警察に相談する means going to the police for advice, not only reporting a crime.",
-    sentence: "警察に届ける is the set way to hand in lost items; small local police boxes are 交番.",
+    sentence: "You report lost items to the police or a local 交番.",
   },
   5808: {
     word: "思い出す is the act of recalling; 思い出 is a memory itself, and 思い出させる means to remind.",
@@ -293,7 +290,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5816: {
     word: "決して strengthens a negative and sounds serious; 絶対に can be used with both positive and negative.",
-    sentence: "決して無駄にはならない is a common reassurance; は adds weight to the denial.",
   },
   5817: {
     word: "身体 read しんたい appears in formal terms like 身体検査; in everyday speech 体 is used.",
@@ -325,8 +321,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5823: {
     word: "本当 is often shortened to ほんと in casual speech.",
-    phrase: "本当の理由 implies the stated reason was not the true one.",
-    sentence: "本当かどうか確かめる is a natural pattern; 本当に is the adverb, as in 本当にありがとう.",
+    phrase: "本当の means real or true; 本当に is the adverb, really.",
   },
   5824: {
     word: "以降 is formal and used with times and dates; 以来 means since a past point up to now.",
@@ -335,7 +330,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5825: {
     word: "法人 is a legal person such as a company, contrasting with 個人, an individual.",
     phrase: "医療法人 is a legal form used by hospitals and clinics in Japan.",
-    sentence: "法人として登録する is standard legal wording; 法人化 means incorporating an organization.",
+    sentence: "法人化 means incorporating an organization.",
   },
   5826: {
     word: "クラス is a class of students or a lesson; 学級 is the formal school term, and 組 appears in names like 二年三組.",
@@ -343,7 +338,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5827: {
     word: "会長 heads associations and clubs, and in companies ranks above 社長; a student council head is 生徒会長.",
-    phrase: "協会の会長 heads an association; in companies 会長 is the chairman, above the 社長.",
+    phrase: "In companies, 会長 is the chairman, above the 社長.",
     sentence: "会長が挨拶をする is standard at ceremonies; programs often list it as 会長挨拶.",
   },
   5828: {
@@ -418,11 +413,10 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5844: {
     word: "会場 is the venue of an event, while 場所 is any place; signs often read 会場はこちら.",
     phrase: "試験会場 is where an exam is held; 会場 means any event venue.",
-    sentence: "会場にはお越しください is typical event wording asking guests to arrive by a set time.",
   },
   5845: {
     word: "電子 marks digital versions of everyday things, as in 電子書籍, 電子マネー, or 電子決済.",
-    phrase: "電子部品 are electronic parts; 電子 also forms 電子レンジ, a microwave oven.",
+    phrase: "電子 also forms 電子レンジ, a microwave oven.",
     sentence: "電子メール is the formal name for email; in speech メール is normal.",
   },
   5846: {
@@ -437,7 +431,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5848: {
     word: "維持 is keeping a state unchanged; 保つ is the softer verb, and 維持費 means upkeep cost.",
     phrase: "健康を維持する is formal; 健康を保つ is a softer equivalent.",
-    sentence: "品質を維持する is typical factory and business language.",
+    sentence: "健康を維持する is a common pairing; 維持 means keeping something at its current level.",
   },
   5849: {
     word: "ほぼ means very nearly; だいたい is rougher, and ほとんど often pairs with negatives.",
@@ -469,7 +463,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5855: {
     word: "失う is for losing abstract or important things; losing a wallet is usually なくす.",
     phrase: "自信を失う sounds formal; casually people say 自信がなくなる.",
-    sentence: "信用を失う is a set phrase, and lost trust is typically paired with 取り戻す.",
+    sentence: "信用を失う is a set phrase for losing people's trust.",
   },
   5856: {
     word: "理論 is a theory; 理屈 is reasoning, often used negatively for excuses.",
@@ -499,7 +493,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5862: {
     word: "当たる covers hitting a target, winning a prize, a guess proving right, and being in sunlight; 当てる is transitive.",
-    sentence: "抽選で当たる is the usual phrase for winning a drawing; a winning ticket is 当たり.",
+    sentence: "当たる also means to win, as in くじが当たる.",
   },
   5863: {
     word: "資本 is capital for business; 資金 is funds for a specific purpose.",
@@ -535,7 +529,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5870: {
     word: "集まる is intransitive: people or things gather; 集う is a literary synonym.",
     phrase: "人が集まる is intransitive; the transitive counterpart is 人を集める.",
-    sentence: "大勢の市民が集まった is typical news wording; the place is marked with に or へ.",
   },
   5871: {
     word: "措置 is formal, used for official action; 対策 is a countermeasure plan.",
@@ -568,7 +561,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5878: {
     word: "二つ can also give a small child's age, and 二つ上 means two years older.",
     phrase: "二つの方法 uses the native counter つ, used for general things without a special counter.",
-    sentence: "二つに絞る is common for narrowing choices; with other counters, 二 is used, as in 二枚.",
   },
   5879: {
     word: "以来 means since a past point up to now; 以降 simply means from that point on.",
@@ -581,7 +573,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5881: {
     word: "集める is transitive; 集まる is its intransitive pair.",
-    phrase: "情報を集める is natural in speech; 情報収集 is the formal noun.",
+    phrase: "集める is transitive and takes を; the intransitive partner is 集まる.",
   },
   5882: {
     word: "離れる is intransitive, moving away from something; 離す is transitive, as in 手を離す.",
@@ -626,7 +618,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5891: {
     word: "位置 is a position or location, often precise; 場所 is a place in general.",
     phrase: "現在の位置 is common in apps and maps; 現在地 is the shorter term.",
-    sentence: "避難所の位置を確認する is typical disaster-preparedness advice.",
   },
   5892: {
     word: "指定 is officially specifying something; a 指定席 is a reserved seat and a 自由席 an unreserved one.",
@@ -678,7 +669,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5903: {
     word: "整理 means sorting and removing what is unneeded; a 整理券 is a numbered ticket for waiting in line.",
-    phrase: "資料の整理 is sorting documents; 整理 removes clutter, while 整頓 puts things in place.",
+    phrase: "整理 removes clutter, while 整頓 puts things in their place.",
     sentence: "机の上を整理する is natural; 片付ける is the everyday verb for tidying up.",
   },
   5904: {
@@ -687,11 +678,11 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5905: {
     word: "至る is formal for reaching a point or result; 至る所 means everywhere, and 今に至るまで means up to now.",
-    sentence: "合意に至った is formal written style; in speech 合意できた is more natural.",
+    sentence: "結論に至る is formal written style; in speech 結論が出た is more natural.",
   },
   5906: {
     word: "多数 sounds formal and statistical; in speech, たくさん. 多数決, majority vote, is a common way groups decide.",
-    phrase: "多数の応募 is formal; in speech たくさんの応募 is more natural.",
+    phrase: "多数 is formal; 多数決 means deciding by majority vote.",
     sentence: "多数の人が賛成した is formal; 過半数 is the precise word for more than half.",
   },
   5907: {
@@ -720,11 +711,11 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5912: {
     word: "勝つ is winning a contest; for winning a prize, もらう or 当たる is used instead.",
     phrase: "試合に勝つ uses に, not を; saying 試合を勝つ is a common learner mistake.",
-    sentence: "相手に勝つ marks the opponent with に, just like 試合に勝つ.",
+    sentence: "勝つ marks the game or opponent with に.",
   },
   5913: {
     word: "打つ covers hitting, typing, and giving injections; 撃つ is used for shooting a gun.",
-    sentence: "早めに手を打つ is a common business phrase urging early action.",
+    sentence: "打つ also means to type, as in メールを打つ.",
   },
   5914: { word: "流れる is used for water, time, music, and rumors; 流す is transitive, as in 音楽を流す." },
   5915: {
@@ -757,7 +748,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5922: {
     word: "明確 is formal; はっきり is the everyday equivalent.",
-    phrase: "明確な基準 is formal, common in business and legal writing.",
+    phrase: "明確 is formal, common in business and written reports.",
     sentence: "目的を明確にする is a common business phrase; 明確化 is the noun form.",
   },
   5923: {
@@ -771,7 +762,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5925: {
     word: "セット covers meal combos, sets of items, and stage sets; セット販売 means selling items as a bundle.",
-    sentence: "ランチセット is a staple of Japanese restaurants, usually with a drink or soup.",
+    sentence: "Many Japanese restaurants offer lunch sets with a drink or soup.",
   },
   5926: {
     word: "皆様 is used in announcements and formal writing; 皆さん is polite but friendlier.",
@@ -798,7 +789,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5931: {
     word: "工場 is read こうじょう for factories, while こうば suggests a small workshop.",
-    phrase: "食品工場 produces packaged food; 工場見学 tours of such factories are popular school trips.",
+    phrase: "工場 is read こうじょう; the reading こうば is used for small workshops.",
   },
   5932: {
     word: "入力 is entering data on a device; 記入 is filling in a paper form, and 出力 is output.",
@@ -828,7 +819,9 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
     word: "現象 describes an observable event, often in science or social trends.",
     phrase: "自然現象 is a natural phenomenon like a rainbow or lightning.",
   },
-  5938: { word: "ビル is a modern multistory building; 建物 is any building, including houses." },
+  5938: {
+    word: "ビル is a modern multistory building; 建物 is any building, including houses.",
+  },
   5939: {
     word: "感動 is being deeply moved, stronger than 感心, which means admiring.",
     phrase: "大きな感動 pairs with を与える or を受ける; 感動する is the verb.",
@@ -865,7 +858,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5947: {
     word: "農業 is farming as an industry; the actual field work is 農作業, and 農業体験 is a hands-on farm experience.",
     phrase: "地域の農業 is local farming; 農業 is the industry, while 農家 is a farming household.",
-    sentence: "農業の人手不足 is a common topic in news about rural Japan.",
   },
   5948: {
     word: "用意 is getting things ready; 準備 is broader preparation, and 用意周到 means thoroughly prepared.",
@@ -881,9 +873,10 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5951: {
     word: "強化 is making something stronger, like security, training, or rules; 強める is plainer, and 補強 is physical reinforcement.",
     phrase: "対策の強化 is common in news; the verb form is 対策を強化する.",
-    sentence: "対策を強化する is typical news wording after disasters or incidents.",
   },
-  5952: { word: "周り is the area or people around you; 周囲 is formal, and 身の回り means your personal surroundings or belongings." },
+  5952: {
+    word: "周り is the area or people around you; 周囲 is formal, and 身の回り means your personal surroundings or belongings.",
+  },
   5953: {
     word: "レポート is a term paper at university and a field report in media; 報告書 is a formal business report.",
     phrase: "調査レポート is a research report, often published by companies or research institutes.",
@@ -924,7 +917,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5961: {
     word: "他人 is someone outside your circle; 赤の他人 means a complete stranger, and 他人事 means someone else's problem.",
-    sentence: "他人の写真を勝手に投稿する is typical wording in rules about online privacy.",
   },
   5962: {
     word: "The opposite of 上昇 is 下降, or 低下 for levels and quality.",
@@ -938,7 +930,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5964: {
     word: "大好き is warm and casual; 大好物 means a favorite food.",
-    sentence: "主人公が大好きだ follows the が pattern; 大好き is typical of fans and children.",
+    sentence: "大好き takes が for the thing loved, just like 好き.",
   },
   5965: {
     word: "扱う covers handling objects, dealing with topics, and treating people; 取り扱い注意 means handle with care.",
@@ -955,11 +947,11 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5968: {
     word: "負ける is losing a contest; losing an object is なくす, and 負けず嫌い is someone who hates losing.",
-    sentence: "決勝で負ける uses で for the stage of the tournament.",
+    sentence: "負ける marks the game or opponent with に.",
   },
   5969: {
     word: "野球 is a hugely popular spectator sport in Japan; the high school tournament at 甲子園 draws national attention.",
-    phrase: "野球中継 means a live baseball broadcast; 中継 means relaying live.",
+    phrase: "プロ野球 is short for professional baseball, Japan's most popular spectator sport.",
     sentence: "野球の試合を聞く is natural for radio; on TV you would say 見る.",
   },
   5970: {
@@ -969,7 +961,6 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   5971: {
     word: "並ぶ also means to stand in a queue.",
     phrase: "本が並ぶ is intransitive; to line up books yourself, use 本を並べる.",
-    sentence: "古い建物が並んでいる is natural for a streetscape; 立ち並ぶ is a more vivid, written variant.",
   },
   5972: {
     word: "視点 is a viewpoint or angle; 立場 is one's position, and 視点を変える means changing perspective.",
@@ -989,7 +980,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5976: {
     word: "挙げる means to raise, cite, or hold a ceremony, as in 結婚式を挙げる; 上げる is general raising.",
-    sentence: "例を挙げている often appears in reading questions about an author's points.",
+    sentence: "例を挙げる means giving examples.",
   },
   5977: {
     word: "ドラマ usually means a TV series; 連ドラ is short for 連続ドラマ, and 朝ドラ is the NHK morning drama.",
@@ -1003,7 +994,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5980: {
     word: "止める is transitive and 止まる intransitive; in writing, 止める can also be read やめる, so context matters.",
-    sentence: "機械を止める is natural for machines; for cars, both 止める and 停める appear.",
+    sentence: "For parking, both 止める and 停める are used.",
   },
   5981: {
     word: "取り組む suggests sustained, serious effort; the noun 取り組み is common in corporate reports.",
@@ -1038,7 +1029,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5988: {
     word: "立てる is standing something up and also forming plans; 建てる is for building a structure.",
-    sentence: "予算を立てる follows the same pattern as 計画を立てる.",
+    sentence: "計画を立てる is the set phrase for making a plan.",
   },
   5989: {
     word: "画面 is a display screen on TVs, phones, and computers; スクリーン is for projectors and cinemas.",
@@ -1056,7 +1047,7 @@ export const vocabNuances8: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5992: {
     word: "スタート is a start or launch; 開始 is formal, and 再スタート means a fresh start.",
-    phrase: "好調なスタート means a strong start, common in sales or sports news.",
+    phrase: "スタート works like 始まり; いいスタートを切る is a set phrase for making a good start.",
     sentence: "来月からスタートする is common in business and ads for new services.",
   },
   5993: {

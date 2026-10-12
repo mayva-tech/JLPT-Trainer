@@ -175,7 +175,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4044: {
     word: "保険証 is short for 健康保険証; many people now use the マイナ保険証 instead.",
-    phrase: "提示 means showing a document, a formal word seen on signs like 保険証をご提示ください.",
+    phrase: "Clinics ask 保険証をお見せください or, more formally, ご提示ください.",
   },
   4045: {
     word: "熱中症 covers heat illness in general, from dizziness to severe heatstroke.",
@@ -360,7 +360,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4089: {
     word: "Many Japanese scholarships are loans to repay, so check whether one is 給付型 or 貸与型.",
-    phrase: "申請 is a formal application to an institution, as in ビザの申請.",
+    phrase: "Many 奨学金 in Japan are loans that have to be paid back.",
     sentence: "奨学金をもらう is natural in speech; forms write 奨学金を受ける.",
   },
   4090: {
@@ -411,8 +411,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4101: {
     word: "洗濯 is only for washing clothes; washing dishes or hands uses 洗う.",
-    phrase: "洗濯物 is the laundry itself, and 干す means hanging it out to dry.",
-    sentence: "洗濯をまとめてする means batching laundry; running the machine is 洗濯機を回す.",
+    phrase: "洗濯をする is the everyday way to say doing the laundry; the clothes themselves are 洗濯物.",
   },
   4102: {
     word: "縮む is intransitive; to shrink something on purpose is 縮める.",
@@ -433,6 +432,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4106: {
     word: "柄が悪い uses the same word to mean rough or ill-mannered.",
+    sentence: "柄 read がら means a pattern; plain fabric with no pattern is 無地.",
   },
   4107: {
     word: "試着 is trying on clothes in a shop; 試食 is tasting food samples.",
@@ -440,7 +440,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4108: {
     word: "丁寧 means both polite and careful; 丁寧語 is the です and ます level of politeness.",
-    phrase: "丁寧に扱う means to handle with care; fragile parcels are labeled 取扱注意.",
+    phrase: "丁寧に means carefully and neatly; 丁寧な言葉 means polite language.",
   },
   4109: {
     word: "流行 is also used for epidemics, as in インフルエンザの流行.",
@@ -451,7 +451,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4111: {
     word: "宿泊 appears in 宿泊費, 宿泊客 and 宿泊施設, all formal travel terms.",
-    sentence: "宿泊費 is lodging cost, usually claimed alongside 交通費 on business trips.",
+    sentence: "宿泊費 is the cost of a stay, usually quoted per person per night in Japan.",
   },
   4112: {
     word: "観光 is sightseeing; a tourist is 観光客, and a tourist spot is 観光地.",
@@ -471,7 +471,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4116: {
     word: "At airports, チェックイン is also called 搭乗手続き in formal Japanese.",
-    phrase: "フロント is the front desk, and it takes で as the place where you check in.",
+    phrase: "チェックインする takes に for the hotel; the front desk is the フロント.",
   },
   4117: {
     word: "空席 is formal booking language; the opposite is 満席.",
@@ -480,7 +480,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4118: {
     word: "模様替え changes a room's look; the seasonal switch of wardrobe is 衣替え.",
-    sentence: "気分転換に模様替えする is a common pairing: rearranging a room to refresh your mood.",
+    sentence: "Rearranging a room to refresh your mood is often called 気分転換に模様替えする.",
   },
   4119: {
     word: "眠れない can be one night or ongoing trouble; the medical term is 不眠症.",
@@ -498,7 +498,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4122: {
     word: "寝坊 is sleeping past the time you meant to get up; staying up late is 夜更かし.",
-    phrase: "寝坊して遅刻する is the classic excuse; 遅刻 is being late for school or work.",
+    phrase: "寝坊して遅れる is the classic excuse for being late.",
   },
   4123: {
     word: "枕 also appears in 枕元, bedside, and 膝枕, resting your head on someone's lap.",
@@ -507,14 +507,16 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4124: {
     word: "布団 covers both the mattress, 敷布団, and the quilt, 掛け布団.",
+    sentence: "Airing the futon in the sun on a fine day is a routine Japanese chore.",
   },
   4125: {
     word: "掃除 is cleaning a space; 大掃除 is the big year-end clean.",
     phrase: "掃除 is removing dirt from a place; washing objects is 洗う, and tidying up is 片付け.",
+    sentence: "掃除する works as a verb on its own, so 部屋を掃除します means I clean the room.",
   },
   4126: {
     word: "片付ける also means finishing off tasks, as in 仕事を片付ける.",
-    phrase: "食器の片付け covers clearing the table and putting dishes away, not only washing.",
+    phrase: "片付け covers tidying and putting things back where they belong.",
   },
   4127: {
     word: "ゴミ出し is the chore itself; the verb phrase is ゴミを出す, and collection day is 収集日.",
@@ -523,6 +525,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4128: {
     word: "趣味 also means taste in style, as in 趣味がいい.",
     phrase: "Hobbies are introduced with 趣味は and a noun, as in 趣味は読書です.",
+    sentence: "Hobbies are often given as 〜ことです after 趣味は.",
   },
   4129: {
     word: "汚れ is the noun of 汚れる, to get dirty; making something dirty is 汚す.",
@@ -539,7 +542,6 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4132: {
     word: "資源ゴミ is recyclable waste on garbage calendars, such as cans and newspapers.",
     phrase: "天然資源 is natural resources, and 人的資源 means human resources.",
-    sentence: "限りある資源 is a set phrase in environmental messages.",
   },
   4133: {
     word: "省エネ is energy saving in general; 節電 is specifically cutting electricity use.",
@@ -577,7 +579,6 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4141: {
     word: "礼儀 is proper manners; マナー is used for everyday etiquette like train or phone manners.",
     phrase: "礼儀を守る means to observe manners, and a polite person is 礼儀正しい.",
-    sentence: "礼儀をわきまえる means knowing proper conduct, formal wording often used about adults.",
   },
   4142: {
     word: "招待 is a formal invitation; the invitation card is 招待状.",
@@ -594,7 +595,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4145: {
     word: "Public apologies by companies are 謝罪会見, apology press conferences.",
-    sentence: "誠意を持って謝罪する is set phrasing for a sincere formal apology.",
+    sentence: "心から謝罪する is set phrasing for a sincere formal apology.",
   },
   4146: {
     word: "誘い is a casual invitation from the verb 誘う; a formal one is 招待.",
@@ -604,7 +605,6 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4147: {
     word: "信頼 is trust in someone's character; 信用 leans toward credibility and credit.",
     phrase: "信頼を築く means to build trust over time; losing it is 信頼を失う.",
-    sentence: "信頼を得る is the collocation for earning trust.",
   },
   4148: {
     word: "否定 is denial or negation; the grammatical negative form is 否定形.",
@@ -716,7 +716,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4174: {
     word: "ダウンロード is often written DL online; the opposite is アップロード.",
-    phrase: "ファイルをダウンロードする takes を; keeping it on your device is 保存する.",
+    phrase: "ダウンロードする takes を; keeping a file on your device is 保存する.",
   },
   4175: {
     word: "充電 is charging a battery; topping up money on an IC card is チャージ.",
@@ -769,11 +769,11 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4186: {
     word: "審判 is both the referee and the act of judging.",
-    phrase: "判定 is a ruling, and a mistaken call is called 誤審.",
+    phrase: "審判 is both the referee and the judgment they make.",
   },
   4187: {
     word: "記録を取る means to take notes or log data.",
-    sentence: "自己記録を更新する means to beat your personal best.",
+    sentence: "記録を破る means to break a record; 自己記録 is a personal best.",
   },
   4188: {
     word: "応援しています is a warm message to friends or performers; 応援に行く can also mean going to help out.",
@@ -816,7 +816,6 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4197: {
     word: "気持ちいい means pleasant or feels good, a different use of the word.",
     phrase: "気持ちを伝える means expressing feelings, often love or gratitude.",
-    sentence: "感謝の気持ち is a set pairing in thank-you speeches and cards.",
   },
   4198: {
     word: "ストレスがたまる means stress builds up; the cause of stress is a ストレスの原因.",
@@ -847,10 +846,11 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4205: {
     word: "辛口 is the opposite of 甘口, and curry menus often add 中辛 in between.",
+    sentence: "辛口 means spicy for food, but for sake or wine it means dry.",
   },
   4206: {
     word: "薄味 sounds like healthy praise, while 味が薄い can be a complaint that food is bland.",
-    phrase: "薄味に仕上げる means to finish with light seasoning; the opposite is 濃い味.",
+    phrase: "The opposite of 薄味 is 濃い味.",
   },
   4207: {
     word: "好みのタイプ means your type in romance; 好み also covers food and style, as in 好みが分かれる, opinions differ.",
@@ -892,6 +892,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4217: {
     word: "Someone who breaks a rule is a 違反者, and illegal parking is 駐車違反.",
+    sentence: "駐車違反 is a parking violation; the fine is called 罰金 or 反則金.",
   },
   4218: {
     word: "Minor traffic offenses usually carry a 反則金, which is technically different from 罰金.",
@@ -906,7 +907,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   4221: {
     word: "親戚 and 親類 both mean relatives; 親戚 is more common.",
     phrase: "親戚が集まる is typical at New Year or お盆.",
-    sentence: "親戚一同 is a set phrase meaning all the relatives together.",
+    sentence: "In Japan, relatives often gather at New Year, お正月.",
   },
   4222: {
     word: "Someone else's grandchild is politely お孫さん, and a great-grandchild is ひ孫.",
@@ -917,7 +918,7 @@ export const vocabNuances1: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4224: {
     word: "離婚 is divorce; living apart without divorcing is 別居.",
-    phrase: "決意する expresses firm resolve, stronger than 決める.",
+    phrase: "離婚 is divorce; the opposite, getting married, is 結婚.",
   },
   4225: {
     word: "扶養 is financial support of dependents; the everyday verb is 養う.",

@@ -114,6 +114,17 @@
   z-index: 40;
 }
 
+/* In a control bar: one more pair of buttons in the row. */
+.amb-pan--bar {
+  position: static;
+  gap: 4px;
+  opacity: 1;
+}
+
+.amb-pan--bar .amb-pan-bar-btn {
+  min-width: 28px;
+}
+
 .amb-pan-btn {
   width: 26px;
   height: 22px;
@@ -129,13 +140,14 @@
   user-select: none;
 }
 
-.amb-pan-btn:hover:not(:disabled) {
+.amb-pan-btn:hover {
   border-color: rgba(236, 240, 248, 0.55);
 }
 
-.amb-pan-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
+.amb-pan-btn--on {
+  color: #1a1f2b;
+  background: rgba(232, 178, 92, 0.9);
+  border-color: rgba(232, 178, 92, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

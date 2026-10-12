@@ -15,7 +15,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4503: {
     word: "寒波 is a mass of cold air sweeping in, a winter news word; its summer counterpart is 熱波, a heat wave.",
     phrase: "強い寒波 is standard; news also says 寒波が到来する or 寒波が襲来する, and 大寒波 for a severe one.",
-    sentence: "寒波が日本列島を覆う is set news imagery; 覆う pictures the cold blanketing the whole country.",
   },
   4504: {
     word: "熱帯夜 is an official weather term, often heard alongside 猛暑日 and 真夏日 in summer reports.",
@@ -73,7 +72,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4516: {
     word: "失礼 works as a noun and a na-adjective, and 失礼ですが is a polite opener before a personal question.",
-    sentence: "失礼にあたる is a set phrase for counting as rude, common when explaining etiquette.",
   },
   4517: {
     word: "控える also means to wait nearby or to have something coming up, as in 試験を控えている.",
@@ -108,7 +106,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4524: {
     word: "引き継ぎ is a key workplace routine before transfers or leave; it is also written 引継ぎ in company documents.",
     phrase: "The verb form is 業務を引き継ぐ, and a written handover memo is called 引き継ぎ書.",
-    sentence: "後任者 is your successor; the person you replaced is 前任者.",
   },
   4525: {
     word: "進捗 is office jargon for how far work has advanced; 進捗状況 is the progress status in reports.",
@@ -160,7 +157,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4536: {
     word: "改善 is making something better; in Japanese factories it names continuous improvement, known abroad as kaizen.",
     phrase: "改善 is fixing what is bad or making good better, and 改善点 means points to improve.",
-    sentence: "見直して改善する is a common business chain: review the process, then improve it.",
   },
   4537: {
     word: "工夫する takes what is being improved as its object, as in 説明を工夫する; 工夫次第 means it depends on your ingenuity.",
@@ -173,7 +169,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4539: {
     word: "手段 is the means to a goal; 方法 is the general word for a way of doing things, and 交通手段 is means of transport.",
-    sentence: "あらゆる手段を試す is a strong set phrase; 最後の手段 means a last resort.",
+    sentence: "手段を選ばない means being willing to do anything to reach a goal.",
   },
   4540: {
     word: "妥当 is formal: reasonable and justifiable after consideration; 適当 can mean suitable but also careless in speech.",
@@ -279,8 +275,8 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4562: {
     word: "意見する as a verb can mean to admonish, as in 親に意見される.",
-    phrase: "意見を述べる is formal; in conversation, 意見を言う is more natural.",
-    sentence: "会議で意見を述べる is formal; when a group brainstorms, 意見を出す is the usual verb.",
+    phrase: "意見を言う is the everyday verb; 意見を述べる is the formal one.",
+    sentence: "When a group is collecting ideas, the usual verb is 意見を出す.",
   },
   4563: {
     word: "見解 is a considered view, often official; 意見 is a general opinion, and 見解の相違 is a difference of views.",
@@ -292,7 +288,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4565: {
     word: "反対 is both opposition and the opposite, as in 反対側 for the other side.",
-    sentence: "私の留学に反対する shows 反対 taking a noun with に; parents objecting is a very common use.",
+    sentence: "反対する takes に for what you oppose.",
   },
   4566: {
     word: "批判 is critical evaluation of ideas or actions; 批評 is critique of art, books, or films.",
@@ -318,7 +314,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4571: {
     word: "穏やか suggests calm and mild, for people, weather, or seas; 静か is simply quiet.",
     phrase: "穏やか describes people, weather, and seas alike, as in 穏やかな海.",
-    sentence: "穏やかな態度で接する is a set compliment for calm, gentle handling of people.",
   },
   4572: {
     word: "素直 praises openness and not twisting things; 素直に謝る means apologizing without making excuses.",
@@ -336,7 +331,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4575: {
     word: "冷静 is calm and level-headed; 落ち着いている is the softer everyday way to describe it.",
-    phrase: "冷静に対応する is a stock phrase for keeping a cool head when handling problems.",
+    phrase: "冷静に means calmly, keeping a cool head even when things are tense.",
     sentence: "冷静さを失う is the set phrase for losing composure, and 冷静さを保つ is keeping it.",
   },
   4576: {
@@ -378,7 +373,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4584: {
     word: "信用 is trust earned through reliability; 信用を失う is losing it, and 信用金庫 is a credit union.",
-    sentence: "人々の信用を得る is natural, and 信用 builds up gradually, so 誠実な態度 fits well as the reason.",
   },
   4585: {
     word: "裏切る is betraying trust, and also defying expectations, as in 予想を裏切る.",
@@ -387,12 +381,12 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4586: {
     word: "責める is to blame; 攻める, with the same reading, is to attack.",
     phrase: "自分を責めないで is a common comforting line meaning don't blame yourself.",
-    sentence: "部下を責める is blaming harshly; 叱る is scolding in order to teach, which sounds more constructive.",
+    sentence: "責める is blaming harshly; 叱る is scolding someone in order to teach them.",
   },
   4587: {
     word: "許す is to forgive or allow; 許可 is the formal noun for permission, as in 許可を取る.",
-    phrase: "許す covers both forgiving and permitting: 過ちを許す is forgiving, while 外出を許す is permitting.",
-    sentence: "過ちを許す is somewhat literary; in conversation, 許してあげる or 許してくれた sounds more natural.",
+    phrase: "許す covers both forgiving and permitting, as in 外出を許す.",
+    sentence: "In conversation, 許してあげる or 許してくれた sounds warmer.",
   },
   4588: {
     word: "誤る is formal for making an error; 間違える is the everyday verb, and 誤り is the noun.",
@@ -410,7 +404,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4591: {
     word: "規則 is formal written rules; ルール is the everyday word, and 校則 means school rules.",
-    phrase: "規則を守る is keeping rules; breaking them is 規則を破る or 規則に違反する.",
+    phrase: "Keeping rules is 規則を守る; breaking them is 規則を破る.",
   },
   4592: {
     word: "規定 is a specific written provision; 規則 is a broader set of rules.",
@@ -420,7 +414,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4593: {
     word: "基準 is a standard to measure against; 水準 is a level that has been reached.",
     phrase: "When a standard is met, Japanese says 基準を満たす.",
-    sentence: "採用 here means hiring, not adopting an idea.",
   },
   4594: {
     word: "逸脱 is straying from a norm or rule; it is formal and often critical, as in 逸脱行為.",
@@ -429,13 +422,13 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4595: {
     word: "義務教育 means compulsory education, a very common compound.",
-    phrase: "義務を果たす uses 果たす, as does 責任を果たす.",
+    phrase: "Fulfilling a duty is 義務を果たす.",
     sentence: "税金を納める uses 納める, the formal verb for paying taxes.",
   },
   4596: {
     word: "権利 is paired with 義務, and 〜する権利がある is the usual way to say someone is entitled to do something.",
     phrase: "権利 pairs with 守る, 主張する, or 行使する, the last meaning to exercise a right.",
-    sentence: "発言する権利 is the right to speak, and 誰にでも stresses that it applies to everyone.",
+    sentence: "誰にでも stresses that the right applies to everyone.",
   },
   4597: {
     word: "厳守 is strict adherence, mostly seen on notices and in rules; 守る is the everyday verb.",
@@ -443,7 +436,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4598: {
     word: "禁止 is a formal prohibition; 禁煙 and 駐車禁止 are common compounds on signs.",
-    sentence: "撮影が禁止されている is typical of museums and venues, and 撮影禁止 is the sign version.",
+    sentence: "Signs often just say 撮影禁止 for no photography.",
   },
   4599: {
     word: "施行 is for laws and rules taking effect; 施工 is construction work, and both can be read せこう.",
@@ -458,7 +451,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4602: {
     word: "制度 is an institutional system; a technical or computer system is システム.",
-    phrase: "年金制度 is one of many compounds like 保険制度 and 教育制度.",
+    phrase: "制度 is a system of rules, as in 教育制度 or 保険制度.",
     sentence: "議論が続く means debate goes on without resolution.",
   },
   4603: {
@@ -468,8 +461,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4604: {
     word: "議会 is a general word for an assembly; Japan's national parliament is 国会.",
-    phrase: "審議 is formal deliberation on a bill, and 議会で審議する is set news wording.",
-    sentence: "法案 is a bill before it passes; once passed, it becomes a 法律.",
+    phrase: "議会 is an elected assembly, such as a city council or a national parliament.",
   },
   4605: {
     word: "選挙 is an election; 選挙運動 is campaigning, and 総選挙 is a general election.",
@@ -521,7 +513,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4615: {
     word: "供給 is supplying goods or services; 供給不足 is a shortage, and 電力供給 is power supply.",
     phrase: "供給が不足する is formal, and the noun form 供給不足 is common in headlines.",
-    sentence: "滞る means to stall or back up, used for work, payments, and traffic.",
   },
   4616: {
     word: "利益 is profit, but ご利益, read ごりやく, means a divine blessing.",
@@ -538,8 +529,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4619: {
     word: "競争 is competition in general; 競走, with the same reading, is a running race.",
-    phrase: "競争が激しい uses 激しい, not 強い, for fierce competition.",
-    sentence: "業界の競争が激しい is a stock phrase; 競争率 is the ratio of applicants to places.",
+    phrase: "Fierce competition is 競争が激しい, not 強い.",
   },
   4620: {
     word: "成長率 is growth expressed as a percentage; 高度成長 refers to Japan's rapid postwar growth era.",
@@ -548,8 +538,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4621: {
     word: "雇用 is employment from the employer's side; the everyday verb is 雇う.",
-    phrase: "雇用を促進する is formal policy wording, and 雇用を生む means to create jobs.",
-    sentence: "若者の雇用 is a common policy topic, and 雇用対策 means employment measures.",
+    phrase: "雇用を生む means to create jobs; 雇用対策 means employment measures.",
   },
   4622: {
     word: "登用 is formal and suggests merit-based promotion; 起用 is similar but used for casting or sports lineups.",
@@ -647,7 +636,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4642: {
     word: "事件 usually implies a crime or scandal, as in 殺人事件 or 事件の真相 in news and mysteries.",
-    sentence: "事件が発生した is police and news wording; in conversation, 事件があった is more natural.",
   },
   4643: {
     word: "容疑 is the suspicion or charge itself; 容疑を認める means admitting the charges.",
@@ -721,7 +709,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4659: {
     word: "目撃する is to witness firsthand, usually an accident or crime.",
     phrase: "目撃者が現れる means a witness comes forward; 目撃者を探す is appealing for witnesses.",
-    sentence: "証言する is to testify or give a statement, not only in court.",
   },
   4660: {
     word: "届け出 is an official notification; the verb is 届け出る, and 届け is a shorter form.",
@@ -752,7 +739,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4666: {
     word: "記者 is a reporter; 新聞記者 is a newspaper reporter, and 記者会見 is a press conference.",
-    phrase: "取材 is gathering news, so 記者に取材される means being interviewed for a story.",
+    phrase: "新聞記者 is a newspaper reporter; a TV reporter is often called レポーター.",
     sentence: "話を聞く here means hearing people's accounts, a gentle way to say interviewing.",
   },
   4667: {
@@ -766,7 +753,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4669: {
     word: "情報源 is where information comes from; journalists protect it, and 匿名の情報源 is an anonymous source.",
-    phrase: "明かす is revealing something hidden, fitting for sources and secrets.",
+    phrase: "情報源 is where information comes from; 確かな情報源 means a source you can rely on.",
     sentence: "明らかにする is a more formal alternative to 明かす, meaning to make clear.",
   },
   4670: {
@@ -781,12 +768,11 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4672: {
     word: "漏えい is written partly in kana because 洩 is not a common-use kanji; the full form is 漏洩.",
     phrase: "漏えいする is formal; news also uses 流出する for data leaks.",
-    sentence: "発覚 means something hidden coming to light, often a scandal.",
   },
   4673: {
     word: "認証 is proving your identity to a system; 二段階認証 is two-step verification, and 顔認証 is face recognition.",
     phrase: "本人認証 and 本人確認 both mean verifying that you are who you say you are.",
-    sentence: "指紋で認証する is natural, and 指紋認証 is the compound you see in phone settings.",
+    sentence: "顔認証 and 指紋認証 are the usual compounds in phone settings.",
   },
   4674: {
     word: "暗号化 is turning data into code; 暗号 alone is a code or cipher, as in 暗号を解く for cracking one.",
@@ -823,8 +809,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4681: {
     word: "技術 is both skill and technology; 技能 stresses an individual's practical skill.",
-    phrase: "身につける means learning a skill so it becomes truly yours.",
-    sentence: "高い技術 is the natural collocation; skill is described as 高い, not 強い or 大きい.",
+    phrase: "技術 can mean technology or a person's skill, depending on context.",
   },
   4682: {
     word: "開発 suggests a long, planned effort by companies or labs, as in 開発チーム; 都市開発 can sound negative in environmental debates.",
@@ -847,7 +832,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4686: {
     word: "性能 rates how well a machine works; 高性能 means high-performance, and 性能がいい is common in speech.",
-    sentence: "性能が向上する is formal; in conversation, 性能がよくなる is more natural.",
   },
   4687: {
     word: "実験 is a scientific experiment; 実験台 can also mean a guinea pig, said of a person.",
@@ -881,18 +865,16 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4694: {
     word: "拡大 also means enlarging an image, as in 拡大コピー for an enlarged copy.",
-    phrase: "事業を拡大する is standard business wording for growing operations or markets.",
-    sentence: "海外事業を拡大する is typical corporate news; the opposite move is 撤退, withdrawing.",
+    phrase: "拡大 is making something larger in scale; the opposite is 縮小.",
   },
   4695: {
     word: "縮小 is the opposite of 拡大 and is used for scale, size, and images.",
-    phrase: "規模を縮小する is common in business news about downsizing.",
-    sentence: "規模を縮小する suggests shrinking operations rather than closing completely, which is 閉鎖.",
+    phrase: "縮小 is making something smaller in scale; the opposite is 拡大.",
+    sentence: "縮小 suggests shrinking operations rather than closing completely, which is 閉鎖.",
   },
   4696: {
     word: "増加 is formal; 増加傾向 means an upward trend, and 増加率 is the rate of increase.",
     phrase: "人口が増加する is formal; 増える is the everyday verb.",
-    sentence: "観光客の増加 is a typical tourism-news topic, and 賑わう describes the lively result.",
   },
   4697: {
     word: "減少 is formal; 人口減少 is population decline, one of the biggest social issues discussed in Japan.",
@@ -971,7 +953,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4713: {
     word: "予測 is prediction from data; 予報 is an official forecast, as in 天気予報.",
     phrase: "予測 is predicting from data; 予想 is a more general guess or expectation.",
-    sentence: "経済の動きを予測する is typical of analysts, and 予測が外れる means the prediction misses.",
+    sentence: "予測が外れる means a prediction turns out wrong.",
   },
   4714: {
     word: "推測 is guessing from clues; 推定 is formal estimation, as in 推定年齢 for estimated age.",
@@ -1025,7 +1007,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4725: {
     word: "適切 suits business and official writing; 適切な処置 and 不適切な発言 are common collocations.",
-    sentence: "適切に対応する is stock business wording, often used in apologies promising proper handling.",
   },
   4726: {
     word: "不十分 is formal; compounds like 準備不足 or 説明不足 are common alternatives.",
@@ -1093,7 +1074,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4739: {
     word: "引用 is quoting with credit; 引用元 is the original source, and naming it is expected in reports.",
     phrase: "引用 is quoting with credit; copying without credit is 盗用.",
-    sentence: "レポートで引用する means naming the source, and 引用文献 is the list of references.",
   },
   4740: {
     word: "結論 is a conclusion; 結論づける means to conclude formally, and 結論が出ない means no decision is reached.",
@@ -1125,7 +1105,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4746: {
     word: "防ぐ is general prevention; 防止 is the formal noun, as in 事故防止.",
     phrase: "防ぐ is general prevention; 予防する is formal, especially for illness.",
-    sentence: "病気を防ぐ takes the bad thing as its object, and のに効果的 means effective for.",
+    sentence: "病気を防ぐ takes the bad thing you want to stop as its object.",
   },
   4747: {
     word: "避ける is avoiding something unwanted; it also means steering clear of people, as in 人を避ける.",
@@ -1134,7 +1114,7 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   4748: {
     word: "認める is to admit, acknowledge, or approve; 認定 is the related noun, as in 認定証.",
     phrase: "認める also means to approve or acknowledge, so context tells you which sense applies.",
-    sentence: "誤りを認める is a set phrase, and 素直に認める means admitting it without excuses.",
+    sentence: "間違いを認める means admitting you were wrong.",
   },
   4749: {
     word: "求める is formal for seeking or demanding; 求人 is a job listing, and 求む is an old-fashioned notice form.",
@@ -1143,6 +1123,6 @@ export const vocabNuances3: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4750: {
     word: "限る is limiting; 限定 is the noun, as in 期間限定 for limited time.",
-    sentence: "〜に限って here means only, limiting use to weekdays.",
+    sentence: "〜に限って here means only, limiting use to members.",
   },
 };

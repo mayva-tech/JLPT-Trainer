@@ -8,7 +8,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5377: {
     pattern: "甚だしい is written and critical, used for undesirable degrees like 誤解 or 勘違い; 誤解も甚だしい is a stock rebuttal.",
-    sentence: "Calling a remark 誤解が甚だしい rejects it sharply and formally; with も instead of が it sounds even more indignant.",
+    sentence: "誤解も甚だしい is a fixed, sharply formal expression for a gross misunderstanding.",
   },
   5378: {
     pattern: "至極 sounds stiff and old-fashioned; 当然至極 and 残念至極 are set phrases, and 至極当然 can also put it first.",
@@ -20,11 +20,11 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5380: {
     pattern: "きわまりない is written and harsh, pairing with negative words like 無礼 or 危険; 極まる is a close equivalent, as in 失礼極まる.",
-    sentence: "無礼きわまりない condemns strongly; it sounds far more severe and formal than saying 失礼だ in conversation.",
+    sentence: "失礼きわまりない condemns strongly and sounds far more formal than saying 失礼だ.",
   },
   5381: {
     pattern: "と裏腹に contrasts outward words or looks with inner reality, as in 言葉と裏腹に; it often exposes hidden feelings.",
-    sentence: "表情 versus 内心 is the classic surface-versus-inside contrast that と裏腹に is built for.",
+    sentence: "Face versus heart is the classic surface-versus-inside contrast that と裏腹に is built for.",
   },
   5382: {
     pattern: "つつも is written and often follows 分かる or 思う; it shows acting against one's own judgment, like ながらも but stiffer.",
@@ -108,7 +108,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5402: {
     pattern: "に等しい means practically the same as, as in ゼロに等しい, often critically; 等しく alone is an adverb meaning equally.",
-    sentence: "言い訳に等しく dismisses the explanation as no better than an excuse, then links to the result that nobody was convinced.",
+    sentence: "うそに等しく dismisses the explanation as no better than a lie, then links to the result.",
   },
   5403: {
     pattern: "と大差ない is often slightly negative, implying disappointment that nothing really improved.",
@@ -124,11 +124,11 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5406: {
     pattern: "も同じく is a little stiff and common in lists or reports; in speech 同じように is more natural.",
-    sentence: "も同じく links this review to earlier ones, typical of formal reporting on repeated procedures.",
+    sentence: "も同じく links this exam to earlier ones, typical of formal reporting.",
   },
   5407: {
     pattern: "に準ずる is legal and administrative; it means treated as close to a standard, not exactly equal to it.",
-    sentence: "準ずる待遇 means treatment close to, not identical to, that of full-time staff, typical wording in HR rules.",
+    sentence: "準ずる means close to, not identical to, typical wording in company rules.",
   },
   5408: {
     pattern: "に相当する states an objective equivalence in value, amount, or rank, and is common in explanations.",
@@ -164,7 +164,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5416: {
     pattern: "べく is a literary purpose marker, and the main clause is generally not a request or command; it suits reports and news.",
-    sentence: "試行を重ねる is a common written collocation for repeated trials.",
+    sentence: "工夫を重ねる is a common written collocation for repeated improvements.",
   },
   5417: {
     pattern: "に着手する is formal and focuses on starting substantial work, such as projects or reforms.",
@@ -172,7 +172,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5418: {
     pattern: "に踏み切る implies a bold decision taken after hesitation, typically about reforms, price rises, or lawsuits.",
-    sentence: "大規模な改革 is a typical object, and 踏み切った implies the company hesitated before committing.",
+    sentence: "踏み切った implies the company hesitated before committing.",
   },
   5419: {
     pattern: "実験する is technical; for trying a new approach in daily life, 試す sounds more natural.",
@@ -192,19 +192,19 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5423: {
     pattern: "切る means doing something completely, and in 疲れ切る or 分かり切った it means utterly.",
-    sentence: "A long novel and ついに show 切る's sense of finishing every last part after effort.",
+    sentence: "A thick novel and ついに show 切る's sense of finishing every last part after effort.",
   },
   5424: {
     pattern: "ざるを得ない implies reluctant necessity forced by circumstances and sounds formal; 続けるしかない is more conversational.",
-    sentence: "尽きるまで sets a grim limit, underlining the reluctant tone.",
+    sentence: "まで sets the point when the obligation ends, adding to the reluctant tone.",
   },
   5425: {
     pattern: "一途をたどる follows change nouns with の, like 悪化の or 増加の, and mostly describes worrying trends.",
-    sentence: "悪化の一途 is the most common collocation, typical of news about economies or conditions.",
+    sentence: "減少の一途 is a common collocation in news about falling numbers.",
   },
   5426: {
     pattern: "限り here means as long as a condition lasts, often expressing determination to keep going.",
-    sentence: "続く限り is a set phrase often used with 体力, 命, or 力.",
+    sentence: "限り here means as long as, often used with 体 or 力.",
   },
   5427: {
     pattern: "まで marks the endpoint of a continuing state; for a deadline by which something happens, use までに instead.",
@@ -248,7 +248,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5437: {
     pattern: "機会を捉える is a formal, active expression, common in business for seizing a chance.",
-    sentence: "Entering a new market is a typical business use of seizing a chance.",
+    sentence: "Opening abroad is a typical business use of seizing a chance.",
   },
   5438: {
     pattern: "好機 is a written word, and ず is a literary form of ないで, so the phrase suits formal reports.",
@@ -304,11 +304,11 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5451: {
     pattern: "The phrase comes from sumo, where the referee's fan points to the winner; it suits contests and comparisons.",
-    sentence: "対決 is a typical context: the phrase reports a judged win, as in sports or head-to-head comparisons.",
+    sentence: "The phrase reports a judged win, as in sports or head-to-head comparisons.",
   },
   5452: {
     pattern: "選好 is an economics and academic term; in everyday speech より〜を好む sounds natural.",
-    sentence: "消費者 and 価格より品質 give the economics-report flavor that 選好 carries.",
+    sentence: "選好 gives the sentence an economics-report flavor.",
   },
   5453: {
     pattern: "を優先する is neutral and common, and often pairs with より to state what gets less priority.",
@@ -316,7 +316,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5454: {
     pattern: "The active form names who does the judging, and it also works for choosing between proposals.",
-    sentence: "審査員 as the subject shows the active form naming the judges who chose the winner.",
+    sentence: "The active form names who chose the winner.",
   },
   5455: {
     pattern: "が好ましい is formal and softer than べきだ, often used in guidelines and instructions.",
@@ -328,7 +328,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5457: {
     pattern: "を第一に is common in company mottos and policies, usually followed by 考える or する.",
-    sentence: "顧客満足を第一に is a typical corporate slogan stating a company's core priority.",
+    sentence: "Putting customers first is a typical corporate slogan.",
   },
   5458: {
     pattern: "を重んじる is formal and used for abstract values like tradition, honor, or courtesy.",
@@ -336,7 +336,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5459: {
     pattern: "重視する is neutral and analytical, while 重んじる sounds more value-driven.",
-    sentence: "Hiring criteria are a typical context for 重視する, naming what is weighted most.",
+    sentence: "Hiring is a typical context for 重視する, naming what is weighted most.",
   },
   5460: {
     pattern: "The past form reports a decided outcome and is common in news about contests or debates.",
@@ -408,7 +408,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5477: {
     pattern: "It hedges a bold label before giving a safer description, making the speaker sound fair.",
-    sentence: "Retreating from 天才 to 非常に優秀 shows the fair-minded hedging this pattern creates.",
+    sentence: "Retreating from 名人 to とても上手 shows the fair-minded hedging this pattern creates.",
   },
   5478: {
     pattern: "否めない is formal and usually admits a negative point reluctantly.",
@@ -416,7 +416,7 @@ export const grammarNuances4: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5479: {
     pattern: "差し支えない makes the claim cautious and polite, less forceful than 過言ではない.",
-    sentence: "危機 is a strong word, and 差し支えない presents it as a fair, measured judgment.",
+    sentence: "差し支えない presents a strong claim as a fair, measured judgment.",
   },
   5480: {
     pattern: "にしても concedes a strong claim, and the main clause then adds a contrasting point.",

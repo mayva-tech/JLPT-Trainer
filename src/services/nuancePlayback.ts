@@ -1,4 +1,4 @@
-import { splitNuanceForSpeech } from "../utils/nuanceSpeech";
+import { locateNuanceSegments } from "../utils/nuanceSpeech";
 import { speechService, type SpeechHighlight } from "./speechService";
 
 type NuanceCallbacks = {
@@ -14,14 +14,7 @@ export function speakNuance(
   rate: number,
   { isAlive, onHighlight, onEnd }: NuanceCallbacks
 ): void {
-  const segments = splitNuanceForSpeech(nuance);
-  let cursor = 0;
-  const located = segments.map((segment) => {
-    const found = nuance.indexOf(segment.text, cursor);
-    const start = found >= 0 ? found : cursor;
-    cursor = start + segment.text.length;
-    return { ...segment, start };
-  });
+  const located = locateNuanceSegments(nuance);
 
   const run = (index: number) => {
     // Still settle when cancelled so awaiting sequencers never hang.
@@ -44,7 +37,11 @@ export function speakNuance(
     const callbacks = {
       onBoundary: (h: SpeechHighlight) => {
         if (!isAlive()) return;
-        onHighlight({ start: h.start + offset, end: h.end + offset });
+        onHighlight(
+          segment.reread
+            ? { start: segment.start, end: segment.end }
+            : { start: h.start + offset, end: h.end + offset }
+        );
       },
       onEnd: () => {
         onHighlight(null);

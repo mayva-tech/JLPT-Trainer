@@ -10,6 +10,7 @@
  *  ⑥ review            — JP pattern once → pause → next item's pattern
  */
 
+import { hookHoldMs, hookSpeech, type HookKind, type ItemHook, type ItemHookState } from "../utils/itemHookSpeech";
 import type { GrammarItem } from "../types/grammar";
 import { autoModeTiming as T, shadowingPauseFor } from "../config/autoModeTiming";
 import {
@@ -49,15 +50,26 @@ export type GrammarAutoModeUi = {
   getPreferredSpeechRate?: () => number;
   setSpeechLang: (lang: "ja" | "en" | "nuance" | null) => void;
   setSpeechStatus: (status: "idle" | "speaking") => void;
+  /** Per-item intro / outro hooks (null = off or none). */
+  getItemHook?: (kind: HookKind, index: number, prevId: string | null) => ItemHook | null;
+  setItemHook?: (state: ItemHookState | null) => void;
   setHighlight: (h: SpeechHighlight | null) => void;
+  /** Nuance note on the card: hidden until the slow pass with furigana is over. */
+  setNuanceShown?: (shown: boolean) => void;
 };
 
 export class GrammarAutoModeRunner {
+  private itemHookKey = 0;
+  private prevIntroHook: string | null = null;
+  private prevOutroHook: string | null = null;
+
   private session = 0;
   private softStop = false;
   private speaking = false;
   private pauseTimers = new Set<number>();
   private pauseWake: (() => void) | null = null;
+  /** UI of the running session, so a hard abort can bring the nuance back. */
+  private ui: GrammarAutoModeUi | null = null;
 
   isActive(): boolean {
     return this.session > 0 && !this.softStop;
@@ -74,6 +86,8 @@ export class GrammarAutoModeRunner {
     this.speaking = false;
     this.clearPauses();
     speechService.stop();
+    this.ui?.setNuanceShown?.(true);
+    this.ui = null;
   }
 
   async start(
@@ -85,10 +99,14 @@ export class GrammarAutoModeRunner {
     this.abort();
     this.softStop = false;
     const sid = ++this.session;
+    this.ui = ui;
     onState("on");
 
     const from = Math.max(0, Math.min(startItemIndex, items.length - 1));
     let completedAll = true;
+    this.prevIntroHook = null;
+    this.prevOutroHook = null;
+    const hookRate = () => resolveAutoModeSpeechRate(ui.getPreferredSpeechRate?.(), SPEECH_RATE_NORMAL);
 
     try {
       for (let i = from; i < items.length; i++) {
@@ -103,7 +121,12 @@ export class GrammarAutoModeRunner {
           if (!this.shouldContinue(sid)) { completedAll = false; break; }
         }
 
+        // Intro hook ("How do you say …?", "A must-know N2 pattern!")
+        await this.runItemHook(sid, ui, "intro", i, hookRate());
+        if (!this.shouldContinue(sid)) { completedAll = false; break; }
+
         // ② pattern + meaning
+        ui.setNuanceShown?.(false);
         ui.setStep("pattern");
         ui.setShowFurigana(false);
         const rateFor = (scripted: number) =>
@@ -136,6 +159,7 @@ export class GrammarAutoModeRunner {
           item.patternReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
+        ui.setNuanceShown?.(true);
         if (!(await this.playNuance(ui, grammarStepNuance("pattern", item), rateFor, sid))) {
           completedAll = false;
           break;
@@ -150,6 +174,7 @@ export class GrammarAutoModeRunner {
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
 
         // ④ example sentence
+        ui.setNuanceShown?.(false);
         ui.setStep("sentence");
         ui.setShowFurigana(false);
         const rateSentence = rateFor(SPEECH_RATE_NORMAL);
@@ -184,6 +209,7 @@ export class GrammarAutoModeRunner {
           item.sentenceReading
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
+        ui.setNuanceShown?.(true);
         if (!(await this.playNuance(ui, grammarStepNuance("sentence", item), rateFor, sid))) {
           completedAll = false;
           break;
@@ -222,6 +248,11 @@ export class GrammarAutoModeRunner {
         );
         if (!this.shouldContinue(sid)) { completedAll = false; break; }
         await this.pause(T.normalPause, sid);
+        if (!this.shouldContinue(sid)) { completedAll = false; break; }
+
+        // Outro hook ("Make your own sentence with …!")
+        await this.runItemHook(sid, ui, "outro", i, hookRate());
+        if (!this.shouldContinue(sid)) { completedAll = false; break; }
 
         if (i < items.length - 1) {
           await this.pause(T.betweenItemsPause, sid);
@@ -234,6 +265,8 @@ export class GrammarAutoModeRunner {
         ui.setSpeechStatus("idle");
         ui.setSpeechLang(null);
         ui.setHighlight(null);
+        ui.setItemHook?.(null);
+        ui.setNuanceShown?.(true);
         onState("off");
       }
     }
@@ -306,6 +339,27 @@ export class GrammarAutoModeRunner {
     ui.setSpeechStatus("idle");
     ui.setSpeechLang(null);
     ui.setHighlight(null);
+  }
+
+
+  /**
+   * Per-item intro / outro hook: the card over the stage, the line in
+   * Andrew's or Nanami's voice, a short hold to read it. Returns true when
+   * one played. The UI decides (setting off → no hook).
+   */
+  private async runItemHook(sid: number, ui: GrammarAutoModeUi, kind: HookKind, index: number, rate: number): Promise<boolean> {
+    const prev = kind === "intro" ? this.prevIntroHook : this.prevOutroHook;
+    const hook = ui.getItemHook?.(kind, index, prev) ?? null;
+    if (!hook) return false;
+    if (kind === "intro") this.prevIntroHook = hook.id;
+    else this.prevOutroHook = hook.id;
+    ui.setItemHook?.({ hook, key: ++this.itemHookKey });
+    const say = hookSpeech(hook);
+    if (say.lang === "ja") await this.speakJapanese(ui, say.text, rate, sid, say.reading);
+    else await this.speakEnglish(ui, say.text, rate, sid);
+    if (this.shouldContinue(sid)) await this.pause(hookHoldMs(hook), sid);
+    ui.setItemHook?.(null);
+    return true;
   }
 
   private speakJapanese(

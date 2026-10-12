@@ -28,7 +28,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5007: {
     pattern: "はともかく shelves one point for now to focus on a more important one; common in pairs like 見た目はともかく、味は.",
-    sentence: "Price is left open while quality is guaranteed, hinting that the price may not be low.",
+    sentence: "The price is set aside so the speaker can praise the taste, hinting that the price may be high.",
   },
   5008: {
     pattern: "ながらも concedes a state and adds a contrasting fact about the same subject; more written than けど, often after 狭い or 小さい.",
@@ -60,7 +60,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5015: {
     pattern: "を契機に marks a turning point that prompts a change; formal and written, while をきっかけに is the everyday choice.",
-    sentence: "Retirement is a life milestone that opens a new chapter, the kind of turning point を契機に usually marks.",
+    sentence: "A child's birth is a life milestone that starts a new chapter, the kind of turning point を契機に usually marks.",
   },
   5016: {
     pattern: "によって covers cause, means, passive agent, and variation; for variation, compare によっては, which singles out some cases.",
@@ -120,7 +120,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5030: {
     pattern: "に違いない is a confident guess from the speaker's reasoning; more written than きっと〜だ, and に相違ない is even more formal.",
-    sentence: "Seeing an unusual light, the speaker concludes it is a comet; に違いない shows strong conviction without proof.",
+    sentence: "Seeing a light in the sky, the speaker concludes it is a plane; に違いない shows strong conviction without proof.",
   },
   5031: {
     pattern: "らしい passes on outside information with little responsibility; do not confuse it with noun plus らしい meaning typical of, as in 男らしい.",
@@ -152,7 +152,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5038: {
     pattern: "気味 marks a slight, unwelcome state or tendency, as in 風邪気味 or 疲れ気味; がち instead stresses that something happens often.",
-    sentence: "風邪気味 means signs of a cold rather than a full one, which fits the vague だるい feeling.",
+    sentence: "風邪気味 means signs of a cold rather than a full one, such as a slight fever.",
   },
   5039: {
     pattern: "に見える gives a visual impression; with い-adjectives the form is く見える, not に.",
@@ -180,7 +180,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5045: {
     pattern: "において is a formal equivalent of で for a place, time, or field, typical of writing and speeches.",
-    sentence: "The broad field 現代社会 and formal 不可欠だ give this the essay tone において typically carries.",
+    sentence: "The broad field 現代社会 gives this the essay tone において typically carries.",
   },
   5046: {
     pattern: "に関して is more formal than について and suits business or official contexts.",
@@ -196,7 +196,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5049: {
     pattern: "ざるを得ない means being forced by circumstances against one's wish; formal, with しかない more natural in speech. する becomes せざるを得ない.",
-    sentence: "The speaker would rather not admit it, but the evidence leaves no choice; reluctance is built into ざるを得ない.",
+    sentence: "The speaker would rather not accept it, but has no choice; reluctance is built into ざるを得ない.",
   },
   5050: {
     pattern: "に当たって marks an important occasion and what one does for it; common in speeches and formal greetings, and close to に際して.",
@@ -280,7 +280,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5070: {
     pattern: "反面 contrasts opposite sides of one thing, often a merit and a drawback; 一方で is broader and can compare separate things.",
-    sentence: "Convenience and dependence are two sides of the same thing, the merit-and-drawback pairing 反面 is used for.",
+    sentence: "Convenience and overuse are two sides of the same thing, the merit-and-drawback pairing 反面 is used for.",
   },
   5071: {
     pattern: "にしたがって can mean following a rule or instruction, or changing in step with another change.",
@@ -300,7 +300,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5075: {
     pattern: "ようになる marks a gradual change in ability or habit; ようにする is a conscious effort, and できるようになった celebrates progress.",
-    sentence: "ようやく stresses the long effort before success.",
+    sentence: "やっと stresses the long effort before success.",
   },
   5076: {
     pattern: "にともない is the written connective form of に伴って, typical of news and official texts; に伴う modifies nouns.",
@@ -340,7 +340,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5085: {
     pattern: "てでも shows willingness to use extreme means and is followed by wishes or intentions.",
-    sentence: "Going into debt is a drastic step, so てでも shows how badly the speaker wants the dream.",
+    sentence: "Going into debt is a drastic step, so てでも shows how badly the speaker wants the shop.",
   },
   5086: {
     pattern: "ないことには is followed by a negative result like わからない or 始まらない and stresses that a step is essential.",
@@ -396,7 +396,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5099: {
     pattern: "ことになっている states a rule or arrangement decided by others, not by the speaker.",
-    sentence: "The uniform rule is set by the school, not the speaker, the typical external-rule use.",
+    sentence: "The rule is set by the school, not the speaker, the typical external-rule use.",
   },
   5100: {
     pattern: "にほかならない asserts strongly and formally that something is exactly this; contrast に過ぎない, which downplays.",
@@ -408,7 +408,7 @@ export const grammarNuances1: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5102: {
     pattern: "べきではない is a strong moral judgment; ないほうがいい is gentler advice.",
-    sentence: "Publishing others' private information is framed as a moral wrong, not just unwise, so べきではない fits.",
+    sentence: "Reading other people's letters is framed as a moral wrong, not just unwise, so べきではない fits.",
   },
   5103: {
     pattern: "ことはない tells someone not to worry or bother and often reassures the listener.",

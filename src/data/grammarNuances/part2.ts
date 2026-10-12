@@ -4,7 +4,7 @@ import type { GrammarNuanceEntry } from "./types";
 export const grammarNuances2: Readonly<Record<number, GrammarNuanceEntry>> = {
   5126: {
     pattern: "Marks the hub that something spreads from or revolves around; を中心として is stiffer, and を中心とした comes before nouns.",
-    sentence: "The capital is the hub and the surge radiates outward from it, the spreading image typical of を中心に.",
+    sentence: "Tokyo is the hub and the damage spreads outward from it, the image typical of を中心に.",
   },
   5127: {
     pattern: "Formal and written: act in close accordance with facts or rules, often 現実, 実態, or 法律; before nouns it becomes に即した.",
@@ -76,7 +76,7 @@ export const grammarNuances2: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5144: {
     pattern: "Something is too obvious or minor to need doing; often with わざわざ. 言うまでもなく means needless to say.",
-    sentence: "わざわざ reinforces that explaining such a trivial matter would be wasted effort.",
+    sentence: "Explaining such a small matter would be wasted effort.",
   },
   5145: {
     pattern: "Casual approximation; くらい can also belittle, as in これくらい平気だ, or set a minimum, as in 電話くらいしてよ.",
@@ -416,7 +416,7 @@ export const grammarNuances2: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5229: {
     pattern: "Means shortly after, with the gap feeling short from the speaker's view rather than a fixed time.",
-    sentence: "任された, the passive of 任せる, shows the speaker was entrusted by others so soon, implying trust.",
+    sentence: "頼まれた, the passive of 頼む, shows the speaker was trusted with work so soon.",
   },
   5230: {
     pattern: "Literary and describes a quick action by others; unnatural with intentions or requests. Close to や否や.",

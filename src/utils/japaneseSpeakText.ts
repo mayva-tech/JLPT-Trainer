@@ -655,36 +655,63 @@ function toHiragana(ch: string): string {
  * spoken "ha". In a kana-only string it looks exactly like the particle, and
  * the voice says "wa" (やまの はが → "wa ga"). Longer readings (はる, はなし)
  * are never mistaken, and particle は is written in kana on the surface, so
- * neither is marked. When the reading does not line up with the surface,
- * nothing is marked.
+ * neither is marked.
+ *
+ * Also splits a reading token after a particle は glued to the next word
+ * (いまはかなり → いまは / かなり): a kana は right after a kanji word on the
+ * surface (今は) is the topic particle, and only a token-final は gets the
+ * "wa" pause. When the reading does not line up with the surface, the tokens
+ * are returned unchanged.
  */
-function markWordHa(surface: string, tokens: string[]): string[] {
+function markHa(surface: string, tokens: string[]): string[] {
   if (!tokens.some((t) => t.includes("は"))) return tokens;
   const kana: string[] = [];
   const wordHa: boolean[] = [];
+  const particleHa: boolean[] = [];
+  let afterKanji = false;
   for (const seg of alignFurigana(surface, tokens.join(" "))) {
+    let first = true;
     for (const ch of seg.reading ?? seg.text) {
       if (!KANA_CHAR_RE.test(ch)) continue;
       kana.push(toHiragana(ch));
       wordHa.push(seg.reading === "は");
+      particleHa.push(!seg.reading && first && afterKanji && ch === "は");
+      first = false;
     }
+    afterKanji = Boolean(seg.reading);
   }
   let k = 0;
   const out: string[] = [];
   for (const tok of tokens) {
     let s = "";
-    for (const ch of tok) {
+    const chars = [...tok];
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i]!;
       if (!KANA_CHAR_RE.test(ch)) {
         s += ch;
         continue;
       }
       if (kana[k] !== toHiragana(ch)) return tokens;
       s += ch === "は" && wordHa[k] ? WORD_HA : ch;
+      if (particleHa[k] && KANA_CHAR_RE.test(chars[i + 1] ?? "")) {
+        out.push(s);
+        s = "";
+      }
       k++;
     }
-    out.push(s);
+    if (s) out.push(s);
   }
   return k === kana.length ? out : tokens;
+}
+
+/**
+ * The reading with every particle は that is glued to the next word split off
+ * (今はかなり: いまはかなり → いまは かなり). Lesson data should already be
+ * spaced this way; the corpus audit uses this to find readings that are not.
+ */
+export function spaceGluedParticleHa(surface: string, spacedReading: string): string {
+  const tokens = spacedReading.trim().split(/\s+/).filter(Boolean);
+  return markHa(surface, tokens).join(" ").replaceAll(WORD_HA, "は");
 }
 
 /**
@@ -704,7 +731,7 @@ export function buildJapaneseSpeakText(
   // word (きじわらいげつ → sounds like "haraigetsu" / "warai…").
   // After は/が/を/に, insert 、 so the voice pauses before the next phrase
   // (except を/に bound patterns and を/が + governing predicates).
-  const tokens = markWordHa(surface, reading.split(/\s+/).filter(Boolean))
+  const tokens = markHa(surface, reading.split(/\s+/).filter(Boolean))
     .map(speakReadingToken)
     .map(appendWaveDashSpeakPause);
   const spoken = tokens

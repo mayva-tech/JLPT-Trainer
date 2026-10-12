@@ -40,11 +40,11 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5509: {
     word: "今回 is this occasion among repeated ones; unlike 今度, it does not mean next time.",
     phrase: "In business 今回の often refers to the current project or matter, as in 今回の件.",
-    sentence: "今回は hints that next time may be different, which softens a refusal like 見送ります.",
+    sentence: "今回は hints that next time may be different, which softens a refusal.",
   },
   5510: {
     word: "In casual speech ウケる, usually in katakana, means to get laughs or be a hit.",
-    sentence: "健康診断を受ける is the set phrase for a checkup; 受ける also covers treatment and lessons, as in 治療を受ける.",
+    sentence: "試験を受ける is the set phrase for taking an exam.",
   },
   5511: {
     word: "最近 covers the recent past up to now, not the near future; for soon, use 近いうちに or もうすぐ.",
@@ -66,7 +66,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5515: {
     word: "Beyond counting, いまひとつ or もうひとつ can mean not quite good enough, as in 味がいまひとつ.",
-    phrase: "一つの方法 often softens a suggestion, meaning one possible way among others.",
+    phrase: "一つ is the native counter for one thing; it can stand alone, as in 一つください, or go before a noun with の.",
     sentence: "質問が一つある is a natural way to announce a question; 一つ質問があります is equally common.",
   },
   5516: {
@@ -93,7 +93,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5521: {
     word: "大きな often sounds more figurative or emotional than 大きい, as in 大きな夢 or 大きな問題.",
-    sentence: "影響を与える is the standard collocation for having an impact on something.",
   },
   5522: {
     word: "感じ is often vague on purpose in casual talk, as in こんな感じ, something like this.",
@@ -110,8 +109,8 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5525: {
     word: "こんな can carry a negative tone, as in こんなこと, such a thing.",
-    phrase: "こんな goes directly before a noun with no の; こんなの alone means this kind of thing.",
-    sentence: "こんな plus an adjective adds emotion, as in こんな美しい, stressing how striking it is.",
+    phrase: "こんな goes directly before a noun with no の.",
+    sentence: "こんな before an adjective adds feeling, stressing how striking something is.",
   },
   5526: {
     word: "管理人 is a building caretaker, and 管理職 is a managerial position.",
@@ -119,7 +118,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5527: {
     word: "特に with a negative means nothing in particular, as in 特にない.",
-    phrase: "特に重要だ is formal; in speech 特に大事 is more common.",
+    phrase: "特に means especially, picking one thing out from others.",
     sentence: "特に can follow a broad term to narrow it down, as in 冬、特に一月.",
   },
   5528: {
@@ -162,7 +161,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5536: {
     word: "日記をつける is a common verb pairing, alongside 日記を書く.",
-    phrase: "旅の日記 is a personal diary; a published travel account is 旅行記.",
+    phrase: "日記 is a diary; 日記をつける means to keep a diary.",
     sentence: "日記に書く uses に for where you write; 日記をつける focuses on the habit itself.",
   },
   5537: {
@@ -196,7 +195,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5543: {
     word: "一般的に means generally, and 一般人 means an ordinary person.",
     phrase: "一般の利用者 contrasts ordinary users with members, staff, or professionals.",
-    sentence: "一般に公開 means open to the public, common wording for events and facilities.",
   },
   5544: {
     word: "重要 is formal and objective; 大切 adds emotional value, and 大事 is the everyday word.",
@@ -205,16 +203,14 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5545: {
     word: "サービス covers service and free extras; 家族サービス means a busy parent spending time with family.",
-    sentence: "サービスを提供する is formal business wording for offering a service.",
   },
   5546: {
     word: "かける has many pairings: 電話をかける, 眼鏡をかける, 迷惑をかける, and お金をかける, to spend money.",
-    sentence: "時間をかけて丁寧に is a natural pairing that stresses careful effort.",
+    sentence: "眼鏡をかける is the set verb for putting on glasses.",
   },
   5547: {
     word: "場所 is a concrete location; ところ can also mean a point in time or a situation.",
     phrase: "安全な場所 is standard in evacuation notices, often with 避難する.",
-    sentence: "待ち合わせの場所 is everyday wording; 待ち合わせ場所 is also used as one compound.",
   },
   5548: {
     word: "お願いします alone works as please, as when ordering food or handing over a task.",
@@ -237,7 +233,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5552: {
     word: "かかる covers time and money, and also 電話がかかる, 医者にかかる, and エンジンがかかる.",
-    sentence: "歩くと…かかります is the standard way to give travel time; 歩いて二十分 is a shorter spoken form.",
+    sentence: "歩いて二十分 is the usual way to give walking time; かかる means it takes time or money.",
   },
   5553: {
     word: "今後 is more formal than これから and common in business mail, as in 今後ともよろしくお願いいたします.",
@@ -259,7 +255,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5557: {
     word: "大変 describes hardship from the speaker's view; 大変ですね is a common sympathetic reply.",
-    sentence: "大変な思いをする is a set phrase for going through a hard time.",
   },
   5558: {
     word: "彼ら appears mainly in writing; in speech people usually use names or あの人たち.",
@@ -303,7 +298,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5567: {
     word: "生きる is to be alive or live a life; to reside somewhere is 住む.",
-    phrase: "力強く生きる is typical of film blurbs and speeches, praising someone who lives with resilience.",
+    phrase: "生きる means to live, to be alive; 長生き means living a long life.",
     sentence: "自分らしく生きる is a popular modern phrase for living true to yourself.",
   },
   5568: {
@@ -315,6 +310,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5570: {
     word: "確か as an adverb flags uncertain memory, while 確かに means certainly or indeed.",
+    sentence: "確か at the start of a sentence means if I remember correctly.",
   },
   5571: {
     word: "ありがとう is casual; ありがとうございます is polite, and ございました thanks for something already done.",
@@ -351,12 +347,11 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5578: {
     word: "専門外です politely says it is outside my field and declines giving an opinion; 専門用語 means jargon.",
-    phrase: "専門の知識 is often compressed to 専門知識.",
+    phrase: "専門 is a specialty; ご専門は何ですか asks someone's field.",
     sentence: "専門に研究する means to make something your main field; ご専門は asks about someone's field.",
   },
   5579: {
     word: "初めて is the adverb for the first time; 初め is the beginning, as in 月の初め.",
-    sentence: "て初めて means only after doing something, often used for realizations.",
   },
   5580: {
     word: "全く can also be an exasperated exclamation, as in まったく、もう, like honestly!",
@@ -383,11 +378,11 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5585: {
     word: "意識 also means consciousness in a medical sense, as in 意識がない.",
     phrase: "安全への意識 is common in campaigns; 意識が高い means highly aware or conscientious.",
-    sentence: "意識する as a verb means to be mindful of something, as in 節電を意識する.",
+    sentence: "意識する as a verb means to be mindful of something.",
   },
   5586: {
     word: "欲しい is an i-adjective, so the thing wanted usually takes が: 靴が欲しい.",
-    sentence: "今欲しいのは with だ at the end is a cleft pattern that highlights what is wanted.",
+    sentence: "欲しい marks the thing wanted with が; it is used for your own wants, not other people's.",
   },
   5587: {
     word: "通り means street, but after a verb or noun it means just as; 大通り is a main road.",
@@ -427,7 +422,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5595: {
     word: "現実 is reality as it is; 現実的 means realistic, and 非現実的 means unrealistic.",
     phrase: "厳しい現実 is a set collocation for harsh reality.",
-    sentence: "理想と現実 is a stock pairing for the gap between hopes and reality.",
+    sentence: "夢と現実 and 理想と現実 are stock pairings for the gap between hopes and reality.",
   },
   5596: {
     word: "進む also means to go on to the next stage, as in 大学に進む.",
@@ -450,7 +445,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5600: {
     word: "含む is to contain; 含める is to include on purpose, and 込み means included in a price, as in 税込み.",
-    phrase: "水分を含む describes something naturally holding moisture inside it.",
+    phrase: "含む means to include; prices that include tax are labeled 税込み.",
     sentence: "含まれています is passive, the natural way to say something is included.",
   },
   5601: {
@@ -465,7 +460,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5603: {
     word: "残る is intransitive; to leave something behind is 残す.",
-    phrase: "記憶に残る means memorable, often used for events and performances.",
+    phrase: "残る means to stay behind or be left over; the transitive form is 残す.",
     sentence: "問題が残る is a common collocation for unresolved issues; 課題が残る is more formal.",
   },
   5604: {
@@ -484,7 +479,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5607: {
     word: "消費 is economic language; daily speech prefers 使う. 消費者 is the consumer, and 消費期限 is the eat-by date.",
-    phrase: "電力を消費する is formal; in speech 電気を使う is more common.",
+    phrase: "消費する is formal; in speech 電気を使う is more common.",
     sentence: "しか消費しない stresses how little is used; 消費電力 is the spec-sheet term.",
   },
   5608: {
@@ -541,7 +536,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5619: {
     word: "皆さん works as a direct address, like everyone, in speeches, where みんな would sound casual.",
-    sentence: "皆さんの協力のおかげで is a stock thank-you line in speeches and emails.",
   },
   5620: {
     word: "ほか is also written 他, and kana is common in softer writing.",
@@ -582,7 +576,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5628: {
     word: "述べる is stating something in an orderly way; 以上述べたように means as stated above in essays.",
-    sentence: "方針を述べる is typical news wording for officials announcing plans.",
+    sentence: "Officials 述べる their views; in conversation people just say 言う.",
   },
   5629: {
     word: "団体 is an organized group; a casual group of friends is グループ or 仲間.",
@@ -596,11 +590,11 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5631: {
     word: "最も shares its reading もっとも with 尤も, meaning admittedly.",
     phrase: "最も is formal; in speech いちばん is more common.",
-    sentence: "最も with ものの一つ means one of the most.",
+    sentence: "最も is formal; in speech people usually say 一番.",
   },
   5632: {
     word: "Alone, 自己 appears in academic or self-help writing; everyday speech uses 自分.",
-    sentence: "自己を客観的に見る is formal essay wording; 自分を客観的に見る is more common in speech.",
+    sentence: "自己 is formal; in speech people usually say 自分.",
   },
   5633: {
     word: "年度 labels school and fiscal years on official documents; 今年度 means this fiscal year.",
@@ -623,7 +617,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5637: {
     word: "向かう also means to face, as in 机に向かう, to sit down and work.",
     phrase: "駅へ向かう takes へ or に and stresses being on the way there.",
-    sentence: "良い方向へ向かう is figurative, a common news phrase for improving situations.",
+    sentence: "向かっています is the usual way to say you are on your way somewhere.",
   },
   5638: {
     word: "男性 is the neutral polite term; 男 alone can sound blunt about a person.",
@@ -632,12 +626,11 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5639: {
     word: "結構 can mean quite, fine, or a polite no; tone and context decide which.",
-    sentence: "結構 often implies more than expected, as when something that looks easy is quite hard.",
+    sentence: "結構 often means more than expected, as in quite hard.",
   },
   5640: {
     word: "産業 is an industry sector; 業界 is the industry as a community of companies.",
     phrase: "A locally rooted industry is called 地場産業.",
-    sentence: "観光産業 is a key term in news about regions that rely on tourism.",
   },
   5641: {
     word: "Read にんき it means popularity; read ひとけ, as in 人気のない道, it means signs of people.",
@@ -660,7 +653,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5645: {
     word: "最終 alone can mean the last train or bus of the day.",
     phrase: "最終の確認 is more commonly said as the compound 最終確認.",
-    sentence: "最終段階に入る is a common news phrase for projects nearing completion.",
+    sentence: "最終 alone can mean the last train or bus of the day; the last train is also called 終電.",
   },
   5646: {
     word: "ドル comes from Dutch rather than English, which explains its pronunciation.",
@@ -672,7 +665,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5648: {
     word: "上げる covers raising a level, price, or quality; as a giving verb it is usually written あげる.",
-    sentence: "性能を上げる is a common tech collocation; 向上させる is more formal.",
   },
   5649: {
     word: "グループ is a loose group; 団体 is more formal and organized, and 班 is a small work unit.",
@@ -698,7 +690,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5654: {
     word: "起こる is for events and phenomena; waking up is 起きる, and 怒る, also おこる, means to get angry.",
-    sentence: "土砂崩れが起こる is standard disaster wording; 発生する is the more formal equivalent.",
   },
   5655: {
     word: "For disability, some prefer writing 障がい to avoid the kanji 害, meaning harm.",
@@ -710,7 +701,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5657: {
     word: "協力 is working together toward a goal; 協調 stresses harmony, and 手伝う is everyday helping.",
-    sentence: "清掃に協力する frames residents joining a shared effort; 手伝う would sound more personal.",
+    sentence: "協力する takes に for the shared effort people join.",
   },
   5658: {
     word: "時期 is a period suited to something; 時代 is a much longer era.",
@@ -724,7 +715,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5660: {
     word: "金融 is finance as a system; personal money matters use お金.",
     phrase: "金融市場 is formal economic vocabulary, common in news.",
-    sentence: "金融業界 is the financial industry; news also uses 金融機関 for banks and insurers.",
   },
   5661: {
     word: "進める moves work or plans forward; 勧める, also すすめる, means to recommend.",
@@ -752,7 +742,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5666: {
     word: "成長 is growth of people, animals, or economies; 生長 is used mainly for plants in science.",
     phrase: "市場の成長 is typical business vocabulary; for people, 成長 means personal growth.",
-    sentence: "急速に成長する is a common business collocation for fast market growth.",
   },
   5667: {
     word: "施設 is a building for a purpose; it can also mean a care home, as in 施設に入る.",
@@ -770,7 +759,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5670: {
     word: "実現 is formal; plans and goals are 実現する, while wishes and dreams usually 叶う.",
-    sentence: "実現する is intransitive here: the special program came to be.",
+    sentence: "実現する is intransitive here: the dream itself came true.",
   },
   5671: {
     word: "海外 is more common than 外国 when talking about going abroad.",
@@ -805,18 +794,16 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5678: {
     word: "期間 is a span with a start and end; 期限 is a deadline.",
-    phrase: "募集期間 is the period when applications are accepted.",
+    phrase: "期間 is a set period with a start and an end, such as a holiday or a sale.",
     sentence: "中 read ちゅう after a noun means during.",
   },
   5679: {
     word: "トップ can be the top rank or a leader, as in 会社のトップ, the head of a company.",
-    phrase: "業界トップ is short for the leading company in an industry.",
-    sentence: "トップに立つ means to take the top position.",
+    phrase: "トップ means first place or the top position, as in クラスのトップ.",
   },
   5680: {
     word: "若く見える means to look young; 若い can also mean lower in number, as in 若い番号.",
-    phrase: "若い世代 is standard; the noun for young people is 若者.",
-    sentence: "若い研究者 is neutral; news often uses 若手研究者 for early-career researchers.",
+    phrase: "若い means young; young people are also called 若者.",
   },
   5681: {
     word: "変更 is a deliberate change to plans or settings; 変化 is change that happens by itself.",
@@ -844,7 +831,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5686: {
     word: "処理 sounds procedural, fitting paperwork, data, and waste; for handling a person's complaint, 対応 is more natural.",
     phrase: "ごみを処理する means disposal; everyday speech says ごみを捨てる.",
-    sentence: "場合があります softens the statement to it may sometimes happen.",
   },
   5687: {
     word: "In speech 絶対 often intensifies a guess or promise, as in 絶対おいしい or 絶対行く.",
@@ -898,7 +884,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5698: {
     word: "無料 is standard; 無償 is formal, used for free repairs or aid, as in 無償修理.",
-    sentence: "無料で入手できる is formal; casual speech would say タダでもらえる.",
+    sentence: "In casual speech, 無料 is often replaced by タダ.",
   },
   5699: {
     word: "思える expresses a thought that comes naturally; 思われる sounds more formal and impersonal.",
@@ -934,7 +920,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5706: {
     word: "合う covers fitting, matching, and agreeing; 似合う is specifically about suiting someone's looks.",
-    sentence: "サイズが合わない is the standard way to say something does not fit.",
+    sentence: "足に合う means shoes fit your feet.",
   },
   5707: {
     word: "動く also means to take action, as in 政府が動く.",
@@ -975,7 +961,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5715: {
     word: "発見 is finding something previously unknown; 発明 is inventing something new.",
     phrase: "発見する is formal; in speech 見つける is more common.",
-    sentence: "欠陥を発見する is formal inspection wording; speech would say 見つけた.",
+    sentence: "発見する is formal; in speech people often say 見つける.",
   },
   5716: {
     word: "とにかく also intensifies, as in とにかく忙しい, just really busy.",
@@ -988,7 +974,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5718: {
     word: "To superiors, 応援しています or お体に気をつけて sounds more respectful than 頑張ってください.",
-    sentence: "チーム全員で頑張った is typical of speeches and interviews after a result.",
   },
   5719: {
     word: "終了 is formal for ending events or processes; 修了, same reading, means completing a course.",
@@ -1000,8 +985,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5721: {
     word: "正しい is correct or morally right; 正確 stresses exactness, as with numbers or times.",
-    phrase: "正しい情報 means accurate, trustworthy information, often contrasted with デマ, false rumors.",
-    sentence: "正しい情報を確認する is common disaster-safety advice against rumors.",
+    phrase: "正しい means correct or right; the opposite is 間違った.",
   },
   5722: {
     word: "さすがプロ praises skill that matches expectations, and プロ並み means professional level, often said of amateurs.",
@@ -1011,7 +995,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5723: {
     word: "大会 covers both sports tournaments and large conventions.",
     phrase: "全国大会 is a national tournament, often reached through regional rounds.",
-    sentence: "大会 attaches to event names like マラソン大会; 大会に出場する is common for competitors.",
+    sentence: "大会 attaches to event names; competitors are said to 大会に出場する.",
   },
   5724: {
     word: "ファン is an admirer; an electric fan is 扇風機.",
@@ -1039,8 +1023,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5730: {
     word: "住宅 is formal; in everyday speech 家 or うち is common.",
-    phrase: "集合住宅 includes apartments and condominiums.",
-    sentence: "住宅の建設 is news wording; a residential area is 住宅街.",
+    phrase: "A residential area is called 住宅街.",
   },
   5731: {
     word: "新た is more formal than 新しい and suits news and speeches; 新たに means anew or newly.",
@@ -1070,12 +1053,12 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5737: {
     word: "思い carries emotional weight, often a wish or longing; 思いをする means going through something, as in 嫌な思いをする.",
     phrase: "強い思い means a strong feeling or determination.",
-    sentence: "思いを込める is a set phrase for putting feelings into a work or gift.",
+    sentence: "思い here means a heartfelt wish; 思いを込める is a set phrase for putting feelings into a work.",
   },
   5738: {
     word: "メンバー is used for teams, bands, and clubs; formal membership is 会員.",
     phrase: "チームのメンバー is standard; メンバー is used for any group or team.",
-    sentence: "メンバーが加わる is a natural pairing; 加入する is more formal.",
+    sentence: "メンバーが入る and メンバーが加わる both work for joining a group.",
   },
   5739: {
     word: "演奏 is performing on an instrument; singing is 歌う, and a concert is 演奏会 or コンサート.",
@@ -1084,8 +1067,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   5740: {
     word: "家庭 is the household as a unit; 家 is the building.",
-    phrase: "一般家庭 means ordinary households.",
-    sentence: "家庭での uses での to modify a noun: electricity use at home.",
+    phrase: "家庭料理 means home-style cooking; 家庭 on its own means household or home.",
   },
   5741: {
     word: "直接 also modifies nouns, as in 直接の原因; its opposite is 間接.",
@@ -1116,7 +1098,7 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5747: {
     word: "加える is transitive; 加わる is intransitive.",
     phrase: "水を加える is standard wording in recipes.",
-    sentence: "機能を加える is common in tech; 追加する is a close alternative.",
+    sentence: "加える is a bit formal; in cooking people also say 入れる.",
   },
   5748: {
     word: "運営 is running an organization, event, or site; 運営側 means the organizers.",
@@ -1124,7 +1106,6 @@ export const vocabNuances7: Readonly<Record<number, VocabNuanceEntry>> = {
   5749: {
     word: "予想 is a guess or forecast; 予定 is a plan.",
     phrase: "予想 is a neutral prediction; for weather use 予報, and for hopes use 期待.",
-    sentence: "予想を上回る means to exceed expectations.",
   },
   5750: {
     word: "モデル can also mean a fashion model or a product model, as in 新モデル.",

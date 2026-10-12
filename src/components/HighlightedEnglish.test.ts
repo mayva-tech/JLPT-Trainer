@@ -30,3 +30,47 @@ describe("HighlightedEnglish jpWordBreaks", () => {
     expect(chunks("Handy, but pushy.")).toEqual(["Handy,", "but", "pushy."]);
   });
 });
+
+function renderGlossed(text: string, highlight: { start: number; end: number } | null = null) {
+  const host = document.createElement("div");
+  const root = createRoot(host);
+  act(() =>
+    root.render(
+      createElement(HighlightedEnglish, { text, className: "x", highlight, readingGlosses: true })
+    )
+  );
+  return { host, done: () => act(() => root.unmount()) };
+}
+
+describe("HighlightedEnglish readingGlosses", () => {
+  it("puts the reading over the kanji instead of after it", () => {
+    const { host, done } = renderGlossed("方 かた is the polite version, and 者（もの） is humble.");
+    const rubies = [...host.querySelectorAll("ruby.reading-gloss")].map((r) => [
+      r.firstChild?.textContent,
+      r.querySelector("rt")?.textContent,
+    ]);
+    expect(rubies).toEqual([
+      ["方", "かた"],
+      ["者", "もの"],
+    ]);
+    const shown = (host.textContent ?? "").replace(/かた|もの/g, "");
+    expect(shown).toBe("方 is the polite version, and 者 is humble.");
+    done();
+  });
+
+  it("covers a number written before the kanji", () => {
+    const { host, done } = renderGlossed("Platform 3 = 3番線(さんばんせん).");
+    const ruby = host.querySelector("ruby.reading-gloss");
+    expect(ruby?.firstChild?.textContent).toBe("3番線");
+    expect(ruby?.querySelector("rt")?.textContent).toBe("さんばんせん");
+    done();
+  });
+
+  it("lights the kanji while its reading is spoken", () => {
+    const text = "人 is neutral; 方 かた is polite.";
+    const at = text.indexOf("方");
+    const { host, done } = renderGlossed(text, { start: at, end: at + 4 });
+    expect(host.querySelector(".speech-active")?.textContent).toBe("方かた");
+    done();
+  });
+});

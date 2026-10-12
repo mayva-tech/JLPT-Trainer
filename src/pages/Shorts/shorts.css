@@ -61,7 +61,7 @@
   cursor: pointer;
 }
 
-.sh-btn:hover {
+.sh-btn:hover:not(.sh-btn--on, .sh-btn--primary) {
   background: rgba(255, 255, 255, 0.12);
 }
 
@@ -94,8 +94,7 @@
 }
 
 .sh-field select,
-.sh-field input,
-.sh-meta textarea {
+.sh-field input {
   font: inherit;
   font-size: 0.85rem;
   color: #f3f0e8;
@@ -103,6 +102,15 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   padding: 6px 8px;
+}
+
+.sh-field-hint {
+  font-size: 0.72rem;
+  color: rgba(243, 240, 232, 0.55);
+}
+
+.sh-hook-styles .sh-btn {
+  flex: 1 1 auto;
 }
 
 .sh-words {
@@ -166,16 +174,6 @@
   align-items: stretch;
 }
 
-.sh-meta h3 {
-  margin: 4px 0 6px;
-  font-size: 0.95rem;
-  color: #f0c078;
-}
-
-.sh-meta-row {
-  margin-bottom: 8px;
-}
-
 /* Hook type of the Short (also in the description, for analytics). */
 .sh-hook-tag {
   margin-left: 8px;
@@ -196,6 +194,11 @@
   background: #9fd3f0;
 }
 
+.sh-hook-tag--message {
+  background: #2f6f5e;
+  color: #e7f6ef;
+}
+
 .sh-hook-tag--math {
   background: #b9e08a;
 }
@@ -207,35 +210,6 @@
   margin-left: 6px;
   border-radius: 50%;
   vertical-align: middle;
-}
-
-.sh-meta-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.78rem;
-  color: rgba(243, 240, 232, 0.7);
-  margin-bottom: 3px;
-}
-
-.sh-meta-head > span:first-child {
-  flex: 1;
-}
-
-.sh-meta-count {
-  font-variant-numeric: tabular-nums;
-}
-
-.sh-meta textarea {
-  width: 100%;
-  box-sizing: border-box;
-  resize: vertical;
-  font-size: 0.78rem;
-}
-
-.sh-copied {
-  font-size: 0.78rem;
-  color: #9fe0b0;
 }
 
 .sh-hint {
@@ -750,6 +724,371 @@
   filter: blur(0.55cqw);
 }
 
+/* ─── Message hook: "Nanami texted you" ────────────────────────── */
+
+/* A light phone-chat card on the dark stage: the brightest, most familiar
+   thing in the frame, so it reads at a glance while scrolling. */
+.sh-msg {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.3cqh;
+}
+
+.sh-msg-title {
+  font-size: 5.4cqw;
+  font-weight: 800;
+  line-height: 1.12;
+  text-shadow: 0 0.5cqw 2cqw rgba(0, 0, 0, 0.5);
+}
+
+.sh-msg-bell {
+  display: inline-block;
+  margin-right: 1.6cqw;
+  transform-origin: 50% 10%;
+}
+
+.sh-chat {
+  position: relative;
+  text-align: left;
+  color: #1d2638;
+  background: linear-gradient(180deg, #fdfbf6 0%, #f1ece2 100%);
+  border-radius: 4.5cqw;
+  padding: 2.4cqw 3.2cqw 2.6cqw;
+  box-shadow: 0 2cqw 6cqw rgba(0, 0, 0, 0.45), 0 0 0 0.3cqw rgba(255, 255, 255, 0.35);
+}
+
+.sh-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 2.2cqw;
+  padding-bottom: 1.6cqw;
+  margin-bottom: 2.2cqw;
+  border-bottom: 0.25cqw solid rgba(29, 38, 56, 0.1);
+}
+
+.sh-chat-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 7.6cqw;
+  height: 7.6cqw;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59a6a, #f0c078);
+  color: #fff;
+  font-family: var(--font-jp);
+  font-size: 4.2cqw;
+  font-weight: 700;
+}
+
+.sh-chat-name {
+  font-size: 4.2cqw;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.sh-chat-name [lang="ja"] {
+  font-family: var(--font-jp);
+}
+
+.sh-chat-name small {
+  font-size: 3.2cqw;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.sh-chat-time {
+  margin-left: auto;
+  font-size: 3cqw;
+  color: #8a8f99;
+}
+
+.sh-bubble--in {
+  width: fit-content;
+  max-width: 94%;
+  box-sizing: border-box;
+  padding: 2.4cqw 3.4cqw;
+  background: #fff;
+  border: 0.25cqw solid rgba(29, 38, 56, 0.08);
+  border-radius: 1.2cqw 4cqw 4cqw 4cqw;
+  box-shadow: 0 0.6cqw 1.6cqw rgba(0, 0, 0, 0.08);
+}
+
+.sh-bubble-text {
+  font-family: var(--font-jp);
+  font-size: 6.2cqw;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #1d2638;
+}
+
+/* Karaoke on a light card: the shared rules paint spoken and active text in
+   --text (light on the dark stage), so the card sets its own ink. */
+.sh-chat,
+.sh-sentence--chat:not(.sh-sentence--reply) {
+  --text: #1d2638;
+}
+
+.sh-chat .sh-piece.speech-active,
+.sh-sentence--chat:not(.sh-sentence--reply) .sh-piece.speech-active {
+  text-shadow: none;
+}
+
+/* The word in the message: a highlighter stroke, readable on any bubble. */
+.sh-mark {
+  color: inherit;
+  background: linear-gradient(180deg, transparent 52%, #ffd66b 52%, #ffd66b 92%, transparent 92%);
+  border-radius: 0.1em;
+  padding: 0 0.04em;
+}
+
+ruby.sh-mark {
+  background: none;
+  box-shadow: inset 0 -0.42em 0 rgba(240, 192, 120, 0.45);
+}
+
+.sh-typing {
+  display: flex;
+  gap: 1.1cqw;
+  width: fit-content;
+  margin: 1.4cqw 0 0 auto;
+  padding: 1.7cqw 2.8cqw;
+  border-radius: 4cqw 4cqw 1.2cqw 4cqw;
+  background: #2f6f5e;
+  visibility: hidden;
+}
+
+.sh-typing--on {
+  visibility: visible;
+  animation: shPop 0.35s ease both;
+}
+
+.sh-typing i {
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: #e7f6ef;
+  animation: shDot 1s ease-in-out infinite;
+}
+
+.sh-typing i:nth-child(2) { animation-delay: 0.15s; }
+.sh-typing i:nth-child(3) { animation-delay: 0.3s; }
+
+/* The 3-2-1 sits on the chat's corner, next to the "typing" dots. */
+.sh-count--msg {
+  position: absolute;
+  left: 3cqw;
+  bottom: 1.2cqw;
+  width: 10.5cqw;
+  height: 10.5cqw;
+  border-radius: 50%;
+  background: #1d2638;
+}
+
+.sh-count--msg span {
+  font-size: 5.6cqw;
+}
+
+.sh-msg-ask {
+  font-size: 5cqw;
+  font-weight: 800;
+  color: #f0c078;
+  text-shadow: 0 0.4cqw 1.6cqw rgba(0, 0, 0, 0.5);
+}
+
+.sh-msg-ask-word {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  color: #ffd66b;
+  white-space: nowrap;
+}
+
+.sh-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 1cqh;
+}
+
+.sh-reply {
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  padding: 0.9cqh 3.2cqw;
+  border-radius: 10cqw;
+  background: rgba(16, 22, 34, 0.66);
+  border: 0.35cqw solid rgba(240, 192, 120, 0.7);
+  font-size: 5cqw;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.sh-reply b {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 7cqw;
+  height: 7cqw;
+  border-radius: 50%;
+  background: #f0c078;
+  color: #1a2332;
+  font-size: 4.2cqw;
+}
+
+.sh-reply--right {
+  background: rgba(36, 110, 78, 0.8);
+  border-color: #7ee2a8;
+}
+
+.sh-reply--right b {
+  background: #7ee2a8;
+}
+
+.sh-reply--right::after {
+  content: "✓";
+  margin-left: auto;
+  color: #7ee2a8;
+  font-weight: 800;
+}
+
+.sh-replies--outro {
+  margin-top: 1.6cqh;
+}
+
+.sh-replies--outro .sh-reply {
+  font-size: 4.6cqw;
+}
+
+/* Frame 0 of a play: the phone buzzes and the bell rings. */
+.sh-stage[data-phase="hook"] .sh-chat {
+  animation: shBuzz 0.6s ease 0.02s both;
+}
+
+.sh-stage[data-phase="hook"] .sh-msg-bell {
+  animation: shRing 0.9s ease both;
+}
+
+/* The answer, right after the word is revealed: "It's A!" */
+.sh-answer {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.8cqw;
+  padding: 0.8cqh 3.4cqw;
+  border-radius: 10cqw;
+  background: rgba(36, 110, 78, 0.85);
+  border: 0.3cqw solid #7ee2a8;
+  font-size: 4.6cqw;
+  font-weight: 800;
+  animation: shPop 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.sh-answer b {
+  display: grid;
+  place-items: center;
+  width: 6.4cqw;
+  height: 6.4cqw;
+  border-radius: 50%;
+  background: #7ee2a8;
+  color: #1a2332;
+  font-size: 4cqw;
+}
+
+.sh-answer span {
+  font-weight: 700;
+}
+
+/* Example: Nanami's message again, as a bubble; shadowing: your reply. */
+.sh-sentence--chat {
+  text-align: left;
+  color: #1d2638;
+  background: rgba(253, 251, 246, 0.95);
+  border-color: rgba(255, 255, 255, 0.5);
+  border-radius: 1.2cqw 4cqw 4cqw 4cqw;
+}
+
+.sh-sentence--chat .sh-sentence-ja rt {
+  color: #a0651a;
+}
+
+.sh-sentence--chat .sh-sentence-en {
+  color: rgba(29, 38, 56, 0.75);
+}
+
+
+/* Sender tag on the bubble's top edge: no extra line, so the message
+   bubble is no taller than the classic sentence box. */
+.sh-sentence--chat {
+  position: relative;
+}
+
+.sh-sentence-from {
+  position: absolute;
+  top: 0;
+  left: 3cqw;
+  transform: translateY(-55%);
+  padding: 0.3cqw 2cqw;
+  border-radius: 10cqw;
+  background: #f59a6a;
+  color: #fff;
+  font-size: 3cqw;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.sh-sentence-from [lang="ja"] {
+  font-family: var(--font-jp);
+}
+
+.sh-sentence--reply {
+  color: #fff;
+  background: linear-gradient(180deg, #357c69, #2a6253);
+  border-color: #7ee2a8;
+  border-radius: 4cqw 4cqw 1.2cqw 4cqw;
+  box-shadow: 0 0 4cqw rgba(126, 226, 168, 0.25);
+}
+
+.sh-sentence--reply .sh-turn {
+  color: #ffe3a3;
+}
+
+.sh-sentence--reply .sh-sentence-ja rt {
+  color: #ffe3a3;
+}
+
+.sh-sentence--reply .sh-sentence-en {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+
+.sh-sentence--reply .sh-repeat span {
+  background: #ffe3a3;
+}
+
+@keyframes shBuzz {
+  0%, 100% { transform: none; }
+  10% { transform: translateX(-1.4cqw) rotate(-1.2deg); }
+  22% { transform: translateX(1.4cqw) rotate(1.2deg); }
+  34% { transform: translateX(-1.1cqw) rotate(-0.9deg); }
+  46% { transform: translateX(1.1cqw) rotate(0.9deg); }
+  58% { transform: translateX(-0.6cqw); }
+  70% { transform: translateX(0.6cqw); }
+}
+
+@keyframes shRing {
+  0%, 100% { transform: none; }
+  15% { transform: rotate(18deg); }
+  30% { transform: rotate(-16deg); }
+  45% { transform: rotate(12deg); }
+  60% { transform: rotate(-8deg); }
+  75% { transform: rotate(4deg); }
+}
+
+@keyframes shDot {
+  0%, 60%, 100% { transform: none; opacity: 0.55; }
+  30% { transform: translateY(-0.9cqw); opacity: 1; }
+}
+
 /* ─── YouTube safe zones (preview only) and the batch blackout ──── */
 
 .sh-safe > div {
@@ -870,7 +1209,12 @@ body:has(.sh-clean--rotated) :is(.th-root, .th-seat--split, .sensei, .sensei-tab
   .sh-stage--loop .sh-col,
   .sh-stage--loop .sh-top,
   .sh-turn,
-  .sh-count::before {
+  .sh-count::before,
+  .sh-stage[data-phase="hook"] .sh-chat,
+  .sh-stage[data-phase="hook"] .sh-msg-bell,
+  .sh-typing--on,
+  .sh-typing i,
+  .sh-answer {
     animation: none;
   }
 }

@@ -12,6 +12,10 @@ type Props = {
   nuanceHighlight?: SpeechHighlight | null;
   nuanceActive?: boolean;
   showFurigana?: boolean;
+  /** English meaning held back until the Japanese is spoken. */
+  meaningHidden?: boolean;
+  /** Nuance held back until the slow pass with furigana is over. */
+  nuanceHidden?: boolean;
 };
 
 export function SentenceCard({
@@ -21,6 +25,8 @@ export function SentenceCard({
   nuanceHighlight = null,
   nuanceActive = false,
   showFurigana = true,
+  meaningHidden = false,
+  nuanceHidden = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -38,7 +44,10 @@ export function SentenceCard({
           />
         </FitScale>
       </div>
-      <div aria-hidden="true">
+      <div
+        aria-hidden="true"
+        className={meaningHidden ? "meaning-reveal meaning-reveal--hidden" : "meaning-reveal"}
+      >
         <FitScale maxLines={1} watch={item.sentenceMeaning}>
           <HighlightedEnglish
             text={item.sentenceMeaning}
@@ -51,6 +60,7 @@ export function SentenceCard({
         note={item.sentenceNuance}
         active={nuanceActive}
         highlight={nuanceHighlight}
+        pending={nuanceHidden}
       />
     </div>
   );

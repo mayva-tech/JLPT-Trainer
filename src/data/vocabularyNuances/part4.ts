@@ -9,13 +9,13 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4752: {
     word: "あなた can sound distant or even rude toward superiors; Japanese prefer the person's name plus さん.",
-    phrase: "In real conversation people say 田中さんの席 or simply お席 rather than あなたの席.",
+    phrase: "Japanese speakers often avoid あなた and use the person's name instead.",
     sentence: "Starting with あなたは sounds textbook-like; in real talk the subject is usually dropped or replaced by the name.",
   },
   4753: {
     word: "人 is the neutral word for a person; 方 かた is the polite version, as in あの方, and 者 もの is humble or official.",
-    phrase: "親切 is a な-adjective, so it needs な before a noun: 親切な人.",
-    sentence: "人が集まる is the set way to say people gather; 人 here is plural even without any plural marker.",
+    phrase: "いい人 is the everyday way to say a good, kind person.",
+    sentence: "人 can mean one person or many; たくさん shows there are a lot of them here.",
   },
   4754: {
     word: "男 alone sounds blunt or rough about a person; in polite talk say 男の人 or 男性, and 男子 for boys or men's events.",
@@ -34,7 +34,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4757: {
     word: "大人 has the special reading おとな; related words include 大人っぽい, mature-looking, and 大人しい, quiet or well-behaved.",
     phrase: "大人の can also mean mature or sophisticated, as in 大人の味 for grown-up flavors.",
-    sentence: "大人になる is the set phrase for growing up; 成人 is the legal or formal term for an adult.",
+    sentence: "大人 is the usual word on tickets and price lists; children are 子供.",
   },
   4758: {
     word: "友達 is casual and everyday; 友人 sounds formal, and 仲間 suggests a group sharing an activity or goal.",
@@ -52,25 +52,27 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4762: {
     word: "母 is your own mother when speaking to outsiders; お母さん is used when addressing her or for someone else's mother.",
+    sentence: "母 is used for your own mother; someone else's mother is お母さん.",
   },
   4763: {
     word: "両親 is neutral for anyone's parents; ご両親 politely refers to someone else's.",
-    phrase: "彼 means he but also boyfriend, so 彼の両親 can mean a boyfriend's parents.",
+    phrase: "両親 is the neutral word for both parents; in casual talk people also say 親.",
   },
   4764: {
     word: "兄 is your own older brother when talking to others; when addressing him, family members say お兄ちゃん or お兄さん.",
   },
   4765: {
     word: "姉 is your own older sister when talking to others; someone else's, or yours when addressing her, is お姉さん.",
-    phrase: "優しい means kind or gentle, while 易しい with the same reading means easy.",
+    phrase: "元気な describes someone lively and full of energy.",
   },
   4766: {
     word: "弟 is used for your own younger brother; someone else's is politely 弟さん.",
-    phrase: "高校生の弟 uses の to mean a brother who is a high school student, not one belonging to a student.",
+    phrase: "弟 already means younger brother; 小さい adds that he is still a small child.",
   },
   4767: {
     word: "妹 is for your own younger sister; someone else's is 妹さん.",
     phrase: "小さな is a form of 小さい used only before nouns; 小さな妹 means a young little sister.",
+    sentence: "上手 is used to praise others; about yourself it sounds boastful.",
   },
   4768: {
     word: "夫 is neutral and common today; 主人 sounds traditional, 旦那 is casual, and someone else's husband is ご主人.",
@@ -127,7 +129,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4782: {
     word: "社会 also means the working world, as in 社会人 for a working adult.",
-    phrase: "現代社会 without の is the more common set phrase.",
+    phrase: "社会 means society; 社会人 is an adult who has finished school and works.",
     sentence: "社会に出る is the set phrase for starting working life after finishing school.",
   },
   4783: {
@@ -159,7 +161,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4789: {
     word: "銀行 is a bank; key related words are 口座 for an account and 振り込み for a bank transfer.",
     phrase: "駅前 is a set word for the busy area right in front of a station.",
-    sentence: "お金を下ろす is the set phrase for withdrawing money; depositing is 預ける.",
+    sentence: "Bank counters in Japan have long closed at three in the afternoon.",
   },
   4790: {
     word: "駅 is a train or subway station; a bus stop is バス停, not 駅.",
@@ -168,7 +170,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4791: {
     word: "店 alone is みせ, but てん in compounds like 店員 and 書店; お店 is the softer everyday form.",
-    phrase: "人気の店 uses の; 人気がある店 is an equally common alternative.",
+    phrase: "店 is a shop; adding お, as in お店, sounds softer and politer.",
     sentence: "店が開いている means it is open for business; here 開く is read あく, not ひらく.",
   },
   4792: {
@@ -193,7 +195,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4797: {
     word: "玄関 is where you take off your shoes; walking past it in shoes is a classic cultural mistake.",
-    sentence: "Wet umbrellas are typically left in the 玄関, often in a 傘立て stand.",
+    sentence: "In Japanese homes you take your shoes off in the 玄関 before stepping up inside.",
   },
   4798: {
     word: "風呂 is usually said お風呂; people wash outside the tub first, so the bathwater stays clean for others.",
@@ -211,11 +213,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4801: {
     word: "ドア is a hinged Western-style door; a traditional sliding door is 戸 or 引き戸.",
     phrase: "Color words like 白い are い-adjectives and go straight before nouns.",
-    sentence: "ドアが閉まる is intransitive, the door closes; trains announce ドアが閉まります before departing.",
+    sentence: "閉める is closing something yourself; ドアが閉まる is the door closing on its own.",
   },
   4802: {
     word: "階段 is stairs; going up is 階段を上る, and going down is 階段を下りる.",
-    phrase: "急 here means steep, not sudden, as in 急な坂 for a steep slope.",
+    phrase: "階段 is a staircase; going up is 階段を上る, going down is 階段を下りる.",
     sentence: "階段を使う is the natural way to say take the stairs, in contrast to エレベーターを使う.",
   },
   4803: {
@@ -232,7 +234,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4806: {
     word: "Write ベッド with a voiced ド; ベット is a common misspelling.",
-    phrase: "柔らかい means soft to the touch; the opposite is 硬い.",
+    phrase: "ベッド is a Western bed; a Japanese futon laid on the floor is a 布団.",
     sentence: "ベッドで寝る uses で for where one sleeps; the traditional floor bedding is 布団.",
   },
   4807: {
@@ -272,6 +274,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4816: {
     word: "午前 is a.m.; 午前中 means during the morning until noon, very common for deliveries and appointments.",
+    sentence: "開く is read あく when a shop or bank opens; ひらく is for opening a book or holding an event.",
   },
   4817: {
     word: "午後 is p.m.; in offices, 午後一 means first thing in the afternoon.",
@@ -279,7 +282,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4818: {
     word: "今週 is this week; 今週中 means within this week, a common deadline phrase at work.",
-    phrase: "予定 means a plan or schedule, not a reservation, which is 予約.",
+    phrase: "今週の土曜日 means the Saturday of this week.",
   },
   4819: {
     word: "In casual speech, この前 often replaces 先週 when the exact timing is vague.",
@@ -289,7 +292,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4821: {
     word: "今月 is this month; 今月末 means the end of this month, a common deadline.",
-    phrase: "給料 is your salary or pay; payday is 給料日.",
+    phrase: "十日 is read とおか as a date; the first ten days of a month all have special readings.",
   },
   4822: {
     word: "先月 is last month; 前月 means the preceding month and appears mostly in records and reports.",
@@ -297,7 +300,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4823: {
     word: "来月 is next month; the month after next is 再来月, read さらいげつ.",
-    phrase: "試験 is a formal exam; a small quiz at school is often called テスト.",
+    phrase: "来月の goes before a noun to mean next month's.",
   },
   4824: {
     word: "今年 is read ことし; business greetings use the formal 本年, as in 本年もよろしくお願いします.",
@@ -311,7 +314,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4827: {
     word: "時間 means both time and hours; 二時間 is two hours, while 二時 is two o'clock.",
-    phrase: "自由時間 without な and 暇な時間 are also common ways to say free time.",
+    phrase: "時間 means time or hours; 休み時間 is the break between classes.",
     sentence: "時間があれば is a soft, no-pressure way to invite someone or ask a favor.",
   },
   4828: {
@@ -344,7 +347,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4834: {
     word: "春 is linked with new beginnings in Japan, since the school and business year starts in April.",
     phrase: "暖かい is for pleasant weather warmth; warm drinks and food use 温かい.",
-    sentence: "花見 means viewing cherry blossoms specifically, not just any flowers.",
   },
   4835: {
     word: "夏 is summer; 夏バテ means exhaustion from summer heat, a very common complaint in Japan.",
@@ -353,7 +355,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4836: {
     word: "秋 appears in set phrases like 食欲の秋 and 読書の秋, calling autumn the season for eating or reading.",
     phrase: "涼しい means pleasantly cool and is the classic word for autumn weather.",
-    sentence: "Leaves turning red and yellow in autumn has its own set word, 紅葉.",
   },
   4837: {
     word: "冬 is winter; 冬休み is winter vacation, and 冬物 means winter clothing in shops.",
@@ -366,11 +367,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4839: {
     word: "毎週 is neutral for habits; 週に一度, or casual 週一, stresses frequency instead.",
-    phrase: "In business, a regularly scheduled meeting is often called 定例会議.",
+    phrase: "毎週の goes before a noun to mean weekly.",
+    sentence: "電話をかける is the set phrase for making a phone call.",
   },
   4840: {
     word: "毎月 is usually read まいつき in speech; まいげつ sounds formal.",
-    sentence: "一日 here is read ついたち, the first day of a month.",
   },
   4841: {
     word: "まいとし is the usual spoken reading, while まいねん sounds slightly formal; 例年 means in a typical year, as in weather news.",
@@ -428,11 +429,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4855: {
     word: "半 attaches after times and counters, while half of a thing is 半分.",
     phrase: "時半 marks half past the hour, so 三時半 is half past three.",
-    sentence: "一時間半 is an hour and a half; 半 comes after the counter, as in 二年半.",
+    sentence: "半 always comes right after the time or counter, as in 九時半 or 一年半.",
   },
   4856: {
     word: "一番 before an adjective makes a superlative, as in 一番好き for favorite.",
-    phrase: "一番人気 is a set phrase on menus and shop signs for the best seller.",
+    phrase: "一番好き is the usual way to say favorite.",
   },
   4857: {
     word: "最初 is the first in a sequence; 初めて means for the first time ever.",
@@ -484,12 +485,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4868: {
     word: "右 is right; 右利き means right-handed, and 右側 is the right side.",
-    phrase: "右の席 depends on viewpoint, so staff often say 向かって右 for your right as you face it.",
+    phrase: "右 is right and 左 is left; 右の窓 is the window on the right.",
   },
   4869: {
     word: "東 is ひがし alone but とう in compounds like 東京 and 東北.",
     phrase: "町の東 can mean the eastern part of town or the area east of it.",
-    sentence: "朝日 is the morning sun, and 昇る is the verb for the sun rising.",
   },
   4870: {
     word: "西 is にし alone but せい or さい in words like 西洋 and 関西.",
@@ -498,11 +498,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4871: {
     word: "南口 is a station's south exit, and 南向き, facing south, is a selling point for sunny apartments.",
-    phrase: "南の島 suggests a tropical island paradise, not just any island to the south.",
+    phrase: "南 is south; the four directions are 東, 西, 南 and 北.",
   },
   4872: {
     word: "北 is きた alone but ほく or ほっ in compounds like 東北 and 北海道.",
-    phrase: "地方 means a region of a country, as in 東北地方.",
+    phrase: "方 read ほう means direction, so 北の方 means toward the north.",
     sentence: "から marks the direction something comes from: 北から吹く.",
   },
   4873: {
@@ -551,7 +551,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4884: {
     word: "その points to something near the listener or something just mentioned.",
-    phrase: "その理由 usually refers back to something just said, like the reason for that.",
+    phrase: "その話 usually refers back to something just mentioned.",
     sentence: "その話は puts the object first as the topic, as in that story, I heard it yesterday.",
   },
   4885: {
@@ -595,11 +595,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4893: {
     word: "なぜ sounds formal or written; どうして and なんで are more conversational.",
     phrase: "か at the end makes なぜ必要か an embedded question, as in explain why it is needed.",
-    sentence: "のですか asks for an explanation and makes the why question sound less abrupt.",
+    sentence: "なぜ is a little formal; in conversation people often say どうして.",
   },
   4894: {
     word: "どうして is neutral; なんで is casual, and なぜ is formal.",
-    phrase: "どうして急に expresses surprise at a sudden change.",
+    phrase: "どうして asks why; it is a little softer and more conversational than なぜ.",
     sentence: "の at the end makes a casual question, used with friends and family.",
   },
   4895: {
@@ -617,12 +617,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4898: {
     word: "どうも works for thanks, hello, or apology, but on its own it can sound curt to superiors.",
-    sentence: "Before a negative feeling, どうも means somehow or for some reason, as in どうも調子が悪い.",
+    sentence: "Before a bad feeling, どうも means somehow or for some reason.",
   },
   4899: {
     word: "する turns countless nouns into verbs, even loanwords like コピーする; humbly it becomes いたす, and respectfully なさる.",
     phrase: "Many nouns combine with する like 仕事をする, as in 勉強する and 掃除する.",
-    sentence: "運動をします and 運動します are both fine; を can be dropped.",
   },
   4900: {
     word: "ある is for things, events, and plans; its negative is ない, not あらない.",
@@ -643,7 +642,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4904: {
     word: "来る is movement toward the speaker's side, also used for seasons, as in 春が来る; respectfully it becomes いらっしゃる.",
     phrase: "来る is movement toward the speaker, so 友達が来る means coming to where you are.",
-    sentence: "遊びに来る uses a verb stem plus に to show the purpose of coming.",
   },
   4905: {
     word: "帰る is going back to where you belong, such as home, your office base, or your own country.",
@@ -691,7 +689,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4916: {
     word: "書く is to write; 描く, also read かく, means to draw.",
     phrase: "手紙 means a letter, not paper; plain paper is 紙.",
-    sentence: "カレンダーに書く uses に for the surface you write on.",
   },
   4917: {
     word: "買う is to buy; shops say お買い上げ to politely refer to a customer's purchase.",
@@ -713,7 +710,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4921: {
     word: "立つ is to stand or stand up; a building going up uses 建つ, with the same reading.",
-    sentence: "立つ here means standing up from your seat; 席を譲る is giving it up, often to elderly riders.",
   },
   4922: {
     word: "座る is to sit; formal kneeling on the floor is 正座, and sitting cross-legged is あぐら.",
@@ -750,11 +746,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4931: {
     word: "消す is transitive; the light going out by itself is 消える.",
-    phrase: "明かり is a softer, more literary word for light than 電気.",
+    phrase: "電気 means electricity, but it is also the everyday word for the lights.",
   },
   4932: {
     word: "出す is transitive; it also means to submit or send, as in 書類を出す and 手紙を出す.",
-    sentence: "申込書を出す uses 出す for handing in documents; 提出する is the formal equivalent.",
+    sentence: "宿題を出す uses 出す for handing in work.",
   },
   4933: {
     word: "入れる is transitive; to go in yourself is 入る.",
@@ -776,11 +772,11 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4937: {
     word: "使う is to use; shops and signs say お使いください for please use.",
     phrase: "For looking a word up, the set phrase is 辞書を引く.",
-    sentence: "使えますか is a handy question when paying, as in このカードは使えますか.",
+    sentence: "てもいいですか is the polite way to ask for permission.",
   },
   4938: {
     word: "分かる is intransitive and takes が; in business, 承知しました is a more formal way to say I understand.",
-    sentence: "やっと分かりました expresses finally getting it after some effort.",
+    sentence: "分かる marks what is understood with が, not を.",
   },
   4939: {
     word: "知る is to come to know; knowing something is 知っている, and the honorific is ご存じ.",
@@ -823,7 +819,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4948: {
     word: "送る means to send and also to see someone off or give them a ride.",
-    sentence: "資料を送る is very common in business emails for sending documents.",
   },
   4949: {
     word: "もらう has the humble form いただく for receiving from superiors.",
@@ -839,6 +834,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4952: {
     word: "やる is a casual する; it can also mean to give food or water to animals or plants.",
+    sentence: "やる is a casual way to say do; する is the neutral word.",
   },
   4953: {
     word: "借りる is to borrow; the lender takes から or に, as in 友達から借りる.",
@@ -887,7 +883,7 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4965: {
     word: "高い means tall, high, or expensive; for people's height, say 背が高い.",
-    sentence: "高いので買えません is a natural refusal; for too expensive, 高すぎる is also common.",
+    sentence: "For too expensive, 高すぎる is also common.",
   },
   4966: {
     word: "安い means cheap; 安っぽい means cheap-looking in a negative sense.",
@@ -975,17 +971,18 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   4989: {
     word: "乗る is to ride or board; changing trains is 乗り換える.",
-    sentence: "急行電車に乗る marks the train with に; using を here is a common learner mistake.",
+    sentence: "乗る marks the vehicle with に; using を here is a common learner mistake.",
   },
   4990: {
     word: "降りる is getting off a vehicle; 下りる with the same reading is going down, like stairs.",
+    sentence: "降りる takes を for the vehicle you get off.",
   },
   4991: {
     word: "面白い covers interesting and funny; おかしい can mean funny but also strange.",
   },
   4992: {
     word: "悲しい is sad; 寂しい is lonely or missing someone.",
-    phrase: "知らせ means news or a notice, often personal.",
+    phrase: "悲しい is sad; a story that moves you to tears is a 泣ける話.",
   },
   4993: {
     word: "怖い is scary or afraid; 恐ろしい is stronger and more formal.",
@@ -996,7 +993,6 @@ export const vocabNuances4: Readonly<Record<number, VocabNuanceEntry>> = {
   4995: {
     word: "忙しい is busy; お忙しいところすみません is a polite opener before asking a favor.",
     phrase: "一日 here is read いちにち, meaning a whole day.",
-    sentence: "忙しくて uses the て form to give the reason for the result.",
   },
   4996: {
     word: "難しい is difficult; 困難 is the formal written word for hardship or difficulty.",

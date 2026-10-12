@@ -12,7 +12,7 @@ import {
   type SpeechHighlight,
 } from "../../services/speechService";
 import type { StyleCategoryId, StyleExpression } from "../../types/speechStyle";
-import { splitNuanceForSpeech } from "../../utils/nuanceSpeech";
+import { locateNuanceSegments } from "../../utils/nuanceSpeech";
 import {
   buildComparisons,
   filterStyles,
@@ -135,14 +135,7 @@ function speakEnAsync(
 
 /** Map nuance segments back onto the original display string for karaoke. */
 function segmentsWithOffsets(text: string) {
-  const segments = splitNuanceForSpeech(text);
-  let cursor = 0;
-  return segments.map((segment) => {
-    const start = text.indexOf(segment.text, cursor);
-    const resolved = start >= 0 ? start : cursor;
-    cursor = resolved + segment.text.length;
-    return { ...segment, start: resolved };
-  });
+  return locateNuanceSegments(text);
 }
 
 /** Speak mixed JP/EN explanation text with the matching voice per run. */
@@ -171,10 +164,11 @@ async function speakMixedAsync(
           chunk,
           {
             onBoundary: (h) =>
-              ui.onHighlight({
-                start: h.start + offset,
-                end: h.end + offset,
-              }),
+              ui.onHighlight(
+                segment.reread
+                  ? { start: segment.start, end: segment.end }
+                  : { start: h.start + offset, end: h.end + offset }
+              ),
             onEnd: () => {
               ui.onTarget(null);
               ui.onHighlight(null);

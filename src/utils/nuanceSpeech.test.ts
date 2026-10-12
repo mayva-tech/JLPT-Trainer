@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitNuanceForSpeech } from "./nuanceSpeech";
+import { locateNuanceSegments, splitNuanceForSpeech } from "./nuanceSpeech";
 
 describe("splitNuanceForSpeech", () => {
   it("alternates Japanese words and English prose", () => {
@@ -42,5 +42,29 @@ describe("splitNuanceForSpeech", () => {
       { lang: "ja", text: "熱い" },
       { lang: "en", text: " touch." },
     ]);
+  });
+
+  it("says a kanji word written with its reading once, by the reading", () => {
+    expect(
+      splitNuanceForSpeech("人 is neutral; 方 かた is polite, and 者（もの） is humble.")
+    ).toEqual([
+      { lang: "ja", text: "人" },
+      { lang: "en", text: " is neutral; " },
+      { lang: "ja", text: "かた" },
+      { lang: "en", text: " is polite, and " },
+      { lang: "ja", text: "もの" },
+      { lang: "en", text: " is humble." },
+    ]);
+    expect(splitNuanceForSpeech("Platform 3 = 3番線(さんばんせん).")).toEqual([
+      { lang: "en", text: "Platform 3 = " },
+      { lang: "ja", text: "さんばんせん" },
+      { lang: "en", text: "." },
+    ]);
+  });
+
+  it("locates each run in the note, the reread word over its whole span", () => {
+    const note = "人 is neutral; 方 かた is polite.";
+    const reread = locateNuanceSegments(note).find((s) => s.reread);
+    expect(reread && note.slice(reread.start, reread.end)).toBe("方 かた");
   });
 });

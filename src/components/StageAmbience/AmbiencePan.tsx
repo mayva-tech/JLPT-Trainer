@@ -1,24 +1,26 @@
-import { useEffect, useRef, useState } from "react";
-import type React from "react";
-import { PAN_STEP, useAmbiencePan } from "./useAmbiencePan";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { stopDrift, useAmbiencePan } from "./useAmbiencePan";
 
 /** Scenes are drawn on a 1600×900 canvas. */
 const SCENE_ASPECT = 16 / 9;
-/** Holding a button keeps the scene gliding after this delay, one step per tick. */
-const HOLD_DELAY_MS = 320;
-const HOLD_TICK_MS = 70;
 
 /**
- * ‹ › buttons that slide a cropped backdrop sideways in small steps (hold to
- * keep sliding). Only shown when the stage is narrower than the scene, i.e.
- * when part of the art is cut off. `fixed` measures the window (the app-shell
- * backdrop); otherwise the positioned parent the buttons sit in.
+ * ‹ › buttons that set a cropped backdrop drifting slowly sideways, turning
+ * round at each edge. Only shown when the stage is narrower than the scene,
+ * i.e. when part of the art is cut off. `fixed` measures the window (the
+ * app-shell backdrop); `stageRef` measures that stage, for buttons sitting in
+ * a control bar; otherwise the positioned parent the buttons sit in.
  */
-export function AmbiencePan({ fixed = false }: { fixed?: boolean }) {
+export function AmbiencePan({
+  fixed = false,
+  stageRef,
+}: {
+  fixed?: boolean;
+  stageRef?: RefObject<HTMLElement | null>;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const holdTimer = useRef<number | null>(null);
   const [cropped, setCropped] = useState(false);
-  const [pan, shift] = useAmbiencePan();
+  const { drift, toggleDrift } = useAmbiencePan();
 
   useEffect(() => {
     const measure = (width: number, height: number) =>
@@ -31,64 +33,54 @@ export function AmbiencePan({ fixed = false }: { fixed?: boolean }) {
       return () => window.removeEventListener("resize", onResize);
     }
 
-    const parent = ref.current?.parentElement;
-    if (!parent || typeof ResizeObserver === "undefined") return;
+    const target = stageRef ? stageRef.current : ref.current?.parentElement;
+    if (!target || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(([entry]) => {
       if (entry) measure(entry.contentRect.width, entry.contentRect.height);
     });
-    observer.observe(parent);
+    observer.observe(target);
     return () => observer.disconnect();
-  }, [fixed]);
+  }, [fixed, stageRef]);
 
-  const stopHold = () => {
-    if (holdTimer.current !== null) {
-      window.clearTimeout(holdTimer.current);
-      window.clearInterval(holdTimer.current);
-      holdTimer.current = null;
-    }
-  };
-
-  useEffect(() => stopHold, []);
-
-  const startHold = (delta: number) => {
-    stopHold();
-    shift(delta);
-    holdTimer.current = window.setTimeout(() => {
-      holdTimer.current = window.setInterval(() => shift(delta), HOLD_TICK_MS);
-    }, HOLD_DELAY_MS);
-  };
-
-  const buttonProps = (delta: number, label: string, disabled: boolean) => ({
-    type: "button" as const,
-    className: "amb-pan-btn",
-    "aria-label": label,
-    title: `${label} (hold to keep sliding)`,
-    disabled,
-    onPointerDown: (e: React.PointerEvent) => {
-      if (e.button === 0) startHold(delta);
-    },
-    onPointerUp: stopHold,
-    onPointerLeave: stopHold,
-    onPointerCancel: stopHold,
-    // Keyboard activation (Enter / Space) arrives as a click with detail 0.
-    onClick: (e: React.MouseEvent) => {
-      if (e.detail === 0) shift(delta);
-    },
-  });
-
-  // A button that turns disabled at the edge never sees its pointerup.
+  // Widened until nothing is cut off: there is nothing left to drift across.
+  const wasCropped = useRef(false);
   useEffect(() => {
-    if (pan <= 0 || pan >= 1) stopHold();
-  }, [pan]);
+    if (wasCropped.current && !cropped) stopDrift();
+    wasCropped.current = cropped;
+  }, [cropped]);
+
+  const button = (direction: -1 | 1, label: string, glyph: string) => {
+    const on = drift === direction;
+    const className = stageRef
+      ? on
+        ? "furi-btn furi-btn--active amb-pan-bar-btn"
+        : "furi-btn amb-pan-bar-btn"
+      : on
+        ? "amb-pan-btn amb-pan-btn--on"
+        : "amb-pan-btn";
+    return (
+      <button
+        type="button"
+        className={className}
+        aria-label={label}
+        aria-pressed={on}
+        tabIndex={stageRef ? -1 : undefined}
+        title={on ? "Stop the backdrop" : `${label} (slowly, back and forth)`}
+        onClick={() => toggleDrift(direction)}
+      >
+        {glyph}
+      </button>
+    );
+  };
 
   return (
     <div
       ref={ref}
-      className={`amb-pan${fixed ? " amb-pan--fixed" : ""}`}
+      className={`amb-pan${fixed ? " amb-pan--fixed" : ""}${stageRef ? " amb-pan--bar" : ""}`}
       hidden={!cropped}
     >
-      <button {...buttonProps(-PAN_STEP, "Shift backdrop left", pan <= 0)}>‹</button>
-      <button {...buttonProps(PAN_STEP, "Shift backdrop right", pan >= 1)}>›</button>
+      {button(-1, "Drift backdrop left", "‹")}
+      {button(1, "Drift backdrop right", "›")}
     </div>
   );
 }

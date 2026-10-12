@@ -43,7 +43,7 @@ import {
 } from "../config/speechTiming";
 
 import { emitSpeechEvent } from "./speechBus";
-import { splitNuanceForSpeech } from "../utils/nuanceSpeech";
+import { locateNuanceSegments } from "../utils/nuanceSpeech";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -1032,11 +1032,8 @@ function speakMixedEnglish(
   callbacks: SpeakCallbacks | undefined,
   rate: number
 ) {
-  let cursor = 0;
-  const runs = splitNuanceForSpeech(text).flatMap((segment) => {
-    const found = text.indexOf(segment.text, cursor);
-    const start = found >= 0 ? found : cursor;
-    cursor = start + segment.text.length;
+  const runs = locateNuanceSegments(text).flatMap((segment) => {
+    const { start } = segment;
     // A Japanese run inside `( … )` leaves unbalanced brackets on the English
     // runs, which skews boundary mapping — speak the bracket pieces separately.
     const pieces =
@@ -1051,6 +1048,7 @@ function speakMixedEnglish(
           lang: segment.lang,
           speak,
           offset: start + piece.at + piece.text.indexOf(speak),
+          span: segment.reread ? { start: segment.start, end: segment.end } : null,
         },
       ];
     });
@@ -1072,7 +1070,9 @@ function speakMixedEnglish(
         callbacks?.onStart?.();
       },
       onBoundary: (h) =>
-        callbacks?.onBoundary?.({ start: h.start + run.offset, end: h.end + run.offset }),
+        callbacks?.onBoundary?.(
+          run.span ?? { start: h.start + run.offset, end: h.end + run.offset }
+        ),
       onEnd: playNext,
       onError: (error) => callbacks?.onError?.(error),
     };

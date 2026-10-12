@@ -83,6 +83,12 @@ body {
   z-index: 40;
 }
 
+/* Shorts: the 9:16 frame fills the height, so the bar sits under it. */
+.app-nav--bottom {
+  top: auto;
+  bottom: 4px;
+}
+
 .app-nav--open {
   padding: 3px;
   background: rgba(21, 32, 46, 0.94);
@@ -228,4 +234,18 @@ body {
   color: var(--text-softer);
   font-family: var(--font-en);
   font-size: 14px;
+}
+
+/* A reading written after its kanji in prose ("方 かた"), shown as furigana. */
+.reading-gloss {
+  ruby-position: over;
+}
+
+.reading-gloss rt {
+  font-family: var(--font-jp);
+  font-size: 0.5em;
+  font-weight: 700;
+  color: var(--reading-color);
+  letter-spacing: 0;
+  user-select: none;
 }

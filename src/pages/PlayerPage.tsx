@@ -1,10 +1,11 @@
 import { reportAnswer } from "../services/reactionBus";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { getLessonById } from "../data/lessons";
 import { getVocabularyByIds, vocabulary } from "../data/vocabulary";
 import { getWordLevel } from "../utils/wordLevel";
 import { getGrammarItemsForLesson, getGrammarLessonById } from "../data/grammar";
 import type { GrammarItem } from "../types/grammar";
+import type { VocabularyItem } from "../types/vocabulary";
 import {
   findTocItemByLessonId,
   getOnomatopoeiaLevelForToc,
@@ -35,6 +36,8 @@ import { EndingCtaDisplay } from "../components/EndingCtaDisplay";
 import { InterviewPracticeDisplay } from "../components/InterviewPracticeDisplay";
 import { SectionPlaceholder } from "../components/SectionPlaceholder";
 import { RegisterSplitCard } from "../components/RegisterSplitCard";
+import { SocialPostPanel } from "../components/Social/SocialPostPanel";
+import type { SocialTarget } from "../utils/social/socialSources";
 import { OnomatopoeiaCard } from "../components/OnomatopoeiaCard";
 import HeadStyleButtons from "../components/TalkingHead/HeadStyleButtons";
 import { usePictureSetting } from "../components/Illustration/usePictureSetting";
@@ -42,14 +45,20 @@ import { useBrushSetting } from "../components/KanjiStrokes/useBrushSetting";
 import { useKanjiStrokeData } from "../components/KanjiStrokes/loadStrokes";
 import { hasStrokes, planStrokes } from "../components/KanjiStrokes/strokePlan";
 import { StageAmbience } from "../components/StageAmbience/StageAmbience";
+import { AmbiencePan } from "../components/StageAmbience/AmbiencePan";
 import { useAmbienceSetting } from "../components/StageAmbience/useAmbienceSetting";
 import { ReadHook, ReadHookBanner } from "../components/Retention/ReadHook";
 import { PauseAnswerCard } from "../components/Retention/PauseAnswerCard";
+import { ItemHookCard } from "../components/Retention/ItemHookCard";
+import { HookMenu, type HookMenuOption } from "../components/Retention/HookMenu";
+import { grammarHook, quizHook, vocabHook, type HookKind, type ItemHookState } from "../utils/itemHooks";
+import { RegisterPauseAnswerCard } from "../components/Retention/RegisterPauseAnswerCard";
 import { useRetentionSettings } from "../components/Retention/useRetentionSettings";
 import type { CheckCard } from "../components/Retention/retentionQuiz";
 import {
   ambienceForGrammar,
   ambienceForOnomatopoeia,
+  ambienceForRegister,
   ambienceForVocab,
   ambienceGlyphs,
   ambienceThemeInfo,
@@ -263,6 +272,8 @@ export function PlayerPage() {
     null
   );
   const manualNuanceGenRef = useRef(0);
+  const [socialTarget, setSocialTarget] = useState<SocialTarget | null>(null);
+  const closeSocial = useCallback(() => setSocialTarget(null), []);
   const stageRef = useRef<HTMLDivElement>(null);
   useStageHeaderClearance(stageRef);
   const [highlight, setHighlight] = useState<SpeechHighlight | null>(null);
@@ -280,6 +291,32 @@ export function PlayerPage() {
   const retentionRef = useRef(retention);
   retentionRef.current = retention;
   const [readHook, setReadHook] = useState<ReadHookState | null>(null);
+  /** Hooks ▾ dropdown entries (intro / outro for every mode, the checks for vocab lessons). */
+  const itemHookOptions: HookMenuOption[] = [
+    { key: "intro", label: "Intro hook", hint: "A varied line before each item", on: retention.intro },
+    { key: "outro", label: "Outro hook", hint: "A challenge after each item", on: retention.outro },
+  ];
+  const vocabCheckOptions: HookMenuOption[] = [
+    { key: "hook", label: "Can you read this?", hint: "Name hidden with a countdown before each word", on: retention.hook },
+    {
+      key: "check",
+      label: "Pause & answer",
+      hint: `A three-choice question every ${autoModeTiming.checkEvery} words`,
+      on: retention.check,
+    },
+  ];
+  /** Per-item intro / outro hook on the stage (Auto Mode). */
+  const [itemHook, setItemHook] = useState<ItemHookState | null>(null);
+  /** Hook line for item `index` of `list`, or null when that hook is off. */
+  const hookFor = <T,>(
+    list: readonly T[],
+    make: (kind: HookKind, item: T, ctx: { index: number; total: number; prevId: string | null }) => ReturnType<typeof vocabHook>,
+  ) => (kind: HookKind, index: number, prevId: string | null) => {
+    const r = retentionRef.current;
+    if (kind === "intro" ? !r.intro : !r.outro) return null;
+    const item = list[index];
+    return item ? make(kind, item, { index, total: list.length, prevId }) : null;
+  };
   // Brush stroke order for the target word (筆). The stroke data is loaded
   // only while the setting is on.
   const [brushOn, toggleBrush] = useBrushSetting();
@@ -293,6 +330,12 @@ export function PlayerPage() {
   const lastBrushKey = useRef(0);
   const [checkView, setCheckView] = useState<{ card: CheckCard; phase: CheckPhase } | null>(null);
   const [autoState, setAutoState] = useState<AutoState>("off");
+  /** Auto Mode: the card's English waits for the Japanese (brush + Nanami). */
+  const [meaningShown, setMeaningShown] = useState(true);
+  /** Auto Mode: the nuance waits for the slow pass with furigana. */
+  const [nuanceShown, setNuanceShown] = useState(true);
+  /** Auto Mode: the finished item fading out before the next one. */
+  const [itemLeaving, setItemLeaving] = useState(false);
 
   const [grammarLessonId, setGrammarLessonId] = useState("grammar-batch-001-010");
   const grammarLesson = getGrammarLessonById(grammarLessonId);
@@ -359,6 +402,11 @@ export function PlayerPage() {
   const [quizShowReading, setQuizShowReading] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizAutoOn, setQuizAutoOn] = useState(false);
+  const anyAutoOn = autoState !== "off" || grammarAutoState !== "off" || quizAutoOn;
+  // A hard stop (navigation, a new run) can leave a card up; nothing shows one outside Auto Mode.
+  useEffect(() => {
+    if (!anyAutoOn) setItemHook(null);
+  }, [anyAutoOn]);
   const [quizDeck, setQuizDeck] = useState<VocabularyQuizQuestion[]>([]);
 
   const [flowConfig, setFlowConfig] = useState<VideoFlowConfig>({
@@ -491,6 +539,7 @@ export function PlayerPage() {
     clearSpeechUi,
     isRegisterScreen: () => screenRef.current === "register",
     betweenItemsPause: autoModeTiming.betweenItemsPause,
+    getRetention: () => retentionRef.current,
   });
   const {
     pairs: registerPairs,
@@ -501,6 +550,9 @@ export function PlayerPage() {
     revealed: registerRevealed,
     playingAll: registerPlayingAll,
     playingSection: registerPlayingSection,
+    noteShown: registerNoteShown,
+    hook: registerHook,
+    check: registerCheck,
     open: openRegister,
     stop: stopRegisterAuto,
     playSide: playRegisterSide,
@@ -601,8 +653,10 @@ export function PlayerPage() {
     return deck;
   }
 
-  function buildQuizAutoUi() {
+  function buildQuizAutoUi(deck: readonly VocabularyQuizQuestion[] = quizDeckRef.current) {
     return {
+      getItemHook: hookFor(deck, quizHook),
+      setItemHook,
       setQuizIndex,
       setSelectedChoiceIndex: setQuizSelectedIndex,
       setPhase: setQuizPhase,
@@ -664,7 +718,7 @@ export function PlayerPage() {
 
       const completed = await quizAutoRunner.start(
         deck,
-        buildQuizAutoUi(),
+        buildQuizAutoUi(deck),
         (state) => {
           if (state === "on") setQuizAutoOn(true);
         },
@@ -863,8 +917,10 @@ export function PlayerPage() {
     }
   }
 
-  function buildAutoUi(): AutoModeUi {
+  function buildAutoUi(list: readonly VocabularyItem[] = itemsRef.current): AutoModeUi {
     return {
+      getItemHook: hookFor(list, vocabHook),
+      setItemHook,
       setItemIndex,
       setStep: (step) => {
         const idx = STEPS.indexOf(step);
@@ -887,6 +943,9 @@ export function PlayerPage() {
         if (state) lastBrushKey.current = state.key;
         setBrushDraw(state);
       },
+      setMeaningShown,
+      setNuanceShown,
+      setItemLeaving,
     };
   }
 
@@ -901,8 +960,10 @@ export function PlayerPage() {
     }
   }
 
-  function buildGrammarAutoUi(): GrammarAutoModeUi {
+  function buildGrammarAutoUi(list: readonly GrammarItem[] = grammarItemsRef.current): GrammarAutoModeUi {
     return {
+      getItemHook: hookFor(list, grammarHook),
+      setItemHook,
       setItemIndex: setGrammarItemIndex,
       setStep: (step: GrammarStep) => setGrammarStep(step),
       setShowFurigana: setGrammarShowFurigana,
@@ -911,6 +972,7 @@ export function PlayerPage() {
       setSpeechLang,
       setSpeechStatus,
       setHighlight,
+      setNuanceShown,
     };
   }
 
@@ -922,7 +984,7 @@ export function PlayerPage() {
     }
     const startAt = fromFlow ? 0 : grammarItemIndexRef.current;
     void grammarAutoModeRunner
-      .start(list, startAt, buildGrammarAutoUi(), (state) => {
+      .start(list, startAt, buildGrammarAutoUi(list), (state) => {
         setGrammarAutoState(state);
       })
       .then((completed) => {
@@ -1174,7 +1236,7 @@ export function PlayerPage() {
     const startAt = fromFlow ? 0 : itemIndexRef.current;
 
     void autoModeRunner
-      .start(list, startAt, buildAutoUi(), (state) => {
+      .start(list, startAt, buildAutoUi(list), (state) => {
         setAutoState(state);
       })
       .then((completed) => {
@@ -2150,19 +2212,32 @@ export function PlayerPage() {
   const ambienceOno =
     screen === "onomatopoeia" ? onoItems[onoIndex] ?? onoItems[0] ?? null : null;
   const ambienceQuiz = screen === "quiz" ? quizDeck[quizIndex]?.item ?? null : null;
+  const ambienceRegister =
+    screen === "register"
+      ? registerPairs[registerIndex] ?? registerPairs[0] ?? null
+      : null;
   const ambienceTheme: AmbienceTheme | null = useMemo(() => {
     if (!showAmbience) return null;
     if (ambienceVocab) return ambienceForVocab(ambienceVocab);
     if (ambienceGrammar) return ambienceForGrammar(ambienceGrammar);
     if (ambienceOno) return ambienceForOnomatopoeia(ambienceOno);
     if (ambienceQuiz) return ambienceForVocab(ambienceQuiz);
+    if (ambienceRegister) return ambienceForRegister(ambienceRegister);
     return null;
-  }, [showAmbience, ambienceVocab, ambienceGrammar, ambienceOno, ambienceQuiz]);
+  }, [
+    showAmbience,
+    ambienceVocab,
+    ambienceGrammar,
+    ambienceOno,
+    ambienceQuiz,
+    ambienceRegister,
+  ]);
   const ambienceKanji = ambienceGlyphs(
     ambienceVocab?.word ??
       ambienceGrammar?.pattern ??
       ambienceOno?.japanese ??
-      ambienceQuiz?.word
+      ambienceQuiz?.word ??
+      ambienceRegister?.formal.text
   );
   const gItemForControls =
     grammarItems[grammarItemIndex] ?? grammarItems[0] ?? null;
@@ -2278,6 +2353,9 @@ export function PlayerPage() {
     return { state: "draw", runKey: `m-${it.id}` };
   }
 
+  const meaningPending = autoState !== "off" && !meaningShown;
+  const nuancePending = (autoState !== "off" || grammarAutoState !== "off") && !nuanceShown;
+
   function renderStep() {
     if (!item) return null;
     if (checkView) {
@@ -2310,6 +2388,8 @@ export function PlayerPage() {
               showPicture={showPictures}
               overlay={readHook ? <ReadHookBanner ms={readHook.ms} runKey={readHook.key} /> : null}
               brush={wordBrush(item)}
+              meaningHidden={meaningPending}
+              nuanceHidden={nuancePending}
             />
           </ReadHook>
         );
@@ -2322,6 +2402,8 @@ export function PlayerPage() {
             nuanceHighlight={nuanceLessonHighlight}
             nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
+            meaningHidden={meaningPending}
+            nuanceHidden={nuancePending}
           />
         );
       case "sentence":
@@ -2333,6 +2415,8 @@ export function PlayerPage() {
             nuanceHighlight={nuanceLessonHighlight}
             nuanceActive={speechLang === "nuance"}
             showFurigana={showFurigana}
+            meaningHidden={meaningPending}
+            nuanceHidden={nuancePending}
           />
         );
       case "shadowing":
@@ -2364,6 +2448,7 @@ export function PlayerPage() {
           <TableOfContents
             selectedId={activeTocId}
             onSelect={(id) => openTocItem(id)}
+            onSocial={(id) => setSocialTarget({ type: "toc", id })}
             weakWordsCount={weakCount}
           />
         );
@@ -2380,6 +2465,20 @@ export function PlayerPage() {
             />
           );
         }
+        if (registerCheck) {
+          return (
+            <>
+              <div className="progress-label">
+                {registerIndex + 1} / {registerPairs.length} · {pair.category}
+              </div>
+              <RegisterPauseAnswerCard
+                card={registerCheck.card}
+                phase={registerCheck.phase}
+                thinkMs={autoModeTiming.checkThinkMs}
+              />
+            </>
+          );
+        }
         return (
           <>
             <div className="progress-label">
@@ -2390,8 +2489,11 @@ export function PlayerPage() {
               activeSide={registerActiveSide}
               jaHighlight={jaLessonHighlight}
               enHighlight={enLessonHighlight}
+              noteHighlight={nuanceLessonHighlight}
               showFurigana={registerShowFurigana}
               formalHidden={registerDrillMode && !registerRevealed}
+              hook={registerHook}
+              noteHidden={!registerNoteShown}
             />
           </>
         );
@@ -2551,6 +2653,7 @@ export function PlayerPage() {
                   enHighlight={enLessonHighlight}
                   nuanceHighlight={nuanceLessonHighlight}
                   nuanceActive={speechLang === "nuance"}
+                  nuanceHidden={nuancePending}
                 />
               </>
             );
@@ -2582,6 +2685,7 @@ export function PlayerPage() {
                   enHighlight={enLessonHighlight}
                   nuanceHighlight={nuanceLessonHighlight}
                   nuanceActive={speechLang === "nuance"}
+                  nuanceHidden={nuancePending}
                 />
               </>
             );
@@ -2744,6 +2848,8 @@ export function PlayerPage() {
   const activeAutoState =
     screen === "grammar" ? grammarAutoState : autoState;
 
+  const backdropPan = ambienceTheme ? <AmbiencePan stageRef={stageRef} /> : null;
+
   const autoLabel =
     activeAutoState === "on"
       ? "Auto ON"
@@ -2788,9 +2894,13 @@ export function PlayerPage() {
             : "stage-wrapper"
         }
       >
-        <div className="stage" ref={stageRef}>
-          <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} />
+        <div
+          className={itemLeaving && autoState !== "off" ? "stage stage--item-out" : "stage"}
+          ref={stageRef}
+        >
+          <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} panButtons={false} />
           {renderStage()}
+          {itemHook ? <ItemHookCard state={itemHook} /> : null}
         </div>
       </div>
 
@@ -3337,6 +3447,11 @@ export function PlayerPage() {
             >
               {quizAutoOn ? "■ Stop" : "▶ Play"}
             </button>
+            <HookMenu
+              className="register-btn"
+              options={itemHookOptions}
+              onToggle={(key) => toggleRetention(key as keyof typeof retention)}
+            />
             <button
               type="button"
               onClick={playJapanese}
@@ -3623,6 +3738,40 @@ export function PlayerPage() {
               </button>
             ) : null}
             <button
+              type="button"
+              className={showAmbience ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={
+                ambienceTheme
+                  ? `Toggle theme background (H) — now: ${ambienceThemeInfo(ambienceTheme).ja} ${ambienceThemeInfo(ambienceTheme).en}`
+                  : "Toggle theme background (H)"
+              }
+              aria-pressed={showAmbience}
+              onClick={toggleAmbience}
+            >
+              背景 {showAmbience ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={retention.hook ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={'"Can you say it politely?" — formal side hidden with a countdown (Play All)'}
+              aria-pressed={retention.hook}
+              onClick={() => toggleRetention("hook")}
+            >
+              読 Hook {retention.hook ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={retention.check ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title={`"Pause & answer" question every ${autoModeTiming.checkEvery} pairs (Play All)`}
+              aria-pressed={retention.check}
+              onClick={() => toggleRetention("check")}
+            >
+              ⏸ Quiz {retention.check ? "ON" : "OFF"}
+            </button>
+            <button
               onClick={goRegisterNext}
               disabled={registerIndex >= registerPairs.length - 1}
               tabIndex={-1}
@@ -3884,26 +4033,11 @@ export function PlayerPage() {
             >
               背景 {showAmbience ? "ON" : "OFF"}
             </button>
-            <button
-              type="button"
-              className={retention.hook ? "furi-btn furi-btn--active" : "furi-btn"}
-              tabIndex={-1}
-              title={'"Can you read this?" — blur and countdown before each word (Auto Mode)'}
-              aria-pressed={retention.hook}
-              onClick={() => toggleRetention("hook")}
-            >
-              読 Hook {retention.hook ? "ON" : "OFF"}
-            </button>
-            <button
-              type="button"
-              className={retention.check ? "furi-btn furi-btn--active" : "furi-btn"}
-              tabIndex={-1}
-              title={`"Pause & answer" question every ${autoModeTiming.checkEvery} words (Auto Mode)`}
-              aria-pressed={retention.check}
-              onClick={() => toggleRetention("check")}
-            >
-              ⏸ Quiz {retention.check ? "ON" : "OFF"}
-            </button>
+            <HookMenu
+              options={screen === "grammar" ? itemHookOptions : [...itemHookOptions, ...vocabCheckOptions]}
+              onToggle={(key) => toggleRetention(key as keyof typeof retention)}
+            />
+            {backdropPan}
             <button
               type="button"
               className={autoClass}
@@ -3922,9 +4056,27 @@ export function PlayerPage() {
             <button onClick={goNextStep} disabled={chromeIsLast} tabIndex={-1}>
               Forward →
             </button>
+            <button
+              type="button"
+              className="furi-btn"
+              tabIndex={-1}
+              title="Social post for this word / pattern: title, caption, hashtags"
+              onClick={() => {
+                const id = screen === "grammar" ? gItemForControls?.id : item?.id;
+                if (id === undefined) return;
+                setSocialTarget({
+                  type: screen === "grammar" ? "grammar-item" : "vocabulary-item",
+                  id,
+                  parentTocId: activeTocId ?? undefined,
+                });
+              }}
+            >
+              📣 Social
+            </button>
           </>
         ) : null}
 
+        {showLessonChrome ? null : backdropPan}
         {screen !== "toc" && screen !== "flow-setup" ? <HeadStyleButtons /> : null}
         <button
           type="button"
@@ -3938,6 +4090,13 @@ export function PlayerPage() {
           {controlsOpen ? "▸" : "◂"}
         </button>
       </div>
+      {socialTarget ? (
+        <SocialPostPanel
+          key={JSON.stringify(socialTarget)}
+          target={socialTarget}
+          onClose={closeSocial}
+        />
+      ) : null}
     </>
   );
 }

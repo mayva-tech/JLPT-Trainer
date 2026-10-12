@@ -1,5 +1,6 @@
 import type { VocabularyItem } from "../../types/vocabulary";
 import { shortAngle } from "./shortAngle";
+import { BAIT_SPOKEN, messageFor, type HookStyle } from "./shortMessage";
 
 /**
  * The beat sheet of one vertical Short (one word, ~25–35 s, hands-free).
@@ -13,6 +14,13 @@ import { shortAngle } from "./shortAngle";
  *   outro    comment bait for the hook type (spoken) + next word teased
  *   loop     the stage fades back to its opening frame, so the end of the
  *            Short matches its start and an auto-replay looks seamless
+ *
+ * The "message" hook style (shortMessage.ts) opens on a text from Nanami
+ * instead: ding + buzz, Andrew "Nanami just texted you", Nanami reads the
+ * message, Andrew "What does the highlighted word mean? A, or B?", then the
+ * countdown. After the reveal Andrew gives the answer ("It's A!"); the
+ * example beat only translates (the message was already heard), shadowing
+ * is "reply back", and the outro asks who picked A or B.
  *
  * Pure data so the order and timing can be tested without a browser.
  */
@@ -54,6 +62,8 @@ export type ShortStep =
       ms: number;
       /** Marks the hook countdown and the shadowing gap (they draw timers). */
       cue?: "countdown" | "repeat";
+      /** Sound effect played as the wait starts (the message ding). */
+      sfx?: "ding";
     };
 
 export { HOOK_LINES, hookLineFor, type HookLine } from "./shortAngle";
@@ -63,40 +73,66 @@ export const OUTRO_MS = 2600;
 /** Hold on the opening frame at the very end (the loop point). */
 export const LOOP_MS = 1500;
 
-/** Silent time to repeat the sentence: roughly its spoken length, 2.5–6 s. */
+/** Shortest repeat gap; also the gap after the word when there is no sentence. */
+export const REPEAT_MIN_MS = 4000;
+
+/** Silent time to read and repeat the sentence, a learner's pace: 4–9.5 s. */
 export function repeatGapMs(sentence: string): number {
   const chars = [...sentence.replace(/\s/g, "")].length;
-  return Math.max(2500, Math.min(6000, 1200 + chars * 170));
+  return Math.max(REPEAT_MIN_MS, Math.min(9500, 2000 + chars * 270));
 }
 
 /** Pause after the last stroke before the word is spoken. */
 export const DRAW_SETTLE_MS = 300;
 
+/** The ding and buzz before anyone speaks (message hook). */
+export const DING_MS = 650;
+
 export interface ShortOptions {
   /** Stroke-order writing time (0 = no draw beat, e.g. kana-only words). */
   drawMs?: number;
+  /** Opener: classic angles, Nanami's text message, or a mix by word. */
+  hookStyle?: HookStyle;
 }
 
 export function buildShortScript(item: VocabularyItem, options: ShortOptions = {}): ShortStep[] {
   const drawMs = Math.max(0, Math.round(options.drawMs ?? 0));
   const angle = shortAngle(item);
-  const steps: ShortStep[] = [
-    { kind: "say", phase: "hook", lang: "en", text: angle.hook.en },
-    { kind: "say", phase: "hook", lang: "ja", text: angle.hook.ja },
-    { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
-  ];
+  const msg = messageFor(item, options.hookStyle);
+  const steps: ShortStep[] = msg
+    ? [
+        { kind: "wait", phase: "hook", ms: DING_MS, sfx: "ding" },
+        { kind: "say", phase: "hook", lang: "en", text: msg.opener },
+        { kind: "say", phase: "hook", lang: "ja", text: msg.text, reading: msg.reading },
+        { kind: "say", phase: "hook", lang: "en", text: msg.ask },
+        { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
+      ]
+    : [
+        { kind: "say", phase: "hook", lang: "en", text: angle.hook.en },
+        { kind: "say", phase: "hook", lang: "ja", text: angle.hook.ja },
+        { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
+      ];
   if (drawMs > 0) {
     steps.push({ kind: "wait", phase: "draw", ms: drawMs + DRAW_SETTLE_MS });
   }
   steps.push(
     { kind: "say", phase: "reveal", lang: "ja", text: item.word, reading: item.reading },
-    { kind: "wait", phase: "reveal", ms: 350 },
+    { kind: "wait", phase: "reveal", ms: 350 }
+  );
+  if (msg) {
+    // Said in the reveal beat: the English highlight there has no target, so
+    // "It's A!" can't light letters of the meaning below.
+    steps.push({ kind: "say", phase: "reveal", lang: "en", text: msg.answerSpoken }, { kind: "wait", phase: "reveal", ms: 250 });
+  }
+  steps.push(
     { kind: "say", phase: "meaning", lang: "en", text: item.meaning },
     { kind: "wait", phase: "meaning", ms: 450 }
   );
   if (item.sentence?.trim()) {
+    if (!msg) {
+      steps.push({ kind: "say", phase: "example", lang: "ja", text: item.sentence, reading: item.sentenceReading });
+    }
     steps.push(
-      { kind: "say", phase: "example", lang: "ja", text: item.sentence, reading: item.sentenceReading },
       { kind: "say", phase: "example", lang: "en", text: item.sentenceMeaning },
       { kind: "wait", phase: "example", ms: 300 },
       {
@@ -112,11 +148,11 @@ export function buildShortScript(item: VocabularyItem, options: ShortOptions = {
   } else {
     steps.push(
       { kind: "say", phase: "shadow", lang: "ja", text: item.word, reading: item.reading, slow: true },
-      { kind: "wait", phase: "shadow", ms: 2500, cue: "repeat" }
+      { kind: "wait", phase: "shadow", ms: REPEAT_MIN_MS, cue: "repeat" }
     );
   }
   steps.push(
-    { kind: "say", phase: "outro", lang: "en", text: angle.baitSpoken },
+    { kind: "say", phase: "outro", lang: "en", text: msg ? BAIT_SPOKEN : angle.baitSpoken },
     { kind: "wait", phase: "outro", ms: OUTRO_MS },
     { kind: "wait", phase: "loop", ms: LOOP_MS }
   );

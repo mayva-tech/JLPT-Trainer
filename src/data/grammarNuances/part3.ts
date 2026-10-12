@@ -32,11 +32,11 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5258: {
     pattern: "Paired であろうと is formal and covers every case; in conversation でも〜でも sounds more natural.",
-    sentence: "Pairing opposites like 社長 and 新人 covers the whole range, so the rule applies to everyone.",
+    sentence: "Pairing opposites like 社長 and 新入社員 covers the whole range, so the rule applies to everyone.",
   },
   5259: {
     pattern: "にひけをとらない praises something as fully matching a strong, well-known rival; に劣らない is similar but plainer.",
-    sentence: "品質の点で narrows the comparison to one aspect, and 海外製 serves as the respected benchmark.",
+    sentence: "性能の点で narrows the comparison to one aspect, and 海外製 serves as the respected benchmark.",
   },
   5260: {
     pattern: "どころではない says circumstances leave no room for something; do not confuse it with どころか, which means let alone.",
@@ -104,7 +104,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5276: {
     pattern: "を除けば is conditional and usually leads to a positive overall evaluation apart from one flaw.",
-    sentence: "ほぼ softens 完璧, fitting the idea that there was one exception.",
+    sentence: "を除けば sets aside the single exception, so everything else can be called problem-free.",
   },
   5277: {
     pattern: "でしかない belittles something as no more than that, like にすぎない but with a stronger dismissive feel.",
@@ -132,7 +132,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5283: {
     pattern: "恐れがある is used for undesirable possibilities in news and warnings; for good outcomes 可能性がある is natural.",
-    sentence: "により is a formal way to give the cause, matching the news tone.",
+    sentence: "Warnings like this are typical of news reports about aging structures.",
   },
   5284: {
     pattern: "にご注意ください is a polite public warning used in announcements and on signs.",
@@ -152,7 +152,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5288: {
     pattern: "This phrase presents an unwelcome judgment as unavoidable, cushioning criticism in formal speech and writing.",
-    sentence: "無謀 is a strongly negative word, so the pattern softens the criticism.",
+    sentence: "The pattern softens a strongly negative judgment.",
   },
   5289: {
     pattern: "由々しき is a literary attributive form used mostly with 問題 or 事態 in formal speeches and writing.",
@@ -160,7 +160,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5290: {
     pattern: "肝に銘じる is used for lessons or advice one resolves to keep firmly in mind, often after a failure.",
-    sentence: "次に生かしたい expresses the resolve to put the lesson to use next time.",
+    sentence: "次は気をつけたい expresses the resolve to put the lesson to use next time.",
   },
   5291: {
     pattern: "なくてはならない is slightly more conversational than なければならない; in casual speech it shortens to なくちゃ.",
@@ -328,7 +328,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5332: {
     pattern: "と推測される is impersonal and common in reports, presenting an inference drawn from evidence.",
-    sentence: "整備不良 is a compact written noun typical of accident reports.",
+    sentence: "Formal wording like this is typical of accident and fire reports.",
   },
   5333: {
     pattern: "と考えられる presents a view as generally held rather than personal, and it is common in academic writing.",
@@ -460,7 +460,7 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5365: {
     pattern: "を狙って implies a deliberate target and can sound calculating in some contexts.",
-    sentence: "若い世代を狙って is a common marketing phrase for targeting a demographic.",
+    sentence: "若い人を狙って is a common marketing phrase for targeting a group.",
   },
   5366: {
     pattern: "という意図で stresses conscious intention, often to explain or defend a decision.",
@@ -476,11 +476,11 @@ export const grammarNuances3: Readonly<Record<number, GrammarNuanceEntry>> = {
   },
   5369: {
     pattern: "画策する implies secret scheming and is usually negative.",
-    sentence: "独占 is a typical goal for 画策, and the context implies behind-the-scenes plotting.",
+    sentence: "The context implies behind-the-scenes plotting, typical of 画策.",
   },
   5370: {
     pattern: "を計画する is neutral and common in business; it lacks the negative tone of 画策する.",
-    sentence: "事業 is a typical object, and nothing here suggests scheming, showing the neutral tone of を計画する.",
+    sentence: "Nothing here suggests scheming, showing the neutral tone of を計画する.",
   },
   5371: {
     pattern: "極まる is formal and usually follows negative な-adjectives like 失礼 or 危険; 極まりない is similar and more common today.",

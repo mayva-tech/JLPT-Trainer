@@ -230,3 +230,273 @@
     animation: none;
   }
 }
+
+/* ─── Per-item intro / outro hooks (ItemHookCard) ─────────────────
+   A card over the stage, sized in stage widths like the lesson cards. */
+.ih-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(8, 12, 20, 0.62), rgba(8, 12, 20, 0.4));
+  animation: ihFade 0.25s ease both;
+}
+
+.ih-overlay--outro {
+  background: radial-gradient(ellipse at center, rgba(8, 12, 20, 0.5), rgba(8, 12, 20, 0.22));
+}
+
+.ih-card {
+  max-width: 72%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2cqh;
+  padding: 2.6cqh 3.2cqw 2.8cqh;
+  border-radius: 2cqw;
+  background: rgba(16, 23, 36, 0.9);
+  border: 0.18cqw solid rgba(240, 192, 120, 0.55);
+  box-shadow: 0 1.4cqh 4cqw rgba(0, 0, 0, 0.45);
+  text-align: center;
+  animation: ihPop 0.45s cubic-bezier(0.2, 1.35, 0.4, 1) both;
+}
+
+.ih-tag {
+  font-family: var(--font-en);
+  font-size: 1.6cqw;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1d2638;
+  background: var(--accent, #f0c078);
+  padding: 0.5cqh 1.4cqw;
+  border-radius: 10cqw;
+}
+
+.ih-overlay--outro .ih-tag {
+  background: #7fd49a;
+  color: #12301d;
+}
+
+.ih-main {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 3.9cqw;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.ih-card--ja .ih-main {
+  font-family: var(--font-jp);
+  font-size: 4.4cqw;
+  line-height: 1.7;
+}
+
+.ih-main rt,
+.ih-sub rt {
+  font-size: 0.42em;
+  color: var(--accent, #f0c078);
+}
+
+.ih-sub {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 2.2cqw;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.ih-sub[lang="ja"],
+.ih-card--en .ih-sub {
+  font-family: var(--font-jp);
+}
+
+.ih-choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2cqw;
+  font-family: var(--font-jp);
+  font-size: 3.4cqw;
+  font-weight: 700;
+}
+
+.ih-choices li {
+  display: flex;
+  align-items: center;
+  gap: 0.8cqw;
+}
+
+.ih-choices span {
+  display: grid;
+  place-items: center;
+  width: 3cqw;
+  height: 3cqw;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  font-family: var(--font-en);
+  font-size: 1.7cqw;
+}
+
+@keyframes ihFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ihPop {
+  from { opacity: 0; transform: scale(0.9) translateY(1cqh); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Phone portrait: the stage is tall and narrow — bigger type, wider card. */
+@media (max-width: 700px) and (orientation: portrait) {
+  .stage .ih-card {
+    max-width: 90%;
+    padding: 2.4cqh 5cqw;
+    border-radius: 4cqw;
+  }
+
+  .stage .ih-tag {
+    font-size: 3.4cqw;
+  }
+
+  .stage .ih-main {
+    font-size: 7.4cqw;
+  }
+
+  .stage .ih-card--ja .ih-main {
+    font-size: 8cqw;
+  }
+
+  .stage .ih-sub {
+    font-size: 4.4cqw;
+  }
+
+  .stage .ih-choices {
+    font-size: 6.4cqw;
+  }
+
+  .stage .ih-choices span {
+    width: 6cqw;
+    height: 6cqw;
+    font-size: 3.4cqw;
+  }
+}
+
+/* Small landscape windows: one step bigger, like the other lesson text. */
+@container (max-width: 1200px) and (orientation: landscape) {
+  .stage .ih-tag {
+    font-size: 2cqw;
+  }
+
+  .stage .ih-main {
+    font-size: 4.6cqw;
+  }
+
+  .stage .ih-card--ja .ih-main {
+    font-size: 5cqw;
+  }
+
+  .stage .ih-sub {
+    font-size: 2.8cqw;
+  }
+}
+
+/* ─── Hooks ▾ dropdown (HookMenu) ─────────────────────────────── */
+.hook-menu-arrow {
+  display: inline-block;
+  margin-left: 2px;
+  font-size: 0.9em;
+}
+
+.hook-menu {
+  position: fixed;
+  z-index: 1000;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(21, 32, 46, 0.98);
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.16));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-en);
+  animation: ihFade 0.15s ease both;
+}
+
+.hook-menu-title {
+  margin: 2px 6px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-soft, #f0c078);
+}
+
+.hook-menu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.hook-menu-item:hover,
+.hook-menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  outline: none;
+}
+
+.hook-menu-check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 5px;
+  border: 1.5px solid var(--text-softer, #8a94a6);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hook-menu-item--on .hook-menu-check {
+  background: var(--accent, #f0c078);
+  border-color: var(--accent, #f0c078);
+  color: #1d2638;
+}
+
+.hook-menu-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hook-menu-text strong {
+  font-size: 13px;
+}
+
+.hook-menu-text small {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--text-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ih-overlay,
+  .ih-card,
+  .hook-menu {
+    animation: none;
+  }
+}

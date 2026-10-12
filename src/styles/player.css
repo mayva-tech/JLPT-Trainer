@@ -64,6 +64,41 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Auto Mode: the English waits (space kept) until the Japanese is written
+   and spoken, then fades in as Andrew reads it. Hidden, not just transparent,
+   so the talking heads may sit over the empty spot. */
+.meaning-reveal {
+  transition: opacity 0.35s ease;
+}
+
+.meaning-reveal--hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+/* Auto Mode: the finished item fades out, so the next word clearly starts
+   fresh (swapping back to .card-fade fades it in). */
+.stage--item-out .safe-area {
+  animation: cardFadeOut 0.45s ease both;
+}
+
+@keyframes cardFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meaning-reveal {
+    transition: none;
+  }
+
+  .stage--item-out .safe-area {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* ─── Persistent header elements ───────────────────────────── */
 .progress-label {
   position: absolute;
@@ -2325,6 +2360,15 @@
   overflow: hidden;
 }
 
+/* Hugs the phrase (not the whole slot) so talking heads keep clear of the
+   text itself and still have the empty slot space to sit in. */
+.register-jp-box {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .register-jp-slot .fit-scale {
   width: 100%;
   max-height: 100%;
@@ -2388,25 +2432,269 @@
   justify-content: center;
 }
 
+/* Usage note: the Player's amber Nuance box (label + karaoke body), so it
+   takes the same type sizes everywhere — portrait and small windows too. */
 .register-note {
   flex: 0 0 auto;
-  font-family: var(--font-en);
-  font-size: 1.7cqw;
-  line-height: 1.35;
-  color: var(--text-soft);
-  opacity: 0.8;
-  text-align: center;
   margin-top: 0;
   max-width: 96%;
   align-self: center;
+  padding: 1cqh 2.2cqw;
   overflow-wrap: anywhere;
-  padding: 0.5cqh 1.4cqw;
-  border-radius: 0.8cqw;
 }
 
-.register-note--active {
-  opacity: 1;
-  background: rgba(232, 165, 75, 0.12);
+.register-note .lesson-nuance-label {
+  margin-bottom: 0.3cqh;
+}
+
+/* ─── Register hook: "Can you say it politely?" ─────────────────
+   The formal side keeps its space (nothing moves at the reveal); the banner
+   and countdown ring sit in the middle of the column. */
+.register-col {
+  position: relative;
+}
+
+.register-col--hook .register-jp-box,
+.register-col--hook .register-romaji,
+.register-col--hook .register-hidden-cue,
+.register-safe--hook .register-note {
+  visibility: hidden;
+}
+
+/* Covers the column below its label (label height + its margin), so the
+   label stays readable and the banner never clips in a short column. */
+.register-hook-banner {
+  --register-label-clear: calc(1.7cqw * 1.3 + 0.7cqh + 0.8cqh);
+  position: absolute;
+  inset: var(--register-label-clear) 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4cqh;
+  padding: 0 2cqw;
+  text-align: center;
+  animation: rtRegisterIn 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.register-hook-banner .ret-hook-en {
+  white-space: normal;
+  font-size: 3cqw;
+  line-height: 1.15;
+}
+
+.register-hook-banner .ret-hook-ja {
+  font-size: 2.2cqw;
+}
+
+@keyframes rtRegisterIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Register "Pause & answer": an English line to make polite, or a formal
+   line to understand (a whole phrase, so smaller than a single word). */
+.ret-check-prompt-en {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 4.2cqw;
+  line-height: 1.25;
+  color: var(--text);
+  margin-top: 1.4cqh;
+  text-align: center;
+}
+
+.ret-check-word.ret-check-word--line {
+  font-size: 5.6cqw;
+  text-align: center;
+  max-width: 90%;
+}
+
+/* Whole phrases, not single words: one option per row, wide enough that a
+   line like お忙しいところ恐れ入ります。 stays on one row. */
+.ret-check--register .ret-options {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1cqh;
+  width: min(62cqw, 92%);
+  margin-top: 2cqh;
+}
+
+.ret-check--register .ret-option.ret-option {
+  min-width: 0;
+  max-width: none;
+  padding: 1cqh 1.6cqw;
+}
+
+.ret-check--register .ret-option-tick {
+  margin-left: auto;
+}
+
+.register-hook-banner .ret-ring {
+  flex: none;
+  width: 3.6cqw;
+  height: 3.6cqw;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-hook-banner {
+    animation: none;
+  }
+}
+
+/* ─── Register, narrow portrait window ──────────────────────────
+   Same type scale as the Player's portrait lesson and Nuance box: the two
+   forms stack (casual above formal) so each gets the full width, and every
+   English line is sized for reading on a phone-width stage. */
+@media (max-width: 700px) and (orientation: portrait) {
+  /* Starts just under the progress line, so the forms get the upper space. */
+  .register-safe {
+    top: max(7.5%, var(--header-clear, 0px));
+    gap: 1.6cqh;
+  }
+
+  .register-meaning,
+  .register-meaning-text {
+    font-size: calc(var(--lesson-en-word) * var(--fit-scale, 1));
+  }
+
+  .register-meaning-text {
+    line-height: 1.2;
+  }
+
+  .register-split {
+    flex-direction: column;
+    gap: 1.2cqh;
+  }
+
+  .register-divider {
+    width: auto;
+    height: 1px;
+    margin: 0 6%;
+  }
+
+  .register-col {
+    padding: 1cqh 3cqw 1.2cqh;
+    border-radius: 2.4cqw;
+  }
+
+  .register-label {
+    font-size: 3.2cqw;
+    padding: 0.5cqh 2.4cqw;
+    border-radius: 1.2cqw;
+    margin-bottom: 0.6cqh;
+  }
+
+  .register-jp {
+    font-size: calc(var(--lesson-jp-line) * var(--fit-scale, 1));
+  }
+
+  .register-romaji,
+  .register-hidden-cue {
+    font-size: 4.4cqw;
+    margin-top: 0.6cqh;
+  }
+
+  .register-note {
+    padding: 1.2cqh 4cqw;
+  }
+
+  .stage .register-hook-banner {
+    --register-label-clear: calc(3.2cqw * 1.3 + 1cqh + 0.6cqh);
+  }
+
+  .stage .register-hook-banner .ret-hook-en {
+    font-size: 5.6cqw;
+  }
+
+  .stage .register-hook-banner .ret-hook-ja {
+    font-size: 4.4cqw;
+  }
+
+  .register-hook-banner .ret-ring {
+    width: 7cqw;
+    height: 7cqw;
+  }
+
+  /* Pause & answer (Player and Register): options stack, phone-sized type. */
+  .stage .ret-check {
+    justify-content: center;
+  }
+
+  .stage .ret-check-tag {
+    font-size: 3.6cqw;
+    padding: 0.6cqh 3.4cqw;
+  }
+
+  .stage .ret-check-question {
+    font-size: 5.2cqw;
+    text-align: center;
+  }
+
+  .stage .ret-check-prompt-en {
+    font-size: 6.2cqw;
+  }
+
+  .stage .ret-check-word {
+    font-size: 15cqw;
+  }
+
+  .stage .ret-check-word--line {
+    font-size: 8.4cqw;
+  }
+
+  .stage .ret-options {
+    flex-direction: column;
+    gap: 1.2cqh;
+    width: 88%;
+  }
+
+  .stage .ret-option,
+  .stage .ret-check--register .ret-option {
+    min-width: 0;
+    max-width: none;
+    gap: 3cqw;
+    padding: 1.2cqh 4cqw;
+    border-radius: 3cqw;
+  }
+
+  .stage .ret-option-label {
+    width: 7cqw;
+    height: 7cqw;
+    font-size: 4cqw;
+  }
+
+  .stage .ret-option-text {
+    font-size: 5.4cqw;
+  }
+
+  /* Whole phrases: one size down so a short line stays on one row. */
+  .stage .ret-option[lang="ja"] .ret-option-text {
+    font-size: 4.6cqw;
+  }
+
+  .stage .ret-option-tick {
+    font-size: 5.4cqw;
+    margin-left: auto;
+  }
+
+  .stage .ret-check-think,
+  .stage .ret-check-answer {
+    font-size: 4.2cqw;
+    gap: 2.4cqw;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stage .ret-check-answer {
+    font-size: 4.6cqw;
+  }
+
+  .stage .ret-ring--small {
+    width: 5cqw;
+    height: 5cqw;
+  }
 }
 
 .register-btn {
@@ -2742,9 +3030,28 @@
   }
 
   .stage .register-label,
-  .stage .register-romaji,
-  .stage .register-note {
+  .stage .register-romaji {
     font-size: 2.2cqw;
+  }
+
+  .stage .register-jp {
+    font-size: calc(6.6cqw * var(--fit-scale, 1));
+  }
+
+  .stage .ret-check-prompt-en {
+    font-size: 4.8cqw;
+  }
+
+  .stage .register-hook-banner {
+    --register-label-clear: calc(2.2cqw * 1.3 + 0.7cqh + 0.8cqh);
+  }
+
+  .stage .register-hook-banner .ret-hook-en {
+    font-size: 3cqw;
+  }
+
+  .stage .register-hook-banner .ret-hook-ja {
+    font-size: 2.4cqw;
   }
 
   .stage .register-hidden-cue {

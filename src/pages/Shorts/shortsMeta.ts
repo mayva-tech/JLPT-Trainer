@@ -1,6 +1,8 @@
 import type { VocabularyItem } from "../../types/vocabulary";
 import type { JlptLevel } from "../../types/level";
+import { AUDIENCE_LINE, buildHashtags, firstSense, TITLE_MAX } from "../../utils/social/socialText";
 import { shortAngle, type ShortAngleKind } from "./shortAngle";
+import { BAIT_SHOWN, LETTERS, MESSAGE_HOOK_LABEL, SENDER, messageFor, type HookStyle } from "./shortMessage";
 
 /**
  * Upload text for one Short: title, description, hashtags, and a comment
@@ -20,8 +22,8 @@ export interface ShortContext {
 export const KANJIVG_CREDIT = "Stroke order: KanjiVG (kanjivg.tagaini.net), CC BY-SA 3.0";
 
 export interface ShortMeta {
-  /** Hook type of this Short (trap / twin / math / read), for analytics. */
-  hookType: ShortAngleKind;
+  /** Hook type of this Short (trap / twin / math / read / message), for analytics. */
+  hookType: ShortAngleKind | "message";
   /** Readable hook name ("Kanji math"). */
   hookLabel: string;
   title: string;
@@ -30,33 +32,37 @@ export interface ShortMeta {
   pinnedComment: string;
 }
 
-const TITLE_MAX = 100;
-
-/** First sense only: "to rise; to go up" → "to rise". */
-export function firstSense(meaning: string): string {
-  const first = meaning.split(/[;；]/)[0] ?? meaning;
-  return first.replace(/\s*\([^)]*\)\s*$/, "").trim() || meaning.trim();
-}
+export { firstSense };
 
 export function shortHashtags(level: JlptLevel): string[] {
-  return [
-    "#learnjapanese",
-    "#japanese",
-    "#jlpt",
-    `#jlpt${level.toLowerCase()}`,
-    "#japanesevocabulary",
-    "#nihongo",
-    "#shorts",
-  ];
+  return buildHashtags({ level, kind: "vocabulary", shortForm: true });
 }
 
 export function buildShortMeta(
   item: VocabularyItem,
   ctx: ShortContext,
-  options: { strokeCredit?: boolean } = {}
+  options: { strokeCredit?: boolean; hookStyle?: HookStyle } = {}
 ): ShortMeta {
   const sense = firstSense(item.meaning);
-  const angle = shortAngle(item);
+  const classic = shortAngle(item);
+  const msg = messageFor(item, options.hookStyle);
+  // The message hook keeps the meaning out of the title: it is the question.
+  const angle = msg
+    ? {
+        ...classic,
+        kind: "message" as const,
+        label: MESSAGE_HOOK_LABEL,
+        titleHead: `${SENDER.en} texted you 「${item.word}」— what does she mean?`,
+        titleHeadShort: `「${item.word}」in a text — what does it mean?`,
+        descLine: `📱 ${SENDER.en} texted: ${msg.text}\n❓ What does 「${item.word}」 mean here? ${msg.choices
+          .map((c, i) => `${LETTERS[i]}) ${c}`)
+          .join("  ")}`,
+        bait: BAIT_SHOWN,
+        pinnedComment: `Which one did ${SENDER.en} mean by 「${item.word}」? ${msg.choices
+          .map((c, i) => `${LETTERS[i]}) ${c}`)
+          .join("  ")} — answer below 👇`,
+      }
+    : classic;
   const tail = ` | JLPT ${ctx.level} #${ctx.wordNumber} #shorts`;
   const fits = (h: string | null): h is string => Boolean(h) && [...h!].length + tail.length <= TITLE_MAX;
   let head = `${item.word} (${item.reading}) = "${sense}"`;
@@ -83,6 +89,8 @@ export function buildShortMeta(
     `Full lesson: JLPT ${ctx.level} Vocabulary #${ctx.lessonNumber} | ${ctx.lessonTheme}`,
     "",
     `💬 ${angle.bait}`,
+    "",
+    AUDIENCE_LINE,
     ""
   );
   if (options.strokeCredit) lines.push(KANJIVG_CREDIT, "");

@@ -11,9 +11,11 @@ import type { VocabularyItem } from "../../types/vocabulary";
 import { useAmbienceSetting } from "../../components/StageAmbience/useAmbienceSetting";
 import { ShortStage } from "./ShortStage";
 import { buildShortScript, estimateShortSeconds } from "./shortScript";
-import { buildShortMeta, firstSense } from "./shortsMeta";
+import { firstSense } from "./shortsMeta";
+import { SocialPostBody } from "../../components/Social/SocialPostPanel";
 import { shortAngle } from "./shortAngle";
 import { useShortPlayer } from "./useShortPlayer";
+import { HOOK_STYLES, MESSAGE_HOOK_LABEL, usesMessage, type HookStyle } from "./shortMessage";
 import { kanjiStrokesIfLoaded, loadKanjiStrokes } from "../../components/KanjiStrokes/loadStrokes";
 import { hasStrokes, planStrokes, type StrokeData } from "../../components/KanjiStrokes/strokePlan";
 import "./shorts.css";
@@ -42,6 +44,8 @@ interface Settings {
   safeZones: boolean;
   /** Stroke-order writing of the word before it is revealed. */
   brush: boolean;
+  /** Opener: classic angles, Nanami's text message, or a mix by word. */
+  hookStyle: HookStyle;
 }
 
 const DEFAULTS: Settings = {
@@ -53,13 +57,16 @@ const DEFAULTS: Settings = {
   autoNext: false,
   safeZones: true,
   brush: true,
+  hookStyle: "mix",
 };
 
 function loadSettings(): Settings {
   try {
     const raw = globalThis.localStorage?.getItem(STORE_KEY);
     if (!raw) return DEFAULTS;
-    return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) };
+    const saved = { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) };
+    if (!HOOK_STYLES.some((h) => h.id === saved.hookStyle)) saved.hookStyle = DEFAULTS.hookStyle;
+    return saved;
   } catch {
     return DEFAULTS;
   }
@@ -75,22 +82,12 @@ function isTypingTarget(target: EventTarget | null): boolean {
   );
 }
 
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 const BY_ID = new Map(vocabulary.map((v) => [v.id, v]));
 
 export default function ShortsStudio() {
   const [settings, setSettings] = useState<Settings>(loadSettings);
   const [clean, setClean] = useState<CleanMode>("off");
   const [blackout, setBlackout] = useState(false);
-  const [copied, setCopied] = useState<string | null>(null);
   const [showAmbience] = useAmbienceSetting();
   const pendingPlay = useRef(false);
   const [strokeData, setStrokeData] = useState<StrokeData | null>(kanjiStrokesIfLoaded);
@@ -138,8 +135,12 @@ export default function ShortsStudio() {
 
   const brush = Boolean(settings.brush && item && strokeData && hasStrokes(item.word, strokeData));
   const drawMs = brush && item && strokeData ? planStrokes(item.word, strokeData).totalMs : 0;
-  const steps = useMemo(() => (item ? buildShortScript(item, { drawMs }) : []), [item, drawMs]);
-  const panSeconds = useMemo(() => (item ? estimateShortSeconds(item, { drawMs }) : 30), [item, drawMs]);
+  const hookStyle = settings.hookStyle;
+  const steps = useMemo(() => (item ? buildShortScript(item, { drawMs, hookStyle }) : []), [item, drawMs, hookStyle]);
+  const panSeconds = useMemo(
+    () => (item ? estimateShortSeconds(item, { drawMs, hookStyle }) : 30),
+    [item, drawMs, hookStyle]
+  );
 
   const onDone = useCallback(() => {
     if (!settings.autoNext || index >= words.length - 1) return;
@@ -207,29 +208,6 @@ export default function ShortsStudio() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [play, stop, go]);
 
-  const meta = useMemo(
-    () =>
-      item && lesson && range
-        ? buildShortMeta(
-            item,
-            {
-              level: settings.level,
-              wordNumber,
-              lessonNumber: range.lessonNumber,
-              lessonTheme: lesson.subtitle,
-            },
-            { strokeCredit: brush }
-          )
-        : null,
-    [item, lesson, range, settings.level, wordNumber, brush]
-  );
-
-  const copy = async (label: string, text: string) => {
-    const ok = await copyText(text);
-    setCopied(ok ? label : `${label} (copy failed — select and copy manually)`);
-    window.setTimeout(() => setCopied(null), 1800);
-  };
-
   if (!item || !lesson) {
     return <div className="sh-studio sh-empty">No words found for this level.</div>;
   }
@@ -252,6 +230,7 @@ export default function ShortsStudio() {
       blackout={blackout}
       brush={brush}
       runKey={runKey}
+      hookStyle={hookStyle}
     />
   );
 
@@ -334,8 +313,12 @@ export default function ShortsStudio() {
                 </span>
                 <span className="sh-word-btn-en">
                   {firstSense(w.meaning)}
-                  {shortAngle(w).kind !== "read" && (
-                    <span className={`sh-hook-dot sh-hook-tag--${shortAngle(w).kind}`} title={shortAngle(w).label} />
+                  {usesMessage(w, hookStyle) ? (
+                    <span className="sh-hook-dot sh-hook-tag--message" title={MESSAGE_HOOK_LABEL} />
+                  ) : (
+                    shortAngle(w).kind !== "read" && (
+                      <span className={`sh-hook-dot sh-hook-tag--${shortAngle(w).kind}`} title={shortAngle(w).label} />
+                    )
                   )}
                 </span>
               </button>
@@ -356,6 +339,29 @@ export default function ShortsStudio() {
           <button type="button" className="sh-btn" onClick={() => setClean("rotated")}>
             ⟲ Rotated <kbd>R</kbd>
           </button>
+        </div>
+
+        <div className="sh-field">
+          <span>Hook style</span>
+          <div className="sh-levels sh-hook-styles" role="radiogroup" aria-label="Hook style">
+            {HOOK_STYLES.map((h) => (
+              <button
+                key={h.id}
+                type="button"
+                role="radio"
+                aria-checked={hookStyle === h.id}
+                className={hookStyle === h.id ? "sh-btn sh-btn--on" : "sh-btn"}
+                title={h.hint}
+                onClick={() => {
+                  stop();
+                  update({ hookStyle: h.id });
+                }}
+              >
+                {h.label}
+              </button>
+            ))}
+          </div>
+          <small className="sh-field-hint">{HOOK_STYLES.find((h) => h.id === hookStyle)?.hint}</small>
         </div>
 
         <fieldset className="sh-options">
@@ -394,35 +400,14 @@ export default function ShortsStudio() {
           </label>
         </fieldset>
 
-        {meta && (
-          <section className="sh-meta" aria-label="Upload text">
-            <h3>
-              Upload text
-              <span className={`sh-hook-tag sh-hook-tag--${meta.hookType}`} title="Hook type — compare retention per type in YouTube Analytics">
-                Hook: {meta.hookLabel}
-              </span>
-            </h3>
-            {(
-              [
-                ["Title", meta.title],
-                ["Description", meta.description],
-                ["Pinned comment", meta.pinnedComment],
-              ] as const
-            ).map(([label, text]) => (
-              <div key={label} className="sh-meta-row">
-                <div className="sh-meta-head">
-                  <span>{label}</span>
-                  {label === "Title" && <span className="sh-meta-count">{[...text].length}/100</span>}
-                  <button type="button" className="sh-btn sh-btn--small" onClick={() => copy(label, text)}>
-                    Copy
-                  </button>
-                </div>
-                <textarea readOnly value={text} rows={label === "Description" ? 9 : 2} />
-              </div>
-            ))}
-            {copied && <div className="sh-copied">{copied}</div>}
-          </section>
-        )}
+        <section className="sh-meta social-inline" aria-label="Upload text">
+          <SocialPostBody
+            key={`${item.id}-${brush}`}
+            target={{ type: "short", id: item.id, strokeCredit: brush, hookStyle }}
+            platformStoreKey="jlpt-trainer:shorts-social-platform:v1"
+            defaultPlatform="youtube-shorts"
+          />
+        </section>
         <p className="sh-hint">
           ← → word · Space play · S stop · F clean · R rotated · Esc exit · H backdrop on/off · ~{panSeconds}s
         </p>

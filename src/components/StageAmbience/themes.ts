@@ -3093,6 +3093,41 @@ export function ambienceForOnomatopoeia(item: OnomatopoeiaLike): AmbienceTheme {
   });
 }
 
+interface RegisterLike {
+  id: number;
+  category: string;
+  meaning: string;
+  casual: { text: string };
+  formal: { text: string };
+  note?: string;
+}
+
+/**
+ * Register (casual ⇄ formal) situations → the scene families they live in.
+ * Subcategory first (weight 3), then category (weight 2); a pair's own words
+ * still win when they name a scene (お茶 → tea room, 会議 → office…). Ties in
+ * a family are broken per pair, so neighbouring pairs vary.
+ */
+export const REGISTER_AMBIENCE_CATEGORIES: Readonly<
+  Record<string, readonly [string, string]>
+> = {
+  "質問・依頼": ["Etiquette & Consideration", "Public Life"],
+  "あいさつ・返事": ["Social Convention & Custom", "Friends & Social Life"],
+  "会社・ビジネス": ["Work", "Economy & Business"],
+  "買い物・外食": ["Dining Out", "Retail & Customer Service"],
+  "気持ち・意見": ["Emotions", "Feelings & Moods"],
+};
+
+export function ambienceForRegister(pair: RegisterLike): AmbienceTheme {
+  const [subcategory, category] = REGISTER_AMBIENCE_CATEGORIES[pair.category] ?? [];
+  return resolveAmbience({
+    id: `r${pair.id}`,
+    primary: [pair.meaning, pair.casual.text, pair.formal.text],
+    categories: [subcategory, category],
+    context: [pair.note],
+  });
+}
+
 /* ── Kanji echo ─────────────────────────────────────────────────── */
 
 /** Themes that write the current word's kanji into the scenery. */

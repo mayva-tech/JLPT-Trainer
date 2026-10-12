@@ -1,10 +1,10 @@
 /** Phrase nuance notes, batch 2. Only phrases with something worth noting. */
 export const phraseNuances2: Readonly<Record<number, string>> = {
-  4251: "応募する takes に for what you apply to, so say 求人に応募する, not を.",
+  4251: "A company posting a job opening is 求人を出す.",
   4254: "内定をもらう is the applicant's view; the company side is 内定を出す, and 内定が出る is also common.",
   4257: "資格を取得する is the formal phrasing; in conversation 資格を取る is more common.",
   4259: "新卒 refers to fresh graduates, whom Japanese companies traditionally hire in bulk each spring.",
-  4262: "発送する is formal shipping language; in everyday speech people just say 荷物を送る.",
+  4262: "荷物 covers both the bags you carry and the parcels you send.",
   4263: "届く is intransitive, the package arrives; 届ける is the transitive verb for delivering it.",
   4269: "再配達 is routine in Japan; if you miss a delivery, a 不在票 slip is left so you can request one.",
   4271: "預ける means to leave something in someone's care; it is also used for luggage and bank deposits.",
@@ -79,7 +79,7 @@ export const phraseNuances2: Readonly<Record<number, string>> = {
   4467: "故障 is for machines breaking down; people get 病気 or ケガ instead.",
   4476: "横になる means lying down to rest, not necessarily falling asleep.",
   4477: "仮眠 is a short sleep, often at work or before a night shift; a daytime nap is 昼寝.",
-  4478: "眠気に襲われる is a set expression for being suddenly overcome by sleepiness.",
+  4478: "Coffee or cold water is said to 眠気を覚ます, chase away sleepiness.",
   4480: "取れる here means to come off, so 疲れが取れる is fatigue going away.",
   4482: "名刺交換 in Japan has strict etiquette, such as receiving the card with both hands.",
   4486: "疎遠になる is the fixed phrase for drifting apart from someone.",

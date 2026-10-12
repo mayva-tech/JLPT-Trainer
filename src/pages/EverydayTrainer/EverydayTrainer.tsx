@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import "./everyday-trainer.css";
 import { AmbiencePan } from "../../components/StageAmbience/AmbiencePan";
 import { StageAmbience } from "../../components/StageAmbience/StageAmbience";
@@ -31,13 +31,35 @@ import type { EverydayCategory, EverydayWord } from "./types";
 
 const ROUND = 10;
 
+/** Visual Discovery (写真で日本語) loads only when opened. */
+const VisualDiscovery = lazy(() => import("./discovery/VisualDiscovery"));
+
+/**
+ * `?view=everyday&discover=1` opens the scene gallery, `&discover=kitchen` a
+ * scene; `&discoverEdit=1` adds the hotspot editor (for mapping new pictures).
+ */
+function discoveryFromUrl(): { open: boolean; sceneId: string | null; editor: boolean } {
+  try {
+    const q = new URLSearchParams(globalThis.location?.search ?? "");
+    const d = q.get("discover");
+    return {
+      open: d !== null,
+      sceneId: d && d !== "1" ? d : null,
+      editor: q.get("discoverEdit") === "1",
+    };
+  } catch {
+    return { open: false, sceneId: null, editor: false };
+  }
+}
+
 type CategoryMode = "explore" | "picture" | "listen" | "recall";
 
 type Screen =
   | { name: "home" }
   | { name: "category"; categoryId: string; mode: CategoryMode; wordId: string | null; seed: number }
   | { name: "all"; mode: Exclude<CategoryMode, "explore">; seed: number }
-  | { name: "review"; seed: number };
+  | { name: "review"; seed: number }
+  | { name: "discovery"; sceneId: string | null };
 
 type Filter = "all" | "new" | "progress" | "done";
 
@@ -64,12 +86,19 @@ export default function EverydayTrainer() {
   const progressApi = useEverydayProgress();
   const { progress } = progressApi;
   const speech = useEverydaySpeech();
-  const [screen, setScreen] = useState<Screen>({ name: "home" });
+  const [discoveryUrl] = useState(discoveryFromUrl);
+  const [screen, setScreen] = useState<Screen>(() =>
+    discoveryUrl.open ? { name: "discovery", sceneId: discoveryUrl.sceneId } : { name: "home" },
+  );
+  /** Location of the open Visual Discovery scene (backdrop + ambience). */
+  const [discoveryCategoryId, setDiscoveryCategoryId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
 
   const category = screen.name === "category" ? categoryById(screen.categoryId) ?? null : null;
-  useHeadScene({ backdrop: category?.backdrop ?? "street" });
+  const discoveryCategory =
+    screen.name === "discovery" && discoveryCategoryId ? categoryById(discoveryCategoryId) ?? null : null;
+  useHeadScene({ backdrop: (category ?? discoveryCategory)?.backdrop ?? "street" });
 
   // Each location brings its own stage ambience; in Explore the card's kanji
   // are written into the scene's signs and lanterns (never in a quiz — that
@@ -77,7 +106,7 @@ export default function EverydayTrainer() {
   const [showAmbience] = useAmbienceSetting();
   const [shownWord, setShownWord] = useState<EverydayWord | null>(null);
   const exploring = screen.name === "category" && screen.mode === "explore";
-  const ambience = category?.ambience ?? HOME_AMBIENCE;
+  const ambience = (category ?? discoveryCategory)?.ambience ?? HOME_AMBIENCE;
   const glyphs = exploring && shownWord ? ambienceGlyphs(plainJapanese(shownWord)) : "";
 
   const open = (next: Screen) => {
@@ -88,7 +117,7 @@ export default function EverydayTrainer() {
     open({ name: "category", categoryId, mode, wordId, seed: Date.now() });
 
   return (
-    <div className="ev-root">
+    <div className={screen.name === "discovery" ? "ev-root ev-root--wide" : "ev-root"}>
       {showAmbience ? (
         <>
           <div className="app-amb" aria-hidden="true">
@@ -107,6 +136,17 @@ export default function EverydayTrainer() {
           openCategory={openCategory}
           open={open}
         />
+      ) : screen.name === "discovery" ? (
+        <Suspense fallback={<p className="ev-footnote">Loading scenes…</p>}>
+          <VisualDiscovery
+            everyday={progressApi}
+            speech={speech}
+            initialSceneId={screen.sceneId}
+            editor={discoveryUrl.editor}
+            onExit={() => open({ name: "home" })}
+            onSceneChange={setDiscoveryCategoryId}
+          />
+        </Suspense>
       ) : (
         <header className="ev-subhead">
           <button type="button" className="ev-back" onClick={() => open({ name: "home" })}>
@@ -194,7 +234,7 @@ export default function EverydayTrainer() {
         />
       ) : null}
 
-      {screen.name === "home" ? null : (
+      {screen.name === "home" || screen.name === "discovery" ? null : (
         <p className="ev-footnote">
           {quizAccuracy(progress).answered > 0
             ? `${Math.round((quizAccuracy(progress).correct / quizAccuracy(progress).answered) * 100)}% quiz accuracy · `
@@ -289,6 +329,21 @@ function Home({
           <span>saved</span>
         </div>
       </section>
+
+      <button type="button" className="ev-discover" onClick={() => open({ name: "discovery", sceneId: null })}>
+        <span className="ev-discover-icon" aria-hidden="true">
+          📷
+        </span>
+        <span className="ev-discover-text">
+          <strong>
+            Visual Discovery <span lang="ja">写真で日本語</span>
+          </strong>
+          <small>Explore a kitchen, a train and a street — tap things to learn their names.</small>
+        </span>
+        <span className="ev-discover-go" aria-hidden="true">
+          →
+        </span>
+      </button>
 
       <div className="ev-actions">
         {resumeWord && resumeCategory ? (

@@ -7,6 +7,7 @@ import {
   SPEECH_BILINGUAL_FIELD_GAP_MS,
 } from "../../../services/speechService";
 import { buildJapaneseHighlightUnits } from "../../../utils/speechHighlightUnits";
+import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import { PhoneRuby } from "./PhoneRuby";
 
 export type IntroPhase = "title" | "titleEn" | "situation" | null;
@@ -503,7 +504,13 @@ export function PhoneStudy({ scenario, onIntroState }: PhoneStudyProps) {
                     </button>
                   </p>
                   <p className={`pt-phrase-note${soloId === noteId ? " pt-speaking" : ""}`} lang="ja">
-                    {phrase.note}
+                    <HighlightedEnglish
+                      text={phrase.note}
+                      className="pt-phrase-note-text"
+                      highlight={null}
+                      inline
+                      readingGlosses
+                    />
                     <button
                       type="button"
                       className="pt-speak pt-speak--inline"

@@ -176,7 +176,13 @@ export function OnomatopoeiaCard({
         {item.collocation}
       </div>
       <div className={partClass("ono-nuance", activePart === "nuance")}>
-        {item.nuance}
+        <HighlightedEnglish
+          text={item.nuance}
+          className="ono-nuance-text"
+          highlight={null}
+          inline
+          readingGlosses
+        />
       </div>
 
       <div

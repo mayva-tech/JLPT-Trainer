@@ -9,7 +9,7 @@ import type { VocabNuanceEntry } from "../vocabularyNuances/types";
 export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7001: {
     word: "家事 covers all the work of running a home; cooking, cleaning and laundry are each a kind of 家事.",
-    phrase: "分担する means to split a job between people, as in 家事を分担する between a couple.",
+    phrase: "手伝う takes を for the task, so 家事を手伝う means helping with the housework.",
   },
   7002: {
     word: "洗濯物 is the clothes being washed or dried; 洗濯 is the act of washing itself.",
@@ -31,7 +31,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7007: {
     phrase: "缶を開ける is the general phrase; a pull-tab can is opened with プシュッと, a can-opener sound word.",
-    sentence: "Japanese towns sort trash strictly, so cans, bottles and plastic often go out on different days.",
   },
   7008: {
     phrase: "蓋をする means to put the lid on; 蓋を取る means to take it off.",
@@ -109,7 +108,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7027: {
     word: "新入社員 are new hires, usually fresh graduates who join together in April.",
-    phrase: "研修 means training; most companies run a group 新入社員研修 for new hires.",
+    phrase: "New employees usually join Japanese companies together in April and train as a group.",
   },
   7028: {
     word: "取引先 is any company you do business with; a customer you sell to can also be 顧客.",
@@ -188,7 +187,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7046: {
     word: "体調 is your overall physical condition, a gentle way to talk about feeling unwell.",
-    phrase: "体調を崩す means to fall ill, a soft and very common expression.",
+    phrase: "体調が悪い is the everyday polite way to say you feel unwell; getting sick is 体調を崩す.",
     sentence: "体調が悪い is a polite reason to give for taking a day off.",
   },
   7047: {
@@ -196,7 +195,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
     phrase: "寝不足の顔 is the tired look people notice, often with dark circles called くま.",
   },
   7048: {
-    phrase: "With 目薬 the verb is さす, not 入れる; 目薬をさす is the set phrase.",
+    phrase: "さす is the usual verb for eye drops; 使う sounds unnatural.",
   },
   7049: {
     word: "虫歯 literally means insect tooth, from an old belief that bugs caused tooth decay.",
@@ -209,14 +208,13 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7051: {
     word: "食材 is anything used as an ingredient; 材料 is broader and covers craft materials too.",
     phrase: "新鮮な食材 is a common phrase on menus and in cooking shows.",
-    sentence: "地元の食材 means locally produced ingredients, a big selling point in Japan.",
   },
   7052: {
     word: "小麦粉 is wheat flour; 粉 alone means any powder, and rice flour is 米粉.",
     phrase: "混ぜる means to mix; 混ざる is the intransitive form when things become mixed.",
   },
   7053: {
-    phrase: "味噌汁 is miso soup; tofu and wakame are its most common ingredients.",
+    phrase: "Tofu is also a classic ingredient in miso soup, 味噌汁.",
     sentence: "体にいい means good for your health, a very common everyday phrase.",
   },
   7054: {
@@ -235,7 +233,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7057: {
     word: "食品 is food as a product, as in shops or labels; 食べ物 is the everyday word.",
-    phrase: "冷凍食品 are frozen foods; 冷凍 means freezing, and 冷蔵 means chilling.",
+    phrase: "健康食品 are foods sold for their health benefits; 冷凍食品 is frozen food.",
   },
   7058: {
     word: "栄養 is nutrition; a balanced diet is 栄養のバランスがいい食事.",
@@ -299,7 +297,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7072: {
     word: "値下げ is a seller lowering a price; prices falling by themselves is 値下がり.",
-    phrase: "大幅な means large in scale, often used with price cuts and changes.",
+    phrase: "値下げ is a seller cutting prices; prices falling on their own is 値下がり.",
     sentence: "Supermarkets put discount stickers on bento before closing, a well-known evening bargain.",
   },
   7073: {
@@ -360,7 +358,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7086: {
     word: "いとこ is usually written in hiragana; it covers male and female cousins alike.",
-    phrase: "いとこの結婚式 is a cousin's wedding, a common family gathering.",
+    phrase: "いとこ covers male and female cousins alike and is usually written in hiragana.",
   },
   7087: {
     word: "味方 is someone on your side; the opposite is 敵, an enemy.",
@@ -464,7 +462,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7110: {
     word: "衛星 is a satellite, natural or artificial; a man-made one is 人工衛星.",
-    phrase: "気象衛星 are the weather satellites behind TV forecasts.",
+    phrase: "人工衛星 is an artificial satellite; the moon is a natural 衛星.",
   },
   7111: {
     word: "性格 is personality; 性質 is more about the nature or properties of things.",
@@ -529,20 +527,19 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7125: {
     word: "証明 is proof; an official certificate is 証明書.",
-    phrase: "身分の証明 is proof of identity, often a driver's license or residence card.",
+    phrase: "An official certificate is a 証明書; proof of address in Japan is usually the 住民票.",
   },
   7126: {
     word: "依頼 is a formal request for work or help; お願い is the everyday version.",
     phrase: "仕事の依頼 is a job request, common in business emails.",
-    sentence: "依頼された is passive, meaning we were asked to do the work.",
   },
   7127: {
     word: "委員 is a member of a committee; the committee itself is 委員会.",
-    phrase: "学級委員 is the class representative chosen in Japanese schools.",
+    phrase: "委員 is a committee member; a committee is 委員会, and its chair is 委員長.",
   },
   7128: {
     word: "首相 is the prime minister; the official title is 内閣総理大臣.",
-    phrase: "首相の発言 means remarks by the prime minister, common in news.",
+    phrase: "首相 is the usual news word for the prime minister; the formal title is 内閣総理大臣.",
   },
   7129: {
     word: "首都 is a capital city; Tokyo and its area are often called 首都圏.",
@@ -645,7 +642,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7152: {
     word: "血液 is the formal word for blood; in daily speech people say 血.",
     phrase: "血液の検査 is a blood test, usually shortened to 血液検査.",
-    sentence: "健康診断 is the yearly health checkup most Japanese workers take.",
   },
   7153: {
     word: "呼吸 is breathing; 息 is a single breath.",
@@ -680,7 +676,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7160: {
     word: "疲れ is tiredness as a noun; the verb is 疲れる.",
     phrase: "疲れが取れる means fatigue goes away; 取る here means to remove.",
-    sentence: "Hot springs are a classic way to relax and recover in Japan.",
   },
   7161: {
     word: "科目 is a school subject; a required subject is 必修科目.",
@@ -753,7 +748,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7177: {
     word: "監督 is a director in film, a manager in sports, or a supervisor at work.",
     phrase: "映画の監督 is a film director.",
-    sentence: "交代 means swapping one person for another, like a substitution.",
   },
   7178: {
     word: "議員 is an elected member of an assembly; Diet members are 国会議員.",
@@ -767,7 +761,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7180: {
     word: "休暇 is a formal word for leave or vacation; paid leave is 有給休暇.",
     phrase: "夏の休暇 is summer vacation; in conversation people often say 夏休み.",
-    sentence: "実家 is the home where your parents live.",
   },
   7181: {
     word: "天候 is weather over a period, a formal word; daily weather is 天気.",
@@ -843,7 +836,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7198: {
     word: "断る is to refuse or decline; Japanese often refuse indirectly to stay polite.",
-    phrase: "誘いを断る is declining an invitation; ちょっと is a soft way to start.",
+    phrase: "断る takes を for what is refused; 頼み is a favor someone asks of you.",
   },
   7199: {
     word: "叫ぶ is to shout or scream; calling someone's name is 呼ぶ.",
@@ -859,7 +852,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7202: {
     word: "悔しい is frustration at losing or failing when you tried hard; 残念 is plain disappointment.",
-    phrase: "悔しい思い is the bitter feeling after a defeat.",
+    phrase: "悔しい is frustration at losing or failing, while 残念 is milder disappointment.",
     sentence: "一点差 means a one-point margin.",
   },
   7203: {
@@ -880,7 +873,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7207: {
     word: "怒り is anger as a noun; the verb is 怒る.",
-    phrase: "抑える means to hold down or control, as in 怒りを抑える.",
+    phrase: "怒り is the noun of 怒る; holding back anger is 怒りを抑える.",
     sentence: "こみ上げる means a feeling welling up from inside.",
   },
   7208: {
@@ -929,7 +922,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7218: {
     word: "豆 is beans; it also appears in names like 豆腐 and 枝豆.",
     phrase: "煮る is to simmer food in liquid.",
-    sentence: "At Setsubun in February, people throw roasted beans to drive away bad luck.",
   },
   7219: {
     word: "砂漠 is a desert; 砂 means sand.",
@@ -949,12 +941,12 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7223: {
     word: "刑事 is a police detective; it also means criminal, as in 刑事事件.",
-    phrase: "ベテランの刑事 is a typical TV drama character.",
+    phrase: "刑事 is a plain-clothes detective; a uniformed officer is 警察官 or おまわりさん.",
     sentence: "現場 is the scene where something happened.",
   },
   7224: {
     word: "罪 is a crime or sin; a criminal is 犯罪者.",
-    phrase: "罪を犯す is the set phrase for committing a crime.",
+    phrase: "罪 is guilt or a crime; committing one is 罪を犯す.",
   },
   7225: {
     word: "停電 is a power outage; 停 means stop and 電 means electricity.",
@@ -967,7 +959,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7227: {
     word: "予防 is prevention; a vaccine is 予防接種.",
     phrase: "病気の予防 is disease prevention.",
-    sentence: "手洗い is hand washing, a common health message in Japan.",
   },
   7228: {
     word: "禁煙 means no smoking, or quitting smoking; smoking areas are 喫煙所.",
@@ -1014,7 +1005,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7238: {
     word: "けち means stingy with money; it can sound rude when said to someone.",
     phrase: "けちな人 is a stingy person.",
-    sentence: "おごる means to treat someone to food or drinks.",
   },
   7239: {
     word: "わがまま means selfish or demanding.",
@@ -1041,7 +1031,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7244: {
     word: "割る is to break or split something; it also means to divide in math.",
     phrase: "卵を割る is cracking an egg.",
-    sentence: "When something breaks by itself, use 割れる.",
   },
   7245: {
     word: "燃やす is to burn something; when it burns by itself use 燃える.",
@@ -1083,7 +1072,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7254: {
     word: "定期 means regular or fixed; on its own it is short for a commuter pass, 定期券.",
-    phrase: "定期の点検 is a regular inspection of machines or buildings.",
+    phrase: "定期 means regular or fixed-term; 定期券, often just 定期, is a commuter pass.",
   },
   7255: {
     word: "通過 is passing through without stopping, used for trains, exams and bills.",
@@ -1108,7 +1097,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7260: {
     word: "列車 is a train, often long-distance; 電車 is an electric commuter train.",
-    phrase: "夜行列車 is an overnight train.",
+    phrase: "列車 is a more formal word for a train; in daily speech people say 電車.",
     sentence: "予定通り means as scheduled.",
   },
   7261: {
@@ -1122,7 +1111,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7263: {
     word: "汗 is sweat; a sweaty person is 汗っかき.",
-    phrase: "汗をかく uses かく; sweat is not 出す in this phrase.",
+    phrase: "汗をかく is the usual collocation; 汗が出る just describes sweat coming out.",
   },
   7264: {
     word: "肌 is skin, especially its look and feel; 皮膚 is the medical word.",
@@ -1130,7 +1119,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7265: {
     word: "膝 is the knee; a lap is also 膝, as in 膝の上.",
-    phrase: "膝を曲げる is bending your knees; straightening them is 伸ばす.",
+    phrase: "膝 is the knee; the lap when sitting is also 膝, as in 膝の上.",
     sentence: "すりむく means to scrape skin.",
   },
   7266: {
@@ -1140,7 +1129,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7267: {
     word: "心臓 is the heart as an organ; 心 is the heart as feelings.",
     phrase: "心臓の音 is the heartbeat.",
-    sentence: "どきどき describes a pounding heart.",
   },
   7268: {
     word: "身長 is a person's height; for buildings use 高さ.",
@@ -1156,7 +1144,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7271: {
     word: "物理 is physics; physical as in body is 身体的.",
-    phrase: "物理の法則 is a law of physics.",
+    phrase: "物理 is physics; chemistry is 化学, and biology is 生物.",
   },
   7272: {
     word: "物質 is matter or a substance in science; material for making things is 材料.",
@@ -1164,7 +1152,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7273: {
     word: "金属 is metal in general; iron is 鉄 and gold is 金.",
-    phrase: "金属の部品 is a metal part.",
+    phrase: "金属 is metal in general; specific metals include 鉄, iron, and 銅, copper.",
     sentence: "Security checks ask you to take out metal objects.",
   },
   7274: {
@@ -1203,7 +1191,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7282: {
     word: "女優 is an actress; the lead role is 主役.",
-    phrase: "主演の女優 is the lead actress.",
+    phrase: "女優 is an actress; 俳優 is used for actors in general.",
   },
   7283: {
     word: "歌手 is a professional singer; 手 after a word often means a person who does it.",
@@ -1219,7 +1207,7 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   },
   7286: {
     word: "観客 is an audience or spectators; a TV audience is 視聴者.",
-    phrase: "満員の観客 is a packed audience.",
+    phrase: "観客 is an audience watching a show or match; listeners at a talk are 聴衆.",
   },
   7287: {
     word: "拍手 is applause; clapping your hands is 手を叩く.",
@@ -1236,7 +1224,6 @@ export const n3VocabNuances: Readonly<Record<number, VocabNuanceEntry>> = {
   7290: {
     word: "博物館 is a museum of history or science; an art museum is 美術館.",
     phrase: "科学の博物館 is a science museum.",
-    sentence: "恐竜 means dinosaur.",
   },
   7291: {
     word: "握る is to grip or hold tightly; it also means shaping sushi rice.",

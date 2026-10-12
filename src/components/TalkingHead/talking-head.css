@@ -39,7 +39,7 @@
   transition: left 280ms ease, top 280ms ease, transform 280ms ease, opacity 220ms ease;
 }
 
-/* Shrunk into a gap beside the line being read; anchored at its top-left spot. */
+/* Shrunk into a gap beside the line being read (or grown into a free dock); anchored at its top-left spot. */
 .th-root--fit {
   transform: scale(var(--th-fit, 1));
   transform-origin: 0 0;

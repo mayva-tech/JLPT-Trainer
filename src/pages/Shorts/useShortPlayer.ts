@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrainerSpeech } from "../../hooks/useTrainerSpeech";
 import { SPEECH_RATE_SLOW } from "../../services/speechService";
 import type { ShortPhase, ShortStep } from "./shortScript";
+import { playSfx } from "./shortSfx";
 
 /**
  * Plays a Short's script: speech steps wait for the voice to finish, wait
@@ -46,6 +47,7 @@ export function useShortPlayer(steps: readonly ShortStep[], onDone?: () => void)
       setPhase(step.phase);
       const next = () => run(index + 1, g);
       if (step.kind === "wait") {
+        if (step.sfx) playSfx(step.sfx);
         setCue(step.cue ? { kind: step.cue, ms: step.ms, key: index } : null);
         timer.current = window.setTimeout(() => {
           if (g !== gen.current) return;

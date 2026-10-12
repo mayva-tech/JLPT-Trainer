@@ -106,6 +106,21 @@ export function useEverydaySpeech() {
     [speakIn],
   );
 
+  /**
+   * One line that isn't a word card (a "Find the …" prompt), cancelling
+   * anything playing. `reading` pins the Japanese pronunciation.
+   */
+  const sayLine = useCallback(
+    (text: string, lang: TrainerSpeechLang, reading?: string | null, onEnded?: () => void) => {
+      sessionRef.current += 1;
+      clearTimer();
+      setNuanceFor(null);
+      if (lang === "ja") speakJapanese(text, { reading: reading ?? null, karaoke: false, onEnded });
+      else speakEnglish(text, { karaoke: false, onEnded });
+    },
+    [speakJapanese, speakEnglish],
+  );
+
   /** Tap the nuance: read just the note. */
   const sayNuance = useCallback(
     (word: EverydayWord) => {
@@ -171,6 +186,7 @@ export function useEverydaySpeech() {
     setRateMode: speech.setRateMode,
     nuanceFor,
     say,
+    sayLine,
     sayNuance,
     playSequence,
     stop,

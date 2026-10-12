@@ -15,6 +15,8 @@ type Props = {
   nuanceActive?: boolean;
   /** Small animated picture of the pattern's function (player "絵" setting). */
   showPicture?: boolean;
+  /** Nuance held back until the slow pass with furigana is over. */
+  nuanceHidden?: boolean;
 };
 
 /** ② Grammar pattern + kanji furigana + meaning. */
@@ -26,6 +28,7 @@ export function GrammarPatternCard({
   nuanceHighlight = null,
   nuanceActive = false,
   showPicture = false,
+  nuanceHidden = false,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -50,6 +53,7 @@ export function GrammarPatternCard({
         note={item.nuance}
         active={nuanceActive}
         highlight={nuanceHighlight}
+        pending={nuanceHidden}
       />
     </div>
   );

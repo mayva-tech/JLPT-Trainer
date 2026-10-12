@@ -108,8 +108,9 @@ describe("Short script", () => {
   });
 
   it("gives a repeat gap of 2.5–6 s that grows with the sentence", () => {
-    expect(repeatGapMs("短い。")).toBe(2500);
-    expect(repeatGapMs("あ".repeat(100))).toBe(6000);
+    expect(repeatGapMs("短い。")).toBe(4000);
+    expect(repeatGapMs("あ".repeat(100))).toBe(9500);
+    expect(repeatGapMs("この言葉の意味が分かりません。")).toBe(6050);
     expect(repeatGapMs("駅の前に人が集まっています。")).toBeGreaterThan(repeatGapMs("短い文です。"));
   });
 
