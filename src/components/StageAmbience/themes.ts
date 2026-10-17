@@ -3016,6 +3016,33 @@ export function resolveAmbience(source: AmbienceSource): AmbienceTheme {
   return NEUTRAL_THEMES[pick]!;
 }
 
+/**
+ * Every theme for one item, best first: the theme `resolveAmbience` picks,
+ * then the other scored themes (highest score first), then the neutral
+ * scenes, then the rest — each group in the item's own stable order.
+ */
+export function rankAmbience(source: AmbienceSource): AmbienceTheme[] {
+  const scores = scoreAmbience(source);
+  const order = (t: AmbienceTheme) => stableHash(`${source.id}:${t}`);
+  const byScore = THEME_ORDER.filter((t) => scores[t] > 0).sort(
+    (a, b) => scores[b] - scores[a] || order(a) - order(b),
+  );
+  const byHash = (list: readonly AmbienceTheme[]) => [...list].sort((a, b) => order(a) - order(b));
+  const out = new Set<AmbienceTheme>([resolveAmbience(source), ...byScore, ...byHash(NEUTRAL_THEMES), ...byHash(THEME_ORDER)]);
+  return [...out];
+}
+
+/** One theme per item, never repeating within the run while unused themes remain. */
+export function distinctAmbiences(sources: readonly AmbienceSource[]): AmbienceTheme[] {
+  const used = new Set<AmbienceTheme>();
+  return sources.map((source) => {
+    const ranked = rankAmbience(source);
+    const theme = ranked.find((t) => !used.has(t)) ?? ranked[0]!;
+    used.add(theme);
+    return theme;
+  });
+}
+
 /* ── Adapters for each content type ─────────────────────────────── */
 
 interface VocabLike {
@@ -3118,14 +3145,23 @@ export const REGISTER_AMBIENCE_CATEGORIES: Readonly<
   "気持ち・意見": ["Emotions", "Feelings & Moods"],
 };
 
-export function ambienceForRegister(pair: RegisterLike): AmbienceTheme {
+function registerSource(pair: RegisterLike): AmbienceSource {
   const [subcategory, category] = REGISTER_AMBIENCE_CATEGORIES[pair.category] ?? [];
-  return resolveAmbience({
+  return {
     id: `r${pair.id}`,
     primary: [pair.meaning, pair.casual.text, pair.formal.text],
     categories: [subcategory, category],
     context: [pair.note],
-  });
+  };
+}
+
+export function ambienceForRegister(pair: RegisterLike): AmbienceTheme {
+  return resolveAmbience(registerSource(pair));
+}
+
+/** A section's pairs in order, each on its own backdrop (a new scene every pair). */
+export function ambiencesForRegisterSection(pairs: readonly RegisterLike[]): AmbienceTheme[] {
+  return distinctAmbiences(pairs.map(registerSource));
 }
 
 /* ── Kanji echo ─────────────────────────────────────────────────── */

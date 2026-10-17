@@ -69,6 +69,29 @@ function OutroPrompt({ text }: { text: string }) {
 }
 
 /**
+ * The 3-2-1: a ring that drains over the countdown (gold → red in the last
+ * second) around big numbers. Paired with a tick per second and a time-up
+ * sound (useShortPlayer), so the wait builds a little urgency.
+ */
+function CountdownRing({ ms, className = "" }: { ms: number; className?: string }) {
+  return (
+    <div
+      className={`sh-count${className ? ` ${className}` : ""}`}
+      style={{ "--sh-cd": `${ms}ms` } as CSSProperties}
+      aria-hidden="true"
+    >
+      <svg className="sh-count-ring" viewBox="0 0 100 100">
+        <circle className="sh-count-track" cx="50" cy="50" r="44" />
+        <circle className="sh-count-arc" cx="50" cy="50" r="44" pathLength={100} />
+      </svg>
+      <span>3</span>
+      <span>2</span>
+      <span>1</span>
+    </div>
+  );
+}
+
+/**
  * The message hook's opening frame: Nanami's text with the word marked, the
  * question, and the A / B quick replies. Shown from the very first (idle)
  * frame, so the thumbnail and the loop frame already ask the question.
@@ -78,14 +101,16 @@ function MessageHookPanel({
   highlight,
   counting,
   cueKey,
+  cueMs,
 }: {
   msg: MessageHook;
   highlight: SpeechHighlight | null;
   counting: boolean;
   cueKey: number;
+  cueMs: number;
 }) {
   return (
-    <div className="sh-msg">
+    <div className={counting ? "sh-msg sh-msg--counting" : "sh-msg"}>
       <div className="sh-msg-title">
         <span className="sh-msg-bell" aria-hidden="true">
           🔔
@@ -112,19 +137,23 @@ function MessageHookPanel({
             className="sh-bubble-text"
           />
         </div>
-        {/* Always laid out (hidden when idle), so the countdown doesn't shift the frame. */}
-        <div className={`sh-bubble sh-bubble--out sh-typing${counting ? " sh-typing--on" : ""}`} aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </div>
-        {counting && (
-          <div className="sh-count sh-count--msg" key={cueKey} aria-hidden="true">
-            <span>3</span>
-            <span>2</span>
-            <span>1</span>
+        {/* Always laid out (hidden when idle), so the countdown doesn't shift the frame:
+            ring · draining bar across the card · "typing" dots. */}
+        <div className={`sh-chat-timer${counting ? " sh-chat-timer--on" : ""}`} aria-hidden="true">
+          {counting ? (
+            <CountdownRing key={cueKey} ms={cueMs} className="sh-count--msg" />
+          ) : (
+            <span className="sh-count-slot" />
+          )}
+          <span className="sh-timer-bar">
+            {counting && <span key={cueKey} style={{ animationDuration: `${cueMs}ms` }} />}
+          </span>
+          <div className={`sh-bubble sh-bubble--out sh-typing${counting ? " sh-typing--on" : ""}`}>
+            <i />
+            <i />
+            <i />
           </div>
-        )}
+        </div>
       </div>
       <div className="sh-msg-ask">
         {ASK_SHOWN.before}
@@ -200,6 +229,7 @@ export function ShortStage(props: ShortStageProps) {
               highlight={phase === "hook" ? ja : null}
               counting={cue?.kind === "countdown"}
               cueKey={cue?.key ?? 0}
+              cueMs={cue?.ms ?? 3000}
             />
           )
         ) : (
@@ -243,13 +273,7 @@ export function ShortStage(props: ShortStageProps) {
           </div>
         )}
 
-        {cue?.kind === "countdown" && !msg && (
-          <div className="sh-count" key={cue.key} aria-hidden="true">
-            <span>3</span>
-            <span>2</span>
-            <span>1</span>
-          </div>
-        )}
+        {cue?.kind === "countdown" && !msg && <CountdownRing key={cue.key} ms={cue.ms} />}
 
         {reached(phase, "reveal") && (
           <PitchAccentLine
@@ -257,6 +281,7 @@ export function ShortStage(props: ShortStageProps) {
             reading={item.reading}
             speaking={phase === "reveal" && activeLang === "ja"}
             className="sh-pitch"
+            reveal={phase === "reveal" ? {} : null}
           />
         )}
 

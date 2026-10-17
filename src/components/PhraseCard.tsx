@@ -3,7 +3,7 @@ import type { SpeechHighlight } from "../services/speechService";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { LessonNuance } from "./LessonNuance";
-import { PhrasePitchLine } from "./PitchAccent/PitchAccentLine";
+import { PhrasePitchLine, type PitchReveal } from "./PitchAccent/PitchAccentLine";
 
 type Props = {
   item: VocabularyItem;
@@ -16,6 +16,8 @@ type Props = {
   meaningHidden?: boolean;
   /** Nuance held back until the slow pass with furigana is over. */
   nuanceHidden?: boolean;
+  /** Pitch line held back until Nanami reads the phrase. */
+  pitchReveal?: PitchReveal | null;
 };
 
 export function PhraseCard({
@@ -27,6 +29,7 @@ export function PhraseCard({
   showFurigana = true,
   meaningHidden = false,
   nuanceHidden = false,
+  pitchReveal = null,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -44,6 +47,7 @@ export function PhraseCard({
         reading={item.phraseReading}
         speaking={jaHighlight != null}
         className="pa--card"
+        reveal={pitchReveal}
       />
       <div
         aria-hidden="true"

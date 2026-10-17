@@ -7,6 +7,7 @@ import {
   SPEECH_BILINGUAL_FIELD_GAP_MS,
 } from "../../../services/speechService";
 import { buildJapaneseHighlightUnits } from "../../../utils/speechHighlightUnits";
+import { chunkJapaneseWords } from "../../../utils/jpLineChunks";
 import { HighlightedEnglish } from "../../../components/HighlightedEnglish";
 import { PhoneRuby } from "./PhoneRuby";
 
@@ -28,27 +29,28 @@ export function KaraokeJapanese({
   highlight: SpeechHighlight | null;
 }) {
   const units = buildJapaneseHighlightUnits(text);
+  const chunks = chunkJapaneseWords(units, (unit) => text.slice(unit.start, unit.end));
   return (
     <>
-      {units.map((unit, ui) => {
-        const slice = text.slice(unit.start, unit.end);
-        let state = "";
-        if (highlight) {
-          if (highlight.start < unit.end && highlight.end > unit.start) {
-            state = "speech-active";
-          } else if (unit.end <= highlight.start) {
-            state = "speech-spoken";
-          }
-        }
-        return (
-          <span
-            className={`speech-char ${state}`.trim()}
-            key={`${unit.start}-${ui}`}
-          >
-            {slice}
-          </span>
-        );
-      })}
+      {chunks.map((chunk) => (
+        <span className="jp-nobreak" key={chunk[0]?.start ?? 0}>
+          {chunk.map((unit) => {
+            let state = "";
+            if (highlight) {
+              if (highlight.start < unit.end && highlight.end > unit.start) {
+                state = "speech-active";
+              } else if (unit.end <= highlight.start) {
+                state = "speech-spoken";
+              }
+            }
+            return (
+              <span className={`speech-char ${state}`.trim()} key={unit.start}>
+                {text.slice(unit.start, unit.end)}
+              </span>
+            );
+          })}
+        </span>
+      ))}
     </>
   );
 }

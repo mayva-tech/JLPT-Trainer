@@ -12,6 +12,7 @@ import { RegisterSplitCard } from "../components/RegisterSplitCard";
 import {
   AMBIENCE_THEMES,
   ambienceForRegister,
+  ambiencesForRegisterSection,
   REGISTER_AMBIENCE_CATEGORIES,
 } from "../components/StageAmbience/themes";
 import { autoModeTiming } from "../config/autoModeTiming";
@@ -20,6 +21,7 @@ import {
   POLITE_HOOK_EN,
   registerCheckQuestion,
   registerCheckSpoken,
+  registerClosingHook,
 } from "./registerRetention";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -98,10 +100,32 @@ describe("ambienceForRegister", () => {
     }
   });
 
-  it("varies within a section (no single backdrop for six pairs in a row)", () => {
+  it("gives every pair in a section its own backdrop, stable per section", () => {
     for (const s of registerSections) {
-      const themes = new Set(getRegisterPairsForSection(s.id).map(ambienceForRegister));
-      expect(themes.size, s.id).toBeGreaterThan(1);
+      const pairs = getRegisterPairsForSection(s.id);
+      const themes = ambiencesForRegisterSection(pairs);
+      expect(themes).toHaveLength(pairs.length);
+      expect(new Set(themes).size, `${s.id}: ${themes.join(", ")}`).toBe(pairs.length);
+      expect(themes.every((t) => known.has(t))).toBe(true);
+      expect(ambiencesForRegisterSection(pairs)).toEqual(themes);
+      // The first pair keeps its own best scene.
+      expect(themes[0]).toBe(ambienceForRegister(pairs[0]!));
+    }
+  });
+});
+
+/* ── Closing remark ─────────────────────────────────────────────── */
+
+describe("registerClosingHook", () => {
+  it("names the section in English, said by Andrew with '&' spoken as 'and'", () => {
+    for (const s of registerSections) {
+      const hook = registerClosingHook(s);
+      expect(hook.kind).toBe("outro");
+      expect(hook.voice).toBe("en");
+      expect(hook.en).toContain(s.subtitle!.toLowerCase());
+      expect(hook.spokenEn).not.toContain("&");
+      expect(hook.ja).toBeTruthy();
+      expect(registerClosingHook(s)).toEqual(hook);
     }
   });
 });
@@ -139,9 +163,23 @@ describe("<RegisterSplitCard />", () => {
         })
       )
     );
-    const box = host.querySelector(".register-note.lesson-nuance--active");
-    expect(box?.querySelector(".lesson-nuance-label")?.textContent).toBe("Nuance");
-    expect(box?.querySelector(".speech-active")?.textContent).toContain("ございました");
+    // The note comes forward: an enlarged copy in the middle carries the
+    // karaoke; the small box keeps its place, hidden; the card steps back.
+    const focus = host.querySelector(".nuance-focus");
+    expect(focus?.querySelector(".lesson-nuance-label")?.textContent).toBe("Nuance");
+    expect(focus?.querySelector(".speech-active")?.textContent).toContain("ございました");
+    expect(focus?.hasAttribute("data-head-avoid")).toBe(true);
+    const held = host.querySelector(".register-note.lesson-nuance--held");
+    expect(held).not.toBeNull();
+    expect(held?.querySelector(".speech-active")).toBeNull();
+    expect(host.querySelector(".register-safe.safe-area--nuance-focus")).not.toBeNull();
+  });
+
+  it("no focus while another part is spoken; every card opens with a topic icon", () => {
+    act(() => root.render(createElement(RegisterSplitCard, { pair, activeSide: "formal" })));
+    expect(host.querySelector(".nuance-focus")).toBeNull();
+    expect(host.querySelector(".safe-area--nuance-focus")).toBeNull();
+    expect(host.querySelector(".register-safe--enter .register-meaning .register-icon")?.textContent).toBeTruthy();
   });
 
   it("no note highlight unless the note is the part being spoken", () => {

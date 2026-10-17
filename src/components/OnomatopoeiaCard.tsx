@@ -156,6 +156,7 @@ export function OnomatopoeiaCard({
         reading={item.reading}
         speaking={activePart === "word"}
         className="pa--card"
+        reveal={activePart === "categoryJa" || activePart === "categoryEn" ? {} : null}
       />
 
       <div

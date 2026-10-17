@@ -136,10 +136,19 @@ export function collectObstacles(root: HTMLElement | null): Box[] {
   }
   document
     // [data-head-avoid]: pictures a page asks the heads (and the mascot) to keep clear of.
-    .querySelectorAll<HTMLElement>(".nav-bar, .production-panel, .th-root, .th-seat--split, [data-head-avoid]")
+    // A panel still waiting to be revealed: its whole box, so the mascot neither
+    // sits where it will appear nor peeks from behind it before it shows.
+    .querySelectorAll<HTMLElement>(
+      ".nav-bar, .production-panel, .th-root, .th-seat--split, [data-head-avoid], .meaning-reveal--hidden"
+    )
     .forEach((el) => {
       const r = el.getBoundingClientRect();
       if (r.width > 0 && r.height > 0) out.push(padded(r));
     });
   return out;
+}
+
+/** Laid out but not shown yet (Auto Mode holds the meaning / nuance back). */
+export function isPendingReveal(el: Element): boolean {
+  return el.closest(".meaning-reveal--hidden") !== null;
 }

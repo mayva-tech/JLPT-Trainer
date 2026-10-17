@@ -11,6 +11,7 @@ import {
   type SpeechHighlight,
 } from "./speechService";
 import { speakNuance } from "./nuancePlayback";
+import { setNextSpeechTone } from "./speechTone";
 import { vocabStepNuance } from "../utils/lessonNuance";
 import {
   buildCheckCard,
@@ -256,8 +257,11 @@ export class AutoModeRunner {
     else this.prevOutroHook = hook.id;
     ui.setItemHook?.({ hook, key: ++this.itemHookKey });
     const say = hookSpeech(hook);
+    // Lively voices: intros bright, outros warm (taken by the next speak call).
+    setNextSpeechTone(kind === "intro" ? "excited" : "outro");
     if (say.lang === "ja") await this.speakJapanese(ui, say.text, rate, sid, say.reading);
     else await this.speakEnglish(ui, say.text, rate, sid);
+    setNextSpeechTone(null);
     if (this.shouldContinue(sid)) await this.pause(hookHoldMs(hook), sid);
     ui.setItemHook?.(null);
     return true;

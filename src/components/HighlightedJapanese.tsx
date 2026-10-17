@@ -1,5 +1,6 @@
 import type { SpeechHighlight } from "../services/speechService";
 import { buildJapaneseHighlightUnits } from "../utils/speechHighlightUnits";
+import { chunkJapaneseWords } from "../utils/jpLineChunks";
 
 type Props = {
   text: string;
@@ -25,6 +26,7 @@ export function HighlightedJapanese({
   inline = false,
 }: Props) {
   const units = buildJapaneseHighlightUnits(text);
+  const chunks = chunkJapaneseWords(units, (unit) => text.slice(unit.start, unit.end));
   const Wrapper = inline ? "span" : "div";
 
   return (
@@ -33,25 +35,25 @@ export function HighlightedJapanese({
       lang="ja"
     >
       <span className="jp-wrap-line">
-        {units.map((unit, ui) => {
-          const slice = text.slice(unit.start, unit.end);
-          let state = "";
-          if (highlight) {
-            if (highlight.start < unit.end && highlight.end > unit.start) {
-              state = "speech-active";
-            } else if (unit.end <= highlight.start) {
-              state = "speech-spoken";
-            }
-          }
-          return (
-            <span
-              className={`jp-word speech-char ${state}`.trim()}
-              key={`${unit.start}-${ui}`}
-            >
-              {slice}
-            </span>
-          );
-        })}
+        {chunks.map((chunk) => (
+          <span className="jp-chunk" key={`c-${chunk[0]?.start ?? 0}`}>
+            {chunk.map((unit) => {
+              let state = "";
+              if (highlight) {
+                if (highlight.start < unit.end && highlight.end > unit.start) {
+                  state = "speech-active";
+                } else if (unit.end <= highlight.start) {
+                  state = "speech-spoken";
+                }
+              }
+              return (
+                <span className={`jp-word speech-char ${state}`.trim()} key={unit.start}>
+                  {text.slice(unit.start, unit.end)}
+                </span>
+              );
+            })}
+          </span>
+        ))}
       </span>
     </Wrapper>
   );

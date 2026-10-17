@@ -38,6 +38,31 @@ describe("ensureKanjiReadingsSeeded", () => {
   });
 });
 
+describe("kana-anchor fallback", () => {
+  const ruby = (surface: string, reading: string) =>
+    alignFurigana(surface, reading)
+      .filter((s) => s.reading)
+      .map((s) => `${s.text}[${s.reading}]`);
+
+  it("keeps a word's reading on its own kanji across a 、 missing from the reading", () => {
+    expect(ruby("先週、新しい自転車を買いました。", "せんしゅうあたらしい じてんしゃを かいました")).toEqual([
+      "先[せん]",
+      "週[しゅう]",
+      "新[あたら]",
+      "自[じ]",
+      "転[てん]",
+      "車[しゃ]",
+      "買[か]",
+    ]);
+  });
+
+  it("never starts a kanji on a mora tail (病院, 電話, 匹敵)", () => {
+    expect(ruby("あの高い建物は病院です。", "あの たかい たてもの は びょういん です。")).toContain("病[びょう]");
+    expect(ruby("昨日、母と電話で長く話しました。", "きのうははと でんわで ながく はなしました")).toContain("話[わ]");
+    expect(ruby("〜に匹敵する", "〜にひってきする")).toEqual(["匹[ひっ]", "敵[てき]"]);
+  });
+});
+
 describe("alignFuriganaWithTokenSpans karaoke fallback", () => {
   it("recovers unspaced わたくしが承ります so karaoke can time うけたまわります", () => {
     const surface = "わたくしが承ります。";

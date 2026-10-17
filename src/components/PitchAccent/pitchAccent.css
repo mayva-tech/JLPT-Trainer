@@ -12,6 +12,14 @@
   margin: 0.2em auto 0;
   cursor: pointer;
   user-select: none;
+  transition: opacity 0.25s ease;
+}
+
+/* Waiting for Nanami to read the word: space kept, nothing shown. */
+.pa--waiting {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pa-figures {

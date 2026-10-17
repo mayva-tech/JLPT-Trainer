@@ -10,6 +10,7 @@ import {
   buildVocabularyItemSocialMeta,
   formatAllPosts,
   formatSocialPost,
+  formatYoutubeTags,
   SHORT_CAPTION_MAX,
   SOCIAL_PLATFORMS,
 } from "./socialMeta";
@@ -22,6 +23,8 @@ import {
   charLength,
   firstSense,
   fitTitle,
+  formatTags,
+  TAGS_MAX,
   TITLE_MAX,
 } from "./socialText";
 
@@ -226,9 +229,51 @@ describe("TOC → post", () => {
   });
 
   it("offers no post for entries without an adapter yet", () => {
-    for (const item of items.filter((i) => i.kind === "register" || i.kind === "intro" || i.kind === "glossary")) {
+    for (const item of items.filter((i) => i.kind === "intro" || i.kind === "glossary")) {
       expect(tocItemHasSocial(item)).toBe(false);
     }
+  });
+});
+
+describe("casual ⇄ formal posts", () => {
+  const items = tocGroups.flatMap((g) => g.items).filter((i) => i.kind === "register");
+  const first = items[0]!;
+
+  it("gives every register section a post with a title, description, hashtags and tags", () => {
+    expect(items.length).toBeGreaterThan(0);
+    for (const item of items) {
+      const meta = buildSocialMetaForTocItem(item)!;
+      expect(meta, item.id).not.toBeNull();
+      expect(charLength(meta.title)).toBeLessThanOrEqual(TITLE_MAX);
+      expect(meta.hashtags).toContain("#keigo");
+      expect(meta.children?.every((c) => c.type === "register-pair")).toBe(true);
+      const tags = formatYoutubeTags(meta);
+      expect(charLength(tags)).toBeLessThanOrEqual(TAGS_MAX);
+      expect(tags.split(", ")).toContain("Japanese keigo");
+      for (const p of ["tiktok", "universal", "instagram-reels"] as const) {
+        expect(charLength(formatSocialPost(meta, p).body)).toBeLessThanOrEqual(SHORT_CAPTION_MAX);
+      }
+    }
+    expect(buildSocialMetaForTocItem(first)!.title).toMatch(/^Casual vs Formal Japanese #1 \| Asking & requesting/);
+  });
+
+  it("builds a single pair's post from its casual and formal sides and note", () => {
+    const meta = buildSocialMetaForTarget({ type: "register-pair", id: 1 })!;
+    expect(meta.title).toContain("誰？ vs どちら様ですか？");
+    expect(meta.youtubeDescription).toContain("誰？（だれ） — Dare?");
+    expect(meta.youtubeDescription).toContain("どちら様ですか？（どちらさまですか） — Dochira sama desu ka?");
+    expect(meta.youtubeDescription).toContain("Lesson: Casual ⇄ Formal #1 · 質問・依頼 (Asking & requesting)");
+    expect(formatYoutubeTags(meta)).toMatch(/^Who are you in Japanese, 誰？, どちら様ですか？, Dochira sama desu ka\?, /);
+    expect(parentTocIdFor({ type: "register-pair", id: 1 })).toBe(first.id);
+    expect(formatAllPosts(meta)).toContain("=== YouTube tags ===");
+  });
+});
+
+describe("YouTube tags", () => {
+  it("are comma-separated, deduplicated and kept under the limit", () => {
+    expect(formatTags(["keigo", "Keigo", " polite  Japanese ", "a<b>", ""])).toBe("keigo, polite Japanese, a b");
+    const long = Array.from({ length: 80 }, (_, i) => `tag number ${i}`);
+    expect(charLength(formatTags(long))).toBeLessThanOrEqual(TAGS_MAX);
   });
 });
 

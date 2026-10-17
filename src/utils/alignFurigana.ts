@@ -80,6 +80,10 @@ const COMPOUND_READINGS: Record<string, FuriganaSegment[]> = {
   昨日: [{ text: "昨日", reading: "きのう" }],
   今年: [{ text: "今年", reading: "ことし" }],
   部屋: [{ text: "部屋", reading: "へや" }],
+  芝生: [
+    { text: "芝", reading: "しば" },
+    { text: "生", reading: "ふ" },
+  ],
   果物: [{ text: "果物", reading: "くだもの" }],
   大人: [{ text: "大人", reading: "おとな" }],
   下手: [{ text: "下手", reading: "へた" }],
@@ -365,6 +369,8 @@ function runReadingDp(
           const cut = m + len;
           // Never split ゃゅょ from following long-vowel う/ー (ひょ|う → ひょう)
           if (splitsYouonFromLongVowel(morae, cut)) continue;
+          // No kanji reading starts with っ / ん / ー (匹 ひっ | 敵 てき, not ひ | ってき)
+          if (cut < total && /^[っんー]/u.test(morae[cut]!)) continue;
           consider(i, m, cut, 10 + len);
         }
         // Last kanji can take all remaining morae in soft mode
@@ -1447,9 +1453,19 @@ function alignByKanaAnchors(
         readingChars.length - (remaining - 1),
         ri + 8
       );
+      const known = getReadingCandidates(ch);
+      const nextCh = surfaceChars[si + 1];
+      const kanjiFollows = nextCh !== undefined && (isKanji(nextCh) || isIterationMark(nextCh));
       for (let end = ri + 1; end <= maxEnd; end++) {
-        if (readingChars.slice(ri, end).some(isPunct)) break;
-        consider(end, Math.abs(end - ri - 2));
+        const slice = readingChars.slice(ri, end);
+        if (slice.some(isPunct)) break;
+        // The next kanji never starts on a mora tail (病 びょ | 院 ういん, 電 で | 話 んわ).
+        if (kanjiFollows && /^[ゃゅょぁぃぅぇぉっんー]/u.test(readingChars[end] ?? "")) continue;
+        // A dictionary reading beats an even split (先 せん 週 しゅう, not せんしゅ | う).
+        const cost = known.includes(slice.join(""))
+          ? 0
+          : Math.abs(end - ri - 2) + (known.length > 0 ? 2 : 0);
+        consider(end, cost);
       }
     } else if (isPunct(ch)) {
       if (readingChars[ri] && isPunct(readingChars[ri]!)) {

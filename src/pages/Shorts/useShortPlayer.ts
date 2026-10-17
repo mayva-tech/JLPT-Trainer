@@ -16,6 +16,8 @@ export function useShortPlayer(steps: readonly ShortStep[], onDone?: () => void)
   const [cue, setCue] = useState<{ kind: "countdown" | "repeat"; ms: number; key: number } | null>(null);
   const gen = useRef(0);
   const timer = useRef<number | null>(null);
+  /** Countdown ticks scheduled inside a wait step. */
+  const ticks = useRef<number[]>([]);
   const stepsRef = useRef(steps);
   const onDoneRef = useRef(onDone);
   stepsRef.current = steps;
@@ -24,6 +26,8 @@ export function useShortPlayer(steps: readonly ShortStep[], onDone?: () => void)
   const clearTimer = () => {
     if (timer.current != null) window.clearTimeout(timer.current);
     timer.current = null;
+    for (const t of ticks.current) window.clearTimeout(t);
+    ticks.current = [];
   };
 
   const stop = useCallback(() => {
@@ -49,8 +53,19 @@ export function useShortPlayer(steps: readonly ShortStep[], onDone?: () => void)
       if (step.kind === "wait") {
         if (step.sfx) playSfx(step.sfx);
         setCue(step.cue ? { kind: step.cue, ms: step.ms, key: index } : null);
+        const countdown = step.cue === "countdown";
+        if (countdown) {
+          // One tick per second (3 · 2 · 1), the last brighter, then time-up.
+          const seconds = Math.max(1, Math.round(step.ms / 1000));
+          for (let s = 0; s < seconds; s++) {
+            const fire = () => g === gen.current && playSfx("tick", { last: s === seconds - 1 });
+            if (s === 0) fire();
+            else ticks.current.push(window.setTimeout(fire, s * 1000));
+          }
+        }
         timer.current = window.setTimeout(() => {
           if (g !== gen.current) return;
+          if (countdown) playSfx("timeup");
           setCue(null);
           next();
         }, step.ms);
@@ -62,6 +77,7 @@ export function useShortPlayer(steps: readonly ShortStep[], onDone?: () => void)
         language: step.lang,
         reading: step.reading ?? null,
         rate: step.slow ? SPEECH_RATE_SLOW : undefined,
+        tone: step.tone ?? null,
         onEnded: () => {
           if (g !== gen.current) return;
           next();

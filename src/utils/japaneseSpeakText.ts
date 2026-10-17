@@ -588,6 +588,16 @@ function endsWithTopicWa(core: string): boolean {
   return /(?:に|で|と|え|から|まで|より)わ$/u.test(core);
 }
 
+/**
+ * Topic は glued to its noun (ちちは, これは, しゅうまつは) is spoken "wa".
+ * Kana-only input gives the voice no way to tell it from the "ha" mora, so
+ * it reads ちちは as "chichi ha".
+ */
+function speakTopicWa(core: string): string {
+  // 母 はは, 父母 ちちはは: the は belongs to the word.
+  return /(?<!は)は$/u.test(core) ? `${core.slice(0, -1)}わ` : core;
+}
+
 function keepTopicTight(next: string): boolean {
   const core = next
     .replace(/^[〜～]+/u, "")
@@ -612,8 +622,9 @@ export function appendPhraseParticleSpeakPause(
   const core = punct ? token.slice(0, -punct.length) : token;
   // 手紙には→いくら, 父は→庭で: the topic is its own phrase.
   if (endsWithTopicWa(core)) {
-    if (punct || !nextToken || keepTopicTight(nextToken)) return token;
-    return `${core}、`;
+    const wa = speakTopicWa(core);
+    if (punct || !nextToken || keepTopicTight(nextToken)) return `${wa}${punct}`;
+    return `${wa}、`;
   }
   if (
     core !== "わ" &&

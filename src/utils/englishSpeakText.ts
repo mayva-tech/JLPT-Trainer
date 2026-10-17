@@ -204,6 +204,8 @@ function findEnglishClauseBreakEnds(text: string): number[] {
  * on periods/ellipsis and lags Style Trainer warnings / explanations behind
  * Andrew.
  */
+const SPEAKABLE_RE = /[\p{L}\p{N}]/u;
+
 export function splitEnglishByClauses(
   text: string
 ): EnglishClauseSplit[] | null {
@@ -215,14 +217,11 @@ export function splitEnglishByClauses(
   for (const end of breakEnds) {
     if (end <= start) continue;
     const raw = text.slice(start, end);
-    const speakSource = raw.replace(ENGLISH_CLAUSE_TRAILING_PUNCT, "").trim();
-    if (speakSource) {
-      clauses.push({
-        start,
-        end,
-        speak: buildEnglishSpeakText(speakSource),
-      });
-    }
+    const speak = buildEnglishSpeakText(raw.replace(ENGLISH_CLAUSE_TRAILING_PUNCT, "").trim());
+    // A clause with no words (a leading "— ") joins the next one: an empty
+    // utterance falls back to the whole line, which Andrew then reads twice.
+    if (!SPEAKABLE_RE.test(speak)) continue;
+    clauses.push({ start, end, speak });
     start = end;
   }
   const rest = text.slice(start);

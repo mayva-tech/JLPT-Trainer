@@ -4,6 +4,7 @@ import {
   type SpeechHighlight,
   type SpeakCallbacks,
 } from "./speechService";
+import type { SpeechTone } from "./speechTone";
 
 export type BilingualOrder = "en-ja" | "ja-en";
 
@@ -25,6 +26,8 @@ export type BilingualRateOptions = {
    * speechService — this class only passes the reading through.
    */
   japaneseReading?: string | null;
+  /** Lively-voices tone per language (intro bright, CTA warm…). */
+  tones?: Partial<Record<"en" | "ja", SpeechTone>>;
 };
 
 /**
@@ -100,7 +103,8 @@ export class BilingualPlayback {
           step.text,
           ui,
           stepRate,
-          step.lang === "ja" ? (rateOptions?.japaneseReading ?? null) : null
+          step.lang === "ja" ? (rateOptions?.japaneseReading ?? null) : null,
+          rateOptions?.tones?.[step.lang] ?? null
         );
         if (sid !== this.session) return;
       }
@@ -121,7 +125,8 @@ export class BilingualPlayback {
     text: string,
     ui: BilingualPlaybackUi,
     rate: number,
-    japaneseReading: string | null = null
+    japaneseReading: string | null = null,
+    tone: SpeechTone | null = null
   ): Promise<void> {
     return new Promise((resolve) => {
       if (sid !== this.session) {
@@ -163,10 +168,11 @@ export class BilingualPlayback {
       };
 
       if (lang === "en") {
-        speechService.speakEnglish(text, callbacks, rate);
+        speechService.speakEnglish(text, callbacks, rate, { tone });
       } else {
         speechService.speakJapanese(text, callbacks, rate, {
           reading: japaneseReading,
+          tone,
         });
       }
     });

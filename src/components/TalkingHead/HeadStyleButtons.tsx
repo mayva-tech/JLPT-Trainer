@@ -15,7 +15,70 @@ import {
   subscribeHeadStyle,
   wearHeadCostume,
 } from "./headStyleStore";
+import { setHeadFrame, useHeadFrame } from "./headFrame";
+import { setLivelyVoices, useLivelyVoices } from "../../services/speechTone";
 import "./talking-head.css";
+
+/** Lively voices: brighter openings and hooks, rising questions, warm outros. */
+function LivelyButton() {
+  const lively = useLivelyVoices();
+  return (
+    <span className="head-style-group" role="group" aria-label="Voice tone">
+      <span className="head-style-name" aria-hidden="true">
+        Voices
+      </span>
+      <button
+        type="button"
+        className={lively ? "head-style-btn head-style-btn--on" : "head-style-btn"}
+        tabIndex={-1}
+        aria-pressed={lively}
+        aria-label={lively ? "Lively voices on (click for plain)" : "Lively voices off (click for lively)"}
+        title={
+          lively
+            ? "Lively voices: brighter openings and hooks, rising questions, warm outros (click: plain)"
+            : "Plain voices (click: lively)"
+        }
+        onClick={() => setLivelyVoices(!lively)}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" className="head-style-icon head-style-icon--badge">
+          <path d="M1.5 8 H3.5 L5 4 L7 12 L9 3 L11 13 L12.5 8 H14.5" />
+        </svg>
+      </button>
+    </span>
+  );
+}
+
+/** Full illustrated portraits ↔ round profile badges. */
+function FrameButton() {
+  const frame = useHeadFrame();
+  const badge = frame === "badge";
+  return (
+    <span className="head-style-group" role="group" aria-label="Head style">
+      <span className="head-style-name" aria-hidden="true">
+        Heads
+      </span>
+      <button
+        type="button"
+        className={badge ? "head-style-btn head-style-btn--on" : "head-style-btn"}
+        tabIndex={-1}
+        aria-pressed={badge}
+        aria-label={badge ? "Show full portraits" : "Show round profile badges"}
+        title={
+          badge
+            ? "Heads: profile badges (click: full portraits)"
+            : "Heads: full portraits (click: profile badges)"
+        }
+        onClick={() => setHeadFrame(badge ? "figure" : "badge")}
+      >
+        <svg viewBox="0 0 16 16" aria-hidden="true" className="head-style-icon head-style-icon--badge">
+          <circle cx="8" cy="8" r="6.2" />
+          <circle cx="8" cy="6.6" r="2.1" />
+          <path d="M4.4 12.4 Q8 8.6 11.6 12.4" />
+        </svg>
+      </button>
+    </span>
+  );
+}
 
 const PEOPLE: readonly { voice: Voice; name: string }[] = [
   { voice: "ja", name: "Nanami" },
@@ -128,6 +191,8 @@ export default function HeadStyleButtons() {
           </span>
         );
       })}
+      <LivelyButton />
+      <FrameButton />
       <SenseiButtons />
     </span>
   );

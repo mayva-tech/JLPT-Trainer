@@ -27,6 +27,31 @@ function useReplay(speaking: boolean) {
 }
 
 /**
+ * When the line waits, it stays hidden (keeping its space) until Nanami starts
+ * reading — or, with `afterMs`, until that much time has passed (browsing by
+ * hand: the brush has finished writing). `key` restarts the wait per word.
+ */
+export type PitchReveal = { afterMs?: number };
+
+function useRevealed(key: string, speaking: boolean, reveal: PitchReveal | null | undefined): boolean {
+  const [revealedFor, setRevealedFor] = useState<string | null>(null);
+  const waiting = reveal != null;
+  const afterMs = reveal?.afterMs;
+
+  useEffect(() => {
+    if (waiting && speaking) setRevealedFor(key);
+  }, [waiting, speaking, key]);
+
+  useEffect(() => {
+    if (!waiting || afterMs === undefined) return;
+    const timer = window.setTimeout(() => setRevealedFor(key), afterMs);
+    return () => window.clearTimeout(timer);
+  }, [waiting, afterMs, key]);
+
+  return !waiting || speaking || revealedFor === key;
+}
+
+/**
  * One word's kana with its high/low line; `particles` follow it in their own
  * colour (high after heiban, low otherwise). `start` is the mora offset of
  * this word in the draw-on animation.
@@ -115,14 +140,18 @@ export function PitchAccentLine({
   reading,
   speaking = false,
   className = "",
+  reveal = null,
 }: {
   word: string;
   reading: string;
   speaking?: boolean;
   className?: string;
+  /** Hold the line back until Nanami reads the word (see `PitchReveal`). */
+  reveal?: PitchReveal | null;
 }) {
   const accents = getPitchAccent(word, reading);
   const [play, replay] = useReplay(speaking);
+  const shown = useRevealed(`${word}|${reading}`, speaking, reveal);
 
   if (!accents) return null;
   const active = accents[0];
@@ -132,7 +161,7 @@ export function PitchAccentLine({
 
   return (
     <div
-      className={`pa ${className}`}
+      className={`pa${shown ? "" : " pa--waiting"} ${className}`}
       onClick={(e) => {
         e.stopPropagation();
         replay();
@@ -160,14 +189,18 @@ export function PhrasePitchLine({
   reading,
   speaking = false,
   className = "",
+  reveal = null,
 }: {
   phrase: string;
   reading: string;
   speaking?: boolean;
   className?: string;
+  /** Hold the line back until Nanami reads the phrase (see `PitchReveal`). */
+  reveal?: PitchReveal | null;
 }) {
   const segments = getPhrasePitch(phrase, reading);
   const [play, replay] = useReplay(speaking);
+  const shown = useRevealed(`${phrase}|${reading}`, speaking, reveal);
   if (!segments) return null;
 
   let start = 0;
@@ -185,7 +218,7 @@ export function PhrasePitchLine({
 
   return (
     <div
-      className={`pa pa--phrase ${className}`}
+      className={`pa pa--phrase${shown ? "" : " pa--waiting"} ${className}`}
       onClick={(e) => {
         e.stopPropagation();
         replay();

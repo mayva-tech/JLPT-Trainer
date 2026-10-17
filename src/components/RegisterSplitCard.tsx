@@ -6,6 +6,8 @@ import { FuriganaWrapText } from "./FuriganaWrapText";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import type { ReadHookState } from "../services/autoModeRunner";
 import { POLITE_HOOK_EN, POLITE_HOOK_JA } from "../utils/registerRetention";
+import { registerIcon } from "../utils/registerIcon";
+import { NUANCE_FOCUS_CLASS, NuanceFocus } from "./NuanceFocus";
 import "./Retention/retention.css";
 
 export type RegisterSideName = "casual" | "formal";
@@ -99,6 +101,10 @@ export function RegisterSplitCard({
   noteHidden = false,
 }: Props) {
   const splitRef = useRef<HTMLDivElement>(null);
+  const icon = registerIcon(pair);
+  /** The note is being explained: the card steps back, the note comes forward. */
+  const noteFocus =
+    Boolean(pair.note) && !formalHidden && !noteHidden && activeSide === "note";
 
   useLayoutEffect(() => {
     const split = splitRef.current;
@@ -121,11 +127,13 @@ export function RegisterSplitCard({
 
   return (
     <div
-      className={
-        hook
-          ? "safe-area register-safe register-safe--hook card-fade"
-          : "safe-area register-safe card-fade"
-      }
+      className={[
+        "safe-area register-safe register-safe--enter card-fade",
+        hook ? "register-safe--hook" : "",
+        noteFocus ? NUANCE_FOCUS_CLASS : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div
         className={
@@ -136,6 +144,7 @@ export function RegisterSplitCard({
         aria-hidden="true"
         data-head-avoid
       >
+        <span className={`register-icon register-icon--${icon.motion}`}>{icon.emoji}</span>
         <FitScale maxLines={1} watch={pair.meaning} minScale={0.68}>
           <HighlightedEnglish
             text={pair.meaning}
@@ -213,7 +222,9 @@ export function RegisterSplitCard({
             </div>
           ) : (
             <>
-              <div lang="ja" className="register-jp-slot">
+              {/* Keyed on the hook so the reveal after "Can you say it politely?"
+                  types the formal form in, like the opening of the card. */}
+              <div lang="ja" className="register-jp-slot" key={hook ? "hook" : "shown"}>
                 <div className="register-jp-box" data-head-avoid>
                   <FuriganaWrapText
                     surface={pair.formal.text}
@@ -239,6 +250,7 @@ export function RegisterSplitCard({
           className={[
             "lesson-nuance register-note meaning-reveal",
             activeSide === "note" ? "lesson-nuance--active" : "",
+            noteFocus ? "lesson-nuance--held" : "",
             noteHidden ? "meaning-reveal--hidden" : "",
           ]
             .filter(Boolean)
@@ -248,12 +260,13 @@ export function RegisterSplitCard({
           <HighlightedEnglish
             text={pair.note}
             className="lesson-nuance-body"
-            highlight={activeSide === "note" ? noteHighlight : null}
+            highlight={activeSide === "note" && !noteFocus ? noteHighlight : null}
             jpWordBreaks
             readingGlosses
           />
         </div>
       ) : null}
+      {noteFocus && pair.note ? <NuanceFocus text={pair.note} highlight={noteHighlight} /> : null}
     </div>
   );
 }

@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { boxesIntersect, candidateSpots, pickSpot, type Box } from "./senseiSpots";
+import {
+  boxesIntersect,
+  candidateSpots,
+  collectObstacles,
+  isPendingReveal,
+  pickSpot,
+  spotIsClear,
+  type Box,
+} from "./senseiSpots";
 
 const stage: Box = { left: 0, top: 0, right: 800, bottom: 600 };
 const nuance: Box = { left: 100, top: 400, right: 700, bottom: 500 };
@@ -43,6 +51,28 @@ describe("senseiSpots", () => {
 
   it("returns null when every spot is covered", () => {
     expect(pickSpot(candidateSpots(stage, null, false), [stage])).toBeNull();
+  });
+
+  it("keeps clear of a Nuance panel that is not revealed yet", () => {
+    const panel = document.createElement("div");
+    panel.className = "lesson-nuance meaning-reveal meaning-reveal--hidden";
+    panel.innerHTML = "<span>note</span>";
+    panel.getBoundingClientRect = () => new DOMRect(100, 400, 600, 100);
+    document.body.appendChild(panel);
+    try {
+      expect(isPendingReveal(panel.firstElementChild!)).toBe(true);
+      const obstacles = collectObstacles(null);
+      // Neither on the panel's area nor peeking from behind its top.
+      const behind = candidateSpots(stage, nuance, false).filter((s) => s.edge === "nuance");
+      expect(behind.length).toBeGreaterThan(0);
+      expect(behind.every((s) => !spotIsClear(s, obstacles))).toBe(true);
+      expect(spotIsClear({ edge: "bottom", x: 300, y: 420, w: 74, h: 66, inward: "left", dropBubble: false }, obstacles)).toBe(false);
+
+      panel.classList.remove("meaning-reveal--hidden");
+      expect(isPendingReveal(panel)).toBe(false);
+    } finally {
+      panel.remove();
+    }
   });
 
   it("opens the bubble toward the stage's middle", () => {

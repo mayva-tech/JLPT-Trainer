@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import type { SpeechHighlight } from "../services/speechService";
 import { HighlightedEnglish } from "./HighlightedEnglish";
+import { NUANCE_FOCUS_CLASS, NuanceFocus } from "./NuanceFocus";
 
 type Props = {
   note?: string;
@@ -101,26 +102,40 @@ export function LessonNuance({ note, active = false, highlight = null, pending =
     };
   }, [text]);
 
+  // While the nuance is spoken, the card steps back and the box is shown
+  // enlarged in the middle (NuanceFocus). Pending boxes stay in place only.
+  const focused = Boolean(text) && active && !pending;
+  useLayoutEffect(() => {
+    const safe = ref.current?.closest<HTMLElement>(".safe-area");
+    if (!safe || !focused) return;
+    safe.classList.add(NUANCE_FOCUS_CLASS);
+    return () => safe.classList.remove(NUANCE_FOCUS_CLASS);
+  }, [focused]);
+
   if (!text) return null;
   return (
-    <div
-      ref={ref}
-      className={[
-        "lesson-nuance meaning-reveal",
-        active ? "lesson-nuance--active" : "",
-        pending ? "meaning-reveal--hidden" : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span className="lesson-nuance-label">Nuance</span>
-      <HighlightedEnglish
-        text={text}
-        className="lesson-nuance-body"
-        highlight={active ? highlight : null}
-        jpWordBreaks
-        readingGlosses
-      />
-    </div>
+    <>
+      <div
+        ref={ref}
+        className={[
+          "lesson-nuance meaning-reveal",
+          active ? "lesson-nuance--active" : "",
+          focused ? "lesson-nuance--held" : "",
+          pending ? "meaning-reveal--hidden" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <span className="lesson-nuance-label">Nuance</span>
+        <HighlightedEnglish
+          text={text}
+          className="lesson-nuance-body"
+          highlight={active && !focused ? highlight : null}
+          jpWordBreaks
+          readingGlosses
+        />
+      </div>
+      {focused ? <NuanceFocus text={text} highlight={highlight} /> : null}
+    </>
   );
 }

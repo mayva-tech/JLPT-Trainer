@@ -53,9 +53,9 @@ export function speakNuance(
       },
     };
     if (segment.lang === "ja") {
-      speechService.speakJapanese(text, callbacks, rate, { followVoice: true });
+      speechService.speakJapanese(text, callbacks, rate, { followVoice: true, tone: "explain" });
     } else {
-      speechService.speakEnglish(text, callbacks, rate, { followVoice: true });
+      speechService.speakEnglish(text, callbacks, rate, { followVoice: true, tone: "explain" });
     }
   };
 

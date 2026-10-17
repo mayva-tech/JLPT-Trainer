@@ -31,6 +31,7 @@ import { useHeadCostume } from "./useHeadCostume";
 import { costumeLookFor } from "./costumeLook";
 import { costumeById } from "./costumes";
 import { getHeadStyle, subscribeHeadStyle } from "./headStyleStore";
+import { toggleHeadFrame, useHeadFrame } from "./headFrame";
 import { SceneBackdropArt } from "./backdrops";
 import { CupProp, PhoneProp } from "./props";
 import { SCENE_LABELS } from "./scenes";
@@ -670,6 +671,8 @@ export function AndrewHead({
 }
 
 const VOICE_NAME: Record<Voice, string> = { ja: "Nanami", en: "Andrew" };
+/** Name shown under the round profile badge (badge mode only). */
+const BADGE_NAME: Record<Voice, string> = { ja: "七海", en: "Andrew" };
 
 /** One head on the stage — solo, or one of the duo pair. */
 function Seat({
@@ -722,10 +725,12 @@ function Seat({
   const Head = voice === "ja" ? NanamiHead : AndrewHead;
   return (
     <div
-      className={`th-seat th-seat--${role}${splitAt ? " th-seat--split" : ""}${suitReveal ? " th-seat--suit-reveal" : ""}`}
+      className={`th-seat${talking ? " th-seat--talking" : ""} th-seat--${role}${splitAt ? " th-seat--split" : ""}${suitReveal ? " th-seat--suit-reveal" : ""}`}
       style={splitAt ? { left: splitAt.x, top: splitAt.y } : undefined}
       data-voice={voice}
     >
+      {/* Frame: plain in figure mode; the round badge (and its speaking ring) in badge mode. */}
+      <div className="th-frame">
       <div key={motionKey} className={`th-motion${motionClass}`}>
         <Head
           viseme={talking ? viseme : "rest"}
@@ -741,6 +746,10 @@ function Seat({
           propSide={voice === "ja" ? "l" : "r"}
         />
       </div>
+      </div>
+      <span className="th-badge-name" lang={voice} aria-hidden="true">
+        {BADGE_NAME[voice]}
+      </span>
       {toast && (
         <span className="th-look-toast" aria-live="polite">
           {toast}
@@ -835,9 +844,6 @@ const READING_PITCH_SELECTOR = ".pa-play";
 const DUO_WIDTH_RATIO = 1.9;
 /** Chance the pair splits up even when both would fit together. */
 const SPLIT_CHANCE = 0.35;
-/** Sizes tried, largest first, when no full-size spot clears Japanese and the line being read. */
-const FIT_SCALES = [0.75, 0.6, 0.45] as const;
-
 function boxAt(pos: HeadPos, w: number, h: number): Box {
   return { left: pos.x, top: pos.y, right: pos.x + w, bottom: pos.y + h };
 }
@@ -938,8 +944,6 @@ function dockSeat(dock: { zone: Box; text: Box[] }, w: number, h: number): { spo
   return { spot: seat(s), scale: s };
 }
 
-/** Largest size tried beside the word, so the heads never dwarf it. */
-const SEAT_MAX_SCALE = 1.6;
 const SEAT_GRID_STEP = 6;
 
 type HeadSeats = { zone: Box; word: Box; text: Box[] };
@@ -1013,36 +1017,25 @@ function seatBeside(seats: HeadSeats, side: "left" | "right", w: number, h: numb
 }
 
 /**
- * Largest size at which every head gets its side of the word: Nanami left,
- * Andrew right (a lone speaker on their own side; a pair that can't split on
- * whichever side has room). Falls back to the smallest size by the word.
+ * Full-size seats beside the word: Nanami left, Andrew right (a lone speaker
+ * on their own side; a pair that can't split on whichever side has room).
+ * Null when a head doesn't fit there at full size — the heads never shrink,
+ * they roam to another spot clear of the Japanese instead.
  */
 function placeInSeats(
   seats: HeadSeats,
   w: number,
   h: number,
   voices: { ja: boolean; en: boolean; pair: boolean }
-): { scale: number; ja: HeadPos | null; en: HeadPos | null } {
-  const zoneH = seats.zone.bottom - seats.zone.top;
-  const scales = DOCK_SCALES.filter((s) => s <= SEAT_MAX_SCALE && h * s <= zoneH);
-  for (const s of scales) {
-    if (voices.pair) {
-      const pw = w * DUO_WIDTH_RATIO * s;
-      const spot = seatBeside(seats, "right", pw, h * s) ?? seatBeside(seats, "left", pw, h * s);
-      if (spot) return { scale: s, ja: spot, en: null };
-      continue;
-    }
-    const ja = voices.ja ? seatBeside(seats, "left", w * s, h * s) : null;
-    const en = voices.en ? seatBeside(seats, "right", w * s, h * s) : null;
-    if ((!voices.ja || ja) && (!voices.en || en)) return { scale: s, ja, en };
+): { ja: HeadPos | null; en: HeadPos | null } | null {
+  if (voices.pair) {
+    const pw = w * DUO_WIDTH_RATIO;
+    const spot = seatBeside(seats, "right", pw, h) ?? seatBeside(seats, "left", pw, h);
+    return spot ? { ja: spot, en: null } : null;
   }
-  const s = DOCK_SCALES.at(-1) ?? 0.45;
-  const { word, zone } = seats;
-  const y = Math.round(Math.max(zone.top, (word.top + word.bottom) / 2 - (h * s) / 2));
-  const atLeft = (bw: number) => ({ x: Math.round(Math.max(zone.left, word.left - AVOID_PAD - bw)), y });
-  const atRight = { x: Math.round(Math.min(zone.right - w * s, word.right + AVOID_PAD)), y };
-  if (voices.pair) return { scale: s, ja: atLeft(w * DUO_WIDTH_RATIO * s), en: null };
-  return { scale: s, ja: voices.ja ? atLeft(w * s) : null, en: voices.en ? atRight : null };
+  const ja = voices.ja ? seatBeside(seats, "left", w, h) : null;
+  const en = voices.en ? seatBeside(seats, "right", w, h) : null;
+  return (!voices.ja || ja) && (!voices.en || en) ? { ja, en } : null;
 }
 
 /** Kana, kanji (incl. 々〆), half-width katakana and the long-vowel mark. */
@@ -1236,6 +1229,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   const { scene, toggleScenes } = useStageScene();
   const { lookFor: chosenLook, cycleLook } = useHeadLook();
   const { costume, revealing, toggle: toggleCostume, cycle: cycleCostume } = useHeadCostume();
+  const frame = useHeadFrame();
   const lookFor = (voice: Voice) => {
     const worn = costumeById(costume[voice]);
     return worn ? costumeLookFor(worn, voice, chosenLook(voice)) : chosenLook(voice);
@@ -1270,7 +1264,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
   duoRef.current = duo;
   const shownLangRef = useRef(shownLang);
   shownLangRef.current = shownLang;
-  /** Scale while shrunk into a gap clear of Japanese / the line being read (1 = full size). */
+  /** Scale in a page's head dock (1 = full size; elsewhere the heads never shrink). */
   const [fit, setFit] = useState(1);
   const fitRef = useRef(fit);
   fitRef.current = fit;
@@ -1310,23 +1304,26 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         return;
       }
 
-      // A page can seat the heads on either side of its word.
+      // A page can seat the heads on either side of its word (full size only).
       const seats = findHeadSeats(panel);
-      if (seats) {
-        const apart = splitRef.current;
-        const duoNow = duoRef.current;
-        // Layout size: unlike the rect, not caught mid-way through a resize animation.
-        const rootW = el.offsetWidth || w;
-        const rootH = el.offsetHeight || h;
-        const one = duoNow && !apart ? rootW / DUO_WIDTH_RATIO : rootW;
-        const pair = duoNow && !canSplitRef.current;
-        const voice = shownLangRef.current;
-        const placed = placeInSeats(seats, one, rootH, {
-          pair,
-          ja: duoNow ? !pair : voice === "ja",
-          en: duoNow ? !pair : voice === "en",
-        });
-        if (fitRef.current !== placed.scale) setFit(placed.scale);
+      const apartNow = splitRef.current;
+      const duoNow = duoRef.current;
+      // Layout size: unlike the rect, not caught mid-way through a resize animation.
+      const rootW = el.offsetWidth || w;
+      const rootH = el.offsetHeight || h;
+      const pairNow = duoNow && !canSplitRef.current;
+      const voiceNow = shownLangRef.current;
+      const placed = seats
+        ? placeInSeats(seats, duoNow && !apartNow ? rootW / DUO_WIDTH_RATIO : rootW, rootH, {
+            pair: pairNow,
+            ja: duoNow ? !pairNow : voiceNow === "ja",
+            en: duoNow ? !pairNow : voiceNow === "en",
+          })
+        : null;
+      if (placed) {
+        const apart = apartNow;
+        const pair = pairNow;
+        if (fitRef.current !== 1) setFit(1);
         setYielding(false);
         const en = duoNow && !pair ? placed.en : null;
         if (en) {
@@ -1363,9 +1360,8 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
 
       // Japanese text and the line being read must stay uncovered — any
       // visible text while speech has no karaoke marks. Other text only
-      // costs overlap. A full-size layout is used only when it keeps these
-      // clear; otherwise the pair shrinks into a gap, and as a last resort
-      // fades out until there is room.
+      // costs overlap. The heads stay full size: a spot is used only when it
+      // keeps these clear, otherwise they fade out until there is room.
       const guarded = reading.length
         ? priority
         : speakingRef.current
@@ -1432,23 +1428,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         return true;
       };
 
+      // The heads keep their size: no full-size spot clear of the Japanese means fade out.
+      if (fitRef.current !== 1) setFit(1);
       if (placeFullSize()) {
-        if (fitRef.current !== 1) setFit(1);
         setYielding(false);
         return;
-      }
-
-      const prefer = current ?? posRef.current ?? defaultHeadPos(w, h);
-      const fullW = apart ? w * DUO_WIDTH_RATIO : w;
-      if (apart) setSplit(null);
-      for (const s of FIT_SCALES) {
-        const spot = findClearSpot(panel.box, fullW * s, h * s, obstacles, prefer, priority);
-        if (spot && !covers(spot, fullW * s, h * s)) {
-          setFit(s);
-          setYielding(false);
-          if (spot.x !== current?.x || spot.y !== current?.y) setAutoPos(spot);
-          return;
-        }
       }
       setYielding(true);
     };
@@ -1602,6 +1586,11 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
       flashToast(toggleReactions() ? "Reactions on" : "Reactions off");
       return;
     }
+    if (e.key === "o" || e.key === "O") {
+      e.preventDefault();
+      flashToast(toggleHeadFrame() === "badge" ? "Profile badges" : "Full portraits");
+      return;
+    }
     if (e.key !== "Enter" && e.key !== " ") return;
     e.preventDefault();
     switchLook(e.shiftKey ? -1 : 1);
@@ -1665,6 +1654,7 @@ export default function TalkingHead({ enabled = true }: TalkingHeadProps) {
         dragging ? "th-dragging" : "",
         shown ? "th-placed" : "",
         duo ? "th-root--duo" : "",
+        frame === "badge" ? "th-root--badge" : "",
         apart ? "th-root--split" : "",
         scene ? "th-root--scene" : "",
         fit !== 1 ? "th-root--fit" : "",

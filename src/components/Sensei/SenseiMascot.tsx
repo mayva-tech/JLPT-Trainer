@@ -19,6 +19,7 @@ import {
   candidateSpots,
   collectObstacles,
   findStageBox,
+  isPendingReveal,
   pickSpot,
   spotIsClear,
   type Spot,
@@ -48,9 +49,10 @@ const PEEK_FOR_MS = 2600;
 /** Let the slot mount at its new spot before sliding out, so it doesn't glide across. */
 const PEEK_SETTLE_MS = 60;
 
-/** The visible Nuance panel's box, if any. */
+/** The visible Nuance panel's box, if any — not one still waiting to be revealed. */
 function findNuanceBox() {
   for (const el of document.querySelectorAll<HTMLElement>(NUANCE_SELECTOR)) {
+    if (isPendingReveal(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.width > 0 && r.height > 0) return r;
   }

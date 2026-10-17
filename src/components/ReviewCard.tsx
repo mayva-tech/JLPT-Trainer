@@ -3,13 +3,15 @@ import type { SpeechHighlight } from "../services/speechService";
 import { HighlightedEnglish } from "./HighlightedEnglish";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { JlptLevelBadge } from "./JlptLevelBadge";
-import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
+import { PitchAccentLine, type PitchReveal } from "./PitchAccent/PitchAccentLine";
 
 type Props = {
   item: VocabularyItem;
   jaHighlight?: SpeechHighlight | null;
   enHighlight?: SpeechHighlight | null;
   showFurigana?: boolean;
+  /** Pitch line held back until Nanami reads the word. */
+  pitchReveal?: PitchReveal | null;
 };
 
 export function ReviewCard({
@@ -17,6 +19,7 @@ export function ReviewCard({
   jaHighlight = null,
   enHighlight = null,
   showFurigana = true,
+  pitchReveal = null,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -35,6 +38,7 @@ export function ReviewCard({
         reading={item.reading}
         speaking={jaHighlight != null}
         className="pa--card"
+        reveal={pitchReveal}
       />
       <div aria-hidden="true">
         <HighlightedEnglish

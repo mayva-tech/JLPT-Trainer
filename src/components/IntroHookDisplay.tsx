@@ -20,7 +20,7 @@ export function IntroHookDisplay({
 }: Props) {
   return (
     <div className="safe-area safe-area--hook">
-      <div className="hook-display card-fade">
+      <div className="hook-display hook-display--enter card-fade">
         <div className="category-chip">Intro Hook</div>
         <HighlightedEnglish
           text={english}

@@ -142,6 +142,18 @@ describe("speechService playback generation", () => {
     expect(b.length).toBe(1);
   });
 
+  it("says an English run that starts with a dash once (— you lower yourself, …)", async () => {
+    const { spoken } = installSpeechMock();
+    const { speechService } = await import("./speechService");
+
+    speechService.speakEnglish("— you lower yourself, which raises the listener.");
+    for (let i = 0; i < 5; i++) {
+      spoken.at(-1)?.onend?.();
+      await vi.runAllTimersAsync();
+    }
+    expect(spoken.map((u) => u.text)).toEqual(["you lower yourself, which raises the listener."]);
+  });
+
   it("startOnce prevents duplicate speak when voices load late", async () => {
     const { synth, spoken, setVoices, fireVoicesChanged } = installSpeechMock({
       emptyVoices: true,

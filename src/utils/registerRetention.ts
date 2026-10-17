@@ -1,4 +1,5 @@
 import type { RegisterPair } from "../types/register";
+import type { ItemHook } from "./itemHookSpeech";
 import {
   CHECK_LABELS,
   firstSense,
@@ -105,6 +106,45 @@ export function buildRegisterCheckCard(
       lang,
       correct: text === answer,
     })),
+  };
+}
+
+interface RegisterSectionLike {
+  id: string;
+  subtitle?: string;
+}
+
+const CLOSING_LINES: readonly { id: string; en: (topic: string) => string; ja: string }[] = [
+  {
+    id: "r-o-comment",
+    en: (t) => `That's ${t}! Which polite phrase will you use first? Tell us in the comments!`,
+    ja: "おつかれさまでした！",
+  },
+  {
+    id: "r-o-boss",
+    en: (t) => `That's ${t}! Try one of these polite lines at work or in a shop this week!`,
+    ja: "使(つか)ってみてください！",
+  },
+  {
+    id: "r-o-replay",
+    en: (t) => `That's ${t}! Replay it and say the polite side before Nanami does!`,
+    ja: "もう一度(いちど)、練習(れんしゅう)しましょう！",
+  },
+];
+
+/** Closing remark after the last pair of a section's Play All. */
+export function registerClosingHook(section: RegisterSectionLike | undefined): ItemHook {
+  const topic = section?.subtitle ? section.subtitle.toLowerCase() : "the section";
+  const line = CLOSING_LINES[stableHash(`reg-close:${section?.id ?? ""}`) % CLOSING_LINES.length]!;
+  const en = line.en(topic);
+  return {
+    id: line.id,
+    kind: "outro",
+    voice: "en",
+    tag: "Wrap-up",
+    en,
+    spokenEn: en.replace(/\s*&\s*/g, " and "),
+    ja: line.ja,
   };
 }
 

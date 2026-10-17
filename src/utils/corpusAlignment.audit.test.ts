@@ -107,6 +107,16 @@ describe("corpus alignment audit", () => {
     expect(bad).toEqual([]);
   });
 
+  it("keeps every mid-sentence 、 in the reading", () => {
+    // Without it a reading glues two words (せんしゅうあたらしい) and the
+    // furigana of one slides onto the other (新[うあたら]).
+    const midCommas = (t: string) => (t.replace(/[、。！？]+\s*$/u, "").match(/、/gu) ?? []).length;
+    const bad = all
+      .filter((c) => c.reading.trim() && midCommas(c.surface) > midCommas(c.reading))
+      .map((c) => `${c.kind}#${c.id}: ${c.surface} / ${c.reading}`);
+    expect(bad).toEqual([]);
+  });
+
   it("vocab headword readings are single tokens (no spaces)", () => {
     const bad: string[] = [];
     for (const c of all) {

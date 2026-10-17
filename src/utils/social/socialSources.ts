@@ -1,5 +1,5 @@
 import type { TocItem, TocItemId, TocItemKind } from "../../data/toc";
-import { findTocItemByLessonId, getTocItem } from "../../data/toc";
+import { findTocItemByLessonId, getTocItem, tocGroups } from "../../data/toc";
 import { getLessonById } from "../../data/lessons";
 import { getPlaylistWordRange, parsePlaylistLessonId, playlistLessons } from "../../data/playlists";
 import { getVocabularyById, getVocabularyByIds } from "../../data/vocabulary";
@@ -11,6 +11,12 @@ import {
 } from "../../data/grammar";
 import { n3GrammarLessons } from "../../data/n3/grammarN3";
 import { formatGrammarCategorySuffix, grammarBatchRangeLabel } from "../../data/tocGrammarItems";
+import {
+  getRegisterPairById,
+  getRegisterPairsForSection,
+  getRegisterSectionById,
+  registerSections,
+} from "../../data/registerPairs";
 import { getVocabularyLessonIdForQuiz } from "../quizVocabLesson";
 import { getGrammarLessonIdForQuiz } from "../quizGrammarLesson";
 import { getWordLevel } from "../wordLevel";
@@ -23,6 +29,8 @@ import {
   buildGrammarItemSocialMeta,
   buildGrammarLessonSocialMeta,
   buildQuizSocialMeta,
+  buildRegisterPairSocialMeta,
+  buildRegisterSectionSocialMeta,
   buildVocabularyItemSocialMeta,
   buildVocabularyLessonSocialMeta,
   grammarLessonName,
@@ -37,6 +45,8 @@ export type SocialTarget =
   | { type: "toc"; id: TocItemId }
   | { type: "vocabulary-item"; id: number; parentTocId?: TocItemId }
   | { type: "grammar-item"; id: number; parentTocId?: TocItemId }
+  /** One casual ⇄ formal pair. */
+  | { type: "register-pair"; id: number; parentTocId?: TocItemId }
   /** One Shorts-studio Short: the word's post with the Short's own upload text. */
   | { type: "short"; id: number; strokeCredit?: boolean; hookStyle?: HookStyle };
 
@@ -213,6 +223,40 @@ function quizMeta(quizId: string): SocialMeta | null {
   return null;
 }
 
+/* ── Casual ⇄ formal ─────────────────────────────────────────────── */
+
+function registerSectionMeta(sectionId: string): SocialMeta | null {
+  const section = getRegisterSectionById(sectionId);
+  const pairs = getRegisterPairsForSection(sectionId);
+  if (!section || pairs.length === 0) return null;
+  return buildRegisterSectionSocialMeta(section, pairs, { number: registerSections.indexOf(section) + 1 });
+}
+
+function registerSectionOf(pairId: number) {
+  return registerSections.find((s) => s.pairIds.includes(pairId));
+}
+
+function registerPairMeta(id: number): SocialMeta | null {
+  const pair = getRegisterPairById(id);
+  if (!pair) return null;
+  const section = registerSectionOf(id);
+  return buildRegisterPairSocialMeta(
+    pair,
+    section,
+    section ? { number: registerSections.indexOf(section) + 1 } : undefined
+  );
+}
+
+function registerTocId(pairId: number): TocItemId | null {
+  const section = registerSectionOf(pairId);
+  if (!section) return null;
+  return (
+    tocGroups
+      .flatMap((g) => g.items)
+      .find((i) => i.kind === "register" && i.registerSectionId === section.id)?.id ?? null
+  );
+}
+
 /* ── TOC adapters ────────────────────────────────────────────────── */
 
 type TocAdapter = (item: TocItem) => SocialMeta | null;
@@ -227,6 +271,7 @@ const TOC_ADAPTERS: Partial<Record<TocItemKind, TocAdapter>> = {
     return lesson ? grammarLessonMeta(lesson) : null;
   },
   quiz: (item) => quizMeta(item.quizId ?? item.id),
+  register: (item) => (item.registerSectionId ? registerSectionMeta(item.registerSectionId) : null),
 };
 
 const hasSocialCache = new Map<TocItemId, boolean>();
@@ -259,6 +304,8 @@ export function buildSocialMetaForTarget(target: SocialTarget): SocialMeta | nul
     }
     case "grammar-item":
       return grammarItemMeta(target.id);
+    case "register-pair":
+      return registerPairMeta(target.id);
     case "short": {
       const item = getVocabularyById(target.id);
       return item ? shortMeta(item, Boolean(target.strokeCredit), target.hookStyle) : null;
@@ -270,6 +317,7 @@ export function buildSocialMetaForTarget(target: SocialTarget): SocialMeta | nul
 export function parentTocIdFor(target: SocialTarget): TocItemId | null {
   if (target.type === "toc" || target.type === "short") return null;
   if (target.parentTocId) return target.parentTocId;
+  if (target.type === "register-pair") return registerTocId(target.id);
   if (target.type === "vocabulary-item") {
     const place = playlistPlace(target.id);
     return place ? findTocItemByLessonId(place.lesson.id)?.id ?? null : null;

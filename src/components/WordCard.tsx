@@ -5,7 +5,7 @@ import { HighlightedEnglish } from "./HighlightedEnglish";
 import { LessonNuance } from "./LessonNuance";
 import { FuriganaWrapText } from "./FuriganaWrapText";
 import { JlptLevelBadge } from "./JlptLevelBadge";
-import { PitchAccentLine } from "./PitchAccent/PitchAccentLine";
+import { PitchAccentLine, type PitchReveal } from "./PitchAccent/PitchAccentLine";
 import { Illustration } from "./Illustration/Illustration";
 import { vocabPicture } from "./Illustration/pictures";
 import { BrushWord } from "./KanjiStrokes/BrushWord";
@@ -27,6 +27,8 @@ type Props = {
   meaningHidden?: boolean;
   /** Nuance held back until the slow pass with furigana is over. */
   nuanceHidden?: boolean;
+  /** Pitch line held back while the brush writes, until Nanami reads the word. */
+  pitchReveal?: PitchReveal | null;
 };
 
 export function WordCard({
@@ -41,6 +43,7 @@ export function WordCard({
   brush = null,
   meaningHidden = false,
   nuanceHidden = false,
+  pitchReveal = null,
 }: Props) {
   return (
     <div className="safe-area card-fade">
@@ -73,6 +76,7 @@ export function WordCard({
         reading={item.reading}
         speaking={jaHighlight != null}
         className="pa--card"
+        reveal={pitchReveal}
       />
       <div
         aria-hidden="true"

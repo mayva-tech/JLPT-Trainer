@@ -13,6 +13,7 @@ import {
   updateSpeechPreferences,
   type SpeechRateMode,
 } from "../services/speechPreferences";
+import type { SpeechTone } from "../services/speechTone";
 
 export type TrainerSpeechLang = "ja" | "en";
 
@@ -24,6 +25,8 @@ export type SpeakLineOptions = {
   rate?: number;
   /** When false, karaoke highlight callbacks are skipped. */
   karaoke?: boolean;
+  /** Lively-voices tone (hook, question, outro…); omitted = picked from the line. */
+  tone?: SpeechTone | null;
   onEnded?: () => void;
 };
 
@@ -117,9 +120,10 @@ export function useTrainerSpeech(options?: { stopOnUnmount?: boolean }) {
         if (line.language === "ja") {
           speechService.speakJapanese(text, callbacks, rate, {
             reading: line.reading ?? null,
+            tone: line.tone ?? null,
           });
         } else {
-          speechService.speakEnglish(text, callbacks, rate);
+          speechService.speakEnglish(text, callbacks, rate, { tone: line.tone ?? null });
         }
       } catch {
         if (!alive()) return;

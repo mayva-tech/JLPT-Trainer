@@ -259,6 +259,27 @@
   white-space: normal;
 }
 
+/*
+ * A line breaks only between chunks — after a particle or punctuation
+ * (三年前に | 日本へ | 来ました。), never 来|ました. A chunk wider than the
+ * whole line still wraps between its words rather than overflowing.
+ */
+.jp-chunk {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: inherit;
+  align-items: flex-end;
+  flex: 0 1 auto;
+  row-gap: inherit;
+  max-width: 100%;
+}
+
+.jp-wrap--inline .jp-chunk,
+.jp-nobreak {
+  display: inline;
+  white-space: nowrap;
+}
+
 /* Same wrap units as shadowing — break between words only */
 .jp-word {
   display: inline-flex;
@@ -3104,3 +3125,254 @@
   }
 }
 
+
+
+/* ─── Visual review: register enter + nuance focus ───────────────
+   Opening motion (icon, slide, type-in) and Nuance focus. Only transform /
+   opacity / clip-path animate, so the fit and talking-head measurements are stable. */
+.register-meaning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+}
+
+/* Icon + meaning centred as one group (the meaning still shrinks to fit). */
+.register-meaning > .fit-scale {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.register-icon {
+  flex: none;
+  display: inline-block;
+  font-size: 1.25em;
+  line-height: 1;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.register-safe--enter .register-meaning {
+  animation: enterDrop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.register-safe--enter .register-icon--walk {
+  animation: iconWalk 1.1s ease-out 0.1s both;
+}
+
+.register-safe--enter .register-icon--ring {
+  animation: iconRing 0.9s ease-in-out 0.15s both;
+}
+
+.register-safe--enter .register-icon--bow {
+  transform-origin: 50% 90%;
+  animation: iconBow 1s ease-in-out 0.15s both;
+}
+
+.register-safe--enter .register-icon--wave {
+  transform-origin: 70% 85%;
+  animation: iconWave 1s ease-in-out 0.15s both;
+}
+
+.register-safe--enter .register-icon--pop {
+  animation: iconPop 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) 0.1s both;
+}
+
+.register-safe--enter .register-col--casual {
+  animation: enterFromLeft 0.5s cubic-bezier(0.2, 1, 0.3, 1) 0.05s both;
+}
+
+.register-safe--enter .register-col--formal {
+  animation: enterFromRight 0.5s cubic-bezier(0.2, 1, 0.3, 1) 0.15s both;
+}
+
+/* Typewriter: each phrase is uncovered left to right in steps. */
+.register-safe--enter .register-col--casual .register-jp-box {
+  animation: typeIn 0.6s steps(10, end) 0.3s both;
+}
+
+.register-safe--enter .register-col--formal .register-jp-box {
+  animation: typeIn 0.7s steps(12, end) 0.5s both;
+}
+
+.register-safe--enter .register-romaji,
+.register-safe--enter .register-note {
+  animation: fadeUp 0.4s ease 0.9s both;
+}
+
+.hook-display--enter .category-chip {
+  animation: iconPop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.hook-display--enter .hook-line--en {
+  animation: typeIn 0.8s steps(18, end) 0.15s both;
+}
+
+.hook-display--enter .hook-line--ja {
+  animation: typeIn 0.7s steps(14, end) 0.75s both;
+}
+
+@keyframes typeIn {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes enterDrop {
+  from { opacity: 0; transform: translateY(-1.2cqh) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes enterFromLeft {
+  from { opacity: 0; transform: translateX(-4cqw); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes enterFromRight {
+  from { opacity: 0; transform: translateX(4cqw); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(0.8cqh); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes iconWalk {
+  0% { opacity: 0; transform: translateX(-2.2em); }
+  15% { opacity: 1; }
+  20%, 60% { transform: translateX(-1.2em) translateY(-0.08em); }
+  30%, 70% { transform: translateX(-0.8em) translateY(0); }
+  40%, 80% { transform: translateX(-0.4em) translateY(-0.08em); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes iconRing {
+  0% { opacity: 0; transform: scale(0.6); }
+  15% { opacity: 1; transform: scale(1.1) rotate(0); }
+  25% { transform: rotate(-16deg); }
+  35% { transform: rotate(14deg); }
+  45% { transform: rotate(-12deg); }
+  55% { transform: rotate(10deg); }
+  65% { transform: rotate(-6deg); }
+  75%, 100% { opacity: 1; transform: none; }
+}
+
+@keyframes iconBow {
+  0% { opacity: 0; transform: scale(0.7); }
+  20% { opacity: 1; transform: none; }
+  50% { transform: rotate(28deg) translateY(0.06em); }
+  75%, 100% { opacity: 1; transform: none; }
+}
+
+@keyframes iconWave {
+  0% { opacity: 0; transform: scale(0.7); }
+  15% { opacity: 1; transform: none; }
+  30% { transform: rotate(18deg); }
+  45% { transform: rotate(-10deg); }
+  60% { transform: rotate(16deg); }
+  75% { transform: rotate(-6deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes iconPop {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ─── Nuance focus: the explanation comes forward ──────────────────
+   While the Nuance note is spoken, the card dims and steps back and the
+   note sits enlarged in the middle (NuanceFocus). The small box keeps its
+   space (hidden), so nothing reflows when the note ends. */
+/* Zero specificity: any card part with its own transition keeps it. */
+:where(.safe-area) > :where(*) {
+  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease;
+}
+
+.safe-area--nuance-focus > :not(.nuance-focus) {
+  opacity: 0.22;
+  filter: saturate(0.5);
+  transform: scale(0.97);
+}
+
+.lesson-nuance--held {
+  visibility: hidden;
+}
+
+.stage .nuance-focus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  translate: -50% -50%;
+  width: max-content;
+  max-width: 84%;
+  margin: 0;
+  padding: 2.6cqh 3.6cqw;
+  border-radius: 1.6cqw;
+  background: rgba(38, 29, 20, 0.94);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  box-shadow: 0 2cqh 6cqh rgba(0, 0, 0, 0.55);
+  animation: nuanceFocusIn 0.4s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.stage .nuance-focus .lesson-nuance-label {
+  font-size: 2.1cqw;
+  margin-bottom: 1.2cqh;
+}
+
+.stage .nuance-focus .lesson-nuance-body {
+  font-size: 3.7cqw;
+  line-height: 1.5;
+}
+
+@keyframes nuanceFocusIn {
+  from { opacity: 0; scale: 0.88; }
+  to { opacity: 1; scale: 1; }
+}
+
+@container (max-width: 1200px) and (orientation: landscape) {
+  .stage .nuance-focus .lesson-nuance-label {
+    font-size: 2.5cqw;
+  }
+
+  .stage .nuance-focus .lesson-nuance-body {
+    font-size: 4.4cqw;
+  }
+}
+
+@media (max-width: 700px) and (orientation: portrait) {
+  .stage .nuance-focus {
+    max-width: 92%;
+    padding: 2.2cqh 5cqw;
+    border-radius: 3cqw;
+  }
+
+  .stage .nuance-focus .lesson-nuance-label {
+    font-size: 4cqw;
+  }
+
+  .stage .nuance-focus .lesson-nuance-body {
+    font-size: 6.2cqw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-safe--enter .register-meaning,
+  .register-safe--enter .register-icon,
+  .register-safe--enter .register-col--casual,
+  .register-safe--enter .register-col--formal,
+  .register-safe--enter .register-jp-box,
+  .register-safe--enter .register-romaji,
+  .register-safe--enter .register-note,
+  .hook-display--enter .category-chip,
+  .hook-display--enter .hook-line--en,
+  .hook-display--enter .hook-line--ja,
+  .stage .nuance-focus {
+    animation: none;
+  }
+
+  :where(.safe-area) > :where(*) {
+    transition: none;
+  }
+}

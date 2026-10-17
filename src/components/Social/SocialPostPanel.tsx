@@ -4,7 +4,9 @@ import {
   formatAllPosts,
   formatSocialPost,
   formatYoutubeFull,
+  formatYoutubeTags,
   SOCIAL_PLATFORMS,
+  type SocialChild,
   type SocialPlatform,
 } from "../../utils/social/socialMeta";
 import {
@@ -18,8 +20,14 @@ import {
   SOCIAL_STATUSES,
   type SocialStatus,
 } from "../../utils/social/socialStatus";
-import { charLength, copyText, TITLE_MAX } from "../../utils/social/socialText";
+import { charLength, copyText, TAGS_MAX, TITLE_MAX } from "../../utils/social/socialText";
 import "./socialPost.css";
+
+const CHILD_HEADING: Record<SocialChild["type"], string> = {
+  "vocabulary-item": "One word",
+  "grammar-item": "One pattern",
+  "register-pair": "One pair",
+};
 
 function loadPlatform(storeKey: string, fallback: SocialPlatform): SocialPlatform {
   try {
@@ -196,6 +204,15 @@ export function SocialPostBody({
                 <Field label="Title" text={meta.title} rows={2} copyLabel="Copy Title" copied={copied} onCopy={copy} count={TITLE_MAX} />
                 <Field label="Description" text={meta.youtubeDescription} rows={10} copyLabel="Copy Description" copied={copied} onCopy={copy} />
                 <Field label="Hashtags" text={post.hashtags.join(" ")} rows={2} copyLabel="Copy Hashtags" copied={copied} onCopy={copy} />
+                <Field
+                  label="Tags (comma-separated)"
+                  text={formatYoutubeTags(meta)}
+                  rows={3}
+                  copyLabel="Copy Tags"
+                  copied={copied}
+                  onCopy={copy}
+                  count={TAGS_MAX}
+                />
                 <Field label="Full YouTube post" text={formatYoutubeFull(meta)} rows={4} copyLabel="Copy YouTube" copied={copied} onCopy={copy} />
               </>
             ) : (
@@ -240,7 +257,7 @@ export function SocialPostBody({
 
           {meta.children && meta.children.length > 0 ? (
             <section className="social-children" aria-label="Single posts">
-              <h3>{meta.children[0]!.type === "grammar-item" ? "One pattern" : "One word"} — post for a single item</h3>
+              <h3>{CHILD_HEADING[meta.children[0]!.type]} — post for a single item</h3>
               <div className="social-child-list">
                 {meta.children.map((c) => (
                   <button

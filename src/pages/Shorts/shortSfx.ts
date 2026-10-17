@@ -1,8 +1,13 @@
 /**
- * The message hook's notification: a two-note ding over a double buzz,
- * synthesized with Web Audio (no sound file, nothing borrowed from a real
- * messaging app). Plays through the page's audio, so OBS records it with
- * the voices. Silently does nothing where Web Audio is missing (tests).
+ * Short sound cues, synthesized with Web Audio:
+ *   ding    the message hook's notification
+ *   tick    one per second of the 3-2-1 (the last one a little brighter)
+ *   timeup  the countdown ends, right before the answer
+ *
+ * The ding is two notes over a double buzz (no sound file, nothing borrowed
+ * from a real messaging app). Everything plays through the page's audio, so
+ * OBS records it with the voices. Silently does nothing where Web Audio is
+ * missing (tests).
  */
 
 let ctx: AudioContext | null = null;
@@ -51,8 +56,28 @@ function buzz(ac: AudioContext, out: AudioNode, at: number, length: number) {
   osc.stop(at + length + 0.02);
 }
 
-export function playSfx(kind: "ding"): void {
-  if (kind !== "ding") return;
+export type SfxKind = "ding" | "tick" | "timeup";
+
+/** A soft wooden tick: a short click of filtered noise over a high blip. */
+function tick(ac: AudioContext, out: AudioNode, at: number, last: boolean) {
+  const len = 0.05;
+  const buffer = ac.createBuffer(1, Math.ceil(ac.sampleRate * len), ac.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3);
+  const src = ac.createBufferSource();
+  src.buffer = buffer;
+  const bp = ac.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.setValueAtTime(last ? 2400 : 1900, at);
+  bp.Q.setValueAtTime(6, at);
+  const gain = ac.createGain();
+  gain.gain.setValueAtTime(last ? 0.5 : 0.38, at);
+  src.connect(bp).connect(gain).connect(out);
+  src.start(at);
+  tone(ac, out, last ? 1568 : 1175, at, 0.07, last ? 0.07 : 0.05, "triangle");
+}
+
+export function playSfx(kind: SfxKind, opts: { last?: boolean } = {}): void {
   const ac = audio();
   if (!ac) return;
   try {
@@ -60,6 +85,16 @@ export function playSfx(kind: "ding"): void {
     const out = ac.createGain();
     out.gain.value = 0.9;
     out.connect(ac.destination);
+    if (kind === "tick") {
+      tick(ac, out, t, Boolean(opts.last));
+      return;
+    }
+    if (kind === "timeup") {
+      // Time's up: a quick rising two-note "pop", softer than the message ding.
+      tone(ac, out, 880, t, 0.14, 0.09, "triangle");
+      tone(ac, out, 1320, t + 0.08, 0.32, 0.11, "sine");
+      return;
+    }
     buzz(ac, out, t, 0.16);
     buzz(ac, out, t + 0.24, 0.16);
     // Two bright notes, a fourth apart (E6 → A6), with a soft octave shimmer.

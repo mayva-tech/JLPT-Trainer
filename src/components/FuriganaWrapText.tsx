@@ -1,6 +1,7 @@
 import { alignFurigana } from "../utils/alignFurigana";
 import type { FuriganaSegment } from "../utils/alignFurigana";
 import { buildJapaneseHighlightUnits } from "../utils/speechHighlightUnits";
+import { chunkJapaneseWords } from "../utils/jpLineChunks";
 import type { SpeechHighlight } from "../services/speechService";
 
 type Props = {
@@ -37,6 +38,7 @@ export function FuriganaWrapText({
   const pieces = segmentsToPieces(segments);
   const units = buildJapaneseHighlightUnits(surface);
   const groups = assignPiecesToWordUnits(pieces, units);
+  const chunks = chunkJapaneseWords(groups, (group) => group.map((p) => p.text).join(""));
   const anyReading = showFurigana && pieces.some((p) => !!p.reading);
   const reserve = reserveReadingSpace || anyReading;
 
@@ -45,40 +47,44 @@ export function FuriganaWrapText({
       className={`jp-wrap furigana-wrap ${showFurigana ? "" : "furigana-hidden"} ${className}`.trim()}
     >
       <span className="jp-wrap-line">
-        {groups.map((group, gi) => {
-          const groupStart = group[0]?.start ?? 0;
-          const groupEnd = group[group.length - 1]?.end ?? groupStart;
-          const wordActive =
-            !!highlight &&
-            highlight.start < groupEnd &&
-            highlight.end > groupStart;
-          return (
-          <span
-            className={`jp-word${wordActive ? " speech-active" : ""}`}
-            key={`w-${gi}-${groupStart}`}
-          >
-            {group.map((piece) => {
-              let state = "";
-              if (highlight) {
-                if (highlight.start < piece.end && highlight.end > piece.start) {
-                  state = "speech-active";
-                } else if (piece.end <= highlight.start) {
-                  state = "speech-spoken";
-                }
-              }
+        {chunks.map((chunk) => (
+          <span className="jp-chunk" key={`c-${chunk[0]?.[0]?.start ?? 0}`}>
+            {chunk.map((group, gi) => {
+              const groupStart = group[0]?.start ?? 0;
+              const groupEnd = group[group.length - 1]?.end ?? groupStart;
+              const wordActive =
+                !!highlight &&
+                highlight.start < groupEnd &&
+                highlight.end > groupStart;
               return (
-                <FuriCell
-                  key={`${piece.start}-${piece.text}`}
-                  segment={{ text: piece.text, reading: piece.reading }}
-                  state={state}
-                  showFurigana={showFurigana}
-                  reserveReadingSpace={reserve}
-                />
+                <span
+                  className={`jp-word${wordActive ? " speech-active" : ""}`}
+                  key={`w-${gi}-${groupStart}`}
+                >
+                  {group.map((piece) => {
+                    let state = "";
+                    if (highlight) {
+                      if (highlight.start < piece.end && highlight.end > piece.start) {
+                        state = "speech-active";
+                      } else if (piece.end <= highlight.start) {
+                        state = "speech-spoken";
+                      }
+                    }
+                    return (
+                      <FuriCell
+                        key={`${piece.start}-${piece.text}`}
+                        segment={{ text: piece.text, reading: piece.reading }}
+                        state={state}
+                        showFurigana={showFurigana}
+                        reserveReadingSpace={reserve}
+                      />
+                    );
+                  })}
+                </span>
               );
             })}
           </span>
-          );
-        })}
+        ))}
       </span>
     </div>
   );

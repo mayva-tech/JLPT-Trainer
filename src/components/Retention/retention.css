@@ -207,14 +207,34 @@
   color: var(--text-softer);
 }
 
+/* One line of text that wraps as a whole (a flex row would split the
+   Japanese and the English into two squeezed columns). */
 .ret-check-answer {
+  display: block;
+  max-width: 92%;
+  text-align: center;
   font-size: 2.4cqw;
+  line-height: 1.35;
   color: var(--text);
   animation: rtPop 0.4s ease both;
 }
 
 .ret-check-answer [lang="ja"] {
   font-family: var(--font-jp);
+}
+
+/* Measured and zoomed by useFitAboveBar so the card ends above the control bar. */
+.ret-check-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Japanese wraps between phrases (よろしいでしょうか stays whole), not mid-word. */
+.ret-check [lang="ja"],
+.ret-option[lang="ja"] .ret-option-text {
+  word-break: auto-phrase;
 }
 
 @keyframes rtPop {

@@ -44,6 +44,14 @@ import {
 
 import { emitSpeechEvent } from "./speechBus";
 import { locateNuanceSegments } from "../utils/nuanceSpeech";
+import {
+  callTone,
+  markSpeechActivity,
+  prosodyFor,
+  segmentTone,
+  takeNextSpeechTone,
+  type SpeechTone,
+} from "./speechTone";
 
 export type SpeechStatus = "idle" | "speaking" | "paused";
 
@@ -79,6 +87,8 @@ export type SpeakJapaneseOptions = {
   reading?: string | null;
   /** See {@link SpeakEnglishOptions.followVoice}. */
   followVoice?: boolean;
+  /** Lively-voices tone for this line (see speechTone.ts). */
+  tone?: SpeechTone | null;
 };
 
 export type SpeakEnglishOptions = {
@@ -88,6 +98,8 @@ export type SpeakEnglishOptions = {
    * short mixed-language runs such as nuance notes).
    */
   followVoice?: boolean;
+  /** Lively-voices tone for this line (see speechTone.ts). */
+  tone?: SpeechTone | null;
 };
 
 export const SPEECH_RATE_NORMAL = 0.80;
@@ -504,7 +516,9 @@ function runUtterance(
    * instead of rebuilding from the full string — used for split EN asides/clauses.
    */
   karaokeUnits?: HighlightUnit[] | null,
-  followVoice = false
+  followVoice = false,
+  /** Lively-voices tone: lifts rate / pitch (karaoke follows the lifted rate). */
+  tone: SpeechTone = "neutral"
 ) {
   if (!window.speechSynthesis || !text.trim()) {
     callbacks?.onEnd?.();
@@ -515,6 +529,9 @@ function runUtterance(
   const reading = spacedReading?.trim() || "";
   const isJa = lang.startsWith("ja");
   rate = voiceRate(isJa ? "ja" : "en", rate);
+  const prosody = prosodyFor(tone, rate);
+  rate = prosody.rate;
+  markSpeechActivity();
   // Browser boundary indices refer to audioText. For Japanese with an explicit
   // reading (even when it equals the surface, e.g. 〜ことになっている), use the
   // spoken-kana fallback timeline — Nanami word boundaries routinely skip いる /
@@ -550,6 +567,7 @@ function runUtterance(
   // Voice must be set before rate — Chromium resets rate when voice is assigned.
   if (voice) utter.voice = voice;
   utter.rate = rate;
+  if (prosody.pitch !== 1) utter.pitch = prosody.pitch;
 
   debug("speak", {
     playbackId,
@@ -801,6 +819,7 @@ function runUtterance(
   utter.onstart = () => {
     if (!alive()) return;
     utteranceStarted = true;
+    markSpeechActivity();
     debug("onstart", playbackId);
     emitSpeechEvent({ type: "start", lang: unitLang, rate });
     callbacks?.onStart?.();
@@ -884,6 +903,7 @@ function runUtterance(
       if (kind === "error") {
         callbacks?.onError?.(error);
       }
+      markSpeechActivity();
       emitSpeechEvent({ type: "end" });
       callbacks?.onEnd?.();
     }
@@ -964,6 +984,8 @@ export const speechService = {
   ) {
     const reading = options?.reading ?? null;
     const followVoice = options?.followVoice ?? false;
+    const pendingTone = takeNextSpeechTone();
+    const tone = callTone(options?.tone ?? pendingTone, "ja");
     const segments = buildJapaneseSpeakSegments(text, reading);
     if (segments.length <= 1) {
       const speakText = buildJapaneseSpeakText(text, reading);
@@ -977,12 +999,13 @@ export const speechService = {
         speakText,
         reading,
         null,
-        followVoice
+        followVoice,
+        segmentTone(tone, 0, text, "ja")
       );
       return;
     }
 
-    speakJapaneseSegments(text, segments, callbacks, rate, followVoice);
+    speakJapaneseSegments(text, segments, callbacks, rate, followVoice, tone);
   },
 
   speakEnglish(
@@ -993,11 +1016,14 @@ export const speechService = {
   ) {
     // Andrew (multilingual) garbles embedded Japanese and the English around
     // it, so hand Japanese runs to Nanami.
+    const pendingTone = takeNextSpeechTone();
+    const explicitTone = options?.tone ?? pendingTone;
     if (JAPANESE_CHAR_RE.test(text)) {
-      speakMixedEnglish(text, callbacks, rate);
+      speakMixedEnglish(text, callbacks, rate, explicitTone);
       return;
     }
     const followVoice = options?.followVoice ?? false;
+    const tone = callTone(explicitTone, "en");
     const segments = buildEnglishSpeakSegments(text);
     if (segments.length <= 1) {
       const speakText = buildEnglishSpeakText(text);
@@ -1011,12 +1037,13 @@ export const speechService = {
         speakText,
         null,
         null,
-        followVoice
+        followVoice,
+        segmentTone(tone, 0, text, "en")
       );
       return;
     }
 
-    speakEnglishSegments(text, segments, callbacks, rate, followVoice);
+    speakEnglishSegments(text, segments, callbacks, rate, followVoice, tone);
   },
 };
 
@@ -1030,7 +1057,8 @@ const SPEAKABLE_CHAR_RE = /[\p{L}\p{N}]/u;
 function speakMixedEnglish(
   text: string,
   callbacks: SpeakCallbacks | undefined,
-  rate: number
+  rate: number,
+  tone: SpeechTone | null = null
 ) {
   const runs = locateNuanceSegments(text).flatMap((segment) => {
     const { start } = segment;
@@ -1077,9 +1105,9 @@ function speakMixedEnglish(
       onError: (error) => callbacks?.onError?.(error),
     };
     if (run.lang === "ja") {
-      speechService.speakJapanese(run.speak, runCallbacks, rate, { followVoice: true });
+      speechService.speakJapanese(run.speak, runCallbacks, rate, { followVoice: true, tone });
     } else {
-      speechService.speakEnglish(run.speak, runCallbacks, rate, { followVoice: true });
+      speechService.speakEnglish(run.speak, runCallbacks, rate, { followVoice: true, tone });
     }
   };
 
@@ -1164,7 +1192,8 @@ function speakJapaneseSegments(
   segments: JapaneseSpeakSegment[],
   callbacks: SpeakCallbacks | undefined,
   rate: number,
-  followVoice = false
+  followVoice = false,
+  tone: SpeechTone | null = null
 ) {
   const voice = pickNanamiVoice();
   let started = false;
@@ -1217,7 +1246,8 @@ function speakJapaneseSegments(
       seg.speak,
       seg.reading,
       seg.steps,
-      followVoice
+      followVoice,
+      segmentTone(tone, index - 1, seg.speak, "ja")
     );
   };
 
@@ -1307,7 +1337,8 @@ function speakEnglishSegments(
   segments: EnglishSpeakSegment[],
   callbacks: SpeakCallbacks | undefined,
   rate: number,
-  followVoice = false
+  followVoice = false,
+  tone: SpeechTone | null = null
 ) {
   const voice = pickEnglishVoice();
   let started = false;
@@ -1360,7 +1391,8 @@ function speakEnglishSegments(
       seg.speak,
       null,
       seg.steps,
-      followVoice
+      followVoice,
+      segmentTone(tone, index - 1, seg.speak, "en")
     );
   };
 

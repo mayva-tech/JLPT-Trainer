@@ -792,6 +792,7 @@
 }
 
 .rt-word-jp .jp-wrap-line,
+.rt-word-jp .jp-chunk,
 .rt-word-jp .jp-word {
   flex-wrap: nowrap;
   max-width: none;

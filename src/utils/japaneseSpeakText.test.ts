@@ -18,12 +18,12 @@ describe("buildJapaneseSpeakText", () => {
       buildJapaneseSpeakText("x", "かいがいへ おくる てがみには いくらの きってが ひつようですか。")
     ).toBe("かいがいえ おくる てがみにわ、 いくらの きってが ひつようですか。");
     expect(buildJapaneseSpeakText("x", "ちちは にわで さかなを やいています。")).toBe(
-      "ちちは、 にわで さかなを やいています。"
+      "ちちわ、 にわで さかなを やいています。"
     );
     expect(buildJapaneseSpeakText("x", "ここでは たばこを すえません")).toBe(
       "ここでわ、 たばこを すえません"
     );
-    expect(buildJapaneseSpeakText("x", "じかいからは はやめに")).toBe("じかいからは、 はやめに");
+    expect(buildJapaneseSpeakText("x", "じかいからは はやめに")).toBe("じかいからわ、 はやめに");
   });
 
   it("keeps topic は tight with a bound ending (ではない, にはいかない, てはいけない)", () => {
@@ -34,15 +34,24 @@ describe("buildJapaneseSpeakText", () => {
 
   it("says は inside a word as 'ha' (katakana), never the particle 'wa'", () => {
     expect(buildJapaneseSpeakText("秋は山の葉が赤くなります。", "あきは やまの はが あかくなります")).toBe(
-      "あきは、 やまの ハが あかくなります"
+      "あきわ、 やまの ハが あかくなります"
     );
     expect(buildJapaneseSpeakText("葉", "は")).toBe("ハ");
     expect(buildJapaneseSpeakText("歯を抜く", "は を ぬく")).toBe("ハ を ぬく");
     expect(buildJapaneseSpeakText("葉書", "はがき")).toBe("ハがき");
     // Longer readings are never taken for the particle; they stay as they are.
     expect(buildJapaneseSpeakText("父は今電話で話しています", "ちちは いまでんわで はなしています")).toBe(
-      "ちちは、 いまでんわで はなしています"
+      "ちちわ、 いまでんわで はなしています"
     );
+  });
+
+  it("says topic は glued to its noun as 'wa' (ちちは → ちちわ), not 母 / 父母", () => {
+    expect(buildJapaneseSpeakText("父は毎朝早く起きます。", "ちちは まいあさはやく おきます")).toBe(
+      "ちちわ、 まいあさはやく おきます"
+    );
+    expect(buildJapaneseSpeakText("これは本です。", "これは ほんです")).toBe("これわ、 ほんです");
+    expect(buildJapaneseSpeakText("母は元気です。", "はは は げんきです")).toBe("はは わ、 げんきです");
+    expect(buildJapaneseSpeakText("父母", "ちちはは")).toBe("ちちはは");
   });
 
   it("keeps the particle は that is written in kana", () => {
@@ -287,9 +296,9 @@ describe("buildJapaneseSpeakText", () => {
         "朝は晴れていましたが、今はかなり曇っています。",
         "あさは はれていましたが、いまはかなり くもっています。"
       )
-    ).toBe("あさは、 ハれていましたが、いまは、 かなり くもっています。");
+    ).toBe("あさわ、 ハれていましたが、いまわ、 かなり くもっています。");
     expect(buildJapaneseSpeakText("父はいつも六時に起きます。", "ちちはいつも ろくじに おきます")).toBe(
-      "ちちは、 いつも ろくじに おきます"
+      "ちちわ、 いつも ろくじに おきます"
     );
     // は inside a kana word, or after a kanji's okurigana, is left alone.
     expect(buildJapaneseSpeakText("話しています。", "はなしています。")).toBe("はなしています。");

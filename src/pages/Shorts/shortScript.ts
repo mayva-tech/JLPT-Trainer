@@ -1,4 +1,5 @@
 import type { VocabularyItem } from "../../types/vocabulary";
+import type { SpeechTone } from "../../services/speechTone";
 import { shortAngle } from "./shortAngle";
 import { BAIT_SPOKEN, messageFor, type HookStyle } from "./shortMessage";
 
@@ -55,6 +56,8 @@ export type ShortStep =
       text: string;
       reading?: string;
       slow?: boolean;
+      /** Lively-voices tone; omitted = picked from the line / silence. */
+      tone?: SpeechTone;
     }
   | {
       kind: "wait";
@@ -102,14 +105,14 @@ export function buildShortScript(item: VocabularyItem, options: ShortOptions = {
   const steps: ShortStep[] = msg
     ? [
         { kind: "wait", phase: "hook", ms: DING_MS, sfx: "ding" },
-        { kind: "say", phase: "hook", lang: "en", text: msg.opener },
+        { kind: "say", phase: "hook", lang: "en", text: msg.opener, tone: "opening" },
         { kind: "say", phase: "hook", lang: "ja", text: msg.text, reading: msg.reading },
-        { kind: "say", phase: "hook", lang: "en", text: msg.ask },
+        { kind: "say", phase: "hook", lang: "en", text: msg.ask, tone: "question" },
         { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
       ]
     : [
-        { kind: "say", phase: "hook", lang: "en", text: angle.hook.en },
-        { kind: "say", phase: "hook", lang: "ja", text: angle.hook.ja },
+        { kind: "say", phase: "hook", lang: "en", text: angle.hook.en, tone: "opening" },
+        { kind: "say", phase: "hook", lang: "ja", text: angle.hook.ja, tone: "excited" },
         { kind: "wait", phase: "hook", ms: COUNTDOWN_MS, cue: "countdown" },
       ];
   if (drawMs > 0) {
@@ -122,7 +125,10 @@ export function buildShortScript(item: VocabularyItem, options: ShortOptions = {
   if (msg) {
     // Said in the reveal beat: the English highlight there has no target, so
     // "It's A!" can't light letters of the meaning below.
-    steps.push({ kind: "say", phase: "reveal", lang: "en", text: msg.answerSpoken }, { kind: "wait", phase: "reveal", ms: 250 });
+    steps.push(
+      { kind: "say", phase: "reveal", lang: "en", text: msg.answerSpoken, tone: "excited" },
+      { kind: "wait", phase: "reveal", ms: 250 }
+    );
   }
   steps.push(
     { kind: "say", phase: "meaning", lang: "en", text: item.meaning },
@@ -152,7 +158,7 @@ export function buildShortScript(item: VocabularyItem, options: ShortOptions = {
     );
   }
   steps.push(
-    { kind: "say", phase: "outro", lang: "en", text: msg ? BAIT_SPOKEN : angle.baitSpoken },
+    { kind: "say", phase: "outro", lang: "en", text: msg ? BAIT_SPOKEN : angle.baitSpoken, tone: "outro" },
     { kind: "wait", phase: "outro", ms: OUTRO_MS },
     { kind: "wait", phase: "loop", ms: LOOP_MS }
   );

@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type {
   RegisterPlayPart,
   RegisterSideName,
 } from "../components/RegisterSplitCard";
 import { checkpointIndices, firstSense } from "../components/Retention/retentionQuiz";
 import { autoModeTiming } from "../config/autoModeTiming";
-import { getRegisterPairsForSection } from "../data/registerPairs";
+import { getRegisterPairsForSection, getRegisterSectionById } from "../data/registerPairs";
 import type { CheckPhase, ReadHookState } from "../services/autoModeRunner";
 import { speakNuance } from "../services/nuancePlayback";
 import {
@@ -16,11 +16,13 @@ import {
   type SpeechHighlight,
 } from "../services/speechService";
 import type { RegisterPair } from "../types/register";
+import { hookHoldMs, hookSpeech, type ItemHookState } from "../utils/itemHookSpeech";
 import { buildRegisterPlaySteps } from "../utils/registerPlayback";
 import {
   buildRegisterCheckCard,
   POLITE_HOOK_EN,
   registerCheckSpoken,
+  registerClosingHook,
   type RegisterCheckCard,
 } from "../utils/registerRetention";
 
@@ -34,8 +36,8 @@ export type UseRegisterSessionOptions = {
   clearSpeechUi: () => void;
   isRegisterScreen: () => boolean;
   betweenItemsPause: number;
-  /** Player's retention toggles (読 Hook / ⏸ Quiz); both off when omitted. */
-  getRetention?: () => { hook: boolean; check: boolean };
+  /** Player's retention toggles (読 Hook / ⏸ Quiz / closing outro); all off when omitted. */
+  getRetention?: () => { hook: boolean; check: boolean; outro?: boolean };
 };
 
 export type RegisterCheckView = { card: RegisterCheckCard; phase: CheckPhase };
@@ -53,7 +55,8 @@ export function useRegisterSession({
   getRetention,
 }: UseRegisterSessionOptions) {
   const [sectionId, setSectionId] = useState("register-01");
-  const pairs = getRegisterPairsForSection(sectionId);
+  const pairs = useMemo(() => getRegisterPairsForSection(sectionId), [sectionId]);
+  const section = getRegisterSectionById(sectionId);
   const [index, setIndex] = useState(0);
   const [activeSide, setActiveSide] = useState<RegisterPlayPart | null>(null);
   const [showFurigana, setShowFurigana] = useState(true);
@@ -67,6 +70,8 @@ export function useRegisterSession({
   const [hook, setHook] = useState<ReadHookState | null>(null);
   /** "Pause & answer" checkpoint card. */
   const [check, setCheck] = useState<RegisterCheckView | null>(null);
+  /** Closing remark after the last pair of Play All. */
+  const [closing, setClosing] = useState<ItemHookState | null>(null);
   const playSessionRef = useRef(0);
   const timersRef = useRef(new Set<number>());
   const hookKeyRef = useRef(0);
@@ -85,6 +90,7 @@ export function useRegisterSession({
     setNoteShown(true);
     setHook(null);
     setCheck(null);
+    setClosing(null);
   }
 
   function open(nextSectionId: string) {
@@ -97,6 +103,7 @@ export function useRegisterSession({
     setNoteShown(true);
     setHook(null);
     setCheck(null);
+    setClosing(null);
     clearTimers();
     playSessionRef.current += 1;
   }
@@ -245,7 +252,8 @@ export function useRegisterSession({
    * One pair: casual JP, meaning EN, casual JP slow, [hook], formal JP,
    * formal JP slow, note — rates and pauses as in the Player's Auto Mode.
    * The hook only runs in Play All (the recorded video), like the Player's
-   * Auto Mode; `speakHook` says the line aloud (first pair only).
+   * Auto Mode; `speakHook` says the line aloud (first pair only). With the
+   * hook on, the formal side is hidden from the start of the pair.
    */
   async function playPairSequence(
     pair: RegisterPair,
@@ -256,6 +264,8 @@ export function useRegisterSession({
     const steps = buildRegisterPlaySteps(pair);
     let hooked = hookMode === "off";
     setNoteShown(false);
+    // The formal side stays behind the banner while the casual lines play.
+    if (!hooked) setHook({ ms: 0, key: ++hookKeyRef.current });
 
     for (const step of steps) {
       if (!alive()) return;
@@ -344,6 +354,22 @@ export function useRegisterSession({
     setCheck(null);
   }
 
+  /** Wrap-up card over the stage, said by Andrew, held to be read. */
+  async function runClosing(session: number): Promise<void> {
+    const alive = () => session === playSessionRef.current;
+    const hook = registerClosingHook(section);
+    await wait(T.shortPause, session);
+    if (!alive()) return;
+    setActiveSide(null);
+    setClosing({ hook, key: ++hookKeyRef.current });
+    const line = hookSpeech(hook);
+    await say(line.lang, line.text, session, line.reading, scriptedRate("normal"));
+    if (!alive()) return;
+    await wait(hookHoldMs(hook), session);
+    if (!alive()) return;
+    setClosing(null);
+  }
+
   function play() {
     const pair = pairs[index] ?? null;
     if (!pair) return;
@@ -416,6 +442,9 @@ export function useRegisterSession({
           await wait(betweenItemsPause, session);
         }
       }
+      if (retention.outro && alive() && isRegisterScreen()) {
+        await runClosing(session);
+      }
       if (alive()) finish();
     })();
   }
@@ -454,6 +483,7 @@ export function useRegisterSession({
 
   return {
     sectionId,
+    section,
     pairs,
     index,
     activeSide,
@@ -465,6 +495,7 @@ export function useRegisterSession({
     noteShown,
     hook,
     check,
+    closing,
     open,
     stop,
     playSide,

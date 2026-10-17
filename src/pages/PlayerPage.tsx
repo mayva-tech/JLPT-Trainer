@@ -44,6 +44,7 @@ import { usePictureSetting } from "../components/Illustration/usePictureSetting"
 import { useBrushSetting } from "../components/KanjiStrokes/useBrushSetting";
 import { useKanjiStrokeData } from "../components/KanjiStrokes/loadStrokes";
 import { hasStrokes, planStrokes } from "../components/KanjiStrokes/strokePlan";
+import type { PitchReveal } from "../components/PitchAccent/PitchAccentLine";
 import { StageAmbience } from "../components/StageAmbience/StageAmbience";
 import { AmbiencePan } from "../components/StageAmbience/AmbiencePan";
 import { useAmbienceSetting } from "../components/StageAmbience/useAmbienceSetting";
@@ -59,6 +60,7 @@ import {
   ambienceForGrammar,
   ambienceForOnomatopoeia,
   ambienceForRegister,
+  ambiencesForRegisterSection,
   ambienceForVocab,
   ambienceGlyphs,
   ambienceThemeInfo,
@@ -553,6 +555,8 @@ export function PlayerPage() {
     noteShown: registerNoteShown,
     hook: registerHook,
     check: registerCheck,
+    closing: registerClosing,
+    section: registerSection,
     open: openRegister,
     stop: stopRegisterAuto,
     playSide: playRegisterSide,
@@ -1562,7 +1566,9 @@ export function PlayerPage() {
         if (autoAdvance && flowActiveRef.current) {
           window.setTimeout(() => advanceFlow(), 700);
         }
-      }
+      },
+      // Lively voices: the video opens bright in both languages.
+      { tones: { en: "opening", ja: "excited" } }
     );
   }
 
@@ -1578,7 +1584,9 @@ export function PlayerPage() {
         if (autoAdvance && flowActiveRef.current) {
           window.setTimeout(() => advanceFlow(), 700);
         }
-      }
+      },
+      // …and closes warm.
+      { tones: { ja: "outro", en: "outro" } }
     );
   }
 
@@ -2216,21 +2224,24 @@ export function PlayerPage() {
     screen === "register"
       ? registerPairs[registerIndex] ?? registerPairs[0] ?? null
       : null;
+  const registerAmbiences = useMemo(() => ambiencesForRegisterSection(registerPairs), [registerPairs]);
+  const ambienceRegisterTheme = ambienceRegister
+    ? registerAmbiences[registerIndex] ?? ambienceForRegister(ambienceRegister)
+    : null;
   const ambienceTheme: AmbienceTheme | null = useMemo(() => {
     if (!showAmbience) return null;
     if (ambienceVocab) return ambienceForVocab(ambienceVocab);
     if (ambienceGrammar) return ambienceForGrammar(ambienceGrammar);
     if (ambienceOno) return ambienceForOnomatopoeia(ambienceOno);
     if (ambienceQuiz) return ambienceForVocab(ambienceQuiz);
-    if (ambienceRegister) return ambienceForRegister(ambienceRegister);
-    return null;
+    return ambienceRegisterTheme;
   }, [
     showAmbience,
     ambienceVocab,
     ambienceGrammar,
     ambienceOno,
     ambienceQuiz,
-    ambienceRegister,
+    ambienceRegisterTheme,
   ]);
   const ambienceKanji = ambienceGlyphs(
     ambienceVocab?.word ??
@@ -2353,6 +2364,16 @@ export function PlayerPage() {
     return { state: "draw", runKey: `m-${it.id}` };
   }
 
+  /**
+   * Pitch lines come in with Nanami's reading, never while the brush writes.
+   * Browsing by hand (no voice), the word's line follows the finished brush.
+   */
+  function pitchReveal(it: NonNullable<typeof item>, brushed: boolean): PitchReveal | null {
+    if (autoState !== "off") return {};
+    if (!brushed || !wordBrush(it) || !strokeData) return null;
+    return { afterMs: planStrokes(it.word, strokeData).totalMs };
+  }
+
   const meaningPending = autoState !== "off" && !meaningShown;
   const nuancePending = (autoState !== "off" || grammarAutoState !== "off") && !nuanceShown;
 
@@ -2390,6 +2411,7 @@ export function PlayerPage() {
               brush={wordBrush(item)}
               meaningHidden={meaningPending}
               nuanceHidden={nuancePending}
+              pitchReveal={pitchReveal(item, true)}
             />
           </ReadHook>
         );
@@ -2404,6 +2426,7 @@ export function PlayerPage() {
             showFurigana={showFurigana}
             meaningHidden={meaningPending}
             nuanceHidden={nuancePending}
+            pitchReveal={pitchReveal(item, false)}
           />
         );
       case "sentence":
@@ -2435,6 +2458,7 @@ export function PlayerPage() {
             jaHighlight={jaLessonHighlight}
             enHighlight={enLessonHighlight}
             showFurigana={showFurigana}
+            pitchReveal={pitchReveal(item, false)}
           />
         );
     }
@@ -2465,12 +2489,16 @@ export function PlayerPage() {
             />
           );
         }
+        const registerLabel = (
+          <div className="progress-label">
+            {registerIndex + 1} / {registerPairs.length} · {pair.category}
+            {registerSection?.subtitle ? ` · ${registerSection.subtitle}` : null}
+          </div>
+        );
         if (registerCheck) {
           return (
             <>
-              <div className="progress-label">
-                {registerIndex + 1} / {registerPairs.length} · {pair.category}
-              </div>
+              {registerLabel}
               <RegisterPauseAnswerCard
                 card={registerCheck.card}
                 phase={registerCheck.phase}
@@ -2481,9 +2509,7 @@ export function PlayerPage() {
         }
         return (
           <>
-            <div className="progress-label">
-              {registerIndex + 1} / {registerPairs.length} · {pair.category}
-            </div>
+            {registerLabel}
             <RegisterSplitCard
               pair={pair}
               activeSide={registerActiveSide}
@@ -2901,6 +2927,7 @@ export function PlayerPage() {
           <StageAmbience theme={ambienceTheme} glyphs={ambienceKanji} panButtons={false} />
           {renderStage()}
           {itemHook ? <ItemHookCard state={itemHook} /> : null}
+          {screen === "register" && registerClosing ? <ItemHookCard state={registerClosing} /> : null}
         </div>
       </div>
 
@@ -3770,6 +3797,29 @@ export function PlayerPage() {
               onClick={() => toggleRetention("check")}
             >
               ⏸ Quiz {retention.check ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className={retention.outro ? "furi-btn furi-btn--active" : "furi-btn"}
+              tabIndex={-1}
+              title="Closing remark after the last pair (Play All)"
+              aria-pressed={retention.outro}
+              onClick={() => toggleRetention("outro")}
+            >
+              ✦ Outro {retention.outro ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              className="furi-btn"
+              tabIndex={-1}
+              title="Social post for this casual ⇄ formal pair: title, description, tags, hashtags"
+              onClick={() => {
+                const pair = registerPairs[registerIndex];
+                if (!pair) return;
+                setSocialTarget({ type: "register-pair", id: pair.id, parentTocId: activeTocId ?? undefined });
+              }}
+            >
+              📣 Social
             </button>
             <button
               onClick={goRegisterNext}

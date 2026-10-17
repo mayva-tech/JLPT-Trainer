@@ -1,7 +1,7 @@
 import { act, createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { PhrasePitchLine, PitchAccentLine } from "./PitchAccentLine";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { PhrasePitchLine, PitchAccentLine, type PitchReveal } from "./PitchAccentLine";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -17,8 +17,42 @@ afterEach(() => {
   host.remove();
 });
 
-const render = (props: { word: string; reading: string; speaking?: boolean }) =>
-  act(() => root.render(createElement(PitchAccentLine, props)));
+const render = (props: {
+  word: string;
+  reading: string;
+  speaking?: boolean;
+  reveal?: PitchReveal | null;
+}) => act(() => root.render(createElement(PitchAccentLine, props)));
+
+describe("PitchAccentLine reveal", () => {
+  it("waits for Nanami's reading, then stays shown and draws on", () => {
+    render({ word: "いらいら", reading: "いらいら", reveal: {} });
+    expect(host.querySelector(".pa--waiting")).not.toBeNull();
+    render({ word: "いらいら", reading: "いらいら", speaking: true, reveal: {} });
+    expect(host.querySelector(".pa--waiting")).toBeNull();
+    expect(host.querySelector(".pa-play")).not.toBeNull();
+    render({ word: "いらいら", reading: "いらいら", speaking: false, reveal: {} });
+    expect(host.querySelector(".pa--waiting")).toBeNull();
+  });
+
+  it("waits again for the next word", () => {
+    render({ word: "いらいら", reading: "いらいら", speaking: true, reveal: {} });
+    render({ word: "どきどき", reading: "どきどき", reveal: {} });
+    expect(host.querySelector(".pa--waiting")).not.toBeNull();
+  });
+
+  it("browsing by hand: shows once the brush has finished", () => {
+    vi.useFakeTimers();
+    try {
+      render({ word: "いらいら", reading: "いらいら", reveal: { afterMs: 1200 } });
+      expect(host.querySelector(".pa--waiting")).not.toBeNull();
+      act(() => vi.advanceTimersByTime(1200));
+      expect(host.querySelector(".pa--waiting")).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
 
 describe("PitchAccentLine", () => {
   it("renders nothing for a word without verified data", () => {

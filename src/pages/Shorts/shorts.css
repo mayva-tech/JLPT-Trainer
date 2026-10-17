@@ -515,20 +515,40 @@
   font-weight: 600;
 }
 
+/* Countdown: big numbers in a ring that drains over the 3 s (gold, turning
+   red in the last second), so the wait reads at a glance on a phone. */
 .sh-count {
   position: relative;
-  width: 20cqw;
-  height: 20cqw;
+  width: 30cqw;
+  height: 30cqw;
+  flex: none;
+  animation: shPop 0.35s cubic-bezier(0.2, 1.5, 0.4, 1) both;
 }
 
-.sh-count::before {
-  content: "";
+.sh-count-ring {
   position: absolute;
   inset: 0;
-  border-radius: 50%;
-  border: 0.9cqw solid rgba(255, 255, 255, 0.14);
-  border-top-color: #f0c078;
-  animation: shSpin 1s linear 3;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.sh-count-track {
+  fill: rgba(12, 18, 30, 0.55);
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 7;
+}
+
+.sh-count-arc {
+  fill: none;
+  stroke: #f0c078;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 1.2cqw rgba(240, 192, 120, 0.55));
+  animation: shDrainArc var(--sh-cd, 3000ms) linear both;
 }
 
 .sh-count span {
@@ -536,14 +556,21 @@
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 11cqw;
+  font-size: 15cqw;
   font-weight: 800;
   color: #f0c078;
+  text-shadow: 0 0.5cqw 2cqw rgba(0, 0, 0, 0.5);
   animation: shTick 1s ease both;
 }
 
-.sh-count span:nth-child(2) { animation-delay: 1s; }
-.sh-count span:nth-child(3) { animation-delay: 2s; }
+.sh-count span:nth-child(3) { animation-delay: 1s; }
+.sh-count span:nth-child(4) { animation-delay: 2s; color: #ff8a65; }
+
+@keyframes shDrainArc {
+  0% { stroke-dashoffset: 0; stroke: #f0c078; }
+  66% { stroke: #f59a6a; }
+  100% { stroke-dashoffset: 100; stroke: #ff6b57; }
+}
 
 .sh-pitch {
   font-size: 6.4cqw;
@@ -875,19 +902,77 @@ ruby.sh-mark {
 .sh-typing i:nth-child(2) { animation-delay: 0.15s; }
 .sh-typing i:nth-child(3) { animation-delay: 0.3s; }
 
-/* The 3-2-1 sits on the chat's corner, next to the "typing" dots. */
+/* Timer row along the card's bottom: ring · draining bar · "typing" dots.
+   Laid out even when idle (hidden), so the frame never shifts. */
+.sh-chat-timer {
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  margin-top: 1.8cqw;
+  visibility: hidden;
+}
+
+.sh-chat-timer--on {
+  visibility: visible;
+}
+
+.sh-count-slot {
+  width: 13cqw;
+  height: 13cqw;
+  flex: none;
+}
+
+.sh-timer-bar {
+  flex: 1;
+  height: 1.8cqw;
+  border-radius: 2cqw;
+  background: rgba(29, 38, 56, 0.12);
+  overflow: hidden;
+}
+
+.sh-timer-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transform-origin: 0 50%;
+  animation: shDrainBar linear both;
+}
+
+@keyframes shDrainBar {
+  0% { transform: scaleX(1); background: #f0b45a; }
+  66% { background: #f59a6a; }
+  100% { transform: scaleX(0); background: #ff6b57; }
+}
+
+/* While the clock runs, the two answers glow: this is where to look. */
+.sh-msg--counting .sh-reply {
+  animation: shReplyGlow 1s ease-in-out infinite;
+}
+
+@keyframes shReplyGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(240, 192, 120, 0); }
+  50% { box-shadow: 0 0 0 0.8cqw rgba(240, 192, 120, 0.28); }
+}
+
 .sh-count--msg {
-  position: absolute;
-  left: 3cqw;
-  bottom: 1.2cqw;
-  width: 10.5cqw;
-  height: 10.5cqw;
-  border-radius: 50%;
-  background: #1d2638;
+  width: 13cqw;
+  height: 13cqw;
+}
+
+.sh-count--msg .sh-count-track {
+  fill: #1d2638;
+  stroke: rgba(29, 38, 56, 0.2);
+  stroke-width: 9;
+}
+
+.sh-count--msg .sh-count-arc {
+  stroke-width: 9;
+  filter: none;
 }
 
 .sh-count--msg span {
-  font-size: 5.6cqw;
+  font-size: 7cqw;
+  text-shadow: none;
 }
 
 .sh-msg-ask {
@@ -1209,11 +1294,14 @@ body:has(.sh-clean--rotated) :is(.th-root, .th-seat--split, .sensei, .sensei-tab
   .sh-stage--loop .sh-col,
   .sh-stage--loop .sh-top,
   .sh-turn,
-  .sh-count::before,
   .sh-stage[data-phase="hook"] .sh-chat,
   .sh-stage[data-phase="hook"] .sh-msg-bell,
   .sh-typing--on,
   .sh-typing i,
+  .sh-msg--counting .sh-reply,
+  .sh-count,
+  .sh-count-arc,
+  .sh-timer-bar span,
   .sh-answer {
     animation: none;
   }

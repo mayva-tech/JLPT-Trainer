@@ -56,7 +56,7 @@ export const AUDIENCE_KEYWORDS = ["learn Japanese in English", "Japanese for Eng
 /** Tags for the Japanese-speaking English learners. */
 const AUDIENCE_TAGS = ["#learnenglish", "#英語学習"];
 
-export type HashtagKind = "vocabulary" | "grammar" | "vocabulary-quiz" | "grammar-quiz" | "topic";
+export type HashtagKind = "vocabulary" | "grammar" | "vocabulary-quiz" | "grammar-quiz" | "register" | "topic";
 
 /**
  * One fixed, content-based hashtag set (no random rotation, no spam):
@@ -83,10 +83,35 @@ export function buildHashtags({
     tags.push("#jlptquiz", "#japanesevocabulary");
   } else if (kind === "grammar-quiz") {
     tags.push("#jlptquiz", "#japanesegrammar");
+  } else if (kind === "register") {
+    tags.push("#keigo", "#politejapanese");
+    if (!shortForm) tags.push("#businessjapanese");
   }
   tags.push("#nihongo", ...AUDIENCE_TAGS);
   if (shortForm) tags.push("#shorts");
   return tags;
+}
+
+/** YouTube's limit for the whole Tags field. */
+export const TAGS_MAX = 500;
+
+/**
+ * YouTube Tags field: comma-separated, deduplicated case-insensitively,
+ * dropping later tags once the field would pass TAGS_MAX.
+ */
+export function formatTags(keywords: readonly string[], max = TAGS_MAX): string {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of keywords) {
+    // YouTube rejects < > in tags.
+    const tag = raw.replace(/[<>,]/g, " ").replace(/\s+/g, " ").trim();
+    const key = tag.toLowerCase();
+    if (!tag || seen.has(key)) continue;
+    if (charLength([...out, tag].join(", ")) > max) break;
+    seen.add(key);
+    out.push(tag);
+  }
+  return out.join(", ");
 }
 
 export async function copyText(text: string): Promise<boolean> {

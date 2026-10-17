@@ -11,6 +11,7 @@ import {
   getQuizExample,
   shouldHideReadingOnAsk,
 } from "../utils/quizPresentation";
+import { setNextSpeechTone } from "./speechTone";
 
 export type QuizPhase =
   | "pre"
@@ -303,8 +304,10 @@ export class QuizAutoRunner {
     ui.setItemHook?.({ hook, key: ++this.itemHookKey });
     const rate = this.rateFor(ui);
     const say = hookSpeech(hook);
+    setNextSpeechTone(kind === "intro" ? "excited" : "outro");
     if (say.lang === "ja") await this.speakJapanese(ui, say.text, rate, sid, say.reading);
     else await this.speakEnglish(ui, say.text, rate, sid);
+    setNextSpeechTone(null);
     if (this.shouldContinue(sid)) await this.pause(hookHoldMs(hook), sid);
     ui.setItemHook?.(null);
     return true;

@@ -1,6 +1,7 @@
 import type { GrammarItem, GrammarCourseLevel } from "../../types/grammar";
 import type { GrammarLesson, Lesson } from "../../types/lesson";
 import type { JlptLevel } from "../../types/level";
+import type { RegisterPair, RegisterSection, RegisterSide } from "../../types/register";
 import type { VocabularyItem } from "../../types/vocabulary";
 import { shortAngle } from "../../pages/Shorts/shortAngle";
 import {
@@ -12,6 +13,7 @@ import {
   clip,
   firstSense,
   fitTitle,
+  formatTags,
   wordWithReading,
   type HashtagKind,
 } from "./socialText";
@@ -47,11 +49,13 @@ export type SocialContentType =
   | "grammar-item"
   | "grammar-lesson"
   | "quiz"
+  | "register-section"
+  | "register-pair"
   | "topic";
 
-/** Something inside a lesson that has its own post (one word, one pattern). */
+/** Something inside a lesson that has its own post (one word, pattern or pair). */
 export interface SocialChild {
-  type: "vocabulary-item" | "grammar-item";
+  type: "vocabulary-item" | "grammar-item" | "register-pair";
   id: number;
   label: string;
   sub: string;
@@ -75,6 +79,7 @@ export interface SocialMeta {
   /** Hashtags without #shorts; short-form platforms add it. */
   hashtags: string[];
   pinnedComment?: string;
+  /** YouTube tags (the comma-separated Tags field). */
   keywords: string[];
   /** Words or patterns in a lesson / quiz, each with its own post. */
   children?: SocialChild[];
@@ -443,6 +448,183 @@ export function buildQuizSocialMeta(input: QuizSocialInput): SocialMeta {
   };
 }
 
+/* ── Casual ⇄ formal (register) ─────────────────────────────────── */
+
+/** The register course sits in the N2 track. */
+const REGISTER_LEVEL: JlptLevel = "N2";
+const REGISTER_KEYWORDS = [
+  "casual vs formal Japanese",
+  "polite Japanese",
+  "Japanese keigo",
+  "keigo",
+  "敬語",
+  "business Japanese",
+  "how to speak politely in Japanese",
+];
+
+/** 誰？ with its kana: 誰？（だれ）. Kana-only sides stay as they are. */
+function sideWithReading(side: RegisterSide): string {
+  const bare = (t: string) => t.replace(/[\s、。？！?!,.]+/gu, "");
+  const reading = bare(side.reading);
+  return reading && reading !== bare(side.text) ? `${side.text}（${reading}）` : side.text;
+}
+
+/** "1. 質問・依頼" → "質問・依頼". */
+function sectionJa(section: RegisterSection): string {
+  return section.title.replace(/^\d+\.\s*/, "");
+}
+
+export interface RegisterSectionContext {
+  /** 1-based place in the course ("Casual ⇄ Formal #1"). */
+  number: number;
+}
+
+function registerRef(section: RegisterSection, ctx: RegisterSectionContext): string {
+  return `Casual ⇄ Formal #${ctx.number} · ${sectionJa(section)} (${section.subtitle})`;
+}
+
+export function buildRegisterPairSocialMeta(
+  pair: RegisterPair,
+  section: RegisterSection | undefined,
+  ctx: RegisterSectionContext | undefined
+): SocialMeta {
+  const level = REGISTER_LEVEL;
+  const casual = sideWithReading(pair.casual);
+  const formal = sideWithReading(pair.formal);
+  const quoted = `“${pair.meaning.replace(/[.。]$/u, "")}”`;
+  const title = fitTitle(
+    [
+      `${quoted} in Japanese: ${pair.casual.text} vs ${pair.formal.text}`,
+      `${pair.casual.text} vs ${pair.formal.text}`,
+    ],
+    " | Casual vs Formal Japanese"
+  );
+
+  const desc = [
+    `🇯🇵 Casual vs formal Japanese: ${quoted}`,
+    "",
+    "Casual (friends, family):",
+    `${casual} — ${pair.casual.romaji}`,
+    "",
+    "Formal (work, strangers, customers):",
+    `${formal} — ${pair.formal.romaji}`,
+    "",
+  ];
+  if (pair.note?.trim()) desc.push("When to use which:", pair.note, "");
+  if (section && ctx) desc.push(`Lesson: ${registerRef(section, ctx)}`);
+  desc.push(`Japanese keigo · JLPT ${level}`);
+
+  const caption = [
+    `${quoted} in Japanese`,
+    `Casual: ${pair.casual.text}`,
+    `Formal: ${pair.formal.text}`,
+  ];
+  if (pair.note?.trim()) caption.push(clip(pair.note, 160));
+  caption.push("Casual vs formal Japanese (keigo)");
+
+  return {
+    contentId: `register-pair-${pair.id}`,
+    contentType: "register-pair",
+    level,
+    heading: ctx ? `Casual ⇄ Formal #${ctx.number}` : "Casual ⇄ Formal",
+    subheading: `${pair.casual.text} → ${pair.formal.text}`,
+    title,
+    shortTitle: `${quoted}: ${pair.casual.text} → ${pair.formal.text}`,
+    youtubeDescription: withAudience(desc),
+    universalCaption: [...caption, AUDIENCE_LINE_SHORT].join("\n"),
+    hook: `Casual or polite? How to say ${quoted} in Japanese`,
+    hashtags: buildHashtags({ level, kind: "register" }),
+    pinnedComment: `Which one would you say to your boss? Try the formal one out loud 👇`,
+    keywords: unique([
+      `${pair.meaning.replace(/[.。?？!！]$/u, "")} in Japanese`,
+      pair.casual.text,
+      pair.formal.text,
+      pair.formal.romaji,
+      ...REGISTER_KEYWORDS,
+      section?.subtitle,
+      `JLPT ${level}`,
+      ...AUDIENCE_KEYWORDS,
+    ]),
+  };
+}
+
+function registerChildren(pairs: readonly RegisterPair[]): SocialChild[] {
+  return pairs.map((p) => ({
+    type: "register-pair",
+    id: p.id,
+    label: `${p.casual.text} → ${p.formal.text}`,
+    sub: p.meaning,
+  }));
+}
+
+export function buildRegisterSectionSocialMeta(
+  section: RegisterSection,
+  pairs: readonly RegisterPair[],
+  ctx: RegisterSectionContext
+): SocialMeta {
+  const level = REGISTER_LEVEL;
+  const n = pairs.length;
+  const noun = n === 1 ? "phrase" : "phrases";
+  const ja = sectionJa(section);
+  const head = `Casual vs Formal Japanese #${ctx.number}`;
+
+  const list = pairs
+    .slice(0, LESSON_LIST_MAX)
+    .map((p) => `${p.meaning} — ${p.casual.text} → ${p.formal.text}`);
+  if (n > LESSON_LIST_MAX) list.push(`…and ${n - LESSON_LIST_MAX} more`);
+
+  const desc = [
+    `Learn to switch between casual and polite Japanese (keigo): ${section.subtitle.toLowerCase()}.`,
+    "",
+    "In this lesson:",
+    ...list,
+    "",
+    "Each pair shows the casual form, the formal form, and when to use which.",
+    "",
+    registerRef(section, ctx),
+  ];
+  const hook = `Casual or polite? ${n} Japanese ${noun}: ${section.subtitle}`;
+  const caption = [
+    hook,
+    pairs
+      .slice(0, 4)
+      .map((p) => `${p.casual.text} → ${p.formal.text}`)
+      .join(" · "),
+    `${ja} · Japanese keigo`,
+  ];
+
+  return {
+    contentId: `register-section-${section.id}`,
+    contentType: "register-section",
+    level,
+    heading: `Casual ⇄ Formal #${ctx.number}`,
+    subheading: `${ja} — ${section.subtitle}`,
+    title: fitTitle(
+      [
+        `${head} | ${section.subtitle} (${ja}) — ${n} Keigo ${noun === "phrase" ? "Phrase" : "Phrases"}`,
+        `${head} | ${section.subtitle} (${ja})`,
+        `${head} | ${section.subtitle}`,
+      ],
+      ""
+    ),
+    shortTitle: `Casual vs formal Japanese: ${section.subtitle}`,
+    youtubeDescription: withAudience(desc),
+    universalCaption: [...caption, AUDIENCE_LINE_SHORT].join("\n"),
+    hook,
+    hashtags: buildHashtags({ level, kind: "register" }),
+    pinnedComment: "Which formal phrase was new to you? 👇",
+    keywords: unique([
+      ...REGISTER_KEYWORDS,
+      section.subtitle,
+      ja,
+      `JLPT ${level}`,
+      ...pairs.slice(0, 6).map((p) => p.formal.text),
+      ...AUDIENCE_KEYWORDS,
+    ]),
+    children: registerChildren(pairs),
+  };
+}
+
 /* ── Platform formatting ────────────────────────────────────────── */
 
 export interface SocialPost {
@@ -484,7 +666,9 @@ export function formatSocialPost(meta: SocialMeta, platform: SocialPlatform): So
       };
     case "facebook-reels":
     case "instagram-reels": {
-      const context = meta.subheading && meta.contentType !== "vocabulary-item" && meta.contentType !== "grammar-item"
+      const single =
+        meta.contentType === "vocabulary-item" || meta.contentType === "grammar-item" || meta.contentType === "register-pair";
+      const context = meta.subheading && !single
         ? [`${meta.heading} · ${meta.subheading}`]
         : [meta.heading];
       return { body: fitCaption([meta.universalCaption, "", ...context], tags), hashtags: tags };
@@ -515,8 +699,15 @@ export function formatAllPosts(meta: SocialMeta): string {
     const post = formatSocialPost(meta, id);
     return [`=== ${label} ===`, post.title ? `Title: ${post.title}` : "", post.body].filter(Boolean).join("\n");
   });
+  const tags = formatYoutubeTags(meta);
+  if (tags) blocks.push(`=== YouTube tags ===\n${tags}`);
   if (meta.pinnedComment) blocks.push(`=== Pinned comment ===\n${meta.pinnedComment}`);
   return blocks.join("\n\n");
+}
+
+/** The YouTube Tags field: keywords, comma-separated, within 500 characters. */
+export function formatYoutubeTags(meta: SocialMeta): string {
+  return formatTags(meta.keywords);
 }
 
 function withAudience(lines: readonly string[]): string {
